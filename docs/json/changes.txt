@@ -1,0 +1,222 @@
+Here is the full list of changes I've made so far in this fork.
+
+
+Main.py
+
+from worlds.generic.RuleParser import export_game_rules
+
+                # Usage: After writing the .archipelago file
+                export_game_rules(multiworld, temp_dir, outfilebase)
+
+
+test/bases.py
+
++import json
++import os
+
++        # Set up output directory
++        output_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend')
++        os.makedirs(output_dir, exist_ok=True)
++        
++        # Export the rules data
++        from worlds.generic.RuleParser import export_game_rules
++        export_game_rules(self.multiworld, output_dir, "test_output")
++        
++        # Convert the test cases to the format needed for JSON
++        test_cases = []
++        for location, access, *item_pool in access_pool:
++            items = item_pool[0]
++            all_except = item_pool[1] if len(item_pool) > 1 else None
++            if all_except is not None:
++                test_cases.append([location, access, items, all_except])
++            else:
++                test_cases.append([location, access, items])
++        
++        # Write to JSON file
++        test_cases_data = {"location_tests": test_cases}
++        test_cases_path = os.path.join(output_dir, "test_cases.json")
++        with open(test_cases_path, 'w') as f:
++            json.dump(test_cases_data, f, indent=2)
++        
++        print("\nTest files have been generated. To run frontend tests:")
++        print("1. Start a web server: python -m http.server 8000")
++        print("2. Open http://localhost:8000/test_runner.html in your browser")
++        
++        # Run the original test logic
+
+This code exports the data used by test_runner.html
+It might make more sense to move that to
+worlds/generic/RuleParser
+
+
+README.md
+
+The main readme file for this fork.
+
+
+docs/json/archipidle.md
+
+A readme file for the Archipidle-json interface
+
+
+docs/json/changes.txt
+
+This file, listing the changes made in this fork.  Maybe unnecessary.
+
+
+docs/json/development.md
+
+A project planning doc.
+
+
+docs/json/test-runner.md
+
+A readme file for the test-runner interface
+
+
+docs/json/test-setup.txt
+
+A text file explaining the process for running the backend tests on the frontend.
+
+
+frontend/assets/console.js
+
+From Archipidle, not integrated yet
+
+
+frontend/assets/gameUI.js
+
+Handles the UI for index.html.
+
+
+frontend/assets/globals.js
+
+From Archipidle, not integrated yet
+
+
+frontend/assets/idle.js
+
+From Archipidle, not integrated yet
+
+
+frontend/assets/inventory.js
+
+Handles inventory
+
+
+frontend/assets/locationManager.js
+
+Handles locations
+
+
+frontend/assets/locationTests.js
+
+The main script for test_runner.html
+
+
+frontend/assets/ruleEngine.js
+
+Parses the rules from the json files
+
+
+frontend/assets/serverSocket.js
+
+From Archipidle, not integrated yet
+
+
+frontend/assets/storage.js
+
+A silly file that Claude added, and I didn't bother deleting.
+
+
+frontend/assets/testLogger.js
+
+Outputs the json debug logs
+
+
+frontend/assets/testResultsDisplay.js
+
+Displays the test results for test_runner.html
+
+
+frontend/assets/widgets.js
+
+From Archipidle, not integrated yet
+
+
+frontend/index.html
+
+The html file for the javascript frontend
+
+
+From Archipidle, not integrated yet:
+frontend/static/babykick.gif
+frontend/static/dolphin-left.gif
+frontend/static/dolphin-right.gif
+frontend/static/fairyfla.gif
+frontend/static/netscape-ie.JPG
+
+
+frontend/styles/index.css
+
+The css file for index.html
+
+
+frontend/styles/widgets.css
+
+From Archipidle, not integrated yet
+
+
+frontend/test_cases.json
+
+An example of the json file for the test cases, this one is from worlds/alttp/test/vanilla/TestLightWorld.py
+
+
+frontend/test_output_rules.json
+
+An example of the json file for the rules data for the test cases, this one is from worlds/alttp/test/vanilla/TestLightWorld.py
+
+
+frontend/test_results.json
+
+The test results output file saved by test_runner.html
+
+
+frontend/test_runner.html
+
+The html file for running the automated tests for the javascript rule parser
+
+
+worlds/generic/RuleParser/__init__.py
+
+Handles parsing and exporting of game rules to frontend-compatible format
+
+
+worlds/generic/RuleParser/analyzer.py
+
+Analyzes rule functions to generate structured rule data
+
+
+worlds/generic/RuleParser/exporter.py
+
+Handles preparation and formatting of rule data for export
+
+
+worlds/generic/RuleParser/games/__init__.py
+
+Game-specific rule helper functions
+
+
+worlds/generic/RuleParser/games/alttp.py
+
+Expands the helper functions for A Link to the Past
+
+
+worlds/generic/RuleParser/games/base.py
+
+Base class for game-specific helper expanders
+
+
+worlds/generic/RuleParser/games/generic.py
+
+Generic fallback helper expander

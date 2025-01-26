@@ -18,6 +18,7 @@ from Utils import __version__, output_path, version_tuple, get_settings
 from settings import get_settings
 from worlds import AutoWorld
 from worlds.generic.Rules import exclusion_rules, locality_rules
+from worlds.generic.RuleParser import export_game_rules
 
 __all__ = ["main"]
 
@@ -344,6 +345,9 @@ def main(args, seed=None, baked_server_options: Optional[Dict[str, object]] = No
                 with open(os.path.join(temp_dir, f'{outfilebase}.archipelago'), 'wb') as f:
                     f.write(bytes([3]))  # version of format
                     f.write(multidata)
+
+                # Usage: After writing the .archipelago file
+                export_game_rules(multiworld, temp_dir, outfilebase)
 
             output_file_futures.append(pool.submit(write_multidata))
             if not check_accessibility_task.result():
