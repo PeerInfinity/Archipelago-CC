@@ -1,19 +1,12 @@
 That's the end of the files you need for context.  Now here are your instructions:
 
-Look at the current state of the code, and the test results.
+We recently changed the format of the data exported by worlds/generic/RuleParser/exporter.py
 
-Identify at least one issue that's contributing to the test failures.
+The old format is documented in frontend/assets/types/alttp.d-old.ts
 
-Propose an outline of a plan for how to begin work on fixing the issues.
+The new format is documented in frontend/assets/types/alttp.d.ts
 
-The code to propose changes to is in worlds/generic/RuleParser and in frontend.
+The javascript frontend needs to be updated to use the new format instead of the old format.
 
-There is no restriction on proposing dramatic changes to the way the RuleParser or frontend are implemented, if that's what's required to fix the issues.
+Update the frontend code to read and save all of the relevant data from the json files, even if we're currently not using some of it.
 
-If you want to see the contents of other files, please tell me and I will provide them.
-
-If you want to add trace messages to the code and look at the output, we can do that.
-
-If you have any other questions, then please ask them.
-
-When we left off, we fixed some issues in analyzer.py that were causing the data in test_output_rules.json to be invalid.

@@ -206,3 +206,4 @@ Context.txt
 pytest_output.txt
 test_output_raw_rules.txt
 test_results/*.json
+trash/*

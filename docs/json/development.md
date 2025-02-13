@@ -1,7 +1,9 @@
 # Development Documentation
 
 ## Vision
+
 Create a robust system for using Archipelago's location access rules in web-based applications, enabling:
+
 - Accurate client-side location checking
 - Development of new web interfaces
 - Enhanced testing capabilities
@@ -11,17 +13,20 @@ Create a robust system for using Archipelago's location access rules in web-base
 ### Core Components
 
 #### 1. Rule Export System
+
 - Converts Python rule functions to standardized JSON format
 - Preserves helper function references
 - Handles complex rule patterns including boolean operations, method calls, and conditional expressions
 
-#### 2. Frontend Implementation 
+#### 2. Frontend Implementation
+
 - Evaluates rules using native JavaScript helper functions
 - Manages inventory and state
 - Provides rule debugging capabilities
 - Supports game-specific logic through helpers
 
 #### 3. Testing Infrastructure
+
 - Automated test execution via Playwright
 - Comprehensive debug logging
 - Test result analysis and reporting
@@ -29,6 +34,7 @@ Create a robust system for using Archipelago's location access rules in web-base
 ### Rule Processing Flow
 
 1. Backend (Python)
+
    - Analyzer parses rule functions using AST
    - Converts to standardized JSON structure
    - Preserves helper function references
@@ -43,13 +49,15 @@ Create a robust system for using Archipelago's location access rules in web-base
 ### Supported Rule Types
 
 1. Basic Rules
+
    - `item_check`: Direct item requirements
    - `count_check`: Item quantity requirements
-   - `helper`: Preserved helper function references 
+   - `helper`: Preserved helper function references
    - `group_check`: Item group requirements
    - `constant`: Static boolean values
 
 2. Composite Rules
+
    - `and`: Multiple required conditions
    - `or`: Alternative conditions
    - `comparison`: Numeric comparisons
@@ -67,7 +75,7 @@ Create a robust system for using Archipelago's location access rules in web-base
 
 - Complete rule analysis and export
 - Helper function preservation and execution
-- Inventory and state management  
+- Inventory and state management
 - Automated testing infrastructure
 - Debug logging system
 - Test result analysis
@@ -75,6 +83,7 @@ Create a robust system for using Archipelago's location access rules in web-base
 ### Enhanced Analyzer Capabilities
 
 The analyzer now properly handles:
+
 - Complex lambda expressions
 - Nested parentheses
 - Multiline rules
@@ -87,6 +96,7 @@ The analyzer now properly handles:
 ### Debug Infrastructure
 
 The debug system provides:
+
 - Rule evaluation traces
 - Inventory state logs
 - Helper function execution logs
@@ -97,11 +107,12 @@ The debug system provides:
 ### Test Results Structure
 
 Results are now organized as:
+
 ```javascript
 {
   summary: {
     total: number,
-    passed: number, 
+    passed: number,
     failed: number,
     percentage: number
   },
@@ -122,6 +133,7 @@ Results are now organized as:
 ## Development Priorities
 
 ### 1. Rule System Completion (High Priority)
+
 - [ ] Fix complex helper function parsing
 - [ ] Handle edge cases in helper execution
 - [ ] Improve progressive item logic
@@ -130,11 +142,13 @@ Results are now organized as:
 - [ ] Add option to enable/disable JSON file saving (similar to spoiler file option)
 
 ### 2. Testing Infrastructure (High Priority)
+
 - [ ] Add performance benchmarking
 - [ ] Expand test coverage
 - [ ] Enhance failure analysis
 
 ### 3. Frontend Development (Medium Priority)
+
 - [ ] Improve rule evaluation performance
 - [ ] Enhance error reporting
 - [ ] Add advanced filtering options
@@ -144,6 +158,7 @@ Results are now organized as:
 - [ ] Enhance accessibility
 
 ### 4. Archipidle Integration (Medium Priority)
+
 - [ ] Properly integrate with console
 - [ ] Sync inventory state
 - [ ] Connect to server functionality
@@ -151,6 +166,7 @@ Results are now organized as:
 - [ ] Support game progress tracking
 
 ### 5. Performance Optimization (Lower Priority)
+
 - [ ] Profile rule evaluation
 - [ ] Optimize React rendering
 - [ ] Implement caching
@@ -158,6 +174,7 @@ Results are now organized as:
 - [ ] Monitor memory usage
 
 ### 6. Documentation & Release (Ongoing)
+
 - [ ] Complete user guides
 - [ ] Complete API documentation
 - [ ] Add debugging guides
@@ -166,6 +183,7 @@ Results are now organized as:
 - [ ] Document deployment process
 
 ### 7. Code Style (Lower Priority)
+
 - [ ] Update Python string quotes to match style guide
 - [ ] Adjust JavaScript/HTML/CSS indentation
 - [ ] Add type annotations in Python code
@@ -174,20 +192,20 @@ Results are now organized as:
 
 ## Technical Details
 
-### Rule Format
-```javascript
-{
-  type: string,      // Rule type (item_check, helper, etc.)
-  conditions: Rule[], // For composite rules
-  item: string,      // For item checks
-  count: number,     // For counting rules
-  name: string,      // For helper functions
-  args: any[],       // For helper arguments
-  value: boolean     // For constant rules
-}
-```
+### JSON Export Format Version 3
+
+The rule export system now uses a comprehensive region-based format that includes:
+
+- Complete region graph with entrances and exits
+- Dungeon and shop data
+- Game mode and settings
+- Start region information
+- Enhanced item and progression data
+
+This format is fully documented in `frontend/assets/types/alttp.d.ts` and replaces the previous location-based format.
 
 ### Debug Log Format
+
 ```javascript
 {
   timestamp: string,
@@ -205,6 +223,7 @@ Results are now organized as:
 ## Implementation Notes
 
 ### Helper Functions
+
 - Implemented natively in JavaScript
 - Match Python behavior exactly
 - Access inventory and state
@@ -212,13 +231,15 @@ Results are now organized as:
 - Handle progressive items
 
 ### Rule Evaluation
+
 - Recursive evaluation strategy
 - Caches intermediate results
 - Handles circular references
 - Provides evaluation traces
 - Supports short-circuiting
 
-### State Management  
+### State Management
+
 - Tracks inventory contents
 - Manages progressive items
 - Handles item exclusions

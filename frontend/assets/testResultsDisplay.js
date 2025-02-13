@@ -1,34 +1,36 @@
 // frontend/assets/testResultsDisplay.js
 export class TestResultsDisplay {
-    constructor(resultsElementId = 'test-results') {
-        this.resultsElement = document.getElementById(resultsElementId);
-    }
+  constructor(resultsElementId = 'test-results') {
+    this.resultsElement = document.getElementById(resultsElementId);
+  }
 
-    displayResults(results, locationManager) {
-        const total = results.length;
-        const passed = results.filter(r => r.result?.passed).length;
-        const failed = total - passed;
+  displayResults(results, locationManager) {
+    const total = results.length;
+    const passed = results.filter((r) => r.result?.passed).length;
+    const failed = total - passed;
 
-        const resultsData = {
-            summary: {
-                total,
-                passed,
-                failed,
-                percentage: Math.round(passed/total * 100)
-            },
-            results
-        };
+    const resultsData = {
+      summary: {
+        total,
+        passed,
+        failed,
+        percentage: Math.round((passed / total) * 100),
+      },
+      results,
+    };
 
-        // Create download link for complete results
-        const resultsJson = JSON.stringify(resultsData, null, 2);
-        const blob = new Blob([resultsJson], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        
-        let html = `
+    // Create download link for complete results
+    const resultsJson = JSON.stringify(resultsData, null, 2);
+    const blob = new Blob([resultsJson], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    let html = `
             <h2>Test Results</h2>
             <div class="summary">
                 <p>Total Tests: ${total}</p>
-                <p>Passed: ${passed} (${Math.round(passed/total * 100)}%)</p>
+                <p>Passed: ${passed} (${Math.round(
+      (passed / total) * 100
+    )}%)</p>
                 <p>Failed: ${failed}</p>
                 <a href="${url}" download="test_results.json" class="download-btn">
                     Download Test Results
@@ -47,26 +49,28 @@ export class TestResultsDisplay {
                 </tr>
         `;
 
-        for (const testContext of results) {
-            const result = testContext.result;
-            const locationData = locationManager.locations.find(
-                loc => loc.name === testContext.location
-            );
-            
-            html += `
+    for (const testContext of results) {
+      const result = testContext.result;
+      const locationData = locationManager.locations.find(
+        (loc) => loc.name === testContext.location
+      );
+
+      html += `
                 <tr class="${result.passed ? 'pass' : 'fail'}">
                     <td>${testContext.location}</td>
                     <td>${locationData?.region || 'Unknown'}</td>
                     <td>${result.passed ? '✓ PASS' : '❌ FAIL'}</td>
-                    <td>${testContext.expectedAccess ? 'Accessible' : 'Inaccessible'}</td>
+                    <td>${
+                      testContext.expectedAccess ? 'Accessible' : 'Inaccessible'
+                    }</td>
                     <td>${testContext.requiredItems?.join(', ') || 'None'}</td>
                     <td>${testContext.excludedItems?.join(', ') || 'None'}</td>
                     <td>${result.message || 'No details'}</td>
                 </tr>
             `;
-        }
+    }
 
-        html += `</table>
+    html += `</table>
             <style>
                 .summary { margin: 20px 0; }
                 .download-btn {
@@ -93,6 +97,6 @@ export class TestResultsDisplay {
             </style>
         `;
 
-        this.resultsElement.innerHTML = html;
-    }
+    this.resultsElement.innerHTML = html;
+  }
 }

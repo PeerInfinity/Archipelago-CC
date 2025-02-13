@@ -9,6 +9,7 @@ docs/json/development-update.md
 docs/json/archipidle.md
 docs/json/test-runner.md
 docs/json/test-setup.txt
+docs/style.md
 NewDocs/analyzer-debugging-notes.md
 NewDocs/project-notes.txt
 
@@ -33,6 +34,8 @@ worlds/generic/RuleParser/games/base.py
 worlds/generic/RuleParser/games/generic.py
 
 automate_frontend_tests.py
+
+frontend/assets/types/alttp.d.ts
 
 frontend/test_output_rules.json 1 1000
 frontend/test_cases.json

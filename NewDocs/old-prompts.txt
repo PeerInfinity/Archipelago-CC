@@ -124,3 +124,288 @@ If you want to see the contents of other files, please tell me and I will provid
 If you want to add trace messages to the code and look at the output, we can do that.
 
 If you have any other questions, then please ask them.
+
+----
+
+Feb. 12, 2025:
+
+Rewrite the frontend javascript location accessibility logic to match the backend Python location accessibility logic.
+
+The current JavaScript “location accessibility” code does not fully match how the Python backend determines accessibility. The backend uses a region‐by‐region traversal (BFS) where each entrance has an access rule, and a location is reachable if (A) you can traverse from the start region to that region by satisfying each entrance’s rule, and (B) the location’s own rule is satisfied. Meanwhile, the frontend code mostly just checks each location’s region_rules, path_rules, and location.access_rule in isolation, without doing BFS across entrances. That difference sometimes causes mismatches or infinite recursion.
+
+Below are the main points:
+
+How Backend Accessibility Works (Python)
+Region Graph + BFS
+
+The backend has a big graph of regions and entrances. Each entrance’s access_rule must be true for that connection to be usable.
+The logic typically starts from the “Menu” region (or multiple S&Q regions). It does a BFS/DFS:
+For each reachable region, look at every exit/entrance leaving it.
+If that entrance’s access_rule is satisfied by your items, the “connected_region” becomes reachable.
+Repeats until no more new regions become reachable.
+Location Check
+
+Once a region is known reachable, the code also checks the location’s access_rule. If that rule is met, the location is marked accessible.
+This ensures only the BFS path(s) that meet each step’s entrance.access_rule can lead to that region—and thus that location.
+Because BFS never revisits the same region more than once, the backend code naturally avoids infinite loops from cyclical region links.
+
+How the Current Frontend Code Differs
+In the LocationManager (JS):
+
+canReachRegion(regionName, inventory, context) just checks region.rules (if any). If they pass, it says “region is reachable.” It does not do a BFS to see how you get in. It is basically “If the region has no special rule or that rule is satisfied, the region is considered reachable.”
+evaluatePathRules(location, inventory, context) checks a single path_rules object. There is no concept of enumerating every “entrance” from some start region to another.
+As a result, the JS code lumps all the region/entrance checks into (A) “region.rules” and (B) “path_rules,” rather than enumerating each possible path. It never tries “region X → entrance → region Y,” so it may allow or forbid the entire region based on a single rule. If the user sets up complex or multi-entrance logic in Python, the JS code may produce a different result (often “locked forever” or an infinite loop).
+
+Why This Can Cause Infinite Loops
+Because the frontend code calls:
+
+isLocationAccessible → checks region → runs evaluateRule on path_rules → possibly calls isLocationAccessible again on some location in the same chain.
+The partial attempt at cycle detection (context.seenRules) often fails if new rule objects get created or if it’s a different location object referencing the same or nested path.
+Meanwhile, the Python BFS approach never re-checks the same region in the same BFS pass.
+
+How to Match the Backend Logic
+To replicate the backend BFS:
+
+Build a Graph of Regions and Entrances
+
+For each region, track an array of “exits” (the same as the Python region.exits) that point to some other region. Each exit has its own access_rule.
+For “start regions” (like the “Menu” or standard S&Q points), mark them initially reachable.
+Run BFS
+
+Maintain a set of visited (reachable) regions.
+For each region in a queue, check every exit. If that exit’s access_rule is satisfied, add the connected region to the queue (if not visited).
+Continue until no new regions are added.
+Location Access
+
+A location is reachable if (A) its parent region is in the visited set, and (B) the location’s own access_rule is satisfied.
+This BFS approach (with region+entrance pairs) directly matches the Python logic. You can do it each time the inventory changes or re-run it on demand.
+
+Minimal Implementation Outline
+Parse your JSON to build:
+{
+  regionName: {
+    name: regionName,
+    exits: [
+      {
+        targetRegion: "OtherRegion",
+        access_rule: { /* or a function from JSON expansion */ }
+      },
+      ...
+    ],
+    locations: [...],
+    region_rules: optional
+  }
+}
+Mark “Menu” or other start region(s) reachable.
+Use BFS:
+let reachableRegions = new Set(["Menu"]);
+let queue = ["Menu"];
+
+while (queue.length > 0) {
+  let regionName = queue.shift();
+  let regionData = regionMap[regionName];
+  // Possibly also check regionData.region_rules here
+
+  for (let exit of regionData.exits) {
+    if (evaluateRule(exit.access_rule, inventory, context)) {
+      if (!reachableRegions.has(exit.targetRegion)) {
+        reachableRegions.add(exit.targetRegion);
+        queue.push(exit.targetRegion);
+      }
+    }
+  }
+}
+After BFS: For each region in reachableRegions, check its location rules. If the location’s rule passes, that location is accessible.
+This is exactly how the Python code works under the hood.
+
+Conclusion
+They are not the same. The JS code does a single “region rule check” plus location.path_rules, ignoring BFS across multiple entrances.
+To fully match the Python logic, you must implement a BFS (or DFS) from some start region, checking each entrance’s access_rule. Only if you can chain from “Menu” to the location’s region through valid entrances is that region reachable, and then the location’s own rule must also pass.
+That BFS approach will both:
+
+Avoid infinite loops (once a region is visited, we do not re-visit in the same pass).
+Match the Python backend’s location accessibility logic 1:1.
+That is the recommended fix if you want consistent results with the Python rules.
+
+
+
+Below is a reference implementation of a BFS‐based accessibility check for the frontend. It follows the same region + entrance approach that the backend uses in Python, ensuring consistent accessibility results. The high‐level steps are:
+
+Build a Region Graph from your JSON.
+Run BFS from one or more “start” regions (like "Menu").
+Check each entrance.access_rule during BFS. Only add newly‐reachable regions if the rule passes given the current inventory.
+Mark each location in reachable regions as accessible if that location’s own access_rule is satisfied.
+Below, I’ll assume:
+
+You have a regions structure in your JSON. (If your JSON lumps them under locations["1"] or something similar, you’ll need to adapt.)
+Each region has:
+name (string)
+region_rule (optional rule object; if present, the region is only “fully reachable” if it passes)
+exits: array of objects like { "target": "OtherRegionName", "access_rule": { ... } }
+locations: array of objects like { "name": "Location Name", "access_rule": { ... }, "item": {...} }
+You already have a evaluateRule(rule, inventory, context?) -> boolean function (like in ruleEngine.js).
+You want a function that computes a set of accessible locations for your current inventory and then updates your UI accordingly.
+Example Code
+Below is an example updateAccessibility() method you might add in a new or existing class/module. You’ll see references to:
+
+this.regionMap: an object mapping regionName → regionData.
+this.evaluateRule(...): a function that interprets the JSON rule structure with your inventory.
+/**
+ * Perform BFS over the region graph, update which locations are accessible,
+ * and store them in `this.accessibleLocations`.
+ *
+ * @param {object} inventory - current inventory object
+ * @returns {Set<string>} - set of location names that are accessible
+ */
+updateAccessibility(inventory) {
+    // 1. Initialize BFS structures
+    const reachableRegions = new Set();
+    const queue = [];
+
+    // 2. Identify start region(s). In the backend,
+    //    you typically start from "Menu" (or multiple S+Q regions).
+    //    Adapt as needed if you have multiple starts:
+    const startRegionName = "Menu"; // or "Sanctuary" etc.
+
+    // 3. Check if start region is valid. If the region has a region_rule, we must pass it.
+    const startRegion = this.regionMap[startRegionName];
+    if (!startRegion) {
+        console.warn(`No start region named "${startRegionName}" found in regionMap`);
+        return new Set();
+    }
+
+    // If there's a region_rule, check it:
+    if (!startRegion.region_rule ||
+        this.evaluateRule(startRegion.region_rule, inventory)) {
+        reachableRegions.add(startRegionName);
+        queue.push(startRegionName);
+    }
+
+    // 4. BFS
+    while (queue.length > 0) {
+        const currentRegionName = queue.shift();
+        const currentRegion = this.regionMap[currentRegionName];
+        if (!currentRegion) {
+            // Shouldn't happen if your data is consistent
+            continue;
+        }
+
+        // If the region has a region_rule, we only consider it fully "traversable" if we pass that rule
+        // (We already checked it above for the start region, but you can re-check if you'd like.)
+        // if (currentRegion.region_rule && !this.evaluateRule(currentRegion.region_rule, inventory)) {
+        //     continue;
+        // }
+
+        // For each exit, see if we can travel to its target region
+        for (const exitObj of currentRegion.exits || []) {
+            const targetRegionName = exitObj.target;
+            const canTraverse = this.evaluateRule(exitObj.access_rule, inventory);
+
+            if (canTraverse && !reachableRegions.has(targetRegionName)) {
+                // If we haven't visited that region yet, add it to BFS
+                reachableRegions.add(targetRegionName);
+                queue.push(targetRegionName);
+            }
+        }
+    }
+
+    // 5. Now that we know which regions are reachable, check each region’s locations
+    const newlyAccessibleLocations = new Set();
+    for (const regionName of reachableRegions) {
+        const region = this.regionMap[regionName];
+        if (!region) continue;
+
+        for (const loc of region.locations || []) {
+            // Evaluate the location’s own access_rule
+            const hasAccess = !loc.access_rule 
+                || this.evaluateRule(loc.access_rule, inventory);
+
+            if (hasAccess) {
+                newlyAccessibleLocations.add(loc.name);
+            }
+        }
+    }
+
+    // 6. Save or return the set of accessible location names
+    this.accessibleLocations = newlyAccessibleLocations;
+    return newlyAccessibleLocations;
+}
+Example of regionMap structure
+You need to build this.regionMap from your JSON. Suppose your JSON looks something like:
+
+{
+  "regions": {
+    "Menu": {
+      "name": "Menu",
+      "region_rule": null,
+      "exits": [
+        {
+          "target": "Hyrule Castle",
+          "access_rule": { "type": "constant", "value": true }
+        }
+      ],
+      "locations": []
+    },
+    "Hyrule Castle": {
+      "name": "Hyrule Castle",
+      "region_rule": null,
+      "exits": [
+        {
+          "target": "Sewers",
+          "access_rule": { "type": "helper", "name": "can_lift_rocks" }
+        }
+      ],
+      "locations": [
+        {
+          "name": "Link's Uncle",
+          "access_rule": { "type": "constant", "value": true }
+        },
+        {
+          "name": "Secret Passage",
+          "access_rule": { "type": "constant", "value": true }
+        }
+      ]
+    },
+    ...
+  }
+}
+You’d parse that into memory and store in this.regionMap = jsonData.regions;, or transform it if your format differs. Then updateAccessibility() uses it directly.
+
+Evaluate Rule Function
+You already have a evaluateRule(rule, inventory, context) from your ruleEngine.js. If needed, pass it the BFS “context” too. (Often, BFS is simpler because you don’t need to do the big path-based recursion; BFS itself is your path check.)
+
+Key advantage: BFS does not repeatedly re-check the same region’s rule a million times or get stuck in cycles. As soon as we mark a region visited, we skip it in future expansions. That matches the backend’s logic and also avoids infinite recursion.
+
+Usage Example
+You might do:
+
+// Suppose the user just changed their inventory (picked up Bombs, etc.)
+const accessibleLocations = this.updateAccessibility(myCurrentInventory);
+
+// You can then do something to update the UI, e.g. highlight newly accessible locations
+this.renderLocationsUI(accessibleLocations);
+Summary
+This BFS approach:
+
+Matches the Python logic of region connectivity plus location access checks.
+Prevents infinite loops naturally (once a region is visited, it’s not re‐queued).
+Lets you store a final set of “accessible location names.”
+If you have multiple start regions (like “Menu” plus “Sanctuary” in standard mode), just push them all onto queue initially (if their region rules pass). Everything else stays the same.
+
+Feel free to request any clarifications or adapt the code as needed for your JSON format.
+
+----
+
+Examine the code.
+
+Examine how the Python code determines which locations are accessible.  This logic is mainly in test/bases.py
+
+Examine the data exported by worlds/generic/RuleParser/exporter.py
+
+Also examine the typescript file frontend/assets/types/alttp.d.ts
+
+Determine whether exporter.py currently exports all of the data that is required for the javascript frontend to implement the same location accessibility logic as the Python backend.
+
+If there is data missing, then describe the data that is missing, and write an updated version of the data export code.
+
+If there is no data missing, then describe the changes that need to be made to the javascript frontend, to make it use the same location accessibility logic as the Python backend.

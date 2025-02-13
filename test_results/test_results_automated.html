@@ -28,9 +28,9 @@
             <h2>Test Results</h2>
             <div class="summary">
                 <p>Total Tests: 155</p>
-                <p>Passed: 132 (85%)</p>
-                <p>Failed: 23</p>
-                <a href="blob:http://localhost:8000/e31aa0c6-8877-4560-9770-8fa82e0fe927" download="test_results.json" class="download-btn">
+                <p>Passed: 117 (75%)</p>
+                <p>Failed: 38</p>
+                <a href="blob:http://localhost:8000/1e911633-dc99-47fc-9e02-0d0cc8ab8384" download="test_results.json" class="download-btn">
                     Download Test Results
                 </a>
             </div>
@@ -136,14 +136,14 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>King's Tomb</td>
                     <td>Kings Grave</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Pegasus Boots, Progressive Glove, Progressive Glove</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Location accessible without required item: Progressive Glove</td>
                 </tr>
             
                 <tr class="fail">
@@ -153,7 +153,7 @@
                     <td>Accessible</td>
                     <td>Pegasus Boots, Progressive Glove, Hammer, Moon Pearl, Magic Mirror</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Progressive Glove</td>
                 </tr>
             
                 <tr class="fail">
@@ -163,7 +163,7 @@
                     <td>Accessible</td>
                     <td>Pegasus Boots, Beat Agahnim 1, Progressive Glove, Hookshot, Moon Pearl, Magic Mirror</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Beat Agahnim 1</td>
                 </tr>
             
                 <tr class="fail">
@@ -173,7 +173,7 @@
                     <td>Accessible</td>
                     <td>Pegasus Boots, Beat Agahnim 1, Hammer, Hookshot, Moon Pearl, Magic Mirror</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Beat Agahnim 1</td>
                 </tr>
             
                 <tr class="fail">
@@ -183,7 +183,7 @@
                     <td>Accessible</td>
                     <td>Pegasus Boots, Beat Agahnim 1, Flippers, Hookshot, Moon Pearl, Magic Mirror</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Beat Agahnim 1</td>
                 </tr>
             
                 <tr class="pass">
@@ -586,14 +586,14 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Bottle Merchant</td>
                     <td>Light World</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>None</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Expected: true, Got: false</td>
                 </tr>
             
                 <tr class="pass">
@@ -676,14 +676,14 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Magic Bat</td>
                     <td>Bat Cave (right)</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Magic Powder, Hammer</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Location accessible without required item: Hammer</td>
                 </tr>
             
                 <tr class="fail">
@@ -693,7 +693,7 @@
                     <td>Accessible</td>
                     <td>Magic Powder, Progressive Glove, Progressive Glove, Moon Pearl, Magic Mirror</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Progressive Glove</td>
                 </tr>
             
                 <tr class="pass">
@@ -1006,34 +1006,34 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Cave 45</td>
                     <td>Cave 45</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Inaccessible</td>
                     <td>None</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Expected: false, Got: true</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Cave 45</td>
                     <td>Cave 45</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Inaccessible</td>
                     <td>None</td>
                     <td>Magic Mirror</td>
-                    <td>Test passed</td>
+                    <td>Expected: false, Got: true</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Cave 45</td>
                     <td>Cave 45</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Inaccessible</td>
                     <td>None</td>
                     <td>Moon Pearl</td>
-                    <td>Test passed</td>
+                    <td>Expected: false, Got: true</td>
                 </tr>
             
                 <tr class="fail">
@@ -1043,17 +1043,17 @@
                     <td>Accessible</td>
                     <td>Moon Pearl, Magic Mirror, Progressive Glove, Progressive Glove</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Cave 45</td>
                     <td>Cave 45</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Moon Pearl, Magic Mirror, Progressive Glove, Hammer</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="fail">
@@ -1063,7 +1063,7 @@
                     <td>Accessible</td>
                     <td>Moon Pearl, Magic Mirror, Beat Agahnim 1, Hammer</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="fail">
@@ -1073,7 +1073,7 @@
                     <td>Accessible</td>
                     <td>Moon Pearl, Magic Mirror, Beat Agahnim 1, Progressive Glove, Hookshot</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="fail">
@@ -1083,7 +1083,7 @@
                     <td>Accessible</td>
                     <td>Moon Pearl, Magic Mirror, Beat Agahnim 1, Flippers, Hookshot</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="pass">
@@ -1126,24 +1126,24 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Graveyard Cave</td>
                     <td>Graveyard Cave</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Bomb Upgrade (+5), Moon Pearl, Magic Mirror, Progressive Glove, Progressive Glove</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Graveyard Cave</td>
                     <td>Graveyard Cave</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Bomb Upgrade (+5), Moon Pearl, Magic Mirror, Progressive Glove, Hammer</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="fail">
@@ -1153,7 +1153,7 @@
                     <td>Accessible</td>
                     <td>Bomb Upgrade (+5), Moon Pearl, Magic Mirror, Beat Agahnim 1, Hammer, Hookshot</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="fail">
@@ -1163,7 +1163,7 @@
                     <td>Accessible</td>
                     <td>Bomb Upgrade (+5), Moon Pearl, Magic Mirror, Beat Agahnim 1, Progressive Glove, Hookshot</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="fail">
@@ -1173,7 +1173,7 @@
                     <td>Accessible</td>
                     <td>Bomb Upgrade (+5), Moon Pearl, Magic Mirror, Beat Agahnim 1, Flippers, Hookshot</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Moon Pearl</td>
                 </tr>
             
                 <tr class="pass">
@@ -1223,7 +1223,7 @@
                     <td>Accessible</td>
                     <td>Flute, Magic Mirror, Progressive Glove, Progressive Glove</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Flute</td>
                 </tr>
             
                 <tr class="pass">
@@ -1256,14 +1256,14 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Mushroom</td>
                     <td>Light World</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>None</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Expected: true, Got: false</td>
                 </tr>
             
                 <tr class="pass">
@@ -1316,24 +1316,24 @@
                     <td>Expected: true, Got: false</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Maze Race</td>
                     <td>Maze Race Ledge</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Bomb Upgrade (+5)</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Expected: true, Got: false</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Maze Race</td>
                     <td>Maze Race Ledge</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Pegasus Boots</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Expected: true, Got: false</td>
                 </tr>
             
                 <tr class="pass">
@@ -1376,14 +1376,14 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Desert Ledge</td>
                     <td>Desert Ledge</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Book of Mudora</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Expected: true, Got: false</td>
                 </tr>
             
                 <tr class="fail">
@@ -1393,7 +1393,7 @@
                     <td>Accessible</td>
                     <td>Flute, Magic Mirror, Progressive Glove, Progressive Glove</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Flute</td>
                 </tr>
             
                 <tr class="pass">
@@ -1443,17 +1443,17 @@
                     <td>Accessible</td>
                     <td>Flippers, Moon Pearl, Magic Mirror, Progressive Glove, Progressive Glove</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Progressive Glove</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Lake Hylia Island</td>
                     <td>Lake Hylia Island</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Flippers, Moon Pearl, Magic Mirror, Progressive Glove, Hammer</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Location accessible without required item: Progressive Glove</td>
                 </tr>
             
                 <tr class="fail">
@@ -1463,7 +1463,7 @@
                     <td>Accessible</td>
                     <td>Flippers, Moon Pearl, Magic Mirror, Beat Agahnim 1</td>
                     <td>None</td>
-                    <td>Expected: true, Got: false</td>
+                    <td>Location accessible without required item: Beat Agahnim 1</td>
                 </tr>
             
                 <tr class="fail">
@@ -1526,14 +1526,14 @@
                     <td>Test passed</td>
                 </tr>
             
-                <tr class="pass">
+                <tr class="fail">
                     <td>Flute Spot</td>
                     <td>Light World</td>
-                    <td>✓ PASS</td>
+                    <td>❌ FAIL</td>
                     <td>Accessible</td>
                     <td>Shovel</td>
                     <td>None</td>
-                    <td>Test passed</td>
+                    <td>Expected: true, Got: false</td>
                 </tr>
             
                 <tr class="pass">
