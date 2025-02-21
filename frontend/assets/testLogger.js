@@ -3,7 +3,7 @@ export class TestLogger {
   static MAX_LOGS_PER_TEST = 1000; // Limit logs per test
   static MAX_LOG_LENGTH = 500; // Limit individual log length
   static enableFileSaving = false;
-  static enableDebugLogging = true;
+  static enableDebugLogging = false;
 
   constructor() {
     this.logs = [];

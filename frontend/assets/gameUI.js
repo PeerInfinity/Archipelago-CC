@@ -2,7 +2,7 @@
 
 import { ALTTPInventory } from './games/alttp/inventory.js';
 import { ALTTPState } from './games/alttp/state.js';
-import { LocationManager } from './locationManager.js';
+import locationManager from './locationManagerSingleton.js';
 import { LocationUI } from './locationUI.js';
 import { RegionUI } from './regionUI.js';
 
@@ -169,6 +169,7 @@ export class GameUI {
       );
     }
 
+    locationManager.invalidateCache(); // Invalidate cache when an item is added
     this.updateViewDisplay();
   }
 

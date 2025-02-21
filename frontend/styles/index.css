@@ -115,6 +115,7 @@ body {
   background: #2d2d2d;
   border-bottom: 1px solid #cecece;
   flex-shrink: 0;
+  color: #cecece;
 }
 
 .sidebar-header h2 {
@@ -264,6 +265,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 0.5rem;
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
 /* Location Cards */

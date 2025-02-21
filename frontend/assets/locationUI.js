@@ -1,17 +1,18 @@
 // locationUI.js
-import { LocationManager } from './locationManager.js';
+import locationManager from './locationManagerSingleton.js';
+import { evaluateRule } from './ruleEngine.js';
 
 export class LocationUI {
   constructor(gameUI) {
     this.gameUI = gameUI;
     this.checkedLocations = new Set();
-    this.locationManager = new LocationManager();
+    this.columns = 2; // Default number of columns
 
     this.attachEventListeners();
   }
 
   initialize(jsonData) {
-    this.locationManager.loadFromJSON(jsonData);
+    locationManager.loadFromJSON(jsonData);
     this.updateLocationDisplay();
   }
 
@@ -71,6 +72,19 @@ export class LocationUI {
           }
         }
       });
+
+    // Column adjustment buttons
+    document
+      .getElementById('increase-columns')
+      ?.addEventListener('click', () => this.changeColumns(1));
+    document
+      .getElementById('decrease-columns')
+      ?.addEventListener('click', () => this.changeColumns(-1));
+  }
+
+  changeColumns(delta) {
+    this.columns = Math.max(1, this.columns + delta); // Ensure at least 1 column
+    this.updateLocationDisplay();
   }
 
   handleLocationClick(location) {
@@ -78,7 +92,7 @@ export class LocationUI {
       return;
     }
 
-    const isAccessible = this.locationManager.isLocationAccessible(
+    const isAccessible = locationManager.isLocationAccessible(
       location,
       this.gameUI.inventory
     );
@@ -90,6 +104,7 @@ export class LocationUI {
     if (location.item) {
       this.gameUI.toggleItem(location.item.name);
       this.checkedLocations.add(location.name);
+      locationManager.invalidateCache(); // Invalidate cache when an item is added
       this.updateLocationDisplay();
       this.showLocationDetails(location);
 
@@ -109,18 +124,19 @@ export class LocationUI {
     const showHighlights = document.getElementById('show-highlights').checked;
     const sorting = document.getElementById('sort-select').value;
 
-    const locations = this.locationManager.getProcessedLocations(
+    const locations = locationManager.getProcessedLocations(
       this.gameUI.inventory,
       sorting,
       showReachable,
       showUnreachable
     );
 
-    const newlyReachable = this.locationManager.getNewlyReachableLocations(
+    const newlyReachable = locationManager.getNewlyReachableLocations(
       this.gameUI.inventory
     );
 
     const locationsGrid = document.getElementById('locations-grid');
+    locationsGrid.style.gridTemplateColumns = `repeat(${this.columns}, minmax(0, 1fr))`; // Set the number of columns
 
     if (locations.length === 0) {
       locationsGrid.innerHTML = `
@@ -136,9 +152,51 @@ export class LocationUI {
       return isChecked ? showChecked : true;
     });
 
+    if (sorting === 'accessibility') {
+      filteredLocations.sort((a, b) => {
+        const aRegionAccessible = locationManager.isRegionReachable(
+          a.region,
+          this.gameUI.inventory
+        );
+        const bRegionAccessible = locationManager.isRegionReachable(
+          b.region,
+          this.gameUI.inventory
+        );
+
+        const aLocationAccessible = locationManager.isLocationAccessible(
+          a,
+          this.gameUI.inventory
+        );
+        const bLocationAccessible = locationManager.isLocationAccessible(
+          b,
+          this.gameUI.inventory
+        );
+
+        if (aLocationAccessible && bLocationAccessible) {
+          return 0;
+        } else if (aLocationAccessible) {
+          return -1;
+        } else if (bLocationAccessible) {
+          return 1;
+        } else if (aRegionAccessible && bRegionAccessible) {
+          return 0;
+        } else if (aRegionAccessible) {
+          return -1;
+        } else if (bRegionAccessible) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    }
+
     locationsGrid.innerHTML = filteredLocations
       .map((location) => {
-        const isAccessible = this.locationManager.isLocationAccessible(
+        const isRegionAccessible = locationManager.isRegionReachable(
+          location.region,
+          this.gameUI.inventory
+        );
+        const isLocationAccessible = locationManager.isLocationAccessible(
           location,
           this.gameUI.inventory
         );
@@ -151,7 +209,7 @@ export class LocationUI {
           ? 'checked'
           : isNewlyReachable
           ? 'newly-reachable'
-          : isAccessible
+          : isLocationAccessible
           ? 'reachable'
           : 'unreachable';
 
@@ -164,11 +222,23 @@ export class LocationUI {
                 >
                     <div class="font-medium">${location.name}</div>
                     <div class="text-sm">Player ${location.player}</div>
+                    <div class="text-sm" style="color: ${
+                      isRegionAccessible ? 'inherit' : 'red'
+                    }">
+                        Region: ${
+                          isRegionAccessible ? 'Accessible' : 'Inaccessible'
+                        }
+                    </div>
+                    <div class="text-sm">
+                        Location: ${
+                          this.renderLogicTree(location.access_rule).outerHTML
+                        }
+                    </div>
                     <div class="text-sm">
                         ${
                           isChecked
                             ? 'Checked'
-                            : isAccessible
+                            : isLocationAccessible
                             ? 'Available'
                             : 'Locked'
                         }
@@ -177,6 +247,70 @@ export class LocationUI {
             `;
       })
       .join('');
+  }
+
+  renderLogicTree(rule) {
+    const root = document.createElement('div');
+    root.classList.add('logic-node');
+
+    if (!rule) {
+      root.textContent = '(no rule)';
+      return root;
+    }
+
+    const result = evaluateRule(rule, this.gameUI.inventory);
+    root.classList.toggle('pass', !!result);
+    root.classList.toggle('fail', !result);
+
+    const label = document.createElement('div');
+    label.classList.add('logic-label');
+    label.textContent = `Type: ${rule.type}`;
+    root.appendChild(label);
+
+    switch (rule.type) {
+      case 'constant':
+        root.appendChild(document.createTextNode(` value: ${rule.value}`));
+        break;
+      case 'item_check':
+        root.appendChild(document.createTextNode(` item: ${rule.item}`));
+        break;
+      case 'count_check':
+        root.appendChild(
+          document.createTextNode(` ${rule.item} >= ${rule.count}`)
+        );
+        break;
+      case 'group_check':
+        root.appendChild(document.createTextNode(` group: ${rule.group}`));
+        break;
+      case 'helper':
+        root.appendChild(
+          document.createTextNode(
+            ` helper: ${rule.name}, args: ${JSON.stringify(rule.args)}`
+          )
+        );
+        break;
+      case 'and':
+      case 'or': {
+        const ul = document.createElement('ul');
+        rule.conditions.forEach((cond) => {
+          const li = document.createElement('li');
+          li.appendChild(this.renderLogicTree(cond));
+          ul.appendChild(li);
+        });
+        root.appendChild(ul);
+        break;
+      }
+      case 'state_method':
+        root.appendChild(
+          document.createTextNode(
+            ` method: ${rule.method}, args: ${JSON.stringify(rule.args)}`
+          )
+        );
+        break;
+      default:
+        root.appendChild(document.createTextNode(' [unhandled rule type] '));
+    }
+    return root;
   }
 
   showLocationDetails(location) {
@@ -213,7 +347,7 @@ export class LocationUI {
                     ${
                       this.checkedLocations.has(location.name)
                         ? 'Checked'
-                        : this.locationManager.isLocationAccessible(
+                        : locationManager.isLocationAccessible(
                             location,
                             this.gameUI.inventory
                           )

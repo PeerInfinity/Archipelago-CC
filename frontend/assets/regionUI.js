@@ -1,4 +1,5 @@
 // regionUI.js
+import locationManager from './locationManagerSingleton.js';
 import { evaluateRule } from './ruleEngine.js';
 
 export class RegionUI {
@@ -29,12 +30,27 @@ export class RegionUI {
         this.renderAllRegions();
       });
     }
+
+    const expandCollapseAllButton = document.getElementById(
+      'expand-collapse-all'
+    );
+    if (expandCollapseAllButton) {
+      expandCollapseAllButton.addEventListener('click', () => {
+        if (expandCollapseAllButton.textContent === 'Expand All') {
+          this.expandAllRegions();
+          expandCollapseAllButton.textContent = 'Collapse All';
+        } else {
+          this.collapseAllRegions();
+          expandCollapseAllButton.textContent = 'Expand All';
+        }
+      });
+    }
   }
 
   initialize(regionData) {
     this.regionData = regionData;
     this.log(`RegionUI: Loaded ${Object.keys(regionData).length} regions.`);
-    this.showStartRegion('Links House');
+    this.showStartRegion('Menu');
   }
 
   clear() {
@@ -111,6 +127,52 @@ export class RegionUI {
     this.renderAllRegions();
   }
 
+  expandAllRegions() {
+    if (this.showAll) {
+      Object.keys(this.regionData).forEach((regionName, index) => {
+        const uid = `all_${index}`;
+        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+        if (regionObj) {
+          regionObj.expanded = true;
+        } else {
+          this.visitedRegions.push({
+            name: regionName,
+            expanded: true,
+            uid: uid,
+          });
+        }
+      });
+    } else {
+      this.visitedRegions.forEach((region) => {
+        region.expanded = true;
+      });
+    }
+    this.renderAllRegions();
+  }
+
+  collapseAllRegions() {
+    if (this.showAll) {
+      Object.keys(this.regionData).forEach((regionName, index) => {
+        const uid = `all_${index}`;
+        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+        if (regionObj) {
+          regionObj.expanded = false;
+        } else {
+          this.visitedRegions.push({
+            name: regionName,
+            expanded: false,
+            uid: uid,
+          });
+        }
+      });
+    } else {
+      this.visitedRegions.forEach((region) => {
+        region.expanded = false;
+      });
+    }
+    this.renderAllRegions();
+  }
+
   renderAllRegions() {
     const container = document.getElementById('regions-panel');
     if (!container) {
@@ -124,7 +186,8 @@ export class RegionUI {
       Object.keys(this.regionData).forEach((regionName, index) => {
         const rData = this.regionData[regionName];
         const uid = `all_${index}`; // or any stable unique key
-        const expanded = true; // expand all by default
+        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+        const expanded = regionObj ? regionObj.expanded : true; // expand all by default
         const regionBlock = this.buildRegionBlock(
           rData,
           regionName,
@@ -157,13 +220,21 @@ export class RegionUI {
     regionBlock.dataset.uid = uid;
     regionBlock.classList.add(expanded ? 'expanded' : 'collapsed');
 
+    // Check if the region is accessible
+    const isAccessible = locationManager.isRegionReachable(
+      regionName,
+      this.gameUI.inventory
+    );
+
     // Header
     const headerEl = document.createElement('div');
     headerEl.classList.add('region-header');
     const regionLabel = regionName + this._suffixIfDuplicate(regionName, uid);
 
     headerEl.innerHTML = `
-            <span class="region-name">${regionLabel}</span>
+            <span class="region-name" style="color: ${
+              isAccessible ? 'inherit' : 'red'
+            }">${regionLabel}</span>
             <button class="collapse-btn">${
               expanded ? 'Collapse' : 'Expand'
             }</button>

@@ -10,6 +10,9 @@ export class LocationManager {
     this.settings = null;
     this.startRegions = null;
     this.eventLocations = new Map(); // name -> location
+    this.knownReachableRegions = new Set();
+    this.knownUnreachableRegions = new Set();
+    this.cacheValid = false;
   }
 
   loadFromJSON(jsonData) {
@@ -44,11 +47,24 @@ export class LocationManager {
         }
       });
     });
+
+    // Invalidate cache
+    this.invalidateCache();
+  }
+
+  invalidateCache() {
+    this.cacheValid = false;
+    this.knownReachableRegions.clear();
+    this.knownUnreachableRegions.clear();
   }
 
   computeReachableRegions(inventory) {
+    if (this.cacheValid) {
+      return this.knownReachableRegions;
+    }
+
     let newEventCollected = true;
-    let finalReachableRegions = new Set();
+    let finalReachableRegions = new Set(this.knownReachableRegions);
 
     // Repeat BFS until stable
     while (newEventCollected) {
@@ -77,8 +93,22 @@ export class LocationManager {
         }
       }
 
-      finalReachableRegions = reachableSet;
+      finalReachableRegions = new Set([
+        ...finalReachableRegions,
+        ...reachableSet,
+      ]);
     }
+
+    // Update known reachable and unreachable regions
+    this.knownReachableRegions = finalReachableRegions;
+    this.knownUnreachableRegions = new Set(
+      Object.keys(this.regions).filter(
+        (region) => !finalReachableRegions.has(region)
+      )
+    );
+
+    // Cache the result
+    this.cacheValid = true;
 
     // Return the final stable set of reachable regions
     return finalReachableRegions;

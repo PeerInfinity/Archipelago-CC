@@ -246,7 +246,7 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                                 'reverse': getattr(entrance.reverse, 'name', None) if hasattr(entrance, 'reverse') else None,
                                 'assumed': getattr(entrance, 'assumed', False),
                                 'type': getattr(entrance, 'type', 'Entrance'),
-                                'addresses': getattr(entrance, 'addresses', None)
+                                #'addresses': getattr(entrance, 'addresses', None)
                             }
                             region_data['entrances'].append(entrance_data)
                             logger.debug(f"Successfully processed entrance: {entrance_data['name']}")
@@ -276,7 +276,7 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                         try:
                             location_data = {
                                 'name': getattr(location, 'name', None),
-                                'address': getattr(location, 'address', None),
+                                #'address': getattr(location, 'address', None),
                                 'crystal': getattr(location, 'crystal', None),
                                 'access_rule': safe_expand_rule(helper_expander, getattr(location, 'access_rule', None)),
                                 'item_rule': safe_expand_rule(helper_expander, getattr(location, 'item_rule', None)),
