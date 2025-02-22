@@ -26,6 +26,25 @@ export class StateManager {
     this.mode = null;
     this.settings = null;
     this.startRegions = null;
+
+    // Item collection callbacks
+    this.itemCollectionCallbacks = new Set();
+  }
+
+  /**
+   * Registers a callback to be notified when items are collected
+   * @param {function(string, number)} callback Function to call with (itemName, count)
+   */
+  addItemCollectionCallback(callback) {
+    this.itemCollectionCallbacks.add(callback);
+  }
+
+  /**
+   * Removes a previously registered item collection callback
+   * @param {function} callback The callback to remove
+   */
+  removeItemCollectionCallback(callback) {
+    this.itemCollectionCallbacks.delete(callback);
   }
 
   /**
@@ -74,6 +93,8 @@ export class StateManager {
     this.startRegions = jsonData.start_regions?.['1'];
     this.locations = [];
     this.eventLocations.clear();
+
+    // Process locations and events
     Object.values(this.regions).forEach((region) => {
       region.locations.forEach((loc) => {
         const locationData = {
@@ -87,7 +108,11 @@ export class StateManager {
         }
       });
     });
+
     this.invalidateCache();
+
+    // Immediately compute reachable regions to collect initial events
+    this.computeReachableRegions(this.inventory);
   }
 
   invalidateCache() {
@@ -119,7 +144,9 @@ export class StateManager {
           const canAccessLoc = evaluateRule(loc.access_rule, inventory);
           if (canAccessLoc && !inventory.has(loc.item.name)) {
             this.addItemToInventory(loc.item.name);
-            console.log(`Collected event item: ${loc.item.name}`);
+            this.itemCollectionCallbacks.forEach((callback) =>
+              callback(loc.item.name, this.getItemCount(loc.item.name))
+            );
             newEventCollected = true;
           }
         }

@@ -2,6 +2,7 @@
 
 import { LocationUI } from './locationUI.js';
 import { RegionUI } from './regionUI.js';
+import { InventoryUI } from './inventoryUI.js';
 import stateManager from './stateManagerSingleton.js';
 
 export class GameUI {
@@ -9,11 +10,11 @@ export class GameUI {
     // UI Managers
     this.locationUI = new LocationUI(this);
     this.regionUI = new RegionUI(this);
+    this.inventoryUI = new InventoryUI(this);
 
     // Game state
     this.currentViewMode = 'locations';
     this.debugMode = false;
-    this.itemData = null;
     this.regions = {};
     this.mode = null;
     this.settings = null;
@@ -37,56 +38,11 @@ export class GameUI {
 
     const player1Items = jsonData.items['1'];
     const groups = jsonData.item_groups['1'];
-    this.itemData = player1Items;
-
-    // Initialize inventory UI
-    this.initializeInventoryUI(player1Items, groups);
 
     // Initialize view-specific UIs
+    this.inventoryUI.initialize(player1Items, groups);
     this.locationUI.initialize(jsonData);
     this.regionUI.initialize(jsonData.regions['1']);
-  }
-
-  initializeInventoryUI(itemData, groups) {
-    const inventoryContainer = document.getElementById('inventory-groups');
-    inventoryContainer.innerHTML = '';
-
-    groups.sort();
-
-    groups.forEach((group) => {
-      const groupItems = Object.entries(itemData)
-        .filter(([_, data]) => data.groups.includes(group))
-        .sort(([a], [b]) => a.localeCompare(b));
-
-      const groupDiv = document.createElement('div');
-      groupDiv.className = 'inventory-group';
-      groupDiv.innerHTML = `
-                <h3>${group}</h3>
-                <div class="inventory-items">
-                    ${groupItems
-                      .map(
-                        ([name, data]) => `
-                        <div class="item-container">
-                            <button 
-                                class="item-button" 
-                                data-item="${name}"
-                                title="${name}"
-                                data-advancement="${data.advancement}"
-                                data-priority="${data.priority}"
-                                data-useful="${data.useful}"
-                            >
-                                ${name}
-                            </button>
-                        </div>
-                    `
-                      )
-                      .join('')}
-                </div>
-            `;
-      inventoryContainer.appendChild(groupDiv);
-    });
-
-    this.attachItemEventListeners();
   }
 
   attachEventListeners() {
@@ -115,54 +71,44 @@ export class GameUI {
     });
   }
 
-  attachItemEventListeners() {
-    document.querySelectorAll('.item-button').forEach((button) => {
-      button.addEventListener('click', () => {
-        const itemName = button.dataset.item;
-        this.toggleItem(itemName);
-      });
-    });
+  clearExistingData() {
+    stateManager.clearInventory();
+
+    // Clear UI elements
+    this.inventoryUI.clear();
+    this.locationUI.clear();
+    this.regionUI.clear();
   }
 
-  toggleItem(itemName) {
-    if (!this.itemData || !this.itemData[itemName]) return;
+  updateViewDisplay() {
+    const locationsContainer = document.getElementById('locations-grid');
+    const regionsContainer = document.getElementById('regions-panel');
 
-    const currentCount = stateManager.getItemCount(itemName);
-
-    const buttons = document.querySelectorAll(`[data-item="${itemName}"]`);
-    const containers = Array.from(buttons).map((button) =>
-      button.closest('.item-container')
-    );
-
-    stateManager.addItemToInventory(itemName);
-
-    buttons.forEach((button) => button.classList.add('active'));
-
-    containers.forEach((container) => {
-      let countBadge = container.querySelector('.count-badge');
-      if (!countBadge) {
-        countBadge = document.createElement('div');
-        countBadge.className = 'count-badge';
-        container.appendChild(countBadge);
-      }
-
-      if (currentCount + 1 > 1) {
-        countBadge.textContent = currentCount + 1;
-        countBadge.style.display = 'flex';
-      } else {
-        countBadge.style.display = 'none';
-      }
-    });
-
-    if (window.consoleManager) {
-      window.consoleManager.print(
-        `${itemName} count: ${currentCount + 1}`,
-        'info'
-      );
+    if (!locationsContainer || !regionsContainer) {
+      console.warn('Missing container elements for toggling views.');
+      return;
     }
 
-    locationManager.invalidateCache(); // Invalidate cache when an item is added
-    this.updateViewDisplay();
+    // Toggle view containers
+    if (this.currentViewMode === 'locations') {
+      locationsContainer.style.display = 'grid';
+      regionsContainer.style.display = 'none';
+
+      // Show location controls, hide region controls
+      document.querySelector('.location-controls').style.display = 'flex';
+      document.querySelector('.region-controls').style.display = 'none';
+
+      this.locationUI.update();
+    } else {
+      locationsContainer.style.display = 'none';
+      regionsContainer.style.display = 'block';
+
+      // Show region controls, hide location controls
+      document.querySelector('.location-controls').style.display = 'none';
+      document.querySelector('.region-controls').style.display = 'flex';
+
+      this.regionUI.update();
+    }
   }
 
   async loadDefaultRules() {
@@ -198,67 +144,6 @@ export class GameUI {
           'error'
         );
       }
-    }
-  }
-
-  setViewMode(mode) {
-    this.currentViewMode = mode;
-    this.updateViewDisplay();
-  }
-
-  clearExistingData() {
-    stateManager.clearInventory();
-
-    // Clear UI elements
-    document.querySelectorAll('.item-button').forEach((button) => {
-      button.classList.remove('active');
-      const countBadge = button
-        .closest('.item-container')
-        ?.querySelector('.count-badge');
-      if (countBadge) {
-        countBadge.style.display = 'none';
-      }
-    });
-
-    // Clear UI containers
-    ['inventory-groups', 'locations-grid', 'regions-panel'].forEach((id) => {
-      const container = document.getElementById(id);
-      if (container) container.innerHTML = '';
-    });
-
-    // Clear view-specific data
-    this.locationUI.clear();
-    this.regionUI.clear();
-  }
-
-  updateViewDisplay() {
-    const locationsContainer = document.getElementById('locations-grid');
-    const regionsContainer = document.getElementById('regions-panel');
-
-    if (!locationsContainer || !regionsContainer) {
-      console.warn('Missing container elements for toggling views.');
-      return;
-    }
-
-    // Toggle view containers
-    if (this.currentViewMode === 'locations') {
-      locationsContainer.style.display = 'grid';
-      regionsContainer.style.display = 'none';
-
-      // Show location controls, hide region controls
-      document.querySelector('.location-controls').style.display = 'flex';
-      document.querySelector('.region-controls').style.display = 'none';
-
-      this.locationUI.update();
-    } else {
-      locationsContainer.style.display = 'none';
-      regionsContainer.style.display = 'block';
-
-      // Show region controls, hide location controls
-      document.querySelector('.location-controls').style.display = 'none';
-      document.querySelector('.region-controls').style.display = 'flex';
-
-      this.regionUI.update();
     }
   }
 
@@ -311,6 +196,11 @@ export class GameUI {
     }
   }
 
+  setViewMode(mode) {
+    this.currentViewMode = mode;
+    this.updateViewDisplay();
+  }
+
   registerConsoleCommands() {
     const commands = {
       item: {
@@ -318,8 +208,11 @@ export class GameUI {
         usage: 'item <name>',
         handler: (args) => {
           const itemName = args.join(' ');
-          if (this.itemData && this.itemData[itemName]) {
-            this.toggleItem(itemName);
+          if (
+            this.inventoryUI.itemData &&
+            this.inventoryUI.itemData[itemName]
+          ) {
+            this.inventoryUI.toggleItem(itemName);
             return `Toggled ${itemName}`;
           } else {
             return `Item "${itemName}" not found`;
@@ -330,8 +223,8 @@ export class GameUI {
         description: 'List all available items',
         usage: 'items',
         handler: () => {
-          if (!this.itemData) return 'No items loaded';
-          return Object.entries(this.itemData)
+          if (!this.inventoryUI.itemData) return 'No items loaded';
+          return Object.entries(this.inventoryUI.itemData)
             .map(([name, data]) => `${name} (${data.groups.join(', ')})`)
             .join('\n');
         },

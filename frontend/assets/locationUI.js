@@ -102,8 +102,8 @@ export class LocationUI {
     }
 
     if (location.item) {
-      // Use gameUI.toggleItem instead of directly adding to stateManager
-      this.gameUI.toggleItem(location.item.name);
+      // Use inventoryUI.toggleItem instead of directly adding to stateManager
+      this.gameUI.inventoryUI.toggleItem(location.item.name);
       this.checkedLocations.add(location.name);
       stateManager.invalidateCache();
       this.updateLocationDisplay();

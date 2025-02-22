@@ -281,7 +281,7 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                                 'access_rule': safe_expand_rule(helper_expander, getattr(location, 'access_rule', None)),
                                 'item_rule': safe_expand_rule(helper_expander, getattr(location, 'item_rule', None)),
                                 'progress_type': getattr(location, 'progress_type', None),
-                                'event': getattr(location, 'event', False),
+                                #'event': getattr(location, 'event', False), # This is always false
                                 'locked': getattr(location, 'locked', False),
                                 'item': None
                             }
@@ -293,7 +293,7 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                                     'advancement': getattr(location.item, 'advancement', False),
                                     'priority': getattr(location.item, 'priority', None),
                                     'type': getattr(location.item, 'type', None),
-                                    'code': getattr(location.item, 'code', None)
+                                    #'code': getattr(location.item, 'code', None)
                                 }
                             
                             region_data['locations'].append(location_data)
@@ -348,7 +348,8 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
             'advancement': False,
             'priority': False,
             'useful': False,
-            'trap': False
+            'trap': False,
+            'event': False
         }
 
     # Then add event flags
@@ -360,11 +361,12 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
             items_data[item_name] = {
                 'name': item_name,
                 'id': None,
-                'groups': [],
+                'groups': ['Events'],  # Add Events group by default
                 'advancement': item_data.classification == ItemClassification.progression,
                 'priority': False,
                 'useful': False,
-                'trap': False
+                'trap': False,
+                'event': True
             }
 
     # Update flags from placed items
@@ -375,6 +377,7 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
             item_data['priority'] = getattr(location.item, 'priority', False)
             item_data['useful'] = getattr(location.item, 'useful', False)
             item_data['trap'] = getattr(location.item, 'trap', False)
+            #item_data['event'] = getattr(location.item, 'event', False) # Don't overwrite this
 
     return items_data
 

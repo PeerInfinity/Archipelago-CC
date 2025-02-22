@@ -55,7 +55,7 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
   const trace = new RuleTrace(rule, depth);
 
   // Remove debug logging and just use safeLog
-  safeLog(`Evaluating ${rule.type} rule at depth ${depth}`);
+  //safeLog(`Evaluating ${rule.type} rule at depth ${depth}`);
 
   let result = false;
   switch (rule.type) {
@@ -68,10 +68,10 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
           rule.name,
           ...(rule.args || [])
         );
-        safeLog(`Helper ${rule.name} returned: ${result}`, {
-          args: rule.args,
-          helpers: Object.keys(inventory.helpers),
-        });
+        //safeLog(`Helper ${rule.name} returned: ${result}`, {
+        //  args: rule.args,
+        //  helpers: Object.keys(inventory.helpers),
+        //});
       } else {
         safeLog(`No helper implementation available for: ${rule.name}`, {
           availableHelpers: inventory.helpers
@@ -84,63 +84,63 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
     }
 
     case 'and': {
-      safeLog(`Evaluating AND with ${rule.conditions.length} conditions`);
+      //safeLog(`Evaluating AND with ${rule.conditions.length} conditions`);
       const results = rule.conditions.map((condition, index) => {
         const conditionResult = evaluateRule(condition, inventory, depth + 1);
-        safeLog(`AND condition ${index + 1}: ${conditionResult}`, condition);
+        //safeLog(`AND condition ${index + 1}: ${conditionResult}`, condition);
         trace.addChild(
           new RuleTrace(condition, depth + 1).complete(conditionResult)
         );
         return conditionResult;
       });
       result = results.every(Boolean);
-      safeLog(`AND final result: ${result}`, { individualResults: results });
+      //safeLog(`AND final result: ${result}`, { individualResults: results });
       break;
     }
 
     case 'or': {
-      safeLog(`Evaluating OR with ${rule.conditions.length} conditions`);
+      //safeLog(`Evaluating OR with ${rule.conditions.length} conditions`);
       const results = rule.conditions.map((condition, index) => {
         const conditionResult = evaluateRule(condition, inventory, depth + 1);
-        safeLog(`OR condition ${index + 1}: ${conditionResult}`, condition);
+        //safeLog(`OR condition ${index + 1}: ${conditionResult}`, condition);
         trace.addChild(
           new RuleTrace(condition, depth + 1).complete(conditionResult)
         );
         return conditionResult;
       });
       result = results.some(Boolean);
-      safeLog(`OR final result: ${result}`, { individualResults: results });
+      //safeLog(`OR final result: ${result}`, { individualResults: results });
       break;
     }
 
     case 'item_check': {
       result = rule.item && inventory.has(rule.item);
-      safeLog(`Item check ${rule.item}: ${result}`, {
-        itemState: inventory.getItemState(rule.item),
-      });
+      //safeLog(`Item check ${rule.item}: ${result}`, {
+      //  itemState: inventory.getItemState(rule.item),
+      //});
       break;
     }
 
     case 'count_check': {
       result = rule.item && inventory.count(rule.item) >= (rule.count || 1);
-      safeLog(`Count check ${rule.item} (need ${rule.count || 1}): ${result}`, {
-        actual: inventory.count(rule.item),
-      });
+      //safeLog(`Count check ${rule.item} (need ${rule.count || 1}): ${result}`, {
+      //  actual: inventory.count(rule.item),
+      //});
       break;
     }
 
     case 'group_check': {
       result =
         rule.group && inventory.countGroup(rule.group) >= (rule.count || 1);
-      safeLog(`Group check ${rule.group}: ${result}`, {
-        actual: inventory.countGroup(rule.group),
-      });
+      //safeLog(`Group check ${rule.group}: ${result}`, {
+      //  actual: inventory.countGroup(rule.group),
+      //});
       break;
     }
 
     case 'constant': {
       result = rule.value;
-      safeLog(`Constant rule returns: ${result}`);
+      //safeLog(`Constant rule returns: ${result}`);
       break;
     }
 
@@ -154,11 +154,11 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
           ? evaluateRule(rule.right, inventory, depth + 1)
           : rule.right;
 
-      safeLog('Evaluating comparison', {
-        operator: rule.op,
-        left: leftValue,
-        right: rightValue,
-      });
+      //safeLog('Evaluating comparison', {
+      //  operator: rule.op,
+      //  left: leftValue,
+      //  right: rightValue,
+      //});
 
       switch (rule.op) {
         case 'GtE':
@@ -180,23 +180,23 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
           result = false;
       }
 
-      safeLog(`Comparison ${rule.op} result: ${result}`);
+      //safeLog(`Comparison ${rule.op} result: ${result}`);
       break;
     }
 
     case 'count': {
       result = inventory.count(rule.item);
-      safeLog(`Count for ${rule.item}: ${result}`);
+      //safeLog(`Count for ${rule.item}: ${result}`);
       break;
     }
 
     case 'state_flag': {
       result = rule.flag && inventory.state?.hasFlag(rule.flag);
-      safeLog(`State flag check ${rule.flag}: ${result}`, {
-        flag: rule.flag,
-        hasState: !!inventory.state,
-        stateFlags: inventory.state ? Array.from(inventory.state.flags) : null,
-      });
+      //safeLog(`State flag check ${rule.flag}: ${result}`, {
+      //  flag: rule.flag,
+      //  hasState: !!inventory.state,
+      //  stateFlags: inventory.state ? Array.from(inventory.state.flags) : null,
+      //});
       break;
     }
 
