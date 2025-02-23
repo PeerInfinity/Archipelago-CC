@@ -5,7 +5,6 @@ import { evaluateRule } from './ruleEngine.js';
 export class LocationUI {
   constructor(gameUI) {
     this.gameUI = gameUI;
-    this.checkedLocations = new Set();
     this.columns = 2; // Default number of columns
 
     this.attachEventListeners();
@@ -17,7 +16,6 @@ export class LocationUI {
   }
 
   clear() {
-    this.checkedLocations.clear();
     const locationsGrid = document.getElementById('locations-grid');
     if (locationsGrid) {
       locationsGrid.innerHTML = '';
@@ -88,7 +86,7 @@ export class LocationUI {
   }
 
   handleLocationClick(location) {
-    if (this.checkedLocations.has(location.name)) {
+    if (stateManager.isLocationChecked(location.name)) {
       return;
     }
 
@@ -104,8 +102,7 @@ export class LocationUI {
     if (location.item) {
       // Use inventoryUI.toggleItem instead of directly adding to stateManager
       this.gameUI.inventoryUI.toggleItem(location.item.name);
-      this.checkedLocations.add(location.name);
-      stateManager.invalidateCache();
+      stateManager.checkLocation(location.name);
       this.updateLocationDisplay();
       this.showLocationDetails(location);
 
@@ -116,6 +113,10 @@ export class LocationUI {
         );
       }
     }
+  }
+
+  syncWithState() {
+    this.updateLocationDisplay();
   }
 
   updateLocationDisplay() {
@@ -149,7 +150,7 @@ export class LocationUI {
     }
 
     const filteredLocations = locations.filter((location) => {
-      const isChecked = this.checkedLocations.has(location.name);
+      const isChecked = stateManager.isLocationChecked(location.name);
       return isChecked ? showChecked : true;
     });
 
@@ -204,7 +205,7 @@ export class LocationUI {
         const isNewlyReachable =
           showHighlights &&
           newlyReachable.has(`${location.player}-${location.name}`);
-        const isChecked = this.checkedLocations.has(location.name);
+        const isChecked = stateManager.isLocationChecked(location.name);
 
         let stateClass = isChecked
           ? 'checked'
@@ -347,7 +348,7 @@ export class LocationUI {
                 <div>
                     <span class="font-semibold">Status: </span>
                     ${
-                      this.checkedLocations.has(location.name)
+                      stateManager.isLocationChecked(location.name)
                         ? 'Checked'
                         : stateManager.isLocationAccessible(
                             location,
@@ -380,7 +381,7 @@ export class LocationUI {
                 }
                 ${
                   location.item &&
-                  (this.checkedLocations.has(location.name) ||
+                  (stateManager.isLocationChecked(location.name) ||
                     this.gameUI.debugMode)
                     ? `
                     <div>

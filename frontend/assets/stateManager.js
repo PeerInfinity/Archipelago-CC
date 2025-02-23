@@ -29,6 +29,9 @@ export class StateManager {
 
     // Item collection callbacks
     this.itemCollectionCallbacks = new Set();
+
+    // Checked locations tracking
+    this.checkedLocations = new Set();
   }
 
   /**
@@ -65,11 +68,26 @@ export class StateManager {
 
   clearState() {
     this.inventory = new ALTTPInventory();
+    this.clearCheckedLocations();
     this.invalidateCache();
   }
 
+  /**
+   * Adds an item and notifies all registered callbacks
+   */
   addItemToInventory(itemName) {
-    this.inventory.addItem(itemName);
+    if (this._batchMode) {
+      // In batch mode, collect updates without triggering callbacks
+      const currentCount =
+        this._batchedUpdates.get(itemName) || this.inventory.count(itemName);
+      this._batchedUpdates.set(itemName, currentCount + 1);
+    } else {
+      // Normal single-item mode
+      this.inventory.addItem(itemName);
+      this.itemCollectionCallbacks.forEach((callback) =>
+        callback(itemName, this.getItemCount(itemName))
+      );
+    }
   }
 
   getItemCount(itemName) {
@@ -271,5 +289,102 @@ export class StateManager {
     );
     this.previousReachable = currentReachable;
     return newlyReachable;
+  }
+
+  updateInventoryFromList(items) {
+    // Clear existing inventory items
+    Object.keys(this.inventory.items).forEach((key) => {
+      this.inventory.items[key] = 0;
+    });
+
+    // Add each item from the list
+    items.forEach((item) => {
+      this.addItemToInventory(item);
+    });
+
+    // Invalidate cache since inventory changed
+    this.invalidateCache();
+  }
+
+  /**
+   * Initializes inventory state for running a test case.
+   * @param {string[]} requiredItems - Items that must be present
+   * @param {string[]} excludedItems - Items that must not be present
+   * @param {Object} progressionMapping - Item progression rules
+   * @param {Object} itemData - Complete item database
+   */
+  initializeInventoryForTest(
+    requiredItems = [],
+    excludedItems = [],
+    progressionMapping,
+    itemData
+  ) {
+    this.clearState();
+    this.beginBatchUpdate();
+
+    // If we have excludedItems, start with ALL items except those
+    if (excludedItems?.length > 0) {
+      Object.keys(itemData).forEach((itemName) => {
+        if (
+          !excludedItems.includes(itemName) &&
+          !(itemName.includes('Bottle') && excludedItems.includes('AnyBottle'))
+        ) {
+          this.addItemToInventory(itemName);
+        }
+      });
+    }
+
+    // Then add required items
+    requiredItems.forEach((itemName) => {
+      this.addItemToInventory(itemName);
+    });
+
+    this.commitBatchUpdate();
+  }
+
+  isLocationChecked(locationName) {
+    return this.checkedLocations.has(locationName);
+  }
+
+  checkLocation(locationName) {
+    this.checkedLocations.add(locationName);
+  }
+
+  clearCheckedLocations() {
+    this.checkedLocations.clear();
+  }
+
+  /**
+   * Begins a batch update operation for adding multiple items efficiently.
+   * This prevents UI updates until commitBatchUpdate is called.
+   */
+  beginBatchUpdate() {
+    this._batchMode = true;
+    this._batchedUpdates = new Map(); // store item -> count updates
+  }
+
+  /**
+   * Commits all pending updates from a batch operation.
+   * Triggers UI updates through callbacks and updates the cache.
+   */
+  commitBatchUpdate() {
+    if (!this._batchMode) return;
+
+    // Apply all batched updates at once
+    this._batchedUpdates.forEach((count, itemName) => {
+      this.inventory.items.set(itemName, count);
+    });
+
+    // Notify callbacks once for each changed item
+    this._batchedUpdates.forEach((count, itemName) => {
+      this.itemCollectionCallbacks.forEach((callback) =>
+        callback(itemName, count)
+      );
+    });
+
+    // Clear batch state
+    this._batchMode = false;
+    this._batchedUpdates.clear();
+    this.invalidateCache();
   }
 }

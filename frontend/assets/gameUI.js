@@ -4,6 +4,7 @@ import { LocationUI } from './locationUI.js';
 import { RegionUI } from './regionUI.js';
 import { InventoryUI } from './inventoryUI.js';
 import stateManager from './stateManagerSingleton.js';
+import { TestCaseManager } from './testCaseManager.js';
 
 export class GameUI {
   constructor() {
@@ -11,6 +12,7 @@ export class GameUI {
     this.locationUI = new LocationUI(this);
     this.regionUI = new RegionUI(this);
     this.inventoryUI = new InventoryUI(this);
+    this.testCaseManager = new TestCaseManager(this);
 
     // Game state
     this.currentViewMode = 'locations';
@@ -27,6 +29,11 @@ export class GameUI {
     }
     this.loadDefaultRules();
     this.updateViewDisplay();
+
+    // Initialize test case manager
+    this.testCaseManager.initialize().catch((error) => {
+      console.error('Failed to initialize test cases:', error);
+    });
   }
 
   initializeUI(jsonData) {
@@ -83,31 +90,36 @@ export class GameUI {
   updateViewDisplay() {
     const locationsContainer = document.getElementById('locations-grid');
     const regionsContainer = document.getElementById('regions-panel');
+    const testCasesContainer = document.getElementById('test-cases-panel');
 
-    if (!locationsContainer || !regionsContainer) {
+    if (!locationsContainer || !regionsContainer || !testCasesContainer) {
       console.warn('Missing container elements for toggling views.');
       return;
     }
 
     // Toggle view containers
-    if (this.currentViewMode === 'locations') {
-      locationsContainer.style.display = 'grid';
-      regionsContainer.style.display = 'none';
+    locationsContainer.style.display = 'none';
+    regionsContainer.style.display = 'none';
+    testCasesContainer.style.display = 'none';
 
-      // Show location controls, hide region controls
-      document.querySelector('.location-controls').style.display = 'flex';
-      document.querySelector('.region-controls').style.display = 'none';
-
-      this.locationUI.update();
-    } else {
-      locationsContainer.style.display = 'none';
-      regionsContainer.style.display = 'block';
-
-      // Show region controls, hide location controls
-      document.querySelector('.location-controls').style.display = 'none';
-      document.querySelector('.region-controls').style.display = 'flex';
-
-      this.regionUI.update();
+    switch (this.currentViewMode) {
+      case 'locations':
+        locationsContainer.style.display = 'grid';
+        document.querySelector('.location-controls').style.display = 'flex';
+        document.querySelector('.region-controls').style.display = 'none';
+        this.locationUI.update();
+        break;
+      case 'regions':
+        regionsContainer.style.display = 'block';
+        document.querySelector('.location-controls').style.display = 'none';
+        document.querySelector('.region-controls').style.display = 'flex';
+        this.regionUI.update();
+        break;
+      case 'test-cases':
+        testCasesContainer.style.display = 'block';
+        document.querySelector('.location-controls').style.display = 'none';
+        document.querySelector('.region-controls').style.display = 'none';
+        break;
     }
   }
 

@@ -312,4 +312,22 @@ export class InventoryUI {
     if (groupedContainer) groupedContainer.innerHTML = '';
     if (flatContainer) flatContainer.innerHTML = '';
   }
+
+  // Add method to sync UI with state
+  syncWithState() {
+    // Reset all buttons to inactive state
+    document.querySelectorAll('.item-button').forEach((button) => {
+      const itemName = button.dataset.item;
+      const count = stateManager.getItemCount(itemName);
+      const container = button.closest('.item-container');
+
+      // Update button state
+      button.classList.toggle('active', count > 0);
+
+      // Update count badge
+      this.createOrUpdateCountBadge(container, count);
+    });
+
+    this.updateDisplay();
+  }
 }

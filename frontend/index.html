@@ -112,6 +112,10 @@
               <input type="radio" name="view-mode" value="regions" />
               Regions View
             </label>
+            <label>
+              <input type="radio" name="view-mode" value="test-cases" />
+              Test Cases
+            </label>
             <input type="file" id="json-upload" accept=".json" class="hidden" />
             <label for="json-upload" class="button">Load JSON</label>
             <button id="debug-toggle" class="button">Show Debug</button>
@@ -157,6 +161,9 @@
         </div>
         <div id="regions-panel" style="display: none">
           <!-- Region blocks are injected here by regionManager -->
+        </div>
+        <div id="test-cases-panel" style="display: none">
+          <div id="test-cases-list"></div>
         </div>
       </div>
     </div>

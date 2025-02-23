@@ -6,31 +6,71 @@ export class ALTTPInventory extends GameInventory {
     items = [],
     excludeItems = [],
     progressionMapping = {},
-    itemData = {},
-    debugLog = null
+    itemData = {}
   ) {
-    super(items, excludeItems, progressionMapping, itemData, debugLog);
-    this.initializeInventory(items);
-  }
-
-  initializeInventory(items) {
-    this.log({
-      message: 'Initializing inventory',
-      items: items,
-      excludeItems: Array.from(this.excludeSet),
-      progressionMapping: this.progressionMapping,
+    super();
+    console.debug('Creating ALTTPInventory with:', {
+      items,
+      excludeItems,
+      progressionMapping: !!progressionMapping,
+      itemData: !!itemData,
     });
 
-    // Process each initial item
-    for (const item of items) {
-      this.addItem(item);
+    this.items = new Map();
+    this.progressionMapping = progressionMapping;
+    this.itemData = itemData;
+
+    // Initialize all items to 0
+    if (itemData) {
+      Object.keys(itemData).forEach((itemName) => {
+        this.items.set(itemName, 0);
+      });
     }
+
+    // Add initial items if any
+    items.forEach((itemName) => {
+      console.debug(`Adding initial item: ${itemName}`);
+      this.addItem(itemName);
+    });
+  }
+
+  addItem(itemName) {
+    const currentCount = this.items.get(itemName) || 0;
+    const newCount = currentCount + 1;
+    console.debug(`Adding item ${itemName}: ${currentCount} -> ${newCount}`);
+    this.items.set(itemName, newCount);
+  }
+
+  has(itemName) {
+    if (this.items.get(itemName) > 0) {
+      return true;
+    }
+
+    // Check progressive items
+    if (this.progressionMapping) {
+      for (const [baseItem, progression] of Object.entries(
+        this.progressionMapping
+      )) {
+        const baseCount = this.items.get(baseItem) || 0;
+        for (const upgrade of progression.items) {
+          if (
+            (upgrade.name === itemName ||
+              upgrade.provides?.includes(itemName)) &&
+            baseCount >= upgrade.level
+          ) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   getItemState(itemName) {
     return {
       directCount: this.items.get(itemName) || 0,
-      isExcluded: this.excludeSet.has(itemName),
+      isExcluded: false,
       progressiveInfo: this.getProgressiveItemInfo(itemName),
       itemData: this.itemData[itemName],
     };
@@ -62,69 +102,7 @@ export class ALTTPInventory extends GameInventory {
     return progressiveInfo;
   }
 
-  has(itemName) {
-    this.log({
-      message: 'Checking has() for item',
-      item: itemName,
-      inventory: Array.from(this.items.entries()),
-      excludeSet: Array.from(this.excludeSet),
-    });
-
-    if (this.excludeSet.has(itemName)) {
-      this.log(`${itemName} is excluded`);
-      return false;
-    }
-
-    // Direct check
-    if (this.items.has(itemName)) {
-      this.log(`Direct item check for ${itemName}: true`);
-      return true;
-    }
-
-    // Progressive item check
-    this.log(`Checking progressive mappings for ${itemName}`);
-    const progressiveInfo = this.getProgressiveItemInfo(itemName);
-    for (const [baseItem, progression] of Object.entries(
-      this.progressionMapping
-    )) {
-      const baseCount = this.items.get(baseItem) || 0;
-      this.log(`Checking ${baseItem}: base count = ${baseCount}`);
-      this.log(`Progression data: ${JSON.stringify(progression)}`);
-
-      const targetLevel =
-        progression.items.findIndex((i) => i.name === itemName) + 1;
-      this.log(`Target level for ${itemName}: ${targetLevel}`);
-
-      if (targetLevel > 0 && baseCount >= targetLevel) {
-        this.log(
-          `Progressive match found: ${baseItem} count ${baseCount} >= level ${targetLevel}`
-        );
-        return true;
-      }
-    }
-
-    this.log({
-      message: `No match found for ${itemName}`,
-      progressiveInfo,
-    });
-    return false;
-  }
-
-  addItem(item) {
-    if (!this.excludeSet.has(item)) {
-      // Update item count
-      const count = (this.items.get(item) || 0) + 1;
-      this.items.set(item, count);
-      this.log(`Added item ${item}, new count: ${count}`);
-    }
-  }
-
   count(itemName) {
-    if (this.excludeSet.has(itemName)) {
-      this.log(`Count for ${itemName}: 0 (excluded)`);
-      return 0;
-    }
-
     const directCount = this.items.get(itemName) || 0;
     const progressiveInfo = this.getProgressiveItemInfo(itemName);
 
@@ -138,11 +116,6 @@ export class ALTTPInventory extends GameInventory {
   }
 
   countGroup(groupName) {
-    if (this.excludeSet.has('Any' + groupName)) {
-      this.log(`Group ${groupName} excluded by Any${groupName}`);
-      return 0;
-    }
-
     let count = 0;
     const groupMembers = [];
 
