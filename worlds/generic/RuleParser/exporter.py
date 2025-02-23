@@ -88,7 +88,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                         logger.debug(f"Checking if can start at region: {region.name}")
                         try:
                             can_start = region.can_start_at(world)
-                            if can_start:
+                            if (can_start):
                                 region_data = {
                                     'name': region.name,
                                     'type': getattr(region, 'type', 'Region'),
@@ -334,7 +334,7 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
     items_data = {}
     world = multiworld.worlds[player]
     
-    # First process basic items
+    # First process basic items from item_id_to_name mapping
     for item_id, item_name in getattr(world, 'item_id_to_name', {}).items():
         groups = [
             group_name for group_name, items in world.item_name_groups.items() 
@@ -349,24 +349,36 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
             'priority': False,
             'useful': False,
             'trap': False,
-            'event': False
+            'event': False,
+            'type': None
         }
 
-    # Then add event flags
+    # Add all items from item_table that aren't already added
     from worlds.alttp.Items import item_table
     from BaseClasses import ItemClassification
     
     for item_name, item_data in item_table.items():
-        if item_data.type == 'Event':
+        if item_name not in items_data:
+            # Get groups this item belongs to
+            groups = [
+                group_name for group_name, items in world.item_name_groups.items() 
+                if item_name in items
+            ]
+            
+            # If no groups and item has a type, add type as a group
+            if not groups and item_data.type:
+                groups = [item_data.type]
+
             items_data[item_name] = {
                 'name': item_name,
                 'id': None,
-                'groups': ['Events'],  # Add Events group by default
+                'groups': sorted(groups),
                 'advancement': item_data.classification == ItemClassification.progression,
                 'priority': False,
                 'useful': False,
                 'trap': False,
-                'event': True
+                'event': item_data.type == 'Event',
+                'type': item_data.type
             }
 
     # Update flags from placed items
@@ -424,19 +436,6 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
         bool: True if export successful
     """
 
-    # Example data for testing
-    test_data = {
-        "users": [
-            {"id": 1, "name": "John", "active": True},
-            {"id": 2, "name": "Jane", "active": False}
-        ],
-        "settings": {
-            "theme": "dark",
-            "notifications": True
-        },
-        "version": "1.0.0"
-    }
-    
     import os
     os.makedirs(output_dir, exist_ok=True)
     

@@ -279,7 +279,16 @@ export class InventoryUI {
     this.gameUI.updateViewDisplay();
   }
 
-  handleEventCollection(itemName, count) {
+  handleEventCollection(event) {
+    // Handle special batch sync event
+    if (event === 'batchSync') {
+      this.syncWithState();
+      this.updateDisplay(); // Make sure display updates after batch sync
+      return;
+    }
+
+    // Handle individual items as before
+    const [itemName, count] = arguments;
     const buttons = document.querySelectorAll(`[data-item="${itemName}"]`);
     const containers = Array.from(buttons).map((button) =>
       button.closest('.item-container')
@@ -292,6 +301,19 @@ export class InventoryUI {
 
     this.updateDisplay();
     this.gameUI.updateViewDisplay();
+  }
+
+  // New private method for quiet sync
+  _quietSync() {
+    // Only update button states and count badges
+    document.querySelectorAll('.item-button').forEach((button) => {
+      const itemName = button.dataset.item;
+      const count = stateManager.getItemCount(itemName);
+      const container = button.closest('.item-container');
+      button.classList.toggle('active', count > 0);
+      this.createOrUpdateCountBadge(container, count);
+    });
+    // Do not trigger any other UI updates
   }
 
   clear() {
@@ -315,19 +337,7 @@ export class InventoryUI {
 
   // Add method to sync UI with state
   syncWithState() {
-    // Reset all buttons to inactive state
-    document.querySelectorAll('.item-button').forEach((button) => {
-      const itemName = button.dataset.item;
-      const count = stateManager.getItemCount(itemName);
-      const container = button.closest('.item-container');
-
-      // Update button state
-      button.classList.toggle('active', count > 0);
-
-      // Update count badge
-      this.createOrUpdateCountBadge(container, count);
-    });
-
-    this.updateDisplay();
+    this._quietSync();
+    this.gameUI.updateViewDisplay();
   }
 }

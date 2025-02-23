@@ -4,7 +4,7 @@ import { LocationUI } from './locationUI.js';
 import { RegionUI } from './regionUI.js';
 import { InventoryUI } from './inventoryUI.js';
 import stateManager from './stateManagerSingleton.js';
-import { TestCaseManager } from './testCaseManager.js';
+import { TestCaseUI } from './testCaseUI.js';
 
 export class GameUI {
   constructor() {
@@ -12,7 +12,7 @@ export class GameUI {
     this.locationUI = new LocationUI(this);
     this.regionUI = new RegionUI(this);
     this.inventoryUI = new InventoryUI(this);
-    this.testCaseManager = new TestCaseManager(this);
+    this.testCaseUI = new TestCaseUI(this);
 
     // Game state
     this.currentViewMode = 'locations';
@@ -21,6 +21,7 @@ export class GameUI {
     this.mode = null;
     this.settings = null;
     this.startRegions = null;
+    this.currentRules = null; // Track current rules data
 
     // Initialize UI
     this.attachEventListeners();
@@ -30,8 +31,8 @@ export class GameUI {
     this.loadDefaultRules();
     this.updateViewDisplay();
 
-    // Initialize test case manager
-    this.testCaseManager.initialize().catch((error) => {
+    // Initialize test case UI
+    this.testCaseUI.initialize().catch((error) => {
       console.error('Failed to initialize test cases:', error);
     });
   }
@@ -132,6 +133,7 @@ export class GameUI {
       const jsonData = await response.json();
 
       this.clearExistingData();
+      this.currentRules = jsonData; // Store current rules
 
       stateManager.initializeInventory(
         [], // Initial items
@@ -170,6 +172,7 @@ export class GameUI {
       reader.onload = async (e) => {
         try {
           const jsonData = JSON.parse(e.target.result);
+          this.currentRules = jsonData; // Store current rules
 
           stateManager.initializeInventory(
             [],

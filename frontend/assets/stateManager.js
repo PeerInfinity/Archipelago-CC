@@ -148,42 +148,60 @@ export class StateManager {
       return this.knownReachableRegions;
     }
 
+    if (this._computing) {
+      return this.knownReachableRegions;
+    }
+    this._computing = true;
+
     let finalReachableRegions = new Set(this.knownReachableRegions);
     let newEventCollected = true;
+    let collectedEvents = new Map(); // track collected events
 
-    // Keep checking regions until no new events are collected
-    while (newEventCollected) {
-      newEventCollected = false;
-      const reachableSet = this.runSingleBFS(inventory);
+    try {
+      while (newEventCollected) {
+        newEventCollected = false;
+        const reachableSet = this.runSingleBFS(inventory);
 
-      // Auto-collect events in reachable locations
-      for (const loc of this.eventLocations.values()) {
-        if (reachableSet.has(loc.region)) {
-          const canAccessLoc = evaluateRule(loc.access_rule, inventory);
-          if (canAccessLoc && !inventory.has(loc.item.name)) {
-            this.addItemToInventory(loc.item.name);
-            this.itemCollectionCallbacks.forEach((callback) =>
-              callback(loc.item.name, this.getItemCount(loc.item.name))
-            );
-            newEventCollected = true;
+        // Auto-collect events in reachable locations
+        for (const loc of this.eventLocations.values()) {
+          if (reachableSet.has(loc.region)) {
+            const canAccessLoc = evaluateRule(loc.access_rule, inventory);
+            if (canAccessLoc && !inventory.has(loc.item.name)) {
+              // Directly add to inventory without triggering callbacks
+              inventory.addItem(loc.item.name);
+              collectedEvents.set(
+                loc.item.name,
+                (collectedEvents.get(loc.item.name) || 0) + 1
+              );
+              newEventCollected = true;
+            }
           }
         }
+
+        finalReachableRegions = new Set([
+          ...finalReachableRegions,
+          ...reachableSet,
+        ]);
       }
 
-      finalReachableRegions = new Set([
-        ...finalReachableRegions,
-        ...reachableSet,
-      ]);
-    }
+      // Cache results
+      this.knownReachableRegions = finalReachableRegions;
+      this.knownUnreachableRegions = new Set(
+        Object.keys(this.regions).filter(
+          (region) => !finalReachableRegions.has(region)
+        )
+      );
+      this.cacheValid = true;
 
-    // Cache results
-    this.knownReachableRegions = finalReachableRegions;
-    this.knownUnreachableRegions = new Set(
-      Object.keys(this.regions).filter(
-        (region) => !finalReachableRegions.has(region)
-      )
-    );
-    this.cacheValid = true;
+      // If any events were collected, notify UI in a single batch
+      if (collectedEvents.size > 0) {
+        for (const callback of this.itemCollectionCallbacks) {
+          callback('batchSync');
+        }
+      }
+    } finally {
+      this._computing = false;
+    }
 
     return finalReachableRegions;
   }
@@ -370,21 +388,22 @@ export class StateManager {
   commitBatchUpdate() {
     if (!this._batchMode) return;
 
-    // Apply all batched updates at once
+    // Apply all batched updates at once to inventory
     this._batchedUpdates.forEach((count, itemName) => {
-      this.inventory.items.set(itemName, count);
+      this.inventory.items[itemName] = count;
     });
 
-    // Notify callbacks once for each changed item
-    this._batchedUpdates.forEach((count, itemName) => {
-      this.itemCollectionCallbacks.forEach((callback) =>
-        callback(itemName, count)
-      );
-    });
+    // Clear caches and force a state update before any callbacks
+    this.invalidateCache();
+    this.computeReachableRegions(this.inventory);
+
+    // Notify all callbacks once with special batchSync event
+    for (const callback of this.itemCollectionCallbacks) {
+      callback('batchSync');
+    }
 
     // Clear batch state
     this._batchMode = false;
-    this._batchedUpdates.clear();
-    this.invalidateCache();
+    this._batchedUpdates = new Map();
   }
 }

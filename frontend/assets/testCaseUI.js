@@ -1,6 +1,6 @@
 import stateManager from './stateManagerSingleton.js';
 
-export class TestCaseManager {
+export class TestCaseUI {
   constructor(gameUI) {
     this.gameUI = gameUI;
     this.testCases = null;
@@ -32,6 +32,12 @@ export class TestCaseManager {
       const [location, expectedResult, requiredItems = [], excludedItems = []] =
         testData;
 
+      // Make sure we're using test data
+      if (!this.isUsingTestData()) {
+        statusElement.innerHTML = `<div class="test-error">Error: Please load test data first</div>`;
+        return false;
+      }
+
       // Initialize inventory for test case
       stateManager.initializeInventoryForTest(
         requiredItems,
@@ -51,6 +57,17 @@ export class TestCaseManager {
       );
       const passed = locationAccessible === expectedResult;
 
+      // Debug output
+      console.log('Testing location:', location);
+      console.log('Required items:', requiredItems);
+      console.log('State inventory:', stateManager.inventory);
+      console.log(
+        'Location accessible:',
+        stateManager.isLocationAccessible(
+          { name: location },
+          stateManager.inventory
+        )
+      );
       // Format status message
       statusElement.innerHTML = `<div class="${
         passed ? 'test-success' : 'test-failure'
@@ -63,6 +80,23 @@ export class TestCaseManager {
         error.message
       )}</div>`;
       return false;
+    }
+  }
+
+  isUsingTestData() {
+    return this.testRules && this.testRules === this.gameUI.currentRules;
+  }
+
+  updateDataSourceIndicator() {
+    const dataSource = document.getElementById('data-source');
+    if (dataSource) {
+      const isTestData = this.isUsingTestData();
+      dataSource.textContent = isTestData
+        ? 'test_output_rules.json'
+        : 'default_rules.json';
+      dataSource.className = isTestData
+        ? 'data-source-correct'
+        : 'data-source-wrong';
     }
   }
 
@@ -101,7 +135,13 @@ export class TestCaseManager {
     let html = `
         <div class="test-header">
             <h3>Available Test Cases</h3>
-            <button id="run-all-tests" class="button">Run All Tests</button>
+            <div class="test-controls">
+                <button id="run-all-tests" class="button">Run All Tests</button>
+                <button id="load-test-data" class="button">Load Test Data</button>
+            </div>
+            <div id="data-source-info" class="data-source-info">
+                Current data source: <span id="data-source" class="data-source-wrong">default_rules.json</span>
+            </div>
         </div>
         <table class="results-table">
             <tr>
@@ -129,11 +169,7 @@ export class TestCaseManager {
       html += `
             <tr class="test-case-row">
                 <td>${this.escapeHtml(location)}</td>
-                <td>${
-                  expectedResult
-                    ? 'Should be accessible'
-                    : 'Should not be accessible'
-                }</td>
+                <td>${expectedResult ? 'Yes' : 'No'}</td>
                 <td>${
                   requiredItems.length
                     ? this.escapeHtml(requiredItems.join(', '))
@@ -169,6 +205,15 @@ export class TestCaseManager {
             }
             .test-header h3 {
                 margin: 0;
+            }
+            .test-controls {
+                display: flex;
+                gap: 1rem;
+            }
+            .data-source-info {
+                font-size: 0.9em;
+                color: #666;
+                margin-top: 0.5rem;
             }
             .results-table {
                 width: 100%;
@@ -210,6 +255,12 @@ export class TestCaseManager {
             .test-error {
                 color: #ff9800;
             }
+            .data-source-wrong {
+                color: #f44336;
+            }
+            .data-source-correct {
+                color: #4caf50;
+            }
         </style>
     `;
 
@@ -229,6 +280,36 @@ export class TestCaseManager {
     document
       .getElementById('run-all-tests')
       ?.addEventListener('click', () => this.runAllTests());
+
+    // Add test data loader listener
+    document
+      .getElementById('load-test-data')
+      ?.addEventListener('click', async () => {
+        try {
+          // Use the existing fetch functionality from gameUI
+          const response = await fetch('./test_output_rules.json');
+          const jsonData = await response.json();
+
+          // Use gameUI's initialization code
+          this.gameUI.clearExistingData();
+          this.gameUI.initializeUI(jsonData);
+          this.gameUI.currentRules = jsonData; // Track current rules
+
+          // Update test cases
+          const testCasesResponse = await fetch('./test_cases.json');
+          this.testCases = await testCasesResponse.json();
+          this.testRules = jsonData;
+
+          // Update UI and data source indicator
+          this.updateDataSourceIndicator();
+          //this.renderTestCasesList();
+        } catch (error) {
+          console.error('Error loading test data:', error);
+          const dataSource = document.getElementById('data-source');
+          dataSource.innerHTML = 'Error loading test_output_rules.json';
+          dataSource.className = 'data-source-wrong';
+        }
+      });
   }
 
   escapeHtml(unsafe) {
