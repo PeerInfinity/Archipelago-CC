@@ -27,27 +27,8 @@ export class StateManager {
     this.settings = null;
     this.startRegions = null;
 
-    // Item collection callbacks
-    this.itemCollectionCallbacks = new Set();
-
     // Checked locations tracking
     this.checkedLocations = new Set();
-  }
-
-  /**
-   * Registers a callback to be notified when items are collected
-   * @param {function(string, number)} callback Function to call with (itemName, count)
-   */
-  addItemCollectionCallback(callback) {
-    this.itemCollectionCallbacks.add(callback);
-  }
-
-  /**
-   * Removes a previously registered item collection callback
-   * @param {function} callback The callback to remove
-   */
-  removeItemCollectionCallback(callback) {
-    this.itemCollectionCallbacks.delete(callback);
   }
 
   /**
@@ -84,9 +65,6 @@ export class StateManager {
     } else {
       // Normal single-item mode
       this.inventory.addItem(itemName);
-      this.itemCollectionCallbacks.forEach((callback) =>
-        callback(itemName, this.getItemCount(itemName))
-      );
     }
   }
 
@@ -155,7 +133,6 @@ export class StateManager {
 
     let finalReachableRegions = new Set(this.knownReachableRegions);
     let newEventCollected = true;
-    let collectedEvents = new Map(); // track collected events
 
     try {
       while (newEventCollected) {
@@ -167,13 +144,10 @@ export class StateManager {
           if (reachableSet.has(loc.region)) {
             const canAccessLoc = evaluateRule(loc.access_rule, inventory);
             if (canAccessLoc && !inventory.has(loc.item.name)) {
-              // Directly add to inventory without triggering callbacks
               inventory.addItem(loc.item.name);
-              collectedEvents.set(
-                loc.item.name,
-                (collectedEvents.get(loc.item.name) || 0) + 1
-              );
               newEventCollected = true;
+              // Add this line to trigger UI update when events are collected:
+              window.gameUI?.inventoryUI?.syncWithState();
             }
           }
         }
@@ -184,7 +158,6 @@ export class StateManager {
         ]);
       }
 
-      // Cache results
       this.knownReachableRegions = finalReachableRegions;
       this.knownUnreachableRegions = new Set(
         Object.keys(this.regions).filter(
@@ -192,13 +165,6 @@ export class StateManager {
         )
       );
       this.cacheValid = true;
-
-      // If any events were collected, notify UI in a single batch
-      if (collectedEvents.size > 0) {
-        for (const callback of this.itemCollectionCallbacks) {
-          callback('batchSync');
-        }
-      }
     } finally {
       this._computing = false;
     }
@@ -390,19 +356,16 @@ export class StateManager {
 
     // Apply all batched updates at once to inventory
     this._batchedUpdates.forEach((count, itemName) => {
-      this.inventory.items[itemName] = count;
+      // Fix: Use Map's set method instead of treating it as an object
+      this.inventory.items.set(itemName, count);
     });
 
     // Clear caches and force a state update before any callbacks
     this.invalidateCache();
     this.computeReachableRegions(this.inventory);
 
-    // Notify all callbacks once with special batchSync event
-    for (const callback of this.itemCollectionCallbacks) {
-      callback('batchSync');
-    }
+    window.gameUI?.inventoryUI?.syncWithState();
 
-    // Clear batch state
     this._batchMode = false;
     this._batchedUpdates = new Map();
   }

@@ -14,8 +14,6 @@ export class InventoryUI {
     this.hideCategories = false;
     this.sortAlphabetically = false;
     this.attachEventListeners();
-    this.handleEventCollection = this.handleEventCollection.bind(this);
-    stateManager.addItemCollectionCallback(this.handleEventCollection);
   }
 
   initialize(itemData, groups) {
@@ -275,45 +273,7 @@ export class InventoryUI {
     }
 
     stateManager.invalidateCache();
-    this.updateDisplay();
-    this.gameUI.updateViewDisplay();
-  }
-
-  handleEventCollection(event) {
-    // Handle special batch sync event
-    if (event === 'batchSync') {
-      this.syncWithState();
-      this.updateDisplay(); // Make sure display updates after batch sync
-      return;
-    }
-
-    // Handle individual items as before
-    const [itemName, count] = arguments;
-    const buttons = document.querySelectorAll(`[data-item="${itemName}"]`);
-    const containers = Array.from(buttons).map((button) =>
-      button.closest('.item-container')
-    );
-
-    buttons.forEach((button) => button.classList.add('active'));
-    containers.forEach((container) =>
-      this.createOrUpdateCountBadge(container, count)
-    );
-
-    this.updateDisplay();
-    this.gameUI.updateViewDisplay();
-  }
-
-  // New private method for quiet sync
-  _quietSync() {
-    // Only update button states and count badges
-    document.querySelectorAll('.item-button').forEach((button) => {
-      const itemName = button.dataset.item;
-      const count = stateManager.getItemCount(itemName);
-      const container = button.closest('.item-container');
-      button.classList.toggle('active', count > 0);
-      this.createOrUpdateCountBadge(container, count);
-    });
-    // Do not trigger any other UI updates
+    this.syncWithState(); // This will now update all UI components
   }
 
   clear() {
@@ -337,7 +297,21 @@ export class InventoryUI {
 
   // Add method to sync UI with state
   syncWithState() {
-    this._quietSync();
-    this.gameUI.updateViewDisplay();
+    // combine all quiet sync logic here:
+    // read item states from stateManager in one pass
+    // update button classes and count badges
+    // do not individually call handleEventCollection
+    document.querySelectorAll('.item-button').forEach((button) => {
+      const itemName = button.dataset.item;
+      const count = stateManager.getItemCount(itemName);
+      const container = button.closest('.item-container');
+      button.classList.toggle('active', count > 0);
+      this.createOrUpdateCountBadge(container, count);
+    });
+
+    // Update display for all UI components
+    this.updateDisplay();
+    this.gameUI.locationUI?.syncWithState();
+    this.gameUI.regionUI?.update();
   }
 }

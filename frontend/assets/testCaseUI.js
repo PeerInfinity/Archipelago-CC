@@ -33,12 +33,15 @@ export class TestCaseUI {
         testData;
 
       // Make sure we're using test data
-      if (!this.isUsingTestData()) {
-        statusElement.innerHTML = `<div class="test-error">Error: Please load test data first</div>`;
+      if (!this.testRules) {
+        statusElement.innerHTML = `<div class="test-error">Error: No test rules loaded</div>`;
         return false;
       }
 
-      // Initialize inventory for test case
+      // First initialize inventory with the test rules data
+      stateManager.loadFromJSON(this.testRules);
+
+      // Then set up the test case inventory state
       stateManager.initializeInventoryForTest(
         requiredItems,
         excludedItems,
@@ -48,37 +51,32 @@ export class TestCaseUI {
 
       // Force UI sync
       this.gameUI.inventoryUI.syncWithState();
-      this.gameUI.locationUI.syncWithState();
+
+      // Find the location data in the rules
+      const locationData = Object.values(this.testRules.regions['1'])
+        .flatMap((region) => region.locations)
+        .find((loc) => loc.name === location);
+
+      if (!locationData) {
+        statusElement.innerHTML = `<div class="test-error">Error: Location "${location}" not found</div>`;
+        return false;
+      }
 
       // Check if location is accessible
       const locationAccessible = stateManager.isLocationAccessible(
-        { name: location },
+        locationData,
         stateManager.inventory
       );
       const passed = locationAccessible === expectedResult;
 
-      // Debug output
-      console.log('Testing location:', location);
-      console.log('Required items:', requiredItems);
-      console.log('State inventory:', stateManager.inventory);
-      console.log(
-        'Location accessible:',
-        stateManager.isLocationAccessible(
-          { name: location },
-          stateManager.inventory
-        )
-      );
-      // Format status message
       statusElement.innerHTML = `<div class="${
         passed ? 'test-success' : 'test-failure'
       }">${passed ? '✓ PASS' : '❌ FAIL'}</div>`;
 
-      return true;
+      return passed;
     } catch (error) {
       console.error('Error loading test case:', error);
-      statusElement.innerHTML = `<div class="test-error">Error: ${this.escapeHtml(
-        error.message
-      )}</div>`;
+      statusElement.innerHTML = `<div class="test-error">Error: ${error.message}</div>`;
       return false;
     }
   }
@@ -116,11 +114,15 @@ export class TestCaseUI {
         const statusElement = document.getElementById(`test-status-${index}`);
         if (statusElement) {
           await this.loadTestCase(testCase, statusElement);
+          // Make sure UI is fully updated after each test
+          this.gameUI.inventoryUI.syncWithState();
           // Small delay to allow UI to update and prevent freezing
           await new Promise((resolve) => setTimeout(resolve, 10));
         }
       }
     } finally {
+      // Make sure UI is in sync after all tests complete
+      this.gameUI.inventoryUI.syncWithState();
       // Re-enable the button when done
       if (runAllButton) {
         runAllButton.disabled = false;

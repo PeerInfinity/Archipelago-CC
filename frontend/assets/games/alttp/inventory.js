@@ -1,21 +1,7 @@
 // frontend/assets/games/alttp/inventory.js
-import { GameInventory } from '../../helpers/index.js';
 
-export class ALTTPInventory extends GameInventory {
-  constructor(
-    items = [],
-    excludeItems = [],
-    progressionMapping = {},
-    itemData = {}
-  ) {
-    super();
-    console.debug('Creating ALTTPInventory with:', {
-      items,
-      excludeItems,
-      progressionMapping: !!progressionMapping,
-      itemData: !!itemData,
-    });
-
+export class ALTTPInventory {
+  constructor(items = [], progressionMapping = {}, itemData = {}) {
     this.items = new Map();
     this.progressionMapping = progressionMapping;
     this.itemData = itemData;
@@ -29,16 +15,13 @@ export class ALTTPInventory extends GameInventory {
 
     // Add initial items if any
     items.forEach((itemName) => {
-      console.debug(`Adding initial item: ${itemName}`);
       this.addItem(itemName);
     });
   }
 
   addItem(itemName) {
     const currentCount = this.items.get(itemName) || 0;
-    const newCount = currentCount + 1;
-    console.debug(`Adding item ${itemName}: ${currentCount} -> ${newCount}`);
-    this.items.set(itemName, newCount);
+    this.items.set(itemName, currentCount + 1);
   }
 
   has(itemName) {
@@ -70,7 +53,6 @@ export class ALTTPInventory extends GameInventory {
   getItemState(itemName) {
     return {
       directCount: this.items.get(itemName) || 0,
-      isExcluded: false,
       progressiveInfo: this.getProgressiveItemInfo(itemName),
       itemData: this.itemData[itemName],
     };
@@ -104,34 +86,18 @@ export class ALTTPInventory extends GameInventory {
 
   count(itemName) {
     const directCount = this.items.get(itemName) || 0;
-    const progressiveInfo = this.getProgressiveItemInfo(itemName);
-
-    this.log({
-      message: `Count check for ${itemName}`,
-      directCount,
-      progressiveInfo,
-    });
-
     return directCount;
   }
 
   countGroup(groupName) {
     let count = 0;
-    const groupMembers = [];
-
     this.items.forEach((itemCount, itemName) => {
       const itemInfo = this.itemData[itemName];
-      if (itemInfo && itemInfo.groups.includes(groupName)) {
+      // Only count items that have group data and belong to the specified group
+      if (itemInfo?.groups?.includes(groupName)) {
         count += itemCount;
-        groupMembers.push({ item: itemName, count: itemCount });
       }
     });
-
-    this.log({
-      message: `Group ${groupName} count: ${count}`,
-      members: groupMembers,
-    });
-
     return count;
   }
 }

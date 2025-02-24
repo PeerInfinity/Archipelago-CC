@@ -100,10 +100,13 @@ export class LocationUI {
     }
 
     if (location.item) {
-      // Use inventoryUI.toggleItem instead of directly adding to stateManager
       this.gameUI.inventoryUI.toggleItem(location.item.name);
       stateManager.checkLocation(location.name);
+
+      // Update both inventory and location displays
+      this.gameUI.inventoryUI.syncWithState();
       this.updateLocationDisplay();
+
       this.showLocationDetails(location);
 
       if (window.consoleManager) {
