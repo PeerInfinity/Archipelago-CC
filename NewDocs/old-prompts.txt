@@ -1,3 +1,5 @@
+Dates listed here are approximately when the prompt was moved to this file, not when the prompt was originally written.
+
 Jan. 31, 2025:
 
 automate_frontend_tests.py has now been implemented, to automate the process of running the tests in test_runner.html directly from pytest.
@@ -1335,3 +1337,67 @@ It would be nice if we could get all of the tests from the test runner interface
 I'll want you to generate the code for a first draft of these changes.
 
 But first, ask any questions you need to ask, in order to resolve ambiguity in the implementation details.
+
+----
+
+Feb. 24, 2025
+
+The next feature I want to implement is kinda complicated.  Currently I have index.html for the game interface, and test_runner.html for the automated test runner.  index.html currently has radio buttons for location view and region view.  I want to add a button for a third view, "Test cases", which opens a panel with  a list of the test cases from the test runner interface, but instead of automatically running all the test cases, it lets the user select one of the test cases, and loads the data for the test into the game interface, loading the data from test_output_rules.json, and initializing the inventory state according to the specific test case, from test_cases.json.  Do you have questions to ask for clarification before we get started on implementing this feature?
+
+
+
+UI Layout Questions:
+
+Should the "Test cases" option be added as another radio button alongside location and region view?
+
+Yes.
+
+Where exactly should the test cases panel appear when selected?
+
+It should appear in the same area where the location panel or region panel would normally appear.
+
+Should the test cases panel be closeable/dismissible?
+
+If the user clicks on the radio button for the location view or the region view, those panels will be shown as normal.
+
+Test Case Selection Questions:
+
+After selecting a test case, should it remain visible or should the panel close?
+
+It doesn't matter.  The user can change to another view when they want.
+
+Should there be any visual indication of which test case is currently loaded?
+
+Yes, that would be a good idea.  It would also be helpful to report whether the test got the result it expected, by checking whether the relevant lcoation is accessible after the test data is loaded and processed.
+
+Should there be a way to "reset" or clear a loaded test case?
+
+There is probably no need for this.
+
+Data Loading Questions:
+
+Will test_output_rules.json and test_cases.json be loaded when the page loads or only when accessing the test cases panel?
+
+Whatever you think makes more sense.
+
+When a test case is selected, should it immediately affect the game state or should there be a confirmation step?
+
+There is no need for a confirmation step.  Immediately load the data when the user clicks the button to load the test.
+
+Should there be any visual feedback when a test case is successfully loaded?
+
+Yes.  There should be an indicator that the test case is starting to load, and an indicator when it's finished loading.  Possibly just a line of text under the test case.
+
+Integration Questions:
+
+Should the test case view preserve any current game state when switching between views?
+
+No, there is no need to preserve current game state.  The test data will fully replace the game state.
+
+How should errors be handled if a test case's data is invalid or missing?
+
+Errors should be detected and reported if possible.  In the debug console, unless there is another obvious place to report the information.
+
+Should there be any restrictions on when users can load test cases (e.g., not during certain game states)?
+
+The test cases can be loaded at any time.

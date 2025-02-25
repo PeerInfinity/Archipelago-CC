@@ -50,6 +50,9 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
   if (!rule) {
     return true;
   }
+  if (!inventory) {
+    return false; // Add early return if inventory is undefined
+  }
 
   // Create trace object for this evaluation
   const trace = new RuleTrace(rule, depth);
@@ -114,7 +117,7 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
     }
 
     case 'item_check': {
-      result = rule.item && inventory.has(rule.item);
+      result = inventory.has?.(rule.item) ?? false; // Add safe access
       //safeLog(`Item check ${rule.item}: ${result}`, {
       //  itemState: inventory.getItemState(rule.item),
       //});
@@ -122,7 +125,7 @@ export const evaluateRule = (rule, inventory, depth = 0) => {
     }
 
     case 'count_check': {
-      result = rule.item && inventory.count(rule.item) >= (rule.count || 1);
+      result = (inventory.count?.(rule.item) ?? 0) >= (rule.count || 1); // Add safe access
       //safeLog(`Count check ${rule.item} (need ${rule.count || 1}): ${result}`, {
       //  actual: inventory.count(rule.item),
       //});

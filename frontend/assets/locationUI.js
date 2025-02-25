@@ -145,10 +145,10 @@ export class LocationUI {
 
     if (locations.length === 0) {
       locationsGrid.innerHTML = `
-                <div class="empty-message">
-                    Upload a JSON file to see locations or adjust filters
-                </div>
-            `;
+        <div class="empty-message">
+          Upload a JSON file to see locations or adjust filters
+        </div>
+      `;
       return;
     }
 
@@ -219,39 +219,61 @@ export class LocationUI {
           : 'unreachable';
 
         return `
-                <div 
-                    class="location-card ${stateClass}"
-                    data-location="${encodeURIComponent(
-                      JSON.stringify(location)
-                    ).replace(/"/g, '&quot;')}"
-                >
-                    <div class="font-medium">${location.name}</div>
-                    <div class="text-sm">Player ${location.player}</div>
-                    <div class="text-sm" style="color: ${
-                      isRegionAccessible ? 'inherit' : 'red'
-                    }">
-                        Region: ${
-                          isRegionAccessible ? 'Accessible' : 'Inaccessible'
-                        }
-                    </div>
-                    <div class="text-sm">
-                        Location: ${
-                          this.renderLogicTree(location.access_rule).outerHTML
-                        }
-                    </div>
-                    <div class="text-sm">
-                        ${
-                          isChecked
-                            ? 'Checked'
-                            : isLocationAccessible
-                            ? 'Available'
-                            : 'Locked'
-                        }
-                    </div>
-                </div>
-            `;
+          <div 
+            class="location-card ${stateClass}"
+            data-location="${encodeURIComponent(
+              JSON.stringify(location)
+            ).replace(/"/g, '&quot;')}"
+          >
+            <div class="font-medium location-link" data-location="${
+              location.name
+            }" data-region="${location.region}">${location.name}</div>
+            <div class="text-sm">Player ${location.player}</div>
+            <div class="text-sm">
+              Region: <span class="region-link" data-region="${
+                location.region
+              }" style="color: ${isRegionAccessible ? 'inherit' : 'red'}">${
+          location.region
+        }</span> (${isRegionAccessible ? 'Accessible' : 'Inaccessible'})
+            </div>
+            <div class="text-sm">
+              Location: ${this.renderLogicTree(location.access_rule).outerHTML}
+            </div>
+            <div class="text-sm">
+              ${
+                isChecked
+                  ? 'Checked'
+                  : isLocationAccessible
+                  ? 'Available'
+                  : 'Locked'
+              }
+            </div>
+          </div>
+        `;
       })
       .join('');
+
+    // Add click handlers for region and location links
+    document.querySelectorAll('.region-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent opening the location modal
+        const regionName = link.dataset.region;
+        if (regionName) {
+          this.gameUI.regionUI.navigateToRegion(regionName);
+        }
+      });
+    });
+
+    document.querySelectorAll('.location-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent capturing click on parent card
+        const locationName = link.dataset.location;
+        const regionName = link.dataset.region;
+        if (locationName && regionName) {
+          this.gameUI.regionUI.navigateToLocation(locationName, regionName);
+        }
+      });
+    });
   }
 
   renderLogicTree(rule) {
@@ -347,58 +369,68 @@ export class LocationUI {
     }
 
     info.innerHTML = `
-            <div class="space-y-2">
-                <div>
-                    <span class="font-semibold">Status: </span>
-                    ${
-                      stateManager.isLocationChecked(location.name)
-                        ? 'Checked'
-                        : stateManager.isLocationAccessible(
-                            location,
-                            this.gameUI.inventory
-                          )
-                        ? 'Available'
-                        : 'Locked'
-                    }
-                </div>
-                <div>
-                    <span class="font-semibold">Player: </span>${
-                      location.player
-                    }
-                </div>
-                <div>
-                    <span class="font-semibold">Region: </span>${
-                      location.region
-                    }
-                    ${region?.is_light_world ? ' (Light World)' : ''}
-                    ${region?.is_dark_world ? ' (Dark World)' : ''}
-                </div>
-                ${
-                  region?.dungeon
-                    ? `
-                    <div>
-                        <span class="font-semibold">Dungeon: </span>${region.dungeon.name}
-                    </div>
-                `
-                    : ''
-                }
-                ${
-                  location.item &&
-                  (stateManager.isLocationChecked(location.name) ||
-                    this.gameUI.debugMode)
-                    ? `
-                    <div>
-                        <span class="font-semibold">Item: </span>${
-                          location.item.name
-                        }
-                        ${location.item.advancement ? ' (Progression)' : ''}
-                        ${location.item.priority ? ' (Priority)' : ''}
-                    </div>
-                `
-                    : ''
-                }
+      <div class="space-y-2">
+        <div>
+          <span class="font-semibold">Status: </span>
+          ${
+            stateManager.isLocationChecked(location.name)
+              ? 'Checked'
+              : stateManager.isLocationAccessible(
+                  location,
+                  stateManager.inventory
+                )
+              ? 'Available'
+              : 'Locked'
+          }
+        </div>
+        <div>
+          <span class="font-semibold">Player: </span>${location.player}
+        </div>
+        <div>
+          <span class="font-semibold">Region: </span>
+          <span class="region-link" data-region="${location.region}">${
+      location.region
+    }</span>
+          ${region?.is_light_world ? ' (Light World)' : ''}
+          ${region?.is_dark_world ? ' (Dark World)' : ''}
+        </div>
+        ${
+          region?.dungeon
+            ? `
+            <div>
+              <span class="font-semibold">Dungeon: </span>${region.dungeon.name}
             </div>
-        `;
+          `
+            : ''
+        }
+        ${
+          location.item &&
+          (stateManager.isLocationChecked(location.name) ||
+            this.gameUI.debugMode)
+            ? `
+            <div>
+              <span class="font-semibold">Item: </span>${location.item.name}
+              ${location.item.advancement ? ' (Progression)' : ''}
+              ${location.item.priority ? ' (Priority)' : ''}
+            </div>
+          `
+            : ''
+        }
+      </div>
+    `;
+
+    // Add event listeners to region links in the modal
+    info.querySelectorAll('.region-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        const regionName = link.dataset.region;
+        if (regionName) {
+          // Close the modal first
+          document.getElementById('location-modal').classList.add('hidden');
+          // Then navigate to the region
+          this.gameUI.regionUI.navigateToRegion(regionName);
+        }
+      });
+    });
 
     modal.classList.remove('hidden');
   }

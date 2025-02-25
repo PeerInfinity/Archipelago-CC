@@ -501,3 +501,112 @@ select {
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.2);
 }
+
+/* Region Navigation - CONSOLIDATED VERSION */
+.region-link,
+.location-link,
+.item-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.region-link:hover,
+.location-link:hover,
+.item-link:hover {
+  text-decoration: underline;
+  color: #007bff;
+}
+
+.region-paths {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #555; /* Kept from first definition */
+}
+
+.region-path {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.highlight-region,
+.highlight-location {
+  animation: highlight-animation 2s;
+}
+
+@keyframes highlight-animation {
+  0%,
+  100% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: rgba(255, 255, 0, 0.3);
+  }
+}
+
+.region-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Path controls */
+.paths-control {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #555;
+}
+
+.paths-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.paths-count {
+  color: #aaa;
+  font-size: 0.9em;
+}
+
+.clear-paths-btn {
+  background-color: #722; /* Darker red */
+  color: #fff;
+}
+
+.clear-paths-btn:hover {
+  background-color: #933; /* Lighter red on hover */
+}
+
+/* Show More button appearance */
+button.show-paths-btn:not(:disabled) {
+  background-color: #064; /* Darker green */
+  color: #fff;
+}
+
+button.show-paths-btn:not(:disabled):hover {
+  background-color: #075; /* Lighter green on hover */
+}
+
+button.show-paths-btn:disabled {
+  background-color: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Improve existing location card styles */
+.location-card .location-link {
+  font-weight: 500;
+}
+
+/* Make region and location links more noticeable in test cases */
+.results-table .location-link,
+.results-table .region-link,
+.results-table .item-link {
+  color: #4da6ff;
+}
+
+.checked-loc {
+  color: #22c55e; /* Green */
+  text-decoration: line-through;
+}

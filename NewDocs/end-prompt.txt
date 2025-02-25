@@ -1,65 +1,11 @@
 That's the end of the files you need for context.  Now here are your instructions:
 
-Here is a planning document for the next changes I want to make:
+Here is a description of the next changes I want to make:
 
 ----
 
-The next feature I want to implement is kinda complicated.  Currently I have index.html for the game interface, and test_runner.html for the automated test runner.  index.html currently has radio buttons for location view and region view.  I want to add a button for a third view, "Test cases", which opens a panel with  a list of the test cases from the test runner interface, but instead of automatically running all the test cases, it lets the user select one of the test cases, and loads the data for the test into the game interface, loading the data from test_output_rules.json, and initializing the inventory state according to the specific test case, from test_cases.json.  Do you have questions to ask for clarification before we get started on implementing this feature?
+In the region panel, on each region block, I want you to add a button labeled “Show Paths”. When the button is clicked, it will calculate the possible paths from the start location to that block’s region, and add each of these paths to the bottom of the region block. There should be a finite number of possible paths, if you don't allow any region to occur more than once in the path. But that number might be large, and so we might want to only add one path at a time, and clicking the button again would add another path into the region block. Once the button is clicked the first time, the algorithm will calculate how many possible paths there are and display it beside the “Show Paths” button. And maybe it should stop counting if it reaches 100. When the algorithm runs the first time, it could save the paths it finds to a list, so that it doesn't need to recalculate them later. Or maybe if the algorithm is quick and we don't want to waste memory, we could iterate through the algorithm until it reaches the nth path when we want it. The algorithm is deterministic. It just enumerates all possible paths that start from the start region, and don't visit any region more than once. We keep only the paths that reach our target region, and don't look for paths that continue on from the target region. The algorithm ignores whether the region is currently accessible or not. But when we display the path, we list each region in the path in order from the start region, with the region name colored green if it's currently accessible or red if it's not.
 
+There's another feature that I want to add, that I'll want to reuse in a few places. I want to set up some reusable code so that any time a region name appears in the UI, it can be a clickable link. When the link is clicked, it opens the region panel, enables “Show all regions”, and then scrolls the view to the specified region. We could also make locations into clickable links, that also opens the region panel, enables “Show all regions”, and scrolls the view to the region that contains that location.
 
-
-UI Layout Questions:
-
-Should the "Test cases" option be added as another radio button alongside location and region view?
-
-Yes.
-
-Where exactly should the test cases panel appear when selected?
-
-It should appear in the same area where the location panel or region panel would normally appear.
-
-Should the test cases panel be closeable/dismissible?
-
-If the user clicks on the radio button for the location view or the region view, those panels will be shown as normal.
-
-Test Case Selection Questions:
-
-After selecting a test case, should it remain visible or should the panel close?
-
-It doesn't matter.  The user can change to another view when they want.
-
-Should there be any visual indication of which test case is currently loaded?
-
-Yes, that would be a good idea.  It would also be helpful to report whether the test got the result it expected, by checking whether the relevant lcoation is accessible after the test data is loaded and processed.
-
-Should there be a way to "reset" or clear a loaded test case?
-
-There is probably no need for this.
-
-Data Loading Questions:
-
-Will test_output_rules.json and test_cases.json be loaded when the page loads or only when accessing the test cases panel?
-
-Whatever you think makes more sense.
-
-When a test case is selected, should it immediately affect the game state or should there be a confirmation step?
-
-There is no need for a confirmation step.  Immediately load the data when the user clicks the button to load the test.
-
-Should there be any visual feedback when a test case is successfully loaded?
-
-Yes.  There should be an indicator that the test case is starting to load, and an indicator when it's finished loading.  Possibly just a line of text under the test case.
-
-Integration Questions:
-
-Should the test case view preserve any current game state when switching between views?
-
-No, there is no need to preserve current game state.  The test data will fully replace the game state.
-
-How should errors be handled if a test case's data is invalid or missing?
-
-Errors should be detected and reported if possible.  In the debug console, unless there is another obvious place to report the information.
-
-Should there be any restrictions on when users can load test cases (e.g., not during certain game states)?
-
-The test cases can be loaded at any time.
+Do you understand what I'm asking you to do? Please ask any clarifying questions you have before you write any code.
