@@ -684,6 +684,54 @@ export class RegionUI {
           .forEach((container) => {
             container.style.display = exitRulesVisible ? 'block' : 'none';
           });
+
+        // Show/hide the Compile List button based on exitRulesVisible state
+        compileListBtn.style.display = exitRulesVisible ? 'inline' : 'none';
+
+        // Hide the compiled list container if we're hiding exit rules
+        if (!exitRulesVisible) {
+          const compiledListContainer = pathsContainer.querySelector(
+            '.compiled-rules-list'
+          );
+          if (compiledListContainer) {
+            compiledListContainer.style.display = 'none';
+          }
+        }
+      });
+
+      // Add Compile List button after the Show Exit Rules button
+      const compileListBtn = document.createElement('button');
+      compileListBtn.classList.add('compile-list-btn');
+      compileListBtn.textContent = 'Compile List';
+      compileListBtn.style.display = 'none';
+      showExitRulesBtn.after(compileListBtn);
+
+      // Compile List button functionality
+      compileListBtn.addEventListener('click', () => {
+        // Find all visible exit rule containers
+        const exitRuleContainers = pathsContainer.querySelectorAll(
+          '.path-exit-rule-container'
+        );
+
+        // Extract failing nodes from all visible containers
+        const failingNodes = [];
+        exitRuleContainers.forEach((container) => {
+          if (container.style.display === 'block') {
+            const ruleContainer = container.querySelector('.path-exit-rule');
+            if (ruleContainer && ruleContainer.firstChild) {
+              const failingNodesFromRule = this.extractFailingLeafNodes(
+                ruleContainer.firstChild
+              );
+              failingNodes.push(...failingNodesFromRule);
+            }
+          }
+        });
+
+        // Deduplicate the failing nodes
+        const uniqueFailingNodes = this.deduplicateFailingNodes(failingNodes);
+
+        // Display the compiled list
+        this.displayCompiledList(uniqueFailingNodes, pathsContainer);
       });
     }
 
@@ -879,6 +927,240 @@ export class RegionUI {
         root.appendChild(document.createTextNode(' [unhandled rule type] '));
     }
     return root;
+  }
+
+  /**
+   * Extracts failing leaf nodes from a logic tree element
+   * @param {HTMLElement} treeElement - The logic tree DOM element to analyze
+   * @return {Array} - Array of failing leaf node information
+   */
+  extractFailingLeafNodes(treeElement) {
+    const failingNodes = [];
+
+    // Check if this is a failing node
+    const isFailing = treeElement.classList.contains('fail');
+
+    // Process based on node type
+    if (isFailing) {
+      const nodeType = this.getNodeType(treeElement);
+
+      if (nodeType && this.isLeafNodeType(nodeType)) {
+        // This is a failing leaf node, extract its data
+        const nodeData = this.extractNodeData(treeElement, nodeType);
+        if (nodeData) {
+          failingNodes.push(nodeData);
+        }
+      } else {
+        // For non-leaf nodes, recursively check children
+        const childLists = treeElement.querySelectorAll('ul');
+        childLists.forEach((ul) => {
+          ul.querySelectorAll('li').forEach((li) => {
+            if (li.firstChild) {
+              const childFailingNodes = this.extractFailingLeafNodes(
+                li.firstChild
+              );
+              failingNodes.push(...childFailingNodes);
+            }
+          });
+        });
+      }
+    }
+
+    return failingNodes;
+  }
+
+  /**
+   * Determines the type of a logic node from its DOM element
+   * @param {HTMLElement} element - The DOM element representing a logic node
+   * @return {string|null} - The type of the logic node or null if not found
+   */
+  getNodeType(element) {
+    const logicLabel = element.querySelector('.logic-label');
+    if (logicLabel) {
+      const typeMatch = logicLabel.textContent.match(/Type: (\w+)/);
+      if (typeMatch && typeMatch[1]) {
+        return typeMatch[1];
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Checks if a node type is a leaf node type
+   * @param {string} nodeType - The type of the logic node
+   * @return {boolean} - True if it's a leaf node type, false otherwise
+   */
+  isLeafNodeType(nodeType) {
+    return [
+      'constant',
+      'item_check',
+      'count_check',
+      'group_check',
+      'helper',
+      'state_method',
+    ].includes(nodeType);
+  }
+
+  /**
+   * Extracts data from a leaf node element based on its type
+   * @param {HTMLElement} element - The DOM element representing a logic node
+   * @param {string} nodeType - The type of the logic node
+   * @return {Object|null} - The extracted node data or null if extraction failed
+   */
+  extractNodeData(element, nodeType) {
+    const textContent = element.textContent;
+
+    switch (nodeType) {
+      case 'constant':
+        const valueMatch = textContent.match(/value: (true|false)/i);
+        if (valueMatch) {
+          return {
+            type: 'constant',
+            value: valueMatch[1].toLowerCase() === 'true',
+            display: `Constant: ${valueMatch[1]}`,
+            identifier: `constant_${valueMatch[1]}`,
+          };
+        }
+        break;
+
+      case 'item_check':
+        const itemMatch = textContent.match(/item: (.+?)($|\s)/);
+        if (itemMatch) {
+          return {
+            type: 'item_check',
+            item: itemMatch[1],
+            display: `Missing item: ${itemMatch[1]}`,
+            identifier: `item_${itemMatch[1]}`,
+          };
+        }
+        break;
+
+      case 'count_check':
+        const countMatch = textContent.match(/(\w+) >= (\d+)/);
+        if (countMatch) {
+          return {
+            type: 'count_check',
+            item: countMatch[1],
+            count: parseInt(countMatch[2], 10),
+            display: `Need ${countMatch[2]}× ${countMatch[1]}`,
+            identifier: `count_${countMatch[1]}_${countMatch[2]}`,
+          };
+        }
+        break;
+
+      case 'group_check':
+        const groupMatch = textContent.match(/group: (.+?)($|\s)/);
+        if (groupMatch) {
+          return {
+            type: 'group_check',
+            group: groupMatch[1],
+            display: `Missing group: ${groupMatch[1]}`,
+            identifier: `group_${groupMatch[1]}`,
+          };
+        }
+        break;
+
+      case 'helper':
+        const helperMatch = textContent.match(/helper: (.+?), args:/);
+        if (helperMatch) {
+          return {
+            type: 'helper',
+            name: helperMatch[1],
+            display: `Helper function: ${helperMatch[1]} not satisfied`,
+            identifier: `helper_${helperMatch[1]}`,
+          };
+        }
+        break;
+
+      case 'state_method':
+        const methodMatch = textContent.match(/method: (.+?), args:/);
+        if (methodMatch) {
+          return {
+            type: 'state_method',
+            method: methodMatch[1],
+            display: `State method: ${methodMatch[1]} not satisfied`,
+            identifier: `method_${methodMatch[1]}`,
+          };
+        }
+        break;
+    }
+
+    return null;
+  }
+
+  /**
+   * Removes duplicate failing nodes
+   * @param {Array} nodes - Array of failing node information
+   * @return {Array} - Deduplicated array of failing nodes
+   */
+  deduplicateFailingNodes(nodes) {
+    const uniqueNodes = [];
+    const seenIdentifiers = new Set();
+
+    nodes.forEach((node) => {
+      if (!seenIdentifiers.has(node.identifier)) {
+        seenIdentifiers.add(node.identifier);
+        uniqueNodes.push(node);
+      }
+    });
+
+    return uniqueNodes;
+  }
+
+  /**
+   * Displays the compiled list of failing nodes
+   * @param {Array} nodes - Array of failing node information to display
+   * @param {HTMLElement} container - Container element to place the list
+   */
+  displayCompiledList(nodes, container) {
+    // Check if the list already exists
+    let compiledListContainer = container.querySelector('.compiled-rules-list');
+
+    // If it doesn't exist, create it
+    if (!compiledListContainer) {
+      compiledListContainer = document.createElement('div');
+      compiledListContainer.classList.add('compiled-rules-list');
+
+      // Insert at the top of the paths container
+      if (container.firstChild) {
+        container.insertBefore(compiledListContainer, container.firstChild);
+      } else {
+        container.appendChild(compiledListContainer);
+      }
+    }
+
+    // Clear the container and add the header
+    compiledListContainer.innerHTML = '<h4>Blockers Preventing Access:</h4>';
+    compiledListContainer.style.display = 'block';
+
+    // If there are no failing nodes, show a message
+    if (nodes.length === 0) {
+      const emptyMessage = document.createElement('div');
+      emptyMessage.classList.add('compiled-rules-empty');
+      emptyMessage.textContent =
+        'No failing conditions found. This might be due to a region connection without a rule.';
+      compiledListContainer.appendChild(emptyMessage);
+      return;
+    }
+
+    // Create the list of failing nodes
+    const failingList = document.createElement('ul');
+    failingList.classList.add('compiled-rules-items');
+
+    nodes.forEach((node) => {
+      const listItem = document.createElement('li');
+      listItem.classList.add('compiled-rule-item');
+      listItem.textContent = node.display;
+
+      // Add special class for item-related rules
+      if (node.type === 'item_check' || node.type === 'count_check') {
+        listItem.classList.add('item-related-rule');
+      }
+
+      failingList.appendChild(listItem);
+    });
+
+    compiledListContainer.appendChild(failingList);
   }
 }
 

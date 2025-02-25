@@ -638,3 +638,47 @@ button.show-paths-btn:disabled {
 .show-exit-rules-btn:hover {
   background-color: #666;
 }
+
+/* Compiled Rules List */
+.compiled-rules-list {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: rgba(244, 67, 54, 0.1);
+  border-left: 3px solid #f44336;
+  border-radius: 4px;
+}
+
+.compiled-rules-list h4 {
+  margin-top: 0;
+  color: #f44336;
+  font-weight: 500;
+}
+
+.compiled-rules-items {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.compiled-rule-item {
+  margin-bottom: 0.25rem;
+}
+
+.item-related-rule {
+  color: #ffc107;
+  font-weight: 500;
+}
+
+.compiled-rules-empty {
+  font-style: italic;
+  color: #aaa;
+  padding: 0.5rem 0;
+}
+
+.compile-list-btn {
+  background-color: #7b1fa2;
+  color: #fff;
+}
+
+.compile-list-btn:hover {
+  background-color: #9c27b0;
+}
