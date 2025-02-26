@@ -1,3 +1,5 @@
+import { ALTTPState } from './state.js';
+
 // frontend/assets/games/alttp/inventory.js
 
 export class ALTTPInventory {

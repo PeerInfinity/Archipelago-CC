@@ -408,7 +408,7 @@ export class RegionUI {
       return document.createElement('div'); // Return empty div if no inventory
     }
 
-    const isAccessible = stateManager.isRegionReachable(regionName, inventory);
+    const isAccessible = stateManager.isRegionReachable(regionName);
 
     // Header
     const headerEl = document.createElement('div');
@@ -461,10 +461,8 @@ export class RegionUI {
           const exitWrapper = document.createElement('div');
           exitWrapper.classList.add('exit-wrapper');
 
-          const canAccess = evaluateRule(
-            exit.access_rule,
-            stateManager.inventory
-          );
+          // Remove inventory parameter
+          const canAccess = evaluateRule(exit.access_rule);
           const colorClass = canAccess ? 'accessible' : 'inaccessible';
 
           // Create wrapper for exit info
@@ -518,10 +516,8 @@ export class RegionUI {
           const locDiv = document.createElement('div');
           locDiv.classList.add('location-wrapper');
 
-          const canAccess = evaluateRule(
-            loc.access_rule,
-            stateManager.inventory
-          );
+          // Remove inventory parameter
+          const canAccess = evaluateRule(loc.access_rule);
           const isChecked = stateManager.isLocationChecked(loc.name);
           const colorClass = isChecked
             ? 'checked-loc'
@@ -758,10 +754,7 @@ export class RegionUI {
 
     path.forEach((region, index) => {
       // Check if the region is accessible
-      const regionAccessible = stateManager.isRegionReachable(
-        region,
-        stateManager.inventory
-      );
+      const regionAccessible = stateManager.isRegionReachable(region);
 
       // Create a span for the region with the appropriate color
       const regionSpan = document.createElement('span');
@@ -828,14 +821,8 @@ export class RegionUI {
       const fromRegion = path[i];
       const toRegion = path[i + 1];
 
-      const fromAccessible = stateManager.isRegionReachable(
-        fromRegion,
-        stateManager.inventory
-      );
-      const toAccessible = stateManager.isRegionReachable(
-        toRegion,
-        stateManager.inventory
-      );
+      const fromAccessible = stateManager.isRegionReachable(fromRegion);
+      const toAccessible = stateManager.isRegionReachable(toRegion);
 
       // Found transition from accessible to inaccessible
       if (fromAccessible && !toAccessible) {
@@ -874,7 +861,7 @@ export class RegionUI {
       return root;
     }
 
-    const result = evaluateRule(rule, stateManager.inventory);
+    const result = evaluateRule(rule);
     root.classList.toggle('pass', !!result);
     root.classList.toggle('fail', !result);
 

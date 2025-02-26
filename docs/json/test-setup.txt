@@ -55,7 +55,7 @@ Here is a configuration for .vscode/launch.json for launching just one of the te
         },
 
 The main file in charge of running the tests is:
-frontend/locationTests.js
+frontend/locationTester.js
 
 That file uses these other files:
 frontend/locationManager.js

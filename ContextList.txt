@@ -40,15 +40,18 @@ frontend/assets/types/alttp.d.ts
 frontend/test_output_rules.json 1 1000
 frontend/test_cases.json 1 200
 
-#frontend/assets/locationTests.js
+frontend/assets/locationTester.js
 frontend/assets/stateManager.js
 frontend/assets/stateManagerSingleton.js
 frontend/assets/ruleEngine.js
-#frontend/assets/testLogger.js
-#frontend/assets/testResultsDisplay.js
+frontend/assets/testLogger.js
+frontend/assets/testResultsDisplay.js
 
 frontend/assets/games/alttp/helpers.js
 frontend/assets/games/alttp/inventory.js
+frontend/assets/games/alttp/state.js
+
+frontend/assets/helpers/index.js
 
 frontend/assets/gameUI.js
 frontend/assets/locationUI.js
@@ -57,7 +60,7 @@ frontend/assets/testCaseUI.js
 
 frontend/index.html
 frontend/styles/index.css
-#frontend/test_runner.html
+frontend/test_runner.html
 
 #pytest_output.txt 1 200
 

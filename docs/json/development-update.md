@@ -60,7 +60,7 @@ Modified Files:
 
 ```
 frontend/assets/ruleEngine.js          - Updated to support helpers
-frontend/assets/locationTests.js       - Updated to use new helper system
+frontend/assets/locationTester.js       - Updated to use new helper system
 worlds/generic/RuleParser/analyzer.py  - Modified to preserve helpers
 worlds/generic/RuleParser/exporter.py  - Modified to export helper references
 worlds/generic/RuleParser/games/alttp.py - Changed to validate vs expand helpers

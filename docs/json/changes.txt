@@ -109,7 +109,7 @@ frontend/assets/locationManager.js
 Handles locations
 
 
-frontend/assets/locationTests.js
+frontend/assets/locationTester.js
 
 The main script for test_runner.html
 

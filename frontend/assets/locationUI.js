@@ -90,10 +90,7 @@ export class LocationUI {
       return;
     }
 
-    const isAccessible = stateManager.isLocationAccessible(
-      location,
-      stateManager.inventory
-    );
+    const isAccessible = stateManager.isLocationAccessible(location);
 
     if (!isAccessible) {
       return;
@@ -130,15 +127,12 @@ export class LocationUI {
     const sorting = document.getElementById('sort-select').value;
 
     const locations = stateManager.getProcessedLocations(
-      stateManager.inventory,
       sorting,
       showReachable,
       showUnreachable
     );
 
-    const newlyReachable = stateManager.getNewlyReachableLocations(
-      stateManager.inventory
-    );
+    const newlyReachable = stateManager.getNewlyReachableLocations();
 
     const locationsGrid = document.getElementById('locations-grid');
     locationsGrid.style.gridTemplateColumns = `repeat(${this.columns}, minmax(0, 1fr))`; // Set the number of columns
@@ -159,23 +153,11 @@ export class LocationUI {
 
     if (sorting === 'accessibility') {
       filteredLocations.sort((a, b) => {
-        const aRegionAccessible = stateManager.isRegionReachable(
-          a.region,
-          stateManager.inventory
-        );
-        const bRegionAccessible = stateManager.isRegionReachable(
-          b.region,
-          stateManager.inventory
-        );
+        const aRegionAccessible = stateManager.isRegionReachable(a.region);
+        const bRegionAccessible = stateManager.isRegionReachable(b.region);
 
-        const aLocationAccessible = stateManager.isLocationAccessible(
-          a,
-          stateManager.inventory
-        );
-        const bLocationAccessible = stateManager.isLocationAccessible(
-          b,
-          stateManager.inventory
-        );
+        const aLocationAccessible = stateManager.isLocationAccessible(a);
+        const bLocationAccessible = stateManager.isLocationAccessible(b);
 
         if (aLocationAccessible && bLocationAccessible) {
           return 0;
@@ -198,13 +180,10 @@ export class LocationUI {
     locationsGrid.innerHTML = filteredLocations
       .map((location) => {
         const isRegionAccessible = stateManager.isRegionReachable(
-          location.region,
-          stateManager.inventory
+          location.region
         );
-        const isLocationAccessible = stateManager.isLocationAccessible(
-          location,
-          stateManager.inventory
-        );
+        const isLocationAccessible =
+          stateManager.isLocationAccessible(location);
         const isNewlyReachable =
           showHighlights &&
           newlyReachable.has(`${location.player}-${location.name}`);
@@ -285,8 +264,8 @@ export class LocationUI {
       return root;
     }
 
-    // Use stateManager.inventory instead of gameUI.inventory
-    const result = evaluateRule(rule, stateManager.inventory);
+    // Remove inventory parameter
+    const result = evaluateRule(rule);
     root.classList.toggle('pass', !!result);
     root.classList.toggle('fail', !result);
 
@@ -375,10 +354,7 @@ export class LocationUI {
           ${
             stateManager.isLocationChecked(location.name)
               ? 'Checked'
-              : stateManager.isLocationAccessible(
-                  location,
-                  stateManager.inventory
-                )
+              : stateManager.isLocationAccessible(location)
               ? 'Available'
               : 'Locked'
           }

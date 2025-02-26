@@ -1,5 +1,7 @@
 import { evaluateRule } from './ruleEngine.js';
 import { ALTTPInventory } from './games/alttp/inventory.js';
+import { ALTTPState } from './games/alttp/state.js';
+import { ALTTPHelpers } from './games/alttp/helpers.js';
 
 /**
  * Manages game state including inventory and reachable regions/locations.
@@ -10,6 +12,8 @@ export class StateManager {
   constructor() {
     // Core state storage
     this.inventory = new ALTTPInventory();
+    this.state = new ALTTPState();
+    this.helpers = new ALTTPHelpers();
 
     // Region and location data
     this.locations = []; // Flat array of all locations
@@ -29,28 +33,74 @@ export class StateManager {
 
     // Checked locations tracking
     this.checkedLocations = new Set();
+
+    this._uiCallbacks = {};
   }
 
   /**
    * Initializes inventory with loaded game data
    */
-  initializeInventory(items, excludeItems, progressionMapping, itemData) {
-    this.inventory = new ALTTPInventory(
-      items,
-      excludeItems,
-      progressionMapping,
-      itemData
-    );
+  initializeInventory(items, progressionMapping, itemData) {
+    // Create the inventory first
+    this.inventory = new ALTTPInventory(items, progressionMapping, itemData);
+
+    // Then load state and helpers
+    this.loadStateAndHelpers();
+  }
+
+  /**
+   * Create and connect state and helper objects
+   */
+  loadStateAndHelpers() {
+    try {
+      // Create state object
+      this.state = new ALTTPState();
+      this.state.setFlag('bombless_start');
+
+      // Create helpers
+      this.helpers = new ALTTPHelpers();
+
+      // Make the helpers globally available for debug purposes
+      window.gameHelpers = this.helpers;
+
+      console.log('State and helpers initialized:', {
+        state: this.state,
+        helpers: this.helpers,
+      });
+
+      // Refresh any cached values that might depend on helpers
+      this.invalidateCache();
+    } catch (error) {
+      console.error('Error initializing state and helpers:', error);
+    }
+  }
+
+  registerUICallback(name, callback) {
+    this._uiCallbacks[name] = callback;
+  }
+
+  notifyUI(eventType) {
+    Object.values(this._uiCallbacks).forEach((callback) => {
+      if (typeof callback === 'function') callback(eventType);
+    });
   }
 
   clearInventory() {
-    this.inventory = new ALTTPInventory();
+    // When clearing, make sure we preserve the existing progression mapping and item data
+    const progressionMapping = this.inventory.progressionMapping || {};
+    const itemData = this.inventory.itemData || {};
+    this.inventory = new ALTTPInventory([], progressionMapping, itemData);
+    this.notifyUI('inventoryChanged');
   }
 
   clearState() {
-    this.inventory = new ALTTPInventory();
+    // When clearing state, preserve progression mapping and item data
+    const progressionMapping = this.inventory.progressionMapping || {};
+    const itemData = this.inventory.itemData || {};
+    this.inventory = new ALTTPInventory([], progressionMapping, itemData);
     this.clearCheckedLocations();
     this.invalidateCache();
+    this.notifyUI('inventoryChanged');
   }
 
   /**
@@ -65,6 +115,7 @@ export class StateManager {
     } else {
       // Normal single-item mode
       this.inventory.addItem(itemName);
+      this.notifyUI('inventoryChanged');
     }
   }
 
@@ -105,10 +156,40 @@ export class StateManager {
       });
     });
 
+    // Initialize helper state with settings
+    this.initializeHelperState();
+
     this.invalidateCache();
 
     // Immediately compute reachable regions to collect initial events
-    this.computeReachableRegions(this.inventory);
+    this.computeReachableRegions();
+  }
+
+  /**
+   * Initialize the state object for helper functions
+   */
+  initializeHelperState() {
+    try {
+      // Create a state object with all our settings
+      const stateData = {
+        settings: this.settings || {},
+        hasFlag: (flag) => this.settings && !!this.settings[flag],
+        getFlag: (flag) => (this.settings ? this.settings[flag] : null),
+      };
+
+      const ruleEngine = require('./ruleEngine.js');
+      if (ruleEngine.updateHelperState) {
+        ruleEngine.updateHelperState(stateData);
+        console.log(
+          'Helper state initialized successfully with settings:',
+          Object.keys(this.settings || {}).filter((k) => this.settings[k])
+        );
+      } else {
+        console.warn('updateHelperState not found in ruleEngine');
+      }
+    } catch (error) {
+      console.error('Failed to initialize helper state:', error);
+    }
   }
 
   invalidateCache() {
@@ -121,55 +202,56 @@ export class StateManager {
    * Core pathfinding logic: determines which regions are reachable
    * Also handles automatic collection of event items
    */
-  computeReachableRegions(inventory) {
-    if (this.cacheValid) {
+  computeReachableRegions() {
+    // For custom inventories, don't use the cache
+    const useCache = this.cacheValid;
+    if (useCache) {
       return this.knownReachableRegions;
     }
 
     if (this._computing) {
       return this.knownReachableRegions;
     }
+
+    // Only set computing flag for main inventory
     this._computing = true;
 
-    let finalReachableRegions = new Set(this.knownReachableRegions);
+    // Create a local result set - only store in state if it's the main inventory
+    let localReachable = new Set();
     let newEventCollected = true;
 
     try {
       while (newEventCollected) {
         newEventCollected = false;
-        const reachableSet = this.runSingleBFS(inventory);
+        const reachableSet = this.runSingleBFS();
 
-        // Auto-collect events in reachable locations
+        // Auto-collect events if using main inventory
         for (const loc of this.eventLocations.values()) {
           if (reachableSet.has(loc.region)) {
-            const canAccessLoc = evaluateRule(loc.access_rule, inventory);
-            if (canAccessLoc && !inventory.has(loc.item.name)) {
-              inventory.addItem(loc.item.name);
+            const canAccessLoc = evaluateRule(loc.access_rule);
+            if (canAccessLoc && !this.inventory.has(loc.item.name)) {
+              this.inventory.addItem(loc.item.name);
               newEventCollected = true;
-              // Add this line to trigger UI update when events are collected:
-              window.gameUI?.inventoryUI?.syncWithState();
+              this.notifyUI('inventoryChanged');
             }
           }
         }
 
-        finalReachableRegions = new Set([
-          ...finalReachableRegions,
-          ...reachableSet,
-        ]);
+        localReachable = new Set([...localReachable, ...reachableSet]);
       }
 
-      this.knownReachableRegions = finalReachableRegions;
+      // Only update cache for main inventory
+      this.knownReachableRegions = localReachable;
       this.knownUnreachableRegions = new Set(
-        Object.keys(this.regions).filter(
-          (region) => !finalReachableRegions.has(region)
-        )
+        Object.keys(this.regions).filter((r) => !localReachable.has(r))
       );
       this.cacheValid = true;
     } finally {
       this._computing = false;
     }
 
-    return finalReachableRegions;
+    this.notifyUI('reachableRegionsComputed');
+    return localReachable;
   }
 
   getStartRegions() {
@@ -183,7 +265,7 @@ export class StateManager {
   /**
    * Single pass of breadth-first search to find reachable regions
    */
-  runSingleBFS(inventory) {
+  runSingleBFS() {
     const start = this.getStartRegions();
     const reachable = new Set(start);
     const queue = [...start];
@@ -197,7 +279,7 @@ export class StateManager {
         if (seenExits.has(exitKey)) continue;
         seenExits.add(exitKey);
         if (!exit.connected_region) continue;
-        if (exit.access_rule && !evaluateRule(exit.access_rule, inventory)) {
+        if (exit.access_rule && !evaluateRule(exit.access_rule)) {
           continue;
         }
         const targetRegion = exit.connected_region;
@@ -209,10 +291,7 @@ export class StateManager {
       for (const entrance of currentRegion.entrances || []) {
         if (!entrance.connected_region) continue;
         if (reachable.has(entrance.connected_region)) continue;
-        if (
-          entrance.access_rule &&
-          !evaluateRule(entrance.access_rule, inventory)
-        ) {
+        if (entrance.access_rule && !evaluateRule(entrance.access_rule)) {
           continue;
         }
         reachable.add(entrance.connected_region);
@@ -222,24 +301,33 @@ export class StateManager {
     return reachable;
   }
 
-  isRegionReachable(regionName, inventory) {
-    const reachableRegions = this.computeReachableRegions(inventory);
+  /**
+   * Determines if a region is reachable with the given inventory
+   * @param {string} regionName - The name of the region to check
+   * @return {boolean} - Whether the region is reachable
+   */
+  isRegionReachable(regionName) {
+    const reachableRegions = this.computeReachableRegions();
     return reachableRegions.has(regionName);
   }
 
-  isLocationAccessible(location, inventory) {
-    const reachableRegions = this.computeReachableRegions(inventory);
+  /**
+   * Determines if a location is accessible with the given inventory
+   * @param {Object} location - The location to check
+   * @return {boolean} - Whether the location is accessible
+   */
+  isLocationAccessible(location) {
+    const reachableRegions = this.computeReachableRegions();
     if (!reachableRegions.has(location.region)) {
       return false;
     }
 
     // Simply return the rule evaluation result
     // Don't auto-collect events here since computeReachableRegions handles that
-    return evaluateRule(location.access_rule, inventory);
+    return evaluateRule(location.access_rule);
   }
 
   getProcessedLocations(
-    inventory,
     sorting = 'original',
     showReachable = true,
     showUnreachable = true
@@ -248,24 +336,24 @@ export class StateManager {
       .slice()
       .sort((a, b) => {
         if (sorting === 'accessibility') {
-          const aAccessible = this.isLocationAccessible(a, inventory);
-          const bAccessible = this.isLocationAccessible(b, inventory);
+          const aAccessible = this.isLocationAccessible(a);
+          const bAccessible = this.isLocationAccessible(b);
           return bAccessible - aAccessible;
         }
         return 0;
       })
       .filter((location) => {
-        const isAccessible = this.isLocationAccessible(location, inventory);
+        const isAccessible = this.isLocationAccessible(location);
         return (
           (isAccessible && showReachable) || (!isAccessible && showUnreachable)
         );
       });
   }
 
-  getNewlyReachableLocations(inventory) {
+  getNewlyReachableLocations() {
     const currentReachable = new Set(
       this.locations
-        .filter((loc) => this.isLocationAccessible(loc, inventory))
+        .filter((loc) => this.isLocationAccessible(loc))
         .map((loc) => `${loc.player}-${loc.name}`)
     );
     const newlyReachable = new Set(
@@ -292,10 +380,6 @@ export class StateManager {
 
   /**
    * Initializes inventory state for running a test case.
-   * @param {string[]} requiredItems - Items that must be present
-   * @param {string[]} excludedItems - Items that must not be present
-   * @param {Object} progressionMapping - Item progression rules
-   * @param {Object} itemData - Complete item database
    */
   initializeInventoryForTest(
     requiredItems = [],
@@ -306,6 +390,12 @@ export class StateManager {
     this.clearState();
     this.beginBatchUpdate();
 
+    // Create fresh inventory with the test items
+    this.inventory = new ALTTPInventory([], progressionMapping, itemData);
+
+    // Load state and helpers first before adding items
+    this.loadStateAndHelpers();
+
     // If we have excludedItems, start with ALL items except those
     if (excludedItems?.length > 0) {
       Object.keys(itemData).forEach((itemName) => {
@@ -314,16 +404,35 @@ export class StateManager {
           !(itemName.includes('Bottle') && excludedItems.includes('AnyBottle'))
         ) {
           this.addItemToInventory(itemName);
+
+          // Process as event if applicable
+          if (this.state?.processEventItem) {
+            this.state.processEventItem(itemName);
+          }
+        }
+      });
+    } else {
+      // Otherwise, just add required items
+      requiredItems.forEach((itemName) => {
+        this.addItemToInventory(itemName);
+
+        // Process as event if applicable
+        if (this.state?.processEventItem) {
+          this.state.processEventItem(itemName);
         }
       });
     }
 
-    // Then add required items
-    requiredItems.forEach((itemName) => {
-      this.addItemToInventory(itemName);
-    });
-
     this.commitBatchUpdate();
+
+    // Make sure bombless_start flag is set
+    if (this.state) {
+      this.state.setFlag('bombless_start');
+    }
+
+    // Run a state update cycle to process events
+    this.invalidateCache();
+    this.computeReachableRegions();
   }
 
   isLocationChecked(locationName) {
@@ -362,9 +471,9 @@ export class StateManager {
 
     // Clear caches and force a state update before any callbacks
     this.invalidateCache();
-    this.computeReachableRegions(this.inventory);
+    this.computeReachableRegions();
 
-    window.gameUI?.inventoryUI?.syncWithState();
+    this.notifyUI('inventoryChanged');
 
     this._batchMode = false;
     this._batchedUpdates = new Map();

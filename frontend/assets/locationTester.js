@@ -1,15 +1,15 @@
-// locationTests.js
-import { LocationManager } from './locationManager.js';
+// locationTester.js
 import { evaluateRule } from './ruleEngine.js';
-import { ALTTPInventory } from './games/alttp/inventory.js';
-import { ALTTPState } from './games/alttp/state.js';
-import { ALTTPHelpers } from './games/alttp/helpers.js';
+import stateManager from './stateManagerSingleton.js';
 import { TestLogger } from './testLogger.js';
 import { TestResultsDisplay } from './testResultsDisplay.js';
 
+/**
+ * Class for testing location accessibility
+ * This is used by the test runner interface
+ */
 export class LocationTester {
   constructor() {
-    this.locationManager = new LocationManager();
     this.logger = new TestLogger();
     this.display = new TestResultsDisplay();
     this.regions = null;
@@ -21,13 +21,18 @@ export class LocationTester {
     console.log('LocationTester initialized');
   }
 
-  async loadRulesData() {
+  loadRulesData() {
     try {
-      const response = await fetch('./test_output_rules.json');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Use synchronous XMLHttpRequest
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', './test_output_rules.json', false); // false makes it synchronous
+      xhr.send();
+
+      if (xhr.status !== 200) {
+        throw new Error(`HTTP error! status: ${xhr.status}`);
       }
-      const rulesData = await response.json();
+
+      const rulesData = JSON.parse(xhr.responseText);
 
       // Store all relevant data
       this.regions = rulesData.regions['1'];
@@ -36,8 +41,8 @@ export class LocationTester {
       this.startRegions = rulesData.start_regions?.['1'];
       this.progressionMapping = rulesData.progression_mapping['1'];
 
-      // Initialize location manager
-      this.locationManager.loadFromJSON(rulesData);
+      // Initialize state manager with the rules data
+      stateManager.loadFromJSON(rulesData);
 
       return true;
     } catch (error) {
@@ -46,26 +51,7 @@ export class LocationTester {
     }
   }
 
-  createInventory(items = [], excludeItems = []) {
-    const state = new ALTTPState(this.logger);
-    const inventory = new ALTTPInventory(
-      items,
-      excludeItems,
-      this.progressionMapping,
-      this.locationManager.itemData,
-      this.logger
-    );
-
-    inventory.helpers = new ALTTPHelpers(inventory, state);
-    inventory.state = state;
-
-    // Flag for proper bomb counting
-    state.setFlag('bombless_start');
-
-    return inventory;
-  }
-
-  async runLocationTests(testCases) {
+  runLocationTests(testCases) {
     this.logger.setDebugging(true);
     this.logger.clear();
 
@@ -89,7 +75,7 @@ export class LocationTester {
           excludedItems,
         });
 
-        const testResult = await this.runSingleTest(
+        const testResult = this.runSingleTest(
           location,
           expectedAccess,
           requiredItems,
@@ -116,8 +102,8 @@ export class LocationTester {
         }
       }
 
-      // Display all results
-      this.display.displayResults(allResults, this.locationManager);
+      // Display all results using the TestResultsDisplay
+      this.display.displayResults(allResults);
 
       // Signal completion
       window.testsCompleted = true;
@@ -131,27 +117,48 @@ export class LocationTester {
     }
   }
 
-  async runSingleTest(location, expectedAccess, requiredItems, excludedItems) {
+  runSingleTest(location, expectedAccess, requiredItems, excludedItems) {
     try {
-      const inventory = this.createInventory(requiredItems, excludedItems);
-      const locationData = this.locationManager.locations.find(
+      // Ensure we're using a clean state
+      stateManager.clearState();
+
+      // Start logging this test
+      this.logger.startTest({
+        location,
+        expectedAccess,
+        requiredItems,
+        excludedItems,
+      });
+
+      // Use stateManager's inventory directly (matching testCaseUI.js)
+      stateManager.initializeInventoryForTest(
+        requiredItems,
+        excludedItems,
+        this.progressionMapping,
+        stateManager.itemData
+      );
+
+      // Force cache invalidation to ensure clean state
+      stateManager.invalidateCache();
+
+      // Find location data
+      const locationData = stateManager.locations.find(
         (loc) => loc.name === location && loc.player === 1
       );
 
       if (!locationData) {
-        return {
+        const result = {
           passed: false,
           message: `Location not found: ${location}`,
         };
+        this.logger.endTest(result);
+        return result;
       }
 
-      // Check actual accessibility
-      const isAccessible = this.locationManager.isLocationAccessible(
-        locationData,
-        inventory
-      );
+      // Check accessibility using stateManager's own inventory
+      const isAccessible = stateManager.isLocationAccessible(locationData);
 
-      console.log(`${location} accessibility:`, {
+      this.logger.log(`${location} accessibility:`, {
         expected: expectedAccess,
         actual: isAccessible,
         requiredItems,
@@ -161,68 +168,86 @@ export class LocationTester {
       // Check if result matches expectation
       const passed = isAccessible === expectedAccess;
       if (!passed) {
-        return {
+        const result = {
           passed: false,
           message: `Expected: ${expectedAccess}, Got: ${isAccessible}`,
         };
+        this.logger.endTest(result);
+        return result;
       }
 
       // If accessibility check passed, test partial inventories if needed
-      if (expectedAccess && requiredItems.length && !excludedItems.length) {
+      // Make sure this matches exactly how testCaseUI.js does it
+      if (expectedAccess && requiredItems.length > 0 && !excludedItems.length) {
         for (const missingItem of requiredItems) {
-          const partialInventory = this.createInventory(
-            requiredItems.filter((item) => item !== missingItem)
+          // Initialize stateManager with partial inventory
+          stateManager.initializeInventoryForTest(
+            requiredItems.filter((item) => item !== missingItem),
+            excludedItems,
+            this.progressionMapping,
+            stateManager.itemData
           );
 
-          const partialAccess = this.locationManager.isLocationAccessible(
-            locationData,
-            partialInventory
-          );
+          // Force cache invalidation
+          stateManager.invalidateCache();
+
+          // Check with state manager's inventory directly
+          const partialAccess = stateManager.isLocationAccessible(locationData);
 
           if (partialAccess) {
-            return {
+            const result = {
               passed: false,
               message: `Location accessible without required item: ${missingItem}`,
             };
+            this.logger.endTest(result);
+            return result;
           }
         }
       }
 
-      return {
+      // If we get here, the test passed
+      const result = {
         passed: true,
         message: 'Test passed',
       };
+      this.logger.endTest(result);
+      return result;
     } catch (error) {
       console.error(`Error testing ${location}:`, error);
-      return {
+      const result = {
         passed: false,
         message: `Test error: ${error.message}`,
       };
+      this.logger.endTest(result);
+      return result;
     }
   }
 }
 
 // Initialize tests when page loads
 if (typeof window !== 'undefined') {
-  window.onload = async () => {
+  window.onload = () => {
     try {
       const tester = new LocationTester();
-      await tester.loadRulesData();
+      tester.loadRulesData();
 
-      const testCasesResponse = await fetch('test_cases.json');
-      if (!testCasesResponse.ok) {
-        throw new Error(
-          `Failed to load test cases: ${testCasesResponse.status}`
-        );
+      // Use synchronous XMLHttpRequest
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'test_cases.json', false); // false makes it synchronous
+      xhr.send();
+
+      if (xhr.status !== 200) {
+        throw new Error(`Failed to load test cases: ${xhr.status}`);
       }
-      const testCasesData = await testCasesResponse.json();
+
+      const testCasesData = JSON.parse(xhr.responseText);
 
       if (!testCasesData.location_tests) {
         throw new Error('No location_tests found in test cases file');
       }
 
       console.log(`Loaded ${testCasesData.location_tests.length} test cases`);
-      await tester.runLocationTests(testCasesData.location_tests);
+      tester.runLocationTests(testCasesData.location_tests);
     } catch (error) {
       console.error('Test execution failed:', error);
       document.getElementById('test-results').innerHTML = `

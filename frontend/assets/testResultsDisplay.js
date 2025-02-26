@@ -1,10 +1,12 @@
+import stateManager from './stateManagerSingleton.js';
+
 // testResultsDisplay.js
 export class TestResultsDisplay {
   constructor(resultsElementId = 'test-results') {
     this.resultsElement = document.getElementById(resultsElementId);
   }
 
-  displayResults(results, locationManager) {
+  displayResults(results) {
     // Calculate summary data directly
     const total = results.length;
     const passed = results.filter((r) => r.result?.passed).length;
@@ -37,7 +39,7 @@ export class TestResultsDisplay {
         const result = testContext.result;
         if (!result) continue;
 
-        const locationData = locationManager.locations.find(
+        const locationData = stateManager.locations.find(
           (loc) => loc.name === testContext.location
         );
 

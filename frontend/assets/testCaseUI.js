@@ -8,14 +8,22 @@ export class TestCaseUI {
     this.currentTest = null;
   }
 
-  async initialize() {
+  initialize() {
     try {
-      const [testCasesResponse, testRulesResponse] = await Promise.all([
-        fetch('./test_cases.json'),
-        fetch('./test_output_rules.json'),
-      ]);
-      this.testCases = await testCasesResponse.json();
-      this.testRules = await testRulesResponse.json();
+      // Use synchronous XMLHttpRequest instead of fetch
+      const loadJSON = (url) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false); // false makes it synchronous
+        xhr.send();
+        if (xhr.status === 200) {
+          return JSON.parse(xhr.responseText);
+        } else {
+          throw new Error(`Failed to load ${url}: ${xhr.status}`);
+        }
+      };
+
+      this.testCases = loadJSON('./test_cases.json');
+      this.testRules = loadJSON('./test_output_rules.json');
 
       // Render the test cases list once during initialization
       this.renderTestCasesList();
@@ -26,7 +34,7 @@ export class TestCaseUI {
     }
   }
 
-  async loadTestCase(testData, statusElement) {
+  loadTestCase(testData, statusElement) {
     try {
       statusElement.textContent = 'Loading test...';
       const [location, expectedResult, requiredItems = [], excludedItems = []] =
@@ -51,8 +59,8 @@ export class TestCaseUI {
 
       // Force UI sync and cache invalidation
       stateManager.invalidateCache();
-      stateManager.computeReachableRegions(stateManager.inventory);
-      this.gameUI.inventoryUI.syncWithState();
+      stateManager.computeReachableRegions();
+      this.gameUI.inventoryUI?.syncWithState();
 
       // Find the location data in the rules and include its region
       let locationData = null;
@@ -76,17 +84,45 @@ export class TestCaseUI {
       }
 
       // Check if location is accessible
-      const locationAccessible = stateManager.isLocationAccessible(
-        locationData,
-        stateManager.inventory
-      );
+      const locationAccessible =
+        stateManager.isLocationAccessible(locationData);
       const passed = locationAccessible === expectedResult;
 
-      statusElement.innerHTML = `<div class="${
-        passed ? 'test-success' : 'test-failure'
-      }">${passed ? '✓ PASS' : '❌ FAIL'}</div>`;
+      // If accessible and required items specified, also validate that all items are truly required
+      let validationFailed = null;
+      if (
+        passed &&
+        expectedResult &&
+        requiredItems.length > 0 &&
+        !excludedItems.length
+      ) {
+        for (const missingItem of requiredItems) {
+          // Create inventory without this item
+          stateManager.initializeInventoryForTest(
+            requiredItems.filter((item) => item !== missingItem),
+            excludedItems,
+            this.testRules.progression_mapping['1'],
+            this.testRules.items['1']
+          );
 
-      return passed;
+          // Check if still accessible
+          if (stateManager.isLocationAccessible(locationData)) {
+            validationFailed = missingItem;
+            break;
+          }
+        }
+      }
+
+      // Show appropriate result
+      if (validationFailed) {
+        statusElement.innerHTML = `<div class="test-failure">❌ FAIL: Accessible without ${validationFailed}</div>`;
+        return false;
+      } else {
+        statusElement.innerHTML = `<div class="${
+          passed ? 'test-success' : 'test-failure'
+        }">${passed ? '✓ PASS' : '❌ FAIL'}</div>`;
+        return passed;
+      }
     } catch (error) {
       console.error('Error loading test case:', error);
       statusElement.innerHTML = `<div class="test-error">Error: ${error.message}</div>`;
@@ -111,7 +147,7 @@ export class TestCaseUI {
     }
   }
 
-  async runAllTests() {
+  runAllTests() {
     if (!this.testCases?.location_tests) return;
 
     // Disable the Run All Tests button while tests are running
@@ -129,12 +165,10 @@ export class TestCaseUI {
       for (const [index, testCase] of this.testCases.location_tests.entries()) {
         const statusElement = document.getElementById(`test-status-${index}`);
         if (statusElement) {
-          const result = await this.loadTestCase(testCase, statusElement);
+          const result = this.loadTestCase(testCase, statusElement);
           result ? passed++ : failed++;
           // Make sure UI is fully updated after each test
-          this.gameUI.inventoryUI.syncWithState();
-          // Small delay to allow UI to update and prevent freezing
-          await new Promise((resolve) => setTimeout(resolve, 10));
+          this.gameUI.inventoryUI?.syncWithState();
         }
       }
     } finally {
@@ -154,7 +188,7 @@ export class TestCaseUI {
       }
 
       // Make sure UI is in sync after all tests complete
-      this.gameUI.inventoryUI.syncWithState();
+      this.gameUI.inventoryUI?.syncWithState();
       // Re-enable the button when done
       if (runAllButton) {
         runAllButton.disabled = false;
@@ -170,8 +204,8 @@ export class TestCaseUI {
       <div class="test-header">
         <h3>Available Test Cases</h3>
         <div class="test-controls">
-          <button id="run-all-tests" class="button">Run All Tests</button>
           <button id="load-test-data" class="button">Load Test Data</button>
+          <button id="run-all-tests" class="button">Run All Tests</button>
         </div>
         <div id="data-source-info" class="data-source-info">
           Current data source: <span id="data-source" class="data-source-wrong">default_rules.json</span>
@@ -354,34 +388,48 @@ export class TestCaseUI {
       ?.addEventListener('click', () => this.runAllTests());
 
     // Add test data loader listener
-    document
-      .getElementById('load-test-data')
-      ?.addEventListener('click', async () => {
-        try {
-          // Use the existing fetch functionality from gameUI
-          const response = await fetch('./test_output_rules.json');
-          const jsonData = await response.json();
+    document.getElementById('load-test-data')?.addEventListener('click', () => {
+      try {
+        // Use synchronous XMLHttpRequest instead of fetch
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', './test_output_rules.json', false);
+        xhr.send();
 
-          // Use gameUI's initialization code
-          this.gameUI.clearExistingData();
-          this.gameUI.initializeUI(jsonData);
-          this.gameUI.currentRules = jsonData; // Track current rules
+        if (xhr.status !== 200) {
+          throw new Error(`HTTP error! status: ${xhr.status}`);
+        }
 
-          // Update test cases
-          const testCasesResponse = await fetch('./test_cases.json');
-          this.testCases = await testCasesResponse.json();
-          this.testRules = jsonData;
+        const jsonData = JSON.parse(xhr.responseText);
 
-          // Update UI and data source indicator
-          this.updateDataSourceIndicator();
-          //this.renderTestCasesList();
-        } catch (error) {
-          console.error('Error loading test data:', error);
-          const dataSource = document.getElementById('data-source');
+        // Use gameUI's initialization code
+        this.gameUI.clearExistingData();
+        this.gameUI.initializeUI(jsonData);
+        this.gameUI.currentRules = jsonData; // Track current rules
+
+        // Update test cases with synchronous request
+        const testXhr = new XMLHttpRequest();
+        testXhr.open('GET', './test_cases.json', false);
+        testXhr.send();
+
+        if (testXhr.status === 200) {
+          this.testCases = JSON.parse(testXhr.responseText);
+        } else {
+          throw new Error(`Failed to load test cases: ${testXhr.status}`);
+        }
+
+        this.testRules = jsonData;
+
+        // Update UI and data source indicator
+        this.updateDataSourceIndicator();
+      } catch (error) {
+        console.error('Error loading test data:', error);
+        const dataSource = document.getElementById('data-source');
+        if (dataSource) {
           dataSource.innerHTML = 'Error loading test_output_rules.json';
           dataSource.className = 'data-source-wrong';
         }
-      });
+      }
+    });
 
     // Add event listeners for region and location links
     setTimeout(() => {

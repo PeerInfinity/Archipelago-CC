@@ -14,6 +14,16 @@ export class GameUI {
     this.inventoryUI = new InventoryUI(this);
     this.testCaseUI = new TestCaseUI(this);
 
+    // Register with stateManager for UI updates
+    stateManager.registerUICallback('gameUI', (eventType) => {
+      if (eventType === 'inventoryChanged') {
+        this.inventoryUI?.syncWithState();
+      } else if (eventType === 'reachableRegionsComputed') {
+        this.locationUI?.syncWithState();
+        this.regionUI?.update();
+      }
+    });
+
     // Game state
     this.currentViewMode = 'locations';
     this.debugMode = false;
@@ -31,10 +41,15 @@ export class GameUI {
     this.loadDefaultRules();
     this.updateViewDisplay();
 
-    // Initialize test case UI
-    this.testCaseUI.initialize().catch((error) => {
+    // Initialize test case UI - fix for synchronous method
+    try {
+      const success = this.testCaseUI.initialize();
+      if (!success) {
+        console.error('Failed to initialize test cases');
+      }
+    } catch (error) {
       console.error('Failed to initialize test cases:', error);
-    });
+    }
   }
 
   initializeUI(jsonData) {
@@ -124,20 +139,24 @@ export class GameUI {
     }
   }
 
-  async loadDefaultRules() {
+  loadDefaultRules() {
     try {
-      const response = await fetch('./default_rules.json');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Use synchronous XMLHttpRequest
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', './default_rules.json', false); // false makes it synchronous
+      xhr.send();
+
+      if (xhr.status !== 200) {
+        throw new Error(`HTTP error! status: ${xhr.status}`);
       }
-      const jsonData = await response.json();
+
+      const jsonData = JSON.parse(xhr.responseText);
 
       this.clearExistingData();
       this.currentRules = jsonData; // Store current rules
 
       stateManager.initializeInventory(
         [], // Initial items
-        [], // Excluded items
         jsonData.progression_mapping['1'],
         jsonData.items['1']
       );
@@ -161,7 +180,7 @@ export class GameUI {
     }
   }
 
-  async handleFileUpload(event) {
+  handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -169,13 +188,12 @@ export class GameUI {
       this.clearExistingData();
 
       const reader = new FileReader();
-      reader.onload = async (e) => {
+      reader.onload = (e) => {
         try {
           const jsonData = JSON.parse(e.target.result);
           this.currentRules = jsonData; // Store current rules
 
           stateManager.initializeInventory(
-            [],
             [],
             jsonData.progression_mapping['1'],
             jsonData.items['1']
