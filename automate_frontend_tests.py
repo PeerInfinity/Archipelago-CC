@@ -97,7 +97,7 @@ async def run_frontend_tests():
 
             print("Waiting for tests...")
             try:
-                # First wait for locationTests to be defined
+                # First wait for locationTester to be defined
                 print("Checking for script load errors...")
                 errors = await page.evaluate("window.moduleLoadErrors || []")
                 if errors:

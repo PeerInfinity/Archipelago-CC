@@ -191,9 +191,9 @@ export class InventoryUI {
 
   attachItemEventListeners() {
     document.querySelectorAll('.item-button').forEach((button) => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (event) => {
         const itemName = button.dataset.item;
-        this.toggleItem(itemName);
+        this.toggleItem(itemName, event.shiftKey);
       });
     });
   }
@@ -250,7 +250,7 @@ export class InventoryUI {
     }
   }
 
-  toggleItem(itemName) {
+  toggleItem(itemName, isShiftPressed = false) {
     if (!this.itemData || !this.itemData[itemName]) return;
 
     const currentCount = stateManager.getItemCount(itemName);
@@ -259,17 +259,47 @@ export class InventoryUI {
       button.closest('.item-container')
     );
 
-    stateManager.addItemToInventory(itemName);
-    buttons.forEach((button) => button.classList.add('active'));
-    containers.forEach((container) =>
-      this.createOrUpdateCountBadge(container, currentCount + 1)
-    );
+    if (isShiftPressed) {
+      // Subtract item if shift is pressed and count is positive
+      if (currentCount > 0) {
+        // Use the proper remove method to handle progressive items
+        if (stateManager.inventory) {
+          // Remove the item using our new method
+          stateManager.inventory.removeItem(itemName);
 
-    if (window.consoleManager) {
-      window.consoleManager.print(
-        `${itemName} count: ${currentCount + 1}`,
-        'info'
+          const newCount = stateManager.getItemCount(itemName);
+
+          // Update UI elements
+          if (newCount === 0) {
+            buttons.forEach((button) => button.classList.remove('active'));
+          }
+
+          containers.forEach((container) =>
+            this.createOrUpdateCountBadge(container, newCount)
+          );
+
+          if (window.consoleManager) {
+            window.consoleManager.print(
+              `${itemName} count: ${newCount}`,
+              'info'
+            );
+          }
+        }
+      }
+    } else {
+      // Original behavior: add item
+      stateManager.addItemToInventory(itemName);
+      buttons.forEach((button) => button.classList.add('active'));
+      containers.forEach((container) =>
+        this.createOrUpdateCountBadge(container, currentCount + 1)
       );
+
+      if (window.consoleManager) {
+        window.consoleManager.print(
+          `${itemName} count: ${currentCount + 1}`,
+          'info'
+        );
+      }
     }
 
     stateManager.invalidateCache();

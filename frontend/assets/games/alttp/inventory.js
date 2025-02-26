@@ -26,6 +26,42 @@ export class ALTTPInventory {
     this.items.set(itemName, currentCount + 1);
   }
 
+  removeItem(itemName) {
+    // Decrease direct count if present
+    const currentCount = this.items.get(itemName) || 0;
+    if (currentCount > 0) {
+      this.items.set(itemName, currentCount - 1);
+      return true;
+    }
+    return false;
+  }
+
+  // Helper method to check if an item is a progressive base item
+  isProgressiveBaseItem(itemName) {
+    return this.progressionMapping && !!this.progressionMapping[itemName];
+  }
+
+  // Helper method to get all items provided by a progressive item at any level
+  getProgressiveProvidedItems(baseItemName) {
+    if (!this.progressionMapping || !this.progressionMapping[baseItemName]) {
+      return [];
+    }
+
+    const providedItems = [];
+    const progression = this.progressionMapping[baseItemName];
+
+    for (const upgrade of progression.items || []) {
+      if (upgrade.name) {
+        providedItems.push(upgrade.name);
+      }
+      if (upgrade.provides) {
+        providedItems.push(...upgrade.provides);
+      }
+    }
+
+    return providedItems;
+  }
+
   has(itemName) {
     if (this.items.get(itemName) > 0) {
       return true;

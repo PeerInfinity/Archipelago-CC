@@ -115,8 +115,21 @@ export class StateManager {
     } else {
       // Normal single-item mode
       this.inventory.addItem(itemName);
+
+      // Process progressive items immediately regardless of region computation
+      this._processProgressiveItem(itemName);
+
       this.notifyUI('inventoryChanged');
     }
+  }
+
+  /**
+   * Helper method to process progressive item effects
+   * This runs regardless of batch mode to ensure progressive items are handled correctly
+   */
+  _processProgressiveItem(itemName) {
+    // No action needed here by default - this is just a hook for processing
+    // Progressive items are automatically handled by the inventory.has() method
   }
 
   getItemCount(itemName) {
@@ -388,7 +401,6 @@ export class StateManager {
     itemData
   ) {
     this.clearState();
-    this.beginBatchUpdate();
 
     // Create fresh inventory with the test items
     this.inventory = new ALTTPInventory([], progressionMapping, itemData);
@@ -396,12 +408,19 @@ export class StateManager {
     // Load state and helpers first before adding items
     this.loadStateAndHelpers();
 
-    // If we have excludedItems, start with ALL items except those
+    // Begin batch updates - defer region computation until the end
+    this.beginBatchUpdate(true);
+
+    // First, if we have excludedItems, start with ALL items except those
     if (excludedItems?.length > 0) {
       Object.keys(itemData).forEach((itemName) => {
         if (
           !excludedItems.includes(itemName) &&
-          !(itemName.includes('Bottle') && excludedItems.includes('AnyBottle'))
+          !(
+            itemName.includes('Bottle') && excludedItems.includes('AnyBottle')
+          ) &&
+          !itemData[itemName].event && // Skip event items
+          itemData[itemName].type !== 'Event' // Additional check using type
         ) {
           this.addItemToInventory(itemName);
 
@@ -411,18 +430,41 @@ export class StateManager {
           }
         }
       });
-    } else {
-      // Otherwise, just add required items
-      requiredItems.forEach((itemName) => {
-        this.addItemToInventory(itemName);
+    }
 
-        // Process as event if applicable
-        if (this.state?.processEventItem) {
-          this.state.processEventItem(itemName);
+    // Apply these updates to the inventory but don't recompute regions yet
+    this.commitBatchUpdate();
+
+    // Now that items are in the inventory, process excluded progressive items
+    if (excludedItems?.length > 0) {
+      excludedItems.forEach((excludedItem) => {
+        if (this.inventory.isProgressiveBaseItem(excludedItem)) {
+          const providedItems =
+            this.inventory.getProgressiveProvidedItems(excludedItem);
+
+          providedItems.forEach((providedItem) => {
+            if (this.inventory.items.has(providedItem)) {
+              this.inventory.items.set(providedItem, 0);
+            }
+          });
         }
       });
     }
 
+    // Start second batch for required items
+    this.beginBatchUpdate(true);
+
+    // Add all required items
+    requiredItems.forEach((itemName) => {
+      this.addItemToInventory(itemName);
+
+      // Process as event if applicable
+      if (this.state?.processEventItem) {
+        this.state.processEventItem(itemName);
+      }
+    });
+
+    // Commit with region computation deferred
     this.commitBatchUpdate();
 
     // Make sure bombless_start flag is set
@@ -430,7 +472,7 @@ export class StateManager {
       this.state.setFlag('bombless_start');
     }
 
-    // Run a state update cycle to process events
+    // Now finally compute regions once at the end
     this.invalidateCache();
     this.computeReachableRegions();
   }
@@ -450,32 +492,38 @@ export class StateManager {
   /**
    * Begins a batch update operation for adding multiple items efficiently.
    * This prevents UI updates until commitBatchUpdate is called.
+   * @param {boolean} deferRegionComputation - If true, won't recompute regions during commit (default: true)
    */
-  beginBatchUpdate() {
+  beginBatchUpdate(deferRegionComputation = true) {
     this._batchMode = true;
+    this._deferRegionComputation = deferRegionComputation;
     this._batchedUpdates = new Map(); // store item -> count updates
   }
 
   /**
    * Commits all pending updates from a batch operation.
-   * Triggers UI updates through callbacks and updates the cache.
+   * Triggers UI updates through callbacks and optionally updates region cache.
    */
   commitBatchUpdate() {
     if (!this._batchMode) return;
 
     // Apply all batched updates at once to inventory
     this._batchedUpdates.forEach((count, itemName) => {
-      // Fix: Use Map's set method instead of treating it as an object
       this.inventory.items.set(itemName, count);
     });
 
-    // Clear caches and force a state update before any callbacks
+    // Clear inventory caches
     this.invalidateCache();
-    this.computeReachableRegions();
+
+    // Only recompute regions if not deferred
+    if (!this._deferRegionComputation) {
+      this.computeReachableRegions();
+    }
 
     this.notifyUI('inventoryChanged');
 
     this._batchMode = false;
+    this._deferRegionComputation = false;
     this._batchedUpdates = new Map();
   }
 }

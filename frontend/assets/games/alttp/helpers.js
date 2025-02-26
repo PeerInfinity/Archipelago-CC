@@ -138,4 +138,19 @@ export class ALTTPHelpers extends GameHelpers {
     }
     return hasBow;
   }
+
+  can_retrieve_tablet() {
+    const hasBookOfMudora = stateManager.inventory.has('Book of Mudora');
+
+    if (!hasBookOfMudora) {
+      return false;
+    }
+
+    // Check if we have beam sword OR (swordless mode AND hammer)
+    const hasSword = this.has_beam_sword();
+    const isSwordlessMode = stateManager.state.hasFlag('swordless');
+    const hasHammer = stateManager.inventory.has('Hammer');
+
+    return hasSword || (isSwordlessMode && hasHammer);
+  }
 }
