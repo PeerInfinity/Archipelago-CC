@@ -235,6 +235,8 @@ export class InventoryUI {
   }
 
   createOrUpdateCountBadge(container, count) {
+    if (!container) return;
+
     let countBadge = container.querySelector('.count-badge');
     if (!countBadge) {
       countBadge = document.createElement('div');
@@ -255,9 +257,9 @@ export class InventoryUI {
 
     const currentCount = stateManager.getItemCount(itemName);
     const buttons = document.querySelectorAll(`[data-item="${itemName}"]`);
-    const containers = Array.from(buttons).map((button) =>
-      button.closest('.item-container')
-    );
+    const containers = Array.from(buttons)
+      .map((button) => button.closest('.item-container'))
+      .filter((container) => container !== null);
 
     if (isShiftPressed) {
       // Subtract item if shift is pressed and count is positive
@@ -335,8 +337,12 @@ export class InventoryUI {
       const itemName = button.dataset.item;
       const count = stateManager.getItemCount(itemName);
       const container = button.closest('.item-container');
-      button.classList.toggle('active', count > 0);
-      this.createOrUpdateCountBadge(container, count);
+
+      if (button && container) {
+        // Add null check for both button and container
+        button.classList.toggle('active', count > 0);
+        this.createOrUpdateCountBadge(container, count);
+      }
     });
 
     // Update display for all UI components

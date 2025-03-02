@@ -11,83 +11,104 @@ pip install playwright
 playwright install
 ```
 
-## Running Tests
+## Testing Methods
 
-There are two ways to run the tests:
+The system offers two testing approaches:
 
 ### 1. Automated Testing (Recommended)
 
-The tests can now be run directly from pytest without manual intervention. The test process will:
+Tests run directly from pytest without manual intervention. The process:
 
-1. Run the Python test case
-2. Generate the necessary JSON files
-3. Start a local HTTP server
-4. Launch a headless browser
-5. Execute the frontend tests
-6. Save test results
-7. Clean up automatically
+1. Runs the Python test case
+2. Generates necessary JSON files
+3. Starts a local HTTP server
+4. Launches a headless browser
+5. Executes frontend tests
+6. Saves test results
+7. Cleans up automatically
 
-To run a test:
+Example command:
 
 ```bash
 pytest worlds/alttp/test/vanilla/TestLightWorld.py::TestLightWorld -v
 ```
 
-The test results will be saved to:
-- `test_results/test_results_automated.html` - HTML snapshot of test results
-- `test_results/test_results_automated.json` - Detailed test results in JSON format
+### 2. Web-Based Testing Interface
 
-### 2. Manual Testing (Legacy Method)
+A user interface for interactively running tests is available:
 
-You can still run the tests manually if needed:
+- View and run individual test cases
+- See test results with full details
+- Toggle test data loading
+- Run all tests with results summary
 
-1. Configure test execution in VS Code:
-   ```json
-   {
-       "name": "Python: TestLightWorld",
-       "type": "debugpy",
-       "request": "launch",
-       "module": "pytest",
-       "args": [
-           "worlds/alttp/test/vanilla/TestLightWorld.py::TestLightWorld",
-           "-v",
-           "--capture=tee-sys",
-           "-o", "log_cli=true",
-           ">", "pytest_output.txt"
-       ],
-       "console": "integratedTerminal"
-   }
-   ```
+Start a local server:
 
-2. Run the test to generate JSON files:
-   - `test_output_rules.json`: Converted rules
-   - `test_cases.json`: Test cases
+```bash
+python -m http.server 8000
+```
 
-3. Start a local server:
-   ```bash
-   python -m http.server 8000
-   ```
+The interface is accessible at:
 
-4. Open test runner:
-   ```
-   http://localhost:8000/frontend/test_runner.html
-   ```
+```
+http://localhost:8000/frontend/index.html
+```
 
-### Generated Files
+Then select the "Test Cases" view.
 
-The testing process generates:
+## Test Components
 
-1. Rule Definitions (`test_output_rules.json`)
+### Automated Test Pipeline
+
+The automated testing pipeline:
+
+1. **Python Test Execution**: Runs test cases and exports JSON data
+2. **Browser Automation**: Uses Playwright to load and run frontend tests
+3. **State Initialization**: Sets up inventory and game state
+4. **Test Case Execution**: Evaluates location accessibility rules
+5. **Validation**: Verifies results match expected outcomes
+6. **Results Analysis**: Collects and analyzes results
+
+### Test Runner Components
+
+The test system uses these files:
+
+- `automate_frontend_tests.py`: Launches Playwright tests
+- `frontend/assets/locationTester.js`: Executes test cases
+- `frontend/assets/testLogger.js`: Comprehensive logging
+- `frontend/assets/testResultsDisplay.js`: UI for results
+- `frontend/assets/testCaseUI.js`: Interactive test UI
+
+### State Management for Tests
+
+Tests use a dedicated state initialization process:
+
+1. Load rules from test data
+2. Initialize inventory with required/excluded items
+3. Process progressive items
+4. Compute region accessibility
+5. Evaluate location access rules
+6. Validate against expectations
+
+## Generated Files
+
+The testing process generates several files:
+
+1. **Rule Definitions** (`test_output_rules.json`)
+
    - Exported rules from Python
    - Helper function references
+   - Region graph information
    - Item and location data
 
-2. Test Cases (`test_cases.json`)
+2. **Test Cases** (`test_cases.json`)
+
    - Test specifications from Python
    - Location access requirements
    - Required/excluded items
 
-3. Test Results (`test_results_automated.json`)
+3. **Test Results** (`test_results_automated.json`)
+
 ```javascript
 {
   "summary": {
@@ -110,7 +131,8 @@ The testing process generates:
 }
 ```
 
-4. Debug Logs (`debug_logs_automated.json`)
+4. **Debug Logs** (`debug_logs_automated.json`)
+
 ```javascript
 {
   "timestamp": string,
@@ -154,100 +176,51 @@ The testing process generates:
 The test system provides comprehensive debug logging:
 
 ### Rule Evaluation
+
 - Step-by-step rule processing
 - Helper function execution
 - Inventory state changes
 - Rule evaluation results
 
 ### Test Execution
+
 - Test case setup
 - Rule loading
 - Location access checks
 - Item management
 
 ### Failure Analysis
+
 - Rule evaluation traces
 - Inventory state at failure
 - Helper execution logs
 - Common failure patterns
 
-## Implementation Details
+## Test Case Types
 
-### Frontend Test Runner
+The system tests several types of scenarios:
 
-The test runner (`LocationTester` class):
-1. Loads rule definitions
-2. Creates test inventory
-3. Processes test cases
-4. Evaluates location access
-5. Records results and debug info
-6. Analyzes test failures
+1. **Basic Accessibility**: Tests if locations are accessible with default items
+2. **Item Requirements**: Tests locations that require specific items
+3. **Progressive Items**: Tests locations requiring progressive items
+4. **Exclusion Tests**: Tests behaviors when specific items are excluded
+5. **Region Accessibility**: Tests path discovery through BFS
 
-### Debug Infrastructure
+## Current Testing Status
 
-Debug logging tracks:
-- Rule evaluation steps
-- Helper function calls
-- Inventory operations
-- Location access checks
-- Test case execution
-- Result analysis
+As of March 1, 2025:
 
-### Test Result Analysis
-
-The system analyzes test results to identify:
-- Common failure patterns
-- Problematic rule types
-- Helper function issues
-- Item dependencies
-- State management problems
-
-## Configuration
-
-Test execution can be configured through:
-
-```javascript
-TestLogger.enableFileSaving // Enable/disable file output
-TestLogger.enableDebugLogging // Enable/disable debug logs
-```
-
-Playwright options in `automate_frontend_tests.py`:
-- Browser selection
-- Headless mode
-- Viewport settings
-- Network conditions
-
-## Debugging Failed Tests
-
-When tests fail:
-
-1. Check Results Summary
-   - Review failure count and percentage
-   - Examine failure categories
-   - Look for patterns
-
-2. Analyze Debug Logs
-   - Review rule evaluation traces
-   - Check inventory state
-   - Examine helper execution
-   - Look for error patterns
-
-3. Review Test Cases
-   - Verify test specifications
-   - Check required items
-   - Validate expected access
-
-4. Use Visual Inspection
-   - Run tests with debug logging
-   - Use browser DevTools
-   - Check network requests
-   - Monitor console output
+- TestLightWorld cases all pass (100%)
+- Helper function implementation is largely complete
+- Region traversal and path finding is working
+- Progressive item handling works correctly
 
 ## Adding New Tests
 
 To add new tests:
 
-1. Create Test Cases
+1. Create Test Cases in Python
+
 ```python
 self.run_location_tests([
     ["Location Name", False, []],
@@ -257,17 +230,50 @@ self.run_location_tests([
 ```
 
 2. Run Tests
+
 ```bash
 pytest path/to/test_file.py -v
 ```
 
-3. Check Results
-- Review automated test results
-- Examine debug logs
-- Analyze any failures
+3. Debug Issues in UI
 
-4. Debug Issues
-- Use debug logging
-- Check rule evaluation
-- Verify helper execution
-- Validate inventory state
+- Switch to "Test Cases" view
+- Run individual tests to see results
+- Check "Load Test Data" to ensure using correct data
+
+## Interactive Test Interface
+
+The test interface provides:
+
+- List of all available test cases
+- Individual test execution
+- "Run All Tests" button
+- Test status indicators
+- Result summary statistics
+- Data source indicator
+
+### Test Result Analysis
+
+Test failures can be analyzed in several ways:
+
+1. Using the UI to examine individual test results
+2. Reviewing debug logs for rule evaluation details
+3. Looking for patterns in failing locations
+4. Examining helper function execution
+
+## Debug Tools
+
+For advanced debugging:
+
+```javascript
+// Enable file saving and detailed logging
+TestLogger.enableFileSaving = true;
+TestLogger.enableDebugLogging = true;
+
+// Configure Playwright
+// (in automate_frontend_tests.py)
+browser = await playwright.chromium.launch(
+  (headless = False), // Set to false to see browser
+  (slowMo = 100) // Slow execution for visual debugging
+);
+```

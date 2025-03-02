@@ -1533,3 +1533,14 @@ It looks like the GameState class doesn’t currently need to use StateManager f
 We’ll also want to include ruleEngine at the start of stateManager.
 
 For files that have a base class and a alttp-specific version of the class, we will want to apply these changes to both files, and both versions of the class.
+
+----
+
+Mar. 1, 2025:
+
+I want you to implement the rest of the helpers from worlds/alttp/StateHelpers.py into frontend/assets/games/alttp/helpers.js
+
+I want the helpers to appear in the same order in helpers.js as they appear in StateHelpers.py
+
+Make a note of anything that prevents you from being able to copy the logic of the original Python code exactly.
+

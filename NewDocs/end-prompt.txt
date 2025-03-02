@@ -2,8 +2,4 @@ That's the end of the files you need for context.  Now here are your instruction
 
 ----
 
-I want you to implement the rest of the helpers from worlds/alttp/StateHelpers.py into frontend/assets/games/alttp/helpers.js
-
-I want the helpers to appear in the same order in helpers.js as they appear in StateHelpers.py
-
-Make a note of anything that prevents you from being able to copy the logic of the original Python code exactly.
+I want you to examine the current state of the source code, and update the documentation with the progress so far. Please ask any clarifying questions you think might be helpful.

@@ -91,12 +91,6 @@ export class ALTTPHelpers extends GameHelpers {
 
     if (!hasBow) return false;
 
-    console.log('State check in can_shoot_arrows:', {
-      stateExists: !!stateManager.state,
-      retroBowFlag: stateManager.state?.hasFlag('retro_bow'),
-      gameSettingsRetro: stateManager.state?.gameSettings?.retro_bow,
-    });
-
     // Check retro bow flag or setting
     if (
       stateManager.state?.hasFlag('retro_bow') ||
@@ -134,23 +128,12 @@ export class ALTTPHelpers extends GameHelpers {
     const result =
       stateManager.inventory.has('Power Glove') ||
       stateManager.inventory.has('Titans Mitts');
-    console.log('can_lift_rocks check:', {
-      helperThis: this,
-      inventory: stateManager.inventory,
-      hasPowerGlove: stateManager.inventory.has('Power Glove'),
-      hasTitansMitts: stateManager.inventory.has('Titans Mitts'),
-      result,
-    });
 
     return result;
   }
 
   can_lift_heavy_rocks() {
     const result = stateManager.inventory.has('Titans Mitts');
-    console.log('can_lift_heavy_rocks check:', {
-      hasTitansMitts: stateManager.inventory.has('Titans Mitts'),
-      result,
-    });
 
     return result;
   }
