@@ -38,6 +38,9 @@ export class StateManager {
     this.checkedLocations = new Set();
 
     this._uiCallbacks = {};
+
+    // Add debug mode flag
+    this.debugMode = false; // Set to true to enable detailed logging
   }
 
   /**
@@ -225,6 +228,7 @@ export class StateManager {
     try {
       while (newEventCollected) {
         newEventCollected = false;
+        // Use our updated runSingleBFS that implements auto-indirect approach
         const reachableSet = this.runSingleBFS(localReachable);
 
         // Auto-collect events if using main inventory
@@ -272,38 +276,64 @@ export class StateManager {
     const reachable = new Set([...start, ...currentReachable]);
     const queue = [...start];
     const seenExits = new Set();
+    const blockedExits = new Set();
 
-    while (queue.length > 0) {
-      const currentRegionName = queue.shift();
-      const currentRegion = this.regions[currentRegionName];
-      if (!currentRegion) continue;
+    // Loop until no new regions are discovered
+    let newRegionFound = true;
+    while (newRegionFound) {
+      newRegionFound = false;
 
-      for (const exit of currentRegion.exits || []) {
-        const exitKey = `${currentRegionName}->${exit.name}`;
-        if (seenExits.has(exitKey)) continue;
-        seenExits.add(exitKey);
+      // Process regions in queue
+      while (queue.length > 0) {
+        const currentRegionName = queue.shift();
+        const currentRegion = this.regions[currentRegionName];
+        if (!currentRegion) continue;
 
-        if (!exit.connected_region) continue;
-        if (exit.access_rule && !evaluateRule(exit.access_rule)) {
-          continue;
+        // Process exits from this region
+        for (const exit of currentRegion.exits || []) {
+          const exitKey = `${currentRegionName}->${exit.name}`;
+          if (seenExits.has(exitKey)) continue;
+          seenExits.add(exitKey);
+
+          if (!exit.connected_region) continue;
+
+          // Check if this exit is traversable
+          if (exit.access_rule && !evaluateRule(exit.access_rule)) {
+            // If not traversable, track it as blocked for later rechecking
+            blockedExits.add(exit);
+            continue;
+          }
+
+          // Exit is traversable, connected region is now reachable
+          const targetRegion = exit.connected_region;
+          if (!reachable.has(targetRegion)) {
+            reachable.add(targetRegion);
+            queue.push(targetRegion);
+            newRegionFound = true;
+          }
         }
 
-        const targetRegion = exit.connected_region;
-        if (!reachable.has(targetRegion)) {
-          reachable.add(targetRegion);
-          queue.push(targetRegion);
-        }
+        // Do NOT process entrances - this was causing inconsistencies
       }
 
-      for (const entrance of currentRegion.entrances || []) {
-        if (!entrance.connected_region) continue;
-        if (reachable.has(entrance.connected_region)) continue;
-        if (entrance.access_rule && !evaluateRule(entrance.access_rule)) {
-          continue;
+      // If no new regions found in this pass, recheck all blocked exits
+      // This implements the auto-indirect approach from Python
+      if (!newRegionFound && blockedExits.size > 0) {
+        // Convert blockedExits to array for iteration
+        for (const exit of Array.from(blockedExits)) {
+          // Re-evaluate the exit's access rule
+          if (!exit.access_rule || evaluateRule(exit.access_rule)) {
+            if (
+              exit.connected_region &&
+              !reachable.has(exit.connected_region)
+            ) {
+              reachable.add(exit.connected_region);
+              queue.push(exit.connected_region);
+              blockedExits.delete(exit);
+              newRegionFound = true;
+            }
+          }
         }
-
-        reachable.add(entrance.connected_region);
-        queue.push(entrance.connected_region);
       }
     }
 
@@ -511,5 +541,20 @@ export class StateManager {
     this._batchMode = false;
     this._deferRegionComputation = false;
     this._batchedUpdates = new Map();
+  }
+
+  /**
+   * Log debug information during region accessibility calculations
+   * @private
+   */
+  _logDebug(message, data = null) {
+    if (this.debugMode) {
+      const logMsg = `[StateManager] ${message}`;
+      if (data !== null) {
+        console.log(logMsg, data);
+      } else {
+        console.log(logMsg);
+      }
+    }
   }
 }

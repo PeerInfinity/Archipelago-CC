@@ -2,144 +2,94 @@ That's the end of the files you need for context.  Now here are your instruction
 
 ----
 
-We currently have two different algorithms in the javascript frontend to calculate whether a region is accessible.  One of them is in stateManager.js, and the other is in the “Analyze Paths” tool in regionUI.js.  Both of these are intended to implement the same logic as the Python backend, in run_location_tests in bases.py.  In most cases, these three implementations give the same result, but we sometimes encounter cases where they give different results.  Can you analyze the code to see what the differences are between the three versions of the algorithm?  The python algorithm has gotten much more testing than the other versions, and is more likely to be the one that’s correct. Please tell me if there is any more information you need, in order to figure this out.
+We’re currently working on debugging the “Analyze Paths” tool in regionUI.js.  There is an issue where the results reported by the logic trees of the individual exits don’t match the results displayed in the path list.
 
-Here are some notes from our previous conversations on this topic:
+For example, in the path list, the region names still have the wrong color and colorblind symbol.  According to the exit logic report, East Dark World and Pyramid Fairy should both be accessible:
 
-# What We've Learned About Region Accessibility Algorithms
-
-## Algorithm Architecture
-
-1. **Three Algorithm Implementations Exist**:
-   - Python backend (in BaseClasses.py)
-   - JavaScript frontend (in stateManager.js)
-   - Path visualization tool (in regionUI.js)
-
-2. **Python Implementation Has Two Traversal Modes**:
-   - `_update_reachable_regions_explicit_indirect_conditions`: Handles explicitly registered indirect connections
-   - `_update_reachable_regions_auto_indirect_conditions`: Reexamines all blocked connections after each new region is found
-
-3. **JavaScript Frontend Uses a Mixed Approach**:
-   - Processes both exits and entrances during traversal
-   - Uses multiple BFS passes for event collection
-   - Lacks explicit indirect connection handling
-
-## Core Data Structures
-
-4. **Entrances vs Exits**:
-   - Exits and entrances are instances of the same `Entrance` class in Python
-   - They represent the same connections from different perspectives
-   - The Python algorithm primarily uses exits for traversal, not entrances
-   - Entrances are automatically registered when an exit is connected to a region
-
-5. **Indirect Connections**:
-   - Capture dependencies where an entrance's accessibility depends on reaching a non-directly-connected region
-   - Registered explicitly in Python using `register_indirect_condition`
-   - Not included in the JSON data exported to the frontend
-   - Critical for correct algorithm behavior in complex maps
-
-## Algorithm Behavior
-
-6. **Event Collection**:
-   - Events can unlock new paths when collected
-   - Python collects events as part of `sweep_for_advancements`
-   - JavaScript interweaves event collection with BFS passes
-   - Different event collection timing can cause inconsistencies
-
-7. **Region Accessibility Calculation**:
-   - Python's algorithm is the reference implementation
-   - The JavaScript implementation was enhanced in attempts to fix inconsistencies
-   - Adding entrance processing was an unnecessary complication
-   - The "auto-indirect" approach is more reliable when indirect connection data is unavailable
-
-## Testing and Debugging
-
-8. **Test Results**:
-   - Initially had 396 failed tests out of 3398
-   - Over-aggressive indirect connection implementation caused 2155 failures
-   - Reverted to a more conservative approach brought failures back to 396
-   - The remaining failures are likely caused by an unrelated bug
-
-9. **Performance Considerations**:
-   - The auto-indirect approach is less efficient but more correct
-   - Re-checking all blocked exits is necessary without indirect connection data
-   - There's a trade-off between algorithmic efficiency and implementation complexity
-
-10. **Visualization Requirements**:
-    - regionUI.js needs to both accurately check reachability and explain paths
-    - A two-phase approach can both check official reachability and show path details
-    - Discrepancies between algorithms should be clearly indicated in the UI
-
-This comprehensive understanding of the algorithms and their differences provides a solid foundation for implementing fixes that will align the JavaScript frontend behavior with the Python backend.
-
-
-# Remaining Tasks and Questions
-
-## Implementation Tasks
-
-1. **Remove Entrance Processing**
-   - Remove entrance traversal logic from `runSingleBFS` in stateManager.js
-   - Ensure exits are the only connections processed during BFS traversal
-
-2. **Implement Auto-Indirect Approach**
-   - Update `computeReachableRegions` to use the "auto-indirect" approach
-   - Re-check all blocked exits after each new region becomes accessible
-   - Match Python's `_update_reachable_regions_auto_indirect_conditions` behavior
-
-3. **Update Region UI Tool**
-   - Modify "Analyze Paths" to first check accessibility using stateManager
-   - Implement the deriveCanonicalPath method to find official paths
-   - Add UI to highlight discrepancies between the path finder and stateManager
-   - Implement sorting for viable paths first
-
-4. **Add Debug Capabilities**
-   - Implement better logging to track algorithm execution
-   - Add visualization of reachability differences between approaches
-   - Create toggles for showing/hiding different types of paths
-
-## Questions to Answer
-
-1. **Remaining Test Failures**
-   - What's causing the 396 failed tests? Are they related to other issues?
-   - Are there specific patterns or test cases that consistently fail?
-
-2. **Access Rule Structure**
-   - How are access rules structured in the JSON data? 
-   - Do they contain references to regions that could be used to derive indirect connections?
-
-3. **JSON Data Completeness**
-   - Is there any way to include indirect connection data in the exported JSON?
-   - Could we add a preprocessing step to derive these connections?
-
-4. **Algorithm Performance**
-   - What are the performance implications of the auto-indirect approach?
-   - Should we implement optimizations for larger world graphs?
-
-5. **Event Collection Behavior**
-   - Is the event collection behavior in JavaScript consistent with Python?
-   - How does event collection interact with region accessibility?
-
-## Specific Next Steps
-
-1. **Simplify stateManager.js BFS**
-   ```javascript
-   // Update runSingleBFS to remove entrance processing
-   runSingleBFS() {
-     // Process only exits, not entrances
-     // ...
-   }
-   ```
-
-2. **Implement Auto-Indirect Approach**
-   ```javascript
-   // In computeReachableRegions
-   // Add loop to re-check all blocked exits after regions become accessible
-   ```
-
-3. **Test with Real Data**
-   - Run the modified algorithm against the test suite
-   - Use debug logging to identify remaining discrepancies
-
-This plan addresses both the immediate implementation needs and the deeper questions about algorithm behavior and data completeness that need investigation.
-
-Now, can you begin implementing this plan, starting with removing the unnecessary code for processing entrances, in the javascript frontend?  I’ll also want to change the path analysis tool in regionUI.js to only show information about exits, not entrances.
+**✕ Region Unreachable**This region is currently unreachable with your inventory.
+**Primary Blockers (7)**
+These items directly block access. Acquiring them would unblock the path.
+* Helper function: can_lift_rocks
+* Need item: Magic Mirror
+* Need item: Flippers
+* Helper function: can_lift_heavy_rocks
+* Helper function: old_man
+* Constant: false
+* Need item: Lamp
+**Secondary Blockers (2)**
+These items are failing but are not the only blockers on their paths.
+* Helper function: can_lift_rocks
+* Helper function: can_lift_heavy_rocks
+**Primary Requirements (9)**
+These items are critical for access. Removing them would block the path.
+* Constant: true
+* Need item: Hammer
+* Need item: Moon Pearl
+* Helper function: cross_peg_bridge
+* Need item: Beat Agahnim 1
+* State method: can_reach (East Dark World, Region, player)
+* State method: can_reach (Big Bomb Shop, Region, player)
+* Need item: Crystal 5
+* Need item: Crystal 6
+Paths to this region: (48 found)
+▼
+Menu**✓** → Links House**✓** → Light World**✓** → East Dark World**⚠** → Pyramid Fairy**✗**
+*This path was derived from stateManager's reachability data and represents a logically viable path.*
+**Transition: Menu → Links House**
+**Exit:** Menu → Links House S&Q → Links House
+**✓**
+Type: constant
+value: true
+**Transition: Links House → Light World**
+**Exit:** Links House → Links House Exit → Light World
+**✓**
+Type: constant
+value: true
+**Transition: Light World → East Dark World [1/2 exits available]**
+**Exit 1/2:** Light World → East Hyrule Teleporter → East Dark World
+**✗**
+Type: and
+* **✓**
+Type: item_check
+item: Hammer
+* **✗**
+Type: helper
+helper: can_lift_rocks, args: []
+* **✓**
+Type: item_check
+item: Moon Pearl
+**Exit 2/2:** Light World → Top of Pyramid → East Dark World
+**✓**
+Type: item_check
+item: Beat Agahnim 1
+**Transition: East Dark World → Pyramid Fairy**
+**Exit:** East Dark World → Pyramid Fairy → Pyramid Fairy
+**✓**
+Type: and
+* **✓**
+Type: or
+   * **✓**
+Type: helper
+helper: cross_peg_bridge, args: []
+   * **✗**
+Type: and
+      * **✗**
+Type: item_check
+item: Magic Mirror
+      * **✓**
+Type: item_check
+item: Beat Agahnim 1
+* **✓**
+Type: and
+   * **✓**
+Type: state_method
+method: can_reach, args: ["East Dark World","Region","player"]
+   * **✓**
+Type: state_method
+method: can_reach, args: ["Big Bomb Shop","Region","player"]
+   * **✓**
+Type: item_check
+item: Crystal 5
+   * **✓**
+Type: item_check
+item: Crystal 6
