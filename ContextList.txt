@@ -23,7 +23,8 @@ ContextList.txt
 #worlds/alttp/test/vanilla/TestVanilla.py
 #worlds/alttp/test/__init__.py
 
-#test/bases.py
+test/bases.py
+BaseClasses.py
 
 #worlds/generic/Rules.py
 

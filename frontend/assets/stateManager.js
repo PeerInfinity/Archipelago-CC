@@ -20,6 +20,9 @@ export class StateManager {
     this.regions = {}; // Map of region name -> region data
     this.eventLocations = new Map(); // Map of location name -> event location data
 
+    // Add this new property to track indirect conditions
+    this.indirectConnections = new Map(); // Map of region name -> set of entrances affected by that region
+
     // Region reachability tracking
     this.knownReachableRegions = new Set();
     this.knownUnreachableRegions = new Set();
@@ -69,6 +72,7 @@ export class StateManager {
     const itemData = this.inventory.itemData || {};
     this.inventory = new ALTTPInventory([], progressionMapping, itemData);
     this.clearCheckedLocations();
+    this.indirectConnections = new Map(); // Clear indirect connections
     this.invalidateCache();
     this.notifyUI('inventoryChanged');
   }
@@ -131,6 +135,7 @@ export class StateManager {
     // Process locations and events
     this.locations = [];
     this.eventLocations.clear();
+    this.indirectConnections = new Map(); // Just clear but don't auto-populate
 
     // Extract shop data from regions
     const shops = [];
@@ -220,7 +225,7 @@ export class StateManager {
     try {
       while (newEventCollected) {
         newEventCollected = false;
-        const reachableSet = this.runSingleBFS();
+        const reachableSet = this.runSingleBFS(localReachable);
 
         // Auto-collect events if using main inventory
         for (const loc of this.eventLocations.values()) {
@@ -262,39 +267,46 @@ export class StateManager {
   /**
    * Single pass of breadth-first search to find reachable regions
    */
-  runSingleBFS() {
+  runSingleBFS(currentReachable = new Set()) {
     const start = this.getStartRegions();
-    const reachable = new Set(start);
+    const reachable = new Set([...start, ...currentReachable]);
     const queue = [...start];
     const seenExits = new Set();
+
     while (queue.length > 0) {
       const currentRegionName = queue.shift();
       const currentRegion = this.regions[currentRegionName];
       if (!currentRegion) continue;
+
       for (const exit of currentRegion.exits || []) {
         const exitKey = `${currentRegionName}->${exit.name}`;
         if (seenExits.has(exitKey)) continue;
         seenExits.add(exitKey);
+
         if (!exit.connected_region) continue;
         if (exit.access_rule && !evaluateRule(exit.access_rule)) {
           continue;
         }
+
         const targetRegion = exit.connected_region;
         if (!reachable.has(targetRegion)) {
           reachable.add(targetRegion);
           queue.push(targetRegion);
         }
       }
+
       for (const entrance of currentRegion.entrances || []) {
         if (!entrance.connected_region) continue;
         if (reachable.has(entrance.connected_region)) continue;
         if (entrance.access_rule && !evaluateRule(entrance.access_rule)) {
           continue;
         }
+
         reachable.add(entrance.connected_region);
         queue.push(entrance.connected_region);
       }
     }
+
     return reachable;
   }
 

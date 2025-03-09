@@ -1844,3 +1844,7 @@ It looks like something goes wrong in exporter.py, causing it to drop the “cro
 Looking at pytest_output.txt, I can see several instances of the string “cross_peg_bridge”, so at some point exporter.py does see this function, but somehow it doesn’t get included in the data in the json file.
 
 Can you figure out what is going wrong?
+
+---
+
+There is a bug somewhere in regionUI that causes regions that are inaccessible to be sometimes displayed with green text.  Specifically in the “Analyze Paths” tool.  Can you fix that?

@@ -211,22 +211,33 @@ export class RegionUI {
   }
 
   findPathsToRegion(targetRegion, maxPaths = 100) {
+    const paths = [];
+
+    // Use stateManager's computeReachableRegions to check if the target is reachable at all
+    const reachableRegions = stateManager.computeReachableRegions();
+
+    if (!reachableRegions.has(targetRegion)) {
+      console.debug(
+        `Target region ${targetRegion} is not reachable according to stateManager`
+      );
+      // Still attempt to find paths, which might reveal why it's unreachable
+    }
+
     const startRegions = stateManager.getStartRegions();
-    const allPaths = [];
 
     for (const startRegion of startRegions) {
-      if (allPaths.length >= maxPaths) break;
+      if (paths.length >= maxPaths) break;
       this._findPathsDFS(
         startRegion,
         targetRegion,
         [startRegion],
         new Set([startRegion]),
-        allPaths,
+        paths,
         maxPaths
       );
     }
 
-    return allPaths;
+    return paths;
   }
 
   _findPathsDFS(
@@ -600,202 +611,6 @@ export class RegionUI {
   }
 
   /**
-   * Process each path and create collapsible exit lists
-   * @param {Array} path - The path to process
-   * @param {HTMLElement} pathsDiv - The container for all paths
-   * @param {Object} allNodes - Object containing node categories
-   * @returns {HTMLElement} - The created path element
-   */
-  _processPath(path, pathsDiv, allNodes) {
-    // Create path element
-    const pathEl = document.createElement('div');
-    pathEl.classList.add('region-path');
-    pathEl.style.marginBottom = '10px';
-
-    // Create the path visualization with collapsible header
-    const pathHeader = document.createElement('div');
-    pathHeader.classList.add('path-header');
-    pathHeader.style.display = 'flex';
-    pathHeader.style.alignItems = 'center';
-    pathHeader.style.cursor = 'pointer';
-    pathHeader.style.padding = '5px';
-    pathHeader.style.borderRadius = '4px';
-    pathHeader.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-
-    // Add toggle indicator
-    const toggleIndicator = document.createElement('span');
-    toggleIndicator.classList.add('path-toggle-indicator');
-    toggleIndicator.textContent = '▼'; // Down arrow for expanded
-    toggleIndicator.style.marginRight = '8px';
-    toggleIndicator.style.fontSize = '10px';
-    toggleIndicator.style.transition = 'transform 0.2s';
-    pathHeader.appendChild(toggleIndicator);
-
-    // Create the path visualization
-    const pathText = document.createElement('div');
-    pathText.classList.add('path-regions');
-    pathText.style.flex = '1';
-
-    // Analyze the transitions in this path
-    const transitions = this._findAllTransitions(path);
-
-    // Create container for exit rules (this will be toggled)
-    const exitRulesContainer = document.createElement('div');
-    exitRulesContainer.classList.add('path-exit-rules');
-    exitRulesContainer.style.display = 'block'; // Start expanded
-
-    // Track if the path chain is unbroken so far
-    let pathChainIntact = true;
-    let lastAccessibleRegionIndex = -1;
-
-    // Display the path regions
-    path.forEach((region, index) => {
-      // Check region's general accessibility
-      const regionAccessible = stateManager.isRegionReachable(region);
-
-      // Determine color based on accessibility and path integrity
-      let regionColor;
-
-      if (!regionAccessible) {
-        // Region is completely inaccessible: RED
-        regionColor = '#f44336';
-        pathChainIntact = false;
-      } else if (index === 0) {
-        // First region is accessible, start of path: GREEN
-        regionColor = '#4caf50';
-        lastAccessibleRegionIndex = 0;
-      } else if (pathChainIntact) {
-        // We need to check if the transition from the previous region works
-        const prevRegion = path[index - 1];
-
-        // Find the transition between these regions
-        const transition = transitions.find(
-          (t) => t.fromRegion === prevRegion && t.toRegion === region
-        );
-
-        if (transition && transition.exitAccessible) {
-          // This link in the chain works - region is accessible via this path: GREEN
-          regionColor = '#4caf50';
-          lastAccessibleRegionIndex = index;
-        } else {
-          // Transition doesn't work - region is accessible but not via this path: ORANGE
-          regionColor = '#ff9800';
-          pathChainIntact = false;
-        }
-      } else {
-        // Previous link was broken - region is accessible but not via this path: ORANGE
-        regionColor = '#ff9800';
-      }
-
-      // Create a span for the region with the appropriate color
-      const regionSpan = document.createElement('span');
-      regionSpan.textContent = region;
-      regionSpan.style.color = regionColor;
-      regionSpan.classList.add('region-link');
-      regionSpan.dataset.region = region;
-      regionSpan.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.navigateToRegion(region);
-      });
-
-      // Add the region to the path
-      pathText.appendChild(regionSpan);
-
-      // Add an arrow between regions (except for the last one)
-      if (index < path.length - 1) {
-        const arrow = document.createElement('span');
-        arrow.textContent = ' → ';
-        pathText.appendChild(arrow);
-      }
-    });
-
-    // Add path text to header
-    pathHeader.appendChild(pathText);
-
-    // Add click handler for toggling exit rules
-    pathHeader.addEventListener('click', () => {
-      const isExpanded = exitRulesContainer.style.display !== 'none';
-
-      // Toggle visibility
-      exitRulesContainer.style.display = isExpanded ? 'none' : 'block';
-
-      // Update toggle indicator
-      toggleIndicator.textContent = isExpanded ? '►' : '▼'; // Right arrow when collapsed, down when expanded
-      toggleIndicator.style.transform = isExpanded
-        ? 'rotate(0deg)'
-        : 'rotate(0deg)';
-    });
-
-    // Add header to path element
-    pathEl.appendChild(pathHeader);
-
-    // Add exit rule for transitions if any
-    if (transitions.length > 0) {
-      transitions.forEach((transition) => {
-        if (!transition.exit.access_rule) return;
-
-        // Evaluate the rule to determine accessibility
-        const exitAccessible = transition.exitAccessible;
-
-        // Create exit rule container with appropriate class based on accessibility
-        const exitRuleContainer = document.createElement('div');
-        exitRuleContainer.classList.add('path-exit-rule-container');
-        exitRuleContainer.classList.add(
-          exitAccessible ? 'passing-exit' : 'failing-exit'
-        );
-        exitRuleContainer.style.display = 'block'; // Always show by default
-        exitRuleContainer.style.marginLeft = '20px';
-        exitRuleContainer.style.marginTop = '5px';
-        exitRuleContainer.style.marginBottom = '10px';
-        exitRuleContainer.style.padding = '5px';
-        exitRuleContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-
-        // Set the border color based on rule evaluation
-        exitRuleContainer.style.borderLeft = exitAccessible
-          ? '3px solid #4caf50' // Green for accessible exits
-          : '3px solid #f44336'; // Red for inaccessible exits
-
-        // Create header for exit
-        const exitHeader = document.createElement('div');
-        exitHeader.classList.add('path-exit-header');
-
-        // Set exit header color based on accessibility
-        exitHeader.style.color = exitAccessible ? '#4caf50' : '#f44336';
-
-        exitHeader.innerHTML = `<strong>${
-          transition.isBlocking ? 'Blocked Exit' : 'Exit'
-        }:</strong> ${transition.fromRegion} → ${transition.exit.name} → ${
-          transition.toRegion
-        }`;
-        exitRuleContainer.appendChild(exitHeader);
-
-        // Show the exit rule
-        const ruleContainer = document.createElement('div');
-        ruleContainer.classList.add('path-exit-rule');
-
-        // Create a DOM representation of the rule for both display and analysis
-        const ruleElement = this.renderLogicTree(transition.exit.access_rule);
-        ruleContainer.appendChild(ruleElement);
-        exitRuleContainer.appendChild(ruleContainer);
-
-        // Add to exit rules container
-        exitRulesContainer.appendChild(exitRuleContainer);
-
-        // Analyze rules from this transition for our categories
-        const nodeResults = this.extractCategorizedNodes(ruleElement);
-        Object.keys(allNodes).forEach((key) => {
-          allNodes[key].push(...nodeResults[key]);
-        });
-      });
-    }
-
-    // Add exit rules container to path element
-    pathEl.appendChild(exitRulesContainer);
-
-    return pathEl;
-  }
-
-  /**
    * Comprehensive handler for the Analyze Paths button with toggle controls
    */
   setupAnalyzePathsButton(
@@ -805,19 +620,15 @@ export class RegionUI {
     regionName
   ) {
     analyzePathsBtn.addEventListener('click', () => {
-      // First: Is the paths container already showing analysis?
+      // Clear existing analysis
       if (pathsContainer.style.display === 'block') {
-        // If already showing, clear and hide
         pathsContainer.style.display = 'none';
         pathsContainer.innerHTML = '';
         pathsCountSpan.style.display = 'none';
         analyzePathsBtn.textContent = 'Analyze Paths';
 
-        // Find and remove any toggle controls if they exist
         const toggleContainer = document.querySelector('.path-toggle-controls');
-        if (toggleContainer) {
-          toggleContainer.remove();
-        }
+        if (toggleContainer) toggleContainer.remove();
 
         return;
       }
@@ -825,26 +636,37 @@ export class RegionUI {
       // Begin analysis
       analyzePathsBtn.textContent = 'Analyzing...';
       analyzePathsBtn.disabled = true;
-
-      // Make sure paths container is visible
       pathsContainer.style.display = 'block';
 
-      // 1. Find all paths to this region directly from stateManager
+      // PHASE 1: Check actual reachability using stateManager
+      const isRegionActuallyReachable =
+        stateManager.isRegionReachable(regionName);
+
+      // Create the status indicator first - this will appear at the top
+      const statusIndicator = document.createElement('div');
+      statusIndicator.classList.add('region-status-indicator');
+      statusIndicator.style.marginBottom = '15px';
+      statusIndicator.style.padding = '10px';
+      statusIndicator.style.borderRadius = '4px';
+
+      // Create containers for analysis results
+      const requirementsDiv = document.createElement('div');
+      requirementsDiv.classList.add('compiled-results-container');
+      requirementsDiv.id = 'path-summary-section';
+      requirementsDiv.innerHTML = '<h4>Path Requirements Analysis:</h4>';
+
+      const pathsDiv = document.createElement('div');
+      pathsDiv.classList.add('path-regions-container');
+
+      // PHASE 2: Perform traditional path analysis
       const MAX_PATHS = 100;
       const allPaths = this.findPathsToRegion(regionName, MAX_PATHS);
-      console.log(`Found ${allPaths.length} paths to region ${regionName}`);
 
-      if (allPaths.length === 0) {
-        // No paths found - show message and try analyzing direct connections
-        pathsContainer.innerHTML =
-          '<h4>Path Analysis Results:</h4><p>No paths found to this region. Analyzing direct connections...</p>';
-        this._analyzeDirectConnections(regionName, pathsContainer);
-        analyzePathsBtn.textContent = 'Clear Analysis';
-        analyzePathsBtn.disabled = false;
-        return;
-      }
+      // Track path statistics
+      let accessiblePathCount = 0;
+      let canonicalPath = null; // Will store the first viable path found
 
-      // 2. Create categories for node analysis
+      // Process all paths as before
       const allNodes = {
         primaryBlockers: [],
         secondaryBlockers: [],
@@ -854,57 +676,154 @@ export class RegionUI {
         tertiaryRequirements: [],
       };
 
-      // 3. Create section for the requirement analysis
-      const requirementsDiv = document.createElement('div');
-      requirementsDiv.classList.add('compiled-results-container');
-      requirementsDiv.id = 'path-summary-section';
-      requirementsDiv.innerHTML = '<h4>Path Requirements Analysis:</h4>';
+      if (allPaths.length > 0) {
+        // Process and analyze paths
+        allPaths.forEach((path, pathIndex) => {
+          const transitions = this._findAllTransitions(path);
+          let pathHasIssues = false;
 
-      // 4. Display paths with their transitions
-      const pathsDiv = document.createElement('div');
-      pathsDiv.classList.add('path-regions-container');
-      pathsDiv.innerHTML = '<h4>Paths to this region:</h4>';
+          // Check if this path is fully viable
+          for (const transition of transitions) {
+            if (!transition.exitAccessible) {
+              pathHasIssues = true;
+              break;
+            }
+          }
 
-      // Show path count
-      const countDisplay =
-        allPaths.length >= MAX_PATHS
-          ? `${MAX_PATHS}+`
-          : allPaths.length.toString();
-      pathsCountSpan.textContent = `(${allPaths.length} paths found)`;
-      pathsCountSpan.style.display = 'inline';
+          if (!pathHasIssues) {
+            accessiblePathCount++;
+            if (!canonicalPath) {
+              canonicalPath = path; // Store first viable path
+            }
+          }
 
-      // Process each path - both for display and analysis
-      allPaths.forEach((path, pathIndex) => {
-        // Use the new method to process each path
-        const pathEl = this._processPath(path, pathsDiv, allNodes);
+          // Generate path element and add to container
+          const pathEl = this._processPath(path, pathsDiv, allNodes, pathIndex);
 
-        // Add path to paths container
-        pathsDiv.appendChild(pathEl);
-      });
+          // If this is a viable path, mark it specially
+          if (!pathHasIssues) {
+            pathEl.classList.add('viable-path');
+            pathEl.style.borderLeft = '3px solid #4caf50';
+          }
 
-      // 5. Display the node categorization results
+          pathsDiv.appendChild(pathEl);
+        });
+      }
+
+      // Set status indicator based on actual reachability and path analysis
+      if (isRegionActuallyReachable) {
+        if (accessiblePathCount > 0) {
+          // Region is reachable and we found viable paths
+          statusIndicator.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+          statusIndicator.style.border = '1px solid #4CAF50';
+          statusIndicator.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-weight: bold; color: #4CAF50;">✓ Region Reachable</span>
+              <span>This region is reachable with ${accessiblePathCount} viable path(s).</span>
+            </div>
+          `;
+        } else {
+          // Region is reachable but our path analysis didn't find viable paths
+          statusIndicator.style.backgroundColor = 'rgba(255, 152, 0, 0.2)';
+          statusIndicator.style.border = '1px solid #FF9800';
+          statusIndicator.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-weight: bold; color: #FF9800;">⚠️ Algorithm Discrepancy</span>
+              <span>This region is marked as reachable by stateManager, but no viable paths were found by path analysis. This suggests there may be special cases or complex rule interactions that the path finder doesn't handle correctly.</span>
+            </div>
+          `;
+        }
+      } else {
+        // Region is not reachable
+        statusIndicator.style.backgroundColor = 'rgba(244, 67, 54, 0.2)';
+        statusIndicator.style.border = '1px solid #F44336';
+        statusIndicator.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-weight: bold; color: #F44336;">✕ Region Unreachable</span>
+            <span>This region is currently unreachable with your inventory.</span>
+          </div>
+        `;
+      }
+
+      // If stateManager says the region is reachable but we couldn't find a path,
+      // try to derive a "canonical path" from stateManager's region reachable set
+      if (isRegionActuallyReachable && !canonicalPath) {
+        const derivedPath = this._deriveCanonicalPath(regionName);
+        if (derivedPath && derivedPath.length > 0) {
+          const derivedPathEl = document.createElement('div');
+          derivedPathEl.classList.add('derived-canonical-path');
+          derivedPathEl.style.padding = '10px';
+          derivedPathEl.style.marginTop = '10px';
+          derivedPathEl.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+          derivedPathEl.style.border = '1px solid #4CAF50';
+          derivedPathEl.style.borderRadius = '4px';
+
+          derivedPathEl.innerHTML = `
+            <h4>Canonical Path (derived from stateManager)</h4>
+            <div class="path-regions" style="font-weight: bold;">
+              ${derivedPath
+                .map(
+                  (region) =>
+                    `<span class="region-link" data-region="${region}" style="color: #4CAF50">${region}</span>`
+                )
+                .join(' → ')}
+            </div>
+            <div style="margin-top: 5px; font-style: italic; color: #888;">
+              This path was derived from stateManager's reachability data and represents a logically viable path.
+            </div>
+          `;
+
+          // Add event listeners to region links
+          setTimeout(() => {
+            derivedPathEl.querySelectorAll('.region-link').forEach((link) => {
+              link.addEventListener('click', (e) => {
+                const regionName = link.dataset.region;
+                if (regionName) {
+                  this.navigateToRegion(regionName);
+                }
+              });
+            });
+          }, 0);
+
+          // Insert at the top of the paths container, right after the status
+          pathsDiv.insertBefore(derivedPathEl, pathsDiv.firstChild);
+        }
+      }
+
+      // Display the node categorization results
       this.displayCompiledList(allNodes, requirementsDiv);
 
-      // 6. Add both sections to the container in the right order - requirements first
-      pathsContainer.innerHTML = '';
-      pathsContainer.appendChild(requirementsDiv);
-      pathsContainer.appendChild(pathsDiv);
+      // Add paths section header
+      if (allPaths.length > 0) {
+        const pathsHeader = document.createElement('h4');
+        pathsHeader.textContent = `Analyzed Paths to this region: (${allPaths.length} found)`;
+        pathsDiv.insertBefore(pathsHeader, pathsDiv.firstChild);
+        pathsCountSpan.textContent = `(${allPaths.length} paths found)`;
+        pathsCountSpan.style.display = 'inline';
+      } else {
+        pathsDiv.innerHTML =
+          '<h4>Analyzed Paths to this region:</h4><p>No paths found to this region.</p>';
+      }
 
-      // 7. Create toggle controls
+      // Add everything to the container in order
+      pathsContainer.innerHTML = '';
+      pathsContainer.appendChild(statusIndicator); // Status first
+      pathsContainer.appendChild(requirementsDiv); // Requirements second
+      pathsContainer.appendChild(pathsDiv); // Paths last
+
+      // Create toggle controls
       this._createToggleControls(pathsContainer);
 
-      // 8. Done analyzing - update button
+      // Done!
       analyzePathsBtn.textContent = 'Clear Analysis';
       analyzePathsBtn.disabled = false;
     });
   }
 
   /**
-   * Create toggle controls for the path analysis view
-   * @param {HTMLElement} container - Container to add the toggle controls to
+   * Enhanced toggle controls that include entrance paths section
    */
   _createToggleControls(container) {
-    // Create container for toggle buttons
     const toggleContainer = document.createElement('div');
     toggleContainer.classList.add('path-toggle-controls');
     toggleContainer.style.display = 'flex';
@@ -912,7 +831,6 @@ export class RegionUI {
     toggleContainer.style.marginBottom = '15px';
     toggleContainer.style.flexWrap = 'wrap';
 
-    // Create toggle buttons
     const toggles = [
       {
         id: 'toggle-summary',
@@ -920,6 +838,13 @@ export class RegionUI {
         selector: '#path-summary-section',
         showText: 'Show Summary',
         hideText: 'Hide Summary',
+      },
+      {
+        id: 'toggle-entrance-paths',
+        initialText: 'Hide Entrance Paths',
+        selector: '#entrance-paths-section',
+        showText: 'Show Entrance Paths',
+        hideText: 'Hide Entrance Paths',
       },
       {
         id: 'toggle-passing-exits',
@@ -965,7 +890,79 @@ export class RegionUI {
       toggleContainer.appendChild(button);
     });
 
-    // Add "Collapse All" button
+    // Add toggle for showing viable paths first
+    const viablePathsToggle = document.createElement('button');
+    viablePathsToggle.id = 'toggle-viable-paths-first';
+    viablePathsToggle.textContent = 'Show Viable Paths First';
+    viablePathsToggle.style.padding = '5px 10px';
+    viablePathsToggle.style.backgroundColor = '#4caf50'; // Green to indicate it's active
+    viablePathsToggle.style.color = '#fff';
+    viablePathsToggle.style.border = '1px solid #666';
+    viablePathsToggle.style.borderRadius = '4px';
+    viablePathsToggle.style.cursor = 'pointer';
+
+    let viablePathsFirst = true; // Start with viable paths first
+
+    viablePathsToggle.addEventListener('click', () => {
+      viablePathsFirst = !viablePathsFirst;
+      viablePathsToggle.textContent = viablePathsFirst
+        ? 'Show Viable Paths First'
+        : 'Show Original Order';
+      viablePathsToggle.style.backgroundColor = viablePathsFirst
+        ? '#4caf50'
+        : '#333';
+
+      // Get all path elements
+      const pathsContainer = document.querySelector('.path-regions-container');
+      if (!pathsContainer) return;
+
+      const pathElements = Array.from(
+        pathsContainer.querySelectorAll('.region-path')
+      );
+      const derivedPathEl = pathsContainer.querySelector(
+        '.derived-canonical-path'
+      );
+
+      // Sort based on preference
+      if (viablePathsFirst) {
+        pathElements.sort((a, b) => {
+          const aIsViable = a.classList.contains('viable-path');
+          const bIsViable = b.classList.contains('viable-path');
+          return bIsViable - aIsViable; // Viable paths first
+        });
+      } else {
+        // Reset to original order - this requires adding a data attribute with original index
+        pathElements.sort((a, b) => {
+          return (
+            parseInt(a.dataset.originalIndex || '0') -
+            parseInt(b.dataset.originalIndex || '0')
+          );
+        });
+      }
+
+      // Remove existing elements
+      pathElements.forEach((el) => el.remove());
+
+      // Re-append in new order
+      const headerElement = pathsContainer.querySelector('h4');
+      if (headerElement) {
+        const insertPoint = headerElement.nextSibling;
+
+        // Put derived path first if it exists
+        if (derivedPathEl) {
+          pathsContainer.insertBefore(derivedPathEl, insertPoint);
+        }
+      }
+
+      // Then add sorted paths
+      pathElements.forEach((el) => {
+        pathsContainer.appendChild(el);
+      });
+    });
+
+    toggleContainer.appendChild(viablePathsToggle);
+
+    // Add "Collapse All" button for path details
     const collapseAllButton = document.createElement('button');
     collapseAllButton.id = 'toggle-collapse-all';
     collapseAllButton.textContent = 'Collapse All';
@@ -976,7 +973,6 @@ export class RegionUI {
     collapseAllButton.style.borderRadius = '4px';
     collapseAllButton.style.cursor = 'pointer';
 
-    // Add collapse/expand functionality
     let allCollapsed = false;
     collapseAllButton.addEventListener('click', () => {
       allCollapsed = !allCollapsed;
@@ -999,9 +995,69 @@ export class RegionUI {
 
     toggleContainer.appendChild(collapseAllButton);
 
-    // Insert toggle controls at the very beginning of the container,
-    // before the summary section
     container.insertBefore(toggleContainer, container.firstChild);
+  }
+
+  /**
+   * Finds paths to a region that use entrances (incoming connections)
+   * This complements the existing path finder which only uses exits
+   *
+   * @param {string} targetRegion - The region to find paths to
+   * @returns {Array} - Array of entrance paths that lead to the target region
+   */
+  findEntrancePathsToRegion(targetRegion) {
+    const entrancePaths = [];
+    const targetRegionData = stateManager.regions[targetRegion];
+
+    if (!targetRegionData) return entrancePaths;
+
+    // First, check all entrances to the target region
+    for (const entrance of targetRegionData.entrances || []) {
+      // Skip entrances without valid data
+      if (!entrance.parent_region || !entrance.connected_region) continue;
+
+      // Check if the parent region is reachable
+      const parentRegionAccessible = stateManager.isRegionReachable(
+        entrance.parent_region
+      );
+
+      // Check if the entrance itself is traversable
+      const entranceAccessible =
+        !entrance.access_rule || evaluateRule(entrance.access_rule);
+
+      if (parentRegionAccessible && entranceAccessible) {
+        // This entrance provides access to the target region
+        entrancePaths.push({
+          fromRegion: entrance.parent_region,
+          toRegion: targetRegion,
+          entrance: entrance,
+          entranceName: entrance.name,
+          isAccessible: true,
+        });
+      } else if (parentRegionAccessible) {
+        // Parent is accessible but entrance rule fails
+        entrancePaths.push({
+          fromRegion: entrance.parent_region,
+          toRegion: targetRegion,
+          entrance: entrance,
+          entranceName: entrance.name,
+          isAccessible: false,
+          blockingReason: 'entrance_rule',
+        });
+      } else if (entranceAccessible) {
+        // Entrance would work but parent region is inaccessible
+        entrancePaths.push({
+          fromRegion: entrance.parent_region,
+          toRegion: targetRegion,
+          entrance: entrance,
+          entranceName: entrance.name,
+          isAccessible: false,
+          blockingReason: 'parent_region',
+        });
+      }
+    }
+
+    return entrancePaths;
   }
 
   /**
@@ -2204,6 +2260,1163 @@ export class RegionUI {
     section.appendChild(list);
 
     container.appendChild(section);
+  }
+
+  /**
+   * Process each path and create collapsible exit lists
+   * @param {Array} path - The path to process
+   * @param {HTMLElement} pathsDiv - The container for all paths
+   * @param {Object} allNodes - Object containing node categories
+   * @returns {HTMLElement} - The created path element
+   */
+  _processPath(path, pathsDiv, allNodes, pathIndex = 0) {
+    // Create path element
+    const pathEl = document.createElement('div');
+    pathEl.classList.add('region-path');
+    pathEl.dataset.originalIndex = pathIndex.toString(); // Add original index
+    pathEl.style.marginBottom = '10px';
+
+    // Create the path visualization with collapsible header
+    const pathHeader = document.createElement('div');
+    pathHeader.classList.add('path-header');
+    pathHeader.style.display = 'flex';
+    pathHeader.style.alignItems = 'center';
+    pathHeader.style.cursor = 'pointer';
+    pathHeader.style.padding = '5px';
+    pathHeader.style.borderRadius = '4px';
+    pathHeader.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+
+    // Add toggle indicator
+    const toggleIndicator = document.createElement('span');
+    toggleIndicator.classList.add('path-toggle-indicator');
+    toggleIndicator.textContent = '▼'; // Down arrow for expanded
+    toggleIndicator.style.marginRight = '8px';
+    toggleIndicator.style.fontSize = '10px';
+    toggleIndicator.style.transition = 'transform 0.2s';
+    pathHeader.appendChild(toggleIndicator);
+
+    // Create the path visualization
+    const pathText = document.createElement('div');
+    pathText.classList.add('path-regions');
+    pathText.style.flex = '1';
+
+    // Analyze the transitions in this path
+    const transitions = this._findAllTransitions(path);
+
+    // Create container for exit rules (this will be toggled)
+    const exitRulesContainer = document.createElement('div');
+    exitRulesContainer.classList.add('path-exit-rules');
+    exitRulesContainer.style.display = 'block'; // Start expanded
+
+    // Track if the path chain is unbroken so far
+    let pathChainIntact = true;
+    let lastAccessibleRegionIndex = -1;
+
+    // Display the path regions
+    path.forEach((region, index) => {
+      // Check region's general accessibility
+      const regionAccessible = stateManager.isRegionReachable(region);
+
+      // Determine color based on accessibility and path integrity
+      let regionColor;
+
+      if (!regionAccessible) {
+        // Region is completely inaccessible: RED
+        regionColor = '#f44336';
+        pathChainIntact = false;
+      } else if (index === 0) {
+        // First region is accessible, start of path: GREEN
+        regionColor = '#4caf50';
+        lastAccessibleRegionIndex = 0;
+      } else if (pathChainIntact) {
+        // We need to check if the transition from the previous region works
+        const prevRegion = path[index - 1];
+
+        // Find the transition between these regions
+        const transition = transitions.find(
+          (t) => t.fromRegion === prevRegion && t.toRegion === region
+        );
+
+        if (transition && transition.exitAccessible) {
+          // This link in the chain works - region is accessible via this path: GREEN
+          regionColor = '#4caf50';
+          lastAccessibleRegionIndex = index;
+        } else {
+          // Transition doesn't work - region is accessible but not via this path: ORANGE
+          regionColor = '#ff9800';
+          pathChainIntact = false;
+        }
+      } else {
+        // Previous link was broken - region is accessible but not via this path: ORANGE
+        regionColor = '#ff9800';
+      }
+
+      // Create a span for the region with the appropriate color
+      const regionSpan = document.createElement('span');
+      regionSpan.textContent = region;
+      regionSpan.style.color = regionColor;
+      regionSpan.classList.add('region-link');
+      regionSpan.dataset.region = region;
+      regionSpan.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.navigateToRegion(region);
+      });
+
+      // Add the region to the path
+      pathText.appendChild(regionSpan);
+
+      // Add an arrow between regions (except for the last one)
+      if (index < path.length - 1) {
+        const arrow = document.createElement('span');
+        arrow.textContent = ' → ';
+        pathText.appendChild(arrow);
+      }
+    });
+
+    // Add path text to header
+    pathHeader.appendChild(pathText);
+
+    // Add click handler for toggling exit rules
+    pathHeader.addEventListener('click', () => {
+      const isExpanded = exitRulesContainer.style.display !== 'none';
+
+      // Toggle visibility
+      exitRulesContainer.style.display = isExpanded ? 'none' : 'block';
+
+      // Update toggle indicator
+      toggleIndicator.textContent = isExpanded ? '►' : '▼'; // Right arrow when collapsed, down when expanded
+      toggleIndicator.style.transform = isExpanded
+        ? 'rotate(0deg)'
+        : 'rotate(0deg)';
+    });
+
+    // Add header to path element
+    pathEl.appendChild(pathHeader);
+
+    // Add exit rule for transitions if any
+    if (transitions.length > 0) {
+      transitions.forEach((transition) => {
+        if (!transition.exit.access_rule) return;
+
+        // Evaluate the rule to determine accessibility
+        const exitAccessible = transition.exitAccessible;
+
+        // Create exit rule container with appropriate class based on accessibility
+        const exitRuleContainer = document.createElement('div');
+        exitRuleContainer.classList.add('path-exit-rule-container');
+        exitRuleContainer.classList.add(
+          exitAccessible ? 'passing-exit' : 'failing-exit'
+        );
+        exitRuleContainer.style.display = 'block'; // Always show by default
+        exitRuleContainer.style.marginLeft = '20px';
+        exitRuleContainer.style.marginTop = '5px';
+        exitRuleContainer.style.marginBottom = '10px';
+        exitRuleContainer.style.padding = '5px';
+        exitRuleContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+
+        // Set the border color based on rule evaluation
+        exitRuleContainer.style.borderLeft = exitAccessible
+          ? '3px solid #4caf50' // Green for accessible exits
+          : '3px solid #f44336'; // Red for inaccessible exits
+
+        // Create header for exit
+        const exitHeader = document.createElement('div');
+        exitHeader.classList.add('path-exit-header');
+
+        // Set exit header color based on accessibility
+        exitHeader.style.color = exitAccessible ? '#4caf50' : '#f44336';
+
+        exitHeader.innerHTML = `<strong>${
+          transition.isBlocking ? 'Blocked Exit' : 'Exit'
+        }:</strong> ${transition.fromRegion} → ${transition.exit.name} → ${
+          transition.toRegion
+        }`;
+        exitRuleContainer.appendChild(exitHeader);
+
+        // Show the exit rule
+        const ruleContainer = document.createElement('div');
+        ruleContainer.classList.add('path-exit-rule');
+
+        // Create a DOM representation of the rule for both display and analysis
+        const ruleElement = this.renderLogicTree(transition.exit.access_rule);
+        ruleContainer.appendChild(ruleElement);
+        exitRuleContainer.appendChild(ruleContainer);
+
+        // Add to exit rules container
+        exitRulesContainer.appendChild(exitRuleContainer);
+
+        // Analyze rules from this transition for our categories
+        const nodeResults = this.extractCategorizedNodes(ruleElement);
+        Object.keys(allNodes).forEach((key) => {
+          allNodes[key].push(...nodeResults[key]);
+        });
+      });
+    }
+
+    // Add exit rules container to path element
+    pathEl.appendChild(exitRulesContainer);
+
+    return pathEl;
+  }
+
+  /**
+   * Enhanced path finder that considers both exits and entrances
+   * @param {string} targetRegion - The region to find paths to
+   * @param {number} maxPaths - Maximum number of paths to find
+   * @returns {Array} - Array of paths that include both exit and entrance information
+   */
+  findEnhancedPathsToRegion(targetRegion, maxPaths = 100) {
+    // First, find paths using the standard exit-based approach
+    const exitPaths = this.findPathsToRegion(targetRegion, maxPaths);
+    const enhancedPaths = [];
+
+    // Process each exit path to add entrance information
+    for (const path of exitPaths) {
+      // For each adjacent pair of regions in the path, find both exit and entrance connections
+      const enhancedPath = {
+        regions: path,
+        connections: [],
+      };
+
+      for (let i = 0; i < path.length - 1; i++) {
+        const fromRegion = path[i];
+        const toRegion = path[i + 1];
+
+        // Find the exit connection
+        let exitConnection = null;
+        const fromRegionData = stateManager.regions[fromRegion];
+        if (fromRegionData && fromRegionData.exits) {
+          const exit = fromRegionData.exits.find(
+            (e) => e.connected_region === toRegion
+          );
+          if (exit) {
+            exitConnection = {
+              type: 'exit',
+              name: exit.name,
+              fromRegion,
+              toRegion,
+              rule: exit.access_rule,
+              accessible: !exit.access_rule || evaluateRule(exit.access_rule),
+            };
+          }
+        }
+
+        // Find the entrance connection
+        let entranceConnection = null;
+        const toRegionData = stateManager.regions[toRegion];
+        if (toRegionData && toRegionData.entrances) {
+          // Look for an entrance that connects from this region
+          const entrance = toRegionData.entrances.find(
+            (e) =>
+              e.parent_region === fromRegion ||
+              e.connected_region === fromRegion
+          );
+
+          if (entrance) {
+            entranceConnection = {
+              type: 'entrance',
+              name: entrance.name,
+              fromRegion,
+              toRegion,
+              rule: entrance.access_rule,
+              accessible:
+                !entrance.access_rule || evaluateRule(entrance.access_rule),
+            };
+          }
+        }
+
+        // Store both connections for this path segment
+        enhancedPath.connections.push({
+          fromRegion,
+          toRegion,
+          exit: exitConnection,
+          entrance: entranceConnection,
+        });
+      }
+
+      enhancedPaths.push(enhancedPath);
+    }
+
+    return enhancedPaths;
+  }
+
+  /**
+   * Process a single enhanced path for display
+   * @param {Object} enhancedPath - Path with region and connection data
+   * @param {HTMLElement} container - Container element to add the path to
+   * @returns {HTMLElement} - The created path element
+   */
+  _processEnhancedPath(enhancedPath, container) {
+    // Create path element with collapsible header
+    const pathEl = document.createElement('div');
+    pathEl.classList.add('region-path');
+    pathEl.style.marginBottom = '15px';
+
+    // Create header for path
+    const pathHeader = document.createElement('div');
+    pathHeader.classList.add('path-header');
+    pathHeader.style.cursor = 'pointer';
+    pathHeader.style.padding = '8px';
+    pathHeader.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+    pathHeader.style.borderRadius = '4px';
+    pathHeader.style.display = 'flex';
+    pathHeader.style.alignItems = 'center';
+
+    // Add toggle indicator
+    const toggleIndicator = document.createElement('span');
+    toggleIndicator.classList.add('path-toggle-indicator');
+    toggleIndicator.textContent = '▼'; // Down arrow for expanded
+    toggleIndicator.style.marginRight = '8px';
+    toggleIndicator.style.transition = 'transform 0.2s';
+    pathHeader.appendChild(toggleIndicator);
+
+    // Create the path visualization
+    const pathText = document.createElement('div');
+    pathText.classList.add('path-regions');
+    pathText.style.flex = '1';
+
+    // Track path viability
+    let pathChainIntact = true;
+
+    // Process each region in the path
+    enhancedPath.regions.forEach((region, index) => {
+      // Determine color based on accessibility
+      const regionAccessible = stateManager.isRegionReachable(region);
+
+      let regionColor;
+      if (!regionAccessible) {
+        // Region completely inaccessible
+        regionColor = '#f44336'; // Red
+        pathChainIntact = false;
+      } else if (index === 0) {
+        // First region and accessible
+        regionColor = '#4caf50'; // Green
+      } else if (pathChainIntact) {
+        // Check if connections to this region are viable
+        const prevConnection =
+          index > 0 ? enhancedPath.connections[index - 1] : null;
+
+        if (prevConnection) {
+          // We need at least one valid way to get between regions
+          const exitViable = prevConnection.exit?.accessible || false;
+          const entranceViable = prevConnection.entrance?.accessible || false;
+
+          if (exitViable || entranceViable) {
+            // At least one connection works - region is accessible via this path
+            regionColor = '#4caf50'; // Green
+          } else {
+            // Neither connection works - region is accessible but not via this path
+            regionColor = '#ff9800'; // Orange
+            pathChainIntact = false;
+          }
+        } else {
+          // No connection info
+          regionColor = '#ff9800'; // Orange - uncertain path
+          pathChainIntact = false;
+        }
+      } else {
+        // Previous link broken
+        regionColor = '#ff9800'; // Orange
+      }
+
+      // Create region span
+      const regionSpan = document.createElement('span');
+      regionSpan.textContent = region;
+      regionSpan.style.color = regionColor;
+      regionSpan.classList.add('region-link');
+      regionSpan.dataset.region = region;
+      regionSpan.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.navigateToRegion(region);
+      });
+
+      // Add region to path text
+      pathText.appendChild(regionSpan);
+
+      // Add connection indicators if not the last region
+      if (index < enhancedPath.regions.length - 1) {
+        const connection = enhancedPath.connections[index];
+
+        // Container for arrows
+        const arrowContainer = document.createElement('span');
+        arrowContainer.style.display = 'inline-block';
+        arrowContainer.style.margin = '0 8px';
+        arrowContainer.style.fontSize = '14px';
+
+        // Exit arrow (down)
+        const exitArrow = document.createElement('span');
+        exitArrow.textContent = '↓'; // Down arrow
+        exitArrow.title = connection.exit
+          ? `Exit: ${connection.exit.name}`
+          : 'No exit connection';
+        exitArrow.style.color = connection.exit?.accessible
+          ? '#4caf50'
+          : connection.exit
+          ? '#f44336'
+          : '#777';
+        exitArrow.style.marginRight = '2px';
+        arrowContainer.appendChild(exitArrow);
+
+        // Entrance arrow (up)
+        const entranceArrow = document.createElement('span');
+        entranceArrow.textContent = '↑'; // Up arrow
+        entranceArrow.title = connection.entrance
+          ? `Entrance: ${connection.entrance.name}`
+          : 'No entrance connection';
+        entranceArrow.style.color = connection.entrance?.accessible
+          ? '#4caf50'
+          : connection.entrance
+          ? '#f44336'
+          : '#777';
+        arrowContainer.appendChild(entranceArrow);
+
+        // Add arrows to path
+        pathText.appendChild(arrowContainer);
+      }
+    });
+
+    // Add path text to header
+    pathHeader.appendChild(pathText);
+    pathEl.appendChild(pathHeader);
+
+    // Create details container (for rules)
+    const detailsContainer = document.createElement('div');
+    detailsContainer.classList.add('path-details');
+    detailsContainer.style.display = 'block'; // Start expanded
+    detailsContainer.style.paddingLeft = '15px';
+    detailsContainer.style.marginTop = '5px';
+
+    // Process connections to show rules
+    enhancedPath.connections.forEach((connection, index) => {
+      const { fromRegion, toRegion, exit, entrance } = connection;
+
+      // Create exit rule display if it exists
+      if (exit && exit.rule) {
+        const exitRuleContainer = document.createElement('div');
+        exitRuleContainer.classList.add('path-exit-rule-container');
+        exitRuleContainer.classList.add(
+          exit.accessible ? 'passing-exit' : 'failing-exit'
+        );
+        exitRuleContainer.style.marginBottom = '10px';
+        exitRuleContainer.style.padding = '5px';
+        exitRuleContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.15)';
+        exitRuleContainer.style.borderLeft = exit.accessible
+          ? '3px solid #4caf50'
+          : '3px solid #f44336';
+
+        // Create header
+        const exitHeader = document.createElement('div');
+        exitHeader.classList.add('path-exit-header');
+        exitHeader.style.color = exit.accessible ? '#4caf50' : '#f44336';
+        exitHeader.innerHTML = `<strong>Exit:</strong> ${fromRegion} → ${exit.name} → ${toRegion}`;
+        exitRuleContainer.appendChild(exitHeader);
+
+        // Add rule tree
+        const ruleContainer = document.createElement('div');
+        ruleContainer.appendChild(this.renderLogicTree(exit.rule));
+        exitRuleContainer.appendChild(ruleContainer);
+
+        detailsContainer.appendChild(exitRuleContainer);
+      }
+
+      // Create entrance rule display if it exists
+      if (entrance && entrance.rule) {
+        const entranceRuleContainer = document.createElement('div');
+        entranceRuleContainer.classList.add('path-entrance-rule-container');
+        entranceRuleContainer.classList.add(
+          entrance.accessible ? 'passing-entrance' : 'failing-entrance'
+        );
+        entranceRuleContainer.style.marginBottom = '10px';
+        entranceRuleContainer.style.padding = '5px';
+        entranceRuleContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.15)';
+        entranceRuleContainer.style.borderLeft = entrance.accessible
+          ? '3px solid #4caf50'
+          : '3px solid #f44336';
+
+        // Create header
+        const entranceHeader = document.createElement('div');
+        entranceHeader.classList.add('path-entrance-header');
+        entranceHeader.style.color = entrance.accessible
+          ? '#4caf50'
+          : '#f44336';
+        entranceHeader.innerHTML = `<strong>Entrance:</strong> ${fromRegion} → ${entrance.name} → ${toRegion}`;
+        entranceRuleContainer.appendChild(entranceHeader);
+
+        // Add rule tree
+        const ruleContainer = document.createElement('div');
+        ruleContainer.appendChild(this.renderLogicTree(entrance.rule));
+        entranceRuleContainer.appendChild(ruleContainer);
+
+        detailsContainer.appendChild(entranceRuleContainer);
+      }
+    });
+
+    // Add toggle functionality to header
+    pathHeader.addEventListener('click', () => {
+      const isExpanded = detailsContainer.style.display !== 'none';
+      detailsContainer.style.display = isExpanded ? 'none' : 'block';
+      toggleIndicator.textContent = isExpanded ? '►' : '▼'; // Change arrow
+    });
+
+    // Add details to path element
+    pathEl.appendChild(detailsContainer);
+
+    return pathEl;
+  }
+
+  /**
+   * Updated setupAnalyzePathsButton that uses the bidirectional pathfinder
+   */
+  setupAnalyzePathsButton(
+    analyzePathsBtn,
+    pathsCountSpan,
+    pathsContainer,
+    regionName
+  ) {
+    analyzePathsBtn.addEventListener('click', () => {
+      // Clear existing analysis
+      if (pathsContainer.style.display === 'block') {
+        pathsContainer.style.display = 'none';
+        pathsContainer.innerHTML = '';
+        pathsCountSpan.style.display = 'none';
+        analyzePathsBtn.textContent = 'Analyze Paths';
+
+        // Find and remove any toggle controls if they exist
+        const toggleContainer = document.querySelector('.path-toggle-controls');
+        if (toggleContainer) {
+          toggleContainer.remove();
+        }
+
+        return;
+      }
+
+      // Begin analysis
+      analyzePathsBtn.textContent = 'Analyzing...';
+      analyzePathsBtn.disabled = true;
+
+      // Make sure paths container is visible
+      pathsContainer.style.display = 'block';
+
+      // Check if the region is actually reachable according to stateManager
+      const isRegionActuallyReachable =
+        stateManager.isRegionReachable(regionName);
+
+      // Display a spinner while processing
+      const spinner = document.createElement('div');
+      spinner.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+          <div style="font-size: 16px; margin-right: 10px;">Finding paths...</div>
+          <div class="spinner" style="
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+          "></div>
+        </div>
+        <style>
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        </style>
+      `;
+      pathsContainer.appendChild(spinner);
+
+      // Use setTimeout to allow the spinner to render before starting path analysis
+      setTimeout(() => {
+        try {
+          // Find enhanced paths that include both exit and entrance info using the bidirectional algorithm
+          const MAX_PATHS = 100;
+          const enhancedPaths = this.findEnhancedPathsToRegion(
+            regionName,
+            MAX_PATHS
+          );
+
+          // Create categories for node analysis
+          const allNodes = {
+            primaryBlockers: [],
+            secondaryBlockers: [],
+            tertiaryBlockers: [],
+            primaryRequirements: [],
+            secondaryRequirements: [],
+            tertiaryRequirements: [],
+          };
+
+          // Create section for the requirement analysis
+          const requirementsDiv = document.createElement('div');
+          requirementsDiv.classList.add('compiled-results-container');
+          requirementsDiv.id = 'path-summary-section';
+          requirementsDiv.innerHTML = '<h4>Path Requirements Analysis:</h4>';
+
+          // Create div for paths
+          const pathsDiv = document.createElement('div');
+          pathsDiv.classList.add('path-regions-container');
+
+          // Track fully viable paths
+          let fullViablePaths = 0;
+
+          // Process each path - both for display and analysis
+          if (enhancedPaths.length > 0) {
+            enhancedPaths.forEach((enhancedPath, pathIndex) => {
+              // Check if this path is fully viable (at least one valid connection at each step)
+              let pathViable = true;
+
+              // A path is viable if each segment has at least one working connection (exit OR entrance)
+              for (const connection of enhancedPath.connections) {
+                const exitViable = connection.exit?.accessible || false;
+                const entranceViable = connection.entrance?.accessible || false;
+
+                if (!exitViable && !entranceViable) {
+                  pathViable = false;
+                  break;
+                }
+              }
+
+              if (pathViable) {
+                fullViablePaths++;
+              }
+
+              // For each connection, analyze rules for the summary
+              for (const connection of enhancedPath.connections) {
+                // Analyze exit rules
+                if (connection.exit && connection.exit.rule) {
+                  const ruleElement = this.renderLogicTree(
+                    connection.exit.rule
+                  );
+                  const nodeResults = this.extractCategorizedNodes(ruleElement);
+
+                  // Merge results into allNodes
+                  Object.keys(allNodes).forEach((key) => {
+                    allNodes[key].push(...nodeResults[key]);
+                  });
+                }
+
+                // Analyze entrance rules
+                if (connection.entrance && connection.entrance.rule) {
+                  const ruleElement = this.renderLogicTree(
+                    connection.entrance.rule
+                  );
+                  const nodeResults = this.extractCategorizedNodes(ruleElement);
+
+                  // Merge results into allNodes
+                  Object.keys(allNodes).forEach((key) => {
+                    allNodes[key].push(...nodeResults[key]);
+                  });
+                }
+              }
+
+              // Process the path for display
+              const pathEl = this._processEnhancedPath(enhancedPath, pathsDiv);
+              pathsDiv.appendChild(pathEl);
+            });
+          }
+
+          // Add a status indicator
+          const statusIndicator = document.createElement('div');
+          statusIndicator.classList.add('region-status-indicator');
+          statusIndicator.style.marginBottom = '15px';
+          statusIndicator.style.padding = '10px';
+          statusIndicator.style.borderRadius = '4px';
+
+          if (isRegionActuallyReachable) {
+            if (fullViablePaths > 0) {
+              // Region is reachable with viable paths
+              statusIndicator.style.backgroundColor = 'rgba(76, 175, 80, 0.2)'; // Green
+              statusIndicator.style.border = '1px solid #4CAF50';
+              statusIndicator.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-weight: bold; color: #4CAF50;">✓ Region Reachable</span>
+                  <span>This region is reachable with ${fullViablePaths} viable path(s). Each viable path has at least one working connection (exit OR entrance) at every step.</span>
+                </div>
+              `;
+            } else if (enhancedPaths.length > 0) {
+              // Region is reachable but all found paths have issues
+              statusIndicator.style.backgroundColor = 'rgba(255, 152, 0, 0.2)'; // Orange
+              statusIndicator.style.border = '1px solid #FF9800';
+              statusIndicator.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-weight: bold; color: #FF9800;">⚠️ Reachability Gap</span>
+                  <span>This region is marked as reachable by stateManager, but none of the analyzed paths are fully viable. This may indicate the region is accessible through a different approach than this analysis shows.</span>
+                </div>
+              `;
+            } else {
+              // No paths found at all, but region is reachable
+              statusIndicator.style.backgroundColor = 'rgba(255, 152, 0, 0.2)'; // Orange
+              statusIndicator.style.border = '1px solid #FF9800';
+              statusIndicator.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-weight: bold; color: #FF9800;">⚠️ No Paths Found</span>
+                  <span>This region is marked as reachable, but no paths were found. This may indicate a complex connection or special case not covered by the path finder.</span>
+                </div>
+              `;
+            }
+          } else {
+            // Region is not reachable
+            statusIndicator.style.backgroundColor = 'rgba(244, 67, 54, 0.2)'; // Red
+            statusIndicator.style.border = '1px solid #F44336';
+            statusIndicator.innerHTML = `
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-weight: bold; color: #F44336;">✕ Region Unreachable</span>
+                <span>This region is currently unreachable with your inventory.</span>
+              </div>
+            `;
+          }
+
+          // Add paths header
+          if (enhancedPaths.length > 0) {
+            const pathsHeader = document.createElement('h4');
+            pathsHeader.textContent = `Paths to this region: (${enhancedPaths.length} found)`;
+            pathsDiv.insertBefore(pathsHeader, pathsDiv.firstChild);
+            pathsCountSpan.textContent = `(${enhancedPaths.length} paths found)`;
+            pathsCountSpan.style.display = 'inline';
+          } else {
+            const noneFound = document.createElement('p');
+            noneFound.textContent = 'No paths found to this region.';
+            pathsDiv.appendChild(noneFound);
+          }
+
+          // Display categorized requirements
+          this.displayCompiledList(allNodes, requirementsDiv);
+
+          // Add everything to the container
+          pathsContainer.innerHTML = '';
+          pathsContainer.appendChild(statusIndicator);
+          pathsContainer.appendChild(requirementsDiv);
+          pathsContainer.appendChild(pathsDiv);
+
+          // Create new toggle controls
+          this._createPathToggleControls(pathsContainer);
+
+          // Done analyzing
+          analyzePathsBtn.textContent = 'Clear Analysis';
+          analyzePathsBtn.disabled = false;
+        } catch (error) {
+          // Handle any errors in path analysis
+          pathsContainer.innerHTML = '';
+          const errorDiv = document.createElement('div');
+          errorDiv.style.color = '#f44336';
+          errorDiv.style.padding = '10px';
+          errorDiv.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+          errorDiv.style.borderRadius = '4px';
+          errorDiv.style.margin = '10px 0';
+          errorDiv.innerHTML = `
+            <h4>Error Finding Paths</h4>
+            <p>${error.message}</p>
+            <pre>${error.stack}</pre>
+          `;
+          pathsContainer.appendChild(errorDiv);
+
+          // Reset button
+          analyzePathsBtn.textContent = 'Analyze Paths';
+          analyzePathsBtn.disabled = false;
+
+          console.error('Path analysis error:', error);
+        }
+      }, 50); // Small delay to allow spinner to render
+    });
+  }
+
+  /**
+   * Updated toggle controls with entrance options
+   */
+  _createPathToggleControls(container) {
+    const toggleContainer = document.createElement('div');
+    toggleContainer.classList.add('path-toggle-controls');
+    toggleContainer.style.display = 'flex';
+    toggleContainer.style.gap = '10px';
+    toggleContainer.style.marginBottom = '15px';
+    toggleContainer.style.flexWrap = 'wrap';
+
+    // Define all toggle buttons
+    const toggles = [
+      {
+        id: 'toggle-summary',
+        initialText: 'Hide Summary',
+        selector: '#path-summary-section',
+        showText: 'Show Summary',
+        hideText: 'Hide Summary',
+      },
+      {
+        id: 'toggle-passing-exits',
+        initialText: 'Hide Passing Exits',
+        selector: '.passing-exit',
+        showText: 'Show Passing Exits',
+        hideText: 'Hide Passing Exits',
+      },
+      {
+        id: 'toggle-failing-exits',
+        initialText: 'Hide Failing Exits',
+        selector: '.failing-exit',
+        showText: 'Show Failing Exits',
+        hideText: 'Hide Failing Exits',
+      },
+      {
+        id: 'toggle-passing-entrances',
+        initialText: 'Hide Passing Entrances',
+        selector: '.passing-entrance',
+        showText: 'Show Passing Entrances',
+        hideText: 'Hide Passing Entrances',
+      },
+      {
+        id: 'toggle-failing-entrances',
+        initialText: 'Hide Failing Entrances',
+        selector: '.failing-entrance',
+        showText: 'Show Failing Entrances',
+        hideText: 'Hide Failing Entrances',
+      },
+    ];
+
+    // Create each toggle button
+    toggles.forEach((toggle) => {
+      const button = document.createElement('button');
+      button.id = toggle.id;
+      button.textContent = toggle.initialText;
+      button.style.padding = '5px 10px';
+      button.style.backgroundColor = '#333';
+      button.style.color = '#fff';
+      button.style.border = '1px solid #666';
+      button.style.borderRadius = '4px';
+      button.style.cursor = 'pointer';
+
+      // Set up the toggle functionality
+      let isHidden = false;
+      button.addEventListener('click', () => {
+        isHidden = !isHidden;
+        button.textContent = isHidden ? toggle.showText : toggle.hideText;
+
+        // Toggle visibility of the targeted elements
+        const elements = document.querySelectorAll(toggle.selector);
+        elements.forEach((el) => {
+          el.style.display = isHidden ? 'none' : 'block';
+        });
+      });
+
+      toggleContainer.appendChild(button);
+    });
+
+    // Add "Collapse All" button
+    const collapseAllButton = document.createElement('button');
+    collapseAllButton.id = 'toggle-collapse-all';
+    collapseAllButton.textContent = 'Collapse All';
+    collapseAllButton.style.padding = '5px 10px';
+    collapseAllButton.style.backgroundColor = '#333';
+    collapseAllButton.style.color = '#fff';
+    collapseAllButton.style.border = '1px solid #666';
+    collapseAllButton.style.borderRadius = '4px';
+    collapseAllButton.style.cursor = 'pointer';
+
+    let allCollapsed = false;
+    collapseAllButton.addEventListener('click', () => {
+      allCollapsed = !allCollapsed;
+      collapseAllButton.textContent = allCollapsed
+        ? 'Expand All'
+        : 'Collapse All';
+
+      // Get all path details containers
+      const detailsContainers = document.querySelectorAll('.path-details');
+      detailsContainers.forEach((container) => {
+        container.style.display = allCollapsed ? 'none' : 'block';
+      });
+
+      // Update all toggle indicators
+      const indicators = document.querySelectorAll('.path-toggle-indicator');
+      indicators.forEach((indicator) => {
+        indicator.textContent = allCollapsed ? '►' : '▼';
+      });
+    });
+
+    toggleContainer.appendChild(collapseAllButton);
+
+    // Insert toggle controls at the beginning
+    container.insertBefore(toggleContainer, container.firstChild);
+  }
+
+  /**
+   * Bidirectional path finder that can traverse regions via both exits and entrances
+   * @param {string} targetRegion - The region to find paths to
+   * @param {number} maxPaths - Maximum number of paths to find
+   * @returns {Array} - Array of paths to the target region
+   */
+  findBidirectionalPaths(targetRegion, maxPaths = 100) {
+    const startRegions = stateManager.getStartRegions();
+    const allPaths = [];
+
+    for (const startRegion of startRegions) {
+      if (allPaths.length >= maxPaths) break;
+
+      // Use a modified DFS that considers both exits and entrances
+      this._bidirectionalDFS(
+        startRegion,
+        targetRegion,
+        [startRegion],
+        new Set([startRegion]),
+        allPaths,
+        maxPaths,
+        new Set() // Track connection signatures to prevent infinite loops
+      );
+    }
+
+    return allPaths;
+  }
+
+  /**
+   * Bidirectional DFS traversal of the region graph
+   * @param {string} currentRegion - Current region being examined
+   * @param {string} targetRegion - Target region we want to reach
+   * @param {Array} currentPath - Current path being built
+   * @param {Set} visited - Set of visited regions
+   * @param {Array} allPaths - Collection of all paths found so far
+   * @param {number} maxPaths - Maximum number of paths to find
+   * @param {Set} seenConnections - Track connections we've already examined
+   */
+  _bidirectionalDFS(
+    currentRegion,
+    targetRegion,
+    currentPath,
+    visited,
+    allPaths,
+    maxPaths,
+    seenConnections
+  ) {
+    // Path found - we've reached the target
+    if (currentRegion === targetRegion && currentPath.length > 1) {
+      allPaths.push([...currentPath]);
+      return;
+    }
+
+    // Stop if we've reached the max paths limit
+    if (allPaths.length >= maxPaths) return;
+
+    const regionData = stateManager.regions[currentRegion];
+    if (!regionData) return;
+
+    // 1. Process outgoing EXITS from current region
+    for (const exit of regionData.exits || []) {
+      const nextRegion = exit.connected_region;
+      if (!nextRegion || visited.has(nextRegion)) continue;
+
+      // Create a signature for this connection to prevent revisiting
+      const connectionSignature = `exit:${currentRegion}:${exit.name}:${nextRegion}`;
+      if (seenConnections.has(connectionSignature)) continue;
+      seenConnections.add(connectionSignature);
+
+      currentPath.push(nextRegion);
+      visited.add(nextRegion);
+
+      this._bidirectionalDFS(
+        nextRegion,
+        targetRegion,
+        currentPath,
+        visited,
+        allPaths,
+        maxPaths,
+        seenConnections
+      );
+
+      currentPath.pop();
+      visited.delete(nextRegion);
+    }
+
+    // 2. Process incoming ENTRANCES to current region from OTHER regions
+    // For each region in the game...
+    for (const [otherRegionName, otherRegionData] of Object.entries(
+      stateManager.regions
+    )) {
+      // Skip the current region and visited regions
+      if (otherRegionName === currentRegion || visited.has(otherRegionName))
+        continue;
+
+      // Look for entrances that lead FROM the current region TO other regions
+      const entrancesToOtherRegion = (otherRegionData.entrances || []).filter(
+        (entrance) =>
+          entrance.connected_region === currentRegion ||
+          entrance.parent_region === currentRegion
+      );
+
+      for (const entrance of entrancesToOtherRegion) {
+        // Create a signature for this entrance to prevent revisiting
+        const connectionSignature = `entrance:${currentRegion}:${entrance.name}:${otherRegionName}`;
+        if (seenConnections.has(connectionSignature)) continue;
+        seenConnections.add(connectionSignature);
+
+        currentPath.push(otherRegionName);
+        visited.add(otherRegionName);
+
+        this._bidirectionalDFS(
+          otherRegionName,
+          targetRegion,
+          currentPath,
+          visited,
+          allPaths,
+          maxPaths,
+          seenConnections
+        );
+
+        currentPath.pop();
+        visited.delete(otherRegionName);
+      }
+    }
+  }
+
+  /**
+   * Enhanced path finder that finds paths using both entrances and exits
+   * Then constructs detailed connection information for each path segment
+   * @param {string} targetRegion - The region to find paths to
+   * @param {number} maxPaths - Maximum number of paths to find
+   * @returns {Array} - Array of enhanced paths with connection details
+   */
+  findEnhancedPathsToRegion(targetRegion, maxPaths = 100) {
+    // First, find paths using the bidirectional path finder
+    const bidirectionalPaths = this.findBidirectionalPaths(
+      targetRegion,
+      maxPaths
+    );
+    const enhancedPaths = [];
+
+    // Process each path to add connection information
+    for (const path of bidirectionalPaths) {
+      // For each adjacent pair of regions in the path, find both exit and entrance connections
+      const enhancedPath = {
+        regions: path,
+        connections: [],
+      };
+
+      for (let i = 0; i < path.length - 1; i++) {
+        const fromRegion = path[i];
+        const toRegion = path[i + 1];
+
+        // Find all possible connections between these regions
+        const connections = this._findAllPossibleConnections(
+          fromRegion,
+          toRegion
+        );
+        enhancedPath.connections.push(connections);
+      }
+
+      enhancedPaths.push(enhancedPath);
+    }
+
+    return enhancedPaths;
+  }
+
+  /**
+   * Find all possible connections (exits and entrances) between two regions
+   * @param {string} fromRegion - The source region
+   * @param {string} toRegion - The destination region
+   * @returns {Object} - Object containing exit and entrance connections between the regions
+   */
+  _findAllPossibleConnections(fromRegion, toRegion) {
+    const connections = {
+      fromRegion,
+      toRegion,
+      exit: null,
+      entrance: null,
+    };
+
+    // 1. Check for an exit from fromRegion to toRegion
+    const fromRegionData = stateManager.regions[fromRegion];
+    if (fromRegionData && fromRegionData.exits) {
+      const exit = fromRegionData.exits.find(
+        (e) => e.connected_region === toRegion
+      );
+      if (exit) {
+        connections.exit = {
+          type: 'exit',
+          name: exit.name,
+          fromRegion,
+          toRegion,
+          rule: exit.access_rule,
+          accessible: !exit.access_rule || evaluateRule(exit.access_rule),
+        };
+      }
+    }
+
+    // 2. Check for an entrance to toRegion from fromRegion
+    const toRegionData = stateManager.regions[toRegion];
+    if (toRegionData && toRegionData.entrances) {
+      // Find entrances that connect these regions
+      const entrances = toRegionData.entrances.filter(
+        (e) =>
+          e.connected_region === fromRegion || e.parent_region === fromRegion
+      );
+
+      if (entrances.length > 0) {
+        // Use the first matching entrance (could enhance to pick "best" entrance)
+        const entrance = entrances[0];
+        connections.entrance = {
+          type: 'entrance',
+          name: entrance.name,
+          fromRegion,
+          toRegion,
+          rule: entrance.access_rule,
+          accessible:
+            !entrance.access_rule || evaluateRule(entrance.access_rule),
+        };
+      }
+    }
+
+    return connections;
+  }
+
+  /**
+   * Derives a canonical path to a region using stateManager's accessibility data
+   * @param {string} targetRegion - The target region to find a path to
+   * @returns {Array|null} - An array of region names forming a path, or null if no path exists
+   */
+  _deriveCanonicalPath(targetRegion) {
+    const reachableRegions = stateManager.computeReachableRegions();
+    if (!reachableRegions.has(targetRegion)) {
+      return null; // Target isn't reachable according to stateManager
+    }
+
+    // Start with all start regions
+    const startRegions = stateManager.getStartRegions();
+
+    // Use BFS to find a path from start regions to target
+    const queue = startRegions.map((region) => [region]); // Queue of paths
+    const visited = new Set(startRegions);
+
+    while (queue.length > 0) {
+      const currentPath = queue.shift();
+      const currentRegion = currentPath[currentPath.length - 1];
+
+      if (currentRegion === targetRegion) {
+        return currentPath; // Found a path!
+      }
+
+      // Find neighbors (connected regions that are reachable)
+      const currentRegionData = stateManager.regions[currentRegion];
+      if (!currentRegionData) continue;
+
+      // Check all exits for viable connections
+      for (const exit of currentRegionData.exits || []) {
+        if (!exit.connected_region) continue;
+        if (!reachableRegions.has(exit.connected_region)) continue;
+        if (visited.has(exit.connected_region)) continue;
+
+        // This is a reachable neighbor
+        const newPath = [...currentPath, exit.connected_region];
+        queue.push(newPath);
+        visited.add(exit.connected_region);
+      }
+
+      // Check entrances too
+      for (const entrance of currentRegionData.entrances || []) {
+        if (!entrance.connected_region) continue;
+        if (!reachableRegions.has(entrance.connected_region)) continue;
+        if (visited.has(entrance.connected_region)) continue;
+
+        // This is a reachable neighbor
+        const newPath = [...currentPath, entrance.connected_region];
+        queue.push(newPath);
+        visited.add(entrance.connected_region);
+      }
+    }
+
+    // No path found
+    return null;
   }
 }
 

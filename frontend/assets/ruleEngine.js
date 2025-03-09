@@ -80,26 +80,34 @@ export const evaluateRule = (rule, depth = 0) => {
     }
 
     case 'and': {
-      const results = rule.conditions.map((condition, index) => {
+      // For AND rules, short-circuit on first failure
+      result = true;
+      for (const condition of rule.conditions) {
         const conditionResult = evaluateRule(condition, depth + 1);
         trace.addChild(
           new RuleTrace(condition, depth + 1).complete(conditionResult)
         );
-        return conditionResult;
-      });
-      result = results.every(Boolean);
+        if (!conditionResult) {
+          result = false;
+          break; // Short-circuit on first false condition
+        }
+      }
       break;
     }
 
     case 'or': {
-      const results = rule.conditions.map((condition, index) => {
+      // For OR rules, short-circuit on first success
+      result = false;
+      for (const condition of rule.conditions) {
         const conditionResult = evaluateRule(condition, depth + 1);
         trace.addChild(
           new RuleTrace(condition, depth + 1).complete(conditionResult)
         );
-        return conditionResult;
-      });
-      result = results.some(Boolean);
+        if (conditionResult) {
+          result = true;
+          break; // Short-circuit on first true condition
+        }
+      }
       break;
     }
 
