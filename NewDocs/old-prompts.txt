@@ -2141,3 +2141,102 @@ Type: item_check
 item: Moon Pearl
 
 Can you fix the issue with the alternate exits not being displayed properly?
+
+----
+
+We’re currently working on debugging the “Analyze Paths” tool in regionUI.js.  There is an issue where the results reported by the logic trees of the individual exits don’t match the results displayed in the path list.
+
+For example, in the path list, the region names still have the wrong color and colorblind symbol.  According to the exit logic report, East Dark World and Pyramid Fairy should both be accessible:
+
+**✕ Region Unreachable**This region is currently unreachable with your inventory.
+**Primary Blockers (7)**
+These items directly block access. Acquiring them would unblock the path.
+* Helper function: can_lift_rocks
+* Need item: Magic Mirror
+* Need item: Flippers
+* Helper function: can_lift_heavy_rocks
+* Helper function: old_man
+* Constant: false
+* Need item: Lamp
+**Secondary Blockers (2)**
+These items are failing but are not the only blockers on their paths.
+* Helper function: can_lift_rocks
+* Helper function: can_lift_heavy_rocks
+**Primary Requirements (9)**
+These items are critical for access. Removing them would block the path.
+* Constant: true
+* Need item: Hammer
+* Need item: Moon Pearl
+* Helper function: cross_peg_bridge
+* Need item: Beat Agahnim 1
+* State method: can_reach (East Dark World, Region, player)
+* State method: can_reach (Big Bomb Shop, Region, player)
+* Need item: Crystal 5
+* Need item: Crystal 6
+Paths to this region: (48 found)
+▼
+Menu**✓** → Links House**✓** → Light World**✓** → East Dark World**⚠** → Pyramid Fairy**✗**
+*This path was derived from stateManager's reachability data and represents a logically viable path.*
+**Transition: Menu → Links House**
+**Exit:** Menu → Links House S&Q → Links House
+**✓**
+Type: constant
+value: true
+**Transition: Links House → Light World**
+**Exit:** Links House → Links House Exit → Light World
+**✓**
+Type: constant
+value: true
+**Transition: Light World → East Dark World [1/2 exits available]**
+**Exit 1/2:** Light World → East Hyrule Teleporter → East Dark World
+**✗**
+Type: and
+* **✓**
+Type: item_check
+item: Hammer
+* **✗**
+Type: helper
+helper: can_lift_rocks, args: []
+* **✓**
+Type: item_check
+item: Moon Pearl
+**Exit 2/2:** Light World → Top of Pyramid → East Dark World
+**✓**
+Type: item_check
+item: Beat Agahnim 1
+**Transition: East Dark World → Pyramid Fairy**
+**Exit:** East Dark World → Pyramid Fairy → Pyramid Fairy
+**✓**
+Type: and
+* **✓**
+Type: or
+   * **✓**
+Type: helper
+helper: cross_peg_bridge, args: []
+   * **✗**
+Type: and
+      * **✗**
+Type: item_check
+item: Magic Mirror
+      * **✓**
+Type: item_check
+item: Beat Agahnim 1
+* **✓**
+Type: and
+   * **✓**
+Type: state_method
+method: can_reach, args: ["East Dark World","Region","player"]
+   * **✓**
+Type: state_method
+method: can_reach, args: ["Big Bomb Shop","Region","player"]
+   * **✓**
+Type: item_check
+item: Crystal 5
+   * **✓**
+Type: item_check
+item: Crystal 6
+
+----
+
+The next change I want to make is to move all of the code for the Analyze Path feature from regionUI.js to a new file, pathAnalyzerUI.js.  Can you implement that change, in the form of instructions for a Claude agent running in Cursor?
+
