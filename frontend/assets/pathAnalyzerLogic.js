@@ -110,9 +110,6 @@ export class PathAnalyzerLogic {
       const fromRegion = path[i];
       const toRegion = path[i + 1];
 
-      const fromAccessible = stateManager.isRegionReachable(fromRegion);
-      const toAccessible = stateManager.isRegionReachable(toRegion);
-
       // Get the region data
       const fromRegionData = stateManager.regions[fromRegion];
       if (!fromRegionData || !fromRegionData.exits) continue;
@@ -148,7 +145,9 @@ export class PathAnalyzerLogic {
         fromRegion,
         toRegion,
         exits: availableExits,
-        isBlocking: fromAccessible && !toAccessible,
+        isBlocking:
+          stateManager.isRegionReachable(fromRegion) &&
+          !stateManager.isRegionReachable(toRegion),
         // The transition is accessible if ANY exit is accessible
         transitionAccessible: transitionAccessible,
       });
@@ -390,7 +389,164 @@ export class PathAnalyzerLogic {
   }
 
   /**
-   * Extract categorized leaf nodes from a logic tree element
+   * Extract categorized leaf nodes from a logic tree
+   * This function now uses the rule data directly instead of DOM elements
+   * @param {Object} rule - The rule object to analyze
+   * @return {Object} - Object containing the categorized node lists
+   */
+  analyzeRuleForNodes(rule) {
+    // Initialize result categories
+    const nodes = {
+      primaryBlockers: [],
+      secondaryBlockers: [],
+      tertiaryBlockers: [],
+      primaryRequirements: [],
+      secondaryRequirements: [],
+      tertiaryRequirements: [],
+    };
+
+    if (!rule) return nodes;
+
+    // Base case: this is a leaf rule
+    if (this.isLeafNodeType(rule.type)) {
+      const ruleResult = evaluateRule(rule);
+
+      // Create node data based on the rule
+      const nodeData = this.extractNodeDataFromRule(rule);
+
+      if (nodeData) {
+        // Categorize the node based on its importance to the overall rule
+        if (!ruleResult) {
+          // If the rule fails, is it a primary blocker?
+          const hypotheticalResult = this.evaluateRuleWithOverride(rule, true);
+
+          if (hypotheticalResult) {
+            // Tree would pass if this node passed - Primary blocker
+            nodes.primaryBlockers.push(nodeData);
+          } else {
+            // Tree would still fail - Secondary blocker
+            nodes.secondaryBlockers.push(nodeData);
+          }
+        } else {
+          // If the rule passes, is it a primary requirement?
+          const hypotheticalResult = this.evaluateRuleWithOverride(rule, false);
+
+          if (!hypotheticalResult) {
+            // Tree would fail if this node failed - Primary requirement
+            nodes.primaryRequirements.push(nodeData);
+          } else {
+            // Tree would still pass - Secondary requirement
+            nodes.secondaryRequirements.push(nodeData);
+          }
+        }
+      }
+    }
+    // Recursive case: handle composite rules (AND/OR)
+    else if (rule.type === 'and' || rule.type === 'or') {
+      // Process each condition
+      for (const condition of rule.conditions || []) {
+        const childNodes = this.analyzeRuleForNodes(condition);
+
+        // Merge child nodes into result
+        Object.keys(nodes).forEach((key) => {
+          nodes[key].push(...childNodes[key]);
+        });
+      }
+    }
+
+    return nodes;
+  }
+
+  /**
+   * Evaluates what the rule result would be if a specific rule's value was flipped
+   * @param {Object} rule - The rule to evaluate
+   * @param {boolean} overrideValue - The override value for this rule
+   * @return {boolean} - The hypothetical rule evaluation result
+   */
+  evaluateRuleWithOverride(rule, overrideValue) {
+    // Create a simple map for the overrides
+    const overrides = new Map();
+    const ruleId = JSON.stringify(rule);
+    overrides.set(ruleId, overrideValue);
+
+    // Evaluate with the override
+    return this.evaluateRuleWithOverrides(rule, overrides);
+  }
+
+  /**
+   * Recursively evaluates a rule tree with specified overrides
+   * @param {Object} rule - The rule tree to evaluate
+   * @param {Map} overrides - Map of rule IDs to override values
+   * @return {boolean} - The evaluation result
+   */
+  evaluateRuleWithOverrides(rule, overrides) {
+    if (!rule) return true;
+
+    // Check if this specific rule has an override
+    const ruleId = JSON.stringify(rule);
+    if (overrides.has(ruleId)) {
+      return overrides.get(ruleId);
+    }
+
+    // If no override, evaluate based on rule type
+    switch (rule.type) {
+      case 'constant':
+        return rule.value;
+
+      case 'item_check':
+        return stateManager.inventory.has(rule.item);
+
+      case 'count_check':
+        return stateManager.inventory.count(rule.item) >= (rule.count || 1);
+
+      case 'group_check':
+        return (
+          stateManager.inventory.countGroup(rule.group) >= (rule.count || 1)
+        );
+
+      case 'helper':
+        if (
+          stateManager.helpers &&
+          typeof stateManager.helpers.executeHelper === 'function'
+        ) {
+          return stateManager.helpers.executeHelper(
+            rule.name,
+            ...(rule.args || [])
+          );
+        }
+        return false;
+
+      case 'and':
+        // For AND rules, all conditions must be true
+        return rule.conditions.every((condition) =>
+          this.evaluateRuleWithOverrides(condition, overrides)
+        );
+
+      case 'or':
+        // For OR rules, at least one condition must be true
+        return rule.conditions.some((condition) =>
+          this.evaluateRuleWithOverrides(condition, overrides)
+        );
+
+      case 'state_method':
+        if (
+          stateManager.helpers &&
+          typeof stateManager.helpers.executeStateMethod === 'function'
+        ) {
+          return stateManager.helpers.executeStateMethod(
+            rule.method,
+            ...(rule.args || [])
+          );
+        }
+        return false;
+
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Extract categorized nodes from a logic tree element
    * @param {HTMLElement} treeElement - The logic tree DOM element to analyze
    * @return {Object} - Object containing the categorized node lists
    */
@@ -405,30 +561,55 @@ export class PathAnalyzerLogic {
       tertiaryRequirements: [],
     };
 
-    // Check if this is a failing or passing node
-    const isFailing = treeElement.classList.contains('fail');
-    const isPassing = treeElement.classList.contains('pass');
+    // For non-leaf nodes, recursively check children
+    const childLists = treeElement.querySelectorAll('ul');
+    childLists.forEach((ul) => {
+      ul.querySelectorAll('li').forEach((li) => {
+        if (li.firstChild) {
+          const childResults = this.extractCategorizedNodes(li.firstChild);
+          // Merge results
+          Object.keys(nodes).forEach((key) => {
+            nodes[key].push(...childResults[key]);
+          });
+        }
+      });
+    });
 
-    // Get the current tree evaluation result
-    const treeEvaluationResult = isPassing;
-
-    // Process based on node type
+    // Check if this is a leaf node that we can analyze
     const nodeType = this.getNodeType(treeElement);
-
     if (nodeType && this.isLeafNodeType(nodeType)) {
-      // This is a leaf node, extract its data
-      const nodeData = this.extractNodeData(treeElement, nodeType);
+      // Extract the rule data from the DOM element
+      const rule = this.extractRuleFromElement(treeElement, nodeType);
+      if (rule) {
+        // Get the node data
+        const nodeData = this.extractNodeDataFromRule(rule);
 
-      if (nodeData) {
-        // Categorize the node based on the new algorithm
-        if (isFailing) {
-          if (treeEvaluationResult) {
-            // Tree already passes despite this node's failure - Tertiary blocker
-            nodes.tertiaryBlockers.push(nodeData);
-          } else {
-            // Calculate what would happen if this node passed instead
-            const hypotheticalResult = this.evaluateTreeWithNodeFlipped(
-              treeElement,
+        if (nodeData) {
+          // Check the actual rule evaluation result
+          const ruleResult = evaluateRule(rule);
+
+          // Check visual UI state for comparison
+          const visualStatePass = treeElement.classList.contains('pass');
+          const visualStateFail = treeElement.classList.contains('fail');
+
+          // Log discrepancies between visual state and actual evaluation
+          if (
+            (ruleResult && visualStateFail) ||
+            (!ruleResult && visualStatePass)
+          ) {
+            this._logDebug(`Discrepancy in rule evaluation:`, {
+              ruleType: nodeType,
+              rule: rule,
+              actualResult: ruleResult,
+              visualState: visualStatePass ? 'pass' : 'fail',
+            });
+          }
+
+          // Use actual rule evaluation result, not visual state
+          if (!ruleResult) {
+            // If rule fails, determine if it's a primary blocker
+            const hypotheticalResult = this.evaluateRuleWithOverride(
+              rule,
               true
             );
 
@@ -439,15 +620,10 @@ export class PathAnalyzerLogic {
               // Tree would still fail - Secondary blocker
               nodes.secondaryBlockers.push(nodeData);
             }
-          }
-        } else if (isPassing) {
-          if (!treeEvaluationResult) {
-            // Tree already fails despite this node's passing - Tertiary requirement
-            nodes.tertiaryRequirements.push(nodeData);
           } else {
-            // Calculate what would happen if this node failed instead
-            const hypotheticalResult = this.evaluateTreeWithNodeFlipped(
-              treeElement,
+            // If rule passes, determine if it's a primary requirement
+            const hypotheticalResult = this.evaluateRuleWithOverride(
+              rule,
               false
             );
 
@@ -461,126 +637,122 @@ export class PathAnalyzerLogic {
           }
         }
       }
-    } else {
-      // For non-leaf nodes, recursively check children
-      const childLists = treeElement.querySelectorAll('ul');
-      childLists.forEach((ul) => {
-        ul.querySelectorAll('li').forEach((li) => {
-          if (li.firstChild) {
-            const childResults = this.extractCategorizedNodes(li.firstChild);
-            // Merge results
-            Object.keys(nodes).forEach((key) => {
-              nodes[key].push(...childResults[key]);
-            });
-          }
-        });
-      });
     }
 
     return nodes;
   }
 
   /**
-   * Evaluates what the tree result would be if a specific node's value was flipped
-   * @param {HTMLElement} nodeElement - The node to flip
-   * @param {boolean} newValue - The new value to assume for this node
-   * @return {boolean} - The hypothetical tree evaluation result
+   * Extracts rule data from a DOM element
+   * @param {HTMLElement} element - The DOM element
+   * @param {string} nodeType - The type of node
+   * @return {Object|null} - Rule object or null if extraction failed
    */
-  evaluateTreeWithNodeFlipped(nodeElement, newValue) {
-    // Find the root node of the tree
-    let root = nodeElement;
-    let parent = root.parentElement;
-
-    while (parent) {
-      if (
-        parent.classList &&
-        (parent.classList.contains('logic-tree') || parent.tagName === 'BODY')
-      ) {
-        break;
-      }
-      if (
-        parent.classList &&
-        (parent.classList.contains('pass') || parent.classList.contains('fail'))
-      ) {
-        root = parent;
-      }
-      parent = parent.parentElement;
-    }
-
-    // Now simulate evaluation with the flipped node
-    return this.simulateEvaluation(root, nodeElement, newValue);
-  }
-
-  /**
-   * Simulates rule evaluation with a specific node's value flipped
-   * @param {HTMLElement} currentNode - Current node in the tree traversal
-   * @param {HTMLElement} targetNode - The node to flip
-   * @param {boolean} newTargetValue - The new value for the target node
-   * @return {boolean} - The simulated evaluation result
-   */
-  simulateEvaluation(currentNode, targetNode, newTargetValue) {
-    // If this is the target node, return the flipped value
-    if (currentNode === targetNode) {
-      return newTargetValue;
-    }
-
-    // Otherwise, evaluate based on the node type
-    const nodeType = this.getNodeType(currentNode);
-    if (!nodeType) return false;
+  extractRuleFromElement(element, nodeType) {
+    const textContent = element.textContent;
 
     switch (nodeType) {
       case 'constant':
+        const valueMatch = textContent.match(/value: (true|false)/i);
+        if (valueMatch) {
+          return {
+            type: 'constant',
+            value: valueMatch[1].toLowerCase() === 'true',
+          };
+        }
+        break;
+
       case 'item_check':
+        const itemMatch = textContent.match(
+          /item: ([^,]+?)($|\s(?:Type:|helper:|method:|group:))/
+        );
+        if (itemMatch) {
+          return {
+            type: 'item_check',
+            item: itemMatch[1].trim(),
+          };
+        }
+        break;
+
       case 'count_check':
+        const countMatch = textContent.match(/(\w+) >= (\d+)/);
+        if (countMatch) {
+          return {
+            type: 'count_check',
+            item: countMatch[1],
+            count: parseInt(countMatch[2], 10),
+          };
+        }
+        break;
+
       case 'group_check':
+        const groupMatch = textContent.match(
+          /group: ([^,]+?)($|\s(?:Type:|helper:|method:|item:))/
+        );
+        if (groupMatch) {
+          return {
+            type: 'group_check',
+            group: groupMatch[1].trim(),
+          };
+        }
+        break;
+
       case 'helper':
+        const helperMatch = textContent.match(
+          /helper: ([^,]+?), args: (\[.*\]|\{.*\}|".*?"|null|\d+)/
+        );
+        if (helperMatch) {
+          const helperName = helperMatch[1].trim();
+          let helperArgs = [];
+          try {
+            // Try to parse the arguments as JSON
+            const argsText = helperMatch[2].trim();
+            if (argsText && argsText !== 'null' && argsText !== '[]') {
+              helperArgs = JSON.parse(argsText);
+            }
+          } catch (e) {
+            this._logDebug(
+              `Error parsing helper args: ${e.message}`,
+              helperMatch[2]
+            );
+          }
+          return {
+            type: 'helper',
+            name: helperName,
+            args: helperArgs,
+          };
+        }
+        break;
+
       case 'state_method':
-        // For leaf nodes, return their actual value unless they're the target
-        return currentNode.classList.contains('pass');
-
-      case 'and': {
-        // For AND nodes, check all children - all must be true
-        const childResults = [];
-        const childLists = currentNode.querySelectorAll('ul');
-        childLists.forEach((ul) => {
-          ul.querySelectorAll('li').forEach((li) => {
-            if (li.firstChild) {
-              childResults.push(
-                this.simulateEvaluation(
-                  li.firstChild,
-                  targetNode,
-                  newTargetValue
-                )
-              );
+        const methodMatch = textContent.match(
+          /method: ([^,]+?), args: (\[.*\]|\{.*\}|".*?"|null|\d+)/
+        );
+        if (methodMatch) {
+          const methodName = methodMatch[1].trim();
+          let methodArgs = [];
+          try {
+            // Try to parse the arguments as JSON
+            const argsText = methodMatch[2].trim();
+            if (argsText && argsText !== 'null' && argsText !== '[]') {
+              methodArgs = JSON.parse(argsText);
             }
-          });
-        });
-        return childResults.every(Boolean);
-      }
-
-      case 'or': {
-        // For OR nodes, check all children - at least one must be true
-        const childResults = [];
-        const childLists = currentNode.querySelectorAll('ul');
-        childLists.forEach((ul) => {
-          ul.querySelectorAll('li').forEach((li) => {
-            if (li.firstChild) {
-              childResults.push(
-                this.simulateEvaluation(
-                  li.firstChild,
-                  targetNode,
-                  newTargetValue
-                )
-              );
-            }
-          });
-        });
-        return childResults.some(Boolean);
-      }
-
-      default:
-        return false;
+          } catch (e) {
+            this._logDebug(
+              `Error parsing method args: ${e.message}`,
+              methodMatch[2]
+            );
+          }
+          return {
+            type: 'state_method',
+            method: methodName,
+            args: methodArgs,
+          };
+        }
+        break;
     }
+
+    return null;
   }
 
   /**
@@ -616,6 +788,89 @@ export class PathAnalyzerLogic {
   }
 
   /**
+   * Alias for isLeafNodeType for backward compatibility
+   * @param {string} nodeType - The type of the logic node
+   * @return {boolean} - True if it's a leaf node type, false otherwise
+   */
+  isLeafRuleType(nodeType) {
+    return this.isLeafNodeType(nodeType);
+  }
+
+  /**
+   * Extract data from a rule object
+   * @param {Object} rule - The rule object
+   * @return {Object|null} - The extracted node data or null if extraction failed
+   */
+  extractNodeDataFromRule(rule) {
+    if (!rule) return null;
+
+    // Default display color based on rule evaluation
+    const ruleResult = evaluateRule(rule);
+    const displayColor = ruleResult ? '#4caf50' : '#f44336';
+
+    switch (rule.type) {
+      case 'constant':
+        return {
+          type: 'constant',
+          value: rule.value,
+          display: `Constant: ${rule.value}`,
+          displayColor,
+          identifier: `constant_${rule.value}`,
+        };
+
+      case 'item_check':
+        return {
+          type: 'item_check',
+          item: rule.item,
+          display: `Need item: ${rule.item}`,
+          displayColor,
+          identifier: `item_${rule.item}`,
+        };
+
+      case 'count_check':
+        return {
+          type: 'count_check',
+          item: rule.item,
+          count: rule.count || 1,
+          display: `Need ${rule.count || 1}× ${rule.item}`,
+          displayColor,
+          identifier: `count_${rule.item}_${rule.count || 1}`,
+        };
+
+      case 'group_check':
+        return {
+          type: 'group_check',
+          group: rule.group,
+          display: `Need group: ${rule.group}`,
+          displayColor,
+          identifier: `group_${rule.group}`,
+        };
+
+      case 'helper':
+        return {
+          type: 'helper',
+          name: rule.name,
+          args: rule.args || [],
+          display: `Helper function: ${rule.name}`,
+          displayColor,
+          identifier: `helper_${rule.name}`,
+        };
+
+      case 'state_method':
+        return {
+          type: 'state_method',
+          method: rule.method,
+          args: rule.args || [],
+          display: `State method: ${rule.method}`,
+          displayColor,
+          identifier: `method_${rule.method}`,
+        };
+    }
+
+    return null;
+  }
+
+  /**
    * Deduplicates a list of nodes, treating functions with different args as unique
    * @param {Array} nodes - List of nodes to deduplicate
    * @return {Array} - Deduplicated list
@@ -647,122 +902,6 @@ export class PathAnalyzerLogic {
     });
 
     return uniqueNodes;
-  }
-
-  /**
-   * Extract data from a node element based on its type
-   * @param {HTMLElement} element - The DOM element representing a node
-   * @param {string} nodeType - The type of the node
-   * @return {Object|null} - The extracted node data or null if extraction failed
-   */
-  extractNodeData(element, nodeType) {
-    const textContent = element.textContent;
-    const isFailing = element.classList.contains('fail');
-    // Default display color - red for failing nodes, green for passing nodes
-    const displayColor = isFailing ? '#f44336' : '#4caf50';
-
-    switch (nodeType) {
-      case 'constant':
-        const valueMatch = textContent.match(/value: (true|false)/i);
-        if (valueMatch) {
-          return {
-            type: 'constant',
-            value: valueMatch[1].toLowerCase() === 'true',
-            display: `Constant: ${valueMatch[1]}`,
-            displayColor,
-            identifier: `constant_${valueMatch[1]}`,
-          };
-        }
-        break;
-
-      case 'item_check':
-        const itemMatch = textContent.match(
-          /item: ([^,]+?)($|\s(?:Type:|helper:|method:|group:))/
-        );
-        if (itemMatch) {
-          const itemName = itemMatch[1].trim();
-          return {
-            type: 'item_check',
-            item: itemName,
-            display: `Need item: ${itemName}`,
-            displayColor,
-            identifier: `item_${itemName}`,
-          };
-        }
-        break;
-
-      case 'count_check':
-        const countMatch = textContent.match(/(\w+) >= (\d+)/);
-        if (countMatch) {
-          return {
-            type: 'count_check',
-            item: countMatch[1],
-            count: parseInt(countMatch[2], 10),
-            display: `Need ${countMatch[2]}× ${countMatch[1]}`,
-            displayColor,
-            identifier: `count_${countMatch[1]}_${countMatch[2]}`,
-          };
-        }
-        break;
-
-      case 'group_check':
-        const groupMatch = textContent.match(
-          /group: ([^,]+?)($|\s(?:Type:|helper:|method:|item:))/
-        );
-        if (groupMatch) {
-          const groupName = groupMatch[1].trim();
-          return {
-            type: 'group_check',
-            group: groupName,
-            display: `Need group: ${groupName}`,
-            displayColor,
-            identifier: `group_${groupName}`,
-          };
-        }
-        break;
-
-      case 'helper':
-        // Extract both the helper name and its arguments
-        const helperMatch = textContent.match(
-          /helper: ([^,]+?), args: (\[.*\]|\{.*\}|".*?"|null|\d+)/
-        );
-        if (helperMatch) {
-          const helperName = helperMatch[1].trim();
-          const helperArgs = helperMatch[2].trim();
-
-          return {
-            type: 'helper',
-            name: helperName,
-            args: helperArgs, // Save raw args string for deduplication
-            display: `Helper function: ${helperName}`,
-            displayColor,
-            identifier: `helper_${helperName}`, // Base identifier, args handled in deduplication
-          };
-        }
-        break;
-
-      case 'state_method':
-        // Extract both the method name and its arguments
-        const methodMatch = textContent.match(
-          /method: ([^,]+?), args: (\[.*\]|\{.*\}|".*?"|null|\d+)/
-        );
-        if (methodMatch) {
-          const methodName = methodMatch[1].trim();
-          const methodArgs = methodMatch[2].trim();
-
-          return {
-            type: 'state_method',
-            method: methodName,
-            args: methodArgs, // Save raw args string for deduplication
-            display: `State method: ${methodName}`,
-            displayColor,
-            identifier: `method_${methodName}`, // Base identifier, args handled in deduplication
-          };
-        }
-        break;
-    }
-
-    return null;
   }
 
   /**

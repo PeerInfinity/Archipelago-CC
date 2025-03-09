@@ -66,6 +66,7 @@ export class PathAnalyzerUI {
       analyzePathsBtn.disabled = true;
       pathsContainer.style.display = 'block';
 
+      /* PERFORMANCE WARNING - DISABLED
       // Add warning for potentially complex regions
       const regionData = stateManager.regions[regionName];
       if (regionData && Object.keys(stateManager.regions).length > 100) {
@@ -108,6 +109,7 @@ export class PathAnalyzerUI {
 
         return; // Exit early to show the warning first
       }
+      END PERFORMANCE WARNING */
 
       // Normal case - proceed with analysis
       this.performPathAnalysis(
@@ -254,6 +256,111 @@ export class PathAnalyzerUI {
       pathsContainer.appendChild(toggleContainer);
     }
 
+    // ADD CANONICAL PATH DISPLAY
+    // If stateManager says region is reachable but we couldn't find viable paths,
+    // display a canonical path derived from stateManager's internal data
+    if (isRegionActuallyReachable && accessiblePathCount === 0) {
+      // Find a canonical path using logic component
+      const canonicalPathData = this.logic.findCanonicalPath(regionName);
+
+      if (canonicalPathData && canonicalPathData.regions.length > 0) {
+        // Create container for canonical path
+        const canonicalPathContainer = document.createElement('div');
+        canonicalPathContainer.classList.add('canonical-path-container');
+        canonicalPathContainer.style.marginBottom = '20px';
+        canonicalPathContainer.style.padding = '10px';
+        canonicalPathContainer.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+        canonicalPathContainer.style.border = '1px solid #4CAF50';
+        canonicalPathContainer.style.borderLeft = '4px solid #4CAF50';
+        canonicalPathContainer.style.borderRadius = '4px';
+
+        // Add a header
+        const canonicalHeader = document.createElement('h4');
+        canonicalHeader.textContent =
+          'Canonical Path (derived from stateManager)';
+        canonicalHeader.style.marginTop = '0';
+        canonicalHeader.style.color = '#4CAF50';
+        canonicalPathContainer.appendChild(canonicalHeader);
+
+        // Create path visualization
+        const pathDisplay = document.createElement('div');
+        pathDisplay.classList.add('canonical-path-display');
+        pathDisplay.style.marginBottom = '10px';
+
+        // Add each region in the path with arrows between
+        canonicalPathData.regions.forEach((region, index) => {
+          // Create region link
+          const regionLink = document.createElement('span');
+          regionLink.textContent = region;
+          regionLink.classList.add('region-link');
+          regionLink.dataset.region = region;
+          regionLink.style.color = '#4CAF50';
+          regionLink.style.cursor = 'pointer';
+
+          // Add event listener for navigation
+          regionLink.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.regionUI.navigateToRegion(region);
+          });
+
+          // Add colorblind symbol if needed
+          if (this.colorblindMode) {
+            const symbolSpan = document.createElement('span');
+            symbolSpan.classList.add('colorblind-symbol', 'accessible');
+            symbolSpan.textContent = ' ✓';
+            regionLink.appendChild(symbolSpan);
+          }
+
+          pathDisplay.appendChild(regionLink);
+
+          // Add arrow if not the last item
+          if (index < canonicalPathData.regions.length - 1) {
+            const arrow = document.createElement('span');
+            arrow.textContent = ' → ';
+            arrow.style.color = '#4CAF50';
+            pathDisplay.appendChild(arrow);
+          }
+        });
+
+        canonicalPathContainer.appendChild(pathDisplay);
+
+        // Add explanation
+        const explanation = document.createElement('div');
+        explanation.textContent =
+          'This path shows a logically viable route to this region, determined by the stateManager.';
+        explanation.style.fontStyle = 'italic';
+        explanation.style.fontSize = '0.9em';
+        explanation.style.color = '#666';
+        canonicalPathContainer.appendChild(explanation);
+
+        // Add connections details if available
+        if (
+          canonicalPathData.connections &&
+          canonicalPathData.connections.length > 0
+        ) {
+          const connectionsHeader = document.createElement('div');
+          connectionsHeader.textContent = 'Path Connections:';
+          connectionsHeader.style.fontWeight = 'bold';
+          connectionsHeader.style.marginTop = '10px';
+          canonicalPathContainer.appendChild(connectionsHeader);
+
+          const connectionsList = document.createElement('ul');
+          connectionsList.style.marginTop = '5px';
+
+          canonicalPathData.connections.forEach((connection) => {
+            const item = document.createElement('li');
+            item.textContent = `${connection.fromRegion} → ${connection.exit.name} → ${connection.toRegion}`;
+            connectionsList.appendChild(item);
+          });
+
+          canonicalPathContainer.appendChild(connectionsList);
+        }
+
+        // Insert the canonical path at the top of the paths container
+        pathsContainer.insertBefore(canonicalPathContainer, pathsDiv);
+      }
+    }
+
     // Add paths visualization
     pathsContainer.appendChild(pathsDiv);
 
@@ -370,10 +477,6 @@ export class PathAnalyzerUI {
     // Analyze the transitions in this path using the logic component
     const transitions = this.logic.findAllTransitions(path);
 
-    // Call debug function for problematic transitions
-    this.logic.debugTransition(transitions, 'Light World', 'East Dark World');
-    this.logic.debugTransition(transitions, 'East Dark World', 'Pyramid Fairy');
-
     // Create container for exit rules (this will be toggled)
     const exitRulesContainer = document.createElement('div');
     exitRulesContainer.classList.add('path-exit-rules');
@@ -385,7 +488,7 @@ export class PathAnalyzerUI {
 
     // Display the path regions
     path.forEach((region, index) => {
-      // Check region's general accessibility
+      // Check region's general accessibility using stateManager directly
       const regionAccessible = stateManager.isRegionReachable(region);
 
       // Determine color based on accessibility and path integrity
@@ -406,7 +509,7 @@ export class PathAnalyzerUI {
           (t) => t.fromRegion === prevRegion && t.toRegion === region
         );
 
-        // FIX: Check if ANY exit is accessible for this transition
+        // Check if ANY exit is accessible for this transition
         if (transition && transition.transitionAccessible) {
           // This link in the chain works - region is accessible via this path: GREEN
           regionColor = '#4caf50';
@@ -428,7 +531,7 @@ export class PathAnalyzerUI {
       regionSpan.classList.add('region-link');
       regionSpan.dataset.region = region;
 
-      // Add colorblind symbol if needed - FIX: Use correct accessibility status
+      // Add colorblind symbol if needed
       if (this.colorblindMode) {
         const symbolSpan = document.createElement('span');
         symbolSpan.classList.add('colorblind-symbol');
@@ -466,13 +569,13 @@ export class PathAnalyzerUI {
           (t) => t.fromRegion === region && t.toRegion === toRegion
         );
 
-        // FIX: Color the arrow based on transition accessibility
+        // Color the arrow based on transition accessibility
         const arrowColor =
           transition && transition.transitionAccessible ? '#4caf50' : '#ff9800';
 
         const arrow = document.createElement('span');
         arrow.textContent = ' → ';
-        arrow.style.color = arrowColor; // FIX: Apply correct color to arrow
+        arrow.style.color = arrowColor;
         pathText.appendChild(arrow);
       }
     });
@@ -504,19 +607,19 @@ export class PathAnalyzerUI {
         transitionHeader.style.marginBottom = '5px';
         transitionHeader.style.fontWeight = 'bold';
 
-        // FIX: Color the transition header based on whether ANY exit is accessible
+        // Color the transition header based on whether ANY exit is accessible
         const transitionColor = transition.transitionAccessible
           ? '#4caf50' // Green if ANY exit is accessible
           : '#f44336'; // Red if NO exits are accessible
 
         transitionHeader.style.color = transitionColor;
 
-        // Count how many exits are accessible
+        // Count how many exits are accessible - use evaluateRule directly
         const accessibleExitCount = transition.exits.filter(
           (exit) => !exit.access_rule || evaluateRule(exit.access_rule)
         ).length;
 
-        // FIX: Update text to make it clearer, with "transition" in correct color
+        // Update text to make it clearer, with "transition" in correct color
         transitionHeader.innerHTML = `<span style="color: ${transitionColor};">Transition:</span> ${
           transition.fromRegion
         } → ${transition.toRegion} 
@@ -524,7 +627,7 @@ export class PathAnalyzerUI {
           transition.transitionAccessible ? 'Accessible' : 'Blocked'
         })</span>`;
 
-        // FIX: If multiple exits, add indicator with exits count in WHITE color
+        // If multiple exits, add indicator with exits count in WHITE color
         if (transition.exits.length > 1) {
           transitionHeader.innerHTML += ` <span style="color: #cecece; font-weight: normal;">
             [${accessibleExitCount}/${transition.exits.length} exits available]</span>`;
@@ -539,6 +642,7 @@ export class PathAnalyzerUI {
 
         // Add each exit rule
         transition.exits.forEach((exit, exitIndex) => {
+          // Use evaluateRule directly to check accessibility
           const exitAccessible =
             !exit.access_rule || evaluateRule(exit.access_rule);
 
@@ -585,8 +689,10 @@ export class PathAnalyzerUI {
             ruleContainer.appendChild(ruleElement);
             exitRuleContainer.appendChild(ruleContainer);
 
-            // Analyze nodes from this exit for our categories
-            const nodeResults = this.logic.extractCategorizedNodes(ruleElement);
+            // Analyze rule directly instead of DOM nodes
+            const nodeResults = this.logic.analyzeRuleForNodes(
+              exit.access_rule
+            );
             Object.keys(allNodes).forEach((key) => {
               allNodes[key].push(...nodeResults[key]);
             });
@@ -604,8 +710,8 @@ export class PathAnalyzerUI {
     // Add exit rules container to path element
     pathEl.appendChild(exitRulesContainer);
 
-    // FIX: If the entire path is viable, mark it visually
-    if (pathChainIntact) {
+    // If the entire path is viable, mark it visually
+    if (pathChainIntact && lastAccessibleRegionIndex === path.length - 1) {
       pathEl.classList.add('viable-path');
       pathEl.style.borderLeft = '3px solid #4caf50';
     }
@@ -614,7 +720,7 @@ export class PathAnalyzerUI {
   }
 
   /**
-   * Analyzes direct connections to a region and displays the results
+   * Analyzes direct connections to a region
    * @param {string} regionName - The region to analyze
    * @param {HTMLElement} container - The container to add the analysis to
    */
@@ -649,8 +755,8 @@ export class PathAnalyzerUI {
         ruleDiv.appendChild(ruleElement);
         rulesContainer.appendChild(ruleDiv);
 
-        // Analyze nodes
-        const nodeResults = this.logic.extractCategorizedNodes(ruleElement);
+        // Analyze rule directly instead of DOM nodes
+        const nodeResults = this.logic.analyzeRuleForNodes(rule);
         Object.keys(allNodes).forEach((key) => {
           allNodes[key].push(...nodeResults[key]);
         });
@@ -684,8 +790,10 @@ export class PathAnalyzerUI {
           entranceDiv.appendChild(ruleElement);
           entrancesContainer.appendChild(entranceDiv);
 
-          // Analyze nodes
-          const nodeResults = this.logic.extractCategorizedNodes(ruleElement);
+          // Analyze rule directly instead of DOM nodes
+          const nodeResults = this.logic.analyzeRuleForNodes(
+            entrance.access_rule
+          );
           Object.keys(allNodes).forEach((key) => {
             allNodes[key].push(...nodeResults[key]);
           });
@@ -745,8 +853,10 @@ export class PathAnalyzerUI {
     `;
 
     // Only add styles once
-    if (!document.querySelector('style[data-colorblind-styles]')) {
-      colorblindStyles.setAttribute('data-colorblind-styles', 'true');
+    if (
+      !document.querySelector('style[data-colorblind-styles="logic-nodes"]')
+    ) {
+      colorblindStyles.setAttribute('data-colorblind-styles', 'logic-nodes');
       document.head.appendChild(colorblindStyles);
     }
 
@@ -1363,5 +1473,26 @@ export class PathAnalyzerUI {
           }
         }
       });
+
+    // Add this section to update logic nodes
+    document.querySelectorAll('.logic-node').forEach((node) => {
+      const isPassing = node.classList.contains('pass');
+
+      // Remove existing symbol
+      const existingSymbol = node.querySelector('.colorblind-symbol');
+      if (existingSymbol) existingSymbol.remove();
+
+      // Add new symbol if needed
+      if (
+        this.colorblindMode &&
+        (node.classList.contains('pass') || node.classList.contains('fail'))
+      ) {
+        const symbolSpan = document.createElement('span');
+        symbolSpan.classList.add('colorblind-symbol');
+        symbolSpan.textContent = isPassing ? ' ✓' : ' ✗';
+        symbolSpan.classList.add(isPassing ? 'accessible' : 'inaccessible');
+        node.insertBefore(symbolSpan, node.firstChild); // Insert at beginning
+      }
+    });
   }
 }

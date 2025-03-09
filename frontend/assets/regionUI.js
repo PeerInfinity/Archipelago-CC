@@ -610,6 +610,11 @@ export class RegionUI {
     root.classList.toggle('pass', !!result);
     root.classList.toggle('fail', !result);
 
+    const label = document.createElement('div');
+    label.classList.add('logic-label');
+    label.textContent = `Type: ${rule.type}`;
+    root.appendChild(label);
+
     // Add colorblind symbol if colorblind mode is enabled
     if (this.colorblindMode) {
       const symbolSpan = document.createElement('span');
@@ -623,13 +628,8 @@ export class RegionUI {
         symbolSpan.classList.add('inaccessible');
       }
 
-      root.appendChild(symbolSpan);
+      root.insertBefore(symbolSpan, root.firstChild); // Insert at beginning
     }
-
-    const label = document.createElement('div');
-    label.classList.add('logic-label');
-    label.textContent = `Type: ${rule.type}`;
-    root.appendChild(label);
 
     switch (rule.type) {
       case 'constant':
@@ -733,7 +733,7 @@ export class RegionUI {
         symbolSpan.classList.add('colorblind-symbol');
         symbolSpan.textContent = isPassing ? ' ✓' : ' ✗';
         symbolSpan.classList.add(isPassing ? 'accessible' : 'inaccessible');
-        node.appendChild(symbolSpan);
+        node.insertBefore(symbolSpan, node.firstChild); // Insert at beginning
       }
     });
   }
