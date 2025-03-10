@@ -2,7 +2,24 @@ That's the end of the files you need for context.  Now here are your instruction
 
 ----
 
-We are currently trying to debug why some of the test cases fail, when it looks like they should be passing.  We implemented an Analyze Paths tool, to do a thorough analysis of the logic for the paths to the target region.  That seems to be mostly working, but we are getting some strange results.  There are some cases where the logic trees for the exit rules parse as true, but the region is still labeled as being inaccessible.  Here is one example:
+We just finished making some major changes to stateManager.js, to make its logic more closely match the Python code.  This brought the failing test cases down from 396 to 296, but now the data displayed in regionUI and in pathAnalyzer isn’t matching the data displayed in testCaseUI.
+
+For example, in this case:
+   [
+      "Pyramid Fairy - Left",
+      true,
+      [
+        "Moon Pearl",
+        "Crystal 5",
+        "Crystal 6",
+        "Beat Agahnim 1",
+        "Hammer"
+      ]
+    ],
+
+I load the index.html page, then I click on the “Test Cases” radio button, then I click on the vanilla East Dark World test set, then I click the “Load Test Data” button, then I click the “Run Test” button for the test case listed above.  It says the test passes.  The test was failing before the recent batch of code changes.  Anyway, next I click on the “Pyramid Fairy - Left” link, which opens Regions View, enables “Show All Regions”, and scrolls to the “Pyramid Fairy” region.  Next, I click the “Analyze Paths” button for that region, then I click the “Enable Colorblind Mode” button.
+
+When I ran the test, this test case passes, meaning that "Pyramid Fairy - Left" is accessible with these inventory items.  But then when I go to Regions View immediately after running the test, it displays the “Pyramid Fairy” region as inaccessible, and shows this data in the path analysis tool:
 
 Pyramid Fairy
 Collapse
@@ -21,30 +38,25 @@ Clear Analysis
 (48 paths)
 ✗ Region Unreachable
 This region is currently unreachable. Review the paths below to understand what's blocking access.
-Primary Blockers (7)
+Primary Blockers (9)
 These items directly block access. Acquiring them would unblock the path.
 
+Need item: Hammer
 Helper function: can_lift_rocks
 Need item: Magic Mirror
+State method: can_reach
 Need item: Flippers
 Helper function: can_lift_heavy_rocks
 Helper function: old_man
 Constant: false
 Need item: Lamp
-Secondary Blockers (2)
-These items are failing but are not the only blockers on their paths.
-
-Helper function: can_lift_rocks
-Helper function: can_lift_heavy_rocks
-Primary Requirements (9)
+Primary Requirements (7)
 These items are critical for access. Removing them would block the path.
 
 Constant: true
-Need item: Hammer
 Need item: Moon Pearl
 Need item: Beat Agahnim 1
 Helper function: cross_peg_bridge
-State method: can_reach
 State method: can_reach
 Need item: Crystal 5
 Need item: Crystal 6
@@ -71,7 +83,7 @@ Transition: Light World → East Dark World (Accessible) [1/2 exits available]
 Exit 1/2: Light World → East Hyrule Teleporter → East Dark World✗
 ✗
 Type: and
-✓
+✗
 Type: item_check
 item: Hammer
 ✗
@@ -84,9 +96,9 @@ Exit 2/2: Light World → Top of Pyramid → East Dark World✓
 ✓
 Type: item_check
 item: Beat Agahnim 1
-Transition: East Dark World → Pyramid Fairy (Accessible)
-Exit: East Dark World → Pyramid Fairy → Pyramid Fairy✓
-✓
+Transition: East Dark World → Pyramid Fairy (Blocked)
+Exit: East Dark World → Pyramid Fairy → Pyramid Fairy✗
+✗
 Type: and
 ✓
 Type: or
@@ -101,12 +113,12 @@ item: Magic Mirror
 ✓
 Type: item_check
 item: Beat Agahnim 1
-✓
+✗
 Type: and
 ✓
 Type: state_method
 method: can_reach, args: ["East Dark World","Region","player"]
-✓
+✗
 Type: state_method
 method: can_reach, args: ["Big Bomb Shop","Region","player"]
 ✓
@@ -116,5 +128,7 @@ item: Crystal 5
 Type: item_check
 item: Crystal 6
 
+Can you figure out what might be causing this?
 
-Can you figure out what is happening here?
+
+

@@ -450,9 +450,19 @@ export class ALTTPHelpers extends GameHelpers {
 
   // And now the state_methods:
 
-  can_reach(region) {
-    // Untested
-    return stateManager.isRegionReachable(region);
+  can_reach(region, type = 'Region', player = 1) {
+    // The context-aware state manager handles position-specific constraints correctly
+    if (type === 'Region') {
+      return stateManager.isRegionReachable(region);
+    } else if (type === 'Location') {
+      // Find the location object
+      const location = stateManager.locations.find(
+        (loc) => loc.name === region
+      );
+      return location && stateManager.isLocationAccessible(location);
+    }
+
+    return false;
   }
 
   /*

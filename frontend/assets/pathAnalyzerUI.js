@@ -477,6 +477,10 @@ export class PathAnalyzerUI {
     // Analyze the transitions in this path using the logic component
     const transitions = this.logic.findAllTransitions(path);
 
+    // Call debug function for problematic transitions
+    this.logic.debugTransition(transitions, 'Light World', 'East Dark World');
+    this.logic.debugTransition(transitions, 'East Dark World', 'Pyramid Fairy');
+
     // Create container for exit rules (this will be toggled)
     const exitRulesContainer = document.createElement('div');
     exitRulesContainer.classList.add('path-exit-rules');
@@ -488,7 +492,7 @@ export class PathAnalyzerUI {
 
     // Display the path regions
     path.forEach((region, index) => {
-      // Check region's general accessibility using stateManager directly
+      // Check region's general accessibility
       const regionAccessible = stateManager.isRegionReachable(region);
 
       // Determine color based on accessibility and path integrity
@@ -509,7 +513,7 @@ export class PathAnalyzerUI {
           (t) => t.fromRegion === prevRegion && t.toRegion === region
         );
 
-        // Check if ANY exit is accessible for this transition
+        // FIX: Check if ANY exit is accessible for this transition
         if (transition && transition.transitionAccessible) {
           // This link in the chain works - region is accessible via this path: GREEN
           regionColor = '#4caf50';
@@ -531,7 +535,7 @@ export class PathAnalyzerUI {
       regionSpan.classList.add('region-link');
       regionSpan.dataset.region = region;
 
-      // Add colorblind symbol if needed
+      // Add colorblind symbol if needed - FIX: Use correct accessibility status
       if (this.colorblindMode) {
         const symbolSpan = document.createElement('span');
         symbolSpan.classList.add('colorblind-symbol');
@@ -569,13 +573,13 @@ export class PathAnalyzerUI {
           (t) => t.fromRegion === region && t.toRegion === toRegion
         );
 
-        // Color the arrow based on transition accessibility
+        // FIX: Color the arrow based on transition accessibility
         const arrowColor =
           transition && transition.transitionAccessible ? '#4caf50' : '#ff9800';
 
         const arrow = document.createElement('span');
         arrow.textContent = ' → ';
-        arrow.style.color = arrowColor;
+        arrow.style.color = arrowColor; // FIX: Apply correct color to arrow
         pathText.appendChild(arrow);
       }
     });
@@ -607,19 +611,19 @@ export class PathAnalyzerUI {
         transitionHeader.style.marginBottom = '5px';
         transitionHeader.style.fontWeight = 'bold';
 
-        // Color the transition header based on whether ANY exit is accessible
+        // FIX: Color the transition header based on whether ANY exit is accessible
         const transitionColor = transition.transitionAccessible
           ? '#4caf50' // Green if ANY exit is accessible
           : '#f44336'; // Red if NO exits are accessible
 
         transitionHeader.style.color = transitionColor;
 
-        // Count how many exits are accessible - use evaluateRule directly
+        // Count how many exits are accessible
         const accessibleExitCount = transition.exits.filter(
           (exit) => !exit.access_rule || evaluateRule(exit.access_rule)
         ).length;
 
-        // Update text to make it clearer, with "transition" in correct color
+        // FIX: Update text to make it clearer, with "transition" in correct color
         transitionHeader.innerHTML = `<span style="color: ${transitionColor};">Transition:</span> ${
           transition.fromRegion
         } → ${transition.toRegion} 
@@ -627,7 +631,7 @@ export class PathAnalyzerUI {
           transition.transitionAccessible ? 'Accessible' : 'Blocked'
         })</span>`;
 
-        // If multiple exits, add indicator with exits count in WHITE color
+        // FIX: If multiple exits, add indicator with exits count in WHITE color
         if (transition.exits.length > 1) {
           transitionHeader.innerHTML += ` <span style="color: #cecece; font-weight: normal;">
             [${accessibleExitCount}/${transition.exits.length} exits available]</span>`;
@@ -642,7 +646,6 @@ export class PathAnalyzerUI {
 
         // Add each exit rule
         transition.exits.forEach((exit, exitIndex) => {
-          // Use evaluateRule directly to check accessibility
           const exitAccessible =
             !exit.access_rule || evaluateRule(exit.access_rule);
 
@@ -689,10 +692,8 @@ export class PathAnalyzerUI {
             ruleContainer.appendChild(ruleElement);
             exitRuleContainer.appendChild(ruleContainer);
 
-            // Analyze rule directly instead of DOM nodes
-            const nodeResults = this.logic.analyzeRuleForNodes(
-              exit.access_rule
-            );
+            // Analyze nodes from this exit for our categories
+            const nodeResults = this.logic.extractCategorizedNodes(ruleElement);
             Object.keys(allNodes).forEach((key) => {
               allNodes[key].push(...nodeResults[key]);
             });
@@ -710,8 +711,8 @@ export class PathAnalyzerUI {
     // Add exit rules container to path element
     pathEl.appendChild(exitRulesContainer);
 
-    // If the entire path is viable, mark it visually
-    if (pathChainIntact && lastAccessibleRegionIndex === path.length - 1) {
+    // FIX: If the entire path is viable, mark it visually
+    if (pathChainIntact) {
       pathEl.classList.add('viable-path');
       pathEl.style.borderLeft = '3px solid #4caf50';
     }
@@ -720,7 +721,7 @@ export class PathAnalyzerUI {
   }
 
   /**
-   * Analyzes direct connections to a region
+   * Analyzes direct connections to a region and displays the results
    * @param {string} regionName - The region to analyze
    * @param {HTMLElement} container - The container to add the analysis to
    */
@@ -755,8 +756,8 @@ export class PathAnalyzerUI {
         ruleDiv.appendChild(ruleElement);
         rulesContainer.appendChild(ruleDiv);
 
-        // Analyze rule directly instead of DOM nodes
-        const nodeResults = this.logic.analyzeRuleForNodes(rule);
+        // Analyze nodes
+        const nodeResults = this.logic.extractCategorizedNodes(ruleElement);
         Object.keys(allNodes).forEach((key) => {
           allNodes[key].push(...nodeResults[key]);
         });
@@ -790,10 +791,8 @@ export class PathAnalyzerUI {
           entranceDiv.appendChild(ruleElement);
           entrancesContainer.appendChild(entranceDiv);
 
-          // Analyze rule directly instead of DOM nodes
-          const nodeResults = this.logic.analyzeRuleForNodes(
-            entrance.access_rule
-          );
+          // Analyze nodes
+          const nodeResults = this.logic.extractCategorizedNodes(ruleElement);
           Object.keys(allNodes).forEach((key) => {
             allNodes[key].push(...nodeResults[key]);
           });

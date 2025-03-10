@@ -274,113 +274,47 @@ export class PathAnalyzerLogic {
    */
   findCanonicalPath(targetRegion) {
     // First check if the region is reachable according to stateManager
-    const reachableRegions = new Set(stateManager.computeReachableRegions());
+    const reachableRegions = stateManager.computeReachableRegions();
     if (!reachableRegions.has(targetRegion)) {
       return null; // Target isn't reachable according to stateManager
     }
 
-    // Record predecessor information during a BFS search
-    const predecessors = new Map();
-    const exitInfo = new Map(); // Store the exit used between regions
-    const queue = [...stateManager.getStartRegions()];
-    const visited = new Set(queue);
-
-    // Track level of search to ensure we find shortest path
-    const nodeLevel = new Map();
-    queue.forEach((region) => nodeLevel.set(region, 0));
-
-    while (queue.length > 0) {
-      const currentRegion = queue.shift();
-      const currentLevel = nodeLevel.get(currentRegion);
-
-      // Found target region, reconstruct path
-      if (currentRegion === targetRegion) {
-        return this._reconstructCanonicalPath(
-          predecessors,
-          exitInfo,
-          targetRegion
-        );
-      }
-
-      // Process all exits from the current region
-      const currentRegionData = stateManager.regions[currentRegion];
-      if (!currentRegionData) continue;
-
-      for (const exit of currentRegionData.exits || []) {
-        if (!exit.connected_region) continue;
-
-        // Check if this exit is traversable
-        const exitAccessible =
-          !exit.access_rule || evaluateRule(exit.access_rule);
-        if (!exitAccessible) continue;
-
-        const nextRegion = exit.connected_region;
-        if (!reachableRegions.has(nextRegion)) continue;
-
-        const newLevel = currentLevel + 1;
-
-        if (!visited.has(nextRegion)) {
-          // First time seeing this region - use this path
-          visited.add(nextRegion);
-          queue.push(nextRegion);
-          nodeLevel.set(nextRegion, newLevel);
-          predecessors.set(nextRegion, currentRegion);
-          exitInfo.set(`${currentRegion}->${nextRegion}`, exit);
-        }
-        // If we find a shorter path, update it
-        else if (
-          nodeLevel.has(nextRegion) &&
-          newLevel < nodeLevel.get(nextRegion)
-        ) {
-          // Update to shorter path
-          nodeLevel.set(nextRegion, newLevel);
-          predecessors.set(nextRegion, currentRegion);
-          exitInfo.set(`${currentRegion}->${nextRegion}`, exit);
-        }
-      }
+    // Get the path directly from stateManager
+    const pathSegments = stateManager.getPathToRegion(targetRegion);
+    if (!pathSegments || !pathSegments.length) {
+      return null;
     }
 
-    return null; // No path found
-  }
-
-  /**
-   * Reconstructs a path from predecessors map
-   * @param {Map} predecessors - Map of region to its predecessor
-   * @param {Map} exitInfo - Map of region pairs to the exit used
-   * @param {string} targetRegion - Target region
-   * @returns {Object} - Object containing the path and exit information
-   * @private
-   */
-  _reconstructCanonicalPath(predecessors, exitInfo, targetRegion) {
-    const regions = [targetRegion];
+    // Convert to our path format
+    const regions = [pathSegments[0].from];
     const connections = [];
-    let current = targetRegion;
 
-    while (predecessors.has(current)) {
-      const previous = predecessors.get(current);
+    pathSegments.forEach((segment) => {
+      regions.push(segment.to);
 
-      // Add the connection to our connections list
-      const exitKey = `${previous}->${current}`;
-      const exit = exitInfo.get(exitKey);
+      // Build connection info
+      const fromRegionData = stateManager.regions[segment.from];
+      if (fromRegionData && fromRegionData.exits) {
+        const exit = fromRegionData.exits.find(
+          (e) => e.name === segment.entrance
+        );
 
-      if (exit) {
-        connections.unshift({
-          fromRegion: previous,
-          toRegion: current,
-          exit: {
-            type: 'exit',
-            name: exit.name,
-            fromRegion: previous,
-            toRegion: current,
-            rule: exit.access_rule,
-            accessible: true, // Must be accessible since we're using it in our path
-          },
-        });
+        if (exit) {
+          connections.push({
+            fromRegion: segment.from,
+            toRegion: segment.to,
+            exit: {
+              type: 'exit',
+              name: exit.name,
+              fromRegion: segment.from,
+              toRegion: segment.to,
+              rule: exit.access_rule,
+              accessible: true, // Must be accessible since we're using it in our path
+            },
+          });
+        }
       }
-
-      regions.unshift(previous);
-      current = previous;
-    }
+    });
 
     return {
       regions: regions,

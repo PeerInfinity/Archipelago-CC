@@ -178,7 +178,18 @@ export const evaluateRule = (rule, depth = 0) => {
     }
 
     case 'state_method': {
+      // First try using stateManager's direct method for better accuracy
       if (
+        stateManager &&
+        typeof stateManager.executeStateMethod === 'function'
+      ) {
+        result = stateManager.executeStateMethod(
+          rule.method,
+          ...(rule.args || [])
+        );
+      }
+      // Fall back to helpers if stateManager doesn't have the method
+      else if (
         stateManager.helpers &&
         typeof stateManager.helpers.executeStateMethod === 'function'
       ) {

@@ -383,6 +383,9 @@ export class TestCaseUI {
         runAllButton.textContent = 'Run All Tests';
       }
     }
+
+    // Add debug button
+    this.addDebugButton();
   }
 
   renderTestCasesList() {
@@ -654,7 +657,33 @@ export class TestCaseUI {
       const testCase = this.testCases.location_tests[index];
       const statusElement = document.getElementById(`test-status-${index}`);
       if (testCase && statusElement) {
-        button.onclick = () => this.loadTestCase(testCase, statusElement);
+        button.onclick = () => {
+          // Run the test
+          const result = this.loadTestCase(testCase, statusElement);
+
+          // Update summary for a single test
+          const resultsElement = document.getElementById(
+            'test-results-summary'
+          );
+          if (resultsElement) {
+            resultsElement.innerHTML = `
+              <div class="test-summary ${
+                result ? 'all-passed' : 'has-failures'
+              }">
+                Test completed: 
+                <span class="${result ? 'passed' : 'failed'}">${
+              result ? 'PASSED' : 'FAILED'
+            }</span>
+                (Location: ${testCase[0]})
+              </div>
+            `;
+          }
+
+          // Add the debug button after running an individual test
+          this.addDebugButton();
+
+          return result;
+        };
       }
     });
 
@@ -765,5 +794,28 @@ export class TestCaseUI {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
+  /**
+   * Adds a debug button to the test results summary panel
+   * This allows users to debug critical regions with a click
+   */
+  addDebugButton() {
+    const container = document.getElementById('test-results-summary');
+    if (!container) return;
+
+    const debugButton = document.createElement('button');
+    debugButton.textContent = 'Debug Critical Regions';
+    debugButton.className = 'button';
+    debugButton.style.marginTop = '10px';
+    debugButton.style.backgroundColor = '#9c27b0';
+    debugButton.style.color = '#fff';
+
+    debugButton.addEventListener('click', () => {
+      stateManager.debugCriticalRegions();
+    });
+
+    container.appendChild(debugButton);
+    console.log('Debug button added to test UI');
   }
 }
