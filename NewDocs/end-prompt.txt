@@ -2,4 +2,118 @@ That's the end of the files you need for context.  Now here are your instruction
 
 ----
 
-The javascript frontend is currently using a simple algorithm to fill the inventory when handling the excluded items for tests.  It just adds one of everything into the inventory.  Can you check how the Python code handles filling the inventory when processing excluded items?  I think there’s probably some data somewhere that lists what it means for the inventory to be full.  For some items, having a full inventory means having a specific number of that item, not just one.  Please let me know if the relevant data isn’t in the context file I gave you.
+The next issue to fix is that some of the helper functions aren’t getting their parameters successfully parsed by exporter.py.
+
+For example:
+has_crystals(state, 7, player)
+
+Or
+
+   set_rule(ganons_tower, lambda state: has_crystals(state, state.multiworld.crystals_needed_for_gt[player], player))
+
+
+This gets parsed in the json file as:
+           "access_rule": {
+              "type": "helper",
+              "name": "has_crystals",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "player"
+                }
+              ]
+            },
+
+Here is some relevant data form the debug file:
+
+--- Starting Rule Analysis ---
+Rule function: <function set_rules.<locals>.<lambda> at 0x00000273EEDE4CC0>
+Extracted closure vars: ['player', 'has_crystals']
+Original source: '    set_rule(ganons_tower, lambda state: has_crystals(state, state.multiworld.crystals_needed_for_gt[player], player))\n'
+Cleaned source: 'def __analyzed_func__(state):\n    return has_crystals(state, state.multiworld.crystals_needed_for_gt[player], player)'
+AST parsed successfully
+DEBUG    root:analyzer.py:67 
+--- Starting Module Analysis ---
+
+--- Starting Module Analysis ---
+DEBUG    root:analyzer.py:67 Module body length: 1
+Module body length: 1
+DEBUG    root:analyzer.py:67 Module body node 0: FunctionDef
+Module body node 0: FunctionDef
+DEBUG    root:analyzer.py:67 
+--- Analyzing Function Definition: __analyzed_func__ ---
+
+--- Analyzing Function Definition: __analyzed_func__ ---
+DEBUG    root:analyzer.py:67 Function args: ['state']
+Function args: ['state']
+DEBUG    root:analyzer.py:67 Function body node 0: Return
+Function body node 0: Return
+DEBUG    root:analyzer.py:67 
+--- Analyzing Return ---
+
+--- Analyzing Return ---
+DEBUG    root:analyzer.py:67 Return value type: Call
+Return value type: Call
+
+visit_Call called:
+Function: Name(id='has_crystals', ctx=Load())
+Args: ["Name(id='state', ctx=Load())", "Subscript(value=Attribute(value=Attribute(value=Name(id='state', ctx=Load()), attr='multiworld', ctx=Load()), attr='crystals_needed_for_gt', ctx=Load()), slice=Name(id='player', ctx=Load()), ctx=Load())", "Name(id='player', ctx=Load())"]
+
+visit_Name called: has_crystals
+Name result: {'type': 'name', 'name': 'has_crystals'}
+Function info after visit: {'type': 'name', 'name': 'has_crystals'}
+DEBUG    root:analyzer.py:67 
+--- Generic Visit: Subscript ---
+
+--- Generic Visit: Subscript ---
+DEBUG    root:analyzer.py:67 Node details: {'value': <ast.Attribute object at 0x00000273EEE1E410>, 'slice': <ast.Name object at 0x00000273EEE1F1F0>, 'ctx': <ast.Load object at 0x00000273DFC97550>, 'lineno': 2, 'col_offset': 31, 'end_lineno': 2, 'end_col_offset': 78}
+Node details: {'value': <ast.Attribute object at 0x00000273EEE1E410>, 'slice': <ast.Name object at 0x00000273EEE1F1F0>, 'ctx': <ast.Load object at 0x00000273DFC97550>, 'lineno': 2, 'col_offset': 31, 'end_lineno': 2, 'end_col_offset': 78}
+
+visit_Attribute called:
+Value: Attribute(value=Name(id='state', ctx=Load()), attr='multiworld', ctx=Load())
+Attr: crystals_needed_for_gt
+
+visit_Attribute called:
+Value: Name(id='state', ctx=Load())
+Attr: multiworld
+
+visit_Name called: state
+Name result: {'type': 'name', 'name': 'state'}
+Value info after visit: {'type': 'name', 'name': 'state'}
+Value info after visit: {'type': 'state_method', 'method': 'multiworld'}
+Unhandled attribute access: crystals_needed_for_gt on {'type': 'state_method', 'method': 'multiworld'}
+
+visit_Name called: player
+Name result: {'type': 'name', 'name': 'player'}
+DEBUG    root:analyzer.py:67 
+--- Generic Visit: Load ---
+
+--- Generic Visit: Load ---
+DEBUG    root:analyzer.py:67 Node details: {}
+Node details: {}
+Collected args: ['state', {'type': 'name', 'name': 'player'}, 'player']
+Processed args (without state/player): [{'type': 'name', 'name': 'player'}]
+Checking helper: has_crystals
+Available closure vars: ['player', 'has_crystals']
+Created helper: {'type': 'helper', 'name': 'has_crystals', 'args': [{'type': 'name', 'name': 'player'}]}
+Debug log:
+
+--- Starting Module Analysis ---
+Module body length: 1
+Module body node 0: FunctionDef
+
+--- Analyzing Function Definition: __analyzed_func__ ---
+Function args: ['state']
+Function body node 0: Return
+
+--- Analyzing Return ---
+Return value type: Call
+
+--- Generic Visit: Subscript ---
+Node details: {'value': <ast.Attribute object at 0x00000273EEE1E410>, 'slice': <ast.Name object at 0x00000273EEE1F1F0>, 'ctx': <ast.Load object at 0x00000273DFC97550>, 'lineno': 2, 'col_offset': 31, 'end_lineno': 2, 'end_col_offset': 78}
+
+--- Generic Visit: Load ---
+Node details: {}
+DEBUG    worlds.generic.RuleParser.exporter:exporter.py:617 Successfully expanded rule
+DEBUG    worlds.generic.RuleParser.exporter:exporter.py:771 Successfully processed exit: Ganons Tower
+

@@ -304,6 +304,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'mode': {},     # Game mode by player
         'settings': {}, # Game settings by player
         'start_regions': {},  # Start regions by player
+        'itempool_counts': {},  # NEW: Complete itempool counts by player
     }
 
     for player in multiworld.player_ids:
@@ -314,6 +315,65 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         export_data['items'][str(player)] = process_items(multiworld, player)
         export_data['item_groups'][str(player)] = process_item_groups(multiworld, player)
         export_data['progression_mapping'][str(player)] = process_progression_mapping(multiworld, player)
+
+        # NEW: Process complete itempool data
+        try:
+            # Count all items in the itempool
+            itempool_counts = collections.defaultdict(int)
+            
+            # Process main itempool
+            for item in multiworld.itempool:
+                if item.player == player:
+                    itempool_counts[item.name] += 1
+            
+            # Add pre-collected items 
+            if hasattr(multiworld, 'precollected_items'):
+                for item in multiworld.precollected_items.get(player, []):
+                    itempool_counts[item.name] += 1
+            
+            # Process already placed items in locations
+            for location in multiworld.get_locations(player):
+                if location.item and location.item.player == player:
+                    itempool_counts[location.item.name] += 1
+            
+            # Add dungeon-specific items like keys
+            world = multiworld.worlds[player]
+            if hasattr(world, 'dungeons'):
+                for dungeon in world.dungeons:
+                    dungeon_name = getattr(dungeon, 'name', '')
+                    if dungeon_name:
+                        # Count small keys
+                        small_key_name = f'Small Key ({dungeon_name})'
+                        if hasattr(dungeon, 'small_key_count'):
+                            small_key_count = dungeon.small_key_count
+                            if small_key_count > 0 and small_key_name not in itempool_counts:
+                                itempool_counts[small_key_name] = small_key_count
+                        
+                        # Add big key
+                        big_key_name = f'Big Key ({dungeon_name})'
+                        if hasattr(dungeon, 'big_key') and dungeon.big_key and big_key_name not in itempool_counts:
+                            itempool_counts[big_key_name] = 1
+            
+            # Ensure we include data about item maximums from difficulty_requirements
+            if hasattr(world, 'difficulty_requirements'):
+                # Add these as special maximum values, not actual counts
+                if hasattr(world.difficulty_requirements, 'progressive_bottle_limit'):
+                    itempool_counts['__max_progressive_bottle'] = world.difficulty_requirements.progressive_bottle_limit
+                if hasattr(world.difficulty_requirements, 'boss_heart_container_limit'):
+                    itempool_counts['__max_boss_heart_container'] = world.difficulty_requirements.boss_heart_container_limit
+                if hasattr(world.difficulty_requirements, 'heart_piece_limit'):
+                    itempool_counts['__max_heart_piece'] = world.difficulty_requirements.heart_piece_limit
+            
+            export_data['itempool_counts'][str(player)] = dict(itempool_counts)
+            
+        except Exception as e:
+            error_msg = f"Error exporting itempool counts for player {player}: {str(e)}"
+            logger.error(error_msg)
+            debug_mode_settings(f"ERROR: {error_msg}")
+            export_data['itempool_counts'][str(player)] = {
+                'error': error_msg,
+                'details': "Failed to read itempool counts. Check logs for more information."
+            }
 
         # Game settings
         try:
@@ -770,7 +830,7 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
         raise
 
 def process_items(multiworld, player: int) -> Dict[str, Any]:
-    """Process item data including progression flags."""
+    """Process item data including progression flags and capacity information."""
     items_data = {}
     world = multiworld.worlds[player]
     
@@ -790,7 +850,8 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
             'useful': False,
             'trap': False,
             'event': False,
-            'type': None
+            'type': None,
+            'max_count': 1  # Default max count is 1
         }
 
     # Add all items from item_table that aren't already added
@@ -818,7 +879,8 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
                 'useful': False,
                 'trap': False,
                 'event': item_data.type == 'Event',
-                'type': item_data.type
+                'type': item_data.type,
+                'max_count': 1  # Default max count is 1
             }
 
     # Update flags from placed items
@@ -830,7 +892,32 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
             item_data['useful'] = getattr(location.item, 'useful', False)
             item_data['trap'] = getattr(location.item, 'trap', False)
             #item_data['event'] = getattr(location.item, 'event', False) # Don't overwrite this
-
+    
+    # Add default special max counts for certain item types
+    special_max_counts = {
+        'Piece of Heart': 24,
+        'Boss Heart Container': 10,
+        'Sanctuary Heart Container': 1,
+        'Magic Upgrade (1/2)': 1,
+        'Magic Upgrade (1/4)': 1,
+        'Progressive Sword': 4,
+        'Progressive Shield': 3,
+        'Progressive Glove': 2,
+        'Progressive Mail': 2,
+        'Progressive Bow': 2,
+        'Bottle': 4,
+        'Bottle (Red Potion)': 4,
+        'Bottle (Green Potion)': 4,
+        'Bottle (Blue Potion)': 4,
+        'Bottle (Fairy)': 4,
+        'Bottle (Bee)': 4,
+        'Bottle (Good Bee)': 4,
+    }
+    
+    for item_name, max_count in special_max_counts.items():
+        if item_name in items_data:
+            items_data[item_name]['max_count'] = max_count
+    
     return items_data
 
 def process_item_groups(multiworld, player: int) -> List[str]:

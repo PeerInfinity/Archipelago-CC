@@ -24404,7 +24404,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Progressive Bow": {
         "name": "Progressive Bow",
@@ -24419,7 +24420,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 2
       },
       "Progressive Bow (Alt)": {
         "name": "Progressive Bow (Alt)",
@@ -24434,7 +24436,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Silver Arrows": {
         "name": "Silver Arrows",
@@ -24449,7 +24452,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Silver Bow": {
         "name": "Silver Bow",
@@ -24464,7 +24468,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Book of Mudora": {
         "name": "Book of Mudora",
@@ -24478,7 +24483,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Hammer": {
         "name": "Hammer",
@@ -24492,7 +24498,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -24506,7 +24513,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
@@ -24520,7 +24528,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Flute": {
         "name": "Flute",
@@ -24534,7 +24543,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Pegasus Boots": {
         "name": "Pegasus Boots",
@@ -24548,7 +24558,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Power Glove": {
         "name": "Power Glove",
@@ -24563,7 +24574,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Cape": {
         "name": "Cape",
@@ -24577,7 +24589,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -24591,7 +24604,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Shovel": {
         "name": "Shovel",
@@ -24605,7 +24619,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Lamp": {
         "name": "Lamp",
@@ -24619,7 +24634,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Magic Powder": {
         "name": "Magic Powder",
@@ -24633,7 +24649,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Moon Pearl": {
         "name": "Moon Pearl",
@@ -24647,7 +24664,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Cane of Somaria": {
         "name": "Cane of Somaria",
@@ -24662,7 +24680,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Fire Rod": {
         "name": "Fire Rod",
@@ -24677,7 +24696,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Flippers": {
         "name": "Flippers",
@@ -24691,7 +24711,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Ice Rod": {
         "name": "Ice Rod",
@@ -24706,7 +24727,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Titans Mitts": {
         "name": "Titans Mitts",
@@ -24721,7 +24743,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bombos": {
         "name": "Bombos",
@@ -24736,7 +24759,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Ether": {
         "name": "Ether",
@@ -24751,7 +24775,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Quake": {
         "name": "Quake",
@@ -24766,7 +24791,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bottle": {
         "name": "Bottle",
@@ -24781,7 +24807,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Bottle (Red Potion)": {
         "name": "Bottle (Red Potion)",
@@ -24797,7 +24824,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Bottle (Green Potion)": {
         "name": "Bottle (Green Potion)",
@@ -24813,7 +24841,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Bottle (Blue Potion)": {
         "name": "Bottle (Blue Potion)",
@@ -24829,7 +24858,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Bottle (Fairy)": {
         "name": "Bottle (Fairy)",
@@ -24844,7 +24874,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Bottle (Bee)": {
         "name": "Bottle (Bee)",
@@ -24859,7 +24890,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Bottle (Good Bee)": {
         "name": "Bottle (Good Bee)",
@@ -24874,7 +24906,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Master Sword": {
         "name": "Master Sword",
@@ -24889,7 +24922,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Tempered Sword": {
         "name": "Tempered Sword",
@@ -24904,7 +24938,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Fighter Sword": {
         "name": "Fighter Sword",
@@ -24919,7 +24954,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Golden Sword": {
         "name": "Golden Sword",
@@ -24934,7 +24970,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -24949,7 +24986,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 4
       },
       "Progressive Glove": {
         "name": "Progressive Glove",
@@ -24964,7 +25002,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 2
       },
       "Triforce": {
         "name": "Triforce",
@@ -24978,7 +25017,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Power Star": {
         "name": "Power Star",
@@ -24992,7 +25032,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Triforce Piece": {
         "name": "Triforce Piece",
@@ -25006,7 +25047,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Single Arrow": {
         "name": "Single Arrow",
@@ -25020,7 +25062,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Arrows (10)": {
         "name": "Arrows (10)",
@@ -25034,7 +25077,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Arrow Upgrade (+10)": {
         "name": "Arrow Upgrade (+10)",
@@ -25049,7 +25093,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Arrow Upgrade (+5)": {
         "name": "Arrow Upgrade (+5)",
@@ -25064,7 +25109,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Arrow Upgrade (70)": {
         "name": "Arrow Upgrade (70)",
@@ -25079,7 +25125,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Single Bomb": {
         "name": "Single Bomb",
@@ -25093,7 +25140,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bombs (3)": {
         "name": "Bombs (3)",
@@ -25107,7 +25155,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bombs (10)": {
         "name": "Bombs (10)",
@@ -25121,7 +25170,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bomb Upgrade (+10)": {
         "name": "Bomb Upgrade (+10)",
@@ -25136,7 +25186,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bomb Upgrade (+5)": {
         "name": "Bomb Upgrade (+5)",
@@ -25151,7 +25202,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bomb Upgrade (50)": {
         "name": "Bomb Upgrade (50)",
@@ -25166,7 +25218,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Blue Mail": {
         "name": "Blue Mail",
@@ -25181,7 +25234,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Red Mail": {
         "name": "Red Mail",
@@ -25196,7 +25250,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Progressive Mail": {
         "name": "Progressive Mail",
@@ -25211,7 +25266,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 2
       },
       "Blue Boomerang": {
         "name": "Blue Boomerang",
@@ -25226,7 +25282,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Red Boomerang": {
         "name": "Red Boomerang",
@@ -25241,7 +25298,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Blue Shield": {
         "name": "Blue Shield",
@@ -25256,7 +25314,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Red Shield": {
         "name": "Red Shield",
@@ -25271,7 +25330,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Mirror Shield": {
         "name": "Mirror Shield",
@@ -25286,7 +25346,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -25301,7 +25362,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 3
       },
       "Bug Catching Net": {
         "name": "Bug Catching Net",
@@ -25315,7 +25377,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Cane of Byrna": {
         "name": "Cane of Byrna",
@@ -25330,7 +25393,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Boss Heart Container": {
         "name": "Boss Heart Container",
@@ -25344,7 +25408,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 10
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",
@@ -25358,7 +25423,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Piece of Heart": {
         "name": "Piece of Heart",
@@ -25372,7 +25438,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 24
       },
       "Rupee (1)": {
         "name": "Rupee (1)",
@@ -25387,7 +25454,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Rupees (5)": {
         "name": "Rupees (5)",
@@ -25402,7 +25470,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Rupees (20)": {
         "name": "Rupees (20)",
@@ -25417,7 +25486,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Rupees (50)": {
         "name": "Rupees (50)",
@@ -25432,7 +25502,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Rupees (100)": {
         "name": "Rupees (100)",
@@ -25447,7 +25518,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Rupees (300)": {
         "name": "Rupees (300)",
@@ -25462,7 +25534,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Rupoor": {
         "name": "Rupoor",
@@ -25476,7 +25549,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Red Clock": {
         "name": "Red Clock",
@@ -25491,7 +25565,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Blue Clock": {
         "name": "Blue Clock",
@@ -25506,7 +25581,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Green Clock": {
         "name": "Green Clock",
@@ -25521,7 +25597,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Single RNG": {
         "name": "Single RNG",
@@ -25535,7 +25612,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Multi RNG": {
         "name": "Multi RNG",
@@ -25549,7 +25627,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Magic Upgrade (1/2)": {
         "name": "Magic Upgrade (1/2)",
@@ -25564,7 +25643,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Magic Upgrade (1/4)": {
         "name": "Magic Upgrade (1/4)",
@@ -25579,7 +25659,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Eastern Palace)": {
         "name": "Small Key (Eastern Palace)",
@@ -25594,7 +25675,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Eastern Palace)": {
         "name": "Big Key (Eastern Palace)",
@@ -25609,7 +25691,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Eastern Palace)": {
         "name": "Compass (Eastern Palace)",
@@ -25624,7 +25707,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Eastern Palace)": {
         "name": "Map (Eastern Palace)",
@@ -25639,7 +25723,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Desert Palace)": {
         "name": "Small Key (Desert Palace)",
@@ -25654,7 +25739,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Desert Palace)": {
         "name": "Big Key (Desert Palace)",
@@ -25669,7 +25755,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Desert Palace)": {
         "name": "Compass (Desert Palace)",
@@ -25684,7 +25771,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Desert Palace)": {
         "name": "Map (Desert Palace)",
@@ -25699,7 +25787,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Tower of Hera)": {
         "name": "Small Key (Tower of Hera)",
@@ -25714,7 +25803,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Tower of Hera)": {
         "name": "Big Key (Tower of Hera)",
@@ -25729,7 +25819,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Tower of Hera)": {
         "name": "Compass (Tower of Hera)",
@@ -25744,7 +25835,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Tower of Hera)": {
         "name": "Map (Tower of Hera)",
@@ -25759,7 +25851,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Hyrule Castle)": {
         "name": "Small Key (Hyrule Castle)",
@@ -25774,7 +25867,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Hyrule Castle)": {
         "name": "Big Key (Hyrule Castle)",
@@ -25789,7 +25883,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Hyrule Castle)": {
         "name": "Compass (Hyrule Castle)",
@@ -25804,7 +25899,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Hyrule Castle)": {
         "name": "Map (Hyrule Castle)",
@@ -25819,7 +25915,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Agahnims Tower)": {
         "name": "Small Key (Agahnims Tower)",
@@ -25834,7 +25931,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Agahnims Tower)": {
         "name": "Big Key (Agahnims Tower)",
@@ -25849,7 +25947,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Agahnims Tower)": {
         "name": "Compass (Agahnims Tower)",
@@ -25864,7 +25963,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Agahnims Tower)": {
         "name": "Map (Agahnims Tower)",
@@ -25879,7 +25979,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Palace of Darkness)": {
         "name": "Small Key (Palace of Darkness)",
@@ -25894,7 +25995,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Palace of Darkness)": {
         "name": "Big Key (Palace of Darkness)",
@@ -25909,7 +26011,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Palace of Darkness)": {
         "name": "Compass (Palace of Darkness)",
@@ -25924,7 +26027,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Palace of Darkness)": {
         "name": "Map (Palace of Darkness)",
@@ -25939,7 +26043,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Thieves Town)": {
         "name": "Small Key (Thieves Town)",
@@ -25954,7 +26059,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Thieves Town)": {
         "name": "Big Key (Thieves Town)",
@@ -25969,7 +26075,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Thieves Town)": {
         "name": "Compass (Thieves Town)",
@@ -25984,7 +26091,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Thieves Town)": {
         "name": "Map (Thieves Town)",
@@ -25999,7 +26107,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Skull Woods)": {
         "name": "Small Key (Skull Woods)",
@@ -26014,7 +26123,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Skull Woods)": {
         "name": "Big Key (Skull Woods)",
@@ -26029,7 +26139,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Skull Woods)": {
         "name": "Compass (Skull Woods)",
@@ -26044,7 +26155,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Skull Woods)": {
         "name": "Map (Skull Woods)",
@@ -26059,7 +26171,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Swamp Palace)": {
         "name": "Small Key (Swamp Palace)",
@@ -26074,7 +26187,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Swamp Palace)": {
         "name": "Big Key (Swamp Palace)",
@@ -26089,7 +26203,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Swamp Palace)": {
         "name": "Compass (Swamp Palace)",
@@ -26104,7 +26219,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Swamp Palace)": {
         "name": "Map (Swamp Palace)",
@@ -26119,7 +26235,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Ice Palace)": {
         "name": "Small Key (Ice Palace)",
@@ -26134,7 +26251,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Ice Palace)": {
         "name": "Big Key (Ice Palace)",
@@ -26149,7 +26267,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Ice Palace)": {
         "name": "Compass (Ice Palace)",
@@ -26164,7 +26283,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Ice Palace)": {
         "name": "Map (Ice Palace)",
@@ -26179,7 +26299,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Misery Mire)": {
         "name": "Small Key (Misery Mire)",
@@ -26194,7 +26315,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Misery Mire)": {
         "name": "Big Key (Misery Mire)",
@@ -26209,7 +26331,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Misery Mire)": {
         "name": "Compass (Misery Mire)",
@@ -26224,7 +26347,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Misery Mire)": {
         "name": "Map (Misery Mire)",
@@ -26239,7 +26363,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Turtle Rock)": {
         "name": "Small Key (Turtle Rock)",
@@ -26254,7 +26379,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Turtle Rock)": {
         "name": "Big Key (Turtle Rock)",
@@ -26269,7 +26395,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Turtle Rock)": {
         "name": "Compass (Turtle Rock)",
@@ -26284,7 +26411,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Turtle Rock)": {
         "name": "Map (Turtle Rock)",
@@ -26299,7 +26427,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Ganons Tower)": {
         "name": "Small Key (Ganons Tower)",
@@ -26314,7 +26443,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Big Key (Ganons Tower)": {
         "name": "Big Key (Ganons Tower)",
@@ -26329,7 +26459,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Compass (Ganons Tower)": {
         "name": "Compass (Ganons Tower)",
@@ -26344,7 +26475,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Map (Ganons Tower)": {
         "name": "Map (Ganons Tower)",
@@ -26359,7 +26491,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Key (Universal)": {
         "name": "Small Key (Universal)",
@@ -26374,7 +26507,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Nothing": {
         "name": "Nothing",
@@ -26388,7 +26522,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bee Trap": {
         "name": "Bee Trap",
@@ -26402,7 +26537,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Faerie": {
         "name": "Faerie",
@@ -26416,7 +26552,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Good Bee": {
         "name": "Good Bee",
@@ -26430,7 +26567,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Magic Jar": {
         "name": "Magic Jar",
@@ -26444,7 +26582,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Apple": {
         "name": "Apple",
@@ -26458,7 +26597,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Red Potion": {
         "name": "Red Potion",
@@ -26473,7 +26613,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Green Potion": {
         "name": "Green Potion",
@@ -26488,7 +26629,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Blue Potion": {
         "name": "Blue Potion",
@@ -26503,7 +26645,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Bee": {
         "name": "Bee",
@@ -26517,7 +26660,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Small Heart": {
         "name": "Small Heart",
@@ -26531,7 +26675,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null
+        "type": null,
+        "max_count": 1
       },
       "Green Pendant": {
         "name": "Green Pendant",
@@ -26544,7 +26689,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Blue Pendant": {
         "name": "Blue Pendant",
@@ -26557,7 +26703,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Red Pendant": {
         "name": "Red Pendant",
@@ -26570,7 +26717,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Crystal 1": {
         "name": "Crystal 1",
@@ -26583,7 +26731,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Crystal 2": {
         "name": "Crystal 2",
@@ -26596,7 +26745,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Crystal 3": {
         "name": "Crystal 3",
@@ -26609,7 +26759,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Crystal 4": {
         "name": "Crystal 4",
@@ -26622,7 +26773,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Crystal 5": {
         "name": "Crystal 5",
@@ -26635,7 +26787,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Crystal 6": {
         "name": "Crystal 6",
@@ -26648,7 +26801,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Crystal 7": {
         "name": "Crystal 7",
@@ -26661,7 +26815,8 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": "Crystal"
+        "type": "Crystal",
+        "max_count": 1
       },
       "Activated Flute": {
         "name": "Activated Flute",
@@ -26674,7 +26829,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       },
       "Beat Agahnim 1": {
         "name": "Beat Agahnim 1",
@@ -26687,7 +26843,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       },
       "Beat Agahnim 2": {
         "name": "Beat Agahnim 2",
@@ -26700,7 +26857,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       },
       "Get Frog": {
         "name": "Get Frog",
@@ -26713,7 +26871,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       },
       "Return Smith": {
         "name": "Return Smith",
@@ -26726,7 +26885,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       },
       "Pick Up Purple Chest": {
         "name": "Pick Up Purple Chest",
@@ -26739,7 +26899,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       },
       "Open Floodgate": {
         "name": "Open Floodgate",
@@ -26752,7 +26913,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       },
       "Capacity Upgrade Shop": {
         "name": "Capacity Upgrade Shop",
@@ -26765,7 +26927,8 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event"
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -26903,6 +27066,127 @@
         "Menu"
       ],
       "available": []
+    }
+  },
+  "itempool_counts": {
+    "1": {
+      "Map (Hyrule Castle)": 2,
+      "Small Key (Hyrule Castle)": 8,
+      "Big Key (Hyrule Castle)": 2,
+      "Map (Eastern Palace)": 2,
+      "Compass (Eastern Palace)": 2,
+      "Small Key (Eastern Palace)": 4,
+      "Big Key (Eastern Palace)": 2,
+      "Map (Desert Palace)": 2,
+      "Compass (Desert Palace)": 2,
+      "Small Key (Desert Palace)": 8,
+      "Big Key (Desert Palace)": 2,
+      "Map (Tower of Hera)": 2,
+      "Compass (Tower of Hera)": 2,
+      "Small Key (Tower of Hera)": 2,
+      "Big Key (Tower of Hera)": 2,
+      "Small Key (Agahnims Tower)": 8,
+      "Map (Palace of Darkness)": 2,
+      "Compass (Palace of Darkness)": 2,
+      "Small Key (Palace of Darkness)": 12,
+      "Big Key (Palace of Darkness)": 2,
+      "Map (Thieves Town)": 2,
+      "Compass (Thieves Town)": 2,
+      "Small Key (Thieves Town)": 6,
+      "Big Key (Thieves Town)": 2,
+      "Map (Skull Woods)": 2,
+      "Compass (Skull Woods)": 2,
+      "Small Key (Skull Woods)": 10,
+      "Big Key (Skull Woods)": 2,
+      "Map (Swamp Palace)": 2,
+      "Compass (Swamp Palace)": 2,
+      "Small Key (Swamp Palace)": 12,
+      "Big Key (Swamp Palace)": 2,
+      "Map (Ice Palace)": 2,
+      "Compass (Ice Palace)": 2,
+      "Small Key (Ice Palace)": 12,
+      "Big Key (Ice Palace)": 2,
+      "Map (Misery Mire)": 2,
+      "Compass (Misery Mire)": 2,
+      "Small Key (Misery Mire)": 12,
+      "Big Key (Misery Mire)": 2,
+      "Map (Turtle Rock)": 2,
+      "Compass (Turtle Rock)": 2,
+      "Small Key (Turtle Rock)": 12,
+      "Big Key (Turtle Rock)": 2,
+      "Map (Ganons Tower)": 2,
+      "Compass (Ganons Tower)": 2,
+      "Small Key (Ganons Tower)": 16,
+      "Big Key (Ganons Tower)": 2,
+      "Cane of Somaria": 1,
+      "Bottle": 2,
+      "Ether": 1,
+      "Piece of Heart": 24,
+      "Bombs (3)": 14,
+      "Rupees (5)": 4,
+      "Rupees (20)": 28,
+      "Rupee (1)": 2,
+      "Bombos": 1,
+      "Boss Heart Container": 10,
+      "Book of Mudora": 1,
+      "Arrows (10)": 12,
+      "Magic Upgrade (1/2)": 1,
+      "Shovel": 1,
+      "Rupees (50)": 9,
+      "Bottle (Good Bee)": 1,
+      "Cane of Byrna": 1,
+      "Progressive Shield": 3,
+      "Progressive Sword": 4,
+      "Progressive Mail": 2,
+      "Rupees (300)": 5,
+      "Flippers": 1,
+      "Blue Boomerang": 1,
+      "Cape": 1,
+      "Moon Pearl": 1,
+      "Rupees (100)": 1,
+      "Sanctuary Heart Container": 1,
+      "Bombs (10)": 1,
+      "Flute": 1,
+      "Progressive Glove": 2,
+      "Pegasus Boots": 1,
+      "Quake": 1,
+      "Bottle (Fairy)": 1,
+      "Progressive Bow": 2,
+      "Fire Rod": 1,
+      "Red Boomerang": 1,
+      "Arrow Upgrade (70)": 1,
+      "Magic Powder": 1,
+      "Hammer": 1,
+      "Mushroom": 1,
+      "Ice Rod": 1,
+      "Magic Mirror": 1,
+      "Lamp": 1,
+      "Bomb Upgrade (50)": 1,
+      "Hookshot": 1,
+      "Single Arrow": 1,
+      "Bug Catching Net": 1,
+      "Green Pendant": 1,
+      "Red Pendant": 1,
+      "Blue Pendant": 1,
+      "Beat Agahnim 1": 1,
+      "Beat Agahnim 2": 1,
+      "Crystal 1": 1,
+      "Crystal 2": 1,
+      "Crystal 3": 1,
+      "Crystal 4": 1,
+      "Crystal 5": 1,
+      "Crystal 6": 1,
+      "Crystal 7": 1,
+      "Activated Flute": 1,
+      "Open Floodgate": 1,
+      "Return Smith": 1,
+      "Capacity Upgrade Shop": 1,
+      "Get Frog": 1,
+      "Pick Up Purple Chest": 1,
+      "Triforce": 1,
+      "__max_progressive_bottle": 4,
+      "__max_boss_heart_container": 10,
+      "__max_heart_piece": 24
     }
   }
 }

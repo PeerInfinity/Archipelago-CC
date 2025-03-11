@@ -2632,5 +2632,10 @@ item: Crystal 6
 
 Can you figure out what might be causing this?
 
+Mar. 10, 2025:
+
+The javascript frontend is currently using a simple algorithm to fill the inventory when handling the excluded items for tests.  It just adds one of everything into the inventory.  Can you check how the Python code handles filling the inventory when processing excluded items?  I think there’s probably some data somewhere that lists what it means for the inventory to be full.  For some items, having a full inventory means having a specific number of that item, not just one.  Please let me know if the relevant data isn’t in the context file I gave you.
+
+We already started to update exporter.py to export this data to the json file.  The next step is to update the frontend to read the data and use it when initializing the inventory for excluded tests.
 
 

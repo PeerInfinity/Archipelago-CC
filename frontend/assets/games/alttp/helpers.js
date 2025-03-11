@@ -493,9 +493,26 @@ export class ALTTPHelpers extends GameHelpers {
 
   */
 
-  _lttp_has_key(key, player, count) {
-    // Untested
-    return stateManager.inventory.count(key) >= count;
+  _lttp_has_key(key, playerParam, count = 1) {
+    // Convert player parameter - can be a string "player" or a number
+    const player = playerParam === 'player' ? 1 : parseInt(playerParam, 10);
+
+    // Get count of the specific key in inventory
+    const keyCount = stateManager.inventory.count(key);
+
+    if (stateManager.debugMode) {
+      console.log(
+        `_lttp_has_key: ${key}, player=${player}, count=${count}, has=${keyCount}`
+      );
+    }
+
+    // Return true if we have enough keys
+    return keyCount >= count;
+  }
+
+  // Add non-underscore version for consistency
+  lttp_has_key(key, playerParam, count = 1) {
+    return this._lttp_has_key(key, playerParam, count);
   }
 
   multiworld() {

@@ -178,7 +178,9 @@ export const evaluateRule = (rule, depth = 0) => {
     }
 
     case 'state_method': {
-      // First try using stateManager's direct method for better accuracy
+      const startTime = performance.now();
+
+      // Try using stateManager's executeStateMethod
       if (
         stateManager &&
         typeof stateManager.executeStateMethod === 'function'
@@ -208,6 +210,20 @@ export const evaluateRule = (rule, depth = 0) => {
         );
         result = false;
       }
+
+      const duration = performance.now() - startTime;
+      if (duration > 5) {
+        // Only log slow method calls
+        safeLog(
+          `State method ${rule.method} took ${duration.toFixed(2)}ms`,
+          {
+            args: rule.args || [],
+            result,
+          },
+          'warn'
+        );
+      }
+
       break;
     }
 
