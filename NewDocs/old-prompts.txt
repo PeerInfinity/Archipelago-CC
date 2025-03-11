@@ -3054,3 +3054,7 @@ will become:
 ```
 
 …and thus no longer missing that second argument.
+
+----
+
+Currently, there are two places in the code that define a function renderLogicTree.  One is in locationUI.js, and the other is in regionUI.js.  I think I’ll want to move that function to a new file, commonUI.js.  Also, the two versions currently work differently.  For now, let’s use the version from locationUI, which shows the full tree, rather than the abridged version in regionUI.js.  Also, we’ll want it to use the colorblind symbols if that’s enabled.  Also, for now, let’s have them enabled by default.  I’ll also want to make some changes to how the logic trees are displayed, but let’s get the function moved to the new file first, and then we can discuss more details.

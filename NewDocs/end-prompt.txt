@@ -2,7 +2,7 @@ That's the end of the files you need for context.  Now here are your instruction
 
 ----
 
-We’re currently in the process of making some major changes to the structure of the data in the JSON file.  It’s mostly working now, but there are still some changes left to make
+We’re currently in the process of making some major changes to the structure of the data in the JSON file.  It’s mostly working now, but there are still some changes left to make.
 
 Here is some of the new data we’re getting in the json file:
 
@@ -749,82 +749,225 @@ New:
           },
 
 
-One minor issue is that we’re getting a lot of these error messages:
-Invalid location argument to shop_price_rules: false
+Here is one case I’m still confused by:
 
-Here is the Python code that initializes the shop data:
+         {
+            "name": "Desert Palace - Prize",
+            "crystal": true,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "state"
+                          },
+                          "attr": "multiworld"
+                        },
+                        "attr": "get_region"
+                      },
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Desert Palace Main (Outer)"
+                        }
+                      ]
+                    },
+                    "attr": "can_reach"
+                  },
+                  "args": []
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "count_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Small Key (Desert Palace)"
+                      },
+                      "count": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Big Key (Desert Palace)"
+                      }
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_fire_source",
+                      "args": []
+                    },
+                    {
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "function_call",
+                                "function": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "state"
+                                    },
+                                    "attr": "multiworld"
+                                  },
+                                  "attr": "get_location"
+                                },
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Desert Palace - Prize"
+                                  }
+                                ]
+                              },
+                              "attr": "parent_region"
+                            },
+                            "attr": "dungeon"
+                          },
+                          "attr": "boss"
+                        },
+                        "attr": "can_defeat"
+                      },
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            },
+            "item_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "name",
+                  "name": "crystals_and_pendants"
+                },
+                {
+                  "type": "name",
+                  "name": "player"
+                }
+              ]
+            },
+            "progress_type": 1,
+            "locked": false,
+            "item": null
+          }
 
-def shop_price_rules(state: CollectionState, player: int, location: ALttPLocation):
-    if location.shop_price_type == ShopPriceType.Hearts:
-        return has_hearts(state, player, (location.shop_price / 8) + 1)
-    elif location.shop_price_type == ShopPriceType.Bombs:
-        return can_use_bombs(state, player, location.shop_price)
-    elif location.shop_price_type == ShopPriceType.Arrows:
-        return can_hold_arrows(state, player, location.shop_price)
-    return True
+I think that comes from this code:
+    add_rule(multiworld.get_location('Desert Palace - Prize', player), lambda state: state._lttp_has_key('Small Key (Desert Palace)', player, 4) and state.has('Big Key (Desert Palace)', player) and has_fire_source(state, player) and state.multiworld.get_location('Desert Palace - Prize', player).parent_region.dungeon.boss.can_defeat(state))
 
-…
+    # logic patch to prevent placing a crystal in Desert that's required to reach the required keys
+    if not (multiworld.small_key_shuffle[player] and multiworld.big_key_shuffle[player]):
+        add_rule(multiworld.get_location('Desert Palace - Prize', player), lambda state: state.multiworld.get_region('Desert Palace Main (Outer)', player).can_reach(state))
 
-def create_shops(multiworld, player: int):
-    from .Options import RandomizeShopInventories
-    player_shop_table = shop_table.copy()
-    if multiworld.include_witch_hut[player]:
-        player_shop_table["Potion Shop"] = player_shop_table["Potion Shop"]._replace(locked=False)
-        dynamic_shop_slots = total_dynamic_shop_slots + 3
-    else:
-        dynamic_shop_slots = total_dynamic_shop_slots
-    if multiworld.shuffle_capacity_upgrades[player]:
-        player_shop_table["Capacity Upgrade"] = player_shop_table["Capacity Upgrade"]._replace(locked=False)
+It's evaluating to false even when the inventory is full, and I'm not sure what conditions would make it evaluate to true.  I suspect that the problem is that something is failing to parse.
 
-    num_slots = min(dynamic_shop_slots, multiworld.shop_item_slots[player])
-    single_purchase_slots: List[bool] = [True] * num_slots + [False] * (dynamic_shop_slots - num_slots)
-    multiworld.random.shuffle(single_purchase_slots)
+Here is what the logic tree looks like in the UI:
 
-    if multiworld.randomize_shop_inventories[player]:
-        default_shop_table = [i for l in
-                              [shop_generation_types[x] for x in ['arrows', 'bombs', 'potions', 'shields', 'bottle'] if
-                               not multiworld.retro_bow[player] or x != 'arrows'] for i in l]
-        new_basic_shop = multiworld.random.sample(default_shop_table, k=3)
-        new_dark_shop = multiworld.random.sample(default_shop_table, k=3)
-        for name, shop in player_shop_table.items():
-            typ, shop_id, keeper, custom, locked, items, sram_offset = shop
-            if not locked:
-                new_items = multiworld.random.sample(default_shop_table, k=len(items))
-                if multiworld.randomize_shop_inventories[player] == RandomizeShopInventories.option_randomize_by_shop_type:
-                    if items == _basic_shop_defaults:
-                        new_items = new_basic_shop
-                    elif items == _dark_world_shop_defaults:
-                        new_items = new_dark_shop
-                keeper = multiworld.random.choice([0xA0, 0xC1, 0xFF])
-                player_shop_table[name] = ShopData(typ, shop_id, keeper, custom, locked, new_items, sram_offset)
-    if multiworld.mode[player] == "inverted":
-        # make sure that blue potion is available in inverted, special case locked = None; lock when done.
-        player_shop_table["Dark Lake Hylia Shop"] = \
-            player_shop_table["Dark Lake Hylia Shop"]._replace(items=_inverted_hylia_shop_defaults, locked=None)
-    for region_name, (room_id, type, shopkeeper, custom, locked, inventory, sram_offset) in player_shop_table.items():
-        region = multiworld.get_region(region_name, player)
-        shop: Shop = shop_class_mapping[type](region, room_id, shopkeeper, custom, locked, sram_offset)
-        # special case: allow shop slots, but do not allow overwriting of base inventory behind them
-        if locked is None:
-            shop.locked = True
-        region.shop = shop
-        multiworld.shops.append(shop)
-        for index, item in enumerate(inventory):
-            shop.add_inventory(index, *item)
-            if not locked and (num_slots or type == ShopType.UpgradeShop):
-                slot_name = f"{region.name}{shop.slot_names[index]}"
-                loc = ALttPLocation(player, slot_name, address=shop_table_by_location[slot_name],
-                                    parent=region, hint_text="for sale")
-                loc.shop_price_type, loc.shop_price = get_price(multiworld, None, player)
-                loc.item_rule = lambda item, spot=loc: not any(i for i in price_blacklist[spot.shop_price_type] if i in item.name)
-                add_rule(loc, lambda state, spot=loc: shop_price_rules(state, player, spot))
-                loc.shop = shop
-                loc.shop_slot = index
-                if ((not (multiworld.shuffle_capacity_upgrades[player] and type == ShopType.UpgradeShop))
-                        and not single_purchase_slots.pop()):
-                    loc.shop_slot_disabled = True
-                    loc.locked = True
-                else:
-                    shop.region.locations.append(loc)
+Desert Palace - Prize
+Player 1
+Region: Desert Palace North (Accessible)
+Location:
+✗
+Type: and
+✗
+Type: function_call
+function call
+Function:
+✗
+Type: attribute
+object.can_reach
+✓
+Type: function_call
+function call
+Function:
+✗
+Type: attribute
+object.get_region
+✗
+Type: attribute
+object.multiworld
+✓
+Type: name
+variable: state
+Arguments:
+✓
+Type: constant
+value: Desert Palace Main (Outer)
+✓
+Type: and
+✓
+Type: count_check
+Small Key (Desert Palace) >= 4
+Item Expression:
+✓
+Type: constant
+value: Small Key (Desert Palace)
+Count Expression:
+✓
+Type: constant
+value: 4
+✓
+Type: item_check
+item: Big Key (Desert Palace)
+✓
+Type: helper
+helper: has_fire_source, args: []
+✓
+Type: function_call
+function call
+Function:
+✗
+Type: attribute
+object.can_defeat
+✗
+Type: attribute
+object.boss
+✗
+Type: attribute
+object.dungeon
+✗
+Type: attribute
+object.parent_region
+✗
+Type: function_call
+function call
+Function:
+✗
+Type: attribute
+object.get_location
+✗
+Type: attribute
+object.multiworld
+✓
+Type: name
+variable: state
+Arguments:
+✓
+Type: constant
+value: Desert Palace - Prize
+Locked
 
-Can you figure out how the shops are supposed to work?  If not, then we can leave this for later and move on to a more important issue.
+Can you figure out how we can get this rule to evaluate to true when the inventory is full?

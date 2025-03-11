@@ -35,6 +35,35 @@ class RuleTrace {
   }
 }
 
+/**
+ * Recursively checks if a rule object contains defeat methods in its chain
+ * @param {Object} ruleObj - The rule object to check
+ * @returns {boolean} - True if a defeat method was found in the chain
+ */
+function hasDefeatMethod(ruleObj) {
+  if (!ruleObj || typeof ruleObj !== 'object') return false;
+
+  // Check if this is an attribute access to can_defeat or defeat_rule
+  if (
+    ruleObj.type === 'attribute' &&
+    (ruleObj.attr === 'can_defeat' || ruleObj.attr === 'defeat_rule')
+  ) {
+    return true;
+  }
+
+  // Recursively check object property for attribute chains
+  if (ruleObj.object) {
+    return hasDefeatMethod(ruleObj.object);
+  }
+
+  // Check function property for function calls
+  if (ruleObj.function) {
+    return hasDefeatMethod(ruleObj.function);
+  }
+
+  return false;
+}
+
 function safeLog(message, level = 'debug') {
   if (
     window.consoleManager &&
@@ -46,12 +75,72 @@ function safeLog(message, level = 'debug') {
   }
 }
 
+/**
+ * Specifically checks if a rule is a boss defeat check using targeted pattern matching
+ * @param {Object} rule - The rule object to check
+ * @returns {boolean} - True if this is a boss defeat check
+ */
+function isBossDefeatCheck(rule) {
+  // Direct check for simple cases
+  if (
+    rule.type === 'attribute' &&
+    (rule.attr === 'can_defeat' || rule.attr === 'defeat_rule')
+  ) {
+    return true;
+  }
+
+  // Check for the specific nested structure we're seeing in Desert Palace - Prize
+  if (
+    rule.type === 'function_call' &&
+    rule.function &&
+    rule.function.type === 'attribute'
+  ) {
+    // Check if the attribute is 'can_defeat'
+    if (
+      rule.function.attr === 'can_defeat' ||
+      rule.function.attr === 'defeat_rule'
+    ) {
+      return true;
+    }
+
+    // Check deeper in the chain if we have a boss or dungeon reference
+    let current = rule.function.object;
+    while (current) {
+      if (current.type === 'attribute') {
+        // If we see boss or dungeon in the chain, consider it a boss defeat check
+        if (current.attr === 'boss' || current.attr === 'dungeon') {
+          return true;
+        }
+        current = current.object;
+      } else {
+        break;
+      }
+    }
+  }
+
+  return false;
+}
+
 export const evaluateRule = (rule, depth = 0) => {
   if (!rule) {
     return true;
   }
   if (!stateManager.inventory) {
     return false; // Add early return if inventory is undefined
+  }
+
+  // Debug check for specific boss defeat patterns
+  if (
+    rule &&
+    rule.type === 'function_call' &&
+    rule.function &&
+    rule.function.type === 'attribute' &&
+    rule.function.attr === 'can_defeat'
+  ) {
+    //console.log('FOUND DIRECT can_defeat CALL', {
+    //  rule: rule,
+    //  depth: depth,
+    //});
   }
 
   // Create trace object for this evaluation
@@ -229,6 +318,15 @@ export const evaluateRule = (rule, depth = 0) => {
     // NEW NODE TYPES
 
     case 'attribute': {
+      // Check if this is a boss defeat attribute check
+      if (rule.attr === 'can_defeat' || rule.attr === 'defeat_rule') {
+        if (stateManager.debugMode) {
+          console.log('Detected boss defeat check via attribute');
+        }
+        result = true;
+        break;
+      }
+
       // Handle attribute access (e.g., foo.bar)
       // First evaluate the object
       let baseObject = evaluateRule(rule.object, depth + 1);
@@ -299,7 +397,30 @@ export const evaluateRule = (rule, depth = 0) => {
     }
 
     case 'function_call': {
-      // Handle function calls from the Python AST by mapping them to appropriate helpers
+      // First check if this is a boss defeat check using our enhanced detection
+      if (isBossDefeatCheck(rule)) {
+        if (stateManager.debugMode) {
+          console.log('Detected boss defeat check via enhanced detection');
+        }
+        result = true;
+        break;
+      }
+
+      // Existing detailed debugging for depth 5 patterns (likely boss defeat checks)
+      if (
+        depth === 5 &&
+        rule &&
+        rule.type === 'function_call' &&
+        rule.function &&
+        rule.function.type === 'attribute'
+      ) {
+        console.log('EXAMINING POTENTIAL BOSS DEFEAT CHECK', {
+          rule: rule,
+          functionAttr: rule.function.attr,
+          depth: depth,
+          isBossCheck: isBossDefeatCheck(rule),
+        });
+      }
 
       // Extract function path and name
       let functionPath = '';
@@ -314,6 +435,34 @@ export const evaluateRule = (rule, depth = 0) => {
         let currentObj = rule.function.object;
         let pathComponents = [];
 
+        // Special case for region.can_reach pattern
+        if (
+          functionName === 'can_reach' &&
+          currentObj.type === 'function_call'
+        ) {
+          // This might be state.multiworld.get_region("RegionName").can_reach()
+          if (
+            currentObj.function.type === 'attribute' &&
+            currentObj.function.attr === 'get_region' &&
+            currentObj.args &&
+            currentObj.args.length > 0
+          ) {
+            // Extract region name from the get_region call
+            let regionName = null;
+            if (currentObj.args[0].type === 'constant') {
+              regionName = currentObj.args[0].value;
+            } else {
+              // If the region name is a complex expression, evaluate it
+              regionName = evaluateRule(currentObj.args[0], depth + 1);
+            }
+
+            if (regionName) {
+              // Directly return the region accessibility check
+              return stateManager.can_reach(regionName, 'Region', 1);
+            }
+          }
+        }
+
         while (currentObj) {
           if (currentObj.type === 'attribute') {
             pathComponents.unshift(currentObj.attr);
@@ -321,6 +470,15 @@ export const evaluateRule = (rule, depth = 0) => {
           } else if (currentObj.type === 'name') {
             pathComponents.unshift(currentObj.name);
             currentObj = null;
+          } else if (currentObj.type === 'function_call') {
+            // Handle function calls in the chain - just extract the function name
+            if (currentObj.function.type === 'attribute') {
+              pathComponents.unshift(currentObj.function.attr);
+              currentObj = currentObj.function.object;
+            } else {
+              // Unknown function structure, break the loop
+              break;
+            }
           } else {
             // Stop traversal for other node types
             break;
@@ -371,16 +529,57 @@ export const evaluateRule = (rule, depth = 0) => {
         }
       } else if (
         functionPath.includes('.can_defeat') ||
-        functionPath.includes('.defeat_rule')
+        functionPath.includes('.defeat_rule') ||
+        // Note: The explicit isBossDefeatCheck is handled at the start of this case
+        // but we keep these simpler checks for backward compatibility
+        (rule.function &&
+          rule.function.type === 'attribute' &&
+          rule.function.attr === 'can_defeat') ||
+        hasDefeatMethod(rule.function)
       ) {
         // Boss defeat checks - these typically evaluate to true in our frontend system
         // since we don't have complex boss fight mechanics
+
+        if (stateManager.debugMode) {
+          console.log('Boss defeat check detected via function path:', {
+            functionPath,
+            rule: rule,
+          });
+        }
+
+        // Always return true for boss defeat checks
         result = true;
       } else if (functionPath.includes('.can_reach')) {
         // Handle region can_reach calls
-        // Typically format: region.can_reach(state)
-        const regionName = functionPath.split('.')[0];
-        result = stateManager.can_reach(regionName, 'Region', 1);
+
+        // Check for deeper structure where the path might include get_region
+        if (functionPath.includes('get_region')) {
+          // The path contains get_region, try to extract region name from processed args
+          // This might be set already if we found a direct get_region call
+          let regionName = null;
+
+          // Look for the region name in the path parts and args
+          const pathParts = functionPath.split('.');
+          const getRegionIndex = pathParts.indexOf('get_region');
+
+          if (getRegionIndex !== -1 && processedArgs.length > 0) {
+            // If get_region is in the path and we have args, the first arg is likely the region name
+            regionName = processedArgs[0];
+          }
+
+          if (regionName) {
+            result = stateManager.can_reach(regionName, 'Region', 1);
+          } else {
+            console.warn('Could not determine region name for', functionPath);
+            result = false;
+          }
+        } else {
+          // Traditional format: region.can_reach(state)
+          const pathParts = functionPath.split('.');
+          // Get the first part which should be the region name
+          const regionName = pathParts[0];
+          result = stateManager.can_reach(regionName, 'Region', 1);
+        }
       } else if (
         stateManager.helpers &&
         typeof stateManager.helpers.executeHelper === 'function'
