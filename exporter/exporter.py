@@ -1210,7 +1210,9 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     # Create a subdirectory for the parent_directory if it doesn't exist
     parent_dir_path = os.path.join(output_dir, parent_directory)
     os.makedirs(parent_dir_path, exist_ok=True)
-    rules_path = os.path.join(parent_dir_path, f"{filename_base}_rules.json")
+    
+    # CHANGED: Use parent_directory for rules file name instead of filename_base
+    rules_path = os.path.join(parent_dir_path, f"{parent_directory}_rules.json")
     
     # Check the structure of export_data before proceeding
     debug_mode_settings("Export data structure after prepare_export_data", 
@@ -1305,6 +1307,8 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     # Create a subdirectory for the parent_directory if it doesn't exist
     parent_dir_path = os.path.join(output_dir, parent_directory)
     os.makedirs(parent_dir_path, exist_ok=True)
+    
+    # Keep test cases files named by individual test function
     test_cases_path = os.path.join(parent_dir_path, f"{filename_base}_tests.json")
 
     
