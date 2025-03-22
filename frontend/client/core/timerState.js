@@ -1,4 +1,4 @@
-// client/core/gameState.js - Updated to work directly with stateManager
+// client/core/timerState.js - Updated to work directly with stateManager
 
 import Config from './config.js';
 import eventBus from './eventBus.js';
@@ -6,7 +6,7 @@ import connection from './connection.js';
 import messageHandler from './messageHandler.js';
 import locationManager from './locationManager.js';
 
-export class GameState {
+export class TimerState {
   constructor() {
     // Private variables
     this.gameInterval = null;
@@ -27,7 +27,7 @@ export class GameState {
 
     // Make this instance available globally
     if (typeof window !== 'undefined') {
-      window.gameState = this;
+      window.timerState = this;
     }
 
     // Initialize global tracking set for clicked items
@@ -83,10 +83,10 @@ export class GameState {
 
     // Re-expose this instance to window
     if (typeof window !== 'undefined') {
-      window.gameState = this;
+      window.timerState = this;
     }
 
-    console.log('GameState module initialized');
+    console.log('TimerState module initialized');
   }
 
   // Check if there are any unchecked accessible locations left
@@ -476,7 +476,5 @@ export class GameState {
 }
 
 // Create and export a singleton instance
-export const gameState = new GameState();
-
-// Also export as default for backward compatibility with code that might use default import
-export default GameState;
+const timerStateInstance = new TimerState();
+export default timerStateInstance;

@@ -75,7 +75,7 @@ frontend/app/ui/regionUI.js
 frontend/client/core/config.js
 frontend/client/core/connection.js
 frontend/client/core/eventBus.js
-frontend/client/core/gameState.js
+frontend/client/core/timerState.js
 frontend/client/core/locationManager.js
 frontend/client/core/messageHandler.js
 frontend/client/core/storage.js

@@ -162,7 +162,7 @@ export class LocationManager {
   static async checkQuickLocation() {
     // Delegate to gameState
     try {
-      const gameStateModule = await import('./gameState.js');
+      const gameStateModule = await import('./timerState.js');
       const gameState = gameStateModule.gameState;
       if (gameState && typeof gameState.checkQuickLocation === 'function') {
         return gameState.checkQuickLocation();
