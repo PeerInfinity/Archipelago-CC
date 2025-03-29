@@ -968,6 +968,9 @@ class LoopState {
    * @returns {boolean} - Whether region is discovered
    */
   isRegionDiscovered(regionName) {
+    // Menu is always discovered
+    if (regionName === 'Menu') return true;
+    
     return this.discoveredRegions.has(regionName);
   }
 
@@ -977,6 +980,10 @@ class LoopState {
    * @returns {boolean} - Whether location is discovered
    */
   isLocationDiscovered(locationName) {
+    // If location is checked, consider it discovered
+    if (stateManager.isLocationChecked(locationName)) return true;
+    
+    // Otherwise check discovery state
     return this.discoveredLocations.has(locationName);
   }
 
@@ -987,6 +994,9 @@ class LoopState {
    * @returns {boolean} - Whether exit is discovered
    */
   isExitDiscovered(regionName, exitName) {
+    // Exits in Menu are always discovered
+    if (regionName === 'Menu') return true;
+    
     const regionExits = this.discoveredExits.get(regionName);
     return regionExits ? regionExits.has(exitName) : false;
   }

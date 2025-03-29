@@ -380,7 +380,8 @@ select:hover {
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
-#locations-grid {
+#locations-grid,
+#exits-grid {
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden; /* Prevent horizontal scrolling */
@@ -391,19 +392,22 @@ select:hover {
   box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
-/* Location Cards */
-.location-card {
+/* Location and Exit Cards */
+.location-card, 
+.exit-card {
   padding: 0.5rem;
   cursor: pointer;
   border: 1px solid #cecece;
   color: #cecece;
 }
 
-.location-card.reachable {
+.location-card.reachable,
+.exit-card.traversable {
   background-color: #0a3318;
 }
 
-.location-card.unreachable {
+.location-card.unreachable,
+.exit-card.not-traversable {
   background-color: #3a0808;
 }
 
@@ -419,6 +423,13 @@ select:hover {
 
 .location-card.checked:hover {
   background-color: #1a1a1a;
+}
+
+.location-card.undiscovered,
+.exit-card.undiscovered {
+  border-style: dashed;
+  background-color: #222222;
+  opacity: 0.8;
 }
 
 #regions-panel {

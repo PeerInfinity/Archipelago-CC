@@ -4,6 +4,7 @@ import { evaluateRule } from '../core/ruleEngine.js';
 import commonUI from './commonUI.js';
 import connection from '../../client/core/connection.js';
 import messageHandler from '../../client/core/messageHandler.js';
+import loopState from '../core/loop/loopState.js';
 
 export class LocationUI {
   constructor(gameUI) {
@@ -38,6 +39,7 @@ export class LocationUI {
       'show-reachable',
       'show-unreachable',
       'show-highlights',
+      'show-explored',
     ].forEach((id) => {
       document
         .getElementById(id)
@@ -129,12 +131,23 @@ export class LocationUI {
   }
 
   updateLocationDisplay() {
-    const showChecked = document.getElementById('show-checked').checked;
-    const showReachable = document.getElementById('show-reachable').checked;
-    const showUnreachable = document.getElementById('show-unreachable').checked;
-    const showHighlights = document.getElementById('show-highlights').checked;
-    const sorting = document.getElementById('sort-select').value;
+    const showChecked = document.getElementById('show-checked')?.checked ?? true;
+    const showReachable = document.getElementById('show-reachable')?.checked ?? true;
+    const showUnreachable = document.getElementById('show-unreachable')?.checked ?? true;
+    const showHighlights = document.getElementById('show-highlights')?.checked ?? true;
+    const showExplored = document.getElementById('show-explored')?.checked ?? true;
+    const sorting = document.getElementById('sort-select')?.value ?? 'original';
 
+    // Check if Loop Mode is active
+    const isLoopModeActive = window.loopUIInstance?.isLoopModeActive;
+
+    // Toggle visibility of the "Show Explored" checkbox based on Loop Mode
+    const showExploredCheckbox = document.getElementById('show-explored');
+    if (showExploredCheckbox) {
+      showExploredCheckbox.parentElement.style.display = isLoopModeActive ? 'inline' : 'none';
+    }
+
+    // Get locations from state manager
     const locations = stateManager.getProcessedLocations(
       sorting,
       showReachable,
@@ -144,6 +157,8 @@ export class LocationUI {
     const newlyReachable = stateManager.getNewlyReachableLocations();
 
     const locationsGrid = document.getElementById('locations-grid');
+    if (!locationsGrid) return;
+
     locationsGrid.style.gridTemplateColumns = `repeat(${this.columns}, minmax(0, 1fr))`; // Set the number of columns
 
     if (locations.length === 0) {
@@ -155,10 +170,24 @@ export class LocationUI {
       return;
     }
 
-    const filteredLocations = locations.filter((location) => {
+    // Apply filters
+    let filteredLocations = locations.filter((location) => {
       const isChecked = stateManager.isLocationChecked(location.name);
       return isChecked ? showChecked : true;
     });
+
+    // Apply Loop Mode filtering if active
+    if (isLoopModeActive) {
+      filteredLocations = filteredLocations.filter(location => {
+        // Only show locations from discovered regions
+        const isRegionDiscovered = loopState.isRegionDiscovered(location.region);
+        if (!isRegionDiscovered) return false;
+        
+        // Handle exploring filter
+        const isLocationDiscovered = loopState.isLocationDiscovered(location.name);
+        return showExplored || !isLocationDiscovered;
+      });
+    }
 
     if (sorting === 'accessibility') {
       filteredLocations.sort((a, b) => {
@@ -206,6 +235,24 @@ export class LocationUI {
           ? 'reachable'
           : 'unreachable';
 
+        // Handle Loop Mode display
+        let locationName = location.name;
+        let regionName = location.region;
+        
+        if (isLoopModeActive) {
+          const isRegionDiscovered = loopState.isRegionDiscovered(location.region);
+          const isLocationDiscovered = loopState.isLocationDiscovered(location.name);
+          
+          if (!isRegionDiscovered || !isLocationDiscovered) {
+            locationName = "???";
+            stateClass += " undiscovered";
+          }
+          
+          if (!isRegionDiscovered) {
+            regionName = "???";
+          }
+        }
+
         return `
           <div 
             class="location-card ${stateClass}"
@@ -215,13 +262,13 @@ export class LocationUI {
           >
             <div class="font-medium location-link" data-location="${
               location.name
-            }" data-region="${location.region}">${location.name}</div>
+            }" data-region="${location.region}">${locationName}</div>
             <div class="text-sm">Player ${location.player}</div>
             <div class="text-sm">
               Region: <span class="region-link" data-region="${
                 location.region
               }" style="color: ${isRegionAccessible ? 'inherit' : 'red'}">${
-          location.region
+          regionName
         }</span> (${isRegionAccessible ? 'Accessible' : 'Inaccessible'})
             </div>
             <div class="text-sm">

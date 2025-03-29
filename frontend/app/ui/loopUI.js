@@ -970,6 +970,18 @@ export class LoopUI {
         }
       }
     }
+    
+    // Toggle visibility of the "Show Explored" checkbox based on Loop Mode
+    const showExploredCheckbox = document.getElementById('show-explored');
+    if (showExploredCheckbox) {
+      showExploredCheckbox.parentElement.style.display = this.isLoopModeActive ? 'inline' : 'none';
+    }
+    
+    // Toggle visibility of the "Exit Show Explored" checkbox based on Loop Mode
+    const exitShowExploredCheckbox = document.getElementById('exit-show-explored');
+    if (exitShowExploredCheckbox) {
+      exitShowExploredCheckbox.parentElement.style.display = this.isLoopModeActive ? 'inline' : 'none';
+    }
 
     // If entering loop mode, start any queued actions
     if (
@@ -1005,6 +1017,21 @@ export class LoopUI {
 
     // Notify other UI components about loop mode change
     eventBus.publish('loopUI:modeChanged', { active: this.isLoopModeActive });
+    
+    // Update all UI components
+    if (this.gameUI) {
+      if (this.gameUI.locationUI) {
+        this.gameUI.locationUI.updateLocationDisplay();
+      }
+      
+      if (this.gameUI.exitUI) {
+        this.gameUI.exitUI.updateExitDisplay();
+      }
+      
+      if (this.gameUI.regionUI) {
+        this.gameUI.regionUI.renderAllRegions();
+      }
+    }
 
     console.log(
       `Loop mode ${this.isLoopModeActive ? 'activated' : 'deactivated'}`

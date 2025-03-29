@@ -108,6 +108,10 @@
                 Locations
               </label>
               <label>
+                <input type="radio" name="view-mode" value="exits" />
+                Exits
+              </label>
+              <label>
                 <input type="radio" name="view-mode" value="regions" />
                 Regions
               </label>
@@ -159,8 +163,34 @@
               <input type="checkbox" id="show-highlights" checked />
               Show Highlights
             </label>
+            <label style="display: none;">
+              <input type="checkbox" id="show-explored" checked />
+              Show Explored
+            </label>
             <button id="decrease-columns">-</button>
             <button id="increase-columns">+</button>
+          </div>
+          
+          <!-- Exit-specific controls -->
+          <div class="control-group exit-controls" style="display: none;">
+            <select id="exit-sort-select">
+              <option value="original">Original Order</option>
+              <option value="accessibility">Sort by Accessibility</option>
+            </select>
+            <label>
+              <input type="checkbox" id="exit-show-reachable" checked />
+              Show Reachable
+            </label>
+            <label>
+              <input type="checkbox" id="exit-show-unreachable" checked />
+              Show Unreachable
+            </label>
+            <label style="display: none;">
+              <input type="checkbox" id="exit-show-explored" checked />
+              Show Explored
+            </label>
+            <button id="exit-decrease-columns">-</button>
+            <button id="exit-increase-columns">+</button>
           </div>
 
           <!-- Region-specific controls -->
@@ -208,6 +238,9 @@
           </div>
         </div>
         <div id="locations-grid">
+          <!-- Populated by JS -->
+        </div>
+        <div id="exits-grid" style="display: none">
           <!-- Populated by JS -->
         </div>
         <div id="regions-panel" style="display: none">
