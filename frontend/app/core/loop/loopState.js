@@ -451,6 +451,12 @@ class LoopState {
       // Reduce mana based on progress
       const manaCost = (progressIncrement / 100) * actionCost;
       this.currentMana = Math.max(0, this.currentMana - manaCost);
+      
+      // Publish mana changed event immediately after update
+      eventBus.publish('loopState:manaChanged', { 
+        current: this.currentMana, 
+        max: this.maxMana 
+      });
 
       // Continuous XP gain during action
       if (this.currentAction.regionName) {

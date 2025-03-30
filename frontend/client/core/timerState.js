@@ -95,18 +95,18 @@ export class TimerState {
     }
 
     // Set up event listeners for loop mode
-    this._setupLoopModeEventListeners();
+    this._setupLoopModeEventHandlers();
 
     console.log('TimerState module initialized');
   }
 
   // Set up event listeners to handle loop mode events
-  _setupLoopModeEventListeners() {
+  _setupLoopModeEventHandlers() {
     if (this.loopModeEventHandlersAttached) return;
 
     try {
       // Listen for action queue completion
-      eventBus.subscribe('loopState:queueEmpty', () => {
+      eventBus.subscribe('loopState:queueCompleted', () => {
         this._checkLoopModeTimerRestart();
       });
 
@@ -138,15 +138,17 @@ export class TimerState {
     if (!isLoopModeActive) return;
 
     // Check conditions to restart:
-    // 1. No actions in queue or not processing
-    // 2. Mana is above zero
-    const queueEmpty = !loopState.isProcessing || loopState.actionQueue.length === 0;
-    const hasMana = loopState.currentMana > 0;
+    // 1. Queue is finished (empty or all actions completed)
+    // 2. Mana is depleted
+    const queue = loopState.actionQueue || []; // Handle potential null/undefined queue
+    const queueFinished = queue.length === 0 || queue.every(action => action.completed === true);
+    const manaDepleted = loopState.currentMana <= 0;
 
-    if (queueEmpty && hasMana) {
-      console.log('Loop mode conditions met, restarting timer');
+    // Restart if the queue is finished OR if there's no mana left
+    if (queueFinished || manaDepleted) { 
+      console.log(`Loop mode conditions met (Queue Finished: ${queueFinished}, Mana Depleted: ${manaDepleted}), restarting timer`);
       this.timerPausedByLoopMode = false;
-      this.begin();
+      this.begin(); // Restart the timer's countdown
     }
   }
 
@@ -364,18 +366,21 @@ export class TimerState {
           if (isRegionDiscovered && isRegionReachable) {
             region.exits.forEach(exit => {
               // Check if exit is discovered
-              let isExitDiscovered = false;
-              if (loopState.discoveredExits && loopState.discoveredExits.has(regionName)) {
-                isExitDiscovered = loopState.discoveredExits.get(regionName).has(exit.name);
-              }
+              const isExitDiscovered = loopState.isExitDiscovered(regionName, exit.name);
               
-              // Add to options if exit is undiscovered
-              if (!isExitDiscovered) {
+              // Check if the target region is discovered (only if a target region exists)
+              // If no connected_region, it cannot be undiscovered, so treat as discovered for this check.
+              const isTargetRegionDiscovered = exit.connected_region ? loopState.isRegionDiscovered(exit.connected_region) : true;
+              
+              // Add to options if:
+              // - Exit is undiscovered OR
+              // - Exit has a connected region AND that region is undiscovered
+              if (!isExitDiscovered || (exit.connected_region && !isTargetRegionDiscovered)) {
                 // Make sure the exit has the region property set correctly
                 // The exitUI.handleExitClick method requires exit.region to be set
                 const exitWithRegion = {
                   ...exit,
-                  region: regionName
+                  region: regionName // Ensure the source region is attached
                 };
                 
                 allOptions.push({

@@ -803,23 +803,29 @@ export class LoopUI {
    */
   toggleLoopMode() {
     this.isLoopModeActive = !this.isLoopModeActive;
+    
+    // --- Update title and header text based on loop mode state ---
+    const headerTextElement = document.getElementById('header-text');
+    if (this.isLoopModeActive) {
+      const spacedLoopsTitle = "ArchipIDLE Loops".split('').join(' ');
+      const loopsTitleHtml = "A r c h i p I D L E &nbsp; L o o p s"; // Use &nbsp; for the main space
+      document.title = "ArchipIDLE Loops";
+      if (headerTextElement) {
+        headerTextElement.innerHTML = loopsTitleHtml; // Use innerHTML for &nbsp;
+      }
+    } else {
+      const spacedJsonTitle = "ArchipIDLE JSON".split('').join(' ');
+      const jsonTitleHtml = "A r c h i p I D L E &nbsp; J S O N"; // Use &nbsp; for the main space
+      document.title = "ArchipIDLE JSON";
+      if (headerTextElement) {
+        headerTextElement.innerHTML = jsonTitleHtml; // Use innerHTML for &nbsp;
+      }
+    }
+    // --- End Update ---
 
-    // Find all toggle-loop-mode buttons and update them
-    const allToggleButtons = document.querySelectorAll(
-      'button#toggle-loop-mode'
-    );
-    console.log(`Found ${allToggleButtons.length} toggle loop mode buttons`);
-
-    // Update all toggle buttons
-    allToggleButtons.forEach((btn) => {
-      btn.textContent = this.isLoopModeActive
-        ? 'Exit Loop Mode'
-        : 'Enter Loop Mode';
-    });
-
-    // Fallback to find by ID if querySelector didn't work
+    // Update button appearance and other UI elements
     const toggleBtn = document.getElementById('toggle-loop-mode');
-    if (toggleBtn && !allToggleButtons.length) {
+    if (toggleBtn) {
       toggleBtn.textContent = this.isLoopModeActive
         ? 'Exit Loop Mode'
         : 'Enter Loop Mode';

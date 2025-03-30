@@ -102,6 +102,9 @@ export class ProgressUI {
     }
 
     console.log('ProgressUI module initialized');
+    
+    // Explicitly update progress after initialization is complete
+    this.updateProgress(); 
   }
 
   static _setupEventListeners() {
@@ -197,7 +200,10 @@ export class ProgressUI {
 
           // Track reachable/unreachable locations
           if (stateManager.isLocationAccessible(loc)) {
-            reachableCount++;
+            // Only count as reachable if it's also not checked
+            if (!stateManager.isLocationChecked(loc.name)) {
+              reachableCount++;
+            }
           } else {
             unreachableCount++;
           }

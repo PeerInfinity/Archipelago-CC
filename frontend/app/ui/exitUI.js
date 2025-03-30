@@ -23,21 +23,47 @@ export class ExitUI {
     
     if (!isLoopModeActive) return;
     
-    // Check if the last action in the queue is already handling this exit's region
+    // Determine if the exit is discovered
+    const isExitDiscovered = loopState.isExitDiscovered(exit.region, exit.name);
+    
+    // --- New Logic for Initial Checks ---
     if (loopState.actionQueue.length > 0) {
       const lastAction = loopState.actionQueue[loopState.actionQueue.length - 1];
       
-      // If the last action is an explore for this exit's region, do nothing
-      if (lastAction.type === 'explore' && lastAction.regionName === exit.region) {
-        return;
+      if (!isExitDiscovered) {
+        // If exit is undiscovered, and the last action is an explore for this exit's region, do nothing
+        if (lastAction.type === 'explore' && lastAction.regionName === exit.region) {
+          return;
+        }
+      } else {
+        // If exit is discovered, check if a move action for this specific exit already exists
+        const moveExists = loopState.actionQueue.some(action =>
+          action.type === 'moveToRegion' &&
+          action.regionName === exit.region && // The region *containing* the exit
+          action.exitName === exit.name &&      // The specific exit name
+          action.destinationRegion === exit.connected_region // The destination matches
+        );
+        if (moveExists) {
+          return; // Do nothing if the move action is already queued
+        }
+        
+        // Also check if the *last* action is a move corresponding to clicking this exit
+        // This prevents queuing the same move twice if the user clicks rapidly
+        if (lastAction.type === 'moveToRegion' && 
+            lastAction.regionName === exit.region && 
+            lastAction.exitName === exit.name) {
+             return;
+        }
       }
     }
+    // --- End New Logic for Initial Checks ---
     
     // Import the path analyzer logic
     import('../logic/pathAnalyzerLogic.js').then(module => {
       const pathAnalyzerLogic = new module.PathAnalyzerLogic();
       
       // Find path from Menu to the region containing this exit
+      // Include only discovered regions in the path search
       const path = pathAnalyzerLogic.findPathInLoopMode(exit.region);
       
       if (path) {
@@ -51,63 +77,78 @@ export class ExitUI {
         loopState.currentAction = null;
         loopState.currentActionIndex = 0;
         
-        // Queue move actions for each region transition
+        // Queue move actions for each region transition along the path
         for (let i = 0; i < path.length - 1; i++) {
           const fromRegion = path[i];
           const toRegion = path[i + 1];
           
-          // Find the exit that connects these regions
+          // Find the exit that connects these regions (using discovered exits)
           const regionData = stateManager.regions[fromRegion];
-          const exitToUse = regionData?.exits?.find(e => e.connected_region === toRegion);
+          // Important: Find the exit within the *discovered* exits for the 'fromRegion'
+          const exitToUse = regionData?.exits?.find(e => 
+              e.connected_region === toRegion && loopState.isExitDiscovered(fromRegion, e.name)
+          );
           
           if (exitToUse) {
-            // Create and queue a move action
+            // Create and queue a move action (moveToRegion)
             const moveAction = {
               id: `action_${Date.now()}_${Math.floor(Math.random() * 10000) + i}`,
               type: 'moveToRegion',
-              regionName: fromRegion,
-              exitName: exitToUse.name,
-              destinationRegion: toRegion,
+              regionName: fromRegion, // Where the move action starts
+              exitName: exitToUse.name, // The exit being used
+              destinationRegion: toRegion, // Where the move action ends
               progress: 0,
               completed: false
             };
             
             loopState.actionQueue.push(moveAction);
-            
-            // Make sure the loopUI knows these regions are in the queue
-            if (window.loopUIInstance) {
-              window.loopUIInstance.regionsInQueue.add(fromRegion);
-              window.loopUIInstance.regionsInQueue.add(toRegion);
-            }
+          } else {
+             console.warn(`Could not find a discovered exit from ${fromRegion} to ${toRegion} while building path.`);
+             // Optional: Handle this case more robustly, maybe stop queueing?
           }
         }
         
-        // Queue an explore action in the exit's region
-        const exploreAction = {
-          id: `action_${Date.now()}_${Math.floor(Math.random() * 10000) + path.length}`,
-          type: 'explore',
-          regionName: exit.region,
-          progress: 0,
-          completed: false
-        };
-        
-        loopState.actionQueue.push(exploreAction);
-        
-        // Set the region's "repeat explore action" checkbox to checked
-        if (window.loopUIInstance && window.loopUIInstance.repeatExploreStates) {
-          window.loopUIInstance.repeatExploreStates.set(exit.region, true);
+        // --- New Logic for Final Action ---
+        if (!isExitDiscovered) {
+          // If the exit is undiscovered, queue an explore action
+          const exploreAction = {
+            id: `action_${Date.now()}_${Math.floor(Math.random() * 10000) + path.length}`,
+            type: 'explore',
+            regionName: exit.region, // Explore the region the exit is *in*
+            progress: 0,
+            completed: false
+          };
+          loopState.actionQueue.push(exploreAction);
+          
+          // Set the region's "repeat explore action" checkbox to checked
+          if (window.loopUIInstance && window.loopUIInstance.repeatExploreStates) {
+            window.loopUIInstance.repeatExploreStates.set(exit.region, true);
+          }
+        } else {
+          // If the exit is discovered, queue a move action *through* this specific exit
+          const moveThroughExitAction = {
+              id: `action_${Date.now()}_${Math.floor(Math.random() * 10000) + path.length}`,
+              type: 'moveToRegion', // Still a 'moveToRegion' type
+              regionName: exit.region, // Start in the region containing the clicked exit
+              exitName: exit.name, // Use the specific exit that was clicked
+              destinationRegion: exit.connected_region, // Go to the connected region
+              progress: 0,
+              completed: false
+          };
+          loopState.actionQueue.push(moveThroughExitAction);
         }
+        // --- End New Logic for Final Action ---
         
         // Begin processing the action queue
         loopState.setPaused(false);
-        loopState.startProcessing();
+        loopState.startProcessing(); // This will pick up the new queue
         
         // Notify UI components about queue changes
         eventBus.publish('loopState:queueUpdated', { queue: loopState.actionQueue });
         
         // Update the loop UI
         if (window.loopUIInstance) {
-          window.loopUIInstance.renderLoopPanel();
+          window.loopUIInstance.renderLoopPanel(); // Re-render to show the new queue and highlighted regions
         }
         
       } else {
