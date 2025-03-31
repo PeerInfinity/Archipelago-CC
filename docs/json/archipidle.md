@@ -1,169 +1,125 @@
-# Archipidle-json User Guide
+# ArchipIDLE-JSON User Guide
 
-Archipidle-json extends the Archipidle client with location tracking based on game rules. It helps you track your progress and find available locations in your Archipelago game.
+ArchipIDLE-JSON extends the ArchipIDLE web client with features based on your game's exported rules (`rules.json`). It helps you track your progress, understand location accessibility, and explore the game world logically. It also includes an optional incremental game mode called ArchipIDLE Loops.
 
 ## Getting Started
 
 ### Quick Start
 
-1. Visit [Archipidle-json](https://peerinfinity.github.io/archipelago/)
-2. Try out the interface with the default ruleset
-3. When ready to play, load your game's rules.json file
+1.  Visit [ArchipIDLE-JSON](https://peerinfinity.github.io/Archipelago/).
+2.  The client loads with a default ALttP ruleset. Explore the interface in **Locations** or **Regions** view (right panel).
+3.  Click items in the **Inventory** panel (left) to see how accessibility changes.
+4.  When ready to play your own game:
+    *   Generate your game via Archipelago to get an `.archipelago` file and a `rules.json` file.
+    *   In ArchipIDLE, click **"Load JSON"** (top right) and select your `rules.json`.
+    *   Connect to your server using the **Server Address** input and the console (middle panel).
 
-### Loading Your Game
+### Loading Your Game Data
 
-When you generate a game through Archipelago, two files are created:
-
-- Your .archipelago file (game data)
-- A rules.json file (location access rules)
-
-To use Archipidle-json:
-
-1. Click "Load JSON" in the top right
-2. Select your rules.json file
-3. The interface will update with your game's locations
+-   **`rules.json`:** Contains all location/exit access rules, region connections, and item data. Loading this enables intelligent tracking features.
+-   **`.archipelago` file:** Contains your specific world's data (item placements, etc.). While ArchipIDLE doesn't load this directly, connecting to the server syncs this information.
 
 ## Interface Overview
 
 ### Layout
 
-- Left: Inventory management
-- Center: Archipidle console
-- Right: Location/region tracking
+-   **Left Panel:** Inventory Management.
+-   **Center Panel:** Standard Archipelago Console (connect, chat, commands). Progress bar for location check timer.
+-   **Right Panel:** Main interaction area with multiple views (Locations, Exits, Regions, Loops, Files).
 
-### Inventory Panel
+### Inventory Panel (Left)
 
-- Items are organized by category
-- Click items to add them to your inventory
-- SHIFT+click to remove items
-- Multiple clicks track item count
-- Items automatically update available locations
+-   Items are grouped by category (can be toggled to a flat list).
+-   **Click:** Add an item to your inventory. If connected to a server, this sends a `!getitem` command.
+-   **SHIFT+Click:** Remove an item from your inventory (local only).
+-   Item counts are displayed on buttons.
+-   Adding/removing items automatically updates the accessibility status in the right panel views.
+-   Controls: Hide unowned items, hide categories, sort alphabetically.
 
-### View Modes
+### Console & Progress (Center)
 
-The interface offers three view modes:
+-   Standard Archipelago text console for server interaction.
+-   Input commands (e.g., `/connect server:port`, `/help`, game-specific commands).
+-   Progress bar shows the countdown timer for automatic location checks when the timer is running (`Begin!`/`Stop` button).
+-   The `Checks Sent` text displays statistics about locations (Checked/Total, Reachable, Unreachable, Events Checked/Total).
+-   `Begin!` button starts the timer to automatically check reachable locations at random intervals (configurable via `/set_delay` command).
+-   `Quick Check` button immediately checks one reachable, unchecked location.
+
+### Main Views (Right Panel Tabs)
 
 #### Locations View
 
-- Grid of all game locations
-- Color-coded by accessibility status
-- Clickable to check and collect items
-- Sortable and filterable
+-   Displays a grid of all game locations.
+-   Each location card shows:
+    *   Name (Clickable to show details modal)
+    *   Player #
+    *   Region (Clickable link to navigate to the Region View)
+    *   Accessibility Status (Color-coded: Green=Reachable, Red=Unreachable, Gray=Checked, Yellow/Orange=Partially Blocked)
+    *   Access Rule (visual logic tree).
+-   **Controls:** Sort (Original, Accessibility), Filter (Show Checked/Reachable/Unreachable/Explored [Loop Mode Only]), Adjust Columns.
+
+#### Exits View
+
+-   Similar grid view, but showing region exits/transitions.
+-   Each exit card shows:
+    *   Source Region → Exit Name → Destination Region
+    *   Player #
+    *   Accessibility Status (Traversable/Not Traversable)
+    *   Access Rule (visual logic tree).
+-   **Controls:** Similar sorting and filtering as Locations View.
 
 #### Regions View
 
-- List of game regions with exits and entrances
-- Path discovery to visualize routes to regions
-- Exit rule visualization to identify blocking conditions
-- Interactive navigation between regions
+-   Displays regions as collapsible blocks.
+-   Each block shows:
+    *   Region Name & Properties (Light/Dark World).
+    *   **Exits:** Lists exits with links to connected regions and Move buttons (inactive in this mode). Includes access rules.
+    *   **Locations:** Lists locations within the region with check buttons (inactive in this mode). Includes access rules.
+    *   **Analyze Paths:** Button to perform path analysis. Shows potential paths from start regions, highlighting blocking conditions and required items.
+-   **Controls:** Show All Regions (ignores navigation chain), Expand/Collapse All.
 
-#### Test Cases View
+#### Loops View
 
-- Available test cases for validation
-- Run individual or all tests
-- See test results and summaries
+-   Activates the **ArchipIDLE Loops** incremental game mode.
+-   See the [Loop Mode Guide](/docs/json/archipidle-loops.md) for details.
 
-### Location Panel Features
+#### Files View
 
-Controls:
+-   Load predefined **Test Cases** for verifying rule logic.
+-   Load game **Presets** (e.g., vanilla item placements) for offline exploration or testing.
 
-- Sort: Change location display order
-- Show Checked: Toggle completed locations
-- Show Reachable: Toggle available locations
-- Show Unreachable: Toggle locked locations
-- Show Highlights: Toggle highlighting newly available locations
-- Column adjustments: Change display grid
+## Key Features (Standard Mode)
 
-Location cards show:
-
-- Location name (clickable for details)
-- Region name (clickable for navigation)
-- Status (Available/Locked/Checked)
-- Access rules (expandable)
-
-### Region Panel Features
-
-Controls:
-
-- Show All Regions: Toggle between visited chain and all regions
-- Expand/Collapse All: Toggle region block expansion
-
-Region blocks show:
-
-- Region name and properties
-- Exits with accessibility status
-- Locations within the region
-- Path discovery via "Show Paths" button
-- Exit rule visualization via "Show Exit Rules"
-- Compiled list of blocking conditions
-
-### Console Integration
-
-The classic Archipidle console remains available for:
-
-- Server connection
-- Command input
-- Game progress tracking
-
-## Features
-
-### Automatic Event Collection
-
-When a location containing an event item becomes accessible, the system automatically collects it, which may in turn make other locations accessible.
-
-### Interactive Navigation
-
-Click on region or location names throughout the interface to navigate directly to them, allowing easy exploration of the game world.
-
-### Path Discovery
-
-The "Show Paths" button in region view displays possible paths from starting regions to the target region, with visualization of blocking conditions.
-
-### Progressive Item Handling
-
-The system properly tracks progressive items like swords and gloves, understanding their relationships and requirements.
-
-### Accessibility Analysis
-
-The "Compile List" feature provides a consolidated view of all items and conditions preventing access to a region.
+-   **Automatic Event Collection:** When a location containing an Event item (like Pendants, Crystals) becomes accessible based on rules and inventory, the client automatically adds the event item to your state. This can unlock further locations.
+-   **Accessibility Analysis:** The logic trees displayed for locations and exits show exactly which conditions (items, helpers, state flags) are passing or failing based on your current inventory.
+-   **Path Discovery:** In the Regions view, the "Analyze Paths" button performs a search from the starting region(s) to the target region. It displays possible paths and analyzes the rules for all exits along those paths, compiling a list of required items or conditions needed to make the path traversable.
+-   **Progressive Items:** Tracks items like Swords, Gloves, Bows correctly, understanding that `Progressive Sword` grants `Fighter Sword`, then `Master Sword`, etc.
+-   **Interactive Navigation:** Click on region names or location names throughout the UI to jump directly to their detailed view in the Regions or Locations tabs.
 
 ## Tips & Tricks
 
-- Use SHIFT+click to remove items from your inventory
-- Click region names to navigate directly to that region
-- Use "Show Paths" in region view to find routes to a location
-- Use "Compile List" to quickly identify required items
-- The "Test Cases" view can help verify behavior for specific locations
+-   Use Shift+Click in the inventory to decrement item counts or remove single-count items.
+-   Use the "Analyze Paths" feature in the Regions view to understand complex routing requirements.
+-   Use the `/set_delay X Y` command in the console to change the min/max delay (in seconds) for the automatic location check timer. Use `/set_delay X` for a fixed delay.
+-   Load a `rules.json` file even when playing offline to use the tracking features.
 
 ## Common Questions
 
-Q: Do I need both files (.archipelago and rules.json)?
-A: Yes, they serve different purposes. Load both to get full functionality.
+**Q: Do I need both the `.archipelago` file and `rules.json`?**
+A: Load `rules.json` into ArchipIDLE for tracking features. Connect to the server (which uses your `.archipelago` file) for multiworld play and item syncing.
 
-Q: Can I use this without connecting to a server?
-A: Yes! The location tracking works offline. Server connection adds multiplayer features.
+**Q: Can I use this without connecting to a server?**
+A: Yes! Load your `rules.json` to use the inventory tracking, location/region views, and path analysis features entirely offline. Loop Mode also works offline.
 
-Q: How does the "Show Paths" feature work?
-A: It finds routes from start regions to the target region, showing which exits are blocking progress.
+**Q: How does "Analyze Paths" work?**
+A: It uses a search algorithm (BFS/DFS) to find sequences of connected regions from your starting point(s) to the target region. It then examines the access rules for every exit along those paths to determine which items or conditions are required to make the entire path accessible.
 
-Q: What does the "Compile List" button do?
-A: It analyzes all failing exit rules and produces a consolidated list of items or conditions needed to access the region.
+**Q: What are the different colors on location/exit cards?**
+A:
+    *   **Green:** Reachable/Traversable (Region is reachable AND access rule passes).
+    *   **Red:** Unreachable/Blocked (Either region is unreachable OR access rule fails, OR both).
+    *   **Gray:** Checked (Location has been checked).
+    *   **Yellow/Orange:** Partially Blocked (e.g., Region is reachable but the location/exit rule fails, or vice-versa). Hover or click for details.
 
-## Coming Soon
-
-The following features are planned for future updates:
-
-- Integration with the Archipidle console timer
-- Server connection and multiplayer features
-- Queueing system for state updates
-- Additional helper functions
-- Shop data integration
-- Event items for bosses
-- Options to disable automatic event collection
-
-## Need Help?
-
-- Check the Archipelago Discord
-- Report issues on GitHub
-- Contribute improvements
-- Share feedback!
+**Q: What is Loop Mode?**
+A: It's an alternative, incremental game mode where you automate actions within time loops to progress through the game. See the [Loop Mode Guide](/docs/json/archipidle-loops.md).

@@ -1,133 +1,93 @@
-# Archipelago JSON Rules System
+# Archipelago JSON Rules & ArchipIDLE Client
 
-A system for exporting Archipelago's location access rules to JSON format, enabling web-based interfaces and tools.
+This project provides a system for exporting Archipelago's location access rules into a JSON format and includes an enhanced web client, ArchipIDLE, that utilizes these rules for advanced tracking and a new incremental game mode.
 
-## Components
+## Core System: JSON Rule Export
 
-### 1. JSON Rule Export
+-   Extracts game rules (location access, region connections) from Archipelago's Python codebase.
+-   Converts these rules into a standardized JSON format.
+-   Exports the complete region graph, including entrances, exits, and associated metadata.
+-   Includes game settings, item definitions, and progression data.
+-   The `rules.json` file is generated alongside the `.archipelago` file during game generation.
 
-- Extracts game rules from Archipelago's Python codebase
-- Converts rules to a standardized JSON format with region graph data
-- Preserves helper functions rather than expanding them
-- Generated alongside .archipelago files during game generation
+## Web Client: ArchipIDLE
 
-### 2. Web Interfaces
+ArchipIDLE is a web-based client for Archipelago, enhanced with features powered by the exported `rules.json` file.
 
-#### Archipidle-json
+[Try it live](https://peerinfinity.github.io/Archipelago/)
 
-A web interface extending the Archipidle client with rule-based location and region tracking:
+### Features:
 
-- Load and interact with rules from your generated game
-- Track inventory and available locations
-- View regions, paths, and blocking conditions
-- Integrates with existing Archipidle console features
+1.  **Standard Archipelago Client:** Connect to multiworld servers, send/receive items, chat, and use console commands.
+2.  **JSON Rules Integration (Default Mode):**
+    *   Load your game's `rules.json` file.
+    *   Track your inventory visually.
+    *   View locations color-coded by accessibility (reachable, unreachable, checked).
+    *   Explore regions, view exits, and analyze paths to understand requirements.
+    *   Automatically collects event items when their locations become accessible.
+    *   [User Guide](/docs/json/archipidle.md)
+3.  **ArchipIDLE Loops (Incremental Game Mode):**
+    *   A new game mode inspired by idle/incremental games like Idle Loops.
+    *   Play through your Archipelago world in automated time loops.
+    *   Manage Mana, queue actions (Explore, Check Location, Move), and gain Region XP.
+    *   Inventory and discoveries persist across loops, allowing deeper exploration over time.
+    *   Optimize your action queue to complete the game objectives efficiently.
+    *   [Loop Mode Guide](/docs/json/archipidle-loops.md)
 
-[Try it live](https://peerinfinity.github.io/Archipelago/) | [User Guide](/docs/json/archipidle.md)
+## Key Technical Features
 
-#### Rule Test Runner
+-   **Complete Region Graph Export:** Detailed information about regions, locations, exits, and their connections.
+-   **Native JavaScript Rule Engine:** Evaluates JSON rules using JavaScript implementations of Python helper functions.
+-   **Centralized State Management:** A singleton `stateManager` ensures consistent game state (inventory, flags, region accessibility) across the application.
+-   **Region Accessibility:** Uses Breadth-First Search (BFS) to determine reachable regions based on current inventory and rules.
+-   **Path Analysis:** Tools to visualize paths between regions and identify blocking items or conditions.
+-   **Comprehensive Testing:** Automated tests (using Playwright) validate the JavaScript rule engine against Python behavior.
 
-A development tool for validating rule conversion:
+## Usage Notes & Tips
 
-- Runs the same test cases in JavaScript as in Python
-- Verifies consistent behavior between backend and frontend
-- Interactive test case execution and debugging
+This document summarizes the main details that might not be obvious just from experimenting with the interface:
 
-[Developer Guide](/docs/json/test-runner.md)
-
-## Key Features
-
-- **Complete region graph export** with entrances, exits, and metadata
-- **Native JavaScript helper implementations** matching Python behavior
-- **Interactive path discovery** to visualize routes between regions
-- **Automatic event item collection** when locations become accessible
-- **Progressive item support** with proper dependencies
-- **Centralized state management** for consistent data access
-- **Comprehensive testing infrastructure** with automated validation
-
-## Architecture
-
-```
-exporter/                  # Backend rule extraction
-  analyzer.py             # Rule function analysis using AST
-  exporter.py             # Region graph and rule export
-  games/                  # Game-specific helper handling
-
-frontend/                  # Web interfaces
-  assets/                 # Shared JavaScript modules
-    ruleEngine.js         # Rule evaluation engine
-    stateManager.js       # Game state tracking
-    games/alttp/          # Game-specific implementations
-      helpers.js          # ALTTP helper functions
-      inventory.js        # Inventory management
-      state.js            # Game state handling
-    gameUI.js             # Main interface component
-    locationUI.js         # Location view component
-    regionUI.js           # Region view component
-    testCaseUI.js         # Test case interface
-  test_runner.html        # Developer testing interface
-  index.html              # Archipidle-json interface
-```
+*   **[Usage Notes & Tips](/docs/json/notes.md)** - Covers quick start for Loop Mode, automation buttons, interaction differences between modes, and other useful details.
 
 ## For Users
 
-### Getting Started
+### Getting Started (Standard Mode)
 
-1. Generate your game normally through Archipelago
-2. A rules.json file will be created alongside your .archipelago file
-3. Open Archipidle-json in your browser
-4. Click "Load JSON" and select your rules.json file
-5. Use the interface to track your inventory and available locations
+1.  Generate your Archipelago game normally. You will get a `.archipelago` file and a `rules.json` file.
+2.  Open [ArchipIDLE](https://peerinfinity.github.io/Archipelago/) in your browser.
+3.  Click "Load JSON" and select your `rules.json` file.
+4.  Connect to your multiworld server using the "Server Address" input and `/connect` command if needed.
+5.  Use the Inventory panel (left) to track collected items.
+6.  Use the Locations/Regions tabs (right) to track progress and check accessibility.
 
-### Interface Views
+See the [User Guide](/docs/json/archipidle.md) for more details.
 
-- **Locations View**: Shows all game locations with accessibility status
-- **Regions View**: Displays regions, exits, and paths with interactive navigation
-- **Test Cases View**: For developers to verify rule behavior
+### Getting Started (Loop Mode)
 
-See the [User Guide](/docs/json/archipidle.md) for detailed instructions.
+1.  Load your `rules.json` file as above or use the default preset data.
+2.  Switch to the "Loops" tab in the right panel.
+3.  Click "Enter Loop Mode".
+4.  Queue actions like "Explore Region" or "Check Location" within region blocks.
+5.  Manage your Mana and watch the automated loops progress.
+
+See the [Loop Mode Guide](/docs/json/archipidle-loops.md) for detailed instructions.
 
 ## For Developers
 
-### Rule Export System
+-   The **Rule Export System** uses Python's AST module to parse rule lambdas and helper functions, exporting them to a structured JSON format.
+-   The **Frontend Rule Engine** (`ruleEngine.js`) evaluates these rules using native JavaScript implementations of helper functions provided by game-specific modules (e.g., `frontend/app/games/alttp/helpers.js`).
+-   **State Management** (`stateManager.js`) is crucial, handling inventory, region reachability (BFS), event collection, and providing a consistent state view for rule evaluation.
+-   **Loop Mode** (`loopState.js`, `loopUI.js`) adds an incremental game layer, managing its own state (Mana, XP, Action Queue, Discovery) built upon the core `stateManager`.
+-   **Testing** (`test-runner.md`) uses Playwright to automate browser tests, comparing frontend JavaScript execution against backend Python test results.
 
-- Analyzes Python rule functions using AST
-- Preserves helper functions for JavaScript implementation
-- Exports complete region graph with entrances, exits, and metadata
-- Includes game mode, settings, and progression mapping
+See the [Developer Guide](/docs/json/development.md) and [Testing Guide](/docs/json/test-runner.md) for more implementation details.
 
-### Rule Evaluation
+## Current Status & Roadmap
 
-- JavaScript rule engine evaluates standardized rule format
-- Native implementation of helper functions
-- Breadth-first search for region traversal
-- Event collection and path finding
-
-### Testing Infrastructure
-
-- Automated test execution using Playwright
-- Comprehensive debug logging and trace capture
-- Test result analysis and failure categorization
-- Interactive test case execution from UI
-
-See the [Developer Guide](/docs/json/development.md) and [Testing Guide](/docs/json/test-runner.md) for implementation details.
-
-## Current Status
-
-As of March 2025:
-
-- Core system is functional with passing tests for Light World locations
-- Helper-based architecture implemented and working
-- Region traversal and path finding operational
-- Interactive UI with multiple view modes
-- Remaining work on additional helpers and console integration
-
-See the [Development Update](/docs/json/development-update.md) for recent progress.
-
-See the [Project Roadmap](/docs/json/project-roadmap.md) for future plans.
+See the [Project Roadmap](/docs/json/project-roadmap.md) for the latest status, known issues, and future plans.
 
 ## Credits
 
-Built on:
-
-- [Archipelago](https://github.com/ArchipelagoMW/Archipelago) - Game randomizer and multiworld system
-- [Archipidle](https://github.com/LegendaryLinux/archipidle-client) - Web client for Archipelago
+-   Based on the original [Archipelago](https://github.com/ArchipelagoMW/Archipelago) multiworld system.
+-   Web client interface derived from [Archipidle](https://github.com/LegendaryLinux/archipidle-client).
+-   Loop mode inspired by games like [Idle Loops](https://github.com/dmchurch/omsi-loops/), Increlution, and Stuck In Time.

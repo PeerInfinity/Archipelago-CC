@@ -2,241 +2,124 @@
 
 ## Vision
 
-Create a robust system for using Archipelago's location access rules in web-based applications, enabling:
+Create a robust system for using Archipelago's location access rules in web-based applications. This enables:
 
-- Accurate client-side location checking
-- Development of new web interfaces
-- Enhanced testing capabilities
-- Interactive region and path exploration
+-   Accurate client-side location checking and accessibility tracking.
+-   Development of new web interfaces and tools.
+-   Enhanced testing capabilities for Archipelago rules.
+-   Interactive exploration of region graphs and access requirements.
+-   An alternative incremental game mode ("Loop Mode") utilizing the core rule system.
 
 ## Architecture
 
+```
+exporter/                            # Backend: Python rule extraction & JSON export
+  analyzer.py                        # Python AST analysis for rule parsing
+  exporter.py                        # Handles region graph and rule export logic
+  games/                             # Game-specific logic (e.g., alttp helpers)
+
+frontend/                            # Frontend: Web client implementation
+  app/
+    core/                            # Core logic for both modes
+      stateManager.js                # Manages game state (inventory, regions, etc.)
+      stateManagerSingleton.js       # Singleton instance access
+      ruleEngine.js                  # Evaluates JSON rules
+      loop/                          # Logic specific to Loop Mode
+        loopState.js                 # Manages loop resources (Mana, XP, Queue)
+        xpFormulas.js                # XP calculation logic
+    games/alttp/                     # ALTTP-specific frontend code
+      helpers.js                     # JS implementations of Python helpers
+      inventory.js                   # ALTTP inventory logic
+      state.js                       # ALTTP state flags
+    logic/                           # UI-independent logic
+      pathAnalyzerLogic.js           # Path finding algorithms
+    ui/                              # UI components
+      gameUI.js                      # Main application UI orchestrator
+      inventoryUI.js                 # Inventory panel
+      locationUI.js                  # Locations view
+      regionUI.js                    # Regions view
+      loopUI.js                      # Loop Mode panel
+      pathAnalyzerUI.js              # Path analysis display
+      testCaseUI.js                  # Test case interface
+      presetUI.js                    # Preset loading interface
+  client/                            # Standard Archipelago client logic
+    core/                            # Connection, message handling, timing
+    ui/                              # Console, progress bar
+  index.html                         # Main HTML file
+  styles/                            # CSS stylesheets
+```
+
 ### Core Components
 
-#### 1. Rule Export System
+1.  **Rule Export System (Backend - Python)**
+    *   Parses Python rule functions (lambdas, helpers) using AST (`exporter/analyzer.py`).
+    *   Converts rules to a standardized JSON format, preserving helper function references (`exporter/exporter.py`).
+    *   Handles complex rule patterns (boolean logic, method calls, conditionals).
+    *   Exports the complete region graph (regions, locations, exits, connections), item data, game settings, etc. (`exporter/exporter.py`, `exporter/games/`).
 
-- Converts Python rule functions to standardized JSON format
-- Preserves helper function references
-- Handles complex rule patterns including boolean operations, method calls, and conditional expressions
-- Exports region graph with entrances, exits, and other metadata
+2.  **Frontend Rule Engine & State (JavaScript)**
+    *   Evaluates the standardized JSON rules (`frontend/app/core/ruleEngine.js`).
+    *   Uses native JavaScript implementations of Python helper functions (`frontend/app/games/alttp/helpers.js`).
+    *   Manages all relevant game state (inventory, flags, settings, reachability) via a central singleton (`frontend/app/core/stateManager.js`, `stateManagerSingleton.js`).
+    *   Includes game-specific state logic (`frontend/app/games/alttp/state.js`) and inventory handling (`frontend/app/games/alttp/inventory.js`).
+    *   Computes region accessibility using BFS (`stateManager.js`).
+    *   Supports rule debugging and tracing.
 
-#### 2. Frontend Implementation
+3.  **Web User Interface (Frontend - JavaScript/HTML/CSS)**
+    *   **Main UI (`gameUI.js`):** Orchestrates different views and interactions.
+    *   **Views:** Locations (`locationUI.js`), Exits (`exitUI.js` - assumed), Regions (`regionUI.js`), Loops (`loopUI.js`), Files (`testCaseUI.js`, `presetUI.js`).
+    *   **Components:** Inventory (`inventoryUI.js`), Path Analysis (`pathAnalyzerUI.js`), Common UI elements (`commonUI.js`).
+    *   Provides interactive navigation, rule visualization, path finding display, inventory management, and Loop Mode controls.
 
-- Evaluates rules using native JavaScript helper functions
-- Manages inventory and state through a centralized state manager
-- Provides rule debugging capabilities
-- Supports game-specific logic through helper implementations
-- Implements BFS for region traversal and accessibility checks
+4.  **Loop Mode System (Frontend - JavaScript)**
+    *   Manages the incremental game state: Mana, Region XP, Action Queue, Discovery (`frontend/app/core/loop/loopState.js`).
+    *   Handles action processing loop, Mana costs, XP gains (`loopState.js`, `xpFormulas.js`).
+    *   Updates the Loop UI panel (`loopUI.js`).
 
-#### 3. User Interface
+5.  **Testing Infrastructure**
+    *   Automated test execution via Playwright (`automate_frontend_tests.py`).
+    *   Compares frontend JS rule evaluation against backend Python results.
+    *   Supports interactive test case execution from the UI (`testCaseUI.js`).
+    *   Provides comprehensive debug logging and result analysis (`testLogger.js`).
 
-- Multiple view modes: locations, regions, and test cases
-- Interactive navigation between regions and locations
-- Path discovery to visualize routes to regions
-- Exit rule visualization to identify blocking conditions
-- Inventory management with progressive item support
+### Data Flow
 
-#### 4. Testing Infrastructure
+1.  **Generation:** Python backend (`exporter`) parses game rules and exports `rules.json`.
+2.  **Loading:** Frontend loads `rules.json` into `stateManager`.
+3.  **Interaction (Standard):** User interacts with Inventory UI -> `stateManager` updates -> `ruleEngine` re-evaluates accessibility -> Location/Region UIs update.
+4.  **Interaction (Loop):** User interacts with Loop UI -> `loopState` updates Action Queue -> `loopState` processes actions, consuming Mana, gaining XP/Discoveries -> `loopUI` updates. `loopState` uses `stateManager` for rule checks.
+5.  **Interaction (Server):** Client connects (`connection.js`) -> `messageHandler.js` processes server messages -> `stateManager` updates inventory/locations -> UI updates. User actions (checks, item clicks) may send commands back via `messageHandler`.
 
-- Automated test execution via Playwright
-- Comprehensive debug logging
-- Test result analysis and reporting
-- Interactive test case execution from the UI
+### Supported Rule/AST Node Types (Examples)
 
-### Rule Processing Flow
-
-1. Backend (Python)
-
-   - Analyzer parses rule functions using AST
-   - Converts to standardized JSON structure
-   - Preserves helper function references
-   - Exports complete region graph with rules
-
-2. Frontend (JavaScript)
-   - Loads exported rules
-   - Implements helper functions natively
-   - Evaluates rules using unified rule engine
-   - Maintains game state and inventory
-   - Computes region accessibility using BFS
-
-### Supported Rule Types
-
-1. Basic Rules
-
-   - `item_check`: Direct item requirements
-   - `count_check`: Item quantity requirements
-   - `helper`: Preserved helper function references
-   - `group_check`: Item group requirements
-   - `constant`: Static boolean values
-
-2. Composite Rules
-
-   - `and`: Multiple required conditions
-   - `or`: Alternative conditions
-   - `comparison`: Numeric comparisons
-   - `state_method`: State method calls
-
-3. Special Rules
-   - Conditional expressions
-   - Nested helper calls
-   - Progressive item handling
-   - State flags and methods
+-   **Leaf Nodes:** `constant`, `name` (variable access), `item_check`, `count_check`, `group_check`, `helper`, `state_method`.
+-   **Composite Nodes:** `and`, `or`, `comparison` (GtE, Lt, Eq, etc.), `attribute` (e.g., `state.item`), `subscript` (e.g., `list[0]`), `function_call` (e.g., `helper_func(arg)`).
+-   **Special Handling:** Progressive items, state flags, complex nested structures, event item collection.
 
 ## Implementation Status
 
-### Working Features
+-   Core rule export and evaluation system is functional for ALTTP.
+-   Helper function preservation and native JS implementation approach is working.
+-   Centralized `stateManager` handles inventory, state, and reachability calculations (BFS).
+-   Interactive UI with Location, Region, and File views.
+-   Path analysis logic and UI (`PathAnalyzerUI`, `PathAnalyzerLogic`) provide insights into region requirements.
+-   **Loop Mode** core mechanics (Mana, XP, Queue, Discovery, Persistence) are implemented in `loopState.js` and controllable via `loopUI.js`.
+-   Automated testing infrastructure using Playwright is in place.
 
-- Complete rule analysis and export
-- Helper function preservation and execution
-- Inventory and state management
-- Automated testing infrastructure
-- Debug logging system
-- Test result analysis
-- Region traversal with BFS
-- Path discovery and visualization
-- Interactive region/location navigation
-- Event item automatic collection
+## Development Priorities & Roadmap
 
-### Enhanced Analyzer Capabilities
+See [Project Roadmap](/docs/json/project-roadmap.md) for current priorities, known issues, and future plans. Generally includes:
 
-The analyzer now properly handles:
-
-- Complex lambda expressions
-- Nested parentheses
-- Multiline rules
-- Method chains
-- String literals and escaping
-- Conditional expressions
-- Return statements
-- Boolean operations
-
-### Debug Infrastructure
-
-The debug system provides:
-
-- Rule evaluation traces
-- Inventory state logs
-- Helper function execution logs
-- Test execution details
-- Step-by-step rule processing
-- Performance metrics
-
-### Region-Based Data Structure
-
-The system now uses a comprehensive region-based format (v3) that includes:
-
-- Complete region graph with entrances and exits
-- Dungeon and shop data
-- Game mode and settings
-- Start region information
-- Enhanced item and progression data
-
-### State Management
-
-The centralized state manager handles:
-
-- Inventory tracking with progressive items
-- Region accessibility calculation
-- Event item collection
-- Location access evaluation
-- Game mode and settings
-
-## Development Priorities
-
-### 1. Rule System Completion (High Priority)
-
-- [ ] Implement remaining helper functions (`old_man`, `basement_key_rule`, etc.)
-- [ ] Fix edge cases in helper execution
-- [ ] Enhance error handling and recovery
-- [ ] Add option to enable/disable JSON file saving
-
-### 2. Testing Infrastructure (Medium Priority)
-
-- [ ] Add performance benchmarking
-- [ ] Expand test coverage
-- [ ] Enhance failure analysis
-- [ ] Set up convenient test script loading
-
-### 3. UI Enhancements (Medium Priority)
-
-- [ ] Set up queuing system for game state updates
-- [ ] Improve path visualization and filtering
-- [ ] Add advanced inventory management options
-- [ ] Implement caching strategies
-- [ ] Add robust state management
-- [ ] Enhance accessibility
-
-### 4. Archipidle Integration (High Priority)
-
-- [ ] Properly integrate with console
-- [ ] Sync inventory state
-- [ ] Connect to server functionality
-- [ ] Handle multiplayer features
-- [ ] Set up timer for location checks
-- [ ] Support game progress tracking
-
-### 5. Additional Features (Medium Priority)
-
-- [ ] Implement event items for bosses
-- [ ] Calculate steps to escape BK mode
-- [ ] Add option to disable automatic event collection
-- [ ] Support vanilla item placement
-
-### 6. Performance Optimization (Lower Priority)
-
-- [ ] Profile rule evaluation
-- [ ] Optimize BFS implementation
-- [ ] Implement caching
-- [ ] Add lazy loading
-- [ ] Monitor memory usage
-
-### 7. Documentation & Release (Ongoing)
-
-- [ ] Complete user guides
-- [ ] Complete API documentation
-- [ ] Add debugging guides
-- [ ] Document helper implementations
-- [ ] Create example implementations
-- [ ] Document deployment process
+-   Completing implementation of remaining helper functions.
+-   Improving Loop Mode features (stats, action choices, analysis).
+-   Addressing known bugs (test case failures, UI glitches).
+-   Enhancing ArchipIDLE console integration and server communication.
+-   Adding support for other Archipelago games.
 
 ## Technical Details
 
-### JSON Export Format Version 3
-
-The rule export system now uses a comprehensive region-based format that includes:
-
-- Complete region graph with entrances and exits
-- Dungeon and shop data
-- Game mode and settings
-- Start region information
-- Enhanced item and progression data
-
-This format is fully documented in `frontend/assets/types/alttp.d.ts` and replaces the previous location-based format.
-
-### State Management Architecture
-
-The state management system follows a singleton pattern:
-
-- Central `stateManager` instance accessed by all components
-- `inventory` tracks items including progressive items
-- `state` handles game flags, mode, and settings
-- BFS implementation for region traversal
-- Automatic event item collection
-- Cached region accessibility
-
-### Helper Function System
-
-Helper functions are:
-
-- Implemented natively in JavaScript
-- Match Python behavior exactly
-- Access inventory and state via the stateManager
-- Support debug logging
-- Handle progressive items
-
-### Rule Evaluation
-
-- Recursive evaluation strategy
-- Handles all rule types
-- Supports tracing for debugging
-- Provides error handling and fallbacks
+-   **JSON Export Format (v3):** A region-centric format containing the full graph, rules, items, settings, etc. (See `frontend/app/types/alttp.d.ts` for structure).
+-   **State Management:** Singleton `stateManager` provides synchronous access to inventory, flags, settings, and cached reachability. Uses `ALTTPInventory`, `ALTTPState`, `ALTTPHelpers` for game-specific logic.
+-   **Rule Evaluation:** Recursive evaluation in `ruleEngine.js`, handling various AST node types and delegating to `stateManager` or `helpers` as needed.
+-   **Loop State:** `loopState.js` manages Mana, XP (using formulas from `xpFormulas.js`), the action queue, discovery sets, and persistence via localStorage.
+-   **UI Framework:** Vanilla JavaScript with distinct UI classes for different panels/views. Uses an `eventBus` for cross-component communication.

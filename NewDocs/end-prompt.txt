@@ -2,5 +2,10 @@ That's the end of the files you need for context.  Now here are your instruction
 
 ----
 
-For now, I just want to ask you some questions about how the code works.  Can you start by summarizing your current understanding of how the mana, action progress, and XP bars are updated?
+It has been a long time since the documentation was updated.
 
+Since then, a major new feature was added: Loop Mode.
+
+Please review the current state of the code, and the documentation.
+
+Then please write updated versions of the documentation.

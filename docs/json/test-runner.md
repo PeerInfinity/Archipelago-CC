@@ -1,5 +1,7 @@
 # Test Runner Documentation
 
+This document is likely to contain information that is out of date.
+
 The Archipelago JSON Rules system includes automated testing to verify JavaScript rule evaluation matches Python behavior. Tests run automatically using Playwright, with comprehensive debug logging and result analysis.
 
 ## Prerequisites
