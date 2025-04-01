@@ -66,6 +66,10 @@ The underlined Region and Location names are clickable links. Clicking on them w
 
 If nothing is happening in Loop Mode, that's probably because the game is paused. Press the Resume button to resume the game.
 
+## Hide Console
+
+There is a button on the top right of the Console panel to hide the Console. The button to show the Console will then appear in the top right of the Inventory panel. The Console panel is hidden by default on small screens.
+
 ## Other Tips
 
 - **Remove Inventory Item:** Hold **SHIFT** and click an item in the Inventory panel (left) to remove it or decrease its count. This only affects your local state and is mainly used for testing.
