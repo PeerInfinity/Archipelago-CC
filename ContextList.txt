@@ -4,8 +4,8 @@ ContextList.txt
 
 #README.md
 
-#docs/json/archipidle.md
-#docs/json/archipidle-loops.md
+#docs/json/json-web-client.md
+#docs/json/archipelago-loops.md
 #docs/json/development-update.md
 #docs/json/development.md
 #docs/json/project-roadmap.md

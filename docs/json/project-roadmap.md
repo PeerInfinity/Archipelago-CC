@@ -2,8 +2,7 @@
 
 _Last updated on March 30, 2025_
 
-
-## Features to add to ArchipIDLE Loops
+## Features to add to Archipelago Loops
 
 - Add a set of player stats, with their own XP levels, based on the different types of actions required to reach the locations and exits.
 
@@ -27,8 +26,7 @@ _Last updated on March 30, 2025_
 
 - Consider setting up a way to add more details to the game than what is in the json file from Archipelago.
 
-
-## Features to add to ArchipIDLE JSON
+## Features to add to the JSON Web Client
 
 - Implement asynchronous chunking so that updates to game state don't freeze the UI
 
@@ -38,31 +36,27 @@ _Last updated on March 30, 2025_
 
 - Maybe add an option to disable collecting items not through the console and timer
 
-
 ## Low Priority Features
 
 - Set up a preset file with vanilla alttp item placement
 
 - Implement exporting shop data to JSON
 
-
 ## Major Bugs
 
 - 429 of the 3398 alttp test cases are still failing
 
-- Disconnecting and reconnecting from a server gives duplicates of all the items.  The inventory should be cleared before any sync command.
+- Disconnecting and reconnecting from a server gives duplicates of all the items. The inventory should be cleared before any sync command.
 
-- Sometimes, in Region view, one of the location names will appear outside all the divs, shifting everything else up.  This seems to happen rarely and I haven’t found a pattern yet.  So far I’ve only seen it happen when clicking on a Region link.
+- Sometimes, in Region view, one of the location names will appear outside all the divs, shifting everything else up. This seems to happen rarely and I haven’t found a pattern yet. So far I’ve only seen it happen when clicking on a Region link.
 
-- Clicking too fast on the location cards can cause something to go wrong, causing the playthrough to get stuck at “Flute Spot”.  Clicking too fast on the “Quick Check” button doesn’t seem to have this same issue.
-
+- Clicking too fast on the location cards can cause something to go wrong, causing the playthrough to get stuck at “Flute Spot”. Clicking too fast on the “Quick Check” button doesn’t seem to have this same issue.
 
 ## Minor Bugs
 
 - In Items.py, I changed 'Activated Flute' to be an 'Event' item. That fixed four test cases involving 'Flute'. But somehow those tests were passing in the Python code, so I'm probably still missing something important.
 
 - The automated test setup needs updating with the recent changes
-
 
 ## Other To-Do
 
@@ -72,8 +66,7 @@ _Last updated on March 30, 2025_
 
 - There are places where an import happens somewhere other than the top of the file
 
-
-## Questions for ArchipIDLE Loops
+## Questions for Archipelago Loops
 
 - Should locations and exits be unlocked in a random order, or a deterministic order?
 
@@ -81,8 +74,7 @@ _Last updated on March 30, 2025_
 
 - Should the Loops UI be more compact?
 
-- What should the default values for minCheckDelay and maxCheckDelay be?  In ArchipIDLE, they were 30 and 60.  For testing, I prefer 5 for both.  Sometimes I use 1 for both.
-
+- What should the default values for minCheckDelay and maxCheckDelay be? Currently, they're 30 and 60. For testing, I prefer 5 for both. Sometimes I use 1 for both.
 
 ## Future Plans
 

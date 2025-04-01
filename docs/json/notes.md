@@ -1,14 +1,14 @@
-# ArchipIDLE Notes & Tips
+# Notes & Tips
 
-This document contains useful notes, tips, and clarifications for using the ArchipIDLE web client, especially regarding the interplay between different modes and less obvious features.
+This document contains useful notes, tips, and clarifications for using the JSON web client, especially regarding the interplay between different modes and less obvious features.
 
 ## Starting Loop Mode
 
-There are two ways to activate ArchipIDLE Loops:
+There are two ways to activate Archipelago Loops:
 
 1.  **Via the Interface:**
 
-    - Visit the main ArchipIDLE page: [https://peerinfinity.github.io/Archipelago/](https://peerinfinity.github.io/Archipelago/)
+    - Visit the main JSON Web CLient page: [https://peerinfinity.github.io/Archipelago/](https://peerinfinity.github.io/Archipelago/)
     - Click the **"Loops"** radio button (near the top right).
     - Click the **"Enter Loop Mode"** button that appears in the controls below the radio buttons.
 

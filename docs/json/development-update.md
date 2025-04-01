@@ -119,7 +119,7 @@ frontend/assets/locationTester.js      - Updated for new tests
    - Implement remaining helpers: `old_man`, `basement_key_rule`, etc.
    - Fix edge cases in helper behavior
 
-2. **Archipidle Integration**
+2. **JSON Web Client Integration**
 
    - Set up queueing system for state updates
    - Integrate with console
