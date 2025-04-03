@@ -1496,6 +1496,20 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     
     os.makedirs(output_dir, exist_ok=True)
 
+    # --- Define key categories (used for both combined and individual files) ---
+    # Global keys apply to the entire multiworld
+    global_keys = [
+        "schema_version", 
+        "archipelago_version", 
+        "generation_seed", "player_names", "plando_options", "world_classes"
+    ] # Note: game_name is handled specially
+    
+    # Player-specific keys contain data nested under player IDs
+    player_specific_keys = [
+        'regions', 'items', 'item_groups', 'progression_mapping', 
+        'mode', 'settings', 'start_regions', 'itempool_counts', 'game_info'
+    ]
+
     # Prepare the combined export data for all players
     try:
         export_data = prepare_export_data(multiworld)
@@ -1543,21 +1557,21 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
     ordered_cleaned_data = collections.OrderedDict()
 
-    # Add game name first, as determined earlier
-    ordered_cleaned_data['game_name'] = combined_game_name
-
     # Add keys in the desired order
     for key in desired_key_order:
-        # Skip game_name as it was added manually
         if key == 'game_name':
-            continue
-        
-        if key in cleaned_data:
-            ordered_cleaned_data[key] = cleaned_data[key]
+            # Handle game_name explicitly using the determined combined_game_name
+            ordered_cleaned_data[key] = combined_game_name
+        elif key in cleaned_data:
+            # Ensure player-specific keys retain their player-keyed structure
+            if key in player_specific_keys: 
+                ordered_cleaned_data[key] = cleaned_data[key]
+            else:
+                # Assign other global keys directly
+                ordered_cleaned_data[key] = cleaned_data[key]
         else:
-            # Handle potentially missing keys - log or provide default
-            # For now, we'll skip missing keys silently, assuming prepare/cleanup handles structure
-            # logger.warning(f"Key '{key}' not found in cleaned_data for combined export")
+            # Handle potentially missing keys (other than game_name)
+            logger.warning(f"Key '{key}' not found in cleaned_data for combined export")
             pass
 
     # Add any keys present in cleaned_data but not in desired_key_order to the end
@@ -1581,17 +1595,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
     # --- Write individual player rule files ONLY if more than one player ---
     if len(multiworld.player_ids) > 1:
-        # Define keys that are global vs player-specific
-        # Keep these lists as they define the structure of the original cleaned_data
-        global_keys = [
-            "schema_version", # "game_name" is handled separately below
-            "archipelago_version", 
-            "generation_seed", "player_names", "plando_options", "world_classes"
-        ]
-        player_specific_keys = [
-            'regions', 'items', 'item_groups', 'progression_mapping', 
-            'mode', 'settings', 'start_regions', 'itempool_counts', 'game_info'
-        ]
+        # Key definitions moved to top of function
+        # global_keys = [...]
+        # player_specific_keys = [...]
 
         for player in multiworld.player_ids:
             player_str = str(player)
@@ -1641,7 +1647,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # 4. Add player-specific keys in specified order
             for key in player_keys_in_order:
                 if key in cleaned_data and player_str in cleaned_data.get(key, {}):
-                    player_export_data[key] = cleaned_data[key][player_str]
+                    # Assign a dictionary containing the player key and their data
+                    player_export_data[key] = {player_str: cleaned_data[key][player_str]}
                 else:
                     # Log if expected player-specific data is missing
                     logger.warning(f"Missing player-specific key '{key}' for player {player_str} in cleaned_data")
@@ -1773,13 +1780,26 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         elif "folders" not in preset_index[clean_game_name] or not isinstance(preset_index[clean_game_name].get("folders"), dict):
             preset_index[clean_game_name]["folders"] = {}
         
-        # Add or update the folder entry with file list
+        # --- Prepare player game data ---
+        player_game_data = []
+        for player_id in multiworld.player_ids:
+            player_name = multiworld.player_name.get(player_id, f"Player {player_id}")
+            game_for_player = multiworld.game.get(player_id, "Unknown Game")
+            player_game_data.append({
+                "player": player_id,
+                "name": player_name,
+                "game": game_for_player
+            })
+
+        # Add or update the folder entry with the new structure
         preset_index[clean_game_name]["folders"][filename_base] = {
-            "description": f"Preset for {game_name} - {filename_base}", # Use original game name
+            # "description": f"Preset for {game_name} - {filename_base}", # REMOVED
+            "seed": multiworld.seed, # ADDED
+            "games": player_game_data, # ADDED
             "files": preset_files
         }
         
-        logger.info(f"Updated preset_files.json index for {clean_game_name}/{filename_base} with {len(preset_files)} files")
+        logger.info(f"Updated preset_files.json index for {clean_game_name}/{filename_base} with {len(preset_files)} files, seed, and game info")
         
         # Write updated index
         try:

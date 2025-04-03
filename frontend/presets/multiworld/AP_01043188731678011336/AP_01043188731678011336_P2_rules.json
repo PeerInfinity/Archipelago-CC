@@ -2,12 +2,14 @@
   "schema_version": 3,
   "game_name": "Adventure",
   "archipelago_version": "0.6.1",
-  "generation_seed": 3,
+  "generation_seed": 2,
   "player_names": {
-    "1": "Player1"
+    "1": "Player1",
+    "2": "Player2"
   },
   "world_classes": {
-    "1": "AdventureWorld"
+    "1": "ALTTPWorld",
+    "2": "AdventureWorld"
   },
   "plando_options": [
     "connections",
@@ -15,11 +17,11 @@
     "bosses"
   ],
   "regions": {
-    "1": {
+    "2": {
       "Menu": {
         "name": "Menu",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [],
@@ -44,7 +46,7 @@
       "Overworld": {
         "name": "Overworld",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -185,7 +187,7 @@
             "locked": false,
             "item": {
               "name": "Freeincarnate",
-              "player": 1,
+              "player": 2,
               "advancement": false,
               "priority": null,
               "type": "None"
@@ -215,9 +217,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bridge",
+              "name": "Arrows (10)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -246,9 +248,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Yellow Key",
-              "player": 1,
-              "advancement": true,
+              "name": "Freeincarnate",
+              "player": 2,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -277,7 +279,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -308,7 +310,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -339,9 +341,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Black Key",
+              "name": "Rupees (300)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -370,9 +372,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Lamp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -401,8 +403,8 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
-              "player": 1,
+              "name": "Slow Grundle",
+              "player": 2,
               "advancement": false,
               "priority": null,
               "type": "None"
@@ -432,9 +434,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "White Key",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -463,16 +465,16 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Magic Powder",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
           },
           {
-            "name": "Slay Rhindle",
-            "id": 118000208,
+            "name": "Slay Yorgle",
+            "id": 118000209,
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -497,7 +499,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Slow Rhindle",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -514,7 +516,7 @@
       "YellowCastle": {
         "name": "YellowCastle",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -570,7 +572,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Slow Yorgle",
+              "name": "Sanctuary Heart Container",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -608,7 +610,7 @@
             "locked": true,
             "item": {
               "name": "Victory",
-              "player": 1,
+              "player": 2,
               "advancement": true,
               "priority": null,
               "type": "None"
@@ -624,7 +626,7 @@
       "WhiteCastle": {
         "name": "WhiteCastle",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -719,9 +721,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Progressive Shield",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -741,11 +743,11 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
-              "type": "None"
+              "type": "Sword"
             }
           }
         ],
@@ -758,7 +760,7 @@
       "WhiteCastlePreVaultPeek": {
         "name": "WhiteCastlePreVaultPeek",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -814,7 +816,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Boss Heart Container",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -831,7 +833,7 @@
       "WhiteCastleVault": {
         "name": "WhiteCastleVault",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -878,16 +880,16 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
-              "player": 1,
+              "name": "Slow Yorgle",
+              "player": 2,
               "advancement": false,
               "priority": null,
               "type": "None"
             }
           },
           {
-            "name": "Slay Yorgle",
-            "id": 118000209,
+            "name": "Slay Rhindle",
+            "id": 118000208,
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -903,7 +905,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Left Difficulty Switch",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -920,7 +922,7 @@
       "BlackCastle": {
         "name": "BlackCastle",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -991,7 +993,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Arrows (10)",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1013,9 +1015,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Right Difficulty Switch",
+              "name": "Progressive Mail",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -1035,9 +1037,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Sword",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -1060,9 +1062,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Chalice",
+              "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -1077,7 +1079,7 @@
       "BlackCastleVault": {
         "name": "BlackCastleVault",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -1151,7 +1153,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1168,7 +1170,7 @@
       "CreditsRoom": {
         "name": "CreditsRoom",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -1239,9 +1241,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Magnet",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -1256,7 +1258,7 @@
       "CreditsRoomFarSide": {
         "name": "CreditsRoomFarSide",
         "type": "Region",
-        "player": 1,
+        "player": 2,
         "is_light_world": false,
         "is_dark_world": false,
         "entrances": [
@@ -1312,7 +1314,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Slow Grundle",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1329,7 +1331,7 @@
     }
   },
   "start_regions": {
-    "1": {
+    "2": {
       "default": [
         "Menu"
       ],
@@ -1337,14 +1339,14 @@
     }
   },
   "items": {
-    "1": {
+    "2": {
       "Yellow Key": {
         "name": "Yellow Key",
         "id": 118000011,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1358,7 +1360,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1372,7 +1374,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1386,7 +1388,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1400,7 +1402,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1414,7 +1416,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1428,7 +1430,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1456,7 +1458,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1551,43 +1553,42 @@
     }
   },
   "item_groups": {
-    "1": [
+    "2": [
       "Everything"
     ]
   },
   "itempool_counts": {
-    "1": {
-      "Black Key": 2,
-      "Bridge": 2,
-      "Chalice": 2,
-      "Freeincarnate": 24,
-      "Left Difficulty Switch": 2,
-      "Magnet": 2,
-      "Right Difficulty Switch": 2,
+    "2": {
+      "Black Key": 1,
+      "Bridge": 1,
+      "Chalice": 1,
+      "Freeincarnate": 14,
+      "Left Difficulty Switch": 1,
+      "Magnet": 1,
+      "Right Difficulty Switch": 1,
       "Slow Grundle": 2,
-      "Slow Rhindle": 2,
+      "Slow Rhindle": 1,
       "Slow Yorgle": 2,
-      "Sword": 2,
+      "Sword": 1,
       "Victory": 1,
-      "White Key": 2,
-      "Yellow Key": 2
+      "White Key": 1,
+      "Yellow Key": 1
     }
   },
   "progression_mapping": {
-    "1": {}
+    "2": {}
   },
   "mode": {
-    "1": "ERROR: Game mode not found for player 1"
+    "2": "ERROR: Game mode not found for player 2"
   },
   "settings": {
-    "1": {
+    "2": {
       "game": "Adventure",
-      "accessibility": "items",
-      "mode": "ERROR: Could not read game mode for player 1"
+      "mode": "ERROR: Could not read game mode for player 2"
     }
   },
   "game_info": {
-    "1": {
+    "2": {
       "name": "Adventure",
       "rule_format": {
         "version": "1.0",

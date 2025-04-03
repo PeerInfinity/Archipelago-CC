@@ -1,6 +1,6 @@
 {
-  "game_name": "A Short Hike",
   "schema_version": 3,
+  "game_name": "A Short Hike",
   "archipelago_version": "0.6.1",
   "generation_seed": 2,
   "player_names": {

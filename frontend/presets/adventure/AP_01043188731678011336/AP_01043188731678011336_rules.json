@@ -1,6 +1,6 @@
 {
-  "game_name": "Adventure",
   "schema_version": 3,
+  "game_name": "Adventure",
   "archipelago_version": "0.6.1",
   "generation_seed": 2,
   "player_names": {

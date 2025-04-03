@@ -1,6 +1,6 @@
 {
-  "game_name": "A Hat in Time",
   "schema_version": 3,
+  "game_name": "A Hat in Time",
   "archipelago_version": "0.6.1",
   "generation_seed": 2,
   "player_names": {

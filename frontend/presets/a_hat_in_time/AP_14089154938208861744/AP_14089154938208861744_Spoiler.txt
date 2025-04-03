@@ -394,15 +394,15 @@ Playthrough:
 }
 4: {
   Act Completion (The Big Parade): Yarn
+  Act Completion (The Lava Cake): Yarn
   Act Completion (The Subcon Well): Time Piece
-  Act Completion (Time Rift - Village): Yarn
   Alpine Skyline - Mystifying Time Mesa: Zipline: Time Piece
   Alpine Skyline - The Birdhouse: Brewing Crate House: Time Piece
   Alpine Skyline - The Lava Cake: Dweller Pillars: Snatcher's Contract - Toilet of Doom
   Alpine Skyline - The Lava Cake: Outer Island Chest: Yarn
   Alpine Skyline - The Purrloined Village: Chest Reward: Time Piece
-  Alpine Skyline - The Windmill: Inside Pon Cluster: Yarn
   Sleepy Subcon - Page: Behind 3rd Rift Gate: Time Piece
+  Sleepy Subcon - Page: Behind Entrance Area: Yarn
   Sleepy Subcon - Page: Rotating Platform: Time Piece
   Sleepy Subcon - Page: Secret Library: Time Piece
   Subcon Well - Mushroom: Time Piece
@@ -454,15 +454,24 @@ Act Completion (The Illness has Spread)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread
+Act Completion (The Lava Cake)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Lava Cake
+   =>   The Lava Cake
 Act Completion (The Subcon Well)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
@@ -488,12 +497,6 @@ Act Completion (Time Rift - The Moon)
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
    =>   The Golden Vault -> Time Rift - Sewers Portal - Entrance 7
    =>   Time Rift - The Moon
-Act Completion (Time Rift - Village)
-        Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Alpine Skyline
-   =>   Alpine Skyline -> Alpine Skyline - Free Roam
-   =>   Murder on the Owl Express -> Time Rift - The Owl Express Portal - Entrance 1
-   =>   Time Rift - Village
 Act Completion (Toilet of Doom)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
@@ -523,8 +526,8 @@ Alpine Skyline - Ember Summit
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Goat Village: Hidden Branch
@@ -533,24 +536,24 @@ Alpine Skyline - Goat Village: Hidden Branch
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Mystifying Time Mesa: Zipline
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area
 Alpine Skyline - The Birdhouse: Brewing Crate House
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -558,8 +561,8 @@ Alpine Skyline - The Lava Cake: Dweller Pillars
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Lava Cake
    =>   The Lava Cake
@@ -567,8 +570,8 @@ Alpine Skyline - The Lava Cake: Outer Island Chest
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Lava Cake
    =>   The Lava Cake
@@ -576,28 +579,19 @@ Alpine Skyline - The Purrloined Village: Chest Reward
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area
 Alpine Skyline - The Twilight Bell: Wide Purple Platform
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Twilight Bell
    =>   The Twilight Bell
-Alpine Skyline - The Windmill: Inside Pon Cluster
-        Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
-   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
-   =>   Alpine Skyline Area -> -> The Windmill
-   =>   The Windmill
 Badge Seller - Item 3
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
@@ -798,24 +792,31 @@ Picture Perfect - Behind Badge Seller
    =>   Picture Perfect
 Sleepy Subcon - Page: Behind 3rd Rift Gate
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Time Rift - Sleepy Subcon Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
+   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Sleepy Subcon - Page: Behind Entrance Area
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
+   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
    =>   Time Rift - Sleepy Subcon
 Sleepy Subcon - Page: Rotating Platform
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Time Rift - Sleepy Subcon Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
+   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
    =>   Time Rift - Sleepy Subcon
 Sleepy Subcon - Page: Secret Library
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Time Rift - Sleepy Subcon Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
+   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
    =>   Time Rift - Sleepy Subcon
 Snatcher's Contract - Queen Vanessa's Manor
         Menu -> Save File -> Spaceship
@@ -939,8 +940,8 @@ Subcon Well - Mushroom
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
    =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well

@@ -1,6 +1,6 @@
 {
-  "game_name": "A Link to the Past",
   "schema_version": 3,
+  "game_name": "A Link to the Past",
   "archipelago_version": "0.6.1",
   "generation_seed": 2,
   "player_names": {

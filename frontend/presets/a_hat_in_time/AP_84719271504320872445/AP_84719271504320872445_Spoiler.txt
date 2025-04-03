@@ -362,7 +362,6 @@ Playthrough:
   Dead Bird Studio Basement - Above Conductor Sign: Yarn
   Dead Bird Studio Basement - Disco Room: Snatcher's Contract - Toilet of Doom
   Dead Bird Studio Basement - Logo Wall: Time Piece
-  Mafia Town - Blue Vault Brewing Crate: Yarn
   Mafia Town - Clock Tower Chest: Yarn
   Mafia Town - Green Vault: Time Piece
   Mafia Town - Old Man (Seaside Spaghetti): Yarn
@@ -373,6 +372,7 @@ Playthrough:
   Murder on the Owl Express - Cafeteria: Yarn
   Murder on the Owl Express - Luggage Room Top: Time Piece
   Murder on the Owl Express - Raven Suite Top: Time Piece
+  Subcon Well - On Pipe: Yarn
 }
 3: {
   Act Completion (The Birdhouse): Time Piece
@@ -547,15 +547,6 @@ Mafia Town - Behind HQ Chest
    =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
    =>   Heating Up Mafia Town -> Mafia Town Entrance HUMT
    =>   Mafia Town Area (HUMT)
-Mafia Town - Blue Vault Brewing Crate
-        Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
-   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
-   =>   The Golden Vault -> Mafia Town Entrance TGV
-   =>   Mafia Town Area
 Mafia Town - Cargo Ship
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
@@ -749,6 +740,12 @@ Subcon Village - Tree Top Ice Cube
    =>   Queen Vanessa's Manor -> Subcon Forest Entrance QVM
    =>   Subcon Forest Area
 Subcon Well - Mushroom
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
+   =>   The Subcon Well
+Subcon Well - On Pipe
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
