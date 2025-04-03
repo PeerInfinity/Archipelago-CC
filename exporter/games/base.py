@@ -30,3 +30,36 @@ class BaseHelperExpander:
                 for item in items
             ]
         }
+        
+    def get_game_info(self) -> Dict[str, Any]:
+        """
+        Get information about the game's rule formats and structure.
+        This can be overridden by game-specific expanders to provide more detailed information.
+        
+        Returns:
+            A dictionary with game information for the frontend.
+        """
+        return {
+            "rule_format": {
+                "version": "1.0"
+            }
+        }
+        
+    def get_required_fields(self) -> List[str]:
+        """
+        Get list of required fields for a complete game export.
+        
+        Returns:
+            A list of field names that must be included in the export.
+        """
+        return ['region_name', 'locations', 'entrances']
+        
+    def get_all_worlds(self) -> List[Any]:
+        """
+        Get all worlds associated with this helper.
+        This is typically used to access game-specific data and logic.
+        
+        Returns:
+            A list of world objects.
+        """
+        return []

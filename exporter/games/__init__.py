@@ -4,10 +4,12 @@ from typing import Dict, Type
 from .base import BaseHelperExpander
 from .alttp import ALttPHelperExpander
 from .generic import GenericHelperExpander
+from .adventure import AdventureHelperExpander
 
 # Register game-specific helper expanders
 GAME_HELPERS: Dict[str, Type[BaseHelperExpander]] = {
     'A Link to the Past': ALttPHelperExpander,
+    'Adventure': AdventureHelperExpander,
 }
 
 def get_game_helpers(game_name: str) -> BaseHelperExpander:

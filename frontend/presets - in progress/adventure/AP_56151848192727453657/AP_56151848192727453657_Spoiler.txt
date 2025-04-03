@@ -1,0 +1,78 @@
+﻿Archipelago Version 0.6.0  -  Seed: 37934929526912588467
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Adventure
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Slay Dragon Checks:              Yes
+Death Link:                      No
+Bat Logic:                       Can Break
+Freeincarnate Maximum:           17
+Dragon Randomization:            Shuffle
+Connector Multi-Slot:            No
+Yorgle MaxSpeed:                 2
+Yorgle Min Speed:                1
+Grundle MaxSpeed:                2
+Grundle Min Speed:               1
+Rhindle MaxSpeed:                3
+Rhindle Min Speed:               2
+Left Difficulty Switch:          Hard With Unlock Item
+Right Difficulty Switch:         Hard With Unlock Item
+Start Castle:                    Yellow
+
+
+Locations:
+
+Blue Labyrinth 0: Freeincarnate
+Blue Labyrinth 1: Sword
+Catacombs: Slow Yorgle
+Adjacent to Catacombs: Black Key
+Southwest of Catacombs: Freeincarnate
+White Castle Gate: White Key
+Black Castle Gate: Freeincarnate
+Yellow Castle Gate: Magnet
+Inside Yellow Castle: Right Difficulty Switch
+Dungeon0: Chalice
+Dungeon Vault: Left Difficulty Switch
+Dungeon1: Slow Grundle
+RedMaze0: Freeincarnate
+Red Maze Vault Entrance: Freeincarnate
+Red Maze Vault: Freeincarnate
+RedMaze1: Freeincarnate
+Black Castle Foyer: Freeincarnate
+Northeast of Catacombs: Freeincarnate
+Southeast of Catacombs: Bridge
+Credits Left Side: Freeincarnate
+Credits Right Side: Yellow Key
+Chalice Home: Victory
+Slay Yorgle: Freeincarnate
+Slay Grundle: Freeincarnate
+Slay Rhindle: Slow Rhindle
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Adjacent to Catacombs: Black Key
+  Southeast of Catacombs: Bridge
+  Yellow Castle Gate: Magnet
+}
+2: {
+  Credits Right Side: Yellow Key
+  Dungeon0: Chalice
+}
+3: {
+  Chalice Home: Victory
+}

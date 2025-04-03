@@ -9,10 +9,12 @@ import os
 import asyncio
 import inspect
 import shutil
+import datetime  # Added import
 from automate_frontend_tests import run_frontend_tests
 from typing import Any, Dict, List, Set, Optional
 from collections import defaultdict
 
+import Utils  # Added import
 from .analyzer import analyze_rule
 from .games import get_game_helpers
 
@@ -220,7 +222,7 @@ def write_field_by_field(export_data, filepath):
     fields_written = []
     
     # Try each field separately
-    for field in ["regions", "items", "item_groups", "progression_mapping", "mode", "settings", "start_regions"]:
+    for field in ["regions", "items", "item_groups", "progression_mapping", "mode", "settings", "start_regions", "game_info", "itempool_counts"]:
         if field in export_data:
             try:
                 debug_mode_settings(f"Processing field: {field}")
@@ -237,7 +239,7 @@ def write_field_by_field(export_data, filepath):
                 debug_mode_settings(f"ERROR: {error_msg}")
                 
                 # For complex fields, try to process each player separately
-                if field in ["mode", "settings"] and isinstance(export_data.get(field, {}), dict):
+                if field in ["mode", "settings", "game_info"] and isinstance(export_data.get(field, {}), dict):
                     debug_mode_settings(f"Attempting to process {field} player by player")
                     # Initialize with empty dict
                     serializable_data[field] = {}
@@ -297,7 +299,15 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         debug_mode_settings("WARNING: multiworld has no 'mode' attribute")
     
     export_data = {
-        'version': 3,
+        "version": 3,  # Schema version for the export format
+        "game_name": multiworld.game[1],  # Game name for player 1
+        "archipelago_version": Utils.__version__,
+        "generation_seed": multiworld.seed,
+        #"export_timestamp": datetime.datetime.now().isoformat(),
+        "player_names": multiworld.player_name, # Player ID -> Name mapping
+        "plando_options": [option.name for option in multiworld.plando_options], # Active plando options
+        "world_classes": {player: multiworld.worlds[player].__class__.__name__ 
+                           for player in multiworld.player_ids}, # Player ID -> World Class Name mapping
         'regions': {},  # Full region graph
         'items': {},    # Item data by player
         'item_groups': {},  # Item groups by player
@@ -306,6 +316,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'settings': {}, # Game settings by player
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # NEW: Complete itempool counts by player
+        'game_info': {},  # NEW: Game-specific information for frontend
     }
 
     for player in multiworld.player_ids:
@@ -316,6 +327,45 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         export_data['items'][str(player)] = process_items(multiworld, player)
         export_data['item_groups'][str(player)] = process_item_groups(multiworld, player)
         export_data['progression_mapping'][str(player)] = process_progression_mapping(multiworld, player)
+
+        # NEW: Get game-specific information if available
+        world = multiworld.worlds[player]
+        
+        # First try to get game info from the world object
+        if hasattr(world, 'get_game_info') and callable(getattr(world, 'get_game_info')):
+            try:
+                export_data['game_info'][str(player)] = world.get_game_info()
+                debug_mode_settings(f"Added game_info from world for player {player}", export_data['game_info'][str(player)])
+            except Exception as e:
+                error_msg = f"Error getting game_info from world for player {player}: {str(e)}"
+                logger.error(error_msg)
+                debug_mode_settings(f"ERROR: {error_msg}")
+        else:
+            # Try to get game info from the helper expander
+            try:
+                helper = get_game_helpers(multiworld.game[player])
+                if hasattr(helper, 'get_game_info') and callable(getattr(helper, 'get_game_info')):
+                    export_data['game_info'][str(player)] = helper.get_game_info()
+                    debug_mode_settings(f"Added game_info from helper for player {player}", export_data['game_info'][str(player)])
+                else:
+                    # Default game info structure if not provided by game or helper
+                    export_data['game_info'][str(player)] = {
+                        "name": multiworld.game[player],
+                        "rule_format": {
+                            "version": "1.0"
+                        }
+                    }
+            except Exception as e:
+                error_msg = f"Error getting game helper for player {player}: {str(e)}"
+                logger.error(error_msg)
+                debug_mode_settings(f"ERROR: {error_msg}")
+                # Fallback to default
+                export_data['game_info'][str(player)] = {
+                    "name": multiworld.game[player],
+                    "rule_format": {
+                        "version": "1.0"
+                    }
+                }
 
         # NEW: Process complete itempool data
         try:
@@ -617,7 +667,7 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
     """
     logger.debug(f"Starting process_regions for player {player}")
     
-    def safe_expand_rule(helper_expander, rule):
+    def safe_expand_rule(helper_expander, rule, context=None):
         try:
             if rule:
                 analyzed = analyze_rule(rule)
@@ -760,15 +810,21 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                 if hasattr(region, 'entrances'):
                     for entrance in region.entrances:
                         try:
+                            expanded_rule = None
+                            if hasattr(entrance, 'access_rule') and entrance.access_rule:
+                                expanded_rule = safe_expand_rule(
+                                    helper_expander, 
+                                    entrance.access_rule
+                                )
+                            
                             entrance_data = {
                                 'name': getattr(entrance, 'name', None),
                                 'parent_region': getattr(entrance.parent_region, 'name', None) if hasattr(entrance, 'parent_region') else None,
-                                'access_rule': safe_expand_rule(helper_expander, getattr(entrance, 'access_rule', None)),
+                                'access_rule': expanded_rule,
                                 'connected_region': getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None,
                                 'reverse': getattr(entrance, 'reverse', 'name', None) if hasattr(entrance, 'reverse') else None,
                                 'assumed': getattr(entrance, 'assumed', False),
                                 'type': getattr(entrance, 'type', 'Entrance'),
-                                #'addresses': getattr(entrance, 'addresses', None)
                             }
                             region_data['entrances'].append(entrance_data)
                             logger.debug(f"Successfully processed entrance: {entrance_data['name']}")
@@ -780,10 +836,17 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                 if hasattr(region, 'exits'):
                     for exit in region.exits:
                         try:
+                            expanded_rule = None
+                            if hasattr(exit, 'access_rule') and exit.access_rule:
+                                expanded_rule = safe_expand_rule(
+                                    helper_expander, 
+                                    exit.access_rule
+                                )
+                            
                             exit_data = {
                                 'name': getattr(exit, 'name', None),
                                 'connected_region': getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None,
-                                'access_rule': safe_expand_rule(helper_expander, getattr(exit, 'access_rule', None)),
+                                'access_rule': expanded_rule,
                                 'type': getattr(exit, 'type', 'Exit')
                             }
                             region_data['exits'].append(exit_data)
@@ -797,12 +860,29 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                     for location in region.locations:
                         try:
                             location_name = getattr(location, 'name', None)
+                            
+                            # Process access and item rules
+                            access_rule = None
+                            item_rule = None
+                            
+                            if hasattr(location, 'access_rule') and location.access_rule:
+                                access_rule = safe_expand_rule(
+                                    helper_expander, 
+                                    location.access_rule
+                                )
+                                
+                            if hasattr(location, 'item_rule') and location.item_rule:
+                                item_rule = safe_expand_rule(
+                                    helper_expander, 
+                                    location.item_rule
+                                )
+                            
                             location_data = {
                                 'name': location_name,
                                 'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
                                 'crystal': getattr(location, 'crystal', None),
-                                'access_rule': safe_expand_rule(helper_expander, getattr(location, 'access_rule', None)),
-                                'item_rule': safe_expand_rule(helper_expander, getattr(location, 'item_rule', None)),
+                                'access_rule': access_rule,
+                                'item_rule': item_rule,
                                 'progress_type': extract_type_value(getattr(location, 'progress_type', None)),
                                 'locked': getattr(location, 'locked', False),
                                 'item': None
@@ -827,7 +907,10 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                 if hasattr(region, 'region_rules'):
                     for i, rule in enumerate(region.region_rules):
                         try:
-                            expanded_rule = safe_expand_rule(helper_expander, rule)
+                            expanded_rule = safe_expand_rule(
+                                helper_expander, 
+                                rule
+                            )
                             if expanded_rule:
                                 region_data['region_rules'].append(expanded_rule)
                                 logger.debug(f"Successfully processed region rule {i+1}")
@@ -1005,6 +1088,8 @@ def cleanup_export_data(data):
             debug_file.write(f"DEBUG - mode type before cleanup: {type(data['mode'])}\n")
         if 'settings' in data:
             debug_file.write(f"DEBUG - settings before cleanup: {str(data['settings'])}\n")
+        if 'game_info' in data:
+            debug_file.write(f"DEBUG - game_info before cleanup: {str(data['game_info'])}\n")
     
     # Track the game type for each player to apply appropriate settings
     player_games = {}
@@ -1014,7 +1099,7 @@ def cleanup_export_data(data):
         for player_id, settings in data['settings'].items():
             if 'game' in settings:
                 player_games[player_id] = settings['game']
-    
+
     # Define mappings for numeric settings values to readable strings
     # These are primarily ALTTP settings
     alttp_setting_mappings = {
@@ -1039,7 +1124,18 @@ def cleanup_export_data(data):
     common_setting_mappings = {
         'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
     }
-    
+     
+    # Ensure game_info is properly structured
+    if 'game_info' in data:
+        for player_id, game_info in data['game_info'].items():
+            # Make sure game_info has the game name
+            if 'name' not in game_info and player_id in player_games:
+                game_info['name'] = player_games[player_id]
+            
+            # Ensure rule_format exists
+            if 'rule_format' not in game_info:
+                game_info['rule_format'] = {"version": "1.0"}
+
     # Clean up mode field
     if 'mode' in data:
         # Record the original state for debugging

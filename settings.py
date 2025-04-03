@@ -22,7 +22,7 @@ __all__ = [
 ]
 
 no_gui = False
-skip_required_files = True  # New flag to skip required file checks without prompting
+skip_required_files = False
 skip_autosave = False
 _world_settings_name_cache: Dict[str, str] = {}  # TODO: cache on disk and update when worlds change
 _world_settings_name_cache_updated = False
@@ -524,6 +524,7 @@ class GeneralOptions(Group):
         # created on demand, so marked as optional
 
     output_path: OutputPath = OutputPath("output")
+    skip_required_files: bool = False
 
 
 class ServerOptions(Group):
@@ -889,4 +890,9 @@ def get_settings() -> Settings:
                 res = Settings(None)
                 res.save(user_path(filenames[1]))
             setattr(get_settings, "_cache", res)
+
+            # Update the global variable after loading/creating settings
+            global skip_required_files
+            skip_required_files = res.general_options.skip_required_files
+            
         return res

@@ -151,8 +151,8 @@ export class StateManager {
    * Loads and processes region/location data from a JSON file
    */
   loadFromJSON(jsonData) {
-    if (!jsonData.version || jsonData.version !== 3) {
-      throw new Error('Invalid JSON format: requires version 3');
+    if (!jsonData.schema_version || jsonData.schema_version !== 3) {
+      throw new Error('Invalid JSON format: requires schema version 3');
     }
 
     // Load region and location data
