@@ -217,7 +217,7 @@ debug_cleanup_data.txt
 debug_mode_settings.txt
 rule_analysis_debug.log
 server_log.txt
-#NewDocs/*
+NewDocs/*
 test_results/*.json
 test_files-full.json
 scrap/*
