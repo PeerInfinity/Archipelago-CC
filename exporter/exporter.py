@@ -13,9 +13,10 @@ import datetime  # Added import
 from automate_frontend_tests import run_frontend_tests
 from typing import Any, Dict, List, Set, Optional
 from collections import defaultdict
+import ast
 
 import Utils  # Added import
-from .analyzer import analyze_rule
+from .analyzer import analyze_rule, LambdaFinder # Import LambdaFinder
 from .games import get_game_helpers
 
 logger = logging.getLogger(__name__)
@@ -666,15 +667,80 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
     """
     logger.debug(f"Starting process_regions for player {player}")
     
-    def safe_expand_rule(helper_expander, rule, context=None):
+    # --- Pre-parse the relevant rule-setting function's AST --- 
+    # Cache ASTs to avoid re-parsing the same source repeatedly
+    parsed_ast_cache = {}
+    def get_context_ast(obj_with_rule):
+        # Try to find the method where the rule is likely set (e.g., set_rules)
+        # This heuristic might need adjustment based on world code structure
+        context_func = None
         try:
-            if rule:
-                analyzed = analyze_rule(rule)
+            # Look for set_rules method on the world object
+            world = multiworld.worlds.get(player)
+            if world and hasattr(world, 'set_rules') and callable(world.set_rules):
+                context_func = world.set_rules
+            # Add more heuristics if rules are set elsewhere
+
+            if context_func:
+                func_key = id(context_func) # Use function ID as cache key
+                if func_key in parsed_ast_cache:
+                    return parsed_ast_cache[func_key]
+
+                source = inspect.getsource(context_func)
+                tree = ast.parse(source)
+                parsed_ast_cache[func_key] = tree
+                print(f"Parsed and cached AST for {context_func.__name__}")
+                return tree
+            else:
+                print("Could not determine rule-setting context function.")
+                return None
+        except (TypeError, OSError, SyntaxError) as e:
+            print(f"Error getting/parsing context source for rule analysis: {e}")
+            return None
+
+    # Get the AST for the world's rule setting context once
+    # Assuming rules for this player are set in world.set_rules
+    rule_context_ast = get_context_ast(multiworld.worlds.get(player))
+
+    def safe_expand_rule(helper_expander, rule_func, rule_target_name: Optional[str] = None):
+        """Analyzes rule, trying AST-based lambda finding first."""
+        try:
+            if not rule_func: 
+                return None
+
+            lambda_node = None
+            # --- Attempt 1: Find lambda in pre-parsed context AST --- 
+            if rule_context_ast and rule_target_name:
+                print(f"Attempting to find lambda for target '{rule_target_name}' in context AST.")
+                finder = LambdaFinder(target_name=rule_target_name)
+                finder.visit(rule_context_ast)
+                lambda_node = finder.found_lambda
+                if lambda_node:
+                    print(f"AST-based lambda found for '{rule_target_name}'. Analyzing node.")
+                    # Pass necessary closure vars if possible - tricky from AST alone
+                    # For now, pass empty closure, analyze_rule will try to get them if needed
+                    # We might need to enhance LambdaFinder to capture surrounding scope
+                    analyzed = analyze_rule(ast_node=lambda_node, closure_vars={}) 
+                else:
+                    print(f"Lambda for '{rule_target_name}' not found via AST search.")
+            else:
+                 print("Skipping AST-based lambda search: No context AST or target name.")
+
+            # --- Attempt 2: Fallback to original function analysis --- 
+            if not lambda_node:
+                print(f"Falling back to function object analysis for rule of '{rule_target_name or 'unknown target'}'")
+                # Pass the original function object for analysis
+                analyzed = analyze_rule(rule_func=rule_func)
+            
+            # --- Expand the analyzed rule --- 
+            if analyzed:
                 expanded = helper_expander.expand_rule(analyzed)
                 logger.debug("Successfully expanded rule")
                 return expanded
+                
         except Exception as e:
-            logger.error(f"Error expanding rule: {str(e)}")
+            logger.error(f"Error analyzing/expanding rule for target '{rule_target_name or 'unknown'}': {e}")
+            logger.exception("Traceback:")
         return None
 
     def extract_type_value(type_obj):
@@ -760,14 +826,16 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                             'name': getattr(region.dungeon.boss, 'name', None),
                             'defeat_rule': safe_expand_rule(
                                 helper_expander,
-                                getattr(region.dungeon.boss, 'can_defeat', None)
+                                getattr(region.dungeon.boss, 'can_defeat', None),
+                                getattr(region.dungeon.boss, 'name', None) # Pass boss name as target
                             )
                         }
                     
                     if hasattr(region.dungeon, 'medallion_check'):
                         dungeon_data['medallion_check'] = safe_expand_rule(
                             helper_expander,
-                            region.dungeon.medallion_check
+                            region.dungeon.medallion_check,
+                            f"{dungeon_data['name']} Medallion Check" # Construct a target name
                         )
                     
                     region_data['dungeon'] = dungeon_data
@@ -810,14 +878,16 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                     for entrance in region.entrances:
                         try:
                             expanded_rule = None
+                            entrance_name = getattr(entrance, 'name', None)
                             if hasattr(entrance, 'access_rule') and entrance.access_rule:
                                 expanded_rule = safe_expand_rule(
                                     helper_expander, 
-                                    entrance.access_rule
+                                    entrance.access_rule,
+                                    entrance_name # Pass entrance name as target
                                 )
                             
                             entrance_data = {
-                                'name': getattr(entrance, 'name', None),
+                                'name': entrance_name,
                                 'parent_region': getattr(entrance.parent_region, 'name', None) if hasattr(entrance, 'parent_region') else None,
                                 'access_rule': expanded_rule,
                                 'connected_region': getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None,
@@ -836,14 +906,16 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                     for exit in region.exits:
                         try:
                             expanded_rule = None
+                            exit_name = getattr(exit, 'name', None)
                             if hasattr(exit, 'access_rule') and exit.access_rule:
                                 expanded_rule = safe_expand_rule(
                                     helper_expander, 
-                                    exit.access_rule
+                                    exit.access_rule,
+                                    exit_name # Pass exit name as target
                                 )
                             
                             exit_data = {
-                                'name': getattr(exit, 'name', None),
+                                'name': exit_name,
                                 'connected_region': getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None,
                                 'access_rule': expanded_rule,
                                 'type': getattr(exit, 'type', 'Exit')
@@ -861,27 +933,29 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                             location_name = getattr(location, 'name', None)
                             
                             # Process access and item rules
-                            access_rule = None
-                            item_rule = None
+                            access_rule_result = None
+                            item_rule_result = None
                             
                             if hasattr(location, 'access_rule') and location.access_rule:
-                                access_rule = safe_expand_rule(
+                                access_rule_result = safe_expand_rule(
                                     helper_expander, 
-                                    location.access_rule
+                                    location.access_rule,
+                                    location_name # Pass location name as target
                                 )
                                 
                             if hasattr(location, 'item_rule') and location.item_rule:
-                                item_rule = safe_expand_rule(
+                                item_rule_result = safe_expand_rule(
                                     helper_expander, 
-                                    location.item_rule
+                                    location.item_rule,
+                                    f"{location_name} Item Rule" # Construct target name
                                 )
                             
                             location_data = {
                                 'name': location_name,
                                 'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
                                 'crystal': getattr(location, 'crystal', None),
-                                'access_rule': access_rule,
-                                'item_rule': item_rule,
+                                'access_rule': access_rule_result,
+                                'item_rule': item_rule_result,
                                 'progress_type': extract_type_value(getattr(location, 'progress_type', None)),
                                 'locked': getattr(location, 'locked', False),
                                 'item': None
@@ -906,9 +980,12 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                 if hasattr(region, 'region_rules'):
                     for i, rule in enumerate(region.region_rules):
                         try:
+                            # Construct a target name for region rules
+                            rule_target_name = f"{region.name} Rule {i+1}"
                             expanded_rule = safe_expand_rule(
                                 helper_expander, 
-                                rule
+                                rule,
+                                rule_target_name # Pass constructed target name
                             )
                             if expanded_rule:
                                 region_data['region_rules'].append(expanded_rule)

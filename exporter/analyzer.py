@@ -34,7 +34,7 @@ Key Rule Patterns:
 import ast
 import inspect
 import re
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional, Set, Callable
 import traceback
 import json
 import logging
@@ -43,6 +43,78 @@ import logging
 logging.basicConfig(level=logging.DEBUG, 
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     filename='rule_analysis_debug.log')
+
+# Regex definitions
+REGEX_LAMBDA_BODY = re.compile(r'lambda\s+([\w\s,()]*):\s*(.*)', re.DOTALL)
+REGEX_METHOD_CALL = re.compile(r'(\w+)\((.*)\)')
+
+# Helper functions
+def count_nested_parens(s):
+    count = 0
+    for char in s:
+        if char == '(':
+            count += 1
+        elif char == ')':
+            count -= 1
+    return count
+
+def _clean_source(func):
+    """Retrieve and clean the source code of a function, handling lambdas."""
+    try:
+        source = inspect.getsource(func)
+        # Remove comments
+        source = re.sub(r'#.*$', '', source, flags=re.MULTILINE)
+        source = source.strip()
+        print(f"_clean_source: Original source = {repr(source)}")
+    except (TypeError, OSError) as e:
+        print(f"Could not get source for {func}: {e}")
+        return None
+
+    # *** ADDED CHECK for staticmethod ***
+    if 'staticmethod(' in source:
+        print("_clean_source: Detected staticmethod wrapper, skipping analysis.")
+        # Treat staticmethod wrapped rules as always True or return None to signal skipping
+        # Returning a representation of True is safer for now.
+        # Ideally, the caller (process_regions) should handle this case.
+        # For now, we let analyze_rule produce a constant True.
+        return "def __analyzed_func__(state):\n    return True" 
+        # return None # Alternative: Signal to analyze_rule to skip
+
+    # Handle lambda functions specifically
+    match = REGEX_LAMBDA_BODY.match(source)
+    if match:
+        param = match.group(1).strip()
+        body = match.group(2).strip()
+        
+        # Remove trailing comma if present after body extraction
+        if body.endswith(','):
+            body = body[:-1].rstrip()
+
+        # Remove any potential trailing \n or similar artifacts
+        body = ' '.join(body.splitlines()).strip()
+
+        # Ensure parentheses are balanced
+        while count_nested_parens(body) > 0:
+            if body.endswith(')'):
+                body = body[:-1].rstrip()
+            else:
+                # Likely malformed source extraction, break to avoid infinite loop
+                print(f"WARNING: Unbalanced parentheses in lambda body, cannot auto-fix: {repr(body)}")
+                break
+        
+        # Additional check: Handle cases where extraction might grab too much
+        # e.g., lambda x: x.has(A) and x.has(B)), ... <- extraneous closing paren
+        # This is less robust, but can help some cases
+        if count_nested_parens(body) < 0:
+             print(f"WARNING: Potentially extraneous closing parentheses detected: {repr(body)}")
+             # Attempt simple fix: remove trailing ')' if paren count is negative
+             while count_nested_parens(body) < 0 and body.endswith(')'):
+                 body = body[:-1].rstrip()
+
+        print(f"_clean_source: Final body for lambda = {repr(body)}")
+        return f"def __analyzed_func__({param}):\n    return {body}"
+    
+    return source
 
 class RuleAnalyzer(ast.NodeVisitor):
     """
@@ -266,31 +338,42 @@ class RuleAnalyzer(ast.NodeVisitor):
         }
 
     def visit_Attribute(self, node):
-        print(f"\nvisit_Attribute called:")
-        print(f"Value: {ast.dump(node.value)}")
-        print(f"Attr: {node.attr}")
-        
-        # First visit the value node
-        self.visit(node.value)
-        value_info = self.current_result
-        print(f"Value info after visit: {value_info}")
+        try:
+            self.log_debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
+            self.visit(node.value)
+            obj_result = self.current_result
+            attr_name = node.attr
+            self.log_debug(f"visit_Attribute: Object result = {obj_result}, Attribute = {attr_name}")
+            
+            # Specifically log if we are processing self.player
+            if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
+                 self.log_debug("visit_Attribute: Detected access to self.player")
 
-        # Create an attribute node that can be chained
-        self.current_result = {
-            'type': 'attribute',
-            'object': value_info,
-            'attr': node.attr
-        }
-        
-        print(f"Attribute result: {self.current_result}")
+            if obj_result:
+                 self.current_result = {'type': 'attribute', 'object': obj_result, 'attr': attr_name}
+                 self.log_debug(f"visit_Attribute: Set result to {self.current_result}")
+            else:
+                 # Handle case where object visit failed
+                 self.log_error(f"visit_Attribute: Failed to get result for object in {ast.dump(node)}")
+                 self.current_result = None # Ensure failure propagates
+
+        except Exception as e:
+            self.log_error(f"Error in visit_Attribute for {ast.dump(node)}", e)
+            self.current_result = None
 
     def visit_Name(self, node):
-        print(f"\nvisit_Name called: {node.id}")
-        self.current_result = {
-            'type': 'name',
-            'name': node.id
-        }
-        print(f"Name result: {self.current_result}")
+        try:
+            name = node.id
+            self.log_debug(f"visit_Name: Name = {name}")
+            # Specifically log 'self'
+            if name == 'self':
+                self.log_debug("visit_Name: Detected 'self'")
+
+            self.current_result = {'type': 'name', 'name': name}
+            self.log_debug(f"visit_Name: Set result to {self.current_result}")
+        except Exception as e:
+            self.log_error(f"Error in visit_Name for {node.id}", e)
+            self.current_result = None
 
     def visit_Constant(self, node):
         print("\nvisit_Constant called")
@@ -555,143 +638,238 @@ class RuleAnalyzer(ast.NodeVisitor):
             return node.value if isinstance(node, ast.Constant) else node.n
         return None
 
-def analyze_rule(rule_func, closure_vars=None, seen_funcs=None):
+# --- AST Visitor to find specific lambda rules ---
+
+class LambdaFinder(ast.NodeVisitor):
     """
-    Analyzes a rule function to produce a structured representation.
-    
-    The output format represents rules as nested dictionaries with types:
-    - item_check: Direct item requirements
-    - count_check: Item quantity requirements
-    - helper: Known helper function calls
-    - and/or: Boolean combinations
-    - state_method: Direct state method calls
-    
+    Searches an AST for a call to set_rule for a specific target
+    and extracts the lambda function passed as the rule.
+    """
+    def __init__(self, target_name: str, target_player: Optional[int] = None):
+        self.target_name = target_name
+        # self.target_player = target_player # Optional: Could add player matching if needed
+        self.found_lambda: Optional[ast.Lambda] = None
+        self.found = False # Flag to stop searching once found
+        print(f"LambdaFinder initialized for target: {target_name}")
+
+    def visit_Call(self, node: ast.Call):
+        # Stop visiting if we've already found the lambda
+        if self.found:
+            return
+
+        # Check if this is a call to 'set_rule'
+        func_name = None
+        if isinstance(node.func, ast.Name):
+            func_name = node.func.id
+        elif isinstance(node.func, ast.Attribute):
+             # Could be module.set_rule, self.set_rule etc. Just check the attribute name.
+             func_name = node.func.attr
+
+        if func_name == 'set_rule':
+            print(f"LambdaFinder: Found set_rule call: {ast.dump(node)}")
+            if len(node.args) >= 2:
+                # --- Analyze the first argument (the target object) ---
+                # This needs to identify if the call targets our self.target_name
+                # Common patterns:
+                # 1. world.get_location("Target Name", player)
+                # 2. world.get_entrance("Target Name", player)
+                # 3. world.get_region("Target Name", player)
+                target_node = node.args[0]
+                extracted_target_name = None
+
+                if isinstance(target_node, ast.Call) and isinstance(target_node.func, ast.Attribute):
+                    method_name = target_node.func.attr
+                    if method_name in ['get_location', 'get_entrance', 'get_region']:
+                        # Check the first argument of get_location/get_entrance
+                        if len(target_node.args) > 0 and isinstance(target_node.args[0], ast.Constant):
+                            extracted_target_name = target_node.args[0].value
+                            print(f"LambdaFinder: Extracted target '{extracted_target_name}' from {method_name} call.")
+
+                # --- Check if the target name matches ---
+                if extracted_target_name == self.target_name:
+                    print(f"LambdaFinder: Target name '{self.target_name}' MATCHED!")
+                    # --- Check if the second argument is a Lambda ---
+                    rule_node = node.args[1]
+                    if isinstance(rule_node, ast.Lambda):
+                        print(f"LambdaFinder: Found Lambda node for target '{self.target_name}'!")
+                        self.found_lambda = rule_node
+                        self.found = True # Stop searching
+                        return # Don't visit children of this node further
+
+        # Continue visiting children if not found or not a set_rule call
+        if not self.found:
+            super().generic_visit(node)
+
+
+# Main analysis function
+def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None, 
+                 closure_vars: Optional[Dict[str, Any]] = None, 
+                 seen_funcs: Optional[Set[int]] = None,
+                 ast_node: Optional[ast.AST] = None) -> Dict[str, Any]:
+    """
+    Analyzes a rule function or an AST node representing a rule.
+
     Args:
-        rule_func: The function to analyze
-        closure_vars: Dict of helper functions available in closure
-        seen_funcs: Set of already analyzed helper functions
-        
+        rule_func: The rule function (lambda or regular function) to analyze.
+        closure_vars: Dictionary of variables available in the function's closure.
+        seen_funcs: Set of function IDs already analyzed to prevent recursion.
+        ast_node: An optional pre-parsed AST node (e.g., ast.Lambda) to analyze directly.
+
     Returns:
-        Dict representing the rule structure, or None if analysis fails
+        A dictionary representing the structured rule.
     """
-    # Pre-analysis logging
     print("\n--- Starting Rule Analysis ---")
-    print(f"Rule function: {rule_func}")
     
-    # Validation checks
-    if not rule_func or not hasattr(rule_func, '__code__'):
-        print("Invalid rule function")
-        return None
-
+    # Initialize seen_funcs set if not provided
+    seen_funcs = seen_funcs or set()
+    
+    # Ensure closure_vars is a dictionary
+    closure_vars = closure_vars or {}
+    
+    analyzer = RuleAnalyzer(closure_vars=closure_vars, seen_funcs=seen_funcs)
+    
     try:
-        # Extract closure variables including helper functions
-        if closure_vars is None:
-            closure_vars = {}
-            try:
-                vars = inspect.getclosurevars(rule_func)
-                closure_vars.update(vars.nonlocals)
-                closure_vars.update(vars.globals)
-                print(f"Extracted closure vars: {list(closure_vars.keys())}")
-            except Exception as closure_err:
-                print(f"Error getting closure vars: {closure_err}")
+        # --- Option 1: Analyze a provided AST node directly --- 
+        if ast_node:
+            print(f"Analyzing provided AST node: {type(ast_node).__name__}")
+            if isinstance(ast_node, (ast.Lambda, ast.Call, ast.BoolOp, ast.Compare, ast.Constant, ast.Name)): 
+                analyzer.visit(ast_node)
+            else:
+                # Handle cases where the provided node isn't directly visitable as the root rule
+                print(f"WARNING: Provided AST node type {type(ast_node).__name__} might not be a standard rule root. Attempting visit anyway.")
+                # We might need more sophisticated handling here if we pass e.g., FunctionDef
+                analyzer.visit(ast_node)
 
-        try:
-            source = inspect.getsource(rule_func)
-        except (OSError, TypeError) as source_err:
-            print(f"Could not extract source: {source_err}")
-            return None
-
-        print("Original source:", repr(source))
-        
-        # Clean the source
-        cleaned_source = _clean_source(source)
-        print("Cleaned source:", repr(cleaned_source))
-        
-        # Create analyzer
-        analyzer = RuleAnalyzer(closure_vars, seen_funcs)
-        
-        # Comprehensive parse and visit
-        try:
-            tree = ast.parse(cleaned_source)
-            print("AST parsed successfully")
-            analyzer.visit(tree)
-        except SyntaxError as parse_err:
-            print(f"Syntax error parsing source: {parse_err}")
+        # --- Option 2: Analyze a function object (existing logic) --- 
+        elif rule_func:
+            print(f"Rule function: {rule_func}")
+            # Add rule_func itself to closure_vars if needed? Maybe not necessary.
             
-            # More robust function call extraction
-            method_match = re.search(r'(\w+(?:\.\w+)?)\((.+?)\)', cleaned_source, re.DOTALL)
-            if method_match:
-                method = method_match.group(1)
-                args_str = method_match.group(2).strip()
+            # Attempt to add function's actual closure variables
+            try:
+                if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+                    closure_cells = rule_func.__closure__
+                    free_vars = rule_func.__code__.co_freevars
+                    for var_name, cell in zip(free_vars, closure_cells):
+                        if var_name not in closure_vars: # Don't overwrite passed vars
+                            try:
+                                closure_vars[var_name] = cell.cell_contents
+                            except ValueError:
+                                # Cell is empty, skip
+                                pass 
+                    print(f"Extracted closure vars: {list(closure_vars.keys())}")
+                else:
+                    print("No closure variables found for rule function.")
+            except Exception as clo_err:
+                print(f"Error extracting closure variables: {clo_err}")
+
+            # Add self to closure vars if it's a method
+            if hasattr(rule_func, '__self__') and 'self' not in closure_vars:
+                 closure_vars['self'] = rule_func.__self__
+                 print("Added 'self' to closure vars from method binding.")
+
+            # Clean the source
+            cleaned_source = _clean_source(rule_func)
+            if cleaned_source is None:
+                print("analyze_rule: Failed to clean source, returning error.")
+                return {
+                    'type': 'error',
+                    'message': 'Failed to clean or retrieve source code for rule function.'
+                }
+            print("Cleaned source:", repr(cleaned_source))
+            
+            # Create analyzer instance *after* potentially updating closure_vars
+            analyzer = RuleAnalyzer(closure_vars=closure_vars, seen_funcs=seen_funcs)
+            
+            # Comprehensive parse and visit
+            try:
+                tree = ast.parse(cleaned_source)
+                print(f"analyze_rule: Parsed AST = {ast.dump(tree)}")
+                print("AST parsed successfully")
+                analyzer.visit(tree)
+            except SyntaxError as parse_err:
+                print(f"analyze_rule: SyntaxError during parse: {parse_err}")
+                print(f"Syntax error parsing source: {parse_err}")
                 
-                # Carefully parse arguments, handling complex cases
-                def split_args(arg_str):
-                    args = []
-                    current_arg = []
-                    quote_stack = []
-                    paren_stack = []
-                    
-                    for char in arg_str:
-                        if char in ["'", '"']:
-                            if not quote_stack or quote_stack[-1] != char:
-                                quote_stack.append(char)
-                            else:
-                                quote_stack.pop()
-                        
-                        if char == '(':
-                            paren_stack.append(char)
-                        elif char == ')':
-                            if paren_stack:
-                                paren_stack.pop()
-                        
-                        # Split on comma only if not in quotes or nested parentheses
-                        if char == ',' and not quote_stack and not paren_stack:
-                            if current_arg:
-                                args.append(''.join(current_arg).strip())
-                                current_arg = []
-                        else:
-                            current_arg.append(char)
-                    
-                    if current_arg:
-                        args.append(''.join(current_arg).strip())
-                    
-                    return args
-                
-                args = split_args(args_str)
-                
-                print(f"Extracted method: {method}, args: {args}")
-                
-                # Handle specific method cases
-                if method == 'state.has':
-                    item = args[0].strip().strip("'\"")
-                    return {
-                        'type': 'item_check',
-                        'item': item
-                    }
-                elif method == 'can_use_bombs':
-                    return {
-                        'type': 'helper',
-                        'name': 'can_use_bombs'
-                    }
-                elif any(func in method for func in ['can_', 'has_', 'is_']):
-                    return {
-                        'type': 'helper',
-                        'name': method.split('.')[-1],
-                        'args': [arg.strip().strip("'\"") for arg in args]
+                # *** ADDED CHECK for incomplete multi-line lambda ***
+                if cleaned_source.rstrip().endswith((' and', ' or')):
+                    print("analyze_rule: Detected likely truncated multi-line lambda due to SyntaxError.")
+                    analyzer.current_result = {
+                        'type': 'error',
+                        'message': 'Failed to parse likely multi-line lambda; source may be incomplete.',
+                        'source_snippet': cleaned_source[-50:] # Show last 50 chars
                     }
                 else:
-                    return {
-                        'type': 'state_method',
-                        'method': method,
-                        'args': [arg.strip().strip("'\"") for arg in args]
-                    }
-            
-            # Fallback to default always accessible
-            return {
-                'type': 'constant',
-                'value': True
-            }
-        
+                    # *** Original Fallback Logic (modified slightly) ***
+                    # More robust function call extraction
+                    method_match = re.search(r'(\w+(?:\.\w+)?)\((.+?)\)', cleaned_source, re.DOTALL)
+                    if method_match:
+                        method = method_match.group(1)
+                        args_str = method_match.group(2).strip()
+                        
+                        # Careful argument parsing (remains the same)
+                        def split_args(arg_str):
+                            args = []
+                            current_arg = []
+                            quote_stack = []
+                            paren_stack = []
+                            
+                            for char in arg_str:
+                                if char in ["'", '"']:
+                                    if not quote_stack or quote_stack[-1] != char:
+                                        quote_stack.append(char)
+                                    else:
+                                        quote_stack.pop()
+                                
+                                if char == '(':
+                                    paren_stack.append(char)
+                                elif char == ')':
+                                    if paren_stack:
+                                        paren_stack.pop()
+                                
+                                # Split on comma only if not in quotes or nested parentheses
+                                if char == ',' and not quote_stack and not paren_stack:
+                                    if current_arg:
+                                        args.append(''.join(current_arg).strip())
+                                        current_arg = []
+                                else:
+                                    current_arg.append(char)
+                            
+                            if current_arg:
+                                args.append(''.join(current_arg).strip())
+                            
+                            return args
+
+                        args = split_args(args_str)
+                        
+                        print(f"Extracted method: {method}, args: {args}")
+                        
+                        # Set result based on extracted method (remains mostly the same)
+                        # Ensure we don't incorrectly identify __analyzed_func__
+                        if method == '__analyzed_func__':
+                            analyzer.current_result = {
+                                'type': 'error',
+                                'message': f'SyntaxError lead to fallback identification of {method}',
+                                'args': args
+                            }
+                        elif method == 'state.has':
+                            item = args[0].strip().strip("'\"")
+                            analyzer.current_result = {
+                                'type': 'item_check',
+                                'item': item
+                            }
+                        # ... other specific method handlers ...
+                        else:
+                             analyzer.current_result = {
+                                'type': 'state_method', # Or potentially 'helper' if needed
+                                'method': method,
+                                'args': [arg.strip().strip("'\"") for arg in args]
+                            }
+                    else:
+                         # If regex fallback also fails, use error result
+                         print("analyze_rule: SyntaxError occurred and regex fallback failed.")
+                         analyzer.current_result = None # Ensures error_result is used later
+
         # Detailed result logging
         if analyzer.error_log:
             print("Errors during analysis:")
@@ -703,11 +881,17 @@ def analyze_rule(rule_func, closure_vars=None, seen_funcs=None):
             print(log_entry)
         
         # Return result or error information
-        return analyzer.current_result or {
+        error_result = {
             'type': 'error',
             'debug_log': analyzer.debug_log,
             'error_log': analyzer.error_log
         }
+        
+        # *** ADDED LOGGING ***
+        final_result = analyzer.current_result or error_result
+        print(f"analyze_rule: Final result before return = {json.dumps(final_result, indent=2)}")
+        # *** END LOGGING ***
+        return final_result
     
     except Exception as e:
         print(f"Unexpected error in rule analysis: {e}")
@@ -716,128 +900,3 @@ def analyze_rule(rule_func, closure_vars=None, seen_funcs=None):
             'type': 'constant',
             'value': True  # Default to always accessible
         }
-    
-def _clean_source(source: str) -> str:
-    """
-    Cleans and normalizes rule function source code.
-    
-    Handles:
-    - Indentation normalization
-    - Lambda to function conversion
-    - String literal preservation
-    - Nested parentheses tracking
-    - Multiline expression preservation
-    
-    Example input:
-        lambda state: state.has('Item', player)
-        
-    Example output:
-        def __analyzed_func__(state):
-            return state.has('Item', player)
-    """
-    def count_nested_parens(text: str, start: int = 0) -> int:
-        """Count nested parentheses depth at a given position"""
-        count = 0
-        in_string = False
-        string_char = None
-        i = start
-        
-        while i < len(text):
-            char = text[i]
-            
-            # Handle string boundaries
-            if char in "'\"":
-                if not in_string:
-                    in_string = True
-                    string_char = char
-                elif char == string_char:
-                    # Check if it's escaped
-                    if i > 0 and text[i-1] != '\\':
-                        in_string = False
-            
-            # Only count parens outside strings
-            if not in_string:
-                if char == '(':
-                    count += 1
-                elif char == ')':
-                    count -= 1
-                    
-            i += 1
-        return count
-
-    def find_expression_end(text: str) -> int:
-        """Find the end of a complete expression, handling nested structures"""
-        paren_count = 0
-        in_string = False
-        string_char = None
-        
-        for i, char in enumerate(text):
-            # Handle string boundaries
-            if char in "'\"":
-                if not in_string:
-                    in_string = True
-                    string_char = char
-                elif char == string_char and (i == 0 or text[i-1] != '\\'):
-                    in_string = False
-                    
-            if not in_string:
-                if char == '(':
-                    paren_count += 1
-                elif char == ')':
-                    paren_count -= 1
-                    if paren_count < 0:  # Found closing paren of outer expression
-                        return i + 1
-                elif char == '\n' and paren_count == 0:  # End at newline if no open parens
-                    return i
-                    
-        return len(text)  # If no clear end found, take the whole text
-    
-    # Clean indentation first
-    lines = source.strip().splitlines()
-    if not lines:
-        return ''
-        
-    try:
-        indent = min(len(line) - len(line.lstrip()) 
-                    for line in lines if line.strip())
-    except ValueError:
-        indent = 0
-                
-    # Clean lines while preserving structure
-    cleaned_lines = []
-    for line in lines:
-        if line.strip():
-            if len(line) >= indent:
-                cleaned_lines.append(line[indent:])
-            else:
-                cleaned_lines.append(line.lstrip())
-        else:
-            cleaned_lines.append('')
-    
-    # Join preserving newlines for better error messages
-    source = '\n'.join(cleaned_lines)
-    
-    # Handle lambda conversion
-    lambda_match = re.match(r'.*lambda\s+(\w+)\s*:\s*(.+)', source, re.DOTALL)
-    if lambda_match:
-        param, body = lambda_match.groups()
-        
-        # First clean comments and normalize whitespace
-        body = re.sub(r'#.*$', '', body, flags=re.MULTILINE)  # Remove comments
-        body = re.sub(r'\s+', ' ', body.strip())  # Normalize whitespace
-        
-        # Find the complete expression
-        expr_end = find_expression_end(body)
-        body = body[:expr_end].rstrip()
-        
-        # Verify parentheses are balanced
-        if count_nested_parens(body) != 0:
-            # Try to find a valid expression by checking each possible end point
-            for i in range(len(body), -1, -1):
-                if count_nested_parens(body[:i]) == 0:
-                    body = body[:i].rstrip()
-                    break
-        
-        return f"def __analyzed_func__({param}):\n    return {body}"
-    
-    return source
