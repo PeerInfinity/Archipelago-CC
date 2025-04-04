@@ -1585,6 +1585,27 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     
     os.makedirs(output_dir, exist_ok=True)
 
+    # --- Configuration for Excluded Fields --- 
+    # Add keys here to exclude them from the final JSON output (e.g., to reduce size)
+    # This applies recursively to nested structures.
+    EXCLUDED_FIELDS = {
+        'item_rule', # Example: Exclude item rules from locations
+        # 'access_rule', # Example: Uncomment to exclude access rules
+    }
+
+    def remove_excluded_fields(data, excluded_keys):
+        """ Recursively remove specified keys from nested dictionaries and lists. """
+        if isinstance(data, dict):
+            new_dict = {}
+            for key, value in data.items():
+                if key not in excluded_keys:
+                    new_dict[key] = remove_excluded_fields(value, excluded_keys)
+            return new_dict
+        elif isinstance(data, list):
+            return [remove_excluded_fields(item, excluded_keys) for item in data]
+        else:
+            return data
+
     # --- Define key categories (used for both combined and individual files) ---
     # Global keys apply to the entire multiworld
     global_keys = [
@@ -1670,11 +1691,14 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             ordered_cleaned_data[key] = value
             logger.warning(f"Key '{key}' was not in desired_key_order, added to end of combined export")
 
+    # --- Remove Excluded Fields from Combined Data ---
+    final_ordered_data = remove_excluded_fields(ordered_cleaned_data, EXCLUDED_FIELDS)
+
     # --- Write the combined rules file using the ordered data ---
     combined_rules_path = os.path.join(output_dir, f"{filename_base}_rules.json")
     try:
         with open(combined_rules_path, 'w', encoding='utf-8') as f:
-            json.dump(ordered_cleaned_data, f, indent=2) # Use ordered dict
+            json.dump(final_ordered_data, f, indent=2) # Use filtered data
         logger.info(f"Successfully wrote combined rules to {combined_rules_path}")
     except Exception as e:
         logger.error(f"Error writing combined rules export file: {e}")
@@ -1747,9 +1771,12 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # Define player-specific filename
             player_rules_path = os.path.join(output_dir, f"{filename_base}_P{player_str}_rules.json")
             
+            # --- Remove Excluded Fields from Player Data ---
+            final_player_data = remove_excluded_fields(player_export_data, EXCLUDED_FIELDS)
+
             try:
                 with open(player_rules_path, 'w', encoding='utf-8') as f:
-                    json.dump(player_export_data, f, indent=2)
+                    json.dump(final_player_data, f, indent=2) # Use filtered data
                 logger.info(f"Successfully wrote rules for player {player_str} to {player_rules_path}")
                 results[f"rules_p{player_str}"] = player_rules_path # Add player file path to results
             except Exception as e:
