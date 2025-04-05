@@ -129,7 +129,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     """
     def __init__(self, closure_vars=None, seen_funcs=None):
         self.closure_vars = closure_vars or {}  # Helper functions available in closure
-        self.seen_funcs = seen_funcs or set()  # Track analyzed helper functions
+        self.seen_funcs = seen_funcs or {}  # Track analyzed helper functions
         self.current_result = None  # Current rule structure being built
         self.debug_log = []
         self.error_log = []
@@ -251,39 +251,35 @@ class RuleAnalyzer(ast.NodeVisitor):
         if func_info and func_info.get('type') == 'name':
             func_name = func_info['name']
             print(f"Checking helper: {func_name}")
-            # (Removed recursive analysis of 'rule'/'old_rule' for simplicity, can be added back if needed)
-            # For now, treat all functions found by name as potential helpers
+            
+            # Check if the function name is in closure vars
             if func_name in self.closure_vars:
                  print(f"Identified call to known closure variable: {func_name}")
-                 # Optionally, analyze helper func body recursively here if needed
-                 # --- ADDED: Recursive analysis of closure functions ---
+                 # --- Recursive analysis logic (corrected structure) ---
                  try:
-                     # Prevent infinite recursion for simple wrappers
                      # Correctly check if 'state' is passed as an argument AST node
                      has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args) 
-                     if func_name in ['rule', 'old_rule'] and has_state_arg:
+                     # Attempt recursion if state arg is present
+                     if has_state_arg:
                           # Get the actual function from the closure
                           actual_func = self.closure_vars[func_name]
                           print(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
-                          # Call analyze_rule again on the actual function
-                          # Pass existing closure_vars and seen_funcs to maintain context
-                          # We pass rule_func=actual_func to trigger the function analysis path
+                          # Pass the seen_funcs dictionary (it's mutable state)
                           recursive_result = analyze_rule(rule_func=actual_func, 
-                                                          closure_vars=self.closure_vars, 
-                                                          seen_funcs=self.seen_funcs)
+                                                          closure_vars=self.closure_vars.copy(), 
+                                                          seen_funcs=self.seen_funcs) # Pass the dict
                           if recursive_result:
                               if recursive_result.get('type') != 'error':
                                   print(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                                   return recursive_result # Return the detailed analysis result
                               else:
-                                  # Log that the type was 'error'
                                   print(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
                  except Exception as e:
                       print(f"Error during recursive analysis of closure var {func_name}: {e}")
-                      # Fall through to default helper representation on error
-                 # --- END ADDED ---
+                 # --- END Recursive analysis logic ---
+                 # If recursion wasn't attempted or failed, fall through to default helper representation
 
-            # *** ADDED: Special handling for all(GeneratorExp) ***
+            # *** Special handling for all(GeneratorExp) ***
             if func_name == 'all' and len(args) == 1 and args[0].get('type') == 'generator_expression':
                 print(f"Detected all(GeneratorExp) pattern.")
                 gen_exp = args[0] # The result from visit_GeneratorExp
@@ -330,7 +326,7 @@ class RuleAnalyzer(ast.NodeVisitor):
                 return result # Return state method result
 
         # 3. Fallback for other types of calls (e.g., calling result of another function)
-        print(f"Fallback function call type: {func_info}")
+        print(f"Fallback function call type. func_info = {func_info}")
         result = {
             'type': 'function_call',
             'function': func_info,
@@ -341,10 +337,13 @@ class RuleAnalyzer(ast.NodeVisitor):
 
     def visit_Attribute(self, node):
         try:
+            # --- ADDED: Log attribute details before visiting object --- 
+            attr_name = node.attr
+            self.log_debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
+            # --- END ADDED ---
             self.log_debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
             obj_result = self.visit(node.value) # Get returned result
-            attr_name = node.attr
-            self.log_debug(f"visit_Attribute: Object result = {obj_result}, Attribute = {attr_name}")
+            # attr_name = node.attr # Moved up
             
             # Specifically log if we are processing self.player
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
@@ -763,7 +762,7 @@ class RuleAnalyzer(ast.NodeVisitor):
                 print(f"Analyzing helper function: {helper_func.__name__}")
                 result = self.analyze_helper(helper_func)
                 if result:
-                    self.seen_funcs.add(helper_func.__name__)
+                    self.seen_funcs[helper_func.__name__] = 1
                     return result
 
         print(f"Unhandled method call: {obj_name}.{method_name}")
@@ -974,7 +973,7 @@ class LambdaFinder(ast.NodeVisitor):
 # Main analysis function
 def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None, 
                  closure_vars: Optional[Dict[str, Any]] = None, 
-                 seen_funcs: Optional[Set[int]] = None,
+                 seen_funcs: Optional[Dict[int, int]] = None,
                  ast_node: Optional[ast.AST] = None) -> Dict[str, Any]:
     """
     Analyzes a rule function or an AST node representing a rule.
@@ -982,7 +981,7 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
     Args:
         rule_func: The rule function (lambda or regular function) to analyze.
         closure_vars: Dictionary of variables available in the function's closure.
-        seen_funcs: Set of function IDs already analyzed to prevent recursion.
+        seen_funcs: Dictionary of function IDs already analyzed to prevent recursion.
         ast_node: An optional pre-parsed AST node (e.g., ast.Lambda) to analyze directly.
 
     Returns:
@@ -990,8 +989,8 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
     """
     print("\n--- Starting Rule Analysis ---")
     
-    # Initialize seen_funcs set if not provided
-    seen_funcs = seen_funcs or set()
+    # Initialize seen_funcs dict if not provided
+    seen_funcs = seen_funcs or {}
     
     # Ensure closure_vars is a dictionary
     closure_vars = closure_vars or {}
@@ -1011,40 +1010,48 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
         elif rule_func:
             print(f"Rule function: {rule_func}")
 
-            # --- ADDED: Recursion check at entry point ---
             func_id = id(rule_func)
-            if func_id in seen_funcs:
-                print(f"analyze_rule: Function {rule_func} (id={func_id}) already seen, stopping recursion.")
-                # Return an error marker
+            # --- MODIFIED: Recursion check with count ---
+            current_seen_count = seen_funcs.get(func_id, 0)
+            # Allow entering once (count=1), but not twice (count>=2)
+            if current_seen_count >= 2: # Reverted from 3 back to 2
+                print(f"analyze_rule: Function {rule_func} (id={func_id}) seen {current_seen_count+1} times, stopping recursion.")
                 return {
                     'type': 'error',
-                    'message': f'Recursion detected: Already analyzing function {rule_func}',
-                    'debug_log': [], 'error_log': [] # Keep error format consistent
+                    'message': f'Recursion detected: Already analyzing function {rule_func} {current_seen_count+1} times',
+                    'debug_log': [], 'error_log': []
                 }
-            # --- END ADDED ---
+            # --- END MODIFIED ---
             
-            # Attempt to add function's actual closure variables
+            # --- Work on a copy of closure_vars ---
+            local_closure_vars = closure_vars.copy()
+            # ---
+
+            # Attempt to add function's actual closure variables TO THE COPY
             try:
                 if hasattr(rule_func, '__closure__') and rule_func.__closure__:
                     closure_cells = rule_func.__closure__
                     free_vars = rule_func.__code__.co_freevars
                     for var_name, cell in zip(free_vars, closure_cells):
-                        if var_name not in closure_vars: # Don't overwrite passed vars
-                            try:
-                                closure_vars[var_name] = cell.cell_contents
-                            except ValueError:
-                                # Cell is empty, skip
-                                pass 
-                    print(f"Extracted closure vars: {list(closure_vars.keys())}")
+                        # REMOVED CHECK: Allow overwriting with current function's closure variables
+                        # if var_name not in local_closure_vars: 
+                        try:
+                            # Add to local copy, overwriting if necessary
+                            local_closure_vars[var_name] = cell.cell_contents
+                        except ValueError: 
+                            # Cell is empty, skip
+                            pass 
+                    print(f"Extracted closure vars into local copy: {list(local_closure_vars.keys())}")
                 else:
                     print("No closure variables found for rule function.")
             except Exception as clo_err:
                 print(f"Error extracting closure variables: {clo_err}")
 
-            if hasattr(rule_func, '__self__') and 'self' not in closure_vars:
-                 closure_vars['self'] = rule_func.__self__
-                 print("Added 'self' to closure vars from method binding.")
-            # --- End closure extraction ---
+            # Add 'self' to the local copy if needed
+            if hasattr(rule_func, '__self__') and 'self' not in local_closure_vars:
+                 local_closure_vars['self'] = rule_func.__self__
+                 print("Added 'self' to local closure vars from method binding.")
+            # --- End closure extraction modification ---
 
             # Clean the source
             cleaned_source = _clean_source(rule_func)
@@ -1060,16 +1067,16 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                 }
             print("Cleaned source:", repr(cleaned_source))
             
-            # --- Moved analyzer creation and analysis into its own try...finally ---
-            analyzer = None # Ensure analyzer is defined for error reporting
+            # --- Analyzer creation and analysis --- 
+            analyzer = None 
             analysis_result = None
             try:
-                # --- ADDED: Add to seen_funcs before analysis ---
-                seen_funcs.add(func_id)
-                print(f"analyze_rule: Added func_id {func_id} to seen_funcs: {seen_funcs}")
+                # --- MODIFIED: Increment count --- 
+                seen_funcs[func_id] = current_seen_count + 1
+                print(f"analyze_rule: Incremented func_id {func_id} count in seen_funcs: {seen_funcs}")
 
-                # Create analyzer instance *after* potentially updating closure_vars
-                analyzer = RuleAnalyzer(closure_vars=closure_vars, seen_funcs=seen_funcs)
+                # Pass the LOCAL copy to the RuleAnalyzer instance
+                analyzer = RuleAnalyzer(closure_vars=local_closure_vars, seen_funcs=seen_funcs)
                 
                 # Comprehensive parse and visit
                 try:
@@ -1159,11 +1166,13 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                             print("analyze_rule: SyntaxError occurred and regex fallback failed.")
                             analysis_result = None # Ensures error_result is used later
             finally:
-                # --- ADDED: Remove from seen_funcs after analysis attempt ---
+                # --- MODIFIED: Decrement count --- 
                 if func_id in seen_funcs:
-                    seen_funcs.remove(func_id)
-                    print(f"analyze_rule: Removed func_id {func_id} from seen_funcs: {seen_funcs}")
-                # --- END ADDED ---
+                    seen_funcs[func_id] -= 1
+                    if seen_funcs[func_id] <= 0: 
+                        del seen_funcs[func_id]
+                    print(f"analyze_rule: Updated func_id {func_id} count/removed from seen_funcs: {seen_funcs}")
+                # --- END MODIFIED ---
             # --- End inner try...finally ---
         else:
              # No function or AST node provided
