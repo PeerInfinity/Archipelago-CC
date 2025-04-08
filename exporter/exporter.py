@@ -16,48 +16,10 @@ from collections import defaultdict
 import ast
 
 import Utils  # Added import
-from .analyzer import analyze_rule, LambdaFinder # Import LambdaFinder
+from .analyzer import analyze_rule
 from .games import get_game_export_handler
 
 logger = logging.getLogger(__name__)
-
-# Create a dedicated debug file for mode and settings data
-def debug_mode_settings(message, data=None):
-    """Write debug information about mode and settings to a dedicated file."""
-    with open("debug_mode_settings.txt", "a") as debug_file:
-        debug_file.write(f"{message}\n")
-        if data is not None:
-            debug_file.write(f"  Data: {data}\n")
-            debug_file.write(f"  Type: {type(data)}\n")
-            
-            # For dictionaries, show keys and some values
-            if isinstance(data, dict):
-                debug_file.write(f"  Keys: {list(data.keys())}\n")
-                # If it has mode or settings, show those specifically
-                for key in ['mode', 'settings']:
-                    if key in data:
-                        debug_file.write(f"  {key}: {data[key]}\n")
-                        debug_file.write(f"  {key} type: {type(data[key])}\n")
-                        
-                        # If this is also a dictionary, go one level deeper
-                        if isinstance(data[key], dict):
-                            for subkey, value in data[key].items():
-                                debug_file.write(f"  {key}[{subkey}]: {value}\n")
-                                debug_file.write(f"  {key}[{subkey}] type: {type(value)}\n")
-                                
-                                # For objects with helpful attributes
-                                if hasattr(value, 'value'):
-                                    debug_file.write(f"  {key}[{subkey}].value: {value.value}\n")
-                                if hasattr(value, '__dict__'):
-                                    debug_file.write(f"  {key}[{subkey}].__dict__: {value.__dict__}\n")
-            
-            # For objects with helpful attributes
-            if hasattr(data, 'value'):
-                debug_file.write(f"  .value: {data.value}\n")
-            if hasattr(data, '__dict__'):
-                debug_file.write(f"  .__dict__: {data.__dict__}\n")
-        
-        debug_file.write("\n")  # Add a blank line for readability
 
 def is_serializable(obj):
     """Check if an object can be serialized to JSON."""
@@ -72,35 +34,6 @@ def make_serializable(obj):
     Recursively convert an object to be JSON serializable.
     Extracts values from enums and custom objects intelligently.
     """
-    # Only log top-level field processing (not recursive calls)
-    if isinstance(obj, dict) and ('mode' in obj or 'settings' in obj):
-        debug_mode_settings("make_serializable: processing dictionary with mode/settings", 
-                          {"has_mode": 'mode' in obj, 
-                           "has_settings": 'settings' in obj})
-        
-        if 'mode' in obj:
-            debug_mode_settings("make_serializable: mode field", obj['mode'])
-            
-            # If mode is not a dictionary, log this but don't modify
-            # The cleanup function can handle it with proper error messages
-            if not isinstance(obj['mode'], dict):
-                debug_mode_settings("WARNING: mode is not a dictionary", 
-                                  {"type": type(obj['mode']), "value": obj['mode']})
-            
-            # Now log the mode value details for each player
-            if isinstance(obj['mode'], dict):
-                for player, mode_value in obj['mode'].items():
-                    debug_mode_settings(f"mode[{player}] details", 
-                                     {"type": type(mode_value), 
-                                      "value": mode_value,
-                                      "has_value_attr": hasattr(mode_value, 'value'),
-                                      "has_dict_attr": hasattr(mode_value, '__dict__')})
-                    
-                    if hasattr(mode_value, 'value'):
-                        debug_mode_settings(f"mode[{player}].value", mode_value.value)
-                    if hasattr(mode_value, '__dict__'):
-                        debug_mode_settings(f"mode[{player}].__dict__", mode_value.__dict__)
-    
     # Handle basic types directly
     if obj is None or isinstance(obj, (bool, int, float, str)):
         return obj
@@ -108,25 +41,6 @@ def make_serializable(obj):
     # Handle dictionaries
     if isinstance(obj, dict):
         serialized_dict = {str(k): make_serializable(v) for k, v in obj.items()}
-        
-        # Debug the mode field if present after serialization
-        if 'mode' in serialized_dict:
-            debug_mode_settings("make_serializable: mode after dict processing", 
-                              {"type": type(serialized_dict['mode']), 
-                               "value": serialized_dict['mode']})
-            
-            # Special check for when mode is not a dict anymore
-            if not isinstance(serialized_dict['mode'], dict):
-                debug_mode_settings("ERROR: mode is not a dictionary anymore", serialized_dict['mode'])
-                # Don't try to fix - just log the issue
-        
-        # Check for mode in settings and log information
-        if 'settings' in serialized_dict and isinstance(serialized_dict['settings'], dict):
-            for player, settings in serialized_dict['settings'].items():
-                if isinstance(settings, dict) and 'mode' in settings:
-                    debug_mode_settings(f"settings[{player}]['mode']", 
-                                     {"type": type(settings['mode']), 
-                                      "value": settings['mode']})
         
         return serialized_dict
     
@@ -136,13 +50,6 @@ def make_serializable(obj):
     
     # Handle objects with __dict__ attribute (custom classes)
     if hasattr(obj, '__dict__'):
-        # Debug for special objects related to mode or settings
-        if str(obj).lower().find('mode') >= 0 or str(type(obj)).lower().find('mode') >= 0:
-            debug_mode_settings("Processing mode-related object", 
-                              {"type": type(obj), 
-                               "str_rep": str(obj),
-                               "has_value": hasattr(obj, 'value')})
-                    
         # First check for value attribute (common in enums)
         if hasattr(obj, 'value'):
             return make_serializable(obj.value)
@@ -154,10 +61,6 @@ def make_serializable(obj):
                 # Extract value inside parentheses
                 extracted = str_rep.split('(', 1)[1].split(')', 1)[0]
                 
-                # For mode-related objects, log the extraction
-                if str_rep.lower().find('mode') >= 0:
-                    debug_mode_settings("Extracted value from mode parentheses", extracted)
-                
                 # Try to convert to appropriate type
                 if extracted.lower() in ('yes', 'no', 'true', 'false'):
                     return extracted.lower() == 'yes' or extracted.lower() == 'true'
@@ -167,8 +70,6 @@ def make_serializable(obj):
                     return extracted
             except Exception as e:
                 # If extraction fails, log and use string representation
-                if str_rep.lower().find('mode') >= 0:
-                    debug_mode_settings(f"Failed to extract mode value: {str(e)}", str_rep)
                 return str_rep
         
         # If no special handling applies, use string representation
@@ -218,64 +119,50 @@ def write_field_by_field(export_data, filepath):
     Tries to write each major section of the export_data to the file separately,
     to ensure at least some data is saved even if one section is problematic.
     """
-    debug_mode_settings("Starting write_field_by_field")
     serializable_data = {"version": export_data.get("version", 1)}
     fields_written = []
     
     # Try each field separately
-    for field in ["regions", "items", "item_groups", "progression_mapping", "mode", "settings", "start_regions", "game_info", "itempool_counts"]:
+    for field in ["regions", "items", "item_groups", "progression_mapping", "settings", "start_regions", "game_info", "itempool_counts"]:
         if field in export_data:
             try:
-                debug_mode_settings(f"Processing field: {field}")
                 serializable_field = make_serializable(export_data[field])
                 # Test if it's serializable
                 json.dumps(serializable_field)
                 serializable_data[field] = serializable_field
                 fields_written.append(field)
                 logger.info(f"Successfully processed field: {field}")
-                debug_mode_settings(f"Successfully processed field: {field}")
             except Exception as e:
                 error_msg = f"Failed to process field {field}: {str(e)}"
                 logger.error(error_msg)
-                debug_mode_settings(f"ERROR: {error_msg}")
                 
                 # For complex fields, try to process each player separately
-                if field in ["mode", "settings", "game_info"] and isinstance(export_data.get(field, {}), dict):
-                    debug_mode_settings(f"Attempting to process {field} player by player")
+                if field in ["settings", "game_info"] and isinstance(export_data.get(field, {}), dict):
                     # Initialize with empty dict
                     serializable_data[field] = {}
                     
                     # Try each player separately
                     for player_id in export_data.get(field, {}):
                         try:
-                            debug_mode_settings(f"Processing {field} for player {player_id}")
                             player_data = make_serializable(export_data[field][player_id])
                             json.dumps(player_data)  # Test serialization
                             serializable_data[field][player_id] = player_data
                             logger.info(f"Added {field} data for player {player_id}")
-                            debug_mode_settings(f"Successfully processed {field} for player {player_id}", player_data)
                         except Exception as player_error:
                             error_msg = f"Failed to process {field} for player {player_id}: {str(player_error)}"
                             logger.error(error_msg)
-                            debug_mode_settings(f"ERROR: {error_msg}")
                             # Use error message instead of default
                             serializable_data[field][player_id] = f"ERROR: {error_msg}"
-    
-    # Debug the final serializable data
-    debug_mode_settings("Final serializable data structure", 
-                       {"keys": list(serializable_data.keys())})
     
     # Write what we have
     try:
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(serializable_data, f, indent=2)
         logger.info(f"Wrote partial data ({', '.join(fields_written)}) to {filepath}")
-        debug_mode_settings(f"Successfully wrote partial data to {filepath}", fields_written)
         return True
     except Exception as e:
         error_msg = f"Failed to write even partial data: {str(e)}"
         logger.error(error_msg)
-        debug_mode_settings(f"ERROR: {error_msg}")
         return False
 
 def prepare_export_data(multiworld) -> Dict[str, Any]:
@@ -283,27 +170,10 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
     Prepares complete game data for export to JSON format.
     Preserves as much of the Python backend's structure as possible.
     """
-    # Start with a clean debug file
-    with open("debug_mode_settings.txt", "w") as debug_file:
-        debug_file.write(f"DEBUG - Starting prepare_export_data\n")
-        debug_file.write(f"DEBUG - multiworld attributes: {dir(multiworld)}\n")
-        debug_file.write(f"DEBUG - player_ids: {multiworld.player_ids}\n")
-        
-    # Debug the mode attribute specifically
-    if hasattr(multiworld, 'mode'):
-        debug_mode_settings("Examining multiworld.mode", multiworld.mode)
-        # Check the first player's mode if available
-        if multiworld.player_ids and multiworld.player_ids[0] in multiworld.mode:
-            first_player = multiworld.player_ids[0]
-            debug_mode_settings(f"Examining mode for player {first_player}", multiworld.mode[first_player])
-    else:
-        debug_mode_settings("WARNING: multiworld has no 'mode' attribute")
-    
     export_data = {
         "schema_version": 3,  # Schema version for the export format
         "archipelago_version": Utils.__version__,
         "generation_seed": multiworld.seed,
-        #"export_timestamp": datetime.datetime.now().isoformat(),
         "player_names": multiworld.player_name, # Player ID -> Name mapping
         "plando_options": [option.name for option in multiworld.plando_options], # Active plando options
         "world_classes": {player: multiworld.worlds[player].__class__.__name__ 
@@ -338,11 +208,9 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         try:
             game_info = game_handler.get_game_info(world) # Use handler directly
             export_data['game_info'][player_str] = game_info
-            debug_mode_settings(f"Added game_info from handler for player {player}", game_info)
         except Exception as e:
             error_msg = f"Error getting game_info from handler for player {player}: {str(e)}"
             logger.error(error_msg)
-            debug_mode_settings(f"ERROR: {error_msg}")
             # Fallback to default
             export_data['game_info'][player_str] = {
                 "name": game_name,
@@ -355,11 +223,9 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         try:
             export_data['itempool_counts'][player_str] = game_handler.get_itempool_counts(world, multiworld, player) # Call the handler method
             logger.debug(f"Successfully exported itempool counts via handler for player {player}")
-            debug_mode_settings(f"Successfully exported itempool counts via handler for player {player}", export_data['itempool_counts'][player_str])
         except Exception as e:
             error_msg = f"Error exporting itempool counts for player {player}: {str(e)}"
             logger.error(error_msg)
-            debug_mode_settings(f"ERROR: {error_msg}")
             export_data['itempool_counts'][player_str] = {
                 'error': error_msg,
                 'details': "Failed to read itempool counts. Check logs for more information."
@@ -369,11 +235,9 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         try:
             settings_data = game_handler.get_settings_data(world, multiworld, player) # Call the handler method
             export_data['settings'][player_str] = settings_data
-            debug_mode_settings(f"Extracted settings_dict via handler for player {player}", settings_data)
         except Exception as e:
             error_msg = f"Error exporting settings for player {player}: {str(e)}"
             logger.error(error_msg)
-            debug_mode_settings(f"ERROR: {error_msg}")
             export_data['settings'][player_str] = {
                 'error': error_msg,
                 'details': "Failed to read game settings. Check logs for more information."
@@ -446,63 +310,25 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
     """
     logger.debug(f"Starting process_regions for player {player}")
     
-    # --- Pre-parse the relevant rule-setting function's AST --- 
-    # Cache ASTs to avoid re-parsing the same source repeatedly
-    parsed_ast_cache = {}
-    def get_context_ast(obj_with_rule):
-        # Try to find the method where the rule is likely set (e.g., set_rules)
-        # This heuristic might need adjustment based on world code structure
-        context_func = None
-        try:
-            # Look for set_rules method on the world object
-            world = multiworld.worlds.get(player)
-            if world and hasattr(world, 'set_rules') and callable(world.set_rules):
-                context_func = world.set_rules
-            # Add more heuristics if rules are set elsewhere
-
-            if context_func:
-                func_key = id(context_func) # Use function ID as cache key
-                if func_key in parsed_ast_cache:
-                    return parsed_ast_cache[func_key]
-
-                source = inspect.getsource(context_func)
-                tree = ast.parse(source)
-                parsed_ast_cache[func_key] = tree
-                print(f"Parsed and cached AST for {context_func.__name__}")
-                return tree
-            else:
-                print("Could not determine rule-setting context function.")
-                return None
-        except (TypeError, OSError, SyntaxError) as e:
-            print(f"Error getting/parsing context source for rule analysis: {e}")
-            return None
-
-    # Get the AST for the world's rule setting context once
-    # Assuming rules for this player are set in world.set_rules
-    # rule_context_ast = get_context_ast(multiworld.worlds.get(player)) # REMOVED - AST approach not viable for combined rules
-
     def safe_expand_rule(game_handler, rule_func,
                          rule_target_name: Optional[str] = None,
-                         target_type: Optional[str] = None): # Removed rule_context_ast
+                         target_type: Optional[str] = None):
         """Analyzes rule using runtime analysis (analyze_rule)."""
-        # REMOVED AST Analysis Path - Not suitable for combined rules
-        
-        # --- Runtime Analysis Path --- 
         try:
             if not rule_func:
                 return None
 
-            print(f"safe_expand_rule: Analyzing {target_type} '{rule_target_name or 'unknown'}' using runtime analyze_rule")
+            logger.debug(f"safe_expand_rule: Analyzing {target_type} '{rule_target_name or 'unknown'}' using runtime analyze_rule")
             # Directly call analyze_rule, which handles recursion internally for combined rules
             analysis_result = analyze_rule(rule_func=rule_func)
             
             if analysis_result and analysis_result.get('type') != 'error':
-                print(f"safe_expand_rule: Runtime analysis successful for '{rule_target_name or 'unknown'}'")
+                logger.debug(f"safe_expand_rule: Runtime analysis successful for '{rule_target_name or 'unknown'}'")
                 expanded = game_handler.expand_rule(analysis_result)
                 logger.debug(f"Successfully expanded rule for {target_type} '{rule_target_name or 'unknown'}'")
                 return expanded
             else:
-                print(f"safe_expand_rule: Runtime analysis failed or returned error for '{rule_target_name or 'unknown'}'")
+                logger.debug(f"safe_expand_rule: Runtime analysis failed or returned error for '{rule_target_name or 'unknown'}'")
                 logger.warning(f"Failed to analyze or expand rule for {target_type} '{rule_target_name or 'unknown'}' using runtime analysis.")
                 return None # Return None on failure
                 
@@ -595,9 +421,8 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                             'defeat_rule': safe_expand_rule(
                                 game_handler,
                                 getattr(region.dungeon.boss, 'can_defeat', None),
-                                getattr(region.dungeon.boss, 'name', None), # Pass boss name as target
-                                target_type='Boss' # Keep target_type for logging
-                                # Removed rule_context_ast
+                                getattr(region.dungeon.boss, 'name', None),
+                                target_type='Boss'
                             )
                         }
                     
@@ -606,9 +431,8 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                         dungeon_data['medallion_check'] = safe_expand_rule(
                             game_handler,
                             region.dungeon.medallion_check,
-                            f"{dungeon_name} Medallion Check", # Construct a target name
-                            target_type='DungeonMedallion' # Keep target_type
-                            # Removed rule_context_ast
+                            f"{dungeon_name} Medallion Check",
+                            target_type='DungeonMedallion'
                         )
                     
                     region_data['dungeon'] = dungeon_data
@@ -656,9 +480,8 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                                 expanded_rule = safe_expand_rule(
                                     game_handler,
                                     entrance.access_rule,
-                                    entrance_name, # Pass entrance name as target
-                                    target_type='Entrance' # Keep target_type
-                                    # Removed rule_context_ast
+                                    entrance_name,
+                                    target_type='Entrance'
                                 )
                             
                             entrance_data = {
@@ -686,9 +509,8 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                                 expanded_rule = safe_expand_rule(
                                     game_handler,
                                     exit.access_rule,
-                                    exit_name, # Pass exit name as target
-                                    target_type='Exit' # Keep target_type
-                                    # Removed rule_context_ast
+                                    exit_name,
+                                    target_type='Exit'
                                 )
                             
                             exit_data = {
@@ -717,18 +539,16 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                                 access_rule_result = safe_expand_rule(
                                     game_handler,
                                     location.access_rule,
-                                    location_name, # Pass location name as target
-                                    target_type='Location' # Keep target_type
-                                    # Removed rule_context_ast
+                                    location_name,
+                                    target_type='Location'
                                 )
                                 
                             if hasattr(location, 'item_rule') and location.item_rule:
                                 item_rule_result = safe_expand_rule(
                                     game_handler,
                                     location.item_rule,
-                                    f"{location_name} Item Rule", # Construct target name
-                                    target_type='LocationItemRule' # Keep target_type
-                                    # Removed rule_context_ast
+                                    f"{location_name} Item Rule",
+                                    target_type='LocationItemRule'
                                 )
                             
                             location_data = {
@@ -766,9 +586,8 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                             expanded_rule = safe_expand_rule(
                                 game_handler,
                                 rule,
-                                rule_target_name, # Pass constructed target name
-                                target_type='RegionRule' # Keep target_type
-                                # Removed rule_context_ast
+                                rule_target_name,
+                                target_type='RegionRule'
                             )
                             if expanded_rule:
                                 region_data['region_rules'].append(expanded_rule)
@@ -898,17 +717,6 @@ def cleanup_export_data(data):
     Clean up specific fields in the export data that need special handling.
     This is applied after the initial serialization.
     """
-    # Debug output to a separate diagnostics file
-    with open("debug_cleanup_data.txt", "w") as debug_file:
-        debug_file.write(f"DEBUG - cleanup_export_data called\n")
-        if 'mode' in data:
-            debug_file.write(f"DEBUG - mode before cleanup: {data['mode']}\n")
-            debug_file.write(f"DEBUG - mode type before cleanup: {type(data['mode'])}\n")
-        if 'settings' in data:
-            debug_file.write(f"DEBUG - settings before cleanup: {str(data['settings'])}\n")
-        if 'game_info' in data:
-            debug_file.write(f"DEBUG - game_info before cleanup: {str(data['game_info'])}\n")
-    
     # Track the game type for each player to apply appropriate handler
     player_games = {}
     
@@ -927,8 +735,6 @@ def cleanup_export_data(data):
                     logger.warning(f"Could not determine game for player {player_id} in cleanup")
                     player_games[player_id] = "unknown" # Default if not found
                     
-    # REMOVED common_setting_mappings dictionary
-    
     # Ensure game_info is properly structured (this might still be useful)
     if 'game_info' in data:
         for player_id, game_info in data['game_info'].items():
@@ -952,11 +758,9 @@ def cleanup_export_data(data):
                 # Pass a copy to avoid modifying the original dict used elsewhere if cleanup fails partially
                 cleaned_settings = game_handler.cleanup_settings(settings.copy())
                 data['settings'][player] = cleaned_settings # Update with cleaned settings
-                debug_mode_settings(f"Applied cleanup_settings via handler for player {player}", cleaned_settings)
             except Exception as e:
                 logger.error(f"Error cleaning settings via handler for player {player} ({game}): {e}")
                 # Keep original settings in case of error during cleanup
-                debug_mode_settings(f"ERROR cleaning settings for player {player}. Keeping original: {settings}")
 
     # Clean up region types
     if 'regions' in data:
@@ -974,15 +778,6 @@ def cleanup_export_data(data):
                             if location['progress_type'].isdigit():
                                 location['progress_type'] = int(location['progress_type'])
     
-    # Debug output after cleanup
-    with open("debug_cleanup_data.txt", "a") as debug_file:
-        if 'mode' in data:
-            debug_file.write(f"DEBUG - mode after cleanup: {data['mode']}\n")
-            debug_file.write(f"DEBUG - mode type after cleanup: {type(data['mode'])}\n")
-        if 'settings' in data:
-            debug_file.write(f"DEBUG - settings after cleanup: {str(data['settings'])}\n")
-    
-    debug_mode_settings("Export data after cleanup", data)
     return data
 
 def export_test_data(multiworld, access_pool, output_dir, filename_base="test_output"):
@@ -998,34 +793,6 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     Returns:
         bool: True if export successful
     """
-    # Start with a clean debug file
-    with open("debug_mode_settings.txt", "w") as debug_file:
-        debug_file.write(f"DEBUG - Starting export_test_data\n")
-        debug_file.write(f"DEBUG - output_dir: {output_dir}\n")
-        debug_file.write(f"DEBUG - filename_base: {filename_base}\n")
-    
-    # Debug the mode attribute specifically
-    if hasattr(multiworld, 'mode'):
-        debug_mode_settings("Examining multiworld.mode in export_test_data", multiworld.mode)
-        # Examine mode data type and structure in detail
-        debug_mode_settings("multiworld.mode type", type(multiworld.mode))
-        
-        # Check each player's mode
-        for player in multiworld.player_ids:
-            if player in multiworld.mode:
-                player_mode = multiworld.mode[player]
-                debug_mode_settings(f"Mode for player {player}", player_mode)
-                debug_mode_settings(f"Mode type for player {player}", type(player_mode))
-                
-                # Check for special attributes on the mode object
-                if hasattr(player_mode, 'value'):
-                    debug_mode_settings(f"Mode.value for player {player}", player_mode.value)
-                if hasattr(player_mode, 'name'):
-                    debug_mode_settings(f"Mode.name for player {player}", player_mode.name)
-                if hasattr(player_mode, '__dict__'):
-                    debug_mode_settings(f"Mode.__dict__ for player {player}", player_mode.__dict__)
-    else:
-        debug_mode_settings("WARNING: multiworld has no 'mode' attribute in export_test_data")
 
     import os
     os.makedirs(output_dir, exist_ok=True)
@@ -1044,13 +811,7 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
             # Example path: [..., 'alttp', 'test', 'vanilla', 'TestLightWorld.py']
             # We want 'vanilla', which is the directory containing the test file
             parent_directory = os.path.basename(os.path.dirname(os.path.abspath(caller_filename)))
-            
-            # Log the extracted information for debugging
-            debug_mode_settings("Caller information", {
-                "function": caller.function,
-                "filename": caller_filename,
-                "parent_directory": parent_directory
-            })
+            logger.debug(f"Caller function: {caller.function}, filename: {caller_filename}, parent_directory: {parent_directory}") # Use standard logger
         else:
             logger.warning("Could not determine caller function name, using default filename base")
             filename_base = filename_base or "test_output"
@@ -1093,7 +854,6 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
             logger.error(f"Error writing to test_files.json: {e}")
     
     # Export rules data with explicit region connections
-    debug_mode_settings("Calling prepare_export_data")
     export_data = prepare_export_data(multiworld)
 
     # Create a subdirectory for the parent_directory if it doesn't exist
@@ -1102,21 +862,6 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     
     # CHANGED: Use parent_directory for rules file name instead of filename_base
     rules_path = os.path.join(parent_dir_path, f"{parent_directory}_rules.json")
-    
-    # Check the structure of export_data before proceeding
-    debug_mode_settings("Export data structure after prepare_export_data", 
-                        {"keys": list(export_data.keys())})
-    
-    # Verify mode format
-    if 'mode' in export_data:
-        debug_mode_settings("Mode data after prepare_export_data", export_data['mode'])
-        # Examine what's in the mode data
-        if isinstance(export_data['mode'], dict):
-            for player, mode in export_data['mode'].items():
-                debug_mode_settings(f"Mode for player {player} type", type(mode))
-                debug_mode_settings(f"Mode for player {player} value", mode)
-    else:
-        debug_mode_settings("WARNING: No mode field in export_data")
     
     # Check for non-serializable parts before writing
     debug_export_data(export_data)
@@ -1127,29 +872,10 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
         logger.info("Starting serialization of export data")
         
         # First pass: general serialization
-        debug_mode_settings("Calling make_serializable")
         serializable_data = make_serializable(export_data)
         
-        # Debug after serialization
-        debug_mode_settings("Data structure after serialization", 
-                           {"keys": list(serializable_data.keys())})
-        
-        if 'mode' in serializable_data:
-            debug_mode_settings("Mode data after serialization", serializable_data['mode'])
-            if isinstance(serializable_data['mode'], dict):
-                for player, mode in serializable_data['mode'].items():
-                    debug_mode_settings(f"Serialized mode for player {player}", mode)
-        
         # Apply cleanup
-        debug_mode_settings("Calling cleanup_export_data")
         serializable_data = cleanup_export_data(serializable_data)
-        
-        # Final verification before writing
-        debug_mode_settings("Data structure after cleanup", 
-                           {"keys": list(serializable_data.keys())})
-        
-        if 'mode' in serializable_data:
-            debug_mode_settings("Mode data after cleanup", serializable_data['mode'])
         
         # Write the data to file
         logger.info("Writing serialized data to file")
@@ -1161,15 +887,10 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     except Exception as e:
         error_msg = f"Error serializing or writing JSON: {str(e)}"
         logger.error(error_msg)
-        debug_mode_settings(f"ERROR: {error_msg}")
         
         # Log the exception details
         import traceback
-        debug_mode_settings("Exception traceback", traceback.format_exc())
-        
-        if 'serializable_data' in locals():
-            if 'mode' in serializable_data:
-                debug_mode_settings("Mode data at time of error", serializable_data['mode'])
+        logger.error(f"Exception traceback:\n{traceback.format_exc()}")
         
         # Try to save using field-by-field method as a fallback
         logger.error("Attempting to save field-by-field...")
@@ -1208,10 +929,8 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     except Exception as e:
         error_msg = f"Error writing test cases: {str(e)}"
         logger.error(error_msg)
-        debug_mode_settings(f"ERROR: {error_msg}")
         return False
 
-    debug_mode_settings("Export process completed successfully")
     print("Export process completed.")
     return True
 
@@ -1263,7 +982,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
-        'regions', 'items', 'item_groups', 'progression_mapping', 
+        'regions', 'items', 'item_groups', 'progression_mapping',
         'settings', 'start_regions', 'itempool_counts', 'game_info'
     ]
 
@@ -1473,106 +1192,161 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         os.makedirs(game_dir, exist_ok=True)
         
         # Create a folder for this specific preset using filename_base
-        preset_dir = os.path.join(game_dir, filename_base) 
-        
-        # Create/update the preset directory (clearing existing files)
-        files_copied = 0
-        if not os.path.exists(preset_dir):
-            os.makedirs(preset_dir)
-            logger.info(f"Created new preset directory: {preset_dir}")
-        else:
-            logger.info(f"Clearing existing preset directory: {preset_dir}")
-            for item in os.listdir(preset_dir):
-                item_path = os.path.join(preset_dir, item)
-                if os.path.isfile(item_path):
-                    try:
-                        os.remove(item_path)
-                    except Exception as remove_e:
-                        logger.error(f"Error removing file {item_path}: {remove_e}")
-                elif os.path.isdir(item_path):
-                    try:
-                        shutil.rmtree(item_path)
-                    except Exception as rmtree_e:
-                        logger.error(f"Error removing directory {item_path}: {rmtree_e}")
+        preset_dir = os.path.join(game_dir, filename_base)
 
-        # Copy all files from output_dir to preset_dir
-        # This will now include the combined file and all player-specific files
-        for file_name in os.listdir(output_dir):
-            src_file = os.path.join(output_dir, file_name)
-            if os.path.isfile(src_file):
-                try:
-                    dst_file = os.path.join(preset_dir, file_name)
-                    shutil.copy2(src_file, dst_file)
-                    files_copied += 1
-                except Exception as copy_e:
-                     logger.error(f"Error copying file {src_file} to {preset_dir}: {copy_e}")
-
-        logger.info(f"Copied {files_copied} files to preset directory {preset_dir}")
-        
-        # Get list of files in the preset directory after copying
-        try:
-            preset_files = sorted([f for f in os.listdir(preset_dir) if os.path.isfile(os.path.join(preset_dir, f))])
-        except Exception as list_e:
-            logger.error(f"Error listing files in preset directory {preset_dir}: {list_e}")
-            preset_files = [] # Fallback to empty list
-
-        # Update preset_files.json index
-        preset_index_path = os.path.join(presets_dir, 'preset_files.json')
-        preset_index = {}
-        
-        # Load existing index if available
-        if os.path.exists(preset_index_path):
+        # --- Compare existing preset files with new files --- 
+        needs_update = True # Assume update is needed unless proven otherwise
+        if os.path.exists(preset_dir):
             try:
-                with open(preset_index_path, 'r', encoding='utf-8') as f:
-                    preset_index = json.load(f)
-            except json.JSONDecodeError:
-                logger.warning("Could not parse existing preset_files.json, creating new file")
-            except Exception as read_e:
-                 logger.error(f"Error reading preset_files.json: {read_e}")
-                 preset_index = {} # Reset index on error
+                output_files = sorted([f for f in os.listdir(output_dir) if f.endswith('.json') and os.path.isfile(os.path.join(output_dir, f))])
+                preset_files_existing = sorted([f for f in os.listdir(preset_dir) if f.endswith('.json') and os.path.isfile(os.path.join(preset_dir, f))])
 
-        # Initialize game entry if it doesn't exist
-        if clean_game_name not in preset_index:
-            preset_index[clean_game_name] = {
-                "name": game_name, # Store the original game name
-                "folders": {}
+                if set(output_files) == set(preset_files_existing):
+                    # File lists match, now compare content
+                    all_match = True
+                    for filename in output_files:
+                        output_path = os.path.join(output_dir, filename)
+                        preset_path = os.path.join(preset_dir, filename)
+                        try:
+                            with open(output_path, 'r', encoding='utf-8') as f_out, open(preset_path, 'r', encoding='utf-8') as f_pre:
+                                output_json = json.load(f_out)
+                                preset_json = json.load(f_pre)
+                                if output_json != preset_json:
+                                    all_match = False
+                                    logger.info(f"Preset content mismatch found in {filename}. Update needed.")
+                                    break # No need to check further files
+                        except (FileNotFoundError, json.JSONDecodeError, Exception) as cmp_e:
+                            logger.warning(f"Error comparing preset file {filename}: {cmp_e}. Assuming update needed.")
+                            all_match = False # Treat comparison errors as needing update
+                            break
+                    
+                    if all_match:
+                        needs_update = False # All files exist and content matches
+                        logger.info(f"Preset {preset_dir} is up-to-date. Skipping file copy.")
+                else:
+                    logger.info(f"Preset file list mismatch for {preset_dir}. Update needed.")
+
+            except Exception as check_e:
+                 logger.error(f"Error checking existing preset directory {preset_dir}: {check_e}. Proceeding with update.")
+                 needs_update = True # Fallback to updating if check fails
+        else:
+             logger.info(f"Preset directory {preset_dir} does not exist. Creating and copying files.")
+             needs_update = True # Directory doesn't exist, definitely need to create/copy
+
+        files_copied = 0
+        preset_files_after_copy = [] # Store the list of files *after* potential copy
+
+        # --- Create/Update Preset Directory and Copy Files (only if needed) --- 
+        if needs_update:
+            logger.info(f"Updating preset directory: {preset_dir}")
+            if not os.path.exists(preset_dir):
+                os.makedirs(preset_dir)
+                logger.info(f"Created new preset directory: {preset_dir}")
+            else:
+                logger.info(f"Clearing existing preset directory: {preset_dir}")
+                for item in os.listdir(preset_dir):
+                    item_path = os.path.join(preset_dir, item)
+                    if os.path.isfile(item_path):
+                        try:
+                            os.remove(item_path)
+                        except Exception as remove_e:
+                            logger.error(f"Error removing file {item_path}: {remove_e}")
+                    elif os.path.isdir(item_path):
+                        try:
+                            shutil.rmtree(item_path)
+                        except Exception as rmtree_e:
+                            logger.error(f"Error removing directory {item_path}: {rmtree_e}")
+
+            # Copy all files from output_dir to preset_dir
+            # This will now include the combined file and all player-specific files
+            for file_name in os.listdir(output_dir):
+                src_file = os.path.join(output_dir, file_name)
+                if os.path.isfile(src_file):
+                    try:
+                        dst_file = os.path.join(preset_dir, file_name)
+                        shutil.copy2(src_file, dst_file)
+                        files_copied += 1
+                    except Exception as copy_e:
+                         logger.error(f"Error copying file {src_file} to {preset_dir}: {copy_e}")
+
+            logger.info(f"Copied {files_copied} files to preset directory {preset_dir}")
+
+            # Get list of files in the preset directory *after* copying
+            try:
+                preset_files_after_copy = sorted([f for f in os.listdir(preset_dir) if os.path.isfile(os.path.join(preset_dir, f))])
+            except Exception as list_e:
+                logger.error(f"Error listing files in updated preset directory {preset_dir}: {list_e}")
+                preset_files_after_copy = [] # Fallback to empty list
+
+            # --- Update preset_files.json Index (only if update occurred OR first time) ---
+            # We update the index even if files weren't copied, to ensure seed/game info is current,
+            # but the file list itself comes from the actual state of the directory.
+            preset_index_path = os.path.join(presets_dir, 'preset_files.json')
+            preset_index = {}
+            
+            # Load existing index if available
+            if os.path.exists(preset_index_path):
+                try:
+                    with open(preset_index_path, 'r', encoding='utf-8') as f:
+                        preset_index = json.load(f)
+                except json.JSONDecodeError:
+                    logger.warning("Could not parse existing preset_files.json, creating new file")
+                except Exception as read_e:
+                     logger.error(f"Error reading preset_files.json: {read_e}")
+                     preset_index = {} # Reset index on error
+
+            # Check if the entry needs to be added or updated
+            update_index_entry = True # Default to updating the index entry
+            if not needs_update and clean_game_name in preset_index and filename_base in preset_index[clean_game_name].get("folders", {}):
+                 # If no file copy happened AND the entry already exists, maybe skip index update?
+                 # For now, let's update anyway to refresh seed/game info even if files are identical.
+                 # To *truly* skip if identical, we'd need to compare seed/game info too.
+                 logger.info(f"Preset files for {clean_game_name}/{filename_base} were identical, but updating index entry with current seed/game info.")
+
+            # Initialize game entry if it doesn't exist
+            if clean_game_name not in preset_index:
+                preset_index[clean_game_name] = {
+                    "name": game_name, # Store the original game name
+                    "folders": {}
+                }
+            # Make sure folders key exists and is a dictionary
+            elif "folders" not in preset_index[clean_game_name] or not isinstance(preset_index[clean_game_name].get("folders"), dict):
+                preset_index[clean_game_name]["folders"] = {}
+            
+            # --- Prepare player game data ---
+            player_game_data = []
+            for player_id in multiworld.player_ids:
+                player_name = multiworld.player_name.get(player_id, f"Player {player_id}")
+                game_for_player = multiworld.game.get(player_id, "Unknown Game")
+                player_game_data.append({
+                    "player": player_id,
+                    "name": player_name,
+                    "game": game_for_player
+                })
+
+            # Add or update the folder entry with the new structure
+            # Use preset_files_after_copy which reflects the actual files in the directory
+            preset_index[clean_game_name]["folders"][filename_base] = {
+                "seed": multiworld.seed, # ADDED
+                "games": player_game_data, # ADDED
+                "files": preset_files_after_copy # Use the actual list from the directory
             }
-        # Make sure folders key exists and is a dictionary
-        elif "folders" not in preset_index[clean_game_name] or not isinstance(preset_index[clean_game_name].get("folders"), dict):
-            preset_index[clean_game_name]["folders"] = {}
-        
-        # --- Prepare player game data ---
-        player_game_data = []
-        for player_id in multiworld.player_ids:
-            player_name = multiworld.player_name.get(player_id, f"Player {player_id}")
-            game_for_player = multiworld.game.get(player_id, "Unknown Game")
-            player_game_data.append({
-                "player": player_id,
-                "name": player_name,
-                "game": game_for_player
-            })
-
-        # Add or update the folder entry with the new structure
-        preset_index[clean_game_name]["folders"][filename_base] = {
-            # "description": f"Preset for {game_name} - {filename_base}", # REMOVED
-            "seed": multiworld.seed, # ADDED
-            "games": player_game_data, # ADDED
-            "files": preset_files
-        }
-        
-        logger.info(f"Updated preset_files.json index for {clean_game_name}/{filename_base} with {len(preset_files)} files, seed, and game info")
-        
-        # Write updated index
-        try:
-            with open(preset_index_path, 'w', encoding='utf-8') as f:
-                # Keep the original insertion order
-                json.dump(preset_index, f, indent=2)
-        except Exception as write_e:
-            logger.error(f"Error writing updated preset_files.json: {write_e}")
+            
+            logger.info(f"Updated preset_files.json index for {clean_game_name}/{filename_base} with {len(preset_files_after_copy)} files, seed, and game info")
+            
+            # Write updated index
+            try:
+                with open(preset_index_path, 'w', encoding='utf-8') as f:
+                    # Keep the original insertion order (requires Python 3.7+ for dict order)
+                    # For broader compatibility, could sort outer keys if needed:
+                    # sorted_index = dict(sorted(preset_index.items()))
+                    json.dump(preset_index, f, indent=2)
+            except Exception as write_e:
+                logger.error(f"Error writing updated preset_files.json: {write_e}")
 
     except Exception as e:
         # Log but don't fail the entire export if preset saving fails
-        logger.error(f"Error saving preset: {e}")
+        logger.error(f"Error during preset saving logic: {e}")
         logger.exception("Exception details during preset saving:")
 
-    return results
+    return results # Return results regardless of preset save success/failure
