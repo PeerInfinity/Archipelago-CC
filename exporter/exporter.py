@@ -345,7 +345,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             try:
                 game_handler = get_game_export_handler(multiworld.game[player])
                 if hasattr(game_handler, 'get_game_info') and callable(getattr(game_handler, 'get_game_info')):
-                    export_data['game_info'][str(player)] = game_handler.get_game_info()
+                    export_data['game_info'][str(player)] = game_handler.get_game_info(world) # Added world argument
                     debug_mode_settings(f"Added game_info from helper for player {player}", export_data['game_info'][str(player)])
                 else:
                     # Default game info structure if not provided by game or helper
@@ -1020,56 +1020,68 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
     game_name = multiworld.game[player]
     game_handler = get_game_export_handler(game_name) # Get game handler
     
-    # First process basic items from item_id_to_name mapping
+    # 1. Start with game-specific item data from the handler
+    try:
+        items_data = game_handler.get_item_data(world)
+        if not items_data:
+             logger.warning(f"Handler for {game_name} returned no item data. Item export might be incomplete.")
+    except Exception as e:
+        logger.error(f"Error getting game-specific item data for {game_name}: {e}")
+        items_data = {} # Start empty if handler fails
+
+    # 2. Layer in base item IDs and groups from world.item_id_to_name
     for item_id, item_name in getattr(world, 'item_id_to_name', {}).items():
-        groups = [
+        if item_name not in items_data:
+            # If item is in ID map but not handler data, create a basic entry
+            logger.warning(f"Item '{item_name}' found in item_id_to_name but not in handler data for {game_name}. Creating basic entry.")
+            items_data[item_name] = {
+                'name': item_name,
+                'id': item_id,
+                'groups': [],
+                'advancement': False, 'priority': False, 'useful': False, 'trap': False, 'event': False,
+                'type': None, 'max_count': 1
+            }
+        else:
+            # Ensure the ID from the world map is added if missing
+            if items_data[item_name].get('id') is None:
+                items_data[item_name]['id'] = item_id
+        
+        # Add groups from world.item_name_groups if they aren't already present
+        base_groups = [
             group_name for group_name, items in getattr(world, 'item_name_groups', {}).items() 
             if item_name in items
         ]
-        
-        items_data[item_name] = {
-            'name': item_name,
-            'id': item_id,
-            'groups': sorted(groups),
-            'advancement': False,
-            'priority': False,
-            'useful': False,
-            'trap': False,
-            'event': False,
-            'type': None,
-            'max_count': 1  # Default max count is 1
-        }
+        if item_name in items_data:
+            # Ensure groups key exists
+            if 'groups' not in items_data[item_name] or not isinstance(items_data[item_name]['groups'], list):
+                 items_data[item_name]['groups'] = []
+                 
+            existing_groups = set(items_data[item_name]['groups'])
+            new_groups_added = False
+            for group in base_groups:
+                if group not in existing_groups:
+                    items_data[item_name]['groups'].append(group)
+                    existing_groups.add(group)
+                    new_groups_added = True
+            if new_groups_added:
+                 items_data[item_name]['groups'].sort()
 
-    # Get game-specific item data and merge/update
-    try:
-        game_specific_items = game_handler.get_item_data(world)
-        for item_name, game_item_data in game_specific_items.items():
-            if item_name in items_data:
-                # Update existing entry
-                items_data[item_name].update(game_item_data)
-            else:
-                # Add new entry
-                items_data[item_name] = game_item_data
-    except Exception as e:
-        logger.error(f"Error getting/merging game-specific item data for {game_name}: {e}")
-
-    # Update flags from placed items - this is game-agnostic
+    # 3. Update classification flags from placed items (use values from placed items if not set by handler)
     for location in multiworld.get_locations(player):
         if location.item and location.item.name in items_data:
             item_data = items_data[location.item.name]
-            # Only update flags if they haven't been set by game-specific data already
-            if 'advancement' not in item_data or not item_data['advancement']:
+            # Only update flags if they are still default (False)
+            if not item_data.get('advancement'):
                 item_data['advancement'] = getattr(location.item, 'advancement', False)
-            if 'priority' not in item_data or not item_data['priority']:
+            if not item_data.get('priority'):
                 item_data['priority'] = getattr(location.item, 'priority', False)
-            if 'useful' not in item_data or not item_data['useful']:
+            if not item_data.get('useful'):
                  item_data['useful'] = getattr(location.item, 'useful', False)
-            if 'trap' not in item_data or not item_data['trap']:
+            if not item_data.get('trap'):
                  item_data['trap'] = getattr(location.item, 'trap', False)
-            # event flag is usually derived from type, don't override unless needed
-            # item_data['event'] = getattr(location.item, 'event', False)
+            # Event flag likely comes from type, less critical to update here unless specific logic requires it
 
-    # Get and apply game-specific max counts
+    # 4. Get and apply game-specific max counts
     try:
         game_max_counts = game_handler.get_item_max_counts(world)
         for item_name, max_count in game_max_counts.items():

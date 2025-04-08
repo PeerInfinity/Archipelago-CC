@@ -10795,10 +10795,10 @@
   },
   "game_info": {
     "1": {
+      "name": "A Hat in Time",
       "rule_format": {
         "version": "1.0"
-      },
-      "name": "A Hat in Time"
+      }
     }
   }
 }

@@ -1443,10 +1443,10 @@
   },
   "game_info": {
     "1": {
+      "name": "Adventure",
       "rule_format": {
         "version": "1.0"
-      },
-      "name": "Adventure"
+      }
     }
   }
 }

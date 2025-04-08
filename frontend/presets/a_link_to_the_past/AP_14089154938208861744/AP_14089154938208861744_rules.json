@@ -31067,7 +31067,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31099,7 +31099,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31115,7 +31115,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31131,7 +31131,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31237,7 +31237,7 @@
           "Gloves",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31406,7 +31406,7 @@
           "Gloves",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31470,7 +31470,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31504,7 +31504,7 @@
           "Potions",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31537,7 +31537,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31569,7 +31569,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31585,12 +31585,12 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Sword",
         "max_count": 1
       },
       "Tempered Sword": {
@@ -31601,12 +31601,12 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Sword",
         "max_count": 1
       },
       "Fighter Sword": {
@@ -31617,12 +31617,12 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Sword",
         "max_count": 1
       },
       "Golden Sword": {
@@ -31633,12 +31633,12 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Sword",
         "max_count": 1
       },
       "Progressive Sword": {
@@ -31654,7 +31654,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Sword",
         "max_count": 4
       },
       "Progressive Glove": {
@@ -31672,6 +31672,48 @@
         "event": false,
         "type": null,
         "max_count": 2
+      },
+      "Green Pendant": {
+        "name": "Green Pendant",
+        "id": null,
+        "groups": [
+          "Pendants"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Blue Pendant": {
+        "name": "Blue Pendant",
+        "id": null,
+        "groups": [
+          "Pendants"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Red Pendant": {
+        "name": "Red Pendant",
+        "id": null,
+        "groups": [
+          "Pendants"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
       },
       "Triforce": {
         "name": "Triforce",
@@ -31695,7 +31737,7 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31716,6 +31758,104 @@
         "trap": false,
         "event": false,
         "type": null,
+        "max_count": 1
+      },
+      "Crystal 1": {
+        "name": "Crystal 1",
+        "id": null,
+        "groups": [
+          "Crystals"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Crystal 2": {
+        "name": "Crystal 2",
+        "id": null,
+        "groups": [
+          "Crystals"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Crystal 3": {
+        "name": "Crystal 3",
+        "id": null,
+        "groups": [
+          "Crystals"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Crystal 4": {
+        "name": "Crystal 4",
+        "id": null,
+        "groups": [
+          "Crystals"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Crystal 5": {
+        "name": "Crystal 5",
+        "id": null,
+        "groups": [
+          "Crystals"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Crystal 6": {
+        "name": "Crystal 6",
+        "id": null,
+        "groups": [
+          "Crystals"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
+        "max_count": 1
+      },
+      "Crystal 7": {
+        "name": "Crystal 7",
+        "id": null,
+        "groups": [
+          "Crystals"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystal",
         "max_count": 1
       },
       "Single Arrow": {
@@ -31849,7 +31989,7 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31865,7 +32005,7 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31881,7 +32021,7 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -31899,7 +32039,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -31915,7 +32055,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -32009,7 +32149,7 @@
           "Progression Items",
           "Shields"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -32071,7 +32211,7 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": true,
         "trap": false,
@@ -32215,7 +32355,7 @@
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
         "max_count": 1
@@ -32231,7 +32371,7 @@
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
         "max_count": 1
@@ -32262,7 +32402,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -32322,7 +32462,7 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -32343,7 +32483,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Eastern Palace)": {
@@ -32359,7 +32499,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Eastern Palace)": {
@@ -32375,7 +32515,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Eastern Palace)": {
@@ -32391,7 +32531,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Desert Palace)": {
@@ -32407,7 +32547,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Desert Palace)": {
@@ -32423,7 +32563,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Desert Palace)": {
@@ -32439,7 +32579,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Desert Palace)": {
@@ -32455,7 +32595,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Tower of Hera)": {
@@ -32471,7 +32611,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Tower of Hera)": {
@@ -32487,7 +32627,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Tower of Hera)": {
@@ -32503,7 +32643,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Tower of Hera)": {
@@ -32519,7 +32659,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Hyrule Castle)": {
@@ -32535,7 +32675,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Hyrule Castle)": {
@@ -32551,7 +32691,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Hyrule Castle)": {
@@ -32567,7 +32707,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Hyrule Castle)": {
@@ -32583,7 +32723,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Agahnims Tower)": {
@@ -32599,7 +32739,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Agahnims Tower)": {
@@ -32610,12 +32750,12 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Agahnims Tower)": {
@@ -32631,7 +32771,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Agahnims Tower)": {
@@ -32647,7 +32787,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Palace of Darkness)": {
@@ -32663,7 +32803,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Palace of Darkness)": {
@@ -32679,7 +32819,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Palace of Darkness)": {
@@ -32695,7 +32835,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Palace of Darkness)": {
@@ -32711,7 +32851,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Thieves Town)": {
@@ -32727,7 +32867,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Thieves Town)": {
@@ -32743,7 +32883,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Thieves Town)": {
@@ -32759,7 +32899,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Thieves Town)": {
@@ -32775,7 +32915,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Skull Woods)": {
@@ -32791,7 +32931,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Skull Woods)": {
@@ -32807,7 +32947,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Skull Woods)": {
@@ -32823,7 +32963,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Skull Woods)": {
@@ -32839,7 +32979,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Swamp Palace)": {
@@ -32855,7 +32995,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Swamp Palace)": {
@@ -32871,7 +33011,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Swamp Palace)": {
@@ -32887,7 +33027,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Swamp Palace)": {
@@ -32903,7 +33043,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Ice Palace)": {
@@ -32919,7 +33059,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Ice Palace)": {
@@ -32935,7 +33075,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Ice Palace)": {
@@ -32951,7 +33091,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Ice Palace)": {
@@ -32967,7 +33107,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Misery Mire)": {
@@ -32983,7 +33123,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Misery Mire)": {
@@ -32999,7 +33139,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Misery Mire)": {
@@ -33015,7 +33155,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Misery Mire)": {
@@ -33031,7 +33171,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Turtle Rock)": {
@@ -33047,7 +33187,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Turtle Rock)": {
@@ -33063,7 +33203,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Turtle Rock)": {
@@ -33079,7 +33219,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Turtle Rock)": {
@@ -33095,7 +33235,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Ganons Tower)": {
@@ -33111,7 +33251,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SmallKey",
         "max_count": 1
       },
       "Big Key (Ganons Tower)": {
@@ -33127,7 +33267,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "BigKey",
         "max_count": 1
       },
       "Compass (Ganons Tower)": {
@@ -33143,7 +33283,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Compass",
         "max_count": 1
       },
       "Map (Ganons Tower)": {
@@ -33159,7 +33299,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Map",
         "max_count": 1
       },
       "Small Key (Universal)": {
@@ -33188,7 +33328,7 @@
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
         "max_count": 1
@@ -33203,7 +33343,7 @@
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
         "max_count": 1
@@ -33326,7 +33466,7 @@
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
         "max_count": 1
@@ -33344,146 +33484,6 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Green Pendant": {
-        "name": "Green Pendant",
-        "id": null,
-        "groups": [
-          "Pendants"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Blue Pendant": {
-        "name": "Blue Pendant",
-        "id": null,
-        "groups": [
-          "Pendants"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Red Pendant": {
-        "name": "Red Pendant",
-        "id": null,
-        "groups": [
-          "Pendants"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Crystal 1": {
-        "name": "Crystal 1",
-        "id": null,
-        "groups": [
-          "Crystals"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Crystal 2": {
-        "name": "Crystal 2",
-        "id": null,
-        "groups": [
-          "Crystals"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Crystal 3": {
-        "name": "Crystal 3",
-        "id": null,
-        "groups": [
-          "Crystals"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Crystal 4": {
-        "name": "Crystal 4",
-        "id": null,
-        "groups": [
-          "Crystals"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Crystal 5": {
-        "name": "Crystal 5",
-        "id": null,
-        "groups": [
-          "Crystals"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Crystal 6": {
-        "name": "Crystal 6",
-        "id": null,
-        "groups": [
-          "Crystals"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
-        "max_count": 1
-      },
-      "Crystal 7": {
-        "name": "Crystal 7",
-        "id": null,
-        "groups": [
-          "Crystals"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Crystal",
         "max_count": 1
       },
       "Activated Flute": {
@@ -33850,10 +33850,10 @@
   },
   "game_info": {
     "1": {
+      "name": "A Link to the Past",
       "rule_format": {
         "version": "1.0"
-      },
-      "name": "A Link to the Past"
+      }
     }
   }
 }

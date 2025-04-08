@@ -87,19 +87,23 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                 if item_name in items
             ]
             # If no groups and item has a type, add type as a group
-            if not groups and item_data.type:
-                groups = [item_data.type] # Use list for consistency
+            item_type_from_data = getattr(item_data, 'type', None) # Safer getattr for type
+            if not groups and item_type_from_data:
+                groups = [item_type_from_data]
+
+            item_classification = getattr(item_data, 'classification', None) # Get classification safely
+            item_type = getattr(item_data, 'type', None) # Get type safely
 
             alttp_items_data[item_name] = {
                 'name': item_name,
                 'id': getattr(item_data, 'code', None), # Use code if available
                 'groups': sorted(groups),
-                'advancement': item_data.classification == ItemClassification.progression,
-                'priority': item_data.classification == ItemClassification.priority,
-                'useful': item_data.classification == ItemClassification.useful,
-                'trap': item_data.classification == ItemClassification.trap,
-                'event': item_data.type == 'Event',
-                'type': item_data.type,
+                'advancement': item_classification == ItemClassification.progression if item_classification else False,
+                'priority': False, # Default priority to False here
+                'useful': item_classification == ItemClassification.useful if item_classification else False,
+                'trap': item_classification == ItemClassification.trap if item_classification else False,
+                'event': item_type == 'Event' if item_type else False,
+                'type': item_type,
                 'max_count': 1 # Default, overridden by get_item_max_counts if needed
             }
         return alttp_items_data

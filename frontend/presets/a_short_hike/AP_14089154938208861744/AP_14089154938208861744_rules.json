@@ -3211,10 +3211,10 @@
   },
   "game_info": {
     "1": {
+      "name": "A Short Hike",
       "rule_format": {
         "version": "1.0"
-      },
-      "name": "A Short Hike"
+      }
     }
   }
 }
