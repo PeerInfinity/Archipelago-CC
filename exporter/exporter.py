@@ -1018,6 +1018,7 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
     items_data = {}
     world = multiworld.worlds[player]
     game_name = multiworld.game[player]
+    game_handler = get_game_export_handler(game_name) # Get game handler
     
     # First process basic items from item_id_to_name mapping
     for item_id, item_name in getattr(world, 'item_id_to_name', {}).items():
@@ -1039,82 +1040,46 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
             'max_count': 1  # Default max count is 1
         }
 
-    # Process game-specific item data
-    if game_name == "A Link to the Past":
-        # For ALTTP, add all items from item_table that aren't already added
-        from worlds.alttp.Items import item_table
-        from BaseClasses import ItemClassification
-        
-        for item_name, item_data in item_table.items():
-            if item_name not in items_data:
-                # Get groups this item belongs to
-                groups = [
-                    group_name for group_name, items in getattr(world, 'item_name_groups', {}).items() 
-                    if item_name in items
-                ]
-                
-                # If no groups and item has a type, add type as a group
-                if not groups and item_data.type:
-                    groups = [item_data.type]
-
-                items_data[item_name] = {
-                    'name': item_name,
-                    'id': None,
-                    'groups': sorted(groups),
-                    'advancement': item_data.classification == ItemClassification.progression,
-                    'priority': False,
-                    'useful': False,
-                    'trap': False,
-                    'event': item_data.type == 'Event',
-                    'type': item_data.type,
-                    'max_count': 1  # Default max count is 1
-                }
-    else:
-        # For other games, we'll just use the basic items from item_id_to_name
-        # and not add any additional items from item_table
-        logger.debug(f"Using basic item processing for game: {game_name}")
+    # Get game-specific item data and merge/update
+    try:
+        game_specific_items = game_handler.get_item_data(world)
+        for item_name, game_item_data in game_specific_items.items():
+            if item_name in items_data:
+                # Update existing entry
+                items_data[item_name].update(game_item_data)
+            else:
+                # Add new entry
+                items_data[item_name] = game_item_data
+    except Exception as e:
+        logger.error(f"Error getting/merging game-specific item data for {game_name}: {e}")
 
     # Update flags from placed items - this is game-agnostic
     for location in multiworld.get_locations(player):
         if location.item and location.item.name in items_data:
             item_data = items_data[location.item.name]
-            item_data['advancement'] = getattr(location.item, 'advancement', False)
-            item_data['priority'] = getattr(location.item, 'priority', False)
-            item_data['useful'] = getattr(location.item, 'useful', False)
-            item_data['trap'] = getattr(location.item, 'trap', False)
-            #item_data['event'] = getattr(location.item, 'event', False) # Don't overwrite this
-    
-    # Add default special max counts based on game type
-    if game_name == "A Link to the Past":
-        # ALTTP-specific special max counts
-        special_max_counts = {
-            'Piece of Heart': 24,
-            'Boss Heart Container': 10,
-            'Sanctuary Heart Container': 1,
-            'Magic Upgrade (1/2)': 1,
-            'Magic Upgrade (1/4)': 1,
-            'Progressive Sword': 4,
-            'Progressive Shield': 3,
-            'Progressive Glove': 2,
-            'Progressive Mail': 2,
-            'Progressive Bow': 2,
-            'Bottle': 4,
-            'Bottle (Red Potion)': 4,
-            'Bottle (Green Potion)': 4,
-            'Bottle (Blue Potion)': 4,
-            'Bottle (Fairy)': 4,
-            'Bottle (Bee)': 4,
-            'Bottle (Good Bee)': 4,
-        }
-        
-        for item_name, max_count in special_max_counts.items():
+            # Only update flags if they haven't been set by game-specific data already
+            if 'advancement' not in item_data or not item_data['advancement']:
+                item_data['advancement'] = getattr(location.item, 'advancement', False)
+            if 'priority' not in item_data or not item_data['priority']:
+                item_data['priority'] = getattr(location.item, 'priority', False)
+            if 'useful' not in item_data or not item_data['useful']:
+                 item_data['useful'] = getattr(location.item, 'useful', False)
+            if 'trap' not in item_data or not item_data['trap']:
+                 item_data['trap'] = getattr(location.item, 'trap', False)
+            # event flag is usually derived from type, don't override unless needed
+            # item_data['event'] = getattr(location.item, 'event', False)
+
+    # Get and apply game-specific max counts
+    try:
+        game_max_counts = game_handler.get_item_max_counts(world)
+        for item_name, max_count in game_max_counts.items():
             if item_name in items_data:
                 items_data[item_name]['max_count'] = max_count
-    else:
-        # For other games, we don't add special max counts by default
-        # This could be expanded in the future with game-specific handlers
-        pass
-    
+            else:
+                 logger.warning(f"Item '{item_name}' found in max counts for {game_name} but not in items_data.")
+    except Exception as e:
+        logger.error(f"Error getting game-specific max counts for {game_name}: {e}")
+
     return items_data
 
 def process_item_groups(multiworld, player: int) -> List[str]:
@@ -1125,35 +1090,17 @@ def process_item_groups(multiworld, player: int) -> List[str]:
     return []
 
 def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
-    """Extract progression item mapping data."""
-    game_name = multiworld.game[player]
-    
-    if game_name == "A Link to the Past":
-        # ALTTP-specific progression mapping
-        from worlds.alttp.Items import progression_mapping
-        
-        mapping_data = {}
-        for target_item, (base_item, level) in progression_mapping.items():
-            if base_item not in mapping_data:
-                mapping_data[base_item] = {
-                    'items': [],
-                    'base_item': base_item
-                }
-            mapping_data[base_item]['items'].append({
-                'name': target_item,
-                'level': level
-            })
-        
-        # Sort items by level
-        for prog_type in mapping_data.values():
-            prog_type['items'].sort(key=lambda x: x['level'])
-        
-        return mapping_data
-    else:
-        # For other games, return an empty mapping
-        # This could be expanded in the future with game-specific handlers
-        logger.debug(f"No progression mapping data available for game: {game_name}")
-        return {}
+    """Extract progression item mapping data using the game handler."""
+    try:
+        world = multiworld.worlds[player]
+        game_name = multiworld.game[player]
+        game_handler = get_game_export_handler(game_name)
+        return game_handler.get_progression_mapping(world)
+    except Exception as e:
+        game_name = multiworld.game.get(player, "Unknown")
+        logger.error(f"Error getting progression mapping for game '{game_name}': {e}")
+        logger.exception("Traceback:")
+        return {} # Return empty on error
 
 def cleanup_export_data(data):
     """
