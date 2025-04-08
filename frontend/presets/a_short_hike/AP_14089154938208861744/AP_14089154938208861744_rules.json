@@ -20,8 +20,6 @@
         "name": "Menu",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [],
         "exits": [
           {
@@ -35,8 +33,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -45,8 +41,6 @@
         "name": "Hawk Peak",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Menu -> Hawk Peak",
@@ -2596,8 +2590,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []

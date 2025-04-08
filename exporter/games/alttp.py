@@ -331,5 +331,23 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         logger.debug(f"Finished cleaning ALTTP settings: {cleaned_settings}")
         return cleaned_settings
 
+    def get_region_attributes(self, region) -> Dict[str, Any]:
+        """
+        Add ALTTP-specific region attributes like light/dark world.
+        
+        Args:
+            region: The region object being processed
+            
+        Returns:
+            Dictionary with ALTTP-specific region attributes
+        """
+        attributes = {}
+        
+        # Add light/dark world attributes which are specific to ALTTP
+        attributes['is_light_world'] = getattr(region, 'is_light_world', False)
+        attributes['is_dark_world'] = getattr(region, 'is_dark_world', False)
+        
+        return attributes
+
 # Reminder: Ensure get_game_export_handler in exporter/games/__init__.py
 # returns an instance of ALttPGameExportHandler for the 'A Link to the Past' game.

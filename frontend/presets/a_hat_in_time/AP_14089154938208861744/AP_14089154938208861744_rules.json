@@ -20,8 +20,6 @@
         "name": "Menu",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [],
         "exits": [
           {
@@ -35,8 +33,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -45,8 +41,6 @@
         "name": "Spaceship",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Save File -> Spaceship",
@@ -210,8 +204,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -220,8 +212,6 @@
         "name": "Time Rift - Gallery",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Curly Tail Trail Portal - Entrance 1",
@@ -262,8 +252,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -272,8 +260,6 @@
         "name": "Time Rift - The Lab",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - The Twilight Bell Portal - Entrance 1",
@@ -312,8 +298,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -322,8 +306,6 @@
         "name": "Mafia Town",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Telescope -> Mafia Town",
@@ -407,8 +389,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -417,8 +397,6 @@
         "name": "Welcome to Mafia Town",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Subcon Forest - Finale",
@@ -960,8 +938,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -970,8 +946,6 @@
         "name": "Barrel Battle",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town - Act 1",
@@ -1068,8 +1042,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1078,8 +1050,6 @@
         "name": "She Came from Outer Space",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town - Act 2",
@@ -1179,8 +1149,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1189,8 +1157,6 @@
         "name": "Down with the Mafia!",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Subcon Forest - Act 4",
@@ -1434,8 +1400,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1444,8 +1408,6 @@
         "name": "Heating Up Mafia Town",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Battle of the Birds - Act 5",
@@ -1608,8 +1570,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1618,8 +1578,6 @@
         "name": "Cheating the Race",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Alpine Skyline - Finale",
@@ -1702,8 +1660,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1712,8 +1668,6 @@
         "name": "The Golden Vault",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town - Act 4",
@@ -1834,8 +1788,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1844,8 +1796,6 @@
         "name": "Battle of the Birds",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Telescope -> Battle of the Birds",
@@ -1929,8 +1879,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1939,8 +1887,6 @@
         "name": "Dead Bird Studio",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town - Act 7",
@@ -2064,8 +2010,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2074,8 +2018,6 @@
         "name": "Murder on the Owl Express",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Alpine Skyline - Free Roam",
@@ -2244,8 +2186,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2254,8 +2194,6 @@
         "name": "Picture Perfect",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town - Act 6",
@@ -2394,8 +2332,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2404,8 +2340,6 @@
         "name": "Train Rush",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Battle of the Birds - Act 2",
@@ -2540,8 +2474,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2550,8 +2482,6 @@
         "name": "The Big Parade",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Subcon Forest - Act 5",
@@ -2699,8 +2629,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2709,8 +2637,6 @@
         "name": "Award Ceremony",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Battle of the Birds - Finale A",
@@ -2780,8 +2706,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2790,8 +2714,6 @@
         "name": "Dead Bird Studio Basement",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Subcon Forest - Act 2",
@@ -3133,8 +3055,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3143,8 +3063,6 @@
         "name": "Time Rift - Dead Bird Studio",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Alpine Skyline Portal - Entrance 1",
@@ -3362,8 +3280,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3372,8 +3288,6 @@
         "name": "Time Rift - The Owl Express",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - The Lab Portal - Entrance 1",
@@ -3423,8 +3337,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3433,8 +3345,6 @@
         "name": "Time Rift - The Moon",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Sewers Portal - Entrance 1",
@@ -3556,8 +3466,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3566,8 +3474,6 @@
         "name": "Dead Bird Studio - Elevator Area",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "DBS -> Elevator Area",
@@ -3669,8 +3575,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3679,8 +3583,6 @@
         "name": "Dead Bird Studio - Post Elevator Area",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "DBS -> Post Elevator Area",
@@ -3812,8 +3714,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3822,8 +3722,6 @@
         "name": "Subcon Forest",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Telescope -> Subcon Forest",
@@ -3910,8 +3808,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3920,8 +3816,6 @@
         "name": "Contractual Obligations",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town - Act 3",
@@ -4057,8 +3951,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4067,8 +3959,6 @@
         "name": "The Subcon Well",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Battle of the Birds - Finale B",
@@ -4235,8 +4125,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4245,8 +4133,6 @@
         "name": "Toilet of Doom",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Battle of the Birds - Act 1",
@@ -4400,8 +4286,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4410,8 +4294,6 @@
         "name": "Queen Vanessa's Manor",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Subcon Forest - Act 3",
@@ -4651,8 +4533,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4661,8 +4541,6 @@
         "name": "Mail Delivery Service",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Battle of the Birds - Act 3",
@@ -4830,8 +4708,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4840,8 +4716,6 @@
         "name": "Your Contract has Expired",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Subcon Forest - Act 1",
@@ -4963,8 +4837,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4973,8 +4845,6 @@
         "name": "Alpine Skyline",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Telescope -> Alpine Skyline",
@@ -5015,8 +4885,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5025,8 +4893,6 @@
         "name": "Alpine Free Roam",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Battle of the Birds - Act 4",
@@ -5208,8 +5074,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5218,8 +5082,6 @@
         "name": "Alpine Skyline Area",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "AFR -> Alpine Skyline Area",
@@ -5420,8 +5282,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5430,8 +5290,6 @@
         "name": "Alpine Skyline Area (TIHS)",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "-> Alpine Skyline Area (TIHS)",
@@ -5650,8 +5508,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5660,8 +5516,6 @@
         "name": "The Birdhouse",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "-> The Birdhouse",
@@ -5838,8 +5692,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5848,8 +5700,6 @@
         "name": "The Lava Cake",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "-> The Lava Cake",
@@ -5977,8 +5827,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5987,8 +5835,6 @@
         "name": "The Windmill",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "-> The Windmill",
@@ -6116,8 +5962,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6126,8 +5970,6 @@
         "name": "The Twilight Bell",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "-> The Twilight Bell",
@@ -6230,8 +6072,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6240,8 +6080,6 @@
         "name": "The Illness has Spread",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town - Act 5",
@@ -6370,8 +6208,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6380,8 +6216,6 @@
         "name": "Time Rift - Alpine Skyline",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 1",
@@ -6523,8 +6357,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6533,8 +6365,6 @@
         "name": "Time Rift - The Twilight Bell",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Bazaar Portal - Entrance 1",
@@ -6658,8 +6488,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6668,8 +6496,6 @@
         "name": "Time Rift - Curly Tail Trail",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - The Moon Portal - Entrance 1",
@@ -6745,8 +6571,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6755,8 +6579,6 @@
         "name": "Mafia Town Area",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Mafia Town Entrance WTMT",
@@ -7145,8 +6967,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -7155,8 +6975,6 @@
         "name": "Mafia Town Area (HUMT)",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "MT Area -> MT Area (HUMT)",
@@ -7736,8 +7554,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -7746,8 +7562,6 @@
         "name": "Time Rift - Mafia of Cooks",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 1",
@@ -7963,8 +7777,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -7973,8 +7785,6 @@
         "name": "Time Rift - Sewers",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Gallery Portal - Entrance 1",
@@ -8024,8 +7834,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8034,8 +7842,6 @@
         "name": "Time Rift - Bazaar",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Pipe Portal - Entrance 1",
@@ -8129,8 +7935,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8139,8 +7943,6 @@
         "name": "Subcon Forest Area",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Subcon Forest Entrance CO",
@@ -8931,8 +8733,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8941,8 +8741,6 @@
         "name": "Subcon Forest Behind Boss Firewall",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "SF Area -> SF Behind Boss Firewall",
@@ -8993,8 +8791,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9003,8 +8799,6 @@
         "name": "Subcon Forest Boss Arena",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "SF Behind Boss Firewall -> SF Boss Arena",
@@ -9055,8 +8849,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9065,8 +8857,6 @@
         "name": "Your Contract has Expired - Post Fight",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "YCHE -> YCHE - Post Fight",
@@ -9102,8 +8892,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9112,8 +8900,6 @@
         "name": "Time Rift - Sleepy Subcon",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 1",
@@ -9369,8 +9155,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9379,8 +9163,6 @@
         "name": "Time Rift - Pipe",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - Village Portal - Entrance 1",
@@ -9476,8 +9258,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9486,8 +9266,6 @@
         "name": "Time Rift - Village",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time Rift - The Owl Express Portal - Entrance 1",
@@ -9550,8 +9328,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9560,8 +9336,6 @@
         "name": "Badge Seller",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "MT Area -> Badge Seller",
@@ -9723,8 +9497,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9733,8 +9505,6 @@
         "name": "Time's End",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Telescope -> Time's End",
@@ -9764,8 +9534,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9774,8 +9542,6 @@
         "name": "The Finale",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "Time's End - Act 1",
@@ -9873,8 +9639,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []

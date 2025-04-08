@@ -20,8 +20,6 @@
         "name": "Menu",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [],
         "exits": [
           {
@@ -35,8 +33,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -45,8 +41,6 @@
         "name": "Overworld",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "GameStart",
@@ -386,8 +380,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -396,8 +388,6 @@
         "name": "YellowCastle",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "YellowCastlePort",
@@ -479,8 +469,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -489,8 +477,6 @@
         "name": "WhiteCastle",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "WhiteCastlePort",
@@ -617,8 +603,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -627,8 +611,6 @@
         "name": "WhiteCastlePreVaultPeek",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "WhiteCastlePeekPassage",
@@ -689,8 +671,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -699,8 +679,6 @@
         "name": "WhiteCastleVault",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "WhiteCastleSecretPassage",
@@ -782,8 +760,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -792,8 +768,6 @@
         "name": "BlackCastle",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "BlackCastlePort",
@@ -947,8 +921,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -957,8 +929,6 @@
         "name": "BlackCastleVault",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "BlackCastleVaultEntrance",
@@ -1019,8 +989,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1029,8 +997,6 @@
         "name": "CreditsRoom",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "CreditsWall",
@@ -1115,8 +1081,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1125,8 +1089,6 @@
         "name": "CreditsRoomFarSide",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
         "entrances": [
           {
             "name": "CreditsToFarSide",
@@ -1175,8 +1137,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []

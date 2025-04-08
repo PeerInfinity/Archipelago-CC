@@ -61,8 +61,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1154,8 +1152,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1217,8 +1213,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1283,8 +1277,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1403,8 +1395,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1490,8 +1480,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1571,8 +1559,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1639,8 +1625,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1718,8 +1702,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1768,8 +1750,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1818,8 +1798,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1883,8 +1861,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1952,8 +1928,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1977,8 +1951,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2024,8 +1996,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2083,8 +2053,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2111,8 +2079,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2139,8 +2105,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2167,8 +2131,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2195,8 +2157,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2224,8 +2184,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2252,7 +2210,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -2281,10 +2241,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Fortune Teller (Light)": {
         "name": "Fortune Teller (Light)",
@@ -2308,8 +2265,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2336,8 +2291,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2364,8 +2317,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2395,8 +2346,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2438,8 +2387,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2466,8 +2413,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2495,8 +2440,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2523,8 +2466,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2551,8 +2492,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2592,8 +2531,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2620,8 +2557,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2648,8 +2583,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2696,8 +2629,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2744,8 +2675,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2851,8 +2780,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -2981,8 +2908,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3031,8 +2956,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3121,8 +3044,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3177,8 +3098,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3237,8 +3156,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3287,8 +3204,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3337,8 +3252,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3387,8 +3300,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3444,8 +3355,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3494,8 +3403,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3566,8 +3473,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3616,8 +3521,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3657,8 +3560,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3704,8 +3605,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3757,8 +3656,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3805,8 +3702,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3853,8 +3748,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -3881,8 +3774,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4031,8 +3922,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4079,8 +3968,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4107,8 +3994,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4136,8 +4021,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4164,7 +4047,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -4193,10 +4078,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Cave Shop (Dark Death Mountain)": {
         "name": "Cave Shop (Dark Death Mountain)",
@@ -4220,7 +4102,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -4249,10 +4133,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Bonk Rock Cave": {
         "name": "Bonk Rock Cave",
@@ -4298,8 +4179,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4348,8 +4227,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4376,8 +4253,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4426,7 +4301,9 @@
             }
           }
         ],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -4455,10 +4332,7 @@
           "locked": true,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Lake Hylia Island": {
         "name": "Lake Hylia Island",
@@ -4523,8 +4397,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4570,7 +4442,9 @@
             }
           }
         ],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 2,
           "inventory": [
@@ -4599,10 +4473,7 @@
           "locked": true,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Two Brothers House": {
         "name": "Two Brothers House",
@@ -4659,8 +4530,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4732,8 +4601,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4761,8 +4628,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4856,8 +4721,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4898,8 +4761,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4966,8 +4827,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5013,8 +4872,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5089,8 +4946,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -5246,44 +5101,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Desert Palace",
-          "regions": [
-            "Desert Palace North",
-            "Desert Palace Main (Inner)",
-            "Desert Palace Main (Outer)",
-            "Desert Palace East"
-          ],
-          "boss": {
-            "name": "Lanmolas",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Desert Palace"
       },
       "Desert Palace Main (Inner)": {
         "name": "Desert Palace Main (Inner)",
@@ -5338,44 +5159,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Desert Palace",
-          "regions": [
-            "Desert Palace North",
-            "Desert Palace Main (Inner)",
-            "Desert Palace Main (Outer)",
-            "Desert Palace East"
-          ],
-          "boss": {
-            "name": "Lanmolas",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Desert Palace"
       },
       "Desert Palace East": {
         "name": "Desert Palace East",
@@ -5449,44 +5236,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Desert Palace",
-          "regions": [
-            "Desert Palace North",
-            "Desert Palace Main (Inner)",
-            "Desert Palace Main (Outer)",
-            "Desert Palace East"
-          ],
-          "boss": {
-            "name": "Lanmolas",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Desert Palace"
       },
       "Desert Palace North": {
         "name": "Desert Palace North",
@@ -5819,44 +5572,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Desert Palace",
-          "regions": [
-            "Desert Palace North",
-            "Desert Palace Main (Inner)",
-            "Desert Palace Main (Outer)",
-            "Desert Palace East"
-          ],
-          "boss": {
-            "name": "Lanmolas",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Desert Palace"
       },
       "Eastern Palace": {
         "name": "Eastern Palace",
@@ -6297,41 +6016,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Eastern Palace",
-          "regions": [
-            "Eastern Palace"
-          ],
-          "boss": {
-            "name": "Armos Knights",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Eastern Palace"
       },
       "Master Sword Meadow": {
         "name": "Master Sword Meadow",
@@ -6396,8 +6084,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6424,8 +6110,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6510,8 +6194,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6634,8 +6316,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -6902,22 +6582,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Hyrule Castle",
-          "regions": [
-            "Hyrule Castle",
-            "Sewers",
-            "Sewer Drop",
-            "Sewers (Dark)",
-            "Sanctuary"
-          ],
-          "boss": null,
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Hyrule Castle"
       },
       "Sewer Drop": {
         "name": "Sewer Drop",
@@ -6952,22 +6620,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Hyrule Castle",
-          "regions": [
-            "Hyrule Castle",
-            "Sewers",
-            "Sewer Drop",
-            "Sewers (Dark)",
-            "Sanctuary"
-          ],
-          "boss": null,
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Hyrule Castle"
       },
       "Sewers (Dark)": {
         "name": "Sewers (Dark)",
@@ -7164,22 +6820,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Hyrule Castle",
-          "regions": [
-            "Hyrule Castle",
-            "Sewers",
-            "Sewer Drop",
-            "Sewers (Dark)",
-            "Sanctuary"
-          ],
-          "boss": null,
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Hyrule Castle"
       },
       "Sewers": {
         "name": "Sewers",
@@ -7330,22 +6974,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Hyrule Castle",
-          "regions": [
-            "Hyrule Castle",
-            "Sewers",
-            "Sewer Drop",
-            "Sewers (Dark)",
-            "Sanctuary"
-          ],
-          "boss": null,
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Hyrule Castle"
       },
       "Sewers Secret Room": {
         "name": "Sewers Secret Room",
@@ -7425,8 +7057,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -7506,22 +7136,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Hyrule Castle",
-          "regions": [
-            "Hyrule Castle",
-            "Sewers",
-            "Sewer Drop",
-            "Sewers (Dark)",
-            "Sanctuary"
-          ],
-          "boss": null,
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Hyrule Castle"
       },
       "Agahnims Tower": {
         "name": "Agahnims Tower",
@@ -7793,42 +7411,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Agahnims Tower",
-          "regions": [
-            "Agahnims Tower",
-            "Agahnim 1"
-          ],
-          "boss": {
-            "name": "Agahnim",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Agahnims Tower"
       },
       "Agahnim 1": {
         "name": "Agahnim 1",
@@ -7920,42 +7506,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Agahnims Tower",
-          "regions": [
-            "Agahnims Tower",
-            "Agahnim 1"
-          ],
-          "boss": {
-            "name": "Agahnim",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Agahnims Tower"
       },
       "Old Man Cave": {
         "name": "Old Man Cave",
@@ -8035,8 +7589,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8120,8 +7672,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8185,8 +7735,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8418,8 +7966,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8483,8 +8029,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8548,8 +8092,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8614,8 +8156,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8676,8 +8216,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8723,8 +8261,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8895,8 +8431,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8923,8 +8457,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -8992,8 +8524,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9355,8 +8885,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9435,8 +8963,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9464,7 +8990,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -9493,10 +9021,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "East Death Mountain (Top)": {
         "name": "East Death Mountain (Top)",
@@ -9621,8 +9146,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9695,8 +9218,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9761,8 +9282,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9811,8 +9330,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9910,8 +9427,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -9969,8 +9484,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -10007,8 +9520,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -10066,8 +9577,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -10140,8 +9649,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -10246,8 +9753,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -10306,8 +9811,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -10508,43 +10011,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Tower of Hera",
-          "regions": [
-            "Tower of Hera (Bottom)",
-            "Tower of Hera (Basement)",
-            "Tower of Hera (Top)"
-          ],
-          "boss": {
-            "name": "Moldorm",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Tower of Hera"
       },
       "Tower of Hera (Basement)": {
         "name": "Tower of Hera (Basement)",
@@ -10636,43 +10106,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Tower of Hera",
-          "regions": [
-            "Tower of Hera (Bottom)",
-            "Tower of Hera (Basement)",
-            "Tower of Hera (Top)"
-          ],
-          "boss": {
-            "name": "Moldorm",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Tower of Hera"
       },
       "Tower of Hera (Top)": {
         "name": "Tower of Hera (Top)",
@@ -10871,43 +10308,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Tower of Hera",
-          "regions": [
-            "Tower of Hera (Bottom)",
-            "Tower of Hera (Basement)",
-            "Tower of Hera (Top)"
-          ],
-          "boss": {
-            "name": "Moldorm",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Tower of Hera"
       },
       "East Dark World": {
         "name": "East Dark World",
@@ -11398,8 +10802,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -11460,8 +10862,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -11635,8 +11035,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -11663,8 +11061,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -11691,8 +11087,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12094,8 +11488,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12145,8 +11537,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12173,8 +11563,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12201,8 +11589,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12375,8 +11761,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12438,8 +11822,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12544,8 +11926,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12572,8 +11952,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12613,8 +11991,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -12797,8 +12173,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -13414,8 +12788,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -13491,8 +12863,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -13613,8 +12983,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -13685,8 +13053,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -13713,8 +13079,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -13741,7 +13105,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -13770,10 +13136,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Dark Lake Hylia Shop": {
         "name": "Dark Lake Hylia Shop",
@@ -13797,7 +13160,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -13826,10 +13191,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Dark World Lumberjack Shop": {
         "name": "Dark World Lumberjack Shop",
@@ -13853,7 +13215,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -13882,10 +13246,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Dark World Potion Shop": {
         "name": "Dark World Potion Shop",
@@ -13909,7 +13270,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -13938,10 +13301,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Dark World Hammer Peg Cave": {
         "name": "Dark World Hammer Peg Cave",
@@ -13999,8 +13359,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14161,8 +13519,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14224,8 +13580,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14274,8 +13628,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14324,8 +13676,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14352,7 +13702,9 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": [],
         "shop": {
           "type": 0,
           "inventory": [
@@ -14381,10 +13733,7 @@
           "locked": false,
           "region_name": null,
           "location_name": null
-        },
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        }
       },
       "Dark Sanctuary Hint": {
         "name": "Dark Sanctuary Hint",
@@ -14408,8 +13757,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14509,8 +13856,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14602,8 +13947,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14703,8 +14046,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14789,8 +14130,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -14945,8 +14284,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15016,8 +14353,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15044,8 +14379,6 @@
         ],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15115,8 +14448,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15342,8 +14673,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15428,8 +14757,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15478,8 +14805,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15574,8 +14899,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15691,8 +15014,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15738,8 +15059,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -15907,8 +15226,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16189,8 +15506,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16262,8 +15577,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16321,8 +15634,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16371,8 +15682,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16422,8 +15731,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16463,8 +15770,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16591,8 +15896,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -16665,46 +15968,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Swamp Palace",
-          "regions": [
-            "Swamp Palace (Entrance)",
-            "Swamp Palace (First Room)",
-            "Swamp Palace (Starting Area)",
-            "Swamp Palace (West)",
-            "Swamp Palace (Center)",
-            "Swamp Palace (North)"
-          ],
-          "boss": {
-            "name": "Arrghus",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Swamp Palace"
       },
       "Swamp Palace (First Room)": {
         "name": "Swamp Palace (First Room)",
@@ -16793,46 +16060,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Swamp Palace",
-          "regions": [
-            "Swamp Palace (Entrance)",
-            "Swamp Palace (First Room)",
-            "Swamp Palace (Starting Area)",
-            "Swamp Palace (West)",
-            "Swamp Palace (Center)",
-            "Swamp Palace (North)"
-          ],
-          "boss": {
-            "name": "Arrghus",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Swamp Palace"
       },
       "Swamp Palace (Starting Area)": {
         "name": "Swamp Palace (Starting Area)",
@@ -16981,46 +16212,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Swamp Palace",
-          "regions": [
-            "Swamp Palace (Entrance)",
-            "Swamp Palace (First Room)",
-            "Swamp Palace (Starting Area)",
-            "Swamp Palace (West)",
-            "Swamp Palace (Center)",
-            "Swamp Palace (North)"
-          ],
-          "boss": {
-            "name": "Arrghus",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Swamp Palace"
       },
       "Swamp Palace (Center)": {
         "name": "Swamp Palace (Center)",
@@ -17274,46 +16469,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Swamp Palace",
-          "regions": [
-            "Swamp Palace (Entrance)",
-            "Swamp Palace (First Room)",
-            "Swamp Palace (Starting Area)",
-            "Swamp Palace (West)",
-            "Swamp Palace (Center)",
-            "Swamp Palace (North)"
-          ],
-          "boss": {
-            "name": "Arrghus",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Swamp Palace"
       },
       "Swamp Palace (West)": {
         "name": "Swamp Palace (West)",
@@ -17408,46 +16567,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Swamp Palace",
-          "regions": [
-            "Swamp Palace (Entrance)",
-            "Swamp Palace (First Room)",
-            "Swamp Palace (Starting Area)",
-            "Swamp Palace (West)",
-            "Swamp Palace (Center)",
-            "Swamp Palace (North)"
-          ],
-          "boss": {
-            "name": "Arrghus",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Swamp Palace"
       },
       "Swamp Palace (North)": {
         "name": "Swamp Palace (North)",
@@ -17707,46 +16830,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Swamp Palace",
-          "regions": [
-            "Swamp Palace (Entrance)",
-            "Swamp Palace (First Room)",
-            "Swamp Palace (Starting Area)",
-            "Swamp Palace (West)",
-            "Swamp Palace (Center)",
-            "Swamp Palace (North)"
-          ],
-          "boss": {
-            "name": "Arrghus",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Swamp Palace"
       },
       "Thieves Town (Entrance)": {
         "name": "Thieves Town (Entrance)",
@@ -17880,43 +16967,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Thieves Town",
-          "regions": [
-            "Thieves Town (Entrance)",
-            "Thieves Town (Deep)",
-            "Blind Fight"
-          ],
-          "boss": {
-            "name": "Blind",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Thieves Town"
       },
       "Thieves Town (Deep)": {
         "name": "Thieves Town (Deep)",
@@ -18198,43 +17252,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Thieves Town",
-          "regions": [
-            "Thieves Town (Entrance)",
-            "Thieves Town (Deep)",
-            "Blind Fight"
-          ],
-          "boss": {
-            "name": "Blind",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Thieves Town"
       },
       "Blind Fight": {
         "name": "Blind Fight",
@@ -18376,43 +17397,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Thieves Town",
-          "regions": [
-            "Thieves Town (Entrance)",
-            "Thieves Town (Deep)",
-            "Blind Fight"
-          ],
-          "boss": {
-            "name": "Blind",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Thieves Town"
       },
       "Skull Woods First Section": {
         "name": "Skull Woods First Section",
@@ -18622,48 +17610,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Skull Woods First Section (Right)": {
         "name": "Skull Woods First Section (Right)",
@@ -18796,48 +17746,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Skull Woods First Section (Left)": {
         "name": "Skull Woods First Section (Left)",
@@ -18988,48 +17900,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Skull Woods First Section (Top)": {
         "name": "Skull Woods First Section (Top)",
@@ -19173,48 +18047,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Skull Woods Second Section (Drop)": {
         "name": "Skull Woods Second Section (Drop)",
@@ -19254,48 +18090,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Skull Woods Second Section": {
         "name": "Skull Woods Second Section",
@@ -19456,48 +18254,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Skull Woods Final Section (Entrance)": {
         "name": "Skull Woods Final Section (Entrance)",
@@ -19601,48 +18361,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Skull Woods Final Section (Mothula)": {
         "name": "Skull Woods Final Section (Mothula)",
@@ -19844,48 +18566,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Skull Woods",
-          "regions": [
-            "Skull Woods Final Section (Entrance)",
-            "Skull Woods First Section",
-            "Skull Woods Second Section",
-            "Skull Woods Second Section (Drop)",
-            "Skull Woods Final Section (Mothula)",
-            "Skull Woods First Section (Right)",
-            "Skull Woods First Section (Left)",
-            "Skull Woods First Section (Top)"
-          ],
-          "boss": {
-            "name": "Mothula",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Skull Woods"
       },
       "Ice Palace (Entrance)": {
         "name": "Ice Palace (Entrance)",
@@ -20027,46 +18711,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ice Palace",
-          "regions": [
-            "Ice Palace (Entrance)",
-            "Ice Palace (Second Section)",
-            "Ice Palace (Main)",
-            "Ice Palace (East)",
-            "Ice Palace (East Top)",
-            "Ice Palace (Kholdstare)"
-          ],
-          "boss": {
-            "name": "Kholdstare",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ice Palace"
       },
       "Ice Palace (Second Section)": {
         "name": "Ice Palace (Second Section)",
@@ -20150,46 +18798,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ice Palace",
-          "regions": [
-            "Ice Palace (Entrance)",
-            "Ice Palace (Second Section)",
-            "Ice Palace (Main)",
-            "Ice Palace (East)",
-            "Ice Palace (East Top)",
-            "Ice Palace (Kholdstare)"
-          ],
-          "boss": {
-            "name": "Kholdstare",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ice Palace"
       },
       "Ice Palace (Main)": {
         "name": "Ice Palace (Main)",
@@ -20534,46 +19146,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ice Palace",
-          "regions": [
-            "Ice Palace (Entrance)",
-            "Ice Palace (Second Section)",
-            "Ice Palace (Main)",
-            "Ice Palace (East)",
-            "Ice Palace (East Top)",
-            "Ice Palace (Kholdstare)"
-          ],
-          "boss": {
-            "name": "Kholdstare",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ice Palace"
       },
       "Ice Palace (East)": {
         "name": "Ice Palace (East)",
@@ -20781,46 +19357,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ice Palace",
-          "regions": [
-            "Ice Palace (Entrance)",
-            "Ice Palace (Second Section)",
-            "Ice Palace (Main)",
-            "Ice Palace (East)",
-            "Ice Palace (East Top)",
-            "Ice Palace (Kholdstare)"
-          ],
-          "boss": {
-            "name": "Kholdstare",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ice Palace"
       },
       "Ice Palace (East Top)": {
         "name": "Ice Palace (East Top)",
@@ -20921,46 +19461,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ice Palace",
-          "regions": [
-            "Ice Palace (Entrance)",
-            "Ice Palace (Second Section)",
-            "Ice Palace (Main)",
-            "Ice Palace (East)",
-            "Ice Palace (East Top)",
-            "Ice Palace (Kholdstare)"
-          ],
-          "boss": {
-            "name": "Kholdstare",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ice Palace"
       },
       "Ice Palace (Kholdstare)": {
         "name": "Ice Palace (Kholdstare)",
@@ -21144,46 +19648,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ice Palace",
-          "regions": [
-            "Ice Palace (Entrance)",
-            "Ice Palace (Second Section)",
-            "Ice Palace (Main)",
-            "Ice Palace (East)",
-            "Ice Palace (East Top)",
-            "Ice Palace (Kholdstare)"
-          ],
-          "boss": {
-            "name": "Kholdstare",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ice Palace"
       },
       "Misery Mire (Entrance)": {
         "name": "Misery Mire (Entrance)",
@@ -21307,45 +19775,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Misery Mire",
-          "regions": [
-            "Misery Mire (Entrance)",
-            "Misery Mire (Main)",
-            "Misery Mire (West)",
-            "Misery Mire (Final Area)",
-            "Misery Mire (Vitreous)"
-          ],
-          "boss": {
-            "name": "Vitreous",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Misery Mire"
       },
       "Misery Mire (Main)": {
         "name": "Misery Mire (Main)",
@@ -21848,45 +20281,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Misery Mire",
-          "regions": [
-            "Misery Mire (Entrance)",
-            "Misery Mire (Main)",
-            "Misery Mire (West)",
-            "Misery Mire (Final Area)",
-            "Misery Mire (Vitreous)"
-          ],
-          "boss": {
-            "name": "Vitreous",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Misery Mire"
       },
       "Misery Mire (West)": {
         "name": "Misery Mire (West)",
@@ -22063,45 +20461,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Misery Mire",
-          "regions": [
-            "Misery Mire (Entrance)",
-            "Misery Mire (Main)",
-            "Misery Mire (West)",
-            "Misery Mire (Final Area)",
-            "Misery Mire (Vitreous)"
-          ],
-          "boss": {
-            "name": "Vitreous",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Misery Mire"
       },
       "Misery Mire (Final Area)": {
         "name": "Misery Mire (Final Area)",
@@ -22163,45 +20526,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Misery Mire",
-          "regions": [
-            "Misery Mire (Entrance)",
-            "Misery Mire (Main)",
-            "Misery Mire (West)",
-            "Misery Mire (Final Area)",
-            "Misery Mire (Vitreous)"
-          ],
-          "boss": {
-            "name": "Vitreous",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Misery Mire"
       },
       "Misery Mire (Vitreous)": {
         "name": "Misery Mire (Vitreous)",
@@ -22351,45 +20679,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Misery Mire",
-          "regions": [
-            "Misery Mire (Entrance)",
-            "Misery Mire (Main)",
-            "Misery Mire (West)",
-            "Misery Mire (Final Area)",
-            "Misery Mire (Vitreous)"
-          ],
-          "boss": {
-            "name": "Vitreous",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Misery Mire"
       },
       "Turtle Rock (Entrance)": {
         "name": "Turtle Rock (Entrance)",
@@ -22497,50 +20790,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (First Section)": {
         "name": "Turtle Rock (First Section)",
@@ -22815,50 +21068,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Pokey Room)": {
         "name": "Turtle Rock (Pokey Room)",
@@ -23073,50 +21286,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Chain Chomp Room)": {
         "name": "Turtle Rock (Chain Chomp Room)",
@@ -23344,50 +21517,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Second Section)": {
         "name": "Turtle Rock (Second Section)",
@@ -23764,50 +21897,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Second Section Bomb Wall)": {
         "name": "Turtle Rock (Second Section Bomb Wall)",
@@ -23879,8 +21972,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -24014,50 +22105,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Crystaroller Room)": {
         "name": "Turtle Rock (Crystaroller Room)",
@@ -24203,50 +22254,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Dark Room)": {
         "name": "Turtle Rock (Dark Room)",
@@ -24341,50 +22352,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Eye Bridge Bomb Wall)": {
         "name": "Turtle Rock (Eye Bridge Bomb Wall)",
@@ -24441,8 +22412,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -24896,50 +22865,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Turtle Rock (Trinexx)": {
         "name": "Turtle Rock (Trinexx)",
@@ -25102,50 +23031,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Turtle Rock",
-          "regions": [
-            "Turtle Rock (Entrance)",
-            "Turtle Rock (First Section)",
-            "Turtle Rock (Chain Chomp Room)",
-            "Turtle Rock (Pokey Room)",
-            "Turtle Rock (Second Section)",
-            "Turtle Rock (Big Chest)",
-            "Turtle Rock (Crystaroller Room)",
-            "Turtle Rock (Dark Room)",
-            "Turtle Rock (Eye Bridge)",
-            "Turtle Rock (Trinexx)"
-          ],
-          "boss": {
-            "name": "Trinexx",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Turtle Rock"
       },
       "Palace of Darkness (Entrance)": {
         "name": "Palace of Darkness (Entrance)",
@@ -25240,48 +23129,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Palace of Darkness (Center)": {
         "name": "Palace of Darkness (Center)",
@@ -25542,48 +23393,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Palace of Darkness (Big Key Chest)": {
         "name": "Palace of Darkness (Big Key Chest)",
@@ -25699,48 +23512,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Palace of Darkness (Bonk Section)": {
         "name": "Palace of Darkness (Bonk Section)",
@@ -25841,48 +23616,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Palace of Darkness (North)": {
         "name": "Palace of Darkness (North)",
@@ -26099,48 +23836,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Palace of Darkness (Maze)": {
         "name": "Palace of Darkness (Maze)",
@@ -26269,48 +23968,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Palace of Darkness (Harmless Hellway)": {
         "name": "Palace of Darkness (Harmless Hellway)",
@@ -26416,48 +24077,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Palace of Darkness (Final Section)": {
         "name": "Palace of Darkness (Final Section)",
@@ -26625,48 +24248,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Palace of Darkness",
-          "regions": [
-            "Palace of Darkness (Entrance)",
-            "Palace of Darkness (Center)",
-            "Palace of Darkness (Big Key Chest)",
-            "Palace of Darkness (Bonk Section)",
-            "Palace of Darkness (North)",
-            "Palace of Darkness (Maze)",
-            "Palace of Darkness (Harmless Hellway)",
-            "Palace of Darkness (Final Section)"
-          ],
-          "boss": {
-            "name": "Helmasaur King",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Palace of Darkness"
       },
       "Ganons Tower (Entrance)": {
         "name": "Ganons Tower (Entrance)",
@@ -26888,52 +24473,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Tile Room)": {
         "name": "Ganons Tower (Tile Room)",
@@ -27075,52 +24618,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Compass Room)": {
         "name": "Ganons Tower (Compass Room)",
@@ -27959,52 +25460,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Hookshot Room)": {
         "name": "Ganons Tower (Hookshot Room)",
@@ -28307,52 +25766,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Map Room)": {
         "name": "Ganons Tower (Map Room)",
@@ -28458,52 +25875,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Firesnake Room)": {
         "name": "Ganons Tower (Firesnake Room)",
@@ -28778,52 +26153,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Teleport Room)": {
         "name": "Ganons Tower (Teleport Room)",
@@ -29389,52 +26722,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Bottom)": {
         "name": "Ganons Tower (Bottom)",
@@ -29908,52 +27199,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Top)": {
         "name": "Ganons Tower (Top)",
@@ -30064,52 +27313,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Before Moldorm)": {
         "name": "Ganons Tower (Before Moldorm)",
@@ -30350,52 +27557,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Ganons Tower (Moldorm)": {
         "name": "Ganons Tower (Moldorm)",
@@ -30502,52 +27667,10 @@
           }
         ],
         "locations": [],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Agahnim 2": {
         "name": "Agahnim 2",
@@ -30699,52 +27822,10 @@
             }
           }
         ],
-        "dungeon": {
-          "name": "Ganons Tower",
-          "regions": [
-            "Ganons Tower (Entrance)",
-            "Ganons Tower (Tile Room)",
-            "Ganons Tower (Compass Room)",
-            "Ganons Tower (Hookshot Room)",
-            "Ganons Tower (Map Room)",
-            "Ganons Tower (Firesnake Room)",
-            "Ganons Tower (Teleport Room)",
-            "Ganons Tower (Bottom)",
-            "Ganons Tower (Top)",
-            "Ganons Tower (Before Moldorm)",
-            "Ganons Tower (Moldorm)",
-            "Agahnim 2"
-          ],
-          "boss": {
-            "name": "Agahnim2",
-            "defeat_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "defeat_rule"
-              },
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
-            }
-          },
-          "medallion_check": null
-        },
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
-        "region_rules": []
+        "region_rules": [],
+        "dungeon": "Ganons Tower"
       },
       "Pyramid": {
         "name": "Pyramid",
@@ -30901,8 +27982,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -30964,8 +28043,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -31011,8 +28088,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -31026,8 +28101,6 @@
         "entrances": [],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -31041,11 +28114,453 @@
         "entrances": [],
         "exits": [],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
+      }
+    }
+  },
+  "dungeons": {
+    "1": {
+      "Desert Palace": {
+        "name": "Desert Palace",
+        "regions": [
+          "Desert Palace North",
+          "Desert Palace Main (Inner)",
+          "Desert Palace Main (Outer)",
+          "Desert Palace East"
+        ],
+        "boss": {
+          "name": "Lanmolas",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Eastern Palace": {
+        "name": "Eastern Palace",
+        "regions": [
+          "Eastern Palace"
+        ],
+        "boss": {
+          "name": "Armos Knights",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Hyrule Castle": {
+        "name": "Hyrule Castle",
+        "regions": [
+          "Hyrule Castle",
+          "Sewers",
+          "Sewer Drop",
+          "Sewers (Dark)",
+          "Sanctuary"
+        ],
+        "boss": null,
+        "medallion_check": null
+      },
+      "Agahnims Tower": {
+        "name": "Agahnims Tower",
+        "regions": [
+          "Agahnims Tower",
+          "Agahnim 1"
+        ],
+        "boss": {
+          "name": "Agahnim",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Tower of Hera": {
+        "name": "Tower of Hera",
+        "regions": [
+          "Tower of Hera (Bottom)",
+          "Tower of Hera (Basement)",
+          "Tower of Hera (Top)"
+        ],
+        "boss": {
+          "name": "Moldorm",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Swamp Palace": {
+        "name": "Swamp Palace",
+        "regions": [
+          "Swamp Palace (Entrance)",
+          "Swamp Palace (First Room)",
+          "Swamp Palace (Starting Area)",
+          "Swamp Palace (West)",
+          "Swamp Palace (Center)",
+          "Swamp Palace (North)"
+        ],
+        "boss": {
+          "name": "Arrghus",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Thieves Town": {
+        "name": "Thieves Town",
+        "regions": [
+          "Thieves Town (Entrance)",
+          "Thieves Town (Deep)",
+          "Blind Fight"
+        ],
+        "boss": {
+          "name": "Blind",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Skull Woods": {
+        "name": "Skull Woods",
+        "regions": [
+          "Skull Woods Final Section (Entrance)",
+          "Skull Woods First Section",
+          "Skull Woods Second Section",
+          "Skull Woods Second Section (Drop)",
+          "Skull Woods Final Section (Mothula)",
+          "Skull Woods First Section (Right)",
+          "Skull Woods First Section (Left)",
+          "Skull Woods First Section (Top)"
+        ],
+        "boss": {
+          "name": "Mothula",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Ice Palace": {
+        "name": "Ice Palace",
+        "regions": [
+          "Ice Palace (Entrance)",
+          "Ice Palace (Second Section)",
+          "Ice Palace (Main)",
+          "Ice Palace (East)",
+          "Ice Palace (East Top)",
+          "Ice Palace (Kholdstare)"
+        ],
+        "boss": {
+          "name": "Kholdstare",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Misery Mire": {
+        "name": "Misery Mire",
+        "regions": [
+          "Misery Mire (Entrance)",
+          "Misery Mire (Main)",
+          "Misery Mire (West)",
+          "Misery Mire (Final Area)",
+          "Misery Mire (Vitreous)"
+        ],
+        "boss": {
+          "name": "Vitreous",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Turtle Rock": {
+        "name": "Turtle Rock",
+        "regions": [
+          "Turtle Rock (Entrance)",
+          "Turtle Rock (First Section)",
+          "Turtle Rock (Chain Chomp Room)",
+          "Turtle Rock (Pokey Room)",
+          "Turtle Rock (Second Section)",
+          "Turtle Rock (Big Chest)",
+          "Turtle Rock (Crystaroller Room)",
+          "Turtle Rock (Dark Room)",
+          "Turtle Rock (Eye Bridge)",
+          "Turtle Rock (Trinexx)"
+        ],
+        "boss": {
+          "name": "Trinexx",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Palace of Darkness": {
+        "name": "Palace of Darkness",
+        "regions": [
+          "Palace of Darkness (Entrance)",
+          "Palace of Darkness (Center)",
+          "Palace of Darkness (Big Key Chest)",
+          "Palace of Darkness (Bonk Section)",
+          "Palace of Darkness (North)",
+          "Palace of Darkness (Maze)",
+          "Palace of Darkness (Harmless Hellway)",
+          "Palace of Darkness (Final Section)"
+        ],
+        "boss": {
+          "name": "Helmasaur King",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
+      },
+      "Ganons Tower": {
+        "name": "Ganons Tower",
+        "regions": [
+          "Ganons Tower (Entrance)",
+          "Ganons Tower (Tile Room)",
+          "Ganons Tower (Compass Room)",
+          "Ganons Tower (Hookshot Room)",
+          "Ganons Tower (Map Room)",
+          "Ganons Tower (Firesnake Room)",
+          "Ganons Tower (Teleport Room)",
+          "Ganons Tower (Bottom)",
+          "Ganons Tower (Top)",
+          "Ganons Tower (Before Moldorm)",
+          "Ganons Tower (Moldorm)",
+          "Agahnim 2"
+        ],
+        "boss": {
+          "name": "Agahnim2",
+          "defeat_rule": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "defeat_rule"
+            },
+            "args": [
+              {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "player"
+              }
+            ]
+          }
+        },
+        "medallion_check": null
       }
     }
   },

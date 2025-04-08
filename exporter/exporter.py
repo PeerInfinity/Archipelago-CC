@@ -187,6 +187,9 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'itempool_counts': {},  # NEW: Complete itempool counts by player
         'game_info': {},  # NEW: Game-specific information for frontend
     }
+    
+    # Dungeons will only be added if there's data to include
+    all_dungeons = {}
 
     for player in multiworld.player_ids:
         player_str = str(player) # Use player_str consistently
@@ -197,7 +200,16 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         game_handler = get_game_export_handler(game_name)
         
         # Process all regions and their connections
-        export_data['regions'][player_str] = process_regions(multiworld, player)
+        # Also extract dungeons to separate structure
+        regions_data, dungeons_data = process_regions(multiworld, player)
+        export_data['regions'][player_str] = regions_data
+        
+        # Only add dungeons if there's data
+        if dungeons_data:
+            if 'dungeons' not in export_data:
+                export_data['dungeons'] = {}
+            export_data['dungeons'][player_str] = dungeons_data
+            all_dungeons[player_str] = dungeons_data
         
         # Process items and groups
         export_data['items'][player_str] = process_items(multiworld, player)
@@ -275,9 +287,12 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                                     'name': region.name,
                                     'type': getattr(region, 'type', 'Region'), # Assuming extract_type_value is not needed here or applied later
                                     'dungeon': getattr(region.dungeon, 'name', None) if hasattr(region, 'dungeon') and region.dungeon else None,
-                                    'is_light_world': getattr(region, 'is_light_world', False),
-                                    'is_dark_world': getattr(region, 'is_dark_world', False)
                                 }
+                                
+                                # Add game-specific region attributes from the handler
+                                region_attributes = game_handler.get_region_attributes(region)
+                                region_data.update(region_attributes)
+                                
                                 available_regions.append(region_data)
                         except Exception as e:
                             logger.error(f"Error checking can_start_at for region {region.name}: {str(e)}")
@@ -304,9 +319,10 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
     return export_data
 
-def process_regions(multiworld, player: int) -> Dict[str, Any]:
+def process_regions(multiworld, player: int) -> tuple:
     """
     Process complete region data including all available backend data.
+    Returns (regions_data, dungeons_data) tuple with separate structures.
     """
     logger.debug(f"Starting process_regions for player {player}")
     
@@ -359,10 +375,13 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
 
     try:
         regions_data = {}
+        dungeons_data = {}  # New structure to hold all dungeons
+        
         logger.debug(f"Getting game helpers for {multiworld.game[player]}")
         # Different games have different levels of rule analysis support
         # ALTTP has detailed helper expansion, while other games may preserve more helper nodes
-        game_handler = get_game_export_handler(multiworld.game[player])
+        game_name = multiworld.game[player]
+        game_handler = get_game_export_handler(game_name)
         logger.debug("Successfully got game helpers")
         
         logger.debug("Getting player regions")
@@ -381,32 +400,14 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                 location_name_to_id = {name: id for id, name in world.location_id_to_name.items()}
                 logger.debug(f"Created location_name_to_id mapping with {len(location_name_to_id)} entries")
 
-        # Process each region
+        # First pass - collect all dungeon data
         for region in player_regions:
-            try:
-                logger.debug(f"Processing region: {region.name}")
-                region_data = {
-                    'name': getattr(region, 'name', 'Unknown'),
-                    'type': extract_type_value(getattr(region, 'type', 'Region')),
-                    'player': getattr(region, 'player', player),
-                    'is_light_world': getattr(region, 'is_light_world', False),
-                    'is_dark_world': getattr(region, 'is_dark_world', False),
-                    'entrances': [],
-                    'exits': [],
-                    'locations': [],
-                    'dungeon': None,
-                    'shop': None,
-                    'time_passes': getattr(region, 'time_passes', True),
-                    'provides_chest_count': getattr(region, 'provides_chest_count', True),
-                    'region_rules': []
-                }
-                logger.debug("Successfully initialized region data")
-
-                # Process dungeon data
-                logger.debug("Processing dungeon data")
-                if hasattr(region, 'dungeon') and region.dungeon:
+            if hasattr(region, 'dungeon') and region.dungeon:
+                dungeon_name = getattr(region.dungeon, 'name', None)
+                if dungeon_name and dungeon_name not in dungeons_data:
+                    logger.debug(f"Processing dungeon: {dungeon_name}")
                     dungeon_data = {
-                        'name': getattr(region.dungeon, 'name', None),
+                        'name': dungeon_name,
                         'regions': [],
                         'boss': None,
                         'medallion_check': None
@@ -427,7 +428,6 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                         }
                     
                     if hasattr(region.dungeon, 'medallion_check'):
-                        dungeon_name = getattr(region.dungeon, 'name', 'UnknownDungeon')
                         dungeon_data['medallion_check'] = safe_expand_rule(
                             game_handler,
                             region.dungeon.medallion_check,
@@ -435,8 +435,37 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                             target_type='DungeonMedallion'
                         )
                     
-                    region_data['dungeon'] = dungeon_data
-                    logger.debug("Successfully processed dungeon data")
+                    dungeons_data[dungeon_name] = dungeon_data
+                    logger.debug(f"Successfully processed dungeon: {dungeon_name}")
+
+        # Second pass - process all regions
+        for region in player_regions:
+            try:
+                logger.debug(f"Processing region: {region.name}")
+                region_data = {
+                    'name': getattr(region, 'name', 'Unknown'),
+                    'type': extract_type_value(getattr(region, 'type', 'Region')),
+                    'player': getattr(region, 'player', player),
+                    'entrances': [],
+                    'exits': [],
+                    'locations': [],
+                    'time_passes': getattr(region, 'time_passes', True),
+                    'provides_chest_count': getattr(region, 'provides_chest_count', True),
+                    'region_rules': []
+                }
+                
+                # Add game-specific region attributes from the handler
+                region_attributes = game_handler.get_region_attributes(region)
+                region_data.update(region_attributes)
+                
+                logger.debug("Successfully initialized region data")
+
+                # Store reference to dungeon instead of full dungeon data
+                if hasattr(region, 'dungeon') and region.dungeon:
+                    dungeon_name = getattr(region.dungeon, 'name', None)
+                    if dungeon_name:
+                        region_data['dungeon'] = dungeon_name
+                        logger.debug(f"Added dungeon reference: {dungeon_name}")
 
                 # Process shop data
                 logger.debug("Processing shop data")
@@ -604,7 +633,7 @@ def process_regions(multiworld, player: int) -> Dict[str, Any]:
                 continue
 
         logger.debug(f"Successfully finished process_regions for player {player}")
-        return regions_data
+        return regions_data, dungeons_data
 
     except Exception as e:
         logger.error(f"Error in process_regions: {str(e)}")
@@ -1021,6 +1050,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'world_classes',
         'plando_options',
         'regions',
+        'dungeons',
         'start_regions',
         'items',
         'item_groups',
@@ -1037,6 +1067,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         if key == 'game_name':
             # Handle game_name explicitly using the determined combined_game_name
             ordered_cleaned_data[key] = combined_game_name
+        elif key == 'dungeons':
+            # Only include dungeons if it exists in the data
+            if key in cleaned_data:
+                ordered_cleaned_data[key] = cleaned_data[key]
         elif key in cleaned_data:
             # Ensure player-specific keys retain their player-keyed structure
             if key in player_specific_keys: 
@@ -1094,6 +1128,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             ]
             player_keys_in_order = [
                 'regions',
+                'dungeons',
                 'start_regions', 
                 'items',
                 'item_groups',
@@ -1123,7 +1158,11 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             
             # 4. Add player-specific keys in specified order
             for key in player_keys_in_order:
-                if key in cleaned_data and player_str in cleaned_data.get(key, {}):
+                if key == 'dungeons':
+                    # Only include dungeons if it exists and has data for this player
+                    if key in cleaned_data and player_str in cleaned_data.get(key, {}):
+                        player_export_data[key] = {player_str: cleaned_data[key][player_str]}
+                elif key in cleaned_data and player_str in cleaned_data.get(key, {}):
                     # Assign a dictionary containing the player key and their data
                     player_export_data[key] = {player_str: cleaned_data[key][player_str]}
                 else:

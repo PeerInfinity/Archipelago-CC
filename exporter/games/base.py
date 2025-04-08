@@ -143,3 +143,17 @@ class BaseGameExportHandler:
                 else:
                     settings_dict[setting_name] = f"unknown_{value}"
         return settings_dict
+
+    def get_region_attributes(self, region) -> Dict[str, Any]:
+        """
+        Get game-specific region attributes to include in the export.
+        This is called for each region during processing.
+        
+        Args:
+            region: The region object being processed
+            
+        Returns:
+            A dictionary of attributes to add to the region data
+        """
+        # Base implementation returns no additional attributes
+        return {}
