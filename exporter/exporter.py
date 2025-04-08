@@ -312,7 +312,6 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'items': {},    # Item data by player
         'item_groups': {},  # Item groups by player
         'progression_mapping': {},  # Progressive item info
-        'mode': {},     # Game mode by player
         'settings': {}, # Game settings by player
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # NEW: Complete itempool counts by player
@@ -320,294 +319,71 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
     }
 
     for player in multiworld.player_ids:
+        player_str = str(player) # Use player_str consistently
+        
+        # Get game name, world, and handler
+        game_name = multiworld.game[player]
+        world = multiworld.worlds[player]
+        game_handler = get_game_export_handler(game_name)
+        
         # Process all regions and their connections
-        export_data['regions'][str(player)] = process_regions(multiworld, player)
+        export_data['regions'][player_str] = process_regions(multiworld, player)
         
         # Process items and groups
-        export_data['items'][str(player)] = process_items(multiworld, player)
-        export_data['item_groups'][str(player)] = process_item_groups(multiworld, player)
-        export_data['progression_mapping'][str(player)] = process_progression_mapping(multiworld, player)
+        export_data['items'][player_str] = process_items(multiworld, player)
+        export_data['item_groups'][player_str] = process_item_groups(multiworld, player)
+        export_data['progression_mapping'][player_str] = process_progression_mapping(multiworld, player)
 
-        # NEW: Get game-specific information if available
-        world = multiworld.worlds[player]
-        
-        # First try to get game info from the world object
-        if hasattr(world, 'get_game_info') and callable(getattr(world, 'get_game_info')):
-            try:
-                export_data['game_info'][str(player)] = world.get_game_info()
-                debug_mode_settings(f"Added game_info from world for player {player}", export_data['game_info'][str(player)])
-            except Exception as e:
-                error_msg = f"Error getting game_info from world for player {player}: {str(e)}"
-                logger.error(error_msg)
-                debug_mode_settings(f"ERROR: {error_msg}")
-        else:
-            # Try to get game info from the helper expander
-            try:
-                game_handler = get_game_export_handler(multiworld.game[player])
-                if hasattr(game_handler, 'get_game_info') and callable(getattr(game_handler, 'get_game_info')):
-                    export_data['game_info'][str(player)] = game_handler.get_game_info(world) # Added world argument
-                    debug_mode_settings(f"Added game_info from helper for player {player}", export_data['game_info'][str(player)])
-                else:
-                    # Default game info structure if not provided by game or helper
-                    export_data['game_info'][str(player)] = {
-                        "name": multiworld.game[player],
-                        "rule_format": {
-                            "version": "1.0"
-                        }
-                    }
-            except Exception as e:
-                error_msg = f"Error getting game helper for player {player}: {str(e)}"
-                logger.error(error_msg)
-                debug_mode_settings(f"ERROR: {error_msg}")
-                # Fallback to default
-                export_data['game_info'][str(player)] = {
-                    "name": multiworld.game[player],
-                    "rule_format": {
-                        "version": "1.0"
-                    }
-                }
-
-        # NEW: Process complete itempool data
+        # NEW: Get game-specific information if available using handler
         try:
-            # Count all items in the itempool
-            itempool_counts = collections.defaultdict(int)
-            
-            # Process main itempool
-            for item in multiworld.itempool:
-                if item.player == player:
-                    itempool_counts[item.name] += 1
-            
-            # Add pre-collected items 
-            if hasattr(multiworld, 'precollected_items'):
-                for item in multiworld.precollected_items.get(player, []):
-                    itempool_counts[item.name] += 1
-            
-            # Process already placed items in locations
-            for location in multiworld.get_locations(player):
-                if location.item and location.item.player == player:
-                    itempool_counts[location.item.name] += 1
-            
-            # Add dungeon-specific items like keys
-            world = multiworld.worlds[player]
-            if hasattr(world, 'dungeons'):
-                for dungeon in world.dungeons:
-                    dungeon_name = getattr(dungeon, 'name', '')
-                    if dungeon_name:
-                        # Count small keys
-                        small_key_name = f'Small Key ({dungeon_name})'
-                        if hasattr(dungeon, 'small_key_count'):
-                            small_key_count = dungeon.small_key_count
-                            if small_key_count > 0 and small_key_name not in itempool_counts:
-                                itempool_counts[small_key_name] = small_key_count
-                        
-                        # Add big key
-                        big_key_name = f'Big Key ({dungeon_name})'
-                        if hasattr(dungeon, 'big_key') and dungeon.big_key and big_key_name not in itempool_counts:
-                            itempool_counts[big_key_name] = 1
-            
-            # Ensure we include data about item maximums from difficulty_requirements
-            if hasattr(world, 'difficulty_requirements'):
-                # Add these as special maximum values, not actual counts
-                if hasattr(world.difficulty_requirements, 'progressive_bottle_limit'):
-                    itempool_counts['__max_progressive_bottle'] = world.difficulty_requirements.progressive_bottle_limit
-                if hasattr(world.difficulty_requirements, 'boss_heart_container_limit'):
-                    itempool_counts['__max_boss_heart_container'] = world.difficulty_requirements.boss_heart_container_limit
-                if hasattr(world.difficulty_requirements, 'heart_piece_limit'):
-                    itempool_counts['__max_heart_piece'] = world.difficulty_requirements.heart_piece_limit
+            game_info = game_handler.get_game_info(world) # Use handler directly
+            export_data['game_info'][player_str] = game_info
+            debug_mode_settings(f"Added game_info from handler for player {player}", game_info)
+        except Exception as e:
+            error_msg = f"Error getting game_info from handler for player {player}: {str(e)}"
+            logger.error(error_msg)
+            debug_mode_settings(f"ERROR: {error_msg}")
+            # Fallback to default
+            export_data['game_info'][player_str] = {
+                "name": game_name,
+                "rule_format": {
+                    "version": "1.0"
+                }
+            }
 
-            # sort the itempool counts by item name
-            itempool_counts = dict(sorted(itempool_counts.items(), key=lambda x: x[0]))
-            
-            export_data['itempool_counts'][str(player)] = dict(itempool_counts)
-            
+        # NEW: Process complete itempool data using handler
+        try:
+            export_data['itempool_counts'][player_str] = game_handler.get_itempool_counts(world, multiworld, player) # Call the handler method
+            logger.debug(f"Successfully exported itempool counts via handler for player {player}")
+            debug_mode_settings(f"Successfully exported itempool counts via handler for player {player}", export_data['itempool_counts'][player_str])
         except Exception as e:
             error_msg = f"Error exporting itempool counts for player {player}: {str(e)}"
             logger.error(error_msg)
             debug_mode_settings(f"ERROR: {error_msg}")
-            export_data['itempool_counts'][str(player)] = {
+            export_data['itempool_counts'][player_str] = {
                 'error': error_msg,
                 'details': "Failed to read itempool counts. Check logs for more information."
             }
 
-        # Game settings
+        # Get Settings using handler
         try:
-            # Build settings dictionary with direct value extraction
-            settings_dict = {}
-            
-            # Add game information
-            settings_dict['game'] = multiworld.game[player]
-            debug_mode_settings(f"Game for player {player}", multiworld.game[player])
-            
-            # Helper function to extract value from enum-like objects
-            def extract_value(obj):
-                if hasattr(obj, 'value'):  # Check if it's an enum with a value attribute
-                    return obj.value
-                
-                # Handle string representation with parentheses like Mode(Open)
-                str_rep = str(obj)
-                if '(' in str_rep and ')' in str_rep:
-                    extracted = str_rep.split('(', 1)[1].split(')', 1)[0]
-                    
-                    # Convert to appropriate type
-                    if extracted.lower() in ('yes', 'no', 'true', 'false'):
-                        return extracted.lower() == 'yes' or extracted.lower() == 'true'
-                    elif extracted.isdigit():
-                        return int(extracted)
-                    else:
-                        return extracted
-                
-                return obj  # Return as is if no special handling needed
-            
-            # Handle common settings
-            common_settings = [
-                'dark_room_logic', 'retro_bow', 'swordless', 'enemy_shuffle',
-                'enemy_health', 'enemy_damage', 'bombless_start', 'glitches_required',
-                'pot_shuffle', 'dungeon_counters', 'glitch_boots', 'accessibility'
-            ]
-            
-            # Debug before processing settings
-            debug_mode_settings(f"Processing settings for player {player}")
-            
-            for setting in common_settings:
-                if hasattr(multiworld, setting) and player in getattr(multiworld, setting, {}):
-                    value = getattr(multiworld, setting)[player]
-                    settings_dict[setting] = extract_value(value)
-                    debug_mode_settings(f"Setting '{setting}' found", value)
-                else:
-                    debug_mode_settings(f"Setting '{setting}' not found for player {player}")
-            
-            # Handle game mode
-            if hasattr(multiworld, 'mode') and player in multiworld.mode:
-                original_mode = multiworld.mode[player]
-                settings_dict['mode'] = extract_value(original_mode)
-                debug_mode_settings(f"Game mode for player {player}", original_mode)
-            else:
-                error_msg = f"Could not read game mode for player {player}"
-                logger.error(error_msg)
-                debug_mode_settings(f"ERROR: {error_msg}")
-                settings_dict['mode'] = f"ERROR: {error_msg}"
-            
-            # Add world-specific attributes if they exist
-            try:
-                if player in multiworld.worlds:
-                    world = multiworld.worlds.get(player)
-                    debug_mode_settings(f"World object for player {player}", world)
-                    
-                    if world:
-                        # Handle shuffle_capacity_upgrades
-                        try:
-                            if hasattr(world, 'options') and hasattr(world.options, 'shuffle_capacity_upgrades'):
-                                debug_mode_settings("shuffle_capacity_upgrades found", world.options.shuffle_capacity_upgrades)
-                                settings_dict['shuffle_capacity_upgrades'] = extract_value(world.options.shuffle_capacity_upgrades)
-                        except Exception as e:
-                            error_msg = f"Error extracting shuffle_capacity_upgrades: {str(e)}"
-                            logger.error(error_msg)
-                            debug_mode_settings(f"ERROR: {error_msg}")
-                            settings_dict['shuffle_capacity_upgrades'] = f"ERROR: {error_msg}"
-                        
-                        # Handle treasure_hunt_required
-                        try:
-                            if hasattr(world, 'treasure_hunt_required'):
-                                debug_mode_settings("treasure_hunt_required found", world.treasure_hunt_required)
-                                settings_dict['treasure_hunt_required'] = world.treasure_hunt_required
-                        except Exception as e:
-                            error_msg = f"Error extracting treasure_hunt_required: {str(e)}"
-                            logger.error(error_msg)
-                            debug_mode_settings(f"ERROR: {error_msg}")
-                            settings_dict['treasure_hunt_required'] = f"ERROR: {error_msg}"
-                        
-                        # Handle difficulty requirements
-                        try:
-                            if hasattr(world, 'difficulty_requirements'):
-                                debug_mode_settings("difficulty_requirements found", world.difficulty_requirements)
-                                difficulty_reqs = {
-                                    'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
-                                    'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
-                                    'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
-                                }
-                                # Check if any values are None and replace with error message
-                                for key, value in difficulty_reqs.items():
-                                    if value is None:
-                                        difficulty_reqs[key] = f"ERROR: Failed to read {key}"
-                                settings_dict['difficulty_requirements'] = difficulty_reqs
-                        except Exception as e:
-                            error_msg = f"Error getting difficulty requirements: {str(e)}"
-                            logger.error(error_msg)
-                            debug_mode_settings(f"ERROR: {error_msg}")
-                            settings_dict['difficulty_requirements'] = {
-                                'error': f"Failed to read difficulty requirements: {str(e)}"
-                            }
-                        
-                        # Handle medallions
-                        try:
-                            if hasattr(world, 'required_medallions'):
-                                debug_mode_settings("required_medallions found", world.required_medallions)
-                                # Direct extraction of medallion names
-                                medallions = []
-                                for medallion in world.required_medallions:
-                                    medallions.append(extract_value(medallion))
-                                
-                                if not medallions:
-                                    error_msg = "No medallions found"
-                                    logger.error(error_msg)
-                                    debug_mode_settings(f"ERROR: {error_msg}")
-                                    raise ValueError(error_msg)
-                                    
-                                settings_dict['required_medallions'] = medallions
-                                settings_dict['misery_mire_medallion'] = medallions[0]
-                                settings_dict['turtle_rock_medallion'] = medallions[1] if len(medallions) > 1 else medallions[0]
-                        except Exception as e:
-                            error_msg = f"Error getting medallions: {str(e)}"
-                            logger.error(error_msg)
-                            debug_mode_settings(f"ERROR: {error_msg}")
-                            settings_dict['required_medallions'] = [f"ERROR: Failed to read medallions: {str(e)}"]
-                            settings_dict['misery_mire_medallion'] = "ERROR: Failed to read medallion"
-                            settings_dict['turtle_rock_medallion'] = "ERROR: Failed to read medallion"
-            except Exception as e:
-                error_msg = f"Error accessing world for player {player}: {str(e)}"
-                logger.error(error_msg)
-                debug_mode_settings(f"ERROR: {error_msg}")
-                settings_dict['error'] = f"Failed to access world data: {str(e)}"
-            
-            export_data['settings'][str(player)] = settings_dict
-            debug_mode_settings(f"Final settings_dict for player {player}", settings_dict)
-            
+            settings_data = game_handler.get_settings_data(world, multiworld, player) # Call the handler method
+            export_data['settings'][player_str] = settings_data
+            debug_mode_settings(f"Extracted settings_dict via handler for player {player}", settings_data)
         except Exception as e:
             error_msg = f"Error exporting settings for player {player}: {str(e)}"
             logger.error(error_msg)
             debug_mode_settings(f"ERROR: {error_msg}")
-            export_data['settings'][str(player)] = {
+            export_data['settings'][player_str] = {
                 'error': error_msg,
                 'details': "Failed to read game settings. Check logs for more information."
             }
 
-        # Game mode handling - add error message approach
-        try:
-            if hasattr(multiworld, 'mode') and player in multiworld.mode:
-                original_mode = multiworld.mode[player]
-                debug_mode_settings(f"Processing mode for player {player}", original_mode)
-                
-                # Extract the mode value using our helper
-                extract_mode = extract_value(original_mode)
-                debug_mode_settings(f"Extracted mode value", extract_mode)
-                
-                export_data['mode'][str(player)] = extract_mode
-            else:
-                error_msg = f"Game mode not found for player {player}"
-                logger.error(error_msg)
-                debug_mode_settings(f"ERROR: {error_msg}")
-                export_data['mode'][str(player)] = f"ERROR: {error_msg}"
-        except Exception as e:
-            error_msg = f"Error processing game mode for player {player}: {str(e)}"
-            logger.error(error_msg)
-            debug_mode_settings(f"ERROR: {error_msg}")
-            export_data['mode'][str(player)] = f"ERROR: {error_msg}"
-
         # Start regions
         try:
             logger.debug(f"Processing start regions for player {player}")
-            world = multiworld.worlds[player]
-            logger.debug(f"Got world for player {player}")
+            # world variable should already be defined from earlier in the loop
+            logger.debug(f"Using world object for player {player}")
 
             try:
                 menu_region = multiworld.get_region('Menu', player)
@@ -625,14 +401,15 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
             for region in player_regions:
                 try:
-                    if hasattr(region, 'can_start_at'):
+                    if hasattr(region, 'can_start_at') and callable(getattr(region, 'can_start_at')):
                         logger.debug(f"Checking if can start at region: {region.name}")
                         try:
-                            can_start = region.can_start_at(world)
+                            # Ensure world is passed to can_start_at if needed by the method
+                            can_start = region.can_start_at(world) 
                             if (can_start):
                                 region_data = {
                                     'name': region.name,
-                                    'type': getattr(region, 'type', 'Region'),
+                                    'type': getattr(region, 'type', 'Region'), # Assuming extract_type_value is not needed here or applied later
                                     'dungeon': getattr(region.dungeon, 'name', None) if hasattr(region, 'dungeon') and region.dungeon else None,
                                     'is_light_world': getattr(region, 'is_light_world', False),
                                     'is_dark_world': getattr(region, 'is_dark_world', False)
@@ -640,21 +417,23 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                                 available_regions.append(region_data)
                         except Exception as e:
                             logger.error(f"Error checking can_start_at for region {region.name}: {str(e)}")
+                    else:
+                        logger.debug(f"Region {region.name} does not have a callable can_start_at method.")
                 except Exception as e:
-                    logger.error(f"Error processing region in start regions: {str(e)}")
+                    logger.error(f"Error processing region {getattr(region, 'name', 'Unknown')} in start regions loop: {str(e)}")
                     continue
 
-            export_data['start_regions'][str(player)] = {
-                'default': ['Menu'],
+            export_data['start_regions'][player_str] = {
+                'default': ['Menu'], # Keep default as Menu
                 'available': available_regions
             }
             logger.debug(f"Completed processing start regions for player {player}")
 
         except Exception as e:
-            logger.error(f"Error in start regions processing: {str(e)}")
+            logger.error(f"Error in top-level start regions processing for player {player}: {str(e)}")
             logger.exception("Full traceback:")
-            # Provide a fallback
-            export_data['start_regions'][str(player)] = {
+            # Provide a fallback in case of error
+            export_data['start_regions'][player_str] = {
                 'default': ['Menu'],
                 'available': []
             }
@@ -1130,41 +909,27 @@ def cleanup_export_data(data):
         if 'game_info' in data:
             debug_file.write(f"DEBUG - game_info before cleanup: {str(data['game_info'])}\n")
     
-    # Track the game type for each player to apply appropriate settings
+    # Track the game type for each player to apply appropriate handler
     player_games = {}
     
-    # If we have game info, collect it for each player
-    if 'settings' in data:
-        for player_id, settings in data['settings'].items():
-            if 'game' in settings:
-                player_games[player_id] = settings['game']
-
-    # Define mappings for numeric settings values to readable strings
-    # These are primarily ALTTP settings
-    alttp_setting_mappings = {
-        'dark_room_logic': {0: 'lamp', 1: 'torches', 2: 'none'},
-        'enemy_health': {0: 'default', 1: 'easy', 2: 'hard', 3: 'expert'},
-        'enemy_damage': {0: 'default', 1: 'shuffled', 2: 'chaos'},
-        'glitches_required': {0: 'none', 1: 'overworld_glitches', 2: 'major_glitches', 3: 'no_logic'},
-        'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
-        'dungeon_counters': {0: 'default', 1: 'on', 2: 'off'},
-        'pot_shuffle': {0: 'off', 1: 'on'},
-        'mode': {0: 'standard', 1: 'open', 2: 'inverted', 3: 'retro'},
-        'glitch_boots': {0: 'off', 1: 'on'},
-        'shuffle_capacity_upgrades': {0: 'off', 1: 'on', 2: 'progressive'}
-    }
+    # Get player game mapping (needed for handler selection)
+    # We need this info before cleaning settings, so iterate over settings first
+    # even if settings themselves aren't cleaned until later
+    if 'settings' in data and isinstance(data['settings'], dict):
+        for player_id, settings_data in data['settings'].items():
+            if isinstance(settings_data, dict) and 'game' in settings_data:
+                player_games[player_id] = settings_data['game']
+            else:
+                # Attempt to get game name from game_info as a fallback
+                if 'game_info' in data and player_id in data['game_info'] and 'name' in data['game_info'][player_id]:
+                    player_games[player_id] = data['game_info'][player_id]['name']
+                else:
+                    logger.warning(f"Could not determine game for player {player_id} in cleanup")
+                    player_games[player_id] = "unknown" # Default if not found
+                    
+    # REMOVED common_setting_mappings dictionary
     
-    # Boolean settings that should be actual booleans for ALTTP
-    alttp_boolean_settings = [
-        'retro_bow', 'swordless', 'enemy_shuffle', 'bombless_start'
-    ]
-    
-    # Common setting mappings for all games
-    common_setting_mappings = {
-        'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
-    }
-     
-    # Ensure game_info is properly structured
+    # Ensure game_info is properly structured (this might still be useful)
     if 'game_info' in data:
         for player_id, game_info in data['game_info'].items():
             # Make sure game_info has the game name
@@ -1175,93 +940,24 @@ def cleanup_export_data(data):
             if 'rule_format' not in game_info:
                 game_info['rule_format'] = {"version": "1.0"}
 
-    # Clean up mode field
-    if 'mode' in data:
-        # Record the original state for debugging
-        debug_mode_settings("Mode field before cleanup", data['mode'])
-        
-        # Check the structure - if it's not a dictionary, don't attempt to fix
-        # Instead, log an error and leave it as-is for debugging
-        if not isinstance(data['mode'], dict):
-            error_msg = f"Mode field has unexpected type: {type(data['mode'])}"
-            logger.error(error_msg)
-            debug_mode_settings(f"ERROR: {error_msg}")
-            with open("debug_cleanup_data.txt", "a") as debug_file:
-                debug_file.write(f"ERROR: {error_msg}\n")
-            # Don't modify the field - better to have wrong data than silently "fixed" data
-        else:
-            # Process the dictionary format
-            for player, mode_value in data['mode'].items():
-                debug_mode_settings(f"Cleaning up mode for player {player}", mode_value)
-                
-                # If it's an error message, keep it as is
-                if isinstance(mode_value, str) and mode_value.startswith("ERROR:"):
-                    debug_mode_settings(f"Keeping error message", mode_value)
-                    continue
-                
-                # Ensure mode is a clean string or number based on mappings
-                if isinstance(mode_value, str) and '(' in mode_value:
-                    # Extract from string like Mode(Open)
-                    extracted = mode_value.split('(', 1)[1].split(')', 1)[0].lower()
-                    data['mode'][player] = extracted
-                    debug_mode_settings(f"Extracted mode from string", extracted)
-                    
-                # Convert from integer to string using the mapping
-                # Only for ALTTP or if we don't know the game type (backward compatibility)
-                game = player_games.get(player, "A Link to the Past")  # Default to ALTTP for compatibility
-                if game == "A Link to the Past" and isinstance(mode_value, int) and mode_value in alttp_setting_mappings['mode']:
-                    mapped_value = alttp_setting_mappings['mode'][mode_value]
-                    data['mode'][player] = mapped_value
-                    debug_mode_settings(f"Mapped mode from int {mode_value}", mapped_value)
-    
     # Clean up settings fields
     if 'settings' in data:
         for player, settings in data['settings'].items():
-            debug_mode_settings(f"Cleaning up settings for player {player}", settings)
-            
-            # Skip if it's an error object
-            if 'error' in settings:
-                debug_mode_settings("Skipping settings with error")
+            if not isinstance(settings, dict) or 'error' in settings: # Skip if not dict or already an error
                 continue
-            
-            # Determine game type for this player
-            game = player_games.get(player, "unknown")
-            debug_mode_settings(f"Game for player {player}: {game}")
-            
-            # Select appropriate setting mappings based on game
-            setting_mappings = common_setting_mappings.copy()
-            boolean_settings = []
-            
-            if game == "A Link to the Past":
-                # Add ALTTP-specific mappings
-                setting_mappings.update(alttp_setting_mappings)
-                boolean_settings = alttp_boolean_settings
-                
-            # Convert numeric settings to descriptive strings
-            for setting_name, value in list(settings.items()):
-                # Skip if it's already an error message
-                if isinstance(value, str) and value.startswith("ERROR:"):
-                    debug_mode_settings(f"Keeping error message for {setting_name}", value)
-                    continue
-                    
-                # Convert numeric settings using mapping
-                if setting_name in setting_mappings and isinstance(value, int):
-                    if value in setting_mappings[setting_name]:
-                        mapped_value = setting_mappings[setting_name][value]
-                        settings[setting_name] = mapped_value
-                        debug_mode_settings(f"Mapped {setting_name} from {value}", mapped_value)
-                    else:
-                        error_msg = f"Unknown {setting_name} value: {value}"
-                        logger.warning(error_msg)
-                        debug_mode_settings(f"WARNING: {error_msg}")
-                        settings[setting_name] = f"unknown_{value}"
-                
-                # Ensure boolean settings are actual booleans
-                if setting_name in boolean_settings:
-                    if isinstance(value, int):
-                        settings[setting_name] = bool(value)
-                        debug_mode_settings(f"Converted {setting_name} to boolean", bool(value))
-    
+            game = player_games.get(player, "unknown") # Get game name retrieved earlier
+            game_handler = get_game_export_handler(game)
+            try:
+                # Delegate cleanup to the specific handler
+                # Pass a copy to avoid modifying the original dict used elsewhere if cleanup fails partially
+                cleaned_settings = game_handler.cleanup_settings(settings.copy())
+                data['settings'][player] = cleaned_settings # Update with cleaned settings
+                debug_mode_settings(f"Applied cleanup_settings via handler for player {player}", cleaned_settings)
+            except Exception as e:
+                logger.error(f"Error cleaning settings via handler for player {player} ({game}): {e}")
+                # Keep original settings in case of error during cleanup
+                debug_mode_settings(f"ERROR cleaning settings for player {player}. Keeping original: {settings}")
+
     # Clean up region types
     if 'regions' in data:
         for player, regions in data['regions'].items():
@@ -1568,7 +1264,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'items', 'item_groups', 'progression_mapping', 
-        'mode', 'settings', 'start_regions', 'itempool_counts', 'game_info'
+        'settings', 'start_regions', 'itempool_counts', 'game_info'
     ]
 
     # Prepare the combined export data for all players
@@ -1611,7 +1307,6 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'item_groups',
         'itempool_counts',
         'progression_mapping',
-        'mode',
         'settings',
         'game_info'
     ]
@@ -1685,7 +1380,6 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 'item_groups',
                 'itempool_counts',
                 'progression_mapping', 
-                'mode',
                 'settings',
                 'game_info' 
             ]

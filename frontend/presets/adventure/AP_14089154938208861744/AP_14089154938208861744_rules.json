@@ -1431,14 +1431,10 @@
   "progression_mapping": {
     "1": {}
   },
-  "mode": {
-    "1": "ERROR: Game mode not found for player 1"
-  },
   "settings": {
     "1": {
       "game": "Adventure",
-      "accessibility": "items",
-      "mode": "ERROR: Could not read game mode for player 1"
+      "accessibility": "items"
     }
   },
   "game_info": {
