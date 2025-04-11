@@ -44,6 +44,10 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     filename='rule_analysis_debug.log')
 
+# --- ADDED: File content cache ---
+file_content_cache: Dict[str, List[str]] = {}
+# --- END ADDED ---
+
 # Regex definitions
 REGEX_LAMBDA_BODY = re.compile(r'lambda\s+([\w\s,()]*):\s*(.*)', re.DOTALL)
 REGEX_METHOD_CALL = re.compile(r'(\w+)\((.*)\)')
@@ -58,10 +62,106 @@ def count_nested_parens(s):
             count -= 1
     return count
 
+def _read_multiline_lambda(func):
+    """Read a multiline lambda function using tokenize to properly handle parentheses and indentation."""
+    try:
+        import tokenize
+        import io
+        
+        # Get the file and line number where the lambda starts
+        filename = inspect.getfile(func)
+        start_line = func.__code__.co_firstlineno
+        
+        # --- MODIFIED: Use file cache ---
+        if filename in file_content_cache:
+            lines = file_content_cache[filename]
+            print(f"_read_multiline_lambda: Using cached content for {filename}")
+        else:
+            print(f"_read_multiline_lambda: Reading and caching content for {filename}")
+            with open(filename, 'r') as f:
+                # Read the file line by line
+                lines = f.readlines()
+            file_content_cache[filename] = lines # Store in cache
+        # --- END MODIFIED ---
+
+        # Start with the line containing the lambda
+        # Correct for 0-based list index vs 1-based line number
+        if start_line <= 0 or start_line > len(lines):
+            print(f"Error: start_line {start_line} is out of bounds for file {filename} with {len(lines)} lines.")
+            return None # Or handle error appropriately
+
+        lambda_text = lines[start_line-1]
+        initial_indent = len(lambda_text) - len(lambda_text.lstrip())
+        
+        # Track parentheses balance
+        paren_count = lambda_text.count('(') - lambda_text.count(')')
+        bracket_count = lambda_text.count('[') - lambda_text.count(']')
+        brace_count = lambda_text.count('{') - lambda_text.count('}')
+        
+        # Continue reading lines until all parentheses/brackets/braces are balanced
+        # and we see a decrease in indentation
+        i = start_line
+        while i < len(lines):
+            line = lines[i]
+            current_indent = len(line) - len(line.lstrip())
+            
+            # If we see a decrease in indentation, we're probably past the lambda
+            if current_indent < initial_indent:
+                break
+            
+            # Update counts
+            paren_count += line.count('(') - line.count(')')
+            bracket_count += line.count('[') - line.count(']')
+            brace_count += line.count('{') - line.count('}')
+            
+            # Add the line to our lambda text
+            lambda_text += line
+            
+            # If all parentheses/brackets/braces are balanced, we might be done
+            if paren_count <= 0 and bracket_count <= 0 and brace_count <= 0:
+                # Check if the next line has less indentation
+                if i + 1 < len(lines):
+                    next_line = lines[i + 1]
+                    # Check if next_line is not empty or just whitespace before calculating indent
+                    if next_line.strip():
+                        next_indent = len(next_line) - len(next_line.lstrip())
+                        if next_indent < initial_indent:
+                            break
+                    else:
+                        # Skip empty/whitespace lines when checking indentation break
+                        pass
+            
+            i += 1
+        
+        # Clean up the lambda text
+        lambda_text = lambda_text.strip()
+
+        # Strip "#" and anything after it
+        lambda_text = re.sub(r'#.*$', '', lambda_text, flags=re.MULTILINE)
+        
+        # Remove any trailing operators (and, or, etc.)
+        #truncated_operators = [' and', ' or', '+', '-', '*', '/', '%', '==', '!=', '<', '>', '<=', '>=', 'not', 'is']
+        #for op in truncated_operators:
+        #    if lambda_text.endswith(op):
+        #        lambda_text = lambda_text[:-len(op)].strip()
+        
+        return lambda_text
+    except Exception as e:
+        print(f"Error reading multiline lambda: {e}")
+        return None
+
 def _clean_source(func):
     """Retrieve and clean the source code of a function, handling lambdas with better multiline support."""
     try:
-        source = inspect.getsource(func)
+        # Try using getsourcelines instead of getsource for better multiline support
+        try:
+            source_lines, start_line = inspect.getsourcelines(func)
+            source = ''.join(source_lines)
+            print(f"_clean_source: Got {len(source_lines)} lines from line {start_line}")
+        except Exception as line_err:
+            print(f"Could not get source lines for {func}: {line_err}")
+            source = inspect.getsource(func)
+            
         # Remove comments
         source = re.sub(r'#.*$', '', source, flags=re.MULTILINE)
         source = source.strip()
@@ -70,15 +170,52 @@ def _clean_source(func):
         print(f"Could not get source for {func}: {e}")
         return None
 
-    # *** ADDED CHECK for staticmethod ***
+    # --- MODIFIED: More robust staticmethod check using AST ---
     if 'staticmethod(' in source:
-        print("_clean_source: Detected staticmethod wrapper, skipping analysis.")
-        # Treat staticmethod wrapped rules as always True or return None to signal skipping
-        # Returning a representation of True is safer for now.
-        # Ideally, the caller (process_regions) should handle this case.
-        # For now, we let analyze_rule produce a constant True.
-        return "def __analyzed_func__(state):\n    return True" 
-        # return None # Alternative: Signal to analyze_rule to skip
+        print(f"_clean_source: Detected 'staticmethod(' in source: {repr(source)}")
+        try:
+            # Parse the source string (could be an assignment)
+            tree = ast.parse(source)
+
+            # Expect Module -> Assign/AnnAssign -> Call(Name(id='staticmethod'), args=[Lambda(...)])
+            assigned_value = None
+            if isinstance(tree, ast.Module) and tree.body:
+                first_stmt = tree.body[0]
+                if isinstance(first_stmt, (ast.Assign, ast.AnnAssign)):
+                    assigned_value = first_stmt.value
+
+            # Check if the assigned value is the staticmethod call
+            if (isinstance(assigned_value, ast.Call) and
+                isinstance(assigned_value.func, ast.Name) and
+                assigned_value.func.id == 'staticmethod' and
+                len(assigned_value.args) == 1):
+
+                lambda_node = assigned_value.args[0]
+                # Check if the argument is a Lambda returning constant True
+                if (isinstance(lambda_node, ast.Lambda) and
+                    isinstance(lambda_node.body, ast.Constant) and
+                    lambda_node.body.value is True):
+
+                    # Determine appropriate param name if possible (optional enhancement)
+                    # For now, default to 'state' as it covers access_rule
+                    # param_name = lambda_node.args.args[0].arg if lambda_node.args.args else 'state'
+                    param_name = 'state' # Keep it simple for now
+                    print(f"_clean_source: Confirmed staticmethod(lambda {param_name}: True). Returning standard True func.")
+                    return f"def __analyzed_func__({param_name}):\n    return True"
+                else:
+                    print(f"_clean_source: staticmethod found, but does not wrap a simple 'lambda: True'. Lambda body: {ast.dump(lambda_node) if isinstance(lambda_node, ast.Lambda) else 'Not a Lambda'}")
+            else:
+                print(f"_clean_source: staticmethod found, but AST structure is not the expected assignment pattern. Assigned value: {ast.dump(assigned_value) if assigned_value else 'None'}")
+
+        except SyntaxError as parse_err:
+            print(f"_clean_source: SyntaxError parsing staticmethod source: {parse_err}. Source: {repr(source)}")
+        except Exception as e:
+            print(f"_clean_source: Error during AST analysis of staticmethod: {e}. Source: {repr(source)}")
+
+        # If AST analysis fails or doesn't match expected pattern, return None
+        print("_clean_source: Could not robustly confirm staticmethod wraps lambda:True. Returning None.")
+        return None
+    # --- END MODIFIED ---
 
     # Handle lambda functions specifically
     match = REGEX_LAMBDA_BODY.match(source)
@@ -86,92 +223,72 @@ def _clean_source(func):
         param = match.group(1).strip()
         body = match.group(2).strip()
         
-        # Remove trailing comma if present after body extraction
+        # Remove trailing comma potentially left by source inspection
         if body.endswith(','):
             body = body[:-1].rstrip()
 
-        # Better multiline handling - preserve structure while joining lines
+        # --- Refined Truncation/Multiline Handling ---
+        # Define operators that might indicate truncation if at the very end
+        truncated_operators = [' and', ' or', '+', '-', '*', '/', '%', '==', '!=', '<', '>', '<=', '>=', 'not', 'is']
+        # Check initial source for signs of truncation/imbalance
+        is_potentially_incomplete = any(body.endswith(op) for op in truncated_operators)
+        is_unbalanced = body.count('(') != body.count(')') # Simple balance check
+
+        if is_potentially_incomplete or is_unbalanced:
+            print(f"_clean_source: Initial lambda source seems incomplete or unbalanced. Trying _read_multiline_lambda.")
+            full_lambda = _read_multiline_lambda(func)
+            if full_lambda:
+                # Re-extract body from the potentially more complete source
+                full_match = REGEX_LAMBDA_BODY.match(full_lambda)
+                if full_match:
+                    body = full_match.group(2).strip()
+                    if body.endswith(','):
+                        body = body[:-1].rstrip()
+                    print(f"_clean_source: Re-extracted body from full lambda: {repr(body)}")
+                else:
+                     print(f"WARNING: Could not parse body from _read_multiline_lambda result: {repr(full_lambda)}")
+                     # Continue with the potentially flawed body from initial parse
+            else:
+                 print(f"WARNING: _read_multiline_lambda failed. Proceeding with potentially incomplete body.")
+                 # Continue with the potentially flawed body from initial parse
+        # --- End Refined Handling ---
+
+        # Flatten the body: joins lines, removes leading/trailing whitespace per line
         body_lines = body.splitlines()
-        # Join lines while preserving meaningful structure
-        for i in range(1, len(body_lines)):
-            body_lines[i] = body_lines[i].strip()
-        body = ' '.join(body_lines).strip()
+        body = ' '.join(line.strip() for line in body_lines)
 
-        # Check for truncated lambda (ends with 'and' or 'or')
-        if body.endswith((' and', ' or')):
-            print(f"_clean_source: Detected likely truncated multi-line lambda: {body}")
-            # Try to reconstruct common patterns
-            if 'state.has(' in body:
-                item_match = re.search(r'state\.has\("([^"]+)"', body)
-                if item_match:
-                    first_item = item_match.group(1)
-                    # Reconstruct common rule patterns
-                    if first_item == "Bridge" and body.endswith(' and'):
-                        print("_clean_source: Attempting to reconstruct bridge-related AND rule")
-                        body = body + ' state.has("Black Key", self.player)'
-                        print(f"_clean_source: Reconstructed body = {body}")
-                    elif first_item == "Bridge" and body.endswith(' or'):
-                        print("_clean_source: Attempting to reconstruct bridge-related OR rule")
-                        body = body + ' state.has("Magnet", self.player)'
-                        print(f"_clean_source: Reconstructed body = {body}")
-                    elif first_item == "Sword":
-                        print("_clean_source: Attempting to reconstruct sword-related rule")
-                        body = body + ' state.has("Right Difficulty Switch", self.player)'
-                        print(f"_clean_source: Reconstructed body = {body}")
-                    # Add more patterns as they are identified
-
-        # Find Keys pattern with unbalanced parentheses
-        key_match = re.search(r'state\.has\("([^"]+Key)"', body)
-        if key_match and body.endswith('))'):
-            key_name = key_match.group(1)
-            print(f"_clean_source: Detected key pattern with extra closing parenthesis: {key_name}")
-            # Fix the extra closing parenthesis for key rules
-            # This handles the YellowCastlePort/BlackCastlePort/WhiteCastlePort cases
-            body = body[:-1]  # Remove the extra closing parenthesis
-            print(f"_clean_source: Fixed key rule: {body}")
-
-        # Ensure parentheses are balanced - using a more robust approach
+        # Safer Parenthesis Balancing: Only remove excess *trailing* closing parentheses
         open_count = body.count('(')
         close_count = body.count(')')
-        
-        if open_count < close_count:
-            # Too many closing parentheses
-            print(f"WARNING: Too many closing parentheses detected: {body} ({open_count} open, {close_count} close)")
-            # Remove excess closing parentheses from the end
+        if close_count > open_count:
             excess = close_count - open_count
-            for _ in range(excess):
-                if body.endswith(')'):
-                    body = body[:-1].strip()
-                else:
-                    break
-        elif open_count > close_count:
-            # Too many opening parentheses - add closing ones
-            print(f"WARNING: Too many opening parentheses detected: {body} ({open_count} open, {close_count} close)")
-            body = body + ')' * (open_count - close_count)
+            original_body = body # Keep for logging
+            removed_count = 0
+            # Repeatedly strip trailing ')' only if it reduces excess
+            while excess > 0 and body.endswith(')'):
+                 body = body[:-1].strip()
+                 excess -= 1
+                 removed_count += 1
 
-        # Fix common patterns with state.has() calls
-        # Improved logic to only fix incomplete has() calls
-        if 'state.has(' in body:
-            # Check each has() call for completeness
-            has_count = body.count('state.has(')
-            # Count complete has() calls by checking patterns like 'state.has(...)'
-            complete_has_pattern = re.findall(r'state\.has\([^)]+\)', body)
-            complete_has_count = len(complete_has_pattern)
-            
-            # If we have incomplete has() calls
-            if has_count > complete_has_count:
-                print(f"WARNING: Found {has_count - complete_has_count} incomplete state.has() calls in: {body}")
-                # Only fix if the has() call doesn't end with ) AND the body doesn't end with 'and' or 'or'
-                # (because 'and' or 'or' endings are handled differently)
-                if not body.endswith((' and', ' or')):
-                    player_match = re.search(r'state\.has\("([^"]+)", (self\.player|player)(?!\))', body)
-                    if player_match:
-                        body = body + ')'
-                        print(f"_clean_source: Fixed incomplete has() call: {body}")
+            if removed_count > 0:
+                 print(f"WARNING: Removed {removed_count} excess trailing ')' from body. Original: {repr(original_body)}, Final: {repr(body)}")
+
+        # Note: We no longer attempt to add missing closing parentheses.
+
+        # Optional: Validate if the cleaned body is a valid expression
+        try:
+            ast.parse(body, mode='eval')
+        except SyntaxError as body_parse_err:
+            print(f"ERROR: Final cleaned lambda body failed to parse as expression: {body_parse_err}")
+            print(f"Final Body: {repr(body)}")
+            # If the body MUST be valid, returning None is safer:
+            # return None
+            # For now, let's allow it to proceed and potentially fail later in RuleAnalyzer
 
         print(f"_clean_source: Final body for lambda = {repr(body)}")
         return f"def __analyzed_func__({param}):\n    return {body}"
-    
+
+    # If source wasn't recognized as a lambda by the initial regex
     return source
 
 class RuleAnalyzer(ast.NodeVisitor):
@@ -1176,6 +1293,10 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
 
                 # Pass the LOCAL copy to the RuleAnalyzer instance
                 analyzer = RuleAnalyzer(closure_vars=local_closure_vars, seen_funcs=seen_funcs)
+
+                # Check if cleaned_source contains "Bridge"
+                if cleaned_source and "Bridge" in cleaned_source:
+                    print(f"analyze_rule: Detected 'Bridge' in the cleaned source code")
                 
                 # Comprehensive parse and visit
                 try:
@@ -1189,181 +1310,6 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                 except SyntaxError as parse_err:
                     print(f"analyze_rule: SyntaxError during parse: {parse_err}")
                     
-                    # *** ENHANCED Truncated Multi-line Lambda Detection ***
-                    # If we get a syntax error but detect a pattern that looks like a valid item check or rule
-                    if cleaned_source.rstrip().endswith((' and', ' or', '+', '-', '*', '/', '%', '==', '!=', '<', '>', '<=', '>=', 'in', 'not', 'is')):
-                        print("analyze_rule: Detected likely truncated multi-line lambda due to SyntaxError.")
-                        
-                        # Try to reconstruct common rule patterns based on error pattern
-                        if 'state.has(' in cleaned_source:
-                            # Extract the item name from the has() call
-                            item_match = re.search(r'state\.has\("([^"]+)"', cleaned_source)
-                            if item_match:
-                                item_name = item_match.group(1)
-                                
-                                # Try to create a semantic rule structure even with partial information
-                                if 'and' in cleaned_source:
-                                    print(f"analyze_rule: Attempting to reconstruct 'and' condition with item '{item_name}'")
-                                    
-                                    # For common 'Bridge and Black Key' patterns
-                                    if item_name == "Bridge" and 'self.player' in cleaned_source:
-                                        analysis_result = {
-                                            'type': 'and',
-                                            'conditions': [
-                                                {'type': 'item_check', 'item': 'Bridge'},
-                                                {'type': 'item_check', 'item': 'Black Key'}
-                                            ]
-                                        }
-                                        print(f"analyze_rule: Reconstructed 'Bridge and Black Key' rule")
-                                    # For 'Sword and Right Difficulty Switch' patterns
-                                    elif item_name == "Sword" and 'self.player' in cleaned_source:
-                                        analysis_result = {
-                                            'type': 'and',
-                                            'conditions': [
-                                                {'type': 'item_check', 'item': 'Sword'},
-                                                {'type': 'item_check', 'item': 'Right Difficulty Switch'}
-                                            ]
-                                        }
-                                        print(f"analyze_rule: Reconstructed 'Sword and Right Difficulty Switch' rule")
-                                
-                                # Try to handle 'or' conditions too
-                                elif 'or' in cleaned_source:
-                                    print(f"analyze_rule: Attempting to reconstruct 'or' condition with item '{item_name}'")
-                                    
-                                    # For 'Bridge or Magnet' patterns
-                                    if item_name == "Bridge" and 'self.player' in cleaned_source:
-                                        analysis_result = {
-                                            'type': 'or',
-                                            'conditions': [
-                                                {'type': 'item_check', 'item': 'Bridge'},
-                                                {'type': 'item_check', 'item': 'Magnet'}
-                                            ]
-                                        }
-                                        print(f"analyze_rule: Reconstructed 'Bridge or Magnet' rule")
-                                
-                                # If reconstruction successful, return it
-                                if analysis_result:
-                                    print(f"analyze_rule: Successfully reconstructed rule from truncated lambda")
-                        
-                        # If we couldn't reconstruct, fallback to reporting the error
-                        if not analysis_result:
-                            analysis_result = {
-                                'type': 'error',
-                                'message': 'Failed to parse likely multi-line lambda; source may be incomplete.',
-                                'source_snippet': cleaned_source[-50:] # Show last 50 chars
-                            }
-                    else:
-                        # Try to handle key syntax errors with pattern matching
-                        key_match = re.search(r'state\.has\("([^"]+Key)"', cleaned_source)
-                        if key_match:
-                            key_name = key_match.group(1)
-                            print(f"analyze_rule: Found key pattern '{key_name}' in syntax error context")
-                            # Create a proper item check for keys
-                            analysis_result = {
-                                'type': 'item_check',
-                                'item': key_name
-                            }
-                            print(f"analyze_rule: Created key item check for '{key_name}'")
-                        # Handle sword syntax errors
-                        elif 'Sword' in cleaned_source:
-                            sword_match = re.search(r'state\.has\("Sword"', cleaned_source)
-                            if sword_match:
-                                print(f"analyze_rule: Found Sword pattern in syntax error context")
-                                # Just create a basic sword check 
-                                analysis_result = {
-                                    'type': 'item_check',
-                                    'item': 'Sword'
-                                }
-                                print(f"analyze_rule: Created item check for 'Sword'")
-                        # Handle Bridge/Magnet syntax errors
-                        elif 'Bridge' in cleaned_source:
-                            bridge_match = re.search(r'state\.has\("Bridge"', cleaned_source)
-                            if bridge_match and ' or' in cleaned_source:
-                                print(f"analyze_rule: Found Bridge+OR pattern in syntax error context")
-                                # Create Bridge or Magnet check
-                                analysis_result = {
-                                    'type': 'or',
-                                    'conditions': [
-                                        {'type': 'item_check', 'item': 'Bridge'},
-                                        {'type': 'item_check', 'item': 'Magnet'}
-                                    ]
-                                }
-                                print(f"analyze_rule: Created or-condition for 'Bridge or Magnet'")
-                            elif bridge_match:
-                                print(f"analyze_rule: Found Bridge pattern in syntax error context")
-                                analysis_result = {
-                                    'type': 'item_check',
-                                    'item': 'Bridge'
-                                }
-                                print(f"analyze_rule: Created item check for 'Bridge'")
-                        else:
-                            # Fallback to regular method extraction
-                            method_match = re.search(r'(\w+(?:\.\w+)?)\((.*)\)', cleaned_source, re.DOTALL)
-                            if method_match:
-                                method = method_match.group(1)
-                                args_str = method_match.group(2).strip()
-                                
-                                # Careful argument parsing (remains the same)
-                                def split_args(arg_str):
-                                    args = []
-                                    current_arg = []
-                                    quote_stack = []
-                                    paren_stack = []
-                                    
-                                    for char in arg_str:
-                                        if char in ["'", '"']:
-                                            if not quote_stack or quote_stack[-1] != char:
-                                                quote_stack.append(char)
-                                            else:
-                                                quote_stack.pop()
-                                        
-                                        if char == '(':
-                                            paren_stack.append(char)
-                                        elif char == ')':
-                                            if paren_stack:
-                                                paren_stack.pop()
-                                        
-                                        # Split on comma only if not in quotes or nested parentheses
-                                        if char == ',' and not quote_stack and not paren_stack:
-                                            if current_arg:
-                                                args.append(''.join(current_arg).strip())
-                                                current_arg = []
-                                        else:
-                                            current_arg.append(char)
-                                    
-                                    if current_arg:
-                                        args.append(''.join(current_arg).strip())
-                                    
-                                    return args
-
-                                args = split_args(args_str)
-                                
-                                print(f"Extracted method: {method}, args: {args}")
-                                
-                                # Set result based on extracted method (remains mostly the same)
-                                # Ensure we don't incorrectly identify __analyzed_func__
-                                if method == '__analyzed_func__':
-                                    analysis_result = {
-                                        'type': 'error',
-                                        'message': f'SyntaxError lead to fallback identification of {method}',
-                                        'args': args
-                                    }
-                                elif method == 'state.has':
-                                    item = args[0].strip().strip("'\"")
-                                    analysis_result = {
-                                        'type': 'item_check',
-                                        'item': item
-                                    }
-                                # ... other specific method handlers ...
-                                else:
-                                     analysis_result = {
-                                        'type': 'state_method', # Or potentially 'helper' if needed
-                                        'method': method,
-                                        'args': [arg.strip().strip("'\"") for arg in args]
-                                    }
-                            else:
-                                print("analyze_rule: SyntaxError occurred and regex fallback failed.")
-                                analysis_result = None # Ensures error_result is used later
             finally:
                 # --- MODIFIED: Decrement count --- 
                 if func_id in seen_funcs:
