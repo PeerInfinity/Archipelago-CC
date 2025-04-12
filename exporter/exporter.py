@@ -6,16 +6,13 @@ import logging
 import collections
 import json
 import os
-import asyncio
 import inspect
 import shutil
-import datetime  # Added import
 from automate_frontend_tests import run_frontend_tests
 from typing import Any, Dict, List, Set, Optional
 from collections import defaultdict
-import ast
 
-import Utils  # Added import
+import Utils
 from .analyzer import analyze_rule
 from .games import get_game_export_handler
 
@@ -184,8 +181,8 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'progression_mapping': {},  # Progressive item info
         'settings': {}, # Game settings by player
         'start_regions': {},  # Start regions by player
-        'itempool_counts': {},  # NEW: Complete itempool counts by player
-        'game_info': {},  # NEW: Game-specific information for frontend
+        'itempool_counts': {},  # Complete itempool counts by player
+        'game_info': {},  # Game-specific information for frontend
     }
     
     # Dungeons will only be added if there's data to include
@@ -216,7 +213,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         export_data['item_groups'][player_str] = process_item_groups(multiworld, player)
         export_data['progression_mapping'][player_str] = process_progression_mapping(multiworld, player)
 
-        # NEW: Get game-specific information if available using handler
+        # Get game-specific information if available using handler
         try:
             game_info = game_handler.get_game_info(world) # Use handler directly
             export_data['game_info'][player_str] = game_info
@@ -231,7 +228,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 }
             }
 
-        # NEW: Process complete itempool data using handler
+        # Process complete itempool data using handler
         try:
             export_data['itempool_counts'][player_str] = game_handler.get_itempool_counts(world, multiworld, player) # Call the handler method
             logger.debug(f"Successfully exported itempool counts via handler for player {player}")
@@ -375,7 +372,7 @@ def process_regions(multiworld, player: int) -> tuple:
 
     try:
         regions_data = {}
-        dungeons_data = {}  # New structure to hold all dungeons
+        dungeons_data = {}  # structure to hold all dungeons
         
         logger.debug(f"Getting game helpers for {multiworld.game[player]}")
         # Different games have different levels of rule analysis support
@@ -840,7 +837,7 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
             # Example path: [..., 'alttp', 'test', 'vanilla', 'TestLightWorld.py']
             # We want 'vanilla', which is the directory containing the test file
             parent_directory = os.path.basename(os.path.dirname(os.path.abspath(caller_filename)))
-            logger.debug(f"Caller function: {caller.function}, filename: {caller_filename}, parent_directory: {parent_directory}") # Use standard logger
+            logger.debug(f"Caller function: {caller.function}, filename: {caller_filename}, parent_directory: {parent_directory}")
         else:
             logger.warning("Could not determine caller function name, using default filename base")
             filename_base = filename_base or "test_output"
@@ -1008,7 +1005,6 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             return data
 
     # --- Define key categories and order ---
-    # Define the desired order of keys
     desired_key_order = [
         'schema_version',
         'game_name',

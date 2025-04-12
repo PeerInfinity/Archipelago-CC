@@ -793,7 +793,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Golden Feather"
+                  "item": {
+                    "type": "constant",
+                    "value": "Golden Feather"
+                  }
                 }
               ]
             },
@@ -1467,7 +1470,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -1563,7 +1569,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -1713,7 +1722,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -1899,7 +1911,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2139,7 +2154,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2160,7 +2178,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Golden Feather"
+                  "item": {
+                    "type": "constant",
+                    "value": "Golden Feather"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -2187,7 +2208,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2301,7 +2325,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2544,7 +2571,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,

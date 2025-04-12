@@ -44,12 +44,10 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     filename='rule_analysis_debug.log')
 
-# --- ADDED: File content cache ---
 file_content_cache: Dict[str, List[str]] = {}
-# --- END ADDED ---
 
 # Regex definitions
-REGEX_LAMBDA_BODY = re.compile(r'lambda\s+([\w\s,()]*):\s*(.*)', re.DOTALL)
+REGEX_LAMBDA_BODY = re.compile(r'lambda\s+([\w\s,()=]*):\s*(.*)', re.DOTALL)
 
 # Helper functions
 def _read_multiline_lambda(func):
@@ -62,22 +60,20 @@ def _read_multiline_lambda(func):
         filename = inspect.getfile(func)
         start_line = func.__code__.co_firstlineno
         
-        # --- MODIFIED: Use file cache ---
         if filename in file_content_cache:
             lines = file_content_cache[filename]
-            logging.debug(f"_read_multiline_lambda: Using cached content for {filename}") # Changed print to logging
+            logging.debug(f"_read_multiline_lambda: Using cached content for {filename}")
         else:
-            logging.debug(f"_read_multiline_lambda: Reading and caching content for {filename}") # Changed print to logging
+            logging.debug(f"_read_multiline_lambda: Reading and caching content for {filename}")
             with open(filename, 'r') as f:
                 # Read the file line by line
                 lines = f.readlines()
             file_content_cache[filename] = lines # Store in cache
-        # --- END MODIFIED ---
 
         # Start with the line containing the lambda
         # Correct for 0-based list index vs 1-based line number
         if start_line <= 0 or start_line > len(lines):
-            logging.error(f"Error: start_line {start_line} is out of bounds for file {filename} with {len(lines)} lines.") # Changed print to logging
+            logging.error(f"Error: start_line {start_line} is out of bounds for file {filename} with {len(lines)} lines.")
             return None # Or handle error appropriately
 
         lambda_text = lines[start_line-1]
@@ -129,15 +125,9 @@ def _read_multiline_lambda(func):
         # Strip "#" and anything after it
         lambda_text = re.sub(r'#.*$', '', lambda_text, flags=re.MULTILINE)
         
-        # Remove any trailing operators (and, or, etc.)
-        #truncated_operators = [' and', ' or', '+', '-', '*', '/', '%', '==', '!=', '<', '>', '<=', '>=', 'not', 'is']
-        #for op in truncated_operators:
-        #    if lambda_text.endswith(op):
-        #        lambda_text = lambda_text[:-len(op)].strip()
-        
         return lambda_text
     except Exception as e:
-        logging.error(f"Error reading multiline lambda: {e}", exc_info=True) # Changed print to logging, added traceback
+        logging.error(f"Error reading multiline lambda: {e}", exc_info=True)
         return None
 
 def _clean_source(func):
@@ -147,22 +137,22 @@ def _clean_source(func):
         try:
             source_lines, start_line = inspect.getsourcelines(func)
             source = ''.join(source_lines)
-            logging.debug(f"_clean_source: Got {len(source_lines)} lines from line {start_line}") # Changed print to logging
+            logging.debug(f"_clean_source: Got {len(source_lines)} lines from line {start_line}")
         except Exception as line_err:
-            logging.warning(f"Could not get source lines for {func}: {line_err}") # Changed print to logging
+            logging.warning(f"Could not get source lines for {func}: {line_err}")
             source = inspect.getsource(func)
             
         # Remove comments
         source = re.sub(r'#.*$', '', source, flags=re.MULTILINE)
         source = source.strip()
-        logging.debug(f"_clean_source: Original source = {repr(source)}") # Changed print to logging
+        logging.debug(f"_clean_source: Original source = {repr(source)}")
     except (TypeError, OSError) as e:
-        logging.error(f"Unexpected error getting source for {func}: {e}") # Changed print to logging
+        logging.error(f"Unexpected error getting source for {func}: {e}")
         return None
 
-    # --- MODIFIED: More robust staticmethod check using AST ---
+    # More robust staticmethod check using AST
     if 'staticmethod(' in source:
-        logging.debug(f"_clean_source: Detected 'staticmethod(' in source: {repr(source)}") # Changed print to logging
+        logging.debug(f"_clean_source: Detected 'staticmethod(' in source: {repr(source)}")
         try:
             # Parse the source string (could be an assignment)
             tree = ast.parse(source)
@@ -188,24 +178,22 @@ def _clean_source(func):
 
                     # Determine appropriate param name if possible (optional enhancement)
                     # For now, default to 'state' as it covers access_rule
-                    # param_name = lambda_node.args.args[0].arg if lambda_node.args.args else 'state'
                     param_name = 'state' # Keep it simple for now
-                    logging.debug(f"_clean_source: Confirmed staticmethod(lambda {param_name}: True). Returning standard True func.") # Changed print to logging
+                    logging.debug(f"_clean_source: Confirmed staticmethod(lambda {param_name}: True). Returning standard True func.")
                     return f"def __analyzed_func__({param_name}):\n    return True"
                 else:
-                    logging.warning(f"_clean_source: staticmethod found, but does not wrap a simple 'lambda: True'. Lambda body: {ast.dump(lambda_node) if isinstance(lambda_node, ast.Lambda) else 'Not a Lambda'}") # Changed print to logging
+                    logging.warning(f"_clean_source: staticmethod found, but does not wrap a simple 'lambda: True'. Lambda body: {ast.dump(lambda_node) if isinstance(lambda_node, ast.Lambda) else 'Not a Lambda'}")
             else:
-                logging.warning(f"_clean_source: staticmethod found, but AST structure is not the expected assignment pattern. Assigned value: {ast.dump(assigned_value) if assigned_value else 'None'}") # Changed print to logging
+                logging.warning(f"_clean_source: staticmethod found, but AST structure is not the expected assignment pattern. Assigned value: {ast.dump(assigned_value) if assigned_value else 'None'}")
 
         except SyntaxError as parse_err:
-            logging.warning(f"_clean_source: SyntaxError parsing staticmethod source: {parse_err}. Source: {repr(source)}") # Changed print to logging
+            logging.warning(f"_clean_source: SyntaxError parsing staticmethod source: {parse_err}. Source: {repr(source)}")
         except Exception as e:
-            logging.error(f"_clean_source: Error during AST analysis of staticmethod: {e}. Source: {repr(source)}", exc_info=True) # Changed print to logging, added exc_info
+            logging.error(f"_clean_source: Error during AST analysis of staticmethod: {e}. Source: {repr(source)}", exc_info=True)
             
         # If AST analysis fails or doesn't match expected pattern, return None
-        logging.warning("_clean_source: Could not robustly confirm staticmethod wraps lambda:True. Returning None.") # Changed print to logging
+        logging.warning("_clean_source: Could not robustly confirm staticmethod wraps lambda:True. Returning None.")
         return None
-    # --- END MODIFIED ---
 
     # Handle lambda functions specifically
     match = REGEX_LAMBDA_BODY.match(source)
@@ -217,7 +205,7 @@ def _clean_source(func):
         if body.endswith(','):
             body = body[:-1].rstrip()
 
-        # --- Refined Truncation/Multiline Handling ---
+        # Refined Truncation/Multiline Handling
         # Define operators that might indicate truncation if at the very end
         truncated_operators = [' and', ' or', '+', '-', '*', '/', '%', '==', '!=', '<', '>', '<=', '>=', 'not', 'is']
         # Check initial source for signs of truncation/imbalance
@@ -225,7 +213,7 @@ def _clean_source(func):
         is_unbalanced = body.count('(') != body.count(')') # Simple balance check
 
         if is_potentially_incomplete or is_unbalanced:
-            logging.debug(f"_clean_source: Initial lambda source seems incomplete or unbalanced. Trying _read_multiline_lambda.") # Changed print to logging
+            logging.debug(f"_clean_source: Initial lambda source seems incomplete or unbalanced. Trying _read_multiline_lambda.")
             full_lambda = _read_multiline_lambda(func)
             if full_lambda:
                 # Re-extract body from the potentially more complete source
@@ -234,14 +222,13 @@ def _clean_source(func):
                     body = full_match.group(2).strip()
                     if body.endswith(','):
                         body = body[:-1].rstrip()
-                    logging.debug(f"_clean_source: Re-extracted body from full lambda: {repr(body)}") # Changed print to logging
+                    logging.debug(f"_clean_source: Re-extracted body from full lambda: {repr(body)}")
                 else:
-                     logging.warning(f"WARNING: Could not parse body from _read_multiline_lambda result: {repr(full_lambda)}") # Changed print to logging
+                     logging.warning(f"WARNING: Could not parse body from _read_multiline_lambda result: {repr(full_lambda)}")
                      # Continue with the potentially flawed body from initial parse
             else:
-                 logging.warning(f"WARNING: _read_multiline_lambda failed. Proceeding with potentially incomplete body.") # Changed print to logging
+                 logging.warning(f"WARNING: _read_multiline_lambda failed. Proceeding with potentially incomplete body.")
                  # Continue with the potentially flawed body from initial parse
-        # --- End Refined Handling ---
 
         # Flatten the body: joins lines, removes leading/trailing whitespace per line
         body_lines = body.splitlines()
@@ -261,21 +248,19 @@ def _clean_source(func):
                  removed_count += 1
 
             if removed_count > 0:
-                 logging.warning(f"WARNING: Removed {removed_count} excess trailing ')' from body. Original: {repr(original_body)}, Final: {repr(body)}") # Changed print to logging
-
-        # Note: We no longer attempt to add missing closing parentheses.
+                 logging.warning(f"WARNING: Removed {removed_count} excess trailing ')' from body. Original: {repr(original_body)}, Final: {repr(body)}")
 
         # Optional: Validate if the cleaned body is a valid expression
         try:
             ast.parse(body, mode='eval')
         except SyntaxError as body_parse_err:
-            logging.error(f"ERROR: Final cleaned lambda body failed to parse as expression: {body_parse_err}") # Changed print to logging
-            logging.error(f"Final Body: {repr(body)}") # Changed print to logging
+            logging.error(f"ERROR: Final cleaned lambda body failed to parse as expression: {body_parse_err}")
+            logging.error(f"Final Body: {repr(body)}")
             # If the body MUST be valid, returning None is safer:
             # return None
             # For now, let's allow it to proceed and potentially fail later in RuleAnalyzer
 
-        logging.debug(f"_clean_source: Final body for lambda = {repr(body)}") # Changed print to logging
+        logging.debug(f"_clean_source: Final body for lambda = {repr(body)}")
         return f"def __analyzed_func__({param}):\n    return {body}"
 
     # If source wasn't recognized as a lambda by the initial regex
@@ -295,15 +280,13 @@ class RuleAnalyzer(ast.NodeVisitor):
     def __init__(self, closure_vars=None, seen_funcs=None):
         self.closure_vars = closure_vars or {}  # Helper functions available in closure
         self.seen_funcs = seen_funcs or {}  # Track analyzed helper functions
-        self.current_result = None  # Current rule structure being built
         self.debug_log = []
         self.error_log = []
 
     def log_debug(self, message):
-        """Log debug message to both console and log file."""
+        """Log debug message."""
         logging.debug(message)
         self.debug_log.append(message)
-        # Removed print for log duplication
 
     def log_error(self, message, exception=None):
         """Log error message with optional exception details."""
@@ -313,7 +296,6 @@ class RuleAnalyzer(ast.NodeVisitor):
         }
         logging.error(message)
         self.error_log.append(error_entry)
-        # Removed print for log duplication
 
     def visit_Module(self, node):
         try:
@@ -381,13 +363,13 @@ class RuleAnalyzer(ast.NodeVisitor):
         """
         Updated visit_Call method that properly handles complex arguments and special cases better.
         """
-        logging.debug(f"\nvisit_Call called:") # Changed print to logging
-        logging.debug(f"Function: {ast.dump(node.func)}") # Changed print to logging
-        logging.debug(f"Args: {[ast.dump(arg) for arg in node.args]}") # Changed print to logging
+        logging.debug(f"\nvisit_Call called:")
+        logging.debug(f"Function: {ast.dump(node.func)}")
+        logging.debug(f"Args: {[ast.dump(arg) for arg in node.args]}")
 
         # Visit the function node to obtain its details.
         func_info = self.visit(node.func) # Get returned result
-        logging.debug(f"Function info after visit: {func_info}") # Changed print to logging
+        logging.debug(f"Function info after visit: {func_info}")
 
         # Process arguments
         args = []
@@ -404,26 +386,19 @@ class RuleAnalyzer(ast.NodeVisitor):
             if not (isinstance(arg_node, ast.Name) and arg_node.id in ['state', 'player']):
                 processed_args.append(arg_result)
 
-        logging.debug(f"Collected args: {args}") # Unused?
-        logging.debug(f"Processed args (without state/player): {processed_args}") # Changed print to logging
+        logging.debug(f"Collected args: {args}") # Simplified comment
+        logging.debug(f"Processed args (without state/player): {processed_args}") # Simplified comment
 
         # --- Determine the type of call --- 
 
         # 1. Helper function call (identified by name)
         if func_info and func_info.get('type') == 'name':
             func_name = func_info['name']
-            logging.debug(f"Checking helper: {func_name}") # Changed print to logging
+            logging.debug(f"Checking helper: {func_name}")
             
             # Check if the function name is in closure vars
             if func_name in self.closure_vars:
-                 logging.debug(f"Identified call to known closure variable: {func_name}") # Changed print to logging
-                 
-                 # Check special case for rule/old_rule from old version
-                 if func_name in ['rule', 'old_rule']:
-                     helper_func = self.closure_vars[func_name]
-                     # Use the recursive analysis with more permissive depth
-                     return analyze_rule(helper_func, closure_vars=self.closure_vars.copy(), 
-                                       seen_funcs=self.seen_funcs)
+                 logging.debug(f"Identified call to known closure variable: {func_name}")
                  
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
@@ -433,24 +408,24 @@ class RuleAnalyzer(ast.NodeVisitor):
                      if has_state_arg:
                           # Get the actual function from the closure
                           actual_func = self.closure_vars[func_name]
-                          logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}") # Changed print to logging
+                          logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
                           # Pass the seen_funcs dictionary (it's mutable state)
                           recursive_result = analyze_rule(rule_func=actual_func, 
                                                           closure_vars=self.closure_vars.copy(), 
                                                           seen_funcs=self.seen_funcs) # Pass the dict
                           if recursive_result.get('type') != 'error':
-                              logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}") # Changed print to logging
+                              logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                               return recursive_result # Return the detailed analysis result
                           else:
-                              logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}") # Changed print to logging
+                              logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
                  except Exception as e:
-                      logging.error(f"Error during recursive analysis of closure var {func_name}", e) # Changed print to logging
+                      logging.error(f"Error during recursive analysis of closure var {func_name}", e)
                  # --- END Recursive analysis logic ---
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
             # *** Special handling for all(GeneratorExp) ***
             if func_name == 'all' and len(processed_args) == 1 and processed_args[0].get('type') == 'generator_expression':
-                logging.debug(f"Detected all(GeneratorExp) pattern.") # Changed print to logging
+                logging.debug(f"Detected all(GeneratorExp) pattern.")
                 gen_exp = processed_args[0] # The result from visit_GeneratorExp
                 # Represent this as a specific 'all_of' rule type
                 result = {
@@ -458,7 +433,7 @@ class RuleAnalyzer(ast.NodeVisitor):
                     'element_rule': gen_exp['element'],
                     'iterator_info': gen_exp['comprehension'] 
                 }
-                logging.debug(f"Created 'all_of' result: {result}") # Changed print to logging
+                logging.debug(f"Created 'all_of' result: {result}")
                 return result
             # *** END ADDED ***
 
@@ -467,14 +442,14 @@ class RuleAnalyzer(ast.NodeVisitor):
                 'name': func_name,
                 'args': processed_args
             }
-            logging.debug(f"Created helper result: {result}") # Changed print to logging
+            logging.debug(f"Created helper result: {result}")
             return result # Return helper result
         
         # 2. State method call (e.g., state.has)
         elif func_info and func_info.get('type') == 'attribute':
             if func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state':
                 method = func_info['attr']
-                logging.debug(f"Processing state method: {method}") # Changed print to logging
+                logging.debug(f"Processing state method: {method}")
                 
                 # Simplify handling based on method name
                 if method == 'has' and len(processed_args) >= 1:
@@ -491,25 +466,23 @@ class RuleAnalyzer(ast.NodeVisitor):
                     # Default for unhandled state methods
                     result = {'type': 'state_method', 'method': method, 'args': processed_args}
                 
-                logging.debug(f"State method result: {result}") # Changed print to logging
+                logging.debug(f"State method result: {result}")
                 return result # Return state method result
 
         # 3. Fallback for other types of calls (e.g., calling result of another function)
-        logging.debug(f"Fallback function call type. func_info = {func_info}") # Changed print to logging
+        logging.debug(f"Fallback function call type. func_info = {func_info}")
         result = {
             'type': 'function_call',
             'function': func_info,
             'args': processed_args # Use processed args here too
         }
-        logging.debug(f"Fallback call result: {result}") # Changed print to logging
+        logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 
     def visit_Attribute(self, node):
         try:
-            # --- ADDED: Log attribute details before visiting object --- 
             attr_name = node.attr
             logging.debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
-            # --- END ADDED ---
             logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
             obj_result = self.visit(node.value) # Get returned result
             # attr_name = node.attr # Moved up
@@ -572,22 +545,22 @@ class RuleAnalyzer(ast.NodeVisitor):
         return self.visit(node.value)
 
     def visit_Constant(self, node):
-        logging.debug("\nvisit_Constant called") # Changed print to logging
-        logging.debug(f"Constant node: {ast.dump(node)}") # Changed print to logging
+        logging.debug("\nvisit_Constant called")
+        logging.debug(f"Constant node: {ast.dump(node)}")
         result = {
             'type': 'constant',
             'value': node.value
         }
-        logging.debug(f"Constant result: {result}") # Changed print to logging
+        logging.debug(f"Constant result: {result}")
         return result # Return the result
 
     def visit_Subscript(self, node):
         """
         Handle subscript expressions like foo[bar]
         """
-        logging.debug(f"\nvisit_Subscript called:") # Changed print to logging
-        logging.debug(f"Value: {ast.dump(node.value)}") # Changed print to logging
-        logging.debug(f"Slice: {ast.dump(node.slice)}") # Changed print to logging
+        logging.debug(f"\nvisit_Subscript called:")
+        logging.debug(f"Value: {ast.dump(node.value)}")
+        logging.debug(f"Slice: {ast.dump(node.slice)}")
         
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
@@ -607,15 +580,15 @@ class RuleAnalyzer(ast.NodeVisitor):
             'index': index_info
         }
         
-        logging.debug(f"Subscript result: {result}") # Changed print to logging
+        logging.debug(f"Subscript result: {result}")
         return result # Return the result
 
     def visit_BoolOp(self, node):
         """Handle boolean operations (AND/OR) between conditions"""
         try:
-            logging.debug("\nvisit_BoolOp called:") # Changed print to logging
-            logging.debug(f"Operator: {type(node.op).__name__}") # Changed print to logging
-            logging.debug(f"Values: {[ast.dump(val) for val in node.values]}") # Changed print to logging
+            logging.debug("\nvisit_BoolOp called:")
+            logging.debug(f"Operator: {type(node.op).__name__}")
+            logging.debug(f"Values: {[ast.dump(val) for val in node.values]}")
             
             # Process each value in the boolean operation
             conditions = []
@@ -637,7 +610,7 @@ class RuleAnalyzer(ast.NodeVisitor):
                 'type': op_type,
                 'conditions': conditions
             }
-            logging.debug(f"Boolean operation result: {result}") # Changed print to logging
+            logging.debug(f"Boolean operation result: {result}")
             return result # Return the result
             
         except Exception as e:
@@ -648,7 +621,7 @@ class RuleAnalyzer(ast.NodeVisitor):
         """ Handle unary operations (e.g., not). """
         try:
             op_name = type(node.op).__name__.lower()
-            logging.debug(f"\n--- visit_UnaryOp: op={op_name} ---") # Changed print to logging
+            logging.debug(f"\n--- visit_UnaryOp: op={op_name} ---")
             
             operand_result = self.visit(node.operand)
             if operand_result is None:
@@ -670,7 +643,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     def visit_Compare(self, node: ast.Compare):
         """ Handle comparison operations (e.g., ==, !=, in, not in, is, is not). """
         try:
-            logging.debug(f"\n--- visit_Compare ---") # Changed print to logging
+            logging.debug(f"\n--- visit_Compare ---")
             if len(node.ops) != 1 or len(node.comparators) != 1:
                 # For now, only support simple comparisons like `a op b`
                 logging.error(f"Unsupported chained comparison: {ast.dump(node)}")
@@ -708,7 +681,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     def visit_Tuple(self, node: ast.Tuple):
         """ Handle tuple literals. """
         try:
-            logging.debug(f"\n--- visit_Tuple ---") # Changed print to logging
+            logging.debug(f"\n--- visit_Tuple ---")
             elements = []
             for elt_node in node.elts:
                 elt_result = self.visit(elt_node)
@@ -726,7 +699,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     def visit_List(self, node: ast.List):
         """ Handle list literals. """
         try:
-            logging.debug(f"\n--- visit_List ---") # Changed print to logging
+            logging.debug(f"\n--- visit_List ---")
             elements = []
             for elt_node in node.elts:
                 elt_result = self.visit(elt_node)
@@ -744,7 +717,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     def visit_Set(self, node: ast.Set):
         """ Handle set literals. """
         try:
-            logging.debug(f"\n--- visit_Set ---") # Changed print to logging
+            logging.debug(f"\n--- visit_Set ---")
             elements = []
             for elt_node in node.elts:
                 elt_result = self.visit(elt_node)
@@ -762,7 +735,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     def visit_GeneratorExp(self, node: ast.GeneratorExp):
         """ Handle generator expressions. """
         try:
-            logging.debug(f"\n--- visit_GeneratorExp ---") # Changed print to logging
+            logging.debug(f"\n--- visit_GeneratorExp ---")
             # Analyze the element expression
             elt_result = self.visit(node.elt)
             if elt_result is None:
@@ -793,7 +766,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     def visit_comprehension(self, node: ast.comprehension):
         """ Handle the 'for target in iter' part of comprehensions/generators. """
         try:
-            logging.debug(f"\n--- visit_comprehension ---") # Changed print to logging
+            logging.debug(f"\n--- visit_comprehension ---")
             target_result = self.visit(node.target)
             iter_result = self.visit(node.iter)
             # Note: Ignoring ifs for now (e.g., for x in y if z)
@@ -816,25 +789,25 @@ class RuleAnalyzer(ast.NodeVisitor):
     def generic_visit(self, node):
         """Override to add detailed logging for unexpected node types."""
         try:
-            logging.debug(f"\n--- Generic Visit: {type(node).__name__} ---") # Changed print to logging
-            logging.debug(f"Node details: {vars(node)}") # Changed print to logging
+            logging.debug(f"\n--- Generic Visit: {type(node).__name__} ---")
+            logging.debug(f"Node details: {vars(node)}")
             super().generic_visit(node)
         except Exception as e:
             logging.error(f"Error in generic_visit for {type(node).__name__}", e)
 
     def visit_Assign(self, node: ast.Assign):
         """ Handle assignment statements. If the value is a lambda/rule, analyze it. """
-        logging.debug(f"\n--- visit_Assign --- Targets: {len(node.targets)}, Value Type: {type(node.value).__name__}") # Changed print to logging
+        logging.debug(f"\n--- visit_Assign --- Targets: {len(node.targets)}, Value Type: {type(node.value).__name__}")
         # We are primarily interested in the value being assigned, as that often holds the rule lambda.
         # Visit the value node and return its result.
         value_result = self.visit(node.value)
-        logging.debug(f"visit_Assign: Result from visiting value = {value_result}") # Changed print to logging
+        logging.debug(f"visit_Assign: Result from visiting value = {value_result}")
         return value_result # Return the result of analyzing the assigned value
 
     def visit_IfExp(self, node: ast.IfExp):
         """ Handle conditional ternary expressions (body if test else orelse). """
         try:
-            logging.debug(f"\n--- visit_IfExp ---") # Changed print to logging
+            logging.debug(f"\n--- visit_IfExp ---")
             test_result = self.visit(node.test)
             body_result = self.visit(node.body)
             orelse_result = self.visit(node.orelse)
@@ -856,7 +829,7 @@ class RuleAnalyzer(ast.NodeVisitor):
     def visit_BinOp(self, node: ast.BinOp):
         """ Handle binary operations (e.g., +, -, *, /). """
         try:
-            logging.debug(f"\n--- visit_BinOp ---") # Changed print to logging
+            logging.debug(f"\n--- visit_BinOp ---")
             left_result = self.visit(node.left)
             op_name = type(node.op).__name__ # E.g., 'Add', 'Mult'
             right_result = self.visit(node.right)
@@ -898,7 +871,7 @@ class LambdaFinder(ast.NodeVisitor):
         # self.target_player = target_player # Optional: Could add player matching if needed
         self._found_lambdas: List[ast.Lambda] = [] # Store all found lambdas
         self._visited_nodes = set() # Prevent infinite recursion on complex ASTs
-        logging.debug(f"LambdaFinder initialized for target: {target_name}") # Changed print to logging
+        logging.debug(f"LambdaFinder initialized for target: {target_name}")
 
     def _extract_target_name_from_call(self, call_node: ast.Call) -> Optional[str]:
         """Helper to extract the target name from a get_location/entrance/region call."""
@@ -908,11 +881,11 @@ class LambdaFinder(ast.NodeVisitor):
                 if len(call_node.args) > 0 and isinstance(call_node.args[0], ast.Constant):
                     return call_node.args[0].value
                 else:
-                    logging.warning(f"LambdaFinder: No constant arg found for {method_name} call.") # Changed print to logging
+                    logging.warning(f"LambdaFinder: No constant arg found for {method_name} call.")
             # else:
-            #     logging.debug(f"LambdaFinder: Method name '{method_name}' not in expected list.") # Changed print to logging
+            #     logging.debug(f"LambdaFinder: Method name '{method_name}' not in expected list.")
         # else:
-        #      logging.debug(f"LambdaFinder: Target node func is not Attribute. Type: {type(call_node.func)}, Dump: {ast.dump(call_node.func)}") # Changed print to logging
+        #      logging.debug(f"LambdaFinder: Target node func is not Attribute. Type: {type(call_node.func)}, Dump: {ast.dump(call_node.func)}")
         return None
 
     def visit_Call(self, node: ast.Call):
@@ -939,24 +912,24 @@ class LambdaFinder(ast.NodeVisitor):
                 if isinstance(target_node, ast.Call):
                     extracted_target_name = self._extract_target_name_from_call(target_node)
                     # if extracted_target_name:
-                    #     logging.debug(f"LambdaFinder: Found '{func_name}' call targeting '{extracted_target_name}' via method call.") # Changed print to logging
+                    #     logging.debug(f"LambdaFinder: Found '{func_name}' call targeting '{extracted_target_name}' via method call.")
                 # else:
                 #     # Potentially handle direct string constants if needed, though less common
                 #     # if isinstance(target_node, ast.Constant) and isinstance(target_node.value, str):
                 #     #     extracted_target_name = target_node.value
-                #     logging.debug(f"LambdaFinder: Target node is not Call. Dump: {ast.dump(target_node)}") # Changed print to logging
+                #     logging.debug(f"LambdaFinder: Target node is not Call. Dump: {ast.dump(target_node)}")
 
                 # --- Check if the extracted target name matches ---
                 if extracted_target_name == self.target_name:
-                    logging.debug(f"LambdaFinder: Target name '{self.target_name}' MATCHED!") # Changed print to logging
+                    logging.debug(f"LambdaFinder: Target name '{self.target_name}' MATCHED!")
                     # --- Check if the second argument is a Lambda ---
                     rule_node = node.args[1]
                     if isinstance(rule_node, ast.Lambda):
-                        logging.debug(f"LambdaFinder: Found Lambda node for target '{self.target_name}'!") # Changed print to logging
+                        logging.debug(f"LambdaFinder: Found Lambda node for target '{self.target_name}'!")
                         self._found_lambdas.append(rule_node)
                         # Do NOT return early, continue searching for other potential matches
                     # else:
-                    #      logging.debug(f"LambdaFinder: Target '{self.target_name}' matched, but rule is not a Lambda node ({type(rule_node).__name__}).") # Changed print to logging
+                    #      logging.debug(f"LambdaFinder: Target '{self.target_name}' matched, but rule is not a Lambda node ({type(rule_node).__name__}).")
 
         # Continue visiting children regardless of finding a match
         super().generic_visit(node)
@@ -970,23 +943,23 @@ class LambdaFinder(ast.NodeVisitor):
             ast.Lambda: The unique lambda node if found.
             None: If zero or more than one lambda definitions are found for the target.
         """
-        logging.debug(f"LambdaFinder: Starting search in AST for target '{self.target_name}'") # Changed print to logging
+        logging.debug(f"LambdaFinder: Starting search in AST for target '{self.target_name}'")
         self._found_lambdas = [] # Reset for this search
         self._visited_nodes = set() # Reset visited nodes
         self.visit(ast_tree)
 
         count = len(self._found_lambdas)
         if count == 1:
-            logging.debug(f"LambdaFinder: Found exactly one lambda for target '{self.target_name}'.") # Changed print to logging
+            logging.debug(f"LambdaFinder: Found exactly one lambda for target '{self.target_name}'.")
             return self._found_lambdas[0]
         elif count == 0:
-            logging.warning(f"LambdaFinder: Found zero lambdas for target '{self.target_name}'.") # Changed print to logging
+            logging.warning(f"LambdaFinder: Found zero lambdas for target '{self.target_name}'.")
             return None
         else:
-            logging.warning(f"LambdaFinder: Found {count} lambdas for target '{self.target_name}'. Cannot uniquely determine rule, returning None.") # Changed print to logging
+            logging.warning(f"LambdaFinder: Found {count} lambdas for target '{self.target_name}'. Cannot uniquely determine rule, returning None.")
             # Optionally log the locations or details of the found lambdas for debugging
             # for i, lam in enumerate(self._found_lambdas):
-            #     logging.debug(f"  Lambda {i+1} at line {getattr(lam, 'lineno', 'N/A')}") # Changed print to logging
+            #     logging.debug(f"  Lambda {i+1} at line {getattr(lam, 'lineno', 'N/A')}")
             return None
 
 # Main analysis function
@@ -1006,7 +979,7 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
     Returns:
         A dictionary representing the structured rule, or an error structure.
     """
-    logging.debug("\n--- Starting Rule Analysis ---") # Changed print to logging
+    logging.debug("\n--- Starting Rule Analysis ---")
 
     # Initialize seen_funcs dict if not provided
     seen_funcs = seen_funcs or {}
@@ -1020,22 +993,22 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
         # --- Option 1: Analyze a provided AST node directly --- 
         analysis_result = None
         if ast_node:
-            logging.debug(f"Analyzing provided AST node: {type(ast_node).__name__}") # Changed print to logging
+            logging.debug(f"Analyzing provided AST node: {type(ast_node).__name__}")
             # Need an analyzer instance here too
             analyzer = RuleAnalyzer(closure_vars=closure_vars, seen_funcs=seen_funcs)
             analysis_result = analyzer.visit(ast_node) 
 
         # --- Option 2: Analyze a function object (existing logic) --- 
         elif rule_func:
-            logging.debug(f"Rule function: {rule_func}") # Changed print to logging
+            logging.debug(f"Rule function: {rule_func}")
 
             func_id = id(rule_func)
-            # --- MODIFIED: More permissive recursion check ---
+            # More permissive recursion check
             current_seen_count = seen_funcs.get(func_id, 0)
             # Allow more recursion depth for multiline lambdas (increased from 2 to 3)
             if current_seen_count >= 3:
                 recursion_msg = f'Recursion detected: Already analyzing function {rule_func} {current_seen_count+1} times'
-                logging.warning(f"analyze_rule: Function {rule_func} (id={func_id}) seen {current_seen_count+1} times, stopping recursion.") # Changed print to logging
+                logging.warning(f"analyze_rule: Function {rule_func} (id={func_id}) seen {current_seen_count+1} times, stopping recursion.")
                 # Return a proper error structure
                 return {
                     'type': 'error',
@@ -1043,11 +1016,9 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                     'subtype': 'recursion', # Added subtype
                     'debug_log': [], 'error_log': []
                 }
-            # --- END MODIFIED ---
             
             # --- Work on a copy of closure_vars ---
             local_closure_vars = closure_vars.copy()
-            # ---
 
             # Attempt to add function's actual closure variables TO THE COPY
             try:
@@ -1063,22 +1034,22 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                         except ValueError: 
                             # Cell is empty, skip
                             pass 
-                    logging.debug(f"Extracted closure vars into local copy: {list(local_closure_vars.keys())}") # Changed print to logging
+                    logging.debug(f"Extracted closure vars into local copy: {list(local_closure_vars.keys())}")
                 else:
-                    logging.debug("No closure variables found for rule function.") # Changed print to logging
+                    logging.debug("No closure variables found for rule function.")
             except Exception as clo_err:
-                logging.warning(f"Error extracting closure variables: {clo_err}") # Changed print to logging
+                logging.warning(f"Error extracting closure variables: {clo_err}")
 
             # Add 'self' to the local copy if needed
             if hasattr(rule_func, '__self__') and 'self' not in local_closure_vars:
                  local_closure_vars['self'] = rule_func.__self__
-                 logging.debug("Added 'self' to local closure vars from method binding.") # Changed print to logging
+                 logging.debug("Added 'self' to local closure vars from method binding.")
             # --- End closure extraction modification ---
 
             # Clean the source
             cleaned_source = _clean_source(rule_func)
             if cleaned_source is None:
-                logging.error("analyze_rule: Failed to clean source, returning error.") # Changed print to logging
+                logging.error("analyze_rule: Failed to clean source, returning error.")
                 # Need to initialize analyzer logs for the error result
                 analyzer = RuleAnalyzer() # Create dummy analyzer for logs
                 return {
@@ -1088,34 +1059,33 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                     'debug_log': analyzer.debug_log, # Return logs from dummy analyzer
                     'error_log': analyzer.error_log
                 }
-            logging.debug(f"Cleaned source: {repr(cleaned_source)}") # Changed print to logging
+            logging.debug(f"Cleaned source: {repr(cleaned_source)}")
             
             # --- Analyzer creation and analysis --- 
             # analyzer = None # Already defined in outer scope
             analysis_result = None
             try:
-                # --- MODIFIED: Increment count --- 
                 seen_funcs[func_id] = current_seen_count + 1
-                logging.debug(f"analyze_rule: Incremented func_id {func_id} count in seen_funcs: {seen_funcs}") # Changed print to logging
+                logging.debug(f"analyze_rule: Incremented func_id {func_id} count in seen_funcs: {seen_funcs}")
 
                 # Pass the LOCAL copy to the RuleAnalyzer instance
                 analyzer = RuleAnalyzer(closure_vars=local_closure_vars, seen_funcs=seen_funcs)
 
                 # Check if cleaned_source contains "Bridge"
                 if cleaned_source and "Bridge" in cleaned_source:
-                    logging.debug(f"analyze_rule: Detected 'Bridge' in the cleaned source code") # Changed print to logging
+                    logging.debug(f"analyze_rule: Detected 'Bridge' in the cleaned source code")
                 
                 # Comprehensive parse and visit
                 try:
                     tree = ast.parse(cleaned_source)
-                    logging.debug(f"analyze_rule: Parsed AST = {ast.dump(tree)}") # Changed print to logging
-                    logging.debug("AST parsed successfully") # Changed print to logging
+                    logging.debug(f"analyze_rule: Parsed AST = {ast.dump(tree)}")
+                    logging.debug("AST parsed successfully")
                     
                     # Always visit the full parsed tree in the fallback path
                     analysis_result = analyzer.visit(tree) # Get the result from visit
 
                 except SyntaxError as parse_err:
-                    logging.error(f"analyze_rule: SyntaxError during parse: {parse_err}", exc_info=True) # Changed print to logging, added exc_info
+                    logging.error(f"analyze_rule: SyntaxError during parse: {parse_err}", exc_info=True)
                     # Return error if parsing fails
                     return {
                          'type': 'error',
@@ -1127,17 +1097,15 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                     }
                     
             finally:
-                # --- MODIFIED: Decrement count --- 
                 if func_id in seen_funcs:
                     seen_funcs[func_id] -= 1
                     if seen_funcs[func_id] <= 0: 
                         del seen_funcs[func_id]
-                    logging.debug(f"analyze_rule: Updated func_id {func_id} count/removed from seen_funcs: {seen_funcs}") # Changed print to logging
-                # --- END MODIFIED ---
+                    logging.debug(f"analyze_rule: Updated func_id {func_id} count/removed from seen_funcs: {seen_funcs}")
             # --- End inner try...finally ---
         else:
              # No function or AST node provided
-             logging.warning("analyze_rule: Called without rule_func or ast_node.") # Changed print to logging
+             logging.warning("analyze_rule: Called without rule_func or ast_node.")
              analysis_result = None
              analyzer = RuleAnalyzer() # Create dummy analyzer for logs
 
@@ -1173,11 +1141,10 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
             final_result = analysis_result
 
         # Always log the final result (or error structure) being returned
-        logging.debug(f"analyze_rule: Final result before return = {json.dumps(final_result, indent=2)}") # Changed print to logging
+        logging.debug(f"analyze_rule: Final result before return = {json.dumps(final_result, indent=2)}")
         return final_result
     
     except Exception as e:
-        # --- MODIFIED: Improved Top-Level Error Handling ---
         error_message = f"Unexpected top-level error in rule analysis: {e}"
         logging.critical(error_message, exc_info=True) # Use critical, include traceback
 
@@ -1196,4 +1163,3 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
             pass # Ignore errors during traceback formatting
             
         return error_result
-        # --- END MODIFIED ---
