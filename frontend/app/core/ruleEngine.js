@@ -164,6 +164,7 @@ export const evaluateRule = (rule, depth = 0) => {
         });
 
         // Call the helper with processed arguments
+        //console.log(`Calling helper: ${rule.name} with args:`, processedArgs);
         result = stateManager.helpers.executeHelper(
           rule.name,
           ...processedArgs
@@ -694,6 +695,11 @@ export const evaluateRule = (rule, depth = 0) => {
         }
         return arg;
       });
+
+      //console.log(
+      //  `Calling state_method: ${rule.method} with args:`,
+      //  processedArgs
+      //);
 
       // Try using stateManager's executeStateMethod
       if (

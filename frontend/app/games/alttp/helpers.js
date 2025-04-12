@@ -410,7 +410,25 @@ export class ALTTPHelpers extends GameHelpers {
 
   // And now the helpers from worlds/alttp/Rules.py
 
-  item_name_in_location_names(item, player, location_name_player_pairs) {
+  item_name_in_location_names(item, arg2, arg3) {
+    let player;
+    let location_name_player_pairs;
+
+    // Check if player argument (arg2) might have been omitted
+    if (Array.isArray(arg2) && arg3 === undefined) {
+      // Assume arg2 is the location pairs list, use stateManager's player slot
+      location_name_player_pairs = arg2;
+      player = stateManager.playerSlot; // Use playerSlot from stateManager
+      //console.warn(
+      //  `item_name_in_location_names potentially missing player arg, defaulting to stateManager.playerSlot (${player})`
+      //);
+    } else {
+      // Assume standard arguments: item, player, location_pairs
+      // Use arg2 as player if it's a number, otherwise default to stateManager's player slot
+      player = typeof arg2 === 'number' ? arg2 : stateManager.playerSlot;
+      location_name_player_pairs = arg3;
+    }
+
     // Ensure location_name_player_pairs is an array
     if (!Array.isArray(location_name_player_pairs)) {
       console.warn(

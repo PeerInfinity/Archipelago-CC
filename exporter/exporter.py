@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # This applies recursively to nested structures.
 EXCLUDED_FIELDS = {
     'item_rule',
-    'entrances',
+    #'entrances',
 }
 
 # Context-specific exclusions

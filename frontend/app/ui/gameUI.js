@@ -24,7 +24,7 @@ export class GameUI {
     this.testCaseUI = new TestCaseUI(this);
     this.presetUI = new PresetUI(this);
     this.loopUI = new LoopUI(this);
-    this.currentFileView = 'test-cases'; // Track which file view is active
+    this.currentFileView = 'presets'; // Track which file view is active
 
     // Initialize commonUI colorblind mode
     commonUI.setColorblindMode(true); // Enable colorblind mode by default
@@ -83,7 +83,6 @@ export class GameUI {
     this.locationUI.initialize();
     this.exitUI.initialize();
     this.regionUI.initialize();
-    this.loopUI.initialize();
   }
 
   attachEventListeners() {
