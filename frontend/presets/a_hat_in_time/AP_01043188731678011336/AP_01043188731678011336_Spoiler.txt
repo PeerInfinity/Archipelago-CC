@@ -386,10 +386,10 @@ Playthrough:
   Alpine Skyline - The Windmill: House Window: Time Piece
   Dead Bird Studio Basement - Above Conductor Sign: Time Piece
   Dead Bird Studio Basement - Locked Room: Time Piece
-  Mafia Town - Clock Tower Chest: Yarn
-  Queen Vanessa's Manor - Bedroom Chest: Yarn
+  Queen Vanessa's Manor - Chandelier: Yarn
   Subcon Well - Above Chest: Time Piece
   Subcon Well - Mushroom: Time Piece
+  Subcon Well - On Pipe: Yarn
   Windmill Cleared: Windmill Cleared
 }
 4: {
@@ -609,13 +609,6 @@ Mafia Town - Camera Badge 2
    =>   Welcome to Mafia Town -> Mafia Town Entrance WTMT
    =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
    =>   Mafia Town Area (HUMT)
-Mafia Town - Clock Tower Chest
-        Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town Entrance WTMT
-   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
-   =>   Mafia Town Area (HUMT)
 Mafia Town - Old Man (Seaside Spaghetti)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
@@ -677,7 +670,7 @@ Picture Perfect - Hats Buy Building
    =>   Spaceship -> Telescope -> Alpine Skyline
    =>   Alpine Skyline -> Alpine Skyline - Free Roam
    =>   Picture Perfect
-Queen Vanessa's Manor - Bedroom Chest
+Queen Vanessa's Manor - Chandelier
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
@@ -806,6 +799,14 @@ Subcon Well - Above Chest
    =>   The Big Parade -> Mafia Town - Act 6: Connection 1
    =>   The Subcon Well
 Subcon Well - Mushroom
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
+   =>   The Big Parade -> Mafia Town - Act 6: Connection 1
+   =>   The Subcon Well
+Subcon Well - On Pipe
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1

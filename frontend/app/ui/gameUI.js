@@ -324,8 +324,27 @@ export class GameUI {
           // === Player Selection Logic ===
           let selectedPlayerId = null;
           const playerIds = Object.keys(jsonData.player_names || {});
+          let playerIdFromFilename = null;
 
-          if (playerIds.length === 0) {
+          // Try to extract player ID from filename
+          const filenameMatch = file.name.match(/_P(\d+)_rules\.json$/);
+          if (filenameMatch && filenameMatch[1]) {
+            const potentialId = filenameMatch[1];
+            if (jsonData.player_names && jsonData.player_names[potentialId]) {
+              playerIdFromFilename = potentialId;
+              console.log(
+                `Determined player ID from filename: ${playerIdFromFilename}`
+              );
+            } else {
+              console.warn(
+                `Player ID ${potentialId} from filename not found in JSON data. Falling back to prompt/auto-select.`
+              );
+            }
+          }
+
+          if (playerIdFromFilename) {
+            selectedPlayerId = playerIdFromFilename;
+          } else if (playerIds.length === 0) {
             throw new Error('No players found in the JSON data.');
           } else if (playerIds.length === 1) {
             selectedPlayerId = playerIds[0];

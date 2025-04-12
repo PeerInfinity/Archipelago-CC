@@ -183,16 +183,16 @@ Playthrough:
   Blocked Mine Pickaxe 1: Seashell
   Boat Isle Mound Seashell: Seashell
   Cliff Overlooking West River Waterfall Stick: Seashell
-  Compass Guy: Golden Feather
   East Coast Chest: Seashell
+  East Coast Seashell: Toy Shovel
   Good Creek Path Seashell: Progressive Fishing Rod
-  Hawk Peak Bucket Rock: Toy Shovel
   House North Beach Chest: Golden Feather
   North Beach Seashell: Seashell
   Northern East Coast Chest: Seashell
   Old Building East Chest: Golden Feather
   Orange Islands East Chest: Seashell
   Outlook Golden Chest: Golden Feather
+  Secret Island Beach Trail Stick: Golden Feather
   Secret Island Bottom Chest: Seashell
   Shirley's Point Rock Seashell: Wristwatch
   Sid Beach Mound Seashell: Seashell
@@ -202,7 +202,7 @@ Playthrough:
   Stone Tower West Cliff Chest: Golden Feather
   Trail to Tough Bird Salesman Stick: Seashell
   Visitor Camp Rock Golden Feather: Seashell
-  Visitor's Center Beach Toy Shovel: Golden Feather
+  Visitor's Center Hidden Chest: Golden Feather
   Visitor's Center Shop Golden Feather 1: Seashell
 }
 2: {

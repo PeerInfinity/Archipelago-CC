@@ -337,10 +337,10 @@ export class PresetUI {
         jsonData.items['1']
       );
 
-      stateManager.loadFromJSON(jsonData);
+      stateManager.loadFromJSON(jsonData, '1');
 
       // Initialize the UI
-      this.gameUI.initializeUI(jsonData);
+      this.gameUI.initializeUI(jsonData, '1');
 
       console.log('Successfully loaded preset rules');
 

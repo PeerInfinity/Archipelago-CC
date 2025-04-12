@@ -522,10 +522,41 @@ export const evaluateRule = (rule, depth = 0) => {
           // Map to can_reach with Entrance type
           const entranceName = processedArgs[0];
           result = stateManager.can_reach(entranceName, 'Entrance', 1);
+        } else if (method === 'can_reach') {
+          // Handle direct state.multiworld.can_reach(spot, type, player) calls
+          const spotName = processedArgs[0];
+          const typeHint = processedArgs[1] || 'Region'; // Default hint
+          const player = processedArgs[2] || 1; // Default player
+          // Use the helpers.can_reach method which correctly uses stateManager
+          if (
+            stateManager.helpers &&
+            typeof stateManager.helpers.executeHelper === 'function'
+          ) {
+            result = stateManager.helpers.executeHelper(
+              'can_reach',
+              spotName,
+              typeHint,
+              player
+            );
+          } else {
+            console.error(
+              'Cannot execute can_reach: helpers or executeHelper not found.'
+            );
+            result = false;
+          }
         } else {
           // For unknown multiworld methods, log and default to false
           console.warn('Unknown multiworld method:', method, processedArgs);
           result = false;
+        }
+      } else if (functionPath === 'world.get_location') {
+        // Handle world.get_location("Location Name") -> return "Location Name"
+        // This allows it to be passed as an argument to other helpers
+        if (processedArgs.length > 0) {
+          result = processedArgs[0]; // Return the evaluated location name
+        } else {
+          console.warn('world.get_location called with no arguments');
+          result = undefined;
         }
       } else if (
         functionPath.includes('.can_defeat') ||
@@ -765,6 +796,18 @@ export const evaluateRule = (rule, depth = 0) => {
         default:
           safeLog(`Unsupported comparison operator: ${rule.op}`);
           result = false;
+      }
+      break;
+    }
+
+    case 'list': {
+      // Handle list literals (e.g., [item1, item2])
+      if (Array.isArray(rule.value)) {
+        // Evaluate each element in the list
+        result = rule.value.map((element) => evaluateRule(element, depth + 1));
+      } else {
+        console.warn('List rule type found, but value is not an array:', rule);
+        result = []; // Return empty array on error
       }
       break;
     }

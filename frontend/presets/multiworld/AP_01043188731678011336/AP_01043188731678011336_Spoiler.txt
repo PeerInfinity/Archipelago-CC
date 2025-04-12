@@ -513,7 +513,6 @@ Playthrough:
   Palace of Darkness - The Arena - Bridge (Player1): Small Key (Palace of Darkness) (Player1)
   Palace of Darkness - The Arena - Ledge (Player1): Small Key (Palace of Darkness) (Player1)
   Skull Woods - Big Key Chest (Player1): Small Key (Skull Woods) (Player1)
-  Skull Woods - Compass Chest (Player1): Big Key (Skull Woods) (Player1)
   Skull Woods - Map Chest (Player1): Small Key (Skull Woods) (Player1)
   Skull Woods - Pot Prison (Player1): Small Key (Skull Woods) (Player1)
   Thieves' Town - Big Key Chest (Player1): Big Key (Thieves Town) (Player1)
@@ -524,7 +523,7 @@ Playthrough:
   Palace of Darkness - Compass Chest (Player1): Progressive Sword (Player1)
   Palace of Darkness - Dark Basement - Left (Player1): Small Key (Palace of Darkness) (Player1)
   Palace of Darkness - Dark Basement - Right (Player1): Small Key (Palace of Darkness) (Player1)
-  Skull Woods - Big Chest (Player1): Small Key (Skull Woods) (Player1)
+  Skull Woods - Bridge Room (Player1): Small Key (Skull Woods) (Player1)
   Thieves' Town - Blind's Cell (Player1): Shovel (Player1)
   Thieves' Town - Hallway Pot Key (Player1): Small Key (Thieves Town) (Player1)
   Thieves' Town - Spike Switch Pot Key (Player1): Small Key (Thieves Town) (Player1)
@@ -1039,24 +1038,20 @@ Sahasrahla's Hut - Left (Player1)
         Links House -> Links House Exit
    =>   Light World -> Sahasrahlas Hut
    =>   Sahasrahlas Hut
-Skull Woods - Big Chest (Player1)
-        Links House -> Links House Exit
-   =>   Light World -> Kakariko Teleporter
-   =>   West Dark World -> Skull Woods Forest
-   =>   Skull Woods Forest -> Skull Woods First Section Hole (North)
-   =>   Skull Woods First Section (Top)
 Skull Woods - Big Key Chest (Player1)
         Links House -> Links House Exit
    =>   Light World -> Kakariko Teleporter
    =>   West Dark World -> Skull Woods Forest
    =>   Skull Woods Forest -> Skull Woods Second Section Door (East)
    =>   Skull Woods Second Section
-Skull Woods - Compass Chest (Player1)
+Skull Woods - Bridge Room (Player1)
         Links House -> Links House Exit
    =>   Light World -> Kakariko Teleporter
    =>   West Dark World -> Skull Woods Forest
-   =>   Skull Woods Forest -> Skull Woods First Section Hole (West)
-   =>   Skull Woods First Section (Left)
+   =>   Skull Woods Forest -> Skull Woods Second Section Door (East)
+   =>   Skull Woods Second Section -> Skull Woods Second Section Exit (West)
+   =>   Skull Woods Forest (West) -> Skull Woods Final Section
+   =>   Skull Woods Final Section (Entrance)
 Skull Woods - Map Chest (Player1)
         Links House -> Links House Exit
    =>   Light World -> Kakariko Teleporter
@@ -1087,10 +1082,9 @@ Superbunny Cave - Top (Player1)
    =>   Dark Death Mountain (West Bottom) -> Spectacle Rock Mirror Spot
    =>   Spectacle Rock -> Spectacle Rock Drop
    =>   Death Mountain (Top) -> East Death Mountain (Top)
-   =>   East Death Mountain (Top) -> East Death Mountain Drop
-   =>   East Death Mountain (Bottom) -> East Death Mountain Teleporter
-   =>   Dark Death Mountain (East Bottom) -> Superbunny Cave (Bottom)
-   =>   Superbunny Cave (Bottom) -> Superbunny Cave Climb
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Superbunny Cave (Top)
    =>   Superbunny Cave (Top)
 Swamp Palace - Entrance (Player1)
         Links House -> Links House Exit

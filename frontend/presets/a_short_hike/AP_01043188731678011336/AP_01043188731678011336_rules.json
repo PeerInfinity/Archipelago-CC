@@ -20,9 +20,6 @@
         "name": "Menu",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
-        "entrances": [],
         "exits": [
           {
             "name": "Menu -> Hawk Peak",
@@ -35,8 +32,6 @@
           }
         ],
         "locations": [],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -45,22 +40,6 @@
         "name": "Hawk Peak",
         "type": "Region",
         "player": 1,
-        "is_light_world": false,
-        "is_dark_world": false,
-        "entrances": [
-          {
-            "name": "Menu -> Hawk Peak",
-            "parent_region": "Menu",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "connected_region": "Hawk Peak",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
         "exits": [],
         "locations": [
           {
@@ -68,10 +47,6 @@
             "id": 83001,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -93,10 +68,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -112,10 +83,6 @@
             "id": 83003,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -137,10 +104,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -156,10 +119,6 @@
             "id": 83005,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -181,10 +140,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -200,10 +155,6 @@
             "id": 83007,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -225,10 +176,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -244,10 +191,6 @@
             "id": 83009,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -269,10 +212,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -288,10 +227,6 @@
             "id": 83011,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -313,10 +248,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -332,10 +263,6 @@
             "id": 83013,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -357,10 +284,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -376,10 +299,6 @@
             "id": 83015,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -401,10 +320,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -420,10 +335,6 @@
             "id": 83017,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -445,10 +356,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -464,10 +371,6 @@
             "id": 83019,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -489,10 +392,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -508,10 +407,6 @@
             "id": 83126,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -533,10 +428,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -555,28 +446,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -594,28 +463,6 @@
             "access_rule": {
               "type": "constant",
               "value": true
-            },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -638,28 +485,6 @@
                 "value": "Progressive Fishing Rod"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -680,28 +505,6 @@
                 "type": "constant",
                 "value": "Progressive Fishing Rod"
               }
-            },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -724,28 +527,6 @@
                 "value": "Progressive Fishing Rod"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -766,28 +547,6 @@
                 "type": "constant",
                 "value": "Progressive Fishing Rod"
               }
-            },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -810,28 +569,6 @@
                 "value": "Progressive Fishing Rod"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -852,28 +589,6 @@
                 "type": "constant",
                 "value": "Progressive Fishing Rod"
               }
-            },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -896,10 +611,6 @@
                 "value": "Stick"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -920,10 +631,6 @@
                 "type": "constant",
                 "value": "Stick"
               }
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
             },
             "progress_type": 1,
             "locked": false,
@@ -946,10 +653,6 @@
                 "value": "Stick"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -971,10 +674,6 @@
                 "value": "Toy Shovel"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -990,10 +689,6 @@
             "id": 83033,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1015,10 +710,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1037,10 +728,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1056,10 +743,6 @@
             "id": 83036,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1083,10 +766,6 @@
                 "type": "constant",
                 "value": "Progressive Fishing Rod"
               }
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
             },
             "progress_type": 1,
             "locked": false,
@@ -1114,13 +793,12 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Golden Feather"
+                  "item": {
+                    "type": "constant",
+                    "value": "Golden Feather"
+                  }
                 }
               ]
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
             },
             "progress_type": 1,
             "locked": false,
@@ -1137,10 +815,6 @@
             "id": 83039,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1165,10 +839,6 @@
                 "value": "Progressive Fishing Rod"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1190,10 +860,6 @@
                 "value": "Camping Permit"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1209,10 +875,6 @@
             "id": 83040,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1234,10 +896,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1253,10 +911,6 @@
             "id": 83042,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1278,10 +932,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1297,10 +947,6 @@
             "id": 83044,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1322,10 +968,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1341,10 +983,6 @@
             "id": 83046,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1366,10 +1004,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1385,10 +1019,6 @@
             "id": 83047,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1410,10 +1040,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1429,10 +1055,6 @@
             "id": 83049,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1454,10 +1076,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1473,10 +1091,6 @@
             "id": 83051,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1498,10 +1112,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1520,10 +1130,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1539,10 +1145,6 @@
             "id": 83054,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1567,28 +1169,6 @@
                 "value": "Progressive Fishing Rod"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1610,10 +1190,6 @@
                 "value": "Motorboat Key"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1629,10 +1205,6 @@
             "id": 83057,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1656,10 +1228,6 @@
                 "type": "constant",
                 "value": "Seashell"
               }
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
             },
             "progress_type": 1,
             "locked": false,
@@ -1694,10 +1262,6 @@
                 }
               ]
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1713,10 +1277,6 @@
             "id": 83059,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1741,10 +1301,6 @@
                 "value": "Headband"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1766,28 +1322,6 @@
                 "value": "Progressive Fishing Rod"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1803,10 +1337,6 @@
             "id": 83062,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1831,10 +1361,6 @@
                 "value": "Shell Necklace"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1856,10 +1382,6 @@
                 "value": "Toy Shovel"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1875,10 +1397,6 @@
             "id": 83065,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1900,10 +1418,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1919,10 +1433,6 @@
             "id": 83067,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -1944,10 +1454,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1964,11 +1470,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -1991,10 +1496,6 @@
                 "value": "Wristwatch"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2016,10 +1517,6 @@
                 "value": "Golden Feather"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2035,10 +1532,6 @@
             "id": 83072,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2060,10 +1553,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2080,11 +1569,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2101,10 +1589,6 @@
             "id": 83075,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2126,10 +1610,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2145,10 +1625,6 @@
             "id": 83077,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2173,28 +1649,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2210,10 +1664,6 @@
             "id": 83079,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2238,28 +1688,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2275,10 +1703,6 @@
             "id": 83081,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2298,11 +1722,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2322,10 +1745,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2341,10 +1760,6 @@
             "id": 83084,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2369,28 +1784,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2412,28 +1805,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2449,10 +1820,6 @@
             "id": 83087,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2474,10 +1841,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2493,10 +1856,6 @@
             "id": 83089,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2518,10 +1877,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2537,10 +1892,6 @@
             "id": 83091,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2560,11 +1911,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2587,28 +1937,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2630,28 +1958,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2667,10 +1973,6 @@
             "id": 83095,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2692,10 +1994,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2711,10 +2009,6 @@
             "id": 83097,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2736,10 +2030,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2755,10 +2045,6 @@
             "id": 83100,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2780,10 +2066,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2799,10 +2081,6 @@
             "id": 83102,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2824,10 +2102,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2843,10 +2117,6 @@
             "id": 83104,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -2868,10 +2138,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2888,11 +2154,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2913,7 +2178,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Golden Feather"
+                  "item": {
+                    "type": "constant",
+                    "value": "Golden Feather"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -2921,28 +2189,6 @@
                     "type": "constant",
                     "value": "Shovel"
                   }
-                }
-              ]
-            },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
                 }
               ]
             },
@@ -2962,11 +2208,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -2986,10 +2231,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3005,10 +2246,6 @@
             "id": 83110,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -3033,28 +2270,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3076,28 +2291,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3113,10 +2306,6 @@
             "id": 83113,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -3136,11 +2325,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -3163,28 +2351,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3206,28 +2372,6 @@
                 "value": "Shovel"
               }
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3243,10 +2387,6 @@
             "id": 83117,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -3283,28 +2423,6 @@
                 }
               ]
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3323,10 +2441,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3342,10 +2456,6 @@
             "id": 83120,
             "crystal": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item_rule": {
               "type": "constant",
               "value": true
             },
@@ -3369,28 +2479,6 @@
                 "type": "constant",
                 "value": "Shovel"
               }
-            },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -3425,28 +2513,6 @@
                 }
               ]
             },
-            "item_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "name",
-                      "name": "player"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3467,10 +2533,6 @@
                 "type": "constant",
                 "value": "Golden Feather"
               }
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
             },
             "progress_type": 1,
             "locked": false,
@@ -3493,10 +2555,6 @@
                 "value": "Golden Feather"
               }
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3513,11 +2571,10 @@
             "crystal": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Feather"
-            },
-            "item_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Golden Feather"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -3537,10 +2594,6 @@
               "type": "constant",
               "value": true
             },
-            "item_rule": {
-              "type": "constant",
-              "value": true
-            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3552,8 +2605,6 @@
             }
           }
         ],
-        "dungeon": null,
-        "shop": null,
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -4155,22 +3206,18 @@
   "progression_mapping": {
     "1": {}
   },
-  "mode": {
-    "1": "ERROR: Game mode not found for player 1"
-  },
   "settings": {
     "1": {
       "game": "A Short Hike",
-      "accessibility": "items",
-      "mode": "ERROR: Could not read game mode for player 1"
+      "accessibility": "items"
     }
   },
   "game_info": {
     "1": {
+      "name": "A Short Hike",
       "rule_format": {
         "version": "1.0"
-      },
-      "name": "A Short Hike"
+      }
     }
   }
 }

@@ -185,13 +185,6 @@ export class StateManager {
         : [],
     });
 
-    if (jsonData.itempool_counts?.['1']) {
-      console.log(
-        'Sample itempool_counts data:',
-        Object.entries(jsonData.itempool_counts['1']).slice(0, 5)
-      );
-    }
-
     // Create a map of item names to IDs for fast lookup (using selected player's items)
     this.itemNameToId = {};
     if (itemData) {
@@ -204,7 +197,6 @@ export class StateManager {
 
       // Debug: Print first 5 item ID entries
       const itemEntries = Object.entries(this.itemNameToId).slice(0, 5);
-      console.log('First 5 item ID mappings:', itemEntries);
     }
 
     // Create a map of location names to IDs for fast lookup
@@ -273,7 +265,6 @@ export class StateManager {
 
       // Debug: Print first 5 location ID entries
       const locationEntries = Object.entries(this.locationNameToId).slice(0, 5);
-      console.log('First 5 location ID mappings:', locationEntries);
     }
 
     // Initialize the state object with settings and data for the selected player

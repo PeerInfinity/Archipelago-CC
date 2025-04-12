@@ -171,6 +171,7 @@ Playthrough:
 
 }
 1: {
+  Beach Hut Seashell: Seashell
   Below Lighthouse Walkway Stick: Stick
   Bill the Walrus Fisherman: Seashell
   Blackwood Cliff Chest: Golden Feather
@@ -183,14 +184,13 @@ Playthrough:
   Good Creek Path Seashell: Seashell
   Meteor Lake Chest: Golden Feather
   Meteor Lake Cliff Golden Feather: Golden Feather
-  Meteor Lake Seashell: Golden Feather
   North Beach Stick: Wristwatch
   Orange Islands Bucket Rock: Golden Feather
   Orange Islands East Chest: Golden Feather
+  Outlook Cliff Golden Feather: Golden Feather
   Outlook Golden Chest: Golden Feather
   Outlook Point Dog Gift: Golden Feather
   Secret Island Beach Seashell: Golden Feather
-  Secret Island Beach Trail Stick: Seashell
   Shirley's Point Beach Seashell: Seashell
   Shirley's Point Rock Seashell: Seashell
   Sid Beach Chest: Seashell
@@ -209,6 +209,6 @@ Playthrough:
 }
 3: {
   Boat Challenge Reward: Camping Permit
+  In Her Shadow Buried Treasure Chest: Progressive Fishing Rod
   Orange Islands Ruins Buried Chest: Headband
-  Small South Island Buried Chest: Progressive Fishing Rod
 }
