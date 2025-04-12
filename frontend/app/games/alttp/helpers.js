@@ -828,6 +828,23 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   /**
+   * Gets the item name and player ID for a given location name.
+   * Mirrors the Python `location_item_name` function.
+   * @param {string} locationName - The name of the location to check.
+   * @returns {[string, number]|null} - An array [itemName, itemPlayer] or null if no item.
+   */
+  location_item_name(locationName) {
+    const location = this._findLocationByName(locationName);
+
+    if (location && location.item) {
+      // Assuming location.item structure is { name: string, player: number }
+      return [location.item.name, location.item.player];
+    }
+
+    return null; // No item found or location doesn't exist
+  }
+
+  /**
    * Override the executeHelper method to add special case handling for Python-like functions
    * @override
    */
@@ -856,6 +873,9 @@ export class ALTTPHelpers extends GameHelpers {
     }
     if (name === 'getattr') {
       return this.getattr(...args);
+    }
+    if (name === 'location_item_name') {
+      return this.location_item_name(...args);
     }
 
     // Use the parent class implementation for all other helpers

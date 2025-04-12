@@ -18,6 +18,20 @@ from .games import get_game_export_handler
 
 logger = logging.getLogger(__name__)
 
+# --- Configuration for Excluded Fields --- 
+# Add keys here to exclude them from the final JSON output (e.g., to reduce size)
+# This applies recursively to nested structures.
+EXCLUDED_FIELDS = {
+    'item_rule',
+    'entrances',
+}
+
+# Context-specific exclusions
+CONTEXT_EXCLUDED_FIELDS = {
+    'entrances': ['access_rule'],  # Exclude access_rule from entrance objects
+    # Add more context-specific exclusions here as needed
+}
+
 def is_serializable(obj):
     """Check if an object can be serialized to JSON."""
     try:
@@ -171,7 +185,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         "schema_version": 3,  # Schema version for the export format
         "archipelago_version": Utils.__version__,
         "generation_seed": multiworld.seed,
-        "player_names": multiworld.player_name, # Player ID -> Name mapping
+        "player_names": getattr(multiworld, 'player_name', {}), # Player ID -> Name mapping (default to {} if missing)
         "plando_options": [option.name for option in multiworld.plando_options], # Active plando options
         "world_classes": {player: multiworld.worlds[player].__class__.__name__ 
                            for player in multiworld.player_ids}, # Player ID -> World Class Name mapping
@@ -806,6 +820,38 @@ def cleanup_export_data(data):
     
     return data
 
+# --- Helper for Field Exclusion ---
+def remove_excluded_fields(data, excluded_keys):
+    """ Recursively remove specified keys from nested dictionaries and lists. """
+    if isinstance(data, dict):
+        new_dict = {}
+        for key, value in data.items():
+            if key not in excluded_keys:
+                new_dict[key] = remove_excluded_fields(value, excluded_keys)
+        return new_dict
+    elif isinstance(data, list):
+        return [remove_excluded_fields(item, excluded_keys) for item in data]
+    else:
+        return data
+
+# --- Helper function for common data processing steps ---
+def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
+    """
+    Prepares, serializes, and cleans rule data. Does NOT apply field exclusions.
+    """
+    try:
+        export_data = prepare_export_data(multiworld)
+        # Apply serialization and cleanup - important for consistent output
+        serializable_data = make_serializable(export_data)
+        cleaned_data = cleanup_export_data(serializable_data)
+        return cleaned_data
+    except Exception as e:
+        logger.error(f"Error preparing or cleaning rule data: {e}")
+        logger.exception("Full traceback during data preparation/cleaning:")
+        # Consider returning a partial structure or raising? For now, return empty.
+        return {}
+
+# --- Test Data Export ---
 def export_test_data(multiworld, access_pool, output_dir, filename_base="test_output"):
     """
     Exports rules and test data files for frontend testing.
@@ -880,7 +926,7 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
             logger.error(f"Error writing to test_files.json: {e}")
     
     # Export rules data with explicit region connections
-    export_data = prepare_export_data(multiworld)
+    cleaned_data = _get_cleaned_rules_data(multiworld)
 
     # Create a subdirectory for the parent_directory if it doesn't exist
     parent_dir_path = os.path.join(output_dir, parent_directory)
@@ -889,38 +935,39 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     # CHANGED: Use parent_directory for rules file name instead of filename_base
     rules_path = os.path.join(parent_dir_path, f"{parent_directory}_rules.json")
     
-    # Check for non-serializable parts before writing
-    debug_export_data(export_data)
+    # Check for non-serializable parts before writing (potentially redundant now)
+    debug_export_data(cleaned_data)
     
-    # Make the export data serializable and clean
+    # Apply field exclusions (matching export_game_rules)
+    filtered_data = remove_excluded_fields(cleaned_data, EXCLUDED_FIELDS)
+    filtered_data = process_field_exclusions(
+        filtered_data,
+        context_excluded_fields=CONTEXT_EXCLUDED_FIELDS,
+        global_excluded_fields=EXCLUDED_FIELDS
+    )
+
+    # Write the filtered data to file
     success = False
     try:
-        logger.info("Starting serialization of export data")
-        
-        # First pass: general serialization
-        serializable_data = make_serializable(export_data)
-        
-        # Apply cleanup
-        serializable_data = cleanup_export_data(serializable_data)
-        
-        # Write the data to file
-        logger.info("Writing serialized data to file")
+        logger.info("Writing filtered rules data to file for testing")
         with open(rules_path, 'w', encoding='utf-8') as f:
-            json.dump(serializable_data, f, indent=2)
-        logger.info(f"Successfully wrote rules to {rules_path}")
+            json.dump(filtered_data, f, indent=2)
+        logger.info(f"Successfully wrote filtered rules to {rules_path}")
         success = True
         
     except Exception as e:
-        error_msg = f"Error serializing or writing JSON: {str(e)}"
+        error_msg = f"Error writing filtered JSON: {str(e)}"
         logger.error(error_msg)
         
         # Log the exception details
         import traceback
         logger.error(f"Exception traceback:\n{traceback.format_exc()}")
         
-        # Try to save using field-by-field method as a fallback
-        logger.error("Attempting to save field-by-field...")
-        success = write_field_by_field(export_data, rules_path)
+        # Fallback write_field_by_field might still use the *original* data, 
+        # consider if it should use cleaned_data or filtered_data if needed.
+        # For now, keeping it as is, using the original export_data.
+        logger.error("Attempting to save field-by-field using original data...")
+        success = write_field_by_field(prepare_export_data(multiworld), rules_path) # Fallback uses original data prep
     
     # If we couldn't write the data, return failure
     if not success:
@@ -960,6 +1007,7 @@ def export_test_data(multiworld, access_pool, output_dir, filename_base="test_ou
     print("Export process completed.")
     return True
 
+# --- Game Rules Export ---
 def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False) -> Dict[str, str]:
     """
     Exports game rules and test data to JSON files for frontend consumption.
@@ -977,33 +1025,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     
     os.makedirs(output_dir, exist_ok=True)
 
-    # --- Configuration for Excluded Fields --- 
-    # Add keys here to exclude them from the final JSON output (e.g., to reduce size)
-    # This applies recursively to nested structures.
-    EXCLUDED_FIELDS = {
-        'item_rule',
-        'entrances',
-    }
+    # --- Configuration for Excluded Fields (now defined globally) ---
     
-    # Context-specific exclusions
-    CONTEXT_EXCLUDED_FIELDS = {
-        'entrances': ['access_rule'],  # Exclude access_rule from entrance objects
-        # Add more context-specific exclusions here as needed
-    }
-
-    def remove_excluded_fields(data, excluded_keys):
-        """ Recursively remove specified keys from nested dictionaries and lists. """
-        if isinstance(data, dict):
-            new_dict = {}
-            for key, value in data.items():
-                if key not in excluded_keys:
-                    new_dict[key] = remove_excluded_fields(value, excluded_keys)
-            return new_dict
-        elif isinstance(data, list):
-            return [remove_excluded_fields(item, excluded_keys) for item in data]
-        else:
-            return data
-
+    # --- Field Exclusion Helpers (now defined globally) --- 
+    
     # --- Define key categories and order ---
     desired_key_order = [
         'schema_version',
@@ -1030,17 +1055,11 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'settings', 'start_regions', 'itempool_counts', 'game_info'
     ]
 
-    # Prepare the combined export data for all players
-    try:
-        export_data = prepare_export_data(multiworld)
-        # Apply serialization and cleanup - important for consistent output
-        serializable_data = make_serializable(export_data)
-        cleaned_data = cleanup_export_data(serializable_data)
-        
-    except Exception as e:
-        logger.error(f"Error preparing export data: {e}")
-        logger.exception("Full traceback for data preparation error:")
-        return {} # Return empty dict if preparation fails
+    # Prepare the combined export data for all players using the helper
+    cleaned_data = _get_cleaned_rules_data(multiworld)
+    if not cleaned_data: # Handle potential errors from the helper
+        logger.error("Failed to get cleaned data, cannot export game rules.")
+        return {}
 
     # --- Helper function to create an ordered dictionary with proper field ordering ---
     def create_ordered_export_data(data, game_name=None, player_id=None):
@@ -1317,9 +1336,11 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # Prepare player game data
             player_game_data = []
             for player_id in multiworld.player_ids:
+                # Use getattr to safely access player_name and provide a default
+                player_name = getattr(multiworld, 'player_name', {}).get(player_id, f"Player {player_id}")
                 player_game_data.append({
                     "player": player_id,
-                    "name": multiworld.player_name.get(player_id, f"Player {player_id}"),
+                    "name": player_name,
                     "game": multiworld.game.get(player_id, "Unknown Game")
                 })
 
@@ -1345,6 +1366,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
     return results
 
+# --- Field Exclusion Processing ---
 def process_field_exclusions(data, context_excluded_fields=None, global_excluded_fields=None, context_path=None):
     """
     Process all configured field exclusions on the data.

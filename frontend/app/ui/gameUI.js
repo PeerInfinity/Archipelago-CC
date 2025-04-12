@@ -67,14 +67,17 @@ export class GameUI {
     }
   }
 
-  initializeUI(jsonData) {
+  initializeUI(jsonData, selectedPlayerId) {
     // Don't store duplicate data locally - stateManager should be the single source of truth
-    const player1Items = jsonData.items['1'];
-    const groups = jsonData.item_groups['1'];
+    if (!selectedPlayerId) {
+      console.error('InitializeUI called without selectedPlayerId');
+      return;
+    }
+    const playerItems = jsonData.items[selectedPlayerId];
+    const groups = jsonData.item_groups[selectedPlayerId];
 
     // Initialize view-specific UIs
-    // Pass the items data for display purposes, but use stateManager for game state
-    this.inventoryUI.initialize(player1Items, groups);
+    this.inventoryUI.initialize(playerItems, groups);
 
     // Have UI components get data from stateManager instead of passing jsonData
     this.locationUI.initialize();
@@ -215,20 +218,47 @@ export class GameUI {
 
       const jsonData = JSON.parse(xhr.responseText);
 
+      // === Player Selection Logic ===
+      let selectedPlayerId = null;
+      const playerIds = Object.keys(jsonData.player_names || {});
+
+      if (playerIds.length === 0) {
+        throw new Error('No players found in the JSON data.');
+      } else if (playerIds.length === 1) {
+        selectedPlayerId = playerIds[0];
+        console.log(`Auto-selected single player ID: ${selectedPlayerId}`);
+      } else {
+        // Prompt user to select a player (simple prompt for now)
+        const playerOptions = playerIds
+          .map((id) => `${id}: ${jsonData.player_names[id]}`)
+          .join('\n');
+        const choice = prompt(
+          `Multiple players found. Please enter the ID of the player to load:\n${playerOptions}`
+        );
+
+        if (choice && jsonData.player_names[choice]) {
+          selectedPlayerId = choice;
+          console.log(`User selected player ID: ${selectedPlayerId}`);
+        } else {
+          throw new Error('Invalid player selection or prompt cancelled.');
+        }
+      }
+      // === End Player Selection Logic ===
+
       this.clearExistingData();
       this.currentRules = jsonData; // Store current rules
 
+      // Use selectedPlayerId for loading
       stateManager.initializeInventory(
         [], // Initial items
-        jsonData.progression_mapping['1'],
-        jsonData.items['1']
+        jsonData.progression_mapping[selectedPlayerId],
+        jsonData.items[selectedPlayerId]
       );
 
-      // Load the complete rules data into the state manager
-      // This ensures settings are properly loaded into the state
-      stateManager.loadFromJSON(jsonData);
+      // Load the complete rules data into the state manager, passing the selected player ID
+      stateManager.loadFromJSON(jsonData, selectedPlayerId);
 
-      this.initializeUI(jsonData);
+      this.initializeUI(jsonData, selectedPlayerId);
 
       // Directly update the progress UI
       try {
@@ -290,19 +320,48 @@ export class GameUI {
       reader.onload = (e) => {
         try {
           const jsonData = JSON.parse(e.target.result);
+
+          // === Player Selection Logic ===
+          let selectedPlayerId = null;
+          const playerIds = Object.keys(jsonData.player_names || {});
+
+          if (playerIds.length === 0) {
+            throw new Error('No players found in the JSON data.');
+          } else if (playerIds.length === 1) {
+            selectedPlayerId = playerIds[0];
+            console.log(`Auto-selected single player ID: ${selectedPlayerId}`);
+          } else {
+            // Prompt user to select a player (simple prompt for now)
+            const playerOptions = playerIds
+              .map((id) => `${id}: ${jsonData.player_names[id]}`)
+              .join('\n');
+            const choice = prompt(
+              `Multiple players found. Please enter the ID of the player to load:\n${playerOptions}`
+            );
+
+            if (choice && jsonData.player_names[choice]) {
+              selectedPlayerId = choice;
+              console.log(`User selected player ID: ${selectedPlayerId}`);
+            } else {
+              throw new Error('Invalid player selection or prompt cancelled.');
+            }
+          }
+          // === End Player Selection Logic ===
+
+          this.clearExistingData(); // Moved clear after selection
           this.currentRules = jsonData; // Store current rules
 
+          // Use selectedPlayerId for loading
           stateManager.initializeInventory(
             [],
-            jsonData.progression_mapping['1'],
-            jsonData.items['1']
+            jsonData.progression_mapping[selectedPlayerId],
+            jsonData.items[selectedPlayerId]
           );
 
-          // Load the complete rules data into the state manager
-          // This ensures settings are properly loaded into the state
-          stateManager.loadFromJSON(jsonData);
+          // Load the complete rules data into the state manager, passing the selected player ID
+          stateManager.loadFromJSON(jsonData, selectedPlayerId);
 
-          this.initializeUI(jsonData);
+          this.initializeUI(jsonData, selectedPlayerId);
 
           // Directly update the progress UI
           try {
