@@ -134,7 +134,8 @@ export class GameUI {
   }
 
   clearExistingData() {
-    stateManager.clearInventory();
+    // Use the more comprehensive clearState instead of just clearInventory
+    stateManager.clearState();
 
     // Clear UI elements
     this.inventoryUI.clear();

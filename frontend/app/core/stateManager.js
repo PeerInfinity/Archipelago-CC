@@ -132,6 +132,10 @@ export class StateManager {
       this._processProgressiveItem(itemName);
 
       this.notifyUI('inventoryChanged');
+
+      // Invalidate cache and recompute after item add (if not batching)
+      this.invalidateCache();
+      this.computeReachableRegions();
     }
 
     return true;
@@ -890,6 +894,10 @@ export class StateManager {
     this._batchMode = false;
     this._deferRegionComputation = false;
     this._batchedUpdates = new Map();
+
+    // Invalidate and recompute after batch commit
+    this.invalidateCache();
+    this.computeReachableRegions(); // This will notify UI via 'reachableRegionsComputed'
   }
 
   /**
