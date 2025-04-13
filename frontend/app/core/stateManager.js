@@ -294,6 +294,33 @@ export class StateManager {
       }
     }
 
+    // Process starting items after inventory is initialized
+    const startingItems = jsonData.starting_items?.[selectedPlayerId] || [];
+    if (startingItems && startingItems.length > 0) {
+      console.log(
+        `Adding ${startingItems.length} starting items for player ${selectedPlayerId}`
+      );
+      this.beginBatchUpdate(true); // Defer computation until after adding items
+      startingItems.forEach((itemName) => {
+        // Ensure the item exists in itemData before trying to add
+        if (this.inventory.itemData && this.inventory.itemData[itemName]) {
+          this.addItemToInventory(itemName);
+        } else {
+          console.warn(
+            `Starting item '${itemName}' not found in itemData, skipping.`
+          );
+        }
+      });
+      this.commitBatchUpdate(); // Commit changes, this will trigger computation if deferred
+    } else {
+      // If no starting items, still need to ensure computation runs if it was deferred implicitly
+      // However, commitBatchUpdate already handles this if we didn't start a batch.
+      // If we *did* start a batch for other reasons (unlikely here), this ensures cleanup.
+      if (this._batchMode) {
+        this.commitBatchUpdate();
+      }
+    }
+
     this.invalidateCache();
 
     // Immediately compute reachable regions to collect initial events

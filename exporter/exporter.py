@@ -197,6 +197,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
+        'starting_items': {}, # Starting items by player
     }
     
     # Dungeons will only be added if there's data to include
@@ -327,6 +328,19 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 'default': ['Menu'],
                 'available': []
             }
+
+        # Process starting items
+        try:
+            starting_items_list = multiworld.precollected_items.get(player, []) # Use precollected_items
+            # Extract item names directly, assuming make_serializable handles strings
+            serializable_starting_items = [
+                item.name for item in starting_items_list if hasattr(item, 'name')
+            ]
+            export_data['starting_items'][player_str] = serializable_starting_items
+            logger.debug(f"Successfully processed {len(serializable_starting_items)} starting items for player {player}")
+        except Exception as e:
+            logger.error(f"Error processing starting items for player {player}: {str(e)}")
+            export_data['starting_items'][player_str] = {'error': f"Failed to process starting items: {str(e)}"}
 
     return export_data
 
@@ -671,7 +685,7 @@ def process_items(multiworld, player: int) -> Dict[str, Any]:
     for item_id, item_name in getattr(world, 'item_id_to_name', {}).items():
         if item_name not in items_data:
             # If item is in ID map but not handler data, create a basic entry
-            logger.warning(f"Item '{item_name}' found in item_id_to_name but not in handler data for {game_name}. Creating basic entry.")
+            #logger.warning(f"Item '{item_name}' found in item_id_to_name but not in handler data for {game_name}. Creating basic entry.")
             items_data[item_name] = {
                 'name': item_name,
                 'id': item_id,
@@ -1045,6 +1059,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'item_groups',
         'itempool_counts',
         'progression_mapping',
+        'starting_items',
         'settings',
         'game_info'
     ]
@@ -1052,7 +1067,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'settings', 'start_regions', 'itempool_counts', 'game_info'
+        'settings', 'start_regions', 'itempool_counts', 'game_info',
+        'starting_items'
     ]
 
     # Prepare the combined export data for all players using the helper

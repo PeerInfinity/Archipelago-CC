@@ -247,8 +247,8 @@ def _clean_source(func):
                  excess -= 1
                  removed_count += 1
 
-            if removed_count > 0:
-                 logging.warning(f"WARNING: Removed {removed_count} excess trailing ')' from body. Original: {repr(original_body)}, Final: {repr(body)}")
+            #if removed_count > 0:
+            #     logging.warning(f"WARNING: Removed {removed_count} excess trailing ')' from body. Original: {repr(original_body)}, Final: {repr(body)}")
 
         # Optional: Validate if the cleaned body is a valid expression
         try:
@@ -803,6 +803,46 @@ class RuleAnalyzer(ast.NodeVisitor):
         value_result = self.visit(node.value)
         logging.debug(f"visit_Assign: Result from visiting value = {value_result}")
         return value_result # Return the result of analyzing the assigned value
+
+    def visit_If(self, node: ast.If):
+        """ Handle standard if statements. """
+        try:
+            logging.debug(f"\n--- visit_If ---")
+            test_result = self.visit(node.test)
+            
+            # Assume simple structure where body/orelse contain a single statement (e.g., return)
+            # and visit that statement directly.
+            body_result = None
+            if node.body:
+                 body_result = self.visit(node.body[0]) # Visit the first statement in the 'if' block
+            else:
+                 logging.warning("visit_If: 'if' block is empty.")
+
+            orelse_result = None
+            if node.orelse:
+                 orelse_result = self.visit(node.orelse[0]) # Visit the first statement in the 'else' block
+            else:
+                 # Handle cases with no 'else' - could return None or a specific structure
+                 logging.debug("visit_If: No 'else' block found.")
+                 # Depending on how 'no else' should be represented, adjust here.
+                 # For now, represent missing else as None.
+
+            if test_result is None or body_result is None: # Orelse can be None legitimately
+                 logging.error(f"Failed to analyze test or body of If statement: {ast.dump(node)}")
+                 # If body_result failed but orelse exists and succeeded, we might still want partial info?
+                 # For simplicity, fail if test or body fails.
+                 return None
+
+            # Use a structure similar to IfExp (ternary) for consistency
+            return {
+                'type': 'conditional', # Reusing 'conditional' type
+                'test': test_result,
+                'if_true': body_result,
+                'if_false': orelse_result # This will be None if no else block
+            }
+        except Exception as e:
+            logging.error("Error in visit_If", e)
+            return None
 
     def visit_IfExp(self, node: ast.IfExp):
         """ Handle conditional ternary expressions (body if test else orelse). """

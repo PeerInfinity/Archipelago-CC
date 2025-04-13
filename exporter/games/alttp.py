@@ -16,31 +16,30 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     def __init__(self):
         # Define ALTTP-specific helpers that should NOT be expanded
         self.known_helpers = {
-            # Core Logic Helpers
-            'can_lift_rocks', 'can_lift_heavy_rocks', 'can_bomb_open', 
-            'can_activate_flute', 'can_melt_things', 'has_crystals', 
-            'can_read', 'is_beatable', 'is_swordless', 'is_standard_mode',
-            'is_open_mode', 'is_inverted_mode', 'is_retro_mode',
-            # Item checks (often used within rules)
-            'has_sword', 'has_shield', 'has_boots', 'has_bombs',
-            'has_bow', 'has_silver_arrows', 'has_fire_source', 'has_magic_power',
-            'has_key', 'has_big_key', 
-            # Specific location/region access helpers
-            'can_extend_magic', 'can_enter_splash_portal', 'can_reach_ledge',
-            'can_get_good_bee', 'can_hurt_boss', 'can_beat_agahnim',
-            'can_complete_dungeon', 'can_reach_outcast', 
-            # Dark world logic helpers
-            'can_reach_dw_main', 'can_reach_dw_northeast', 'can_reach_dw_northwest', 
-            'can_reach_dw_south', 'can_reach_dw_southwest', 'can_reach_dw_southeast',
-            # Specific item interactions
-            'can_open_pyramid_door', 'can_shoot_arrows', 
-            'can_avoid_lasers', 'can_pass_reflect_projectiles',
-            # Dungeon specific helpers
-            'can_defeat_moldorm', 'can_defeat_lanmolas', 'can_defeat_kholdstare',
-            'can_defeat_vittreous', 'can_defeat_trinexx', 'can_defeat_ganon',
-            # Multiworld helpers (should generally be preserved)
-            'can_reach_location', 'can_reach_region', 'can_reach_entrance'
-            # Add other known ALTTP helpers here
+            'GanonDefeatRule',
+            'basement_key_rule',
+            'can_activate_crystal_switch',
+            'can_bomb_or_bonk',
+            'can_extend_magic',
+            'can_kill_most_things',
+            'can_lift_heavy_rocks',
+            'can_lift_rocks',
+            'can_melt_things',
+            'can_retrieve_tablet',
+            'can_shoot_arrows',
+            'can_use_bombs',
+            'has_beam_sword',
+            'has_crystals',
+            'has_fire_source',
+            'has_hearts',
+            'has_melee_weapon',
+            'has_misery_mire_medallion',
+            'has_sword',
+            'has_turtle_rock_medallion',
+            'item_name_in_location_names',
+            # If we encounter orig_rule, that means something is probably wrong.
+            # Currently, it appears in the item_rule entries, which aren't included in the json file
+            'orig_rule', 
         }
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
