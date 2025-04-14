@@ -56,9 +56,9 @@ export class GameUI {
     // Initialize UI
     this.attachEventListeners();
     this.loadDefaultRules();
-    this.updateViewDisplay();
 
-    // Initialize test case UI - fix for synchronous method
+    // Initialize test case UI - MOVED to init.js after container exists
+    /*
     try {
       const success = this.testCaseUI.initialize();
       if (!success) {
@@ -67,6 +67,7 @@ export class GameUI {
     } catch (error) {
       console.error('Failed to initialize test cases:', error);
     }
+    */
   }
 
   initializeUI(jsonData, selectedPlayerId) {
@@ -114,15 +115,6 @@ export class GameUI {
       });
     }
 
-    // View toggle radio buttons
-    document.querySelectorAll('input[name="view-mode"]').forEach((radio) => {
-      radio.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          this.setViewMode(e.target.value);
-        }
-      });
-    });
-
     // File view toggle radio buttons
     document
       .querySelectorAll('input[name="file-view-mode"]')
@@ -144,67 +136,6 @@ export class GameUI {
     this.locationUI.clear();
     this.exitUI.clear();
     this.regionUI.clear();
-  }
-
-  updateViewDisplay() {
-    const locationsContainer = document.getElementById('locations-grid');
-    const exitsContainer = document.getElementById('exits-grid');
-    const regionsContainer = document.getElementById('regions-panel');
-    const loopPanel = document.getElementById('loop-panel');
-    const filesPanel = document.getElementById('files-panel');
-
-    if (
-      !locationsContainer ||
-      !exitsContainer ||
-      !regionsContainer ||
-      !loopPanel ||
-      !filesPanel
-    ) {
-      console.warn('Missing container elements for toggling views.');
-      return;
-    }
-
-    // Toggle view containers
-    locationsContainer.style.display = 'none';
-    exitsContainer.style.display = 'none';
-    regionsContainer.style.display = 'none';
-    loopPanel.style.display = 'none';
-    filesPanel.style.display = 'none';
-
-    // Toggle control containers
-    document.querySelector('.location-controls').style.display = 'none';
-    document.querySelector('.exit-controls').style.display = 'none';
-    document.querySelector('.region-controls').style.display = 'none';
-    document.querySelector('.loop-controls').style.display = 'none';
-    document.querySelector('.file-controls').style.display = 'none';
-
-    switch (this.currentViewMode) {
-      case 'locations':
-        locationsContainer.style.display = 'grid';
-        document.querySelector('.location-controls').style.display = 'flex';
-        this.locationUI.update();
-        break;
-      case 'exits':
-        exitsContainer.style.display = 'grid';
-        document.querySelector('.exit-controls').style.display = 'flex';
-        this.exitUI.update();
-        break;
-      case 'regions':
-        regionsContainer.style.display = 'block';
-        document.querySelector('.region-controls').style.display = 'flex';
-        this.regionUI.update();
-        break;
-      case 'loop':
-        loopPanel.style.display = 'block';
-        document.querySelector('.loop-controls').style.display = 'flex';
-        this.loopUI.renderLoopPanel();
-        break;
-      case 'files':
-        filesPanel.style.display = 'block';
-        document.querySelector('.file-controls').style.display = 'flex';
-        this.updateFileViewDisplay();
-        break;
-    }
   }
 
   loadDefaultRules() {
@@ -429,56 +360,6 @@ export class GameUI {
     }
   }
 
-  setViewMode(mode) {
-    this.currentViewMode = mode;
-    this.updateViewDisplay();
-  }
-
-  registerConsoleCommands() {
-    if (!window.consoleManager) return;
-
-    const commands = {
-      item: {
-        description: 'Toggle an item in your inventory',
-        usage: 'item <name>',
-        handler: (args) => {
-          const itemName = args.join(' ');
-          if (
-            this.inventoryUI.itemData &&
-            this.inventoryUI.itemData[itemName]
-          ) {
-            this.inventoryUI.modifyItemCount(itemName);
-            return `Toggled ${itemName}`;
-          } else {
-            return `Item "${itemName}" not found`;
-          }
-        },
-      },
-      items: {
-        description: 'List all available items',
-        usage: 'items',
-        handler: () => {
-          if (!this.inventoryUI.itemData) return 'No items loaded';
-          return Object.entries(this.inventoryUI.itemData)
-            .map(([name, data]) => `${name} (${data.groups.join(', ')})`)
-            .join('\n');
-        },
-      },
-      clear: {
-        description: 'Clear all items from inventory',
-        usage: 'clear',
-        handler: () => {
-          this.clearExistingData();
-          return 'Inventory cleared';
-        },
-      },
-    };
-
-    Object.entries(commands).forEach(([name, command]) => {
-      window.consoleManager.registerCommand(name, command);
-    });
-  }
-
   /**
    * Initialize collapse/expand functionality for the center column
    */
@@ -528,10 +409,27 @@ export class GameUI {
   }
 
   updateFileViewDisplay() {
-    const testCasesPanel = document.getElementById('test-cases-panel');
-    const presetsPanel = document.getElementById('presets-panel');
-    const testPlaythroughsPanel = document.getElementById(
-      'test-playthroughs-panel'
+    // Query within the files panel content area - we need a way to get this element reliably.
+    // For now, we might have to query the document, assuming only one file panel exists.
+    // A better approach might be to pass the container element to this method.
+    // const filesContentArea = document.getElementById('files-panel-content');
+    const filesPanelRoot = window.gameUI.getFilesPanelRootElement(); // Re-get the structure template (not ideal)
+    const filesContentArea = filesPanelRoot?.querySelector(
+      '#files-panel-content'
+    );
+    // More robust: Find the active Golden Layout panel for 'filesPanel'
+    // let activeFilesPanelContainer = window.goldenLayoutInstance?.root?.getItemsById('filesPanel')[0]?.container?.element;
+    // const filesContentArea = activeFilesPanelContainer?.querySelector('#files-panel-content');
+
+    if (!filesContentArea) {
+      console.warn('Files panel content area not found for updating view.');
+      return;
+    }
+
+    const testCasesPanel = filesContentArea.querySelector('#test-cases-panel');
+    const presetsPanel = filesContentArea.querySelector('#presets-panel');
+    const testPlaythroughsPanel = filesContentArea.querySelector(
+      '#test-playthroughs-panel'
     );
 
     if (!testCasesPanel || !presetsPanel || !testPlaythroughsPanel) {
@@ -544,11 +442,16 @@ export class GameUI {
     presetsPanel.style.display = 'none';
     testPlaythroughsPanel.style.display = 'none';
 
-    // Clear displays of inactive test UIs
-    if (this.currentFileView !== 'test-cases')
-      this.testCaseUI?.clearTestData?.();
-    if (this.currentFileView !== 'test-playthroughs')
-      this.testPlaythroughUI?.clearDisplay?.();
+    // Clear displays of inactive test UIs only if they were initialized
+    if (this.currentFileView !== 'test-cases' && this.testCaseUI?.initialized) {
+      this.testCaseUI.clearTestData();
+    }
+    if (
+      this.currentFileView !== 'test-playthroughs' &&
+      this.testPlaythroughUI?.initialized
+    ) {
+      this.testPlaythroughUI.clearDisplay();
+    }
 
     // Only initialize if Loop Mode is NOT active
     const isLoopModeActive = window.loopUIInstance?.isLoopModeActive;
@@ -556,28 +459,34 @@ export class GameUI {
       // Show the selected panel and initialize if needed
       if (this.currentFileView === 'presets') {
         presetsPanel.style.display = 'block';
-        if (!this.presetUI.presets) {
+        // Initialize presetUI only if it hasn't been initialized or if its container is empty
+        if (
+          !this.presetUI.initialized ||
+          !presetsPanel.querySelector('#presets-list')?.hasChildNodes()
+        ) {
           this.presetUI.initialize();
-        } else if (!document.getElementById('presets-list')?.hasChildNodes()) {
-          this.presetUI.renderGamesList();
+          this.presetUI.initialized = true; // Add a flag to track initialization
         }
       } else if (this.currentFileView === 'test-cases') {
         testCasesPanel.style.display = 'block';
-        if (!this.testCaseUI.availableTestSets && !this.testCaseUI.testCases) {
-          this.testCaseUI.initialize();
-        } else if (
-          !document.getElementById('test-cases-list')?.hasChildNodes()
+        // Initialize testCaseUI only if it hasn't been initialized or if its container is empty
+        if (
+          !this.testCaseUI.initialized ||
+          !testCasesPanel.querySelector('#test-cases-list')?.hasChildNodes()
         ) {
-          this.testCaseUI.renderTestSetSelector();
+          this.testCaseUI.initialize();
+          this.testCaseUI.initialized = true; // Add a flag
         }
       } else if (this.currentFileView === 'test-playthroughs') {
         testPlaythroughsPanel.style.display = 'block';
-        if (!this.testPlaythroughUI.playthroughFiles) {
-          this.testPlaythroughUI.initialize();
-        } else if (
-          !document.getElementById('test-playthroughs-panel')?.hasChildNodes()
+        // Initialize testPlaythroughUI only if it hasn't been initialized or if its container is empty
+        if (
+          !this.testPlaythroughUI.initialized ||
+          !testPlaythroughsPanel.querySelector('.playthrough-list-container')
         ) {
-          this.testPlaythroughUI.renderPlaythroughList();
+          // Check for specific content
+          this.testPlaythroughUI.initialize();
+          this.testPlaythroughUI.initialized = true; // Add a flag
         }
       }
     } else {
@@ -586,5 +495,219 @@ export class GameUI {
       testCasesPanel.style.display = 'none';
       testPlaythroughsPanel.style.display = 'none';
     }
+  }
+
+  registerConsoleCommands() {
+    if (!window.consoleManager) return;
+
+    const commands = {
+      item: {
+        description: 'Toggle an item in your inventory',
+        usage: 'item <name>',
+        handler: (args) => {
+          const itemName = args.join(' ');
+          if (
+            this.inventoryUI.itemData &&
+            this.inventoryUI.itemData[itemName]
+          ) {
+            this.inventoryUI.modifyItemCount(itemName);
+            return `Toggled ${itemName}`;
+          } else {
+            return `Item "${itemName}" not found`;
+          }
+        },
+      },
+      items: {
+        description: 'List all available items',
+        usage: 'items',
+        handler: () => {
+          if (!this.inventoryUI.itemData) return 'No items loaded';
+          return Object.entries(this.inventoryUI.itemData)
+            .map(([name, data]) => `${name} (${data.groups.join(', ')})`)
+            .join('\n');
+        },
+      },
+      clear: {
+        description: 'Clear all items from inventory',
+        usage: 'clear',
+        handler: () => {
+          this.clearExistingData();
+          return 'Inventory cleared';
+        },
+      },
+    };
+
+    Object.entries(commands).forEach(([name, command]) => {
+      window.consoleManager.registerCommand(name, command);
+    });
+  }
+
+  // Creates the main DOM structure for the main content panel
+  getMainContentRootElement() {
+    const element = document.createElement('div');
+    element.classList.add('main-content-panel-container', 'panel-container');
+    element.style.display = 'flex';
+    element.style.flexDirection = 'column';
+    element.style.height = '100%';
+    element.style.overflow = 'hidden';
+    element.style.padding = '1em'; // Add padding back
+    element.style.color = '#cecece'; // Ensure text color
+    element.style.backgroundColor = '#2d2d2d'; // Ensure background
+
+    // Recreate the structure from index.html
+    element.innerHTML = `
+        <!-- <div id="main-content-collapse-btn" title="Collapse Center Column">◀</div> Collapse button removed, GL handles resizing -->
+        <h2 id="header-text" style="text-align: center; margin: 0 0 1em 0;">J S O N &nbsp; W e b &nbsp; C l i e n t</h2>
+
+        <div id="status-bar" style="display: flex; justify-content: space-between; margin-bottom: 1em; flex-shrink: 0;">
+          <div>
+            AP Server: <span id="server-status" class="red">Not Connected</span>
+          </div>
+          <div>
+            <label for="server-address">Server Address:</label>
+            <input id="server-address" value="ws://localhost:38281" />
+          </div>
+        </div>
+
+        <div id="progress-container" style="text-align: center; margin-bottom: 1em; flex-shrink: 0;">
+          <h3 id="progress-container-header" style="margin-bottom: 0;">Location Check Progress</h3>
+          <progress id="progress-bar" value="0" max="30000" style="width: 100%;"></progress>
+          <span id="checks-sent">Checked: 0</span><br />
+          <div class="button-container" style="display: flex; gap: 10px; margin-top: 10px;">
+            <button id="control-button" class="button" disabled="disabled" style="flex: 1;">Begin!</button>
+            <button id="quick-check-button" class="button" disabled="disabled" style="flex: 1;">
+              Quick Check
+            </button>
+          </div>
+        </div>
+
+        <div id="console" style="border: 1px solid #666; border-radius: 4px; flex-grow: 1; overflow-y: auto; margin-bottom: 1em; background-color: #1a1a1a;">
+          <!-- Populated by JS -->
+        </div>
+
+        <div id="command-wrapper" style="display: flex; flex-shrink: 0;">
+          <label for="console-input"></label>
+          <input
+            id="console-input"
+            style="flex-grow: 1;"
+            placeholder="Enter a command here, then press enter."
+          />
+        </div>
+    `;
+    return element;
+  }
+
+  // Attaches listeners and populates content within the main panel's root element
+  initializeMainContentElements(rootElement) {
+    // Find elements within the provided rootElement
+    const consoleElement = rootElement.querySelector('#console');
+    const consoleInput = rootElement.querySelector('#console-input');
+    const controlButton = rootElement.querySelector('#control-button');
+    const quickCheckButton = rootElement.querySelector('#quick-check-button');
+    const serverAddressInput = rootElement.querySelector('#server-address');
+
+    // Example: Initialize Console Manager (assuming it targets #console and #console-input)
+    // You might need to pass these elements to the ConsoleManager constructor or an init method
+    if (window.ConsoleManager && consoleElement && consoleInput) {
+      // Assuming ConsoleManager can be re-initialized or attached to new elements
+      window.consoleManager = new window.ConsoleManager(
+        consoleElement,
+        consoleInput,
+        window.APP
+      );
+      this.registerConsoleCommands(); // Re-register commands if needed
+    }
+
+    // Example: Attach listeners for control buttons
+    if (controlButton && window.APP) {
+      controlButton.onclick = () => window.APP.toggleConnection();
+    }
+    if (quickCheckButton && window.messageHandler) {
+      quickCheckButton.onclick = () => window.messageHandler.sendQuickCheck();
+    }
+    if (serverAddressInput && window.APP) {
+      serverAddressInput.onchange = () =>
+        window.APP.updateServerAddress(serverAddressInput.value);
+    }
+
+    // Re-initialize or update other elements like progress bar, status, etc.
+    // This logic likely lives in client/app.js or progressUI.js and might need adjustment
+    // to target elements within rootElement instead of document.getElementById
+    try {
+      import('../../client/ui/progressUI.js').then((module) => {
+        const ProgressUI = module.default;
+        // Pass the rootElement or specific elements if ProgressUI needs them
+        ProgressUI.initializeWithin(rootElement);
+        ProgressUI.updateProgress();
+      });
+    } catch (error) {
+      console.error('Error initializing progress UI within main panel:', error);
+    }
+    // Similar adjustments might be needed for updating server status span
+  }
+
+  // Creates the main DOM structure for the files panel
+  getFilesPanelRootElement() {
+    const element = document.createElement('div');
+    element.classList.add('files-panel-container', 'panel-container');
+    element.style.display = 'flex';
+    element.style.flexDirection = 'column';
+    element.style.height = '100%';
+    element.style.overflow = 'hidden';
+
+    element.innerHTML = `
+      <div class="control-group file-controls" style="padding: 0.5rem; border-bottom: 1px solid #666; flex-shrink: 0;">
+            <label>
+              <input
+                type="radio"
+                name="file-view-mode"
+                value="presets"
+                checked
+              />
+              Presets
+            </label>
+            <label>
+              <input type="radio" name="file-view-mode" value="test-cases" />
+              Test Cases
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="file-view-mode"
+                value="test-playthroughs"
+              />
+              Test Playthroughs
+            </label>
+       </div>
+       <div id="files-panel-content" style="flex-grow: 1; overflow-y: auto;">
+          <div id="test-cases-panel" style="height: 100%;">
+            <div id="test-cases-list"></div>
+          </div>
+          <div id="presets-panel" style="display: none; height: 100%;">
+            <div id="presets-list"></div>
+          </div>
+          <div id="test-playthroughs-panel" style="display: none; height: 100%;">
+            <!-- Populated by testPlaythroughUI.js -->
+          </div>
+       </div>
+    `;
+    return element;
+  }
+
+  // Attaches listeners and sets up content for the files panel
+  initializeFilesPanelElements(rootElement) {
+    const fileViewRadios = rootElement.querySelectorAll(
+      'input[name="file-view-mode"]'
+    );
+    fileViewRadios.forEach((radio) => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          this.setFileViewMode(e.target.value);
+        }
+      });
+    });
+
+    // Initial render of the default file view (presets)
+    this.updateFileViewDisplay();
   }
 }
