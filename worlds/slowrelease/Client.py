@@ -195,7 +195,8 @@ class SlowReleaseContext(TrackerGameContext):
             # Determine log file name
             timestamp_file = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             safe_player_name = "".join(c for c in self.auth if c.isalnum() or c in ('_','-')).rstrip()
-            log_filename = f"slowrelease_{safe_player_name}_{self.player_id}_{timestamp_file}.json"
+            safe_game_name = "".join(c for c in self.game.replace(" ", "_") if c.isalnum() or c in ('_','-')).rstrip()
+            log_filename = f"{safe_game_name}_{safe_player_name}_{self.player_id}_{timestamp_file}.json"
             self.log_file_path = os.path.join(target_log_dir, log_filename)
             logger.info(f"[SlowReleaseLogger] Initializing log file: {self.log_file_path}")
             index_file_path = os.path.join(target_log_dir, "playthrough_files.json")
@@ -240,12 +241,28 @@ class SlowReleaseContext(TrackerGameContext):
                  logger.error(f"[SlowReleaseLogger] Failed to write updated index file {index_file_path}: {e}")
                  # Continue logging to main file even if index update fails?
 
+            # Re-determine log filename using sanitized game name
+            log_filename = f"{safe_game_name}_{safe_player_name}_{self.player_id}_{timestamp_file}.json"
+            self.log_file_path = os.path.join(target_log_dir, log_filename)
+            # Update the filename in the index entry *before* saving index
+            new_entry["filename"] = log_filename 
+
+            # Write updated index back
+            try:
+                 with open(index_file_path, "w", encoding="utf-8") as f_index:
+                     json.dump(playthrough_index, f_index, indent=4)
+                 logger.info(f"[SlowReleaseLogger] Updated index file: {index_file_path}")
+            except Exception as e:
+                 logger.error(f"[SlowReleaseLogger] Failed to write updated index file {index_file_path}: {e}")
+                 # Continue logging to main file even if index update fails?
+
             # --- Log Connection Info to Main Log File --- 
             connection_info = {
                 "event": "connected",
+                "game": game_name,
                 "player_name": self.auth,
                 "player_id": self.player_id,
-                "seed_name": self.seed_name if hasattr(self, 'seed_name') else None, # Use seed_name if available
+                "seed_name": seed_name,
                 "initial_time_per_check": self.time_per,
                 "initial_region_mode": self.region_mode
             }

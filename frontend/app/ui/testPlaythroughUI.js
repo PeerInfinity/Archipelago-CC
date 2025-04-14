@@ -7,23 +7,28 @@ export class TestPlaythroughUI {
     this.currentPlaythrough = null;
     this.logContainer = null;
     this.abortController = null; // To cancel ongoing tests
+
+    // State for stepping through tests
+    this.logEvents = null;
+    this.currentLogIndex = 0;
+    this.rulesLoaded = false;
+    this.presetInfo = null;
+    this.testStateInitialized = false;
   }
 
   initialize() {
     console.log('Initializing TestPlaythroughUI');
-    const container = document.getElementById('test-playthroughs-panel'); // We'll add this ID later
+    const container = document.getElementById('test-playthroughs-panel');
     if (!container) {
       console.error('Test Playthroughs panel container not found');
       return false;
     }
-    // Add a placeholder or loading message
     container.innerHTML = '<p>Loading playthrough list...</p>';
 
     try {
-      // Load playthrough_files.json
       const loadJSON = (url) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', url, false); // Synchronous load for initialization
+        xhr.open('GET', url, false);
         xhr.send();
         if (xhr.status === 200) {
           return JSON.parse(xhr.responseText);
@@ -35,7 +40,7 @@ export class TestPlaythroughUI {
       this.playthroughFiles = loadJSON('./playthroughs/playthrough_files.json');
       console.log('Loaded playthrough files:', this.playthroughFiles);
 
-      this.renderPlaythroughList();
+      this.renderPlaythroughList(); // Initial view
       return true;
     } catch (error) {
       console.error('Error loading playthrough files data:', error);
@@ -47,6 +52,9 @@ export class TestPlaythroughUI {
   renderPlaythroughList() {
     const container = document.getElementById('test-playthroughs-panel');
     if (!container) return;
+
+    // Clear previous state when returning to list
+    this.clearTestState();
 
     let html = `
       <div class="playthrough-header">
@@ -68,66 +76,101 @@ export class TestPlaythroughUI {
             <span class="playthrough-details">(${this.escapeHtml(
               playthrough.game
             )} - P${playthrough.player_id} - Seed: ${playthrough.seed})</span>
-            <button class="button run-playthrough" data-index="${index}">Test</button>
+            <button class="button select-playthrough" data-index="${index}">Select</button>
           </div>
         `;
       });
     }
 
-    html += `
-      </div>
-      <div id="playthrough-log-output" class="playthrough-log-output">
-        <!-- Log messages will appear here -->
-      </div>
-    `;
-
-    // Add basic styles (can be moved to index.css later)
-    html += `
-      <style>
-        .playthrough-header { margin-bottom: 1rem; }
-        .playthrough-list-container { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-        .playthrough-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.1); border-radius: 4px; flex-wrap: wrap; }
-        .playthrough-name { font-weight: bold; flex-grow: 1; }
-        .playthrough-details { font-size: 0.9em; color: #aaa; }
-        .playthrough-log-output {
-          height: 400px; /* Adjust as needed */
-          overflow-y: auto;
-          background-color: #1a1a1a;
-          border: 1px solid #444;
-          border-radius: 4px;
-          padding: 0.5rem;
-          font-family: monospace;
-          font-size: 0.9em;
-          color: #ccc;
-          white-space: pre-wrap; /* Keep line breaks */
-        }
-        .log-entry { margin-bottom: 0.25rem; border-bottom: 1px solid #333; padding-bottom: 0.25rem; }
-        .log-entry:last-child { border-bottom: none; }
-        .log-error { color: #f44336; font-weight: bold; }
-        .log-success { color: #4caf50; font-weight: bold; }
-        .log-info { color: #aaa; }
-        .log-step { color: #ffc107; }
-        .log-state { color: #2196f3; }
-        .log-mismatch { background-color: rgba(244, 67, 54, 0.2); padding: 2px 4px; border-radius: 3px; }
-      </style>
-    `;
+    html += `</div>`;
+    // Styles moved to renderResultsView or CSS file for better organization
 
     container.innerHTML = html;
-    this.logContainer = container.querySelector('#playthrough-log-output'); // Store reference
 
-    // Add event listeners
-    container.querySelectorAll('.run-playthrough').forEach((button) => {
+    // Add event listeners for the "Select" buttons
+    container.querySelectorAll('.select-playthrough').forEach((button) => {
       button.addEventListener('click', () => {
         const index = parseInt(button.getAttribute('data-index'), 10);
         this.currentPlaythrough = this.playthroughFiles[index];
-        this.runPlaythroughTest(this.currentPlaythrough);
+        this.renderResultsView(); // Show the results view for the selected playthrough
       });
     });
   }
 
-  async runPlaythroughTest(playthroughInfo) {
-    if (!this.logContainer) return;
-    this.logContainer.innerHTML = ''; // Clear previous logs
+  renderResultsView() {
+    const container = document.getElementById('test-playthroughs-panel');
+    if (!container || !this.currentPlaythrough) return;
+
+    container.innerHTML = `
+        <div class="playthrough-results-header">
+            <button id="back-to-playthrough-list" class="button back-button">← Back to List</button>
+            <h4>Testing: ${this.escapeHtml(
+              this.currentPlaythrough.filename
+            )}</h4>
+            <div class="playthrough-controls">
+                <button id="run-full-test" class="button">Run Full Test</button>
+                <button id="step-test" class="button">Step Test</button>
+                <span id="test-step-info"></span>
+            </div>
+        </div>
+        <div id="playthrough-log-output" class="playthrough-log-output">
+            <!-- Log messages will appear here -->
+        </div>
+        <style>
+            .playthrough-results-header { margin-bottom: 1rem; border-bottom: 1px solid #444; padding-bottom: 1rem;}
+            .playthrough-results-header h4 { margin: 0.5rem 0; }
+            .playthrough-controls { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; }
+            #test-step-info { margin-left: 1rem; font-size: 0.9em; color: #aaa; }
+            .playthrough-list-container { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+            .playthrough-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.1); border-radius: 4px; flex-wrap: wrap; }
+            .playthrough-name { font-weight: bold; flex-grow: 1; }
+            .playthrough-details { font-size: 0.9em; color: #aaa; }
+            .playthrough-log-output {
+              height: 400px; /* Adjust as needed */
+              overflow-y: auto;
+              background-color: #1a1a1a;
+              border: 1px solid #444;
+              border-radius: 4px;
+              padding: 0.5rem;
+              font-family: monospace;
+              font-size: 0.9em;
+              color: #ccc;
+              white-space: pre-wrap; /* Keep line breaks */
+            }
+            .log-entry { margin-bottom: 0.25rem; border-bottom: 1px solid #333; padding-bottom: 0.25rem; }
+            .log-entry:last-child { border-bottom: none; }
+            .log-error { color: #f44336; font-weight: bold; }
+            .log-success { color: #4caf50; font-weight: bold; }
+            .log-info { color: #aaa; }
+            .log-step { color: #ffc107; }
+            .log-state { color: #2196f3; }
+            .log-mismatch { background-color: rgba(244, 67, 54, 0.2); padding: 2px 4px; border-radius: 3px; }
+            .back-button { margin-right: 1rem; background-color: #444; }
+            .back-button:hover { background-color: #555; }
+         </style>
+     `;
+
+    this.logContainer = container.querySelector('#playthrough-log-output'); // Store reference
+
+    // Add event listeners for the results view buttons
+    document
+      .getElementById('back-to-playthrough-list')
+      .addEventListener('click', () => {
+        this.renderPlaythroughList();
+      });
+    document.getElementById('run-full-test').addEventListener('click', () => {
+      this.runFullPlaythroughTest();
+    });
+    document.getElementById('step-test').addEventListener('click', () => {
+      this.stepPlaythroughTest();
+    });
+  }
+
+  async preparePlaythroughTest() {
+    if (this.testStateInitialized) return true; // Already prepared
+
+    if (!this.logContainer) return false;
+    this.logContainer.innerHTML = ''; // Clear logs for new preparation
 
     // Abort previous test if running
     if (this.abortController) {
@@ -136,53 +179,91 @@ export class TestPlaythroughUI {
     this.abortController = new AbortController();
     const signal = this.abortController.signal;
 
-    this.log('info', `Starting test for: ${playthroughInfo.filename}`);
+    this.log('info', `Preparing test for: ${this.currentPlaythrough.filename}`);
 
     try {
       // --- 1. Find Corresponding Preset ---
       this.log('step', '1. Finding matching preset...');
-      const presetInfo = this.findPresetForPlaythrough(playthroughInfo);
-      if (!presetInfo) {
+      this.presetInfo = this.findPresetForPlaythrough(this.currentPlaythrough);
+      if (!this.presetInfo) {
         throw new Error(
-          `No matching preset found for game "${playthroughInfo.game}" and seed "${playthroughInfo.seed}". Check presets/preset_files.json.`
+          `No matching preset found for game "${this.currentPlaythrough.game}" and seed "${this.currentPlaythrough.seed}". Check presets/preset_files.json.`
         );
       }
       this.log(
         'success',
-        `Found preset: Game "${presetInfo.gameId}", Folder "${presetInfo.folderId}"`
+        `Found preset: Game "${this.presetInfo.gameId}", Folder "${this.presetInfo.folderId}"`
       );
 
       // --- 2. Load Preset Rules ---
       this.log('step', '2. Loading preset rules...');
-      const rulesLoaded = await this.loadPresetRules(
-        presetInfo.gameId,
-        presetInfo.folderId,
-        playthroughInfo.player_id.toString(),
+      this.rulesLoaded = await this.loadPresetRules(
+        this.presetInfo.gameId,
+        this.presetInfo.folderId,
+        this.currentPlaythrough.player_id.toString(),
         signal
       );
-      if (!rulesLoaded) {
+      if (!this.rulesLoaded) {
         // Error already logged in loadPresetRules
-        return;
+        return false;
       }
       this.log('success', 'Preset rules loaded successfully.');
 
       // --- 3. Load Playthrough Log ---
       this.log('step', '3. Loading playthrough log file...');
-      const logFilePath = `./playthroughs/${playthroughInfo.filename}`;
-      const logEvents = await this.loadLogFile(logFilePath, signal);
-      if (!logEvents) {
+      const logFilePath = `./playthroughs/${this.currentPlaythrough.filename}`;
+      this.logEvents = await this.loadLogFile(logFilePath, signal);
+      if (!this.logEvents) {
         // Error already logged in loadLogFile
-        return;
+        return false;
       }
-      this.log('success', `Loaded ${logEvents.length} events from log.`);
+      this.log('success', `Loaded ${this.logEvents.length} events from log.`);
 
-      // --- 4. Process Log Events ---
-      this.log('step', '4. Processing log events and comparing states...');
-      await this.processLogEvents(logEvents, signal);
+      this.currentLogIndex = 0;
+      this.testStateInitialized = true;
+      this.updateStepInfo();
+      this.log('info', 'Preparation complete. Ready to run or step.');
+      return true;
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        this.log('info', 'Test preparation aborted.');
+      } else {
+        this.log('error', `Test preparation failed: ${error.message}`);
+        console.error('Playthrough Test Prep Error:', error);
+      }
+      this.clearTestState(); // Clean up on error
+      return false;
+    }
+  }
+
+  async runFullPlaythroughTest() {
+    const prepared = await this.preparePlaythroughTest();
+    if (!prepared) return;
+
+    if (!this.logEvents) {
+      this.log('error', 'No log events loaded.');
+      return;
+    }
+
+    this.log('step', '4. Processing all log events...');
+    const runButton = document.getElementById('run-full-test');
+    const stepButton = document.getElementById('step-test');
+    if (runButton) runButton.disabled = true;
+    if (stepButton) stepButton.disabled = true;
+
+    try {
+      while (this.currentLogIndex < this.logEvents.length) {
+        if (this.abortController.signal.aborted)
+          throw new DOMException('Aborted', 'AbortError');
+        await this.processSingleEvent(this.logEvents[this.currentLogIndex]);
+        this.currentLogIndex++;
+        this.updateStepInfo();
+        // Add a small delay to allow UI updates and prevent blocking
+        await new Promise((resolve) => setTimeout(resolve, 5));
+      }
 
       // --- 5. Final Result ---
-      // If we reached here without throwing/aborting, it's a success (or was aborted)
-      if (!signal.aborted) {
+      if (!this.abortController.signal.aborted) {
         this.log(
           'success',
           'Playthrough test completed successfully. All states matched.'
@@ -194,11 +275,174 @@ export class TestPlaythroughUI {
       if (error.name === 'AbortError') {
         this.log('info', 'Playthrough test aborted.');
       } else {
-        this.log('error', `Test failed: ${error.message}`);
-        console.error('Playthrough Test Error:', error); // Log full error to console
+        this.log(
+          'error',
+          `Test failed at step ${this.currentLogIndex + 1}: ${error.message}`
+        );
+        console.error(
+          `Playthrough Test Error at step ${this.currentLogIndex + 1}:`,
+          error
+        );
       }
     } finally {
-      this.abortController = null; // Clear controller when done
+      if (runButton) runButton.disabled = false;
+      if (stepButton) stepButton.disabled = false;
+      // Don't reset abort controller here, allow stepping after failure/abort
+    }
+  }
+
+  async stepPlaythroughTest() {
+    const prepared = await this.preparePlaythroughTest();
+    if (!prepared) return;
+
+    if (!this.logEvents) {
+      this.log('error', 'No log events loaded.');
+      return;
+    }
+
+    if (this.currentLogIndex >= this.logEvents.length) {
+      this.log('info', 'End of log file reached.');
+      return;
+    }
+
+    const runButton = document.getElementById('run-full-test');
+    const stepButton = document.getElementById('step-test');
+    if (runButton) runButton.disabled = true;
+    if (stepButton) stepButton.disabled = true;
+
+    try {
+      await this.processSingleEvent(this.logEvents[this.currentLogIndex]);
+      this.currentLogIndex++;
+      this.updateStepInfo();
+
+      if (this.currentLogIndex >= this.logEvents.length) {
+        this.log(
+          'success',
+          'Playthrough test completed successfully (stepped to end).'
+        );
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        this.log('info', 'Playthrough step aborted.');
+      } else {
+        this.log(
+          'error',
+          `Test failed at step ${this.currentLogIndex + 1}: ${error.message}`
+        );
+        console.error(
+          `Playthrough Test Error at step ${this.currentLogIndex + 1}:`,
+          error
+        );
+      }
+    } finally {
+      if (runButton) runButton.disabled = false;
+      if (stepButton) stepButton.disabled = false;
+    }
+  }
+
+  updateStepInfo() {
+    const stepInfoEl = document.getElementById('test-step-info');
+    if (stepInfoEl && this.logEvents) {
+      stepInfoEl.textContent = `(Step ${this.currentLogIndex} / ${this.logEvents.length})`;
+    } else if (stepInfoEl) {
+      stepInfoEl.textContent = '';
+    }
+  }
+
+  async processSingleEvent(event) {
+    // This function now only processes a single event
+    if (!event) return;
+
+    this.log(
+      'step',
+      `--- Processing Event ${this.currentLogIndex + 1}/${
+        this.logEvents.length
+      }: ${event.event} ---`
+    );
+
+    switch (event.event) {
+      case 'connected':
+        this.log(
+          'info',
+          `Player ${event.player_name} (ID: ${event.player_id}) connected. Seed: ${event.seed_name}`
+        );
+        break;
+
+      case 'initial_state':
+        this.log('state', 'Comparing initial state...');
+        stateManager.computeReachableRegions(); // Ensure initial compute after load
+        this.compareAccessibleLocations(
+          event.accessible_locations,
+          'Initial State'
+        );
+        break;
+
+      case 'checked_location':
+        if (event.location && event.location.name) {
+          const locName = event.location.name;
+          this.log('info', `Simulating check for location: "${locName}"`);
+
+          const locData = stateManager.locations.find(
+            (l) => l.name === locName
+          );
+
+          if (!locData) {
+            this.log(
+              'error',
+              `Location "${locName}" from log not found in current rules. Skipping check.`
+            );
+          } else {
+            const wasAccessible = stateManager.isLocationAccessible(locData);
+            if (!wasAccessible && !stateManager.isLocationChecked(locName)) {
+              this.log(
+                'error',
+                `Log indicates checking "${locName}", but it was NOT accessible according to current logic!`
+              );
+              throw new Error(
+                `Attempted to check inaccessible location: "${locName}"`
+              );
+            }
+
+            if (locData.item && !stateManager.isLocationChecked(locName)) {
+              this.log(
+                'info',
+                `Found item "${locData.item.name}" at "${locName}". Adding to inventory.`
+              );
+              const itemAdded = stateManager.addItemToInventory(
+                locData.item.name
+              );
+              if (!itemAdded) {
+                this.log(
+                  'warn',
+                  `Could not add item "${locData.item.name}" (possibly unknown). State might be inaccurate.`
+                );
+              }
+            }
+
+            stateManager.checkLocation(locName);
+            this.log('info', `Location "${locName}" marked as checked.`);
+          }
+        } else {
+          this.log(
+            'error',
+            `Invalid 'checked_location' event structure: ${JSON.stringify(
+              event
+            )}`
+          );
+        }
+        break;
+
+      case 'state_update':
+        this.log('state', 'Comparing state after update...');
+        // stateManager computation is triggered by addItemToInventory or should be up-to-date
+        this.compareAccessibleLocations(
+          event.accessible_locations,
+          `State after event ${this.currentLogIndex + 1}`
+        );
+        break;
+
+      default:
+        this.log('info', `Skipping unhandled event type: ${event.event}`);
     }
   }
 
@@ -319,7 +563,7 @@ export class TestPlaythroughUI {
             // Load settings, shops, starting items etc. via stateManager
             stateManager.loadFromJSON(jsonData, playerId);
 
-            // Initialize the main UI (regions, locations etc.)
+            // Initialize the main UI (regions, locations etc.) - Crucial for inventoryUI setup
             this.gameUI.initializeUI(jsonData, playerId);
 
             this.log(
@@ -386,132 +630,6 @@ export class TestPlaythroughUI {
           }
         });
     });
-  }
-
-  async processLogEvents(logEvents, signal) {
-    let stepCounter = 0;
-    for (const event of logEvents) {
-      if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-      stepCounter++;
-      this.log(
-        'step',
-        `--- Processing Event ${stepCounter}/${logEvents.length}: ${event.event} ---`
-      );
-
-      // Add a small delay to allow UI updates and prevent blocking
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      switch (event.event) {
-        case 'connected':
-          // Optional: Log connection details
-          this.log(
-            'info',
-            `Player ${event.player_name} (ID: ${event.player_id}) connected. Seed: ${event.seed_name}`
-          );
-          break;
-
-        case 'initial_state':
-          this.log('state', 'Comparing initial state...');
-          // Ensure stateManager has computed initial reachability based on preset
-          stateManager.computeReachableRegions(); // Force recompute just in case
-          this.compareAccessibleLocations(
-            event.accessible_locations,
-            'Initial State'
-          );
-          break;
-
-        case 'checked_location':
-          if (event.location && event.location.name) {
-            const locName = event.location.name;
-            this.log('info', `Simulating check for location: "${locName}"`);
-
-            // Find the location data in stateManager
-            const locData = stateManager.locations.find(
-              (l) => l.name === locName
-            );
-
-            if (!locData) {
-              this.log(
-                'error',
-                `Location "${locName}" from log not found in current rules. Skipping check.`
-              );
-              // Potentially throw error if this should halt the test
-              // throw new Error(`Location "${locName}" from log not found in current rules.`);
-            } else {
-              // Check if the location was actually accessible *before* checking it
-              const wasAccessible = stateManager.isLocationAccessible(locData);
-              if (
-                !wasAccessible &&
-                !stateManager.isLocationChecked(
-                  locName
-                ) /* Allow re-checking already checked */
-              ) {
-                this.log(
-                  'error',
-                  `Log indicates checking "${locName}", but it was NOT accessible according to current logic!`
-                );
-                // Optionally throw an error here if this is considered a failure
-                throw new Error(
-                  `Attempted to check inaccessible location: "${locName}"`
-                );
-              }
-
-              // --- Add Item Logic ---
-              if (
-                locData.item &&
-                !stateManager.isLocationChecked(
-                  locName
-                ) /* Only add item on first check */
-              ) {
-                this.log(
-                  'info',
-                  `Found item "${locData.item.name}" at "${locName}". Adding to inventory.`
-                );
-                // Add item directly to stateManager. This should trigger necessary state updates.
-                const itemAdded = stateManager.addItemToInventory(
-                  locData.item.name
-                );
-                if (!itemAdded) {
-                  this.log(
-                    'warn',
-                    `Could not add item "${locData.item.name}" (possibly unknown). State might be inaccurate.`
-                  );
-                }
-              }
-              // --- End Add Item Logic ---
-
-              // Mark the location as checked in stateManager
-              stateManager.checkLocation(locName);
-              this.log('info', `Location "${locName}" marked as checked.`);
-
-              // stateManager.addItemToInventory should handle the recalculation,
-              // so the next state_update comparison will use the updated state.
-            }
-          } else {
-            this.log(
-              'error',
-              `Invalid 'checked_location' event structure: ${JSON.stringify(
-                event
-              )}`
-            );
-          }
-          break;
-
-        case 'state_update':
-          this.log('state', 'Comparing state after update...');
-          // stateManager should have updated automatically after checkLocation
-          this.compareAccessibleLocations(
-            event.accessible_locations,
-            `State after event ${stepCounter}`
-          );
-          break;
-
-        // Add other event types if needed ('received_items', etc.)
-
-        default:
-          this.log('info', `Skipping unhandled event type: ${event.event}`);
-      }
-    }
   }
 
   compareAccessibleLocations(logAccessible, context) {
@@ -585,19 +703,31 @@ export class TestPlaythroughUI {
   }
 
   clearDisplay() {
-    const container = document.getElementById('test-playthroughs-panel');
-    if (container) {
-      // Don't clear the whole thing, just the log output maybe?
-      // Or perhaps better to re-render the list when switching back.
-      if (this.logContainer) {
-        this.logContainer.innerHTML = '';
-      }
-    }
-    // Abort any ongoing test
+    // Called when switching away from the 'Files' tab or 'Test Playthroughs' sub-tab
+    this.clearTestState();
+    // Abort any ongoing test/preparation
     if (this.abortController) {
       this.abortController.abort();
       this.abortController = null;
     }
+    // Optionally clear the container if needed, but renderPlaythroughList handles it
+    // const container = document.getElementById('test-playthroughs-panel');
+    // if (container) container.innerHTML = '';
+  }
+
+  clearTestState() {
+    // Reset state variables used for stepping/running a test
+    this.logEvents = null;
+    this.currentLogIndex = 0;
+    this.rulesLoaded = false;
+    this.presetInfo = null;
+    this.testStateInitialized = false;
+    this.currentPlaythrough = null; // Clear selected playthrough
+    if (this.logContainer) {
+      // Clear previous logs when resetting state or going back to list
+      this.logContainer.innerHTML = '';
+    }
+    this.updateStepInfo(); // Clear step info display
   }
 }
 
