@@ -12,20 +12,19 @@ export class PresetUI {
   }
 
   initialize() {
-    const filesPanelRoot = window.gameUI?.getFilesPanelRootElement();
-    const filesContentArea = filesPanelRoot?.querySelector(
-      '#files-panel-content'
-    );
+    // Find the container within the live files panel DOM element stored in gameUI
     this.presetsListContainer =
-      filesContentArea?.querySelector('#presets-list');
+      window.gameUI?.filesPanelContainer?.querySelector('#presets-list');
 
     if (!this.presetsListContainer) {
       console.error(
-        'PresetUI: Could not find #presets-list container during initialization.'
+        'PresetUI: Could not find #presets-list container within gameUI.filesPanelContainer during initialization.'
       );
       this.initialized = false;
       return false;
     }
+
+    this.initialized = true; // Set initialized flag early if container found
 
     try {
       // Load the preset_files.json which contains the list of available presets
@@ -45,7 +44,7 @@ export class PresetUI {
 
       // Render the games list
       this.renderGamesList();
-      return true;
+      return true; // Return true from try block
     } catch (error) {
       console.error('Error loading presets data:', error);
 
@@ -59,8 +58,8 @@ export class PresetUI {
           </div>
         `;
       }
-
-      return false;
+      this.initialized = false; // Reset on error
+      return false; // Return false from catch block
     }
   }
 

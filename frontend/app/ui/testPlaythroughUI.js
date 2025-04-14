@@ -20,21 +20,21 @@ export class TestPlaythroughUI {
 
   initialize() {
     console.log('Initializing TestPlaythroughUI');
-    // const container = document.getElementById('test-playthroughs-panel');
-    // Find the container element within the files panel root
-    const filesPanelRoot = window.gameUI?.getFilesPanelRootElement(); // Get the parent structure
-    const filesContentArea = filesPanelRoot?.querySelector(
-      '#files-panel-content'
-    );
-    this.playthroughsPanelContainer = filesContentArea?.querySelector(
-      '#test-playthroughs-panel'
-    );
+    // Find the container within the live files panel DOM element stored in gameUI
+    this.playthroughsPanelContainer =
+      window.gameUI?.filesPanelContainer?.querySelector(
+        '#test-playthroughs-panel'
+      );
 
     if (!this.playthroughsPanelContainer) {
-      console.error('Test Playthroughs panel container not found');
+      console.error(
+        'Test Playthroughs panel container not found within gameUI.filesPanelContainer'
+      );
       this.initialized = false;
       return false;
     }
+
+    this.initialized = true; // Set initialized flag early
     this.playthroughsPanelContainer.innerHTML =
       '<p>Loading playthrough list...</p>';
 
@@ -61,8 +61,8 @@ export class TestPlaythroughUI {
       if (this.playthroughsPanelContainer) {
         this.playthroughsPanelContainer.innerHTML = `<div class="error-message">Failed to load playthroughs: ${error.message}</div>`;
       }
-      this.initialized = false;
-      return false;
+      this.initialized = false; // Reset on error
+      return false; // Return false from catch block
     }
   }
 

@@ -182,27 +182,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       'filesPanel',
       function (container, componentState) {
         console.log('Registering filesPanel');
-        const rootElement = gameUI.getFilesPanelRootElement(); // Method in GameUI
-        container.getElement().append(rootElement);
+        const filesPanelRoot = gameUI.getFilesPanelRootElement();
+        container.getElement().append(filesPanelRoot);
 
-        // Initialize sub-components AFTER the root element is in the DOM
-        gameUI.initializeFilesPanelElements(rootElement); // Attaches radio listeners etc.
-        // Explicitly initialize the default view (presets) and others if needed
-        // REMOVED - Initialization will happen within updateFileViewDisplay when needed
-        /*
-        try {
-            gameUI.presetUI.initialize();
-            gameUI.testCaseUI.initialize();
-            gameUI.testPlaythroughUI.initialize();
-        } catch(error) {
-            console.error("Error initializing file panel sub-components:", error);
-        }
-        */
-        // Render the initially selected file view - This will also trigger initialization if needed
-        gameUI.updateFileViewDisplay();
+        gameUI.initializeFilesPanelElements(container.getElement());
 
         container.on('open', () => gameUI.updateFileViewDisplay());
-        // Resize might be complex here - perhaps just re-trigger updateFileViewDisplay?
         container.on('resize', () => gameUI.updateFileViewDisplay());
       }
     );

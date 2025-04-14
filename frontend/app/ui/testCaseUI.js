@@ -14,20 +14,19 @@ export class TestCaseUI {
   }
 
   initialize() {
-    const filesPanelRoot = window.gameUI?.getFilesPanelRootElement();
-    const filesContentArea = filesPanelRoot?.querySelector(
-      '#files-panel-content'
-    );
+    // Find the container within the live files panel DOM element stored in gameUI
     this.testCasesListContainer =
-      filesContentArea?.querySelector('#test-cases-list');
+      window.gameUI?.filesPanelContainer?.querySelector('#test-cases-list');
 
     if (!this.testCasesListContainer) {
       console.error(
-        'TestCaseUI: Could not find #test-cases-list container during initialization.'
+        'TestCaseUI: Could not find #test-cases-list container within gameUI.filesPanelContainer during initialization.'
       );
       this.initialized = false;
       return false;
     }
+
+    this.initialized = true; // Set initialized flag early if container found
 
     try {
       // Load the test_files.json which contains the list of available test sets
@@ -47,14 +46,14 @@ export class TestCaseUI {
 
       // Render the test set selector instead of loading test cases immediately
       this.renderTestSetSelector();
-      return true;
+      return true; // Return true from try block
     } catch (error) {
       console.error('Error loading test sets data:', error);
       if (this.testCasesListContainer) {
         this.testCasesListContainer.innerHTML = `<div class="error">Error loading test sets: ${error.message}</div>`;
       }
-      this.initialized = false;
-      return false;
+      this.initialized = false; // Reset on error
+      return false; // Return false from catch block
     }
   }
 

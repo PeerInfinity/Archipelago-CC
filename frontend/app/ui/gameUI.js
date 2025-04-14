@@ -27,6 +27,7 @@ export class GameUI {
     this.presetUI = new PresetUI(this);
     this.loopUI = new LoopUI(this);
     this.currentFileView = 'presets'; // Track which file view is active
+    this.filesPanelContainer = null; // Store reference to the live container
 
     // Initialize commonUI colorblind mode
     commonUI.setColorblindMode(true); // Enable colorblind mode by default
@@ -409,17 +410,10 @@ export class GameUI {
   }
 
   updateFileViewDisplay() {
-    // Query within the files panel content area - we need a way to get this element reliably.
-    // For now, we might have to query the document, assuming only one file panel exists.
-    // A better approach might be to pass the container element to this method.
-    // const filesContentArea = document.getElementById('files-panel-content');
-    const filesPanelRoot = window.gameUI.getFilesPanelRootElement(); // Re-get the structure template (not ideal)
-    const filesContentArea = filesPanelRoot?.querySelector(
+    // Use the stored live container reference
+    const filesContentArea = this.filesPanelContainer?.querySelector(
       '#files-panel-content'
     );
-    // More robust: Find the active Golden Layout panel for 'filesPanel'
-    // let activeFilesPanelContainer = window.goldenLayoutInstance?.root?.getItemsById('filesPanel')[0]?.container?.element;
-    // const filesContentArea = activeFilesPanelContainer?.querySelector('#files-panel-content');
 
     if (!filesContentArea) {
       console.warn('Files panel content area not found for updating view.');
@@ -695,7 +689,18 @@ export class GameUI {
   }
 
   // Attaches listeners and sets up content for the files panel
-  initializeFilesPanelElements(rootElement) {
+  initializeFilesPanelElements(jQueryContainerElement) {
+    // Get the underlying DOM element from the jQuery object
+    const rootElement = jQueryContainerElement[0];
+    if (!rootElement) {
+      console.error('Could not get DOM element from filesPanel container');
+      return;
+    }
+
+    // Store the reference to the live DOM container
+    this.filesPanelContainer = rootElement;
+
+    // Use the DOM element for querySelectorAll
     const fileViewRadios = rootElement.querySelectorAll(
       'input[name="file-view-mode"]'
     );
