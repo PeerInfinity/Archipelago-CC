@@ -28,6 +28,8 @@ export class GameUI {
     this.loopUI = new LoopUI(this);
     this.currentFileView = 'presets'; // Track which file view is active
     this.filesPanelContainer = null; // Store reference to the live container
+    this.mainConsoleElement = null; // Store reference for deferred init
+    this.mainConsoleInputElement = null; // Store reference for deferred init
 
     // Initialize commonUI colorblind mode
     commonUI.setColorblindMode(true); // Enable colorblind mode by default
@@ -410,7 +412,7 @@ export class GameUI {
   }
 
   updateFileViewDisplay() {
-    // Use the stored live container reference
+    // Use the stored DOM container reference
     const filesContentArea = this.filesPanelContainer?.querySelector(
       '#files-panel-content'
     );
@@ -592,52 +594,76 @@ export class GameUI {
   }
 
   // Attaches listeners and populates content within the main panel's root element
-  initializeMainContentElements(rootElement) {
-    // Find elements within the provided rootElement
-    const consoleElement = rootElement.querySelector('#console');
-    const consoleInput = rootElement.querySelector('#console-input');
-    const controlButton = rootElement.querySelector('#control-button');
-    const quickCheckButton = rootElement.querySelector('#quick-check-button');
-    const serverAddressInput = rootElement.querySelector('#server-address');
+  initializeMainContentElements(containerElement) {
+    // Get the underlying DOM element
+    const rootElement = containerElement[0];
 
-    // Example: Initialize Console Manager (assuming it targets #console and #console-input)
-    // You might need to pass these elements to the ConsoleManager constructor or an init method
-    if (window.ConsoleManager && consoleElement && consoleInput) {
-      // Assuming ConsoleManager can be re-initialized or attached to new elements
-      window.consoleManager = new window.ConsoleManager(
-        consoleElement,
-        consoleInput,
-        window.APP
-      );
-      this.registerConsoleCommands(); // Re-register commands if needed
+    // Find elements within the DOM element
+    this.mainConsoleElement = rootElement.querySelector('#console'); // Store reference
+    this.mainConsoleInputElement = rootElement.querySelector('#console-input'); // Store reference
+
+    // Keep listener attachment logic
+    const controlButton = containerElement.find('#control-button');
+    const quickCheckButton = containerElement.find('#quick-check-button');
+    const serverAddressInput = containerElement.find('#server-address');
+
+    if (controlButton.length && window.APP) {
+      controlButton
+        .off('click')
+        .on('click', () => window.APP.toggleConnection());
+    }
+    if (quickCheckButton.length && window.messageHandler) {
+      quickCheckButton
+        .off('click')
+        .on('click', () => window.messageHandler.sendQuickCheck());
+    }
+    if (serverAddressInput.length && window.APP) {
+      serverAddressInput
+        .off('change')
+        .on('change', () =>
+          window.APP.updateServerAddress(serverAddressInput.val())
+        );
     }
 
-    // Example: Attach listeners for control buttons
-    if (controlButton && window.APP) {
-      controlButton.onclick = () => window.APP.toggleConnection();
-    }
-    if (quickCheckButton && window.messageHandler) {
-      quickCheckButton.onclick = () => window.messageHandler.sendQuickCheck();
-    }
-    if (serverAddressInput && window.APP) {
-      serverAddressInput.onchange = () =>
-        window.APP.updateServerAddress(serverAddressInput.value);
-    }
-
-    // Re-initialize or update other elements like progress bar, status, etc.
-    // This logic likely lives in client/app.js or progressUI.js and might need adjustment
-    // to target elements within rootElement instead of document.getElementById
+    // Keep ProgressUI initialization
     try {
       import('../../client/ui/progressUI.js').then((module) => {
         const ProgressUI = module.default;
-        // Pass the rootElement or specific elements if ProgressUI needs them
         ProgressUI.initializeWithin(rootElement);
         ProgressUI.updateProgress();
       });
     } catch (error) {
       console.error('Error initializing progress UI within main panel:', error);
     }
-    // Similar adjustments might be needed for updating server status span
+  }
+
+  // Method to be called after client/app.js initializes ConsoleUI
+  activateConsole() {
+    console.log('[GameUI] activateConsole called. Checking prerequisites...');
+    if (
+      window.ConsoleManager &&
+      this.mainConsoleElement &&
+      this.mainConsoleInputElement
+    ) {
+      console.log(
+        '[GameUI] ConsoleManager and elements found. Initializing ConsoleManager...'
+      );
+      window.consoleManager = new window.ConsoleManager(
+        this.mainConsoleElement,
+        this.mainConsoleInputElement,
+        window.APP // Assuming APP is available globally
+      );
+      this.registerConsoleCommands();
+      console.log(
+        '[GameUI] ConsoleManager initialized and commands registered.'
+      );
+    } else {
+      console.warn('[GameUI] activateConsole prerequisites not met:', {
+        hasConsoleManager: !!window.ConsoleManager,
+        hasConsoleElement: !!this.mainConsoleElement,
+        hasInputElement: !!this.mainConsoleInputElement,
+      });
+    }
   }
 
   // Creates the main DOM structure for the files panel
@@ -689,9 +715,9 @@ export class GameUI {
   }
 
   // Attaches listeners and sets up content for the files panel
-  initializeFilesPanelElements(jQueryContainerElement) {
-    // Get the underlying DOM element from the jQuery object
-    const rootElement = jQueryContainerElement[0];
+  initializeFilesPanelElements(containerElement) {
+    // Get the underlying DOM element
+    const rootElement = containerElement[0];
     if (!rootElement) {
       console.error('Could not get DOM element from filesPanel container');
       return;
@@ -705,14 +731,19 @@ export class GameUI {
       'input[name="file-view-mode"]'
     );
     fileViewRadios.forEach((radio) => {
-      radio.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          this.setFileViewMode(e.target.value);
-        }
-      });
+      // Clear existing listeners before adding new ones
+      radio.removeEventListener('change', this._handleFileViewChange);
+      radio.addEventListener('change', this._handleFileViewChange.bind(this));
     });
 
-    // Initial render of the default file view (presets)
+    // Initial render of the default file view
     this.updateFileViewDisplay();
+  }
+
+  // Helper handler for file view change
+  _handleFileViewChange(e) {
+    if (e.target.checked) {
+      this.setFileViewMode(e.target.value);
+    }
   }
 }

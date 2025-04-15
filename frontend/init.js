@@ -1,5 +1,7 @@
 // init.js - Initialization script to load the application
 // import GoldenLayout from 'golden-layout'; // REMOVE this line - rely on global from script tag
+import panelManagerInstance from './app/core/panelManagerSingleton.js'; // Import the singleton
+import eventBus from './app/core/eventBus.js'; // Import EventBus
 
 // Initialize key modules in order
 document.addEventListener('DOMContentLoaded', async () => {
@@ -16,7 +18,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.stateManager = stateManager;
     console.log('StateManager loaded and made global');
 
-    // Import GameUI class and create an instance
+    // --- Set up event listener BEFORE GameUI instantiation ---
+    eventBus.subscribe('stateManager:ready', (data) => {
+      console.log('=== StateManager Ready - Final Status Check ===');
+      console.log('gameUI instance exists:', !!window.gameUI);
+      console.log('stateManager instance exists:', !!window.stateManager);
+      console.log(
+        'Golden Layout instance exists:',
+        !!window.goldenLayoutInstance
+      );
+
+      if (window.gameUI) {
+        console.log(
+          'GameUI initialized with view mode:',
+          window.gameUI.currentViewMode
+        );
+        console.log('GameUI has inventory UI:', !!window.gameUI.inventoryUI);
+        console.log('GameUI has location UI:', !!window.gameUI.locationUI);
+        console.log(
+          'GameUI main console element found:',
+          !!window.gameUI.mainConsoleElement
+        );
+        console.log(
+          'GameUI main console input found:',
+          !!window.gameUI.mainConsoleInputElement
+        );
+      }
+
+      if (window.stateManager) {
+        console.log(
+          'StateManager has inventory:',
+          !!window.stateManager.inventory
+        );
+        console.log(
+          'StateManager has regions:',
+          !!window.stateManager.regions &&
+            Object.keys(window.stateManager.regions).length > 0
+        );
+        console.log(
+          'StateManager has locations:',
+          !!window.stateManager.locations?.length
+        );
+      }
+      // Add a check for ConsoleManager too, though it might init slightly later
+      console.log('window.consoleManager exists:', !!window.consoleManager);
+    });
+
+    // Import GameUI class and create an instance (This will trigger loadFromJSON and the 'ready' event)
     const gameUIModule = await import('./app/ui/gameUI.js');
     const GameUI = gameUIModule.GameUI;
     const gameUI = new GameUI();
@@ -92,111 +140,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Instantiate Golden Layout
     const layout = new GoldenLayout(config, containerElement);
 
-    // Register components (Placeholder implementations)
-    // We will need to modify gameUI or individual UI classes later
-    // to provide the actual content and logic for these containers.
+    // Make layout instance globally available if needed for debugging
+    window.goldenLayoutInstance = layout;
+    console.log('Golden Layout initialized');
 
-    layout.registerComponent(
+    // --- Initialize PanelManager ---
+    panelManagerInstance.initialize(layout, gameUI);
+    window.panelManager = panelManagerInstance; // Make PanelManager global
+    console.log('PanelManager initialized and assigned to window');
+
+    // --- Register components via PanelManager ---
+    panelManagerInstance.registerPanelComponent(
       'inventoryPanel',
-      function (container, componentState) {
-        console.log('Registering inventoryPanel');
-        const rootElement = gameUI.inventoryUI.getRootElement(); // Get the root element
-        container.getElement().append(rootElement); // Append it to GL container
-
-        // Handle resize - Optional: depends if inventory needs specific resize logic
-        container.on('resize', () => {
-          // gameUI.inventoryUI.updateSize(container.width, container.height);
-        });
-        // Initial population - REMOVED - This will be called later by gameUI when data is ready
-        // gameUI.inventoryUI.initialize();
-      }
+      () => gameUI.inventoryUI
     );
-
-    layout.registerComponent(
-      'mainContentPanel',
-      function (container, componentState) {
-        console.log('Registering mainContentPanel');
-        const rootElement = gameUI.getMainContentRootElement(); // Need a method in GameUI for this
-        container.getElement().append(rootElement);
-
-        container.on('resize', () => {
-          // Adjust console height or other elements if needed
-        });
-        // Initial population
-        gameUI.initializeMainContentElements(rootElement); // Method to attach listeners/populate console
-      }
-    );
-
-    layout.registerComponent(
+    panelManagerInstance.registerPanelComponent('mainContentPanel', () => ({
+      getRootElement: () => gameUI.getMainContentRootElement(),
+      initializeElements: (containerElement) =>
+        gameUI.initializeMainContentElements(containerElement),
+    }));
+    panelManagerInstance.registerPanelComponent(
       'locationsPanel',
-      function (container, componentState) {
-        console.log('Registering locationsPanel');
-        const rootElement = gameUI.locationUI.getRootElement();
-        container.getElement().append(rootElement);
-        container.on('open', () => gameUI.locationUI.update());
-        container.on('resize', () => {
-          // We might need an updateSize method in locationUI if layout depends on container size
-          gameUI.locationUI.update(); // For now, just re-render
-        });
-        gameUI.locationUI.initialize(); // Initial render
-      }
+      () => gameUI.locationUI
     );
-
-    layout.registerComponent(
+    panelManagerInstance.registerPanelComponent(
       'exitsPanel',
-      function (container, componentState) {
-        console.log('Registering exitsPanel');
-        const rootElement = gameUI.exitUI.getRootElement();
-        container.getElement().append(rootElement);
-        container.on('open', () => gameUI.exitUI.update());
-        container.on('resize', () => gameUI.exitUI.update()); // Re-render on resize
-        gameUI.exitUI.initialize(); // Initial render
-      }
+      () => gameUI.exitUI
     );
-
-    layout.registerComponent(
+    panelManagerInstance.registerPanelComponent(
       'regionsPanel',
-      function (container, componentState) {
-        console.log('Registering regionsPanel');
-        const rootElement = gameUI.regionUI.getRootElement();
-        container.getElement().append(rootElement);
-        container.on('open', () => gameUI.regionUI.update());
-        container.on('resize', () => gameUI.regionUI.update()); // Re-render on resize
-        gameUI.regionUI.initialize(); // Initial render
-      }
+      () => gameUI.regionUI
     );
-
-    layout.registerComponent(
+    panelManagerInstance.registerPanelComponent(
       'loopsPanel',
-      function (container, componentState) {
-        console.log('Registering loopsPanel');
-        const rootElement = gameUI.loopUI.getRootElement();
-        container.getElement().append(rootElement);
-        container.on('open', () => gameUI.loopUI.renderLoopPanel());
-        container.on('resize', () => gameUI.loopUI.renderLoopPanel()); // Re-render on resize
-        // gameUI.loopUI.initialize(); // Might need specific init
-      }
+      () => gameUI.loopUI
     );
-
-    layout.registerComponent(
-      'filesPanel',
-      function (container, componentState) {
-        console.log('Registering filesPanel');
-        const filesPanelRoot = gameUI.getFilesPanelRootElement();
-        container.getElement().append(filesPanelRoot);
-
-        gameUI.initializeFilesPanelElements(container.getElement());
-
-        container.on('open', () => gameUI.updateFileViewDisplay());
-        container.on('resize', () => gameUI.updateFileViewDisplay());
-      }
-    );
+    panelManagerInstance.registerPanelComponent('filesPanel', () => ({
+      getRootElement: () => gameUI.getFilesPanelRootElement(),
+      initializeElements: (containerElement) =>
+        gameUI.initializeFilesPanelElements(containerElement),
+    }));
 
     // Initialize the layout
     layout.init();
-
-    // Make layout instance globally available if needed for debugging
-    window.goldenLayoutInstance = layout;
     console.log('Golden Layout initialized');
 
     // Import client app last to ensure UI is ready first
@@ -208,39 +194,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Error during application initialization:', error);
   }
-
-  // Add a delayed check to verify initialization
-  setTimeout(() => {
-    console.log('=== Initialization Status Check ===');
-    console.log('gameUI instance exists:', !!window.gameUI);
-    console.log('stateManager instance exists:', !!window.stateManager);
-    console.log(
-      'Golden Layout instance exists:',
-      !!window.goldenLayoutInstance
-    );
-
-    if (window.gameUI) {
-      console.log(
-        'GameUI initialized with view mode:',
-        window.gameUI.currentViewMode
-      );
-      console.log('GameUI has inventory UI:', !!window.gameUI.inventoryUI);
-      console.log('GameUI has location UI:', !!window.gameUI.locationUI);
-    }
-
-    if (window.stateManager) {
-      console.log(
-        'StateManager has inventory:',
-        !!window.stateManager.inventory
-      );
-      console.log(
-        'StateManager has regions:',
-        !!window.stateManager.regions?.length
-      );
-      console.log(
-        'StateManager has locations:',
-        !!window.stateManager.locations?.length
-      );
-    }
-  }, 1000);
 });
