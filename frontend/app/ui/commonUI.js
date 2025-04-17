@@ -579,14 +579,12 @@ export class CommonUI {
    * @param {string} locationName - The name of the location to link to
    * @param {string} regionName - The region containing this location
    * @param {boolean} [colorblindMode] - Whether to use colorblind mode for links
-   * @param {Function} [onClick] - Custom click handler
    * @returns {HTMLElement} - The created location link
    */
   createLocationLink(
     locationName,
     regionName,
-    colorblindMode = this.colorblindMode,
-    onClick = null
+    colorblindMode = this.colorblindMode
   ) {
     const link = document.createElement('span');
     link.textContent = locationName;
@@ -641,14 +639,14 @@ export class CommonUI {
     // Add click handler
     link.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (onClick) {
-        onClick(locationName, regionName, e);
-      } else {
-        // Default behavior - try to find the regionUI and navigate to the location
-        if (window.gameUI && window.gameUI.regionUI) {
-          window.gameUI.regionUI.navigateToLocation(locationName, regionName);
-        }
-      }
+      // Publish an event with location and region names
+      console.log(
+        `[commonUI] Publishing ui:navigateToLocation for ${locationName} in ${regionName}`
+      );
+      eventBus.publish('ui:navigateToLocation', {
+        locationName: locationName,
+        regionName: regionName,
+      });
     });
 
     return link;

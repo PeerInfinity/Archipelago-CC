@@ -679,7 +679,8 @@ export class LocationUI {
       </div>
     `;
 
-    // Add event listeners to region links in the modal
+    // Remove event listeners from region links in the modal, as commonUI handles this
+    /* // Old listener removed - commonUI.createRegionLink handles this now
     info.querySelectorAll('.region-link').forEach((link) => {
       link.addEventListener('click', () => {
         const regionName = link.dataset.region;
@@ -691,6 +692,7 @@ export class LocationUI {
         }
       });
     });
+    */
 
     modal.classList.remove('hidden');
   }

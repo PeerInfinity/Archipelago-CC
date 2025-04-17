@@ -225,6 +225,80 @@ class PanelManager {
           );
           // Store the unsubscribe function for later cleanup
           this.unsubscribeHandles.push(handleRegionNav);
+
+          // ALSO subscribe to location navigation events if the provider supports it
+          if (uiProvider.navigateToLocation) {
+            console.log(
+              `[PanelManager] Setting up 'ui:navigateToLocation' listener for regionsPanel`
+            );
+            const handleLocationNav = eventBus.subscribe(
+              'ui:navigateToLocation',
+              (data) => {
+                console.log(
+                  `[RegionPanel Wrapper] Event 'ui:navigateToLocation' received for: ${data.locationName} in ${data.regionName}`
+                );
+
+                // --- Activate the Panel's Tab (reuse logic from region nav) ---
+                try {
+                  let stack = container.tab?.header?.parent;
+                  let contentItemToActivate = null;
+                  if (stack && stack.type === 'stack') {
+                    contentItemToActivate = container.parentItem; // Try direct parent first
+                    if (
+                      !contentItemToActivate ||
+                      !stack.contentItems.includes(contentItemToActivate)
+                    ) {
+                      // Fallback: search stack by container
+                      contentItemToActivate = stack.contentItems.find(
+                        (item) => item.container === container
+                      );
+                    }
+                    if (
+                      contentItemToActivate &&
+                      stack.setActiveContentItem &&
+                      stack.getActiveContentItem() !== contentItemToActivate
+                    ) {
+                      console.log(
+                        `[RegionPanel Wrapper] Activating panel tab for location ${data.locationName}`
+                      );
+                      stack.setActiveContentItem(contentItemToActivate);
+                    }
+                  } else {
+                    console.warn(
+                      '[RegionPanel Wrapper] Could not find parent stack for location nav activation.'
+                    );
+                  }
+                } catch (activationError) {
+                  console.error(
+                    '[RegionPanel Wrapper] Error during panel activation for location nav:',
+                    activationError
+                  );
+                }
+                // --- End Tab Activation ---
+
+                // Call the internal navigation after delay
+                setTimeout(() => {
+                  if (
+                    this.uiProvider &&
+                    typeof this.uiProvider.navigateToLocation === 'function'
+                  ) {
+                    console.log(
+                      `[RegionPanel Wrapper] Calling uiProvider.navigateToLocation('${data.locationName}', '${data.regionName}') after delay.`
+                    );
+                    this.uiProvider.navigateToLocation(
+                      data.locationName,
+                      data.regionName
+                    );
+                  } else {
+                    console.warn(
+                      `[RegionPanel Wrapper] Could not call navigateToLocation for ${data.locationName}. uiProvider or method missing after delay.`
+                    );
+                  }
+                }, 100); // 100ms delay
+              }
+            );
+            this.unsubscribeHandles.push(handleLocationNav);
+          }
         }
 
         // 5. Handle Golden Layout container lifecycle events

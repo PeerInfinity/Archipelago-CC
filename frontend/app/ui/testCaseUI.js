@@ -1,4 +1,5 @@
 import stateManager from '../core/stateManagerSingleton.js';
+import commonUI from './commonUI.js';
 
 export class TestCaseUI {
   constructor(gameUI) {
@@ -535,7 +536,8 @@ export class TestCaseUI {
         .trim()
     );
 
-    let html = `
+    // --- Header and Controls --- (Keep as HTML string for simplicity)
+    let headerHtml = `
       <div class="test-header">
         <div class="test-header-row">
           <h3>
@@ -557,78 +559,101 @@ export class TestCaseUI {
         </div>
         <div id="test-results-summary"></div>
       </div>
-      <table class="results-table">
-        <tr>
-          <th>Location</th>
-          <th>Expected Access</th>
-          <th>Required Items</th>
-          <th>Excluded Items</th>
-          <th>Actions</th>
-          <th style="min-width: 100px;">Result</th>
-        </tr>
     `;
 
-    if (!this.testCases?.location_tests) {
-      container.innerHTML = '<p>Error: Test cases not loaded</p>';
-      return;
-    }
-
-    // Create table rows for each test case
-    this.testCases.location_tests.forEach((testCase, index) => {
-      const [location, expectedResult, requiredItems = [], excludedItems = []] =
-        testCase;
-      const statusId = `test-status-${index}`;
-
-      // Find the region that contains this location (if available)
-      let locationRegion = '';
-      if (this.testRules) {
-        for (const [regionName, region] of Object.entries(
-          this.testRules.regions['1']
-        )) {
-          if (region.locations.some((loc) => loc.name === location)) {
-            locationRegion = regionName;
-            break;
-          }
-        }
+    // --- Table Creation (Programmatic) ---
+    const table = document.createElement('table');
+    table.className = 'results-table';
+    const thead = table.createTHead();
+    const headerRow = thead.insertRow();
+    [
+      'Location',
+      'Expected Access',
+      'Required Items',
+      'Excluded Items',
+      'Actions',
+      'Result',
+    ].forEach((text) => {
+      const th = document.createElement('th');
+      th.textContent = text;
+      if (text === 'Result') {
+        th.style.minWidth = '100px';
       }
-
-      html += `
-        <tr class="test-case-row">
-          <td>${
-            locationRegion
-              ? `<span class="location-link" data-location="${this.escapeHtml(
-                  location
-                )}" data-region="${this.escapeHtml(
-                  locationRegion
-                )}">${this.escapeHtml(location)}</span>`
-              : this.escapeHtml(location)
-          }</td>
-          <td>${expectedResult ? 'Yes' : 'No'}</td>
-          <td>${
-            requiredItems.length ? this.formatItemsList(requiredItems) : 'None'
-          }</td>
-          <td>${
-            excludedItems.length ? this.formatItemsList(excludedItems) : 'None'
-          }</td>
-          <td>
-            <button class="button run-test" data-test-index="${index}">
-              Run Test
-            </button>
-          </td>
-          <td>
-            <div class="test-status" id="${statusId}"></div>
-          </td>
-        </tr>
-      `;
+      headerRow.appendChild(th);
     });
 
-    html += `</table>`;
+    const tbody = table.createTBody();
+    if (!this.testCases?.location_tests) {
+      // Handle error - maybe add a row indicating no tests loaded
+      const errorRow = tbody.insertRow();
+      const cell = errorRow.insertCell();
+      cell.colSpan = 6;
+      cell.textContent = 'Error: Test cases not loaded';
+    } else {
+      this.testCases.location_tests.forEach((testCase, index) => {
+        const [
+          location,
+          expectedResult,
+          requiredItems = [],
+          excludedItems = [],
+        ] = testCase;
+        const statusId = `test-status-${index}`;
+        const row = tbody.insertRow();
+        row.className = 'test-case-row';
 
-    // Define folderPath variable before using it in download links
+        // Location Cell (Using commonUI.createLocationLink)
+        const locationCell = row.insertCell();
+        let locationRegion = '';
+        if (this.testRules) {
+          // Simplified region finding logic
+          locationRegion =
+            Object.keys(this.testRules.regions['1']).find((regionName) =>
+              this.testRules.regions['1'][regionName].locations.some(
+                (loc) => loc.name === location
+              )
+            ) || '';
+        }
+        if (locationRegion) {
+          // Explicitly disable colorblind mode for test case links
+          const locLink = commonUI.createLocationLink(
+            location,
+            locationRegion,
+            false
+          );
+          locationCell.appendChild(locLink);
+        } else {
+          locationCell.textContent = this.escapeHtml(location);
+        }
+
+        // Other Cells (Keep simple text for now)
+        row.insertCell().textContent = expectedResult ? 'Yes' : 'No';
+        row.insertCell().innerHTML = requiredItems.length
+          ? this.formatItemsList(requiredItems)
+          : 'None';
+        row.insertCell().innerHTML = excludedItems.length
+          ? this.formatItemsList(excludedItems)
+          : 'None';
+
+        // Actions Cell
+        const actionCell = row.insertCell();
+        const runButton = document.createElement('button');
+        runButton.className = 'button run-test';
+        runButton.dataset.testIndex = index;
+        runButton.textContent = 'Run Test';
+        actionCell.appendChild(runButton);
+
+        // Result Cell
+        const resultCell = row.insertCell();
+        const statusDiv = document.createElement('div');
+        statusDiv.className = 'test-status';
+        statusDiv.id = statusId;
+        resultCell.appendChild(statusDiv);
+      });
+    }
+
+    // --- Append Table and Download Links --- (Keep as HTML strings)
     const folderPath = this.currentFolder ? `${this.currentFolder}/` : '';
-
-    // Add download links
-    html += `
+    const linksHtml = `
       <div class="test-links">
         <a href="./tests/${folderPath}${this.currentFolder}_rules.json" 
            download 
@@ -645,8 +670,8 @@ export class TestCaseUI {
       </div>
     `;
 
-    // Add styles
-    html += `
+    // --- Styles --- (Keep as HTML string)
+    const stylesHtml = `
       <style>
         .test-header {
           display: flex;
@@ -797,7 +822,11 @@ export class TestCaseUI {
       </style>
     `;
 
-    container.innerHTML = html;
+    container.innerHTML = ''; // Clear completely first
+    container.innerHTML = headerHtml; // Add back the header HTML
+    container.appendChild(table); // Append the programmatically created table
+    container.insertAdjacentHTML('beforeend', linksHtml); // Add download links
+    container.insertAdjacentHTML('beforeend', stylesHtml); // Add styles
 
     // Attach event listener for the back button
     const backButton = container.querySelector('#back-to-test-sets');
@@ -841,13 +870,13 @@ export class TestCaseUI {
       }
     });
 
-    // Add Run All Tests button listener
+    // Re-attach Run All Tests button listener
     const runAllButton = container.querySelector('#run-all-tests');
     if (runAllButton) {
       runAllButton.addEventListener('click', () => this.runAllTests());
     }
 
-    // Add test data loader listener
+    // Re-attach test data loader listener
     const loadDataButton = container.querySelector('#load-test-data');
     if (loadDataButton) {
       loadDataButton.addEventListener('click', () => {
@@ -918,15 +947,16 @@ export class TestCaseUI {
 
     // Add event listeners for region and location links
     setTimeout(() => {
+      /* // Manual listener removed - commonUI.createLocationLink handles this
       container.querySelectorAll('.location-link').forEach((link) => {
-        link.addEventListener('click', (e) => {
-          const locationName = link.dataset.location;
-          const regionName = link.dataset.region;
-          if (locationName && regionName) {
-            this.gameUI.regionUI.navigateToLocation(locationName, regionName);
-          }
-        });
+        e.stopPropagation(); // Prevent test case click
+        const locationName = link.dataset.location;
+        const regionName = link.dataset.region;
+        if (locationName && regionName && this.gameUI.regionUI) {
+          this.gameUI.regionUI.navigateToLocation(locationName, regionName);
+        }
       });
+      */
     }, 0);
   }
 

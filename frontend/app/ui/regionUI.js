@@ -285,14 +285,8 @@ export class RegionUI {
   }
 
   createRegionLink(regionName) {
-    return commonUI.createRegionLink(
-      regionName,
-      this.colorblindMode,
-      (regionName, e) => {
-        e.stopPropagation();
-        this.navigateToRegion(regionName);
-      }
-    );
+    // Just call commonUI directly, which now handles event publishing
+    return commonUI.createRegionLink(regionName, this.colorblindMode);
   }
 
   /**
@@ -403,22 +397,66 @@ export class RegionUI {
    * @param {string} regionName - The name of the region containing the location
    */
   navigateToLocation(locationName, regionName) {
-    // First navigate to the region
-    this.navigateToRegion(regionName);
+    console.log(
+      `[RegionUI] Navigating to location: ${locationName} in ${regionName}`
+    );
 
-    // Then wait a bit longer and try to find and scroll to the location
-    setTimeout(() => {
-      const locationElement = document.querySelector(
-        `.region-block[data-region="${regionName}"] .location-wrapper:has(span[data-location="${locationName}"])`
+    // Ensure the region block itself is visible first (might require expanding)
+    // We assume navigateToRegion was already called or the region is visible.
+    const regionBlock = this.regionsContainer.querySelector(
+      `.region-block[data-region="${regionName}"]`
+    );
+
+    if (!regionBlock) {
+      console.warn(
+        `[RegionUI] Cannot navigate to location ${locationName}. Parent region block ${regionName} not found or not rendered.`
       );
-      if (locationElement) {
-        locationElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        locationElement.classList.add('highlight-location');
+      // Attempt to force the region to be visible, similar to navigateToRegion
+      this.navigateToRegion(regionName); // Call navigateToRegion to handle visibility
+      // Retry finding the location after a delay to allow rendering
+      setTimeout(() => this.navigateToLocation(locationName, regionName), 200);
+      return;
+    }
+
+    // Ensure the region is expanded if it's a visited region
+    if (regionBlock.classList.contains('collapsed')) {
+      const uidString = regionBlock.dataset.uid;
+      const isVisitedRegion = uidString && !isNaN(parseInt(uidString, 10));
+      if (isVisitedRegion) {
+        console.log(
+          `[RegionUI] Expanding region ${regionName} to find location ${locationName}.`
+        );
+        this.toggleRegionByUID(parseInt(uidString, 10));
+        // Retry after a delay to allow re-render
+        setTimeout(
+          () => this.navigateToLocation(locationName, regionName),
+          200
+        );
+        return;
+      }
+    }
+
+    // Now try to find and scroll to the location within the visible region block
+    // Use a more specific selector targeting the location link within the wrapper
+    const locationElement = regionBlock.querySelector(
+      `.location-wrapper .location-link[data-location="${locationName}"]`
+    );
+    if (locationElement) {
+      console.log(`[RegionUI] Scrolling to location ${locationName}.`);
+      locationElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Highlight the parent wrapper for better visibility
+      const wrapper = locationElement.closest('.location-wrapper');
+      if (wrapper) {
+        wrapper.classList.add('highlight-location');
         setTimeout(() => {
-          locationElement.classList.remove('highlight-location');
+          wrapper.classList.remove('highlight-location');
         }, 2000);
       }
-    }, 300);
+    } else {
+      console.warn(
+        `[RegionUI] Could not find location element for ${locationName} within region ${regionName}.`
+      );
+    }
   }
 
   /**
@@ -428,14 +466,11 @@ export class RegionUI {
    * @returns {HTMLElement} - A clickable span element
    */
   createLocationLink(locationName, regionName) {
+    // Just call commonUI directly, which now handles event publishing
     return commonUI.createLocationLink(
       locationName,
       regionName,
-      this.colorblindMode,
-      (locationName, regionName, e) => {
-        e.stopPropagation();
-        this.navigateToLocation(locationName, regionName);
-      }
+      this.colorblindMode
     );
   }
 
@@ -801,30 +836,15 @@ export class RegionUI {
    * Helper method to update colorblind indicators across the UI
    */
   _updateColorblindIndicators() {
-    // Update all region link indicators
-    document.querySelectorAll('.region-link').forEach((link) => {
-      // Remove any existing colorblind symbols
-      const existingSymbol = link.querySelector('.colorblind-symbol');
-      if (existingSymbol) existingSymbol.remove();
+    // Update all region link indicators (This logic is now handled by commonUI.createRegionLink)
+    /* // Old implementation commented out
+     this.rootElement.querySelectorAll('.region-link').forEach((link) => {
+        // ... (symbol update logic) ...
+     });
+    */
 
-      // Get the region name and check if it's reachable
-      const regionName = link.dataset.region;
-      if (!regionName) return;
-
-      const isReachable = stateManager.isRegionReachable(regionName);
-
-      // Add colorblind symbol if needed
-      if (this.colorblindMode) {
-        const symbolSpan = document.createElement('span');
-        symbolSpan.classList.add('colorblind-symbol');
-        symbolSpan.textContent = isReachable ? ' ✓' : ' ✗';
-        symbolSpan.classList.add(isReachable ? 'accessible' : 'inaccessible');
-        link.appendChild(symbolSpan);
-      }
-    });
-
-    // Update logic nodes
-    document.querySelectorAll('.logic-node').forEach((node) => {
+    // Update logic nodes within this panel
+    this.rootElement.querySelectorAll('.logic-node').forEach((node) => {
       const isPassing = node.classList.contains('pass');
 
       // Remove existing symbol
