@@ -1,0 +1,20 @@
+{
+  "activeGame": "ALTTP",
+  "activeLayout": "default",
+  "customLayoutConfig": null,
+  "generalSettings": { "theme": "dark" },
+  "moduleSettings": {
+    "stateManager": {},
+    "client": { "defaultServer": "ws://localhost:38281" },
+    "inventory": {},
+    "editor": {},
+    "options": {},
+    "locations": {},
+    "exits": {},
+    "pathAnalyzer": {},
+    "regions": {},
+    "discovery": {},
+    "loops": { "defaultSpeed": 10, "autoRestart": false },
+    "files": {}
+  }
+}
