@@ -1,8 +1,6 @@
 // frontend/app/core/panelManager.js
 import eventBus from './eventBus.js';
 import panelManagerInstance from './panelManagerSingleton.js'; // Import the singleton instance
-import EditorUI from '../ui/editorUI.js'; // <-- Import the new EditorUI
-import OptionsUI from '../ui/optionsUI.js'; // <<< Import OptionsUI
 
 class PanelManager {
   constructor() {
@@ -28,17 +26,18 @@ class PanelManager {
     this.gameUI = gameUIInstance;
     console.log('PanelManager initialized');
 
-    // --- Register Core Panels ---
-    // Example: Register main content panel if managed here
-    // this.registerPanelComponent('mainContentPanel', () => this.gameUI.getMainContentUI());
-
+    // --- REMOVED: No longer automatically register core panels ---
+    // In the modular architecture, panels are registered by their respective modules
+    // The following code is kept as a reference but commented out:
+    /*
     // Register the new Editor Panel
     this.registerPanelComponent('editorPanel', () => new EditorUI());
     console.log('Registered editorPanel');
     // Register the new Options Panel
     this.registerPanelComponent('optionsPanel', () => new OptionsUI());
     console.log('Registered optionsPanel');
-    // --- End Register Core Panels ---
+    */
+    // --- End removed section ---
   }
 
   /**
@@ -509,30 +508,6 @@ class PanelManager {
     this.panelMap.clear();
     console.log('Cleared all panel mappings.');
   }
-
-  // --- NEW: Method to easily get EditorUI instance ---
-  getEditorUIInstance() {
-    for (const [, mapping] of this.panelMap.entries()) {
-      if (mapping.uiInstance instanceof EditorUI) {
-        return mapping.uiInstance;
-      }
-    }
-    console.warn('Could not find EditorUI instance in panel map.');
-    return null;
-  }
-  // --- END NEW ---
-
-  // --- NEW: Method to easily get OptionsUI instance ---
-  getOptionsUIInstance() {
-    for (const [, mapping] of this.panelMap.entries()) {
-      if (mapping.uiInstance instanceof OptionsUI) {
-        return mapping.uiInstance;
-      }
-    }
-    console.warn('Could not find OptionsUI instance in panel map.');
-    return null;
-  }
-  // --- END NEW ---
 }
 
 export default PanelManager; // Export the class

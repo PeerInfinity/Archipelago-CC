@@ -91,12 +91,19 @@ export default class FilesUI {
    * @param {HTMLElement} containerElement - The root element returned by getRootElement().
    */
   initialize(containerElement) {
+    console.log(
+      '[FilesUI] Initialize called with container:',
+      containerElement
+    );
+
     this.filesPanelContainer = containerElement; // Store the reference
 
     // Attach listener for file view mode change
     const fileViewRadios = this.filesPanelContainer.querySelectorAll(
       'input[name="file-view-mode"]'
     );
+    console.log('[FilesUI] Found radio buttons:', fileViewRadios.length);
+
     fileViewRadios.forEach((radio) => {
       // Use a clean listener attachment
       radio.addEventListener('change', this._handleFileViewChange.bind(this));
@@ -120,12 +127,15 @@ export default class FilesUI {
 
     // Initial render of the default file view
     this.updateFileViewDisplay();
+    console.log('[FilesUI] Initial view display updated');
 
     // Check initial loop mode state (in case it's already active)
     // Assuming loopUIInstance is globally accessible or we get the state differently
     if (window.loopUIInstance) {
       this.handleLoopModeChange(window.loopUIInstance.isLoopModeActive);
     }
+
+    console.log('[FilesUI] Initialization complete');
   }
 
   /**
@@ -145,12 +155,22 @@ export default class FilesUI {
   }
 
   updateFileViewDisplay() {
-    if (!this.filesPanelContainer) return;
+    if (!this.filesPanelContainer) {
+      console.warn(
+        '[FilesUI] updateFileViewDisplay: filesPanelContainer is not set'
+      );
+      return;
+    }
 
     const filesContentArea = this.filesPanelContainer.querySelector(
       '#files-panel-content'
     );
-    if (!filesContentArea) return;
+    if (!filesContentArea) {
+      console.warn(
+        '[FilesUI] updateFileViewDisplay: files-panel-content not found'
+      );
+      return;
+    }
 
     const testCasesPanel = filesContentArea.querySelector('#test-cases-panel');
     const presetsPanel = filesContentArea.querySelector('#presets-panel');
@@ -160,8 +180,16 @@ export default class FilesUI {
 
     if (!testCasesPanel || !presetsPanel || !testPlaythroughsPanel) {
       console.warn('[FilesUI] Missing file view containers.');
+      console.log('testCasesPanel:', testCasesPanel);
+      console.log('presetsPanel:', presetsPanel);
+      console.log('testPlaythroughsPanel:', testPlaythroughsPanel);
       return;
     }
+
+    console.log(
+      '[FilesUI] Updating display for current view:',
+      this.currentFileView
+    );
 
     // Toggle between file views
     testCasesPanel.style.display = 'none';
@@ -176,32 +204,51 @@ export default class FilesUI {
       if (this.currentFileView === 'presets') {
         presetsPanel.style.display = 'block';
         // Use the container provided by initialize() for the component
-        if (!presetsPanel.querySelector('#presets-list')?.hasChildNodes()) {
-          this.presetUI.initialize(presetsPanel.querySelector('#presets-list'));
+        const presetsList = presetsPanel.querySelector('#presets-list');
+        console.log('[FilesUI] Presets list element:', presetsList);
+
+        if (!presetsList?.hasChildNodes()) {
+          console.log('[FilesUI] Initializing presetUI');
+          this.presetUI.initialize(presetsList);
+        } else {
+          console.log(
+            '[FilesUI] presetsList already has child nodes, skipping initialization'
+          );
         }
       } else if (this.currentFileView === 'test-cases') {
         testCasesPanel.style.display = 'block';
         // Use the container provided by initialize() for the component
-        if (
-          !testCasesPanel.querySelector('#test-cases-list')?.hasChildNodes()
-        ) {
-          this.testCaseUI.initialize(
-            testCasesPanel.querySelector('#test-cases-list')
+        const testCasesList = testCasesPanel.querySelector('#test-cases-list');
+        console.log('[FilesUI] Test cases list element:', testCasesList);
+
+        if (!testCasesList?.hasChildNodes()) {
+          console.log('[FilesUI] Initializing testCaseUI');
+          this.testCaseUI.initialize(testCasesList);
+        } else {
+          console.log(
+            '[FilesUI] testCasesList already has child nodes, skipping initialization'
           );
         }
       } else if (this.currentFileView === 'test-playthroughs') {
         testPlaythroughsPanel.style.display = 'block';
         // TestPlaythroughUI might manage its own container creation within the panel
-        if (
-          !testPlaythroughsPanel
-            .querySelector('.playthrough-list-container')
-            ?.hasChildNodes()
-        ) {
+        const playthroughList = testPlaythroughsPanel.querySelector(
+          '.playthrough-list-container'
+        );
+        console.log('[FilesUI] Playthrough list element:', playthroughList);
+
+        if (!playthroughList?.hasChildNodes()) {
+          console.log('[FilesUI] Initializing testPlaythroughUI');
           this.testPlaythroughUI.initialize(testPlaythroughsPanel); // Pass the panel itself
+        } else {
+          console.log(
+            '[FilesUI] playthroughList already has child nodes, skipping initialization'
+          );
         }
       }
+    } else {
+      console.log('[FilesUI] Loop mode active, hiding file views');
     }
-    // Loop mode handling (hiding content) is done in handleLoopModeChange
   }
 
   // Helper handler for file view change

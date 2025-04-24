@@ -785,4 +785,5 @@ export class TestPlaythroughUI {
   }
 }
 
+// Add default export
 export default TestPlaythroughUI;

@@ -14,12 +14,12 @@ export function registerFilesComponent(layoutInstance) {
 
   const filesUI = new FilesUI(); // Create an instance to manage the UI
 
-  layoutInstance.registerComponent(
+  layoutInstance.registerComponentConstructor(
     'filesPanel',
     function (container, componentState) {
       // Get the root element from the FilesUI instance
       const rootElement = filesUI.getRootElement();
-      container.getElement().append(rootElement);
+      container.element.appendChild(rootElement);
 
       // Call the initialize method after the element is in the DOM
       filesUI.initialize(rootElement);
@@ -34,6 +34,38 @@ export function registerFilesComponent(layoutInstance) {
   );
 
   console.log('Files Panel component registered with Golden Layout.');
+}
+
+/**
+ * Creates a register function that meets the module architecture requirements.
+ * This allows the files module to be loaded and registered like other modules.
+ */
+export function register(registrationApi) {
+  // No-op implementation to ensure the module can be registered
+  console.log('[Files Module] Registering...');
+
+  // Register files panel component with the central registry
+  registrationApi.registerPanelComponent('filesPanel', () => {
+    return new FilesUI();
+  });
+}
+
+/**
+ * Initialize function that meets the module architecture requirements.
+ * This is called by the initialization system after modules are registered.
+ */
+export async function initialize(moduleId, priority, initApi) {
+  console.log(`[Files Module] Initializing with priority ${priority}...`);
+
+  // Get settings if needed
+  const settings = await initApi.getSettings();
+
+  // Get event bus if needed for publishing events
+  const eventBus = initApi.getEventBus();
+
+  console.log('[Files Module] Initialization complete.');
+
+  return true; // Return success
 }
 
 // Optionally export the FilesUI class itself if needed elsewhere

@@ -57,6 +57,11 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   );
   moduleEventBus = initializationApi.getEventBus();
 
+  // Ensure regionInstance is created before requesting PathAnalyzerUI
+  if (!regionInstance) {
+    regionInstance = new RegionUI(null, null);
+  }
+
   // Get the PathAnalyzerUI instance from the pathAnalyzer module
   try {
     const getPathAnalyzerUI = initializationApi.getModuleFunction(
@@ -64,22 +69,21 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       'getPathAnalyzerUIInstance'
     );
     if (getPathAnalyzerUI) {
-      // Pass 'this' regionInstance (if needed) or null for now.
-      // The PathAnalyzer registration expects the requesting UI instance.
+      // Pass the regionInstance to the PathAnalyzer
       pathAnalyzerUI = getPathAnalyzerUI(regionInstance);
       if (pathAnalyzerUI) {
         console.log(
           '[Regions Module] Successfully obtained PathAnalyzerUI instance.'
         );
-        // If regionInstance already exists, potentially update its pathAnalyzerUI reference
-        if (regionInstance) {
-          regionInstance.pathAnalyzerUI = pathAnalyzerUI;
-        }
+        // Update the regionInstance with the pathAnalyzerUI reference
+        regionInstance.pathAnalyzerUI = pathAnalyzerUI;
       } else {
-        console.warn('[Regions Module] Failed to get PathAnalyzerUI instance.');
+        console.error(
+          '[Regions Module] Failed to get PathAnalyzerUI instance.'
+        );
       }
     } else {
-      console.warn(
+      console.error(
         '[Regions Module] Could not find getPathAnalyzerUIInstance function.'
       );
     }

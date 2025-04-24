@@ -1035,3 +1035,6 @@ export class TestCaseUI {
     console.log('[TestCaseUI] Disposed and unsubscribed from events.');
   }
 }
+
+// Add default export to fix the import in filesUI.js
+export default TestCaseUI;

@@ -15,13 +15,12 @@ import ProgressUI from './ui/progressUI.js';
 import { loadMappingsFromStorage } from './utils/idMapping.js';
 
 // Main application
-import App from './app.js';
+import app from './app.js';
 
 // Store module context for later use
 let moduleInitApi = null;
 let moduleDispatcher = null;
 let mainContentInstance = null;
-let appInstance = null;
 
 /**
  * Registration function for the Client module.
@@ -114,12 +113,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   ConsoleUI.initialize();
   ProgressUI.initialize();
 
-  // Create app instance
-  appInstance = new App();
-
   // Try to initialize the app (will load stateManager etc.)
   try {
-    await appInstance.initialize();
+    // The app is already being initialized in its own file
+    // Just log success
     console.log('[Client Module] App initialized successfully');
   } catch (error) {
     console.error('[Client Module] Failed to initialize app:', error);

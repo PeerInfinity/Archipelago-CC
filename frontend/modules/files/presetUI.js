@@ -599,4 +599,5 @@ export class PresetUI {
   }
 }
 
+// Add default export
 export default PresetUI;

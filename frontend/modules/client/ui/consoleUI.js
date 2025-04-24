@@ -1,4 +1,4 @@
-// client/ui/consoleUI.js - Updated to use synchronous name lookups
+// client/ui/consoleUI.js - Updated to use the console manager
 import eventBus from '../../../app/core/eventBus.js';
 import Config from '../core/config.js';
 import messageHandler from '../core/messageHandler.js';
@@ -15,12 +15,15 @@ export class ConsoleUI {
   static maxCachedCommands = Config.MAX_CACHED_COMMANDS || 10;
 
   static initialize() {
-    // Get UI elements
-    this.consoleWindow = document.getElementById('console');
-    this.commandInput = document.getElementById('console-input');
+    // Get UI elements - these will be set by MainContentUI now
+    this.consoleWindow = document.getElementById('main-console');
+    this.commandInput = document.getElementById('main-console-input');
 
     if (!this.consoleWindow || !this.commandInput) {
-      console.error('Console UI elements not found');
+      console.log(
+        'Console UI elements not found - will use console manager when available'
+      );
+      // We'll use the console manager that will be created by MainContentUI
       return;
     }
 
@@ -45,183 +48,11 @@ export class ConsoleUI {
   }
 
   static _setupEventListeners() {
+    // If console elements aren't available yet, return early
+    if (!this.commandInput || !this.consoleWindow) return;
+
     // Add additional command handling for AP integration
-    const additionalCommands = {
-      received: () => {
-        this.appendMessage('Received Items:');
-        if (window.messageHandler) {
-          const items = window.messageHandler.itemsReceived || [];
-          if (items.length === 0) {
-            this.appendMessage('No items received yet.');
-            return;
-          }
-
-          items.forEach((item, index) => {
-            let itemName = 'Unknown';
-            let locationName = 'Unknown';
-
-            try {
-              itemName = window.messageHandler.getItemNameSync(item.item);
-              locationName = window.messageHandler.getLocationNameSync(
-                item.location
-              );
-            } catch (e) {
-              // Use defaults if error
-            }
-
-            this.appendMessage(
-              `${index + 1}. ${itemName} from ${locationName}`
-            );
-          });
-        } else {
-          this.appendMessage('Message handler not available.');
-        }
-      },
-
-      missing: () => {
-        this.appendMessage('Missing Locations:');
-        if (window.messageHandler) {
-          const missing = window.messageHandler.getMissingLocations() || [];
-          if (missing.length === 0) {
-            this.appendMessage('No missing locations found.');
-            return;
-          }
-
-          const limitedList = missing.slice(0, 20); // Limit to 20 to avoid flooding console
-          limitedList.forEach((locId) => {
-            let locationName = 'Unknown';
-            try {
-              locationName = window.messageHandler.getLocationNameSync(locId);
-            } catch (e) {
-              locationName = `Unknown (ID: ${locId})`;
-            }
-            this.appendMessage(`- ${locationName}`);
-          });
-
-          if (missing.length > 20) {
-            this.appendMessage(`...and ${missing.length - 20} more locations.`);
-          }
-        } else {
-          this.appendMessage('Message handler not available.');
-        }
-      },
-
-      items: () => {
-        this.appendMessage('Available Items:');
-        if (window.stateManager && window.stateManager.itemNameToId) {
-          const items = Object.keys(window.stateManager.itemNameToId);
-          if (items.length === 0) {
-            this.appendMessage('No items found.');
-            return;
-          }
-
-          const limitedList = items.slice(0, 20); // Limit to 20 to avoid flooding console
-          limitedList.forEach((itemName) => {
-            this.appendMessage(`- ${itemName}`);
-          });
-
-          if (items.length > 20) {
-            this.appendMessage(`...and ${items.length - 20} more items.`);
-          }
-        } else {
-          this.appendMessage('Item data not available.');
-        }
-      },
-
-      item_groups: () => {
-        this.appendMessage('Available Item Groups:');
-        if (
-          window.stateManager &&
-          window.stateManager.inventory &&
-          window.stateManager.inventory.groupData
-        ) {
-          const groups = Object.keys(
-            window.stateManager.inventory.groupData || {}
-          );
-          if (groups.length === 0) {
-            this.appendMessage('No item groups found.');
-            return;
-          }
-
-          groups.forEach((groupName) => {
-            this.appendMessage(`- ${groupName}`);
-          });
-        } else {
-          this.appendMessage('Item group data not available.');
-        }
-      },
-
-      locations: () => {
-        this.appendMessage('Available Locations:');
-        if (window.stateManager && window.stateManager.locationNameToId) {
-          const locations = Object.keys(window.stateManager.locationNameToId);
-          if (locations.length === 0) {
-            this.appendMessage('No locations found.');
-            return;
-          }
-
-          const limitedList = locations.slice(0, 20); // Limit to 20 to avoid flooding console
-          limitedList.forEach((locationName) => {
-            this.appendMessage(`- ${locationName}`);
-          });
-
-          if (locations.length > 20) {
-            this.appendMessage(
-              `...and ${locations.length - 20} more locations.`
-            );
-          }
-        } else {
-          this.appendMessage('Location data not available.');
-        }
-      },
-
-      location_groups: () => {
-        this.appendMessage('Available Location Groups:');
-        if (window.stateManager && window.stateManager.regions) {
-          // Extract unique region names as location groups
-          const regions = new Set(Object.keys(window.stateManager.regions));
-          if (regions.size === 0) {
-            this.appendMessage('No location groups found.');
-            return;
-          }
-
-          [...regions].sort().forEach((regionName) => {
-            this.appendMessage(`- ${regionName}`);
-          });
-        } else {
-          this.appendMessage('Location group data not available.');
-        }
-      },
-
-      ready: () => {
-        this.appendMessage('Setting ready status...');
-        if (window.messageHandler) {
-          window.messageHandler.sendStatusUpdate?.(10); // 10 = CLIENT_READY
-          this.appendMessage('Ready status sent to server.');
-        } else {
-          this.appendMessage('Message handler not available.');
-        }
-      },
-
-      set_delay: (args) => {
-        const delay = parseInt(args, 10);
-        if (isNaN(delay) || delay < 1) {
-          this.appendMessage(
-            'Invalid delay value. Please specify a number >= 1.'
-          );
-          return;
-        }
-
-        this.appendMessage(`Setting delay to ${delay} seconds...`);
-        // Update the timer state delay
-        if (window.timerState) {
-          window.timerState.setCheckDelay?.(delay);
-          this.appendMessage(`Check delay updated to ${delay} seconds.`);
-        } else {
-          this.appendMessage('Game state not available.');
-        }
-      },
-    };
+    this._registerNetworkCommands();
 
     // Command history navigation
     this.commandInput.addEventListener('keydown', (event) => {
@@ -249,162 +80,171 @@ export class ConsoleUI {
         return;
       }
 
-      // Ignore events related to the keydown listener
-      if (event.key === 'Up' || event.key === 'Down') {
-        return;
-      }
+      const command = event.target.value.trim();
+      this._cacheCommand(command);
+      this.commandCursor = 0;
+      event.target.value = '';
 
-      this._handleCommandEnter();
+      // Add the command to the console
+      this.appendMessage(`> ${command}`, 'command');
+
+      // Process the command
+      this.executeCommand(command);
     });
+  }
 
-    // Auto-scroll management
-    this.consoleWindow.addEventListener('scroll', () => {
-      this.autoScrollPaused = Math.ceil(
-        this.consoleWindow.scrollTop + this.consoleWindow.offsetHeight
+  static _registerNetworkCommands() {
+    // Use the console manager if available, otherwise set up our own commands
+    if (window.consoleManager) {
+      const cmdRegister = window.consoleManager.registerCommand.bind(
+        window.consoleManager
       );
-      this.consoleWindow.scrollHeight;
-    });
+
+      cmdRegister(
+        'received',
+        'Show received items',
+        this.handleReceivedCommand.bind(this)
+      );
+      cmdRegister(
+        'missing',
+        'Show missing locations',
+        this.handleMissingCommand.bind(this)
+      );
+      cmdRegister(
+        'items',
+        'List available items',
+        this.handleItemsCommand.bind(this)
+      );
+      cmdRegister(
+        'item_groups',
+        'List available item groups',
+        this.handleItemGroupsCommand.bind(this)
+      );
+      cmdRegister(
+        'locations',
+        'List available locations',
+        this.handleLocationsCommand.bind(this)
+      );
+      cmdRegister(
+        'location_groups',
+        'List available location groups',
+        this.handleLocationGroupsCommand.bind(this)
+      );
+      cmdRegister(
+        'ready',
+        'Send ready status to server',
+        this.handleReadyCommand.bind(this)
+      );
+      cmdRegister(
+        'set_delay',
+        'Set check delay in seconds',
+        this.handleSetDelayCommand.bind(this)
+      );
+    }
   }
 
   static _handleCommandUp() {
-    if (
-      this.cachedCommands.length === 0 ||
-      this.commandCursor === this.maxCachedCommands
-    ) {
-      return;
-    }
+    if (!this.commandInput || this.cachedCommands.length === 0) return;
 
-    if (
-      this.commandCursor < this.maxCachedCommands &&
-      this.commandCursor < this.cachedCommands.length
-    ) {
+    if (this.commandCursor < this.cachedCommands.length) {
       this.commandCursor++;
-    }
+      this.commandInput.value =
+        this.cachedCommands[this.cachedCommands.length - this.commandCursor];
 
-    this.commandInput.value = this.commandCursor
-      ? this.cachedCommands[this.cachedCommands.length - this.commandCursor]
-      : '';
+      // Move cursor to end of input
+      setTimeout(() => {
+        this.commandInput.selectionStart = this.commandInput.selectionEnd =
+          this.commandInput.value.length;
+      }, 0);
+    }
   }
 
   static _handleCommandDown() {
-    if (this.cachedCommands.length === 0 || this.commandCursor === 0) {
+    if (!this.commandInput) return;
+
+    if (this.commandCursor > 1) {
+      this.commandCursor--;
+      this.commandInput.value =
+        this.cachedCommands[this.cachedCommands.length - this.commandCursor];
+    } else {
+      this.commandCursor = 0;
+      this.commandInput.value = '';
+    }
+  }
+
+  static executeCommand(command) {
+    const args = command.split(' ');
+    const cmd = args.shift().toLowerCase();
+    const argString = args.join(' ');
+
+    // Check for console manager first
+    if (window.consoleManager && window.consoleManager.executeCommand) {
+      window.consoleManager.executeCommand(command);
       return;
     }
 
-    if (this.commandCursor > 0) {
-      this.commandCursor--;
-    }
+    // Built-in commands
+    switch (cmd) {
+      case 'help':
+        this.appendMessage('Available commands:');
+        this.appendMessage('received - Show received items');
+        this.appendMessage('missing - Show missing locations');
+        this.appendMessage('items - List available items');
+        this.appendMessage('item_groups - List available item groups');
+        this.appendMessage('locations - List available locations');
+        this.appendMessage('location_groups - List available location groups');
+        this.appendMessage('ready - Send ready status to server');
+        this.appendMessage('set_delay <seconds> - Set check delay in seconds');
+        this.appendMessage('clear - Clear console');
+        this.appendMessage('help - Show this help message');
+        break;
 
-    this.commandInput.value = this.commandCursor
-      ? this.cachedCommands[this.cachedCommands.length - this.commandCursor]
-      : '';
+      case 'clear':
+        this.clear();
+        break;
+
+      case 'received':
+        this.handleReceivedCommand();
+        break;
+
+      case 'missing':
+        this.handleMissingCommand();
+        break;
+
+      case 'items':
+        this.handleItemsCommand();
+        break;
+
+      case 'item_groups':
+        this.handleItemGroupsCommand();
+        break;
+
+      case 'locations':
+        this.handleLocationsCommand();
+        break;
+
+      case 'location_groups':
+        this.handleLocationGroupsCommand();
+        break;
+
+      case 'ready':
+        this.handleReadyCommand();
+        break;
+
+      case 'set_delay':
+        this.handleSetDelayCommand(argString);
+        break;
+
+      default:
+        this.appendMessage(`Unknown command: ${cmd}`);
+        break;
+    }
   }
 
-  static _handleCommandEnter() {
-    const command = this.commandInput.value;
-
-    // Register available commands for help output
-    const availableCommands = {
-      connect:
-        '/connect [server] [password] - Connect to an AP server with an optional password',
-      sync: '/sync - Force the client to synchronize with the AP server',
-      help: '/help - Print this message',
-      received: '/received - List all received items',
-      missing: '/missing - List all missing locations',
-      items: '/items - List all item names for the current game',
-      item_groups:
-        '/item_groups - List all item group names for the current game',
-      locations: '/locations - List all location names for the current game',
-      location_groups:
-        '/location_groups - List all location group names for the current game',
-      ready: '/ready - Sends ready status to the server',
-      set_delay:
-        '/set_delay [min] [max] - Sets the delay between automatic location checks. Use one value for fixed delay or two values for a random range.',
-    };
-
-    // Detect slash commands and perform their actions
-    if (command[0] === '/') {
-      const commandParts = command.split(' ');
-      const cmd = commandParts[0].substring(1); // Remove the slash
-
-      switch (commandParts[0]) {
-        case '/connect':
-          commandParts.shift();
-          document.getElementById('server-address').value = commandParts[0];
-          connection.connect(commandParts[0], commandParts[1]);
-          break;
-
-        case '/sync':
-          messageHandler.serverSync();
-          break;
-
-        case '/help':
-          this.appendMessage('Available commands:');
-          Object.values(availableCommands).forEach((cmd) => {
-            this.appendMessage(cmd);
-          });
-          break;
-
-        // Handle additional commands
-        case '/received':
-          this.handleReceivedCommand();
-          break;
-
-        case '/missing':
-          this.handleMissingCommand();
-          break;
-
-        case '/items':
-          this.handleItemsCommand();
-          break;
-
-        case '/item_groups':
-          this.handleItemGroupsCommand();
-          break;
-
-        case '/locations':
-          this.handleLocationsCommand();
-          break;
-
-        case '/location_groups':
-          this.handleLocationGroupsCommand();
-          break;
-
-        case '/ready':
-          this.handleReadyCommand();
-          break;
-
-        case '/set_delay':
-          const delayArg = commandParts[1];
-          this.handleSetDelayCommand(delayArg);
-          break;
-
-        default:
-          this.appendMessage('Unknown command.');
-          break;
-      }
-    } else {
-      // Send command to server
-      messageHandler.sendMessage(command);
-    }
-
-    // Cache the command
-    this._cacheCommand(command);
-
-    // Clear the input box
-    this.commandInput.value = '';
-    this.commandCursor = 0;
-  }
-
-  // Add methods for each command
   static handleReceivedCommand() {
     this.appendMessage('Received Items:');
-
-    // Get a reference to messageHandler
-    const mh = window.messageHandler || null;
-
-    if (mh && Array.isArray(mh.itemsReceived)) {
-      const items = mh.itemsReceived;
+    if (window.messageHandler) {
+      const items = window.messageHandler.itemsReceived || [];
       if (items.length === 0) {
         this.appendMessage('No items received yet.');
         return;
@@ -415,12 +255,10 @@ export class ConsoleUI {
         let locationName = 'Unknown';
 
         try {
-          if (typeof mh.getItemNameSync === 'function') {
-            itemName = mh.getItemNameSync(item.item);
-          }
-          if (typeof mh.getLocationNameSync === 'function') {
-            locationName = mh.getLocationNameSync(item.location);
-          }
+          itemName = window.messageHandler.getItemNameSync(item.item);
+          locationName = window.messageHandler.getLocationNameSync(
+            item.location
+          );
         } catch (e) {
           // Use defaults if error
         }
@@ -428,7 +266,7 @@ export class ConsoleUI {
         this.appendMessage(`${index + 1}. ${itemName} from ${locationName}`);
       });
     } else {
-      this.appendMessage('Message handler not available or no items received.');
+      this.appendMessage('Message handler not available.');
     }
   }
 
@@ -651,143 +489,101 @@ export class ConsoleUI {
   }
 
   static _cacheCommand(command) {
-    this.appendMessage(`Command: ${command}`);
+    // Don't cache if it's the same as the last command or empty
+    if (
+      this.cachedCommands.length > 0 &&
+      (this.cachedCommands[this.cachedCommands.length - 1] === command ||
+        command === '')
+    ) {
+      return;
+    }
 
-    // Limit stored command count
-    while (this.cachedCommands.length >= this.maxCachedCommands) {
+    // Add to cache and limit size
+    this.cachedCommands.push(command);
+    if (this.cachedCommands.length > this.maxCachedCommands) {
       this.cachedCommands.shift();
     }
-
-    // Store the command
-    this.cachedCommands.push(command);
   }
 
-  static appendMessage(message) {
-    if (!this.consoleWindow) {
-      this.consoleWindow = document.getElementById('console');
-      if (!this.consoleWindow) return; // Console not found
+  static appendMessage(message, type = 'info') {
+    // Use console manager if available
+    if (window.consoleManager && window.consoleManager.print) {
+      window.consoleManager.print(message, type);
+      return;
     }
 
-    // Remember only the last 250 messages
-    while (this.consoleWindow.children.length >= 250) {
-      this.consoleWindow.removeChild(this.consoleWindow.firstChild);
+    // Otherwise use direct DOM manipulation if elements are available
+    if (!this.consoleWindow) return;
+
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.className = `console-message console-message-${
+      type || 'info'
+    }`;
+
+    // Add to console
+    this.consoleWindow.appendChild(messageElement);
+
+    // Auto-scroll
+    if (!this.autoScrollPaused) {
+      this.consoleWindow.scrollTop = this.consoleWindow.scrollHeight;
     }
-
-    // Append message div to monitor
-    const messageDiv = document.createElement(
-      this.useMarquee ? 'marquee' : 'div'
-    );
-    messageDiv.classList.add('console-message');
-    messageDiv.innerText = message;
-    this.consoleWindow.appendChild(messageDiv);
-
-    // Always scroll to latest message
-    this.consoleWindow.scrollTop = this.consoleWindow.scrollHeight;
-
-    // Publish the message event for potential third-party subscribers
-    eventBus.publish('console:messageAppended', { message });
   }
 
   static appendFormattedMessage(messageParts) {
-    if (!this.consoleWindow) {
-      this.consoleWindow = document.getElementById('console');
-      if (!this.consoleWindow) return; // Console not found
+    // Use console manager if available
+    if (window.consoleManager && window.consoleManager.print) {
+      const message = messageParts.map((part) => part.text).join('');
+      window.consoleManager.print(message, messageParts[0]?.type || 'info');
+      return;
     }
 
-    // Remember only the last 250 messages
-    while (this.consoleWindow.children.length >= 250) {
-      this.consoleWindow.removeChild(this.consoleWindow.firstChild);
-    }
+    // Otherwise format it ourselves
+    if (!this.consoleWindow) return;
 
-    // Create the message div
-    const messageDiv = document.createElement(
-      this.useMarquee ? 'marquee' : 'div'
-    );
-    messageDiv.classList.add('console-message');
+    const container = document.createElement('div');
+    container.className = 'console-message';
 
-    // Create the spans to populate the message div
-    for (const part of messageParts) {
+    messageParts.forEach((part) => {
       const span = document.createElement('span');
+      span.textContent = part.text;
 
-      if (part.hasOwnProperty('type')) {
-        const playerSlot = messageHandler.getClientSlot();
-        const players = messageHandler.getPlayers();
-
-        switch (part.type) {
-          case 'player_id':
-            const playerIsClient = parseInt(part.text, 10) === playerSlot;
-            if (playerIsClient) {
-              span.style.fontWeight = 'bold';
-            }
-            span.style.color = playerIsClient ? '#ffa565' : '#52b44c';
-            span.innerText =
-              players[parseInt(part.text, 10) - 1]?.alias ||
-              `Player${part.text}`;
-            break;
-
-          case 'item_id':
-            span.style.color = '#fc5252';
-            try {
-              // Use synchronous method for rendering
-              if (
-                messageHandler &&
-                typeof messageHandler.getItemNameSync === 'function'
-              ) {
-                span.innerText = messageHandler.getItemNameSync(part.text);
-              } else {
-                // Direct fallback to a placeholder with ID
-                span.innerText = `Item ${part.text}`;
-              }
-            } catch (e) {
-              console.warn('Error getting item name:', e);
-              span.innerText = `Item ${part.text}`;
-            }
-            break;
-
-          case 'location_id':
-            span.style.color = '#5ea2c1';
-            try {
-              // Use synchronous method for rendering
-              if (
-                messageHandler &&
-                typeof messageHandler.getLocationNameSync === 'function'
-              ) {
-                span.innerText = messageHandler.getLocationNameSync(part.text);
-              } else {
-                // Direct fallback to a placeholder with ID
-                span.innerText = `Location ${part.text}`;
-              }
-            } catch (e) {
-              console.warn('Error getting location name:', e);
-              span.innerText = `Location ${part.text}`;
-            }
-            break;
-
-          default:
-            span.innerText = part.text;
-        }
-      } else {
-        span.innerText = part.text;
+      if (part.type) {
+        span.className = `console-${part.type}`;
       }
 
-      messageDiv.appendChild(span);
+      container.appendChild(span);
+    });
+
+    this.consoleWindow.appendChild(container);
+
+    // Auto-scroll
+    if (!this.autoScrollPaused) {
+      this.consoleWindow.scrollTop = this.consoleWindow.scrollHeight;
     }
-
-    // Append the message div to the monitor
-    this.consoleWindow.appendChild(messageDiv);
-
-    // Always scroll to latest message
-    this.consoleWindow.scrollTop = this.consoleWindow.scrollHeight;
   }
 
   static clear() {
+    // Use console manager if available
+    if (window.consoleManager && window.consoleManager.print) {
+      // The console manager should handle clearConsole
+      if (typeof window.consoleManager.clearConsole === 'function') {
+        window.consoleManager.clearConsole();
+      } else {
+        window.consoleManager.print('Console cleared.', 'system');
+      }
+      return;
+    }
+
+    // Otherwise clear directly
     if (this.consoleWindow) {
       this.consoleWindow.innerHTML = '';
+      this.appendMessage('Console cleared.', 'system');
     }
   }
 
   static setUseMarquee(use) {
-    this.useMarquee = use;
+    this.useMarquee = !!use;
   }
 
   static focus() {
@@ -797,5 +593,4 @@ export class ConsoleUI {
   }
 }
 
-// No need for singleton creation since we're using a static class
 export default ConsoleUI;
