@@ -6,18 +6,35 @@ let exitInstance = null;
 let moduleEventBus = null;
 let exitUnsubscribeHandles = []; // Store multiple unsubscribe handles
 
+// Handler for rules loaded
+function handleRulesLoaded(eventData) {
+  console.log('[Exits Module] Received state:rulesLoaded');
+  // Check if instance exists before calling update
+  if (exitInstance) {
+    // Use setTimeout to ensure it runs after potential DOM updates
+    setTimeout(() => exitInstance.updateExitDisplay(), 0);
+  } else {
+    console.warn(
+      '[Exits Module] exitInstance not available for state:rulesLoaded handler.'
+    );
+  }
+}
+
 /**
  * Registration function for the Exits module.
- * Registers the exits panel component.
+ * Registers the exits panel component and event handlers.
  */
 export function register(registrationApi) {
   console.log('[Exits Module] Registering...');
 
   // Register the panel component factory
-  registrationApi.registerPanelComponent(
-    'exitsPanel',
-    () => new ExitUI() // Return a new instance directly
-  );
+  registrationApi.registerPanelComponent('exitsPanel', () => {
+    exitInstance = new ExitUI();
+    return exitInstance;
+  });
+
+  // Register event handler for rules loaded
+  registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);
 
   // Register settings schema if needed
 
@@ -26,19 +43,32 @@ export function register(registrationApi) {
 
 /**
  * Initialization function for the Exits module.
- * Subscribes to events needed for reactivity.
+ * Minimal setup.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(`[Exits Module] Initializing with priority ${priorityIndex}...`);
+  // Store eventBus for postInitialize
   moduleEventBus = initializationApi.getEventBus();
 
-  // Clean up previous subscriptions if any
+  // Clean up previous subscriptions if any (safe practice)
   exitUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
   exitUnsubscribeHandles = [];
 
-  if (moduleEventBus) {
+  console.log('[Exits Module] Basic initialization complete.');
+}
+
+/**
+ * Post-initialization function for the Exits module.
+ * Subscribes to events needed for UI reactivity.
+ */
+export function postInitialize(initializationApi) {
+  console.log('[Exits Module] Post-initializing...');
+  const eventBus = moduleEventBus || initializationApi.getEventBus();
+
+  if (eventBus) {
     const subscribe = (eventName, handler) => {
-      const unsubscribe = moduleEventBus.subscribe(eventName, handler);
+      console.log(`[Exits Module] Subscribing to ${eventName}`);
+      const unsubscribe = eventBus.subscribe(eventName, handler);
       exitUnsubscribeHandles.push(unsubscribe);
     };
 
@@ -50,10 +80,6 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     subscribe('stateManager:regionsComputed', () => {
       console.log('[Exits Module] Received stateManager:regionsComputed');
       exitInstance?.updateExitDisplay(); // Update UI
-    });
-    subscribe('stateManager:jsonDataLoaded', () => {
-      console.log('[Exits Module] Received stateManager:jsonDataLoaded');
-      setTimeout(() => exitInstance?.updateExitDisplay(), 0);
     });
 
     // Subscribe to loop state changes
@@ -80,9 +106,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     });
   } else {
     console.error(
-      '[Exits Module] EventBus not available during initialization.'
+      '[Exits Module] EventBus not available during post-initialization.'
     );
   }
-
-  console.log('[Exits Module] Initialization complete.');
+  console.log('[Exits Module] Post-initialization complete.');
 }

@@ -6,18 +6,36 @@ let locationInstance = null;
 let moduleEventBus = null;
 let locationUnsubscribeHandles = []; // Store multiple unsubscribe handles
 
+// Handler for rules loaded
+function handleRulesLoaded(eventData) {
+  console.log('[Locations Module] Received state:rulesLoaded');
+  // Update display now that data is available
+  // Check if instance exists before calling update
+  if (locationInstance) {
+    // Use setTimeout to ensure it runs after potential DOM updates
+    setTimeout(() => locationInstance.update(), 0);
+  } else {
+    console.warn(
+      '[Locations Module] locationInstance not available for state:rulesLoaded handler.'
+    );
+  }
+}
+
 /**
  * Registration function for the Locations module.
- * Registers the locations panel component.
+ * Registers the locations panel component and event handlers.
  */
 export function register(registrationApi) {
   console.log('[Locations Module] Registering...');
 
   // Register the panel component factory
-  registrationApi.registerPanelComponent(
-    'locationsPanel',
-    () => new LocationUI() // Return a new instance directly
-  );
+  registrationApi.registerPanelComponent('locationsPanel', () => {
+    locationInstance = new LocationUI();
+    return locationInstance;
+  });
+
+  // Register event handler for rules loaded
+  registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);
 
   // Register primary event handler if Locations module owns an action
   // Example: If checking a location *always* goes through this module first
@@ -26,23 +44,34 @@ export function register(registrationApi) {
 
 /**
  * Initialization function for the Locations module.
- * Subscribes to events needed for reactivity.
+ * Minimal setup.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(
     `[Locations Module] Initializing with priority ${priorityIndex}...`
   );
+  // Store eventBus for postInitialize
   moduleEventBus = initializationApi.getEventBus();
-  // const settings = await initializationApi.getSettings();
-  // const dispatcher = initializationApi.getDispatcher();
 
-  // Clean up previous subscriptions if any
+  // Clean up previous subscriptions if any (might be redundant but safe)
   locationUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
   locationUnsubscribeHandles = [];
 
-  if (moduleEventBus) {
+  console.log('[Locations Module] Basic initialization complete.');
+}
+
+/**
+ * Post-initialization function for the Locations module.
+ * Subscribes to events needed for UI reactivity.
+ */
+export function postInitialize(initializationApi) {
+  console.log('[Locations Module] Post-initializing...');
+  const eventBus = moduleEventBus || initializationApi.getEventBus();
+
+  if (eventBus) {
     const subscribe = (eventName, handler) => {
-      const unsubscribe = moduleEventBus.subscribe(eventName, handler);
+      console.log(`[Locations Module] Subscribing to ${eventName}`);
+      const unsubscribe = eventBus.subscribe(eventName, handler);
       locationUnsubscribeHandles.push(unsubscribe);
     };
 
@@ -64,11 +93,6 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         '[Locations Module] Received stateManager:checkedLocationsCleared'
       );
       locationInstance?.updateLocationDisplay(); // Update UI
-    });
-    subscribe('stateManager:jsonDataLoaded', () => {
-      console.log('[Locations Module] Received stateManager:jsonDataLoaded');
-      // Initial display update after data is ready
-      setTimeout(() => locationInstance?.updateLocationDisplay(), 0);
     });
 
     // Subscribe to loop state changes if relevant
@@ -94,11 +118,10 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     });
   } else {
     console.error(
-      '[Locations Module] EventBus not available during initialization.'
+      '[Locations Module] EventBus not available during post-initialization.'
     );
   }
-
-  console.log('[Locations Module] Initialization complete.');
+  console.log('[Locations Module] Post-initialization complete.');
 }
 
 // Refactor handleCheckLocationRequest if it becomes a primary handler

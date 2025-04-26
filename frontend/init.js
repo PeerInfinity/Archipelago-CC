@@ -126,11 +126,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
 
     // --- 3. Instantiate Event Dispatcher ---
-    dispatcher = new EventDispatcher(centralRegistry, modulesData);
+    dispatcher = new EventDispatcher(); // New way: Construct first
     window.dispatcher = dispatcher; // Expose for debugging
-    console.log('[Init] EventDispatcher instantiated.');
+    // console.log('[Init] EventDispatcher instantiated.'); // Log happens inside constructor/init now
 
-    // --- 4. Registration Phase ---
+    // --- 4. Registration Phase --- (Registry populated here)
     console.log('[Init] Starting module registration phase...');
     for (const [moduleId, module] of importedModules.entries()) {
       if (typeof module.register === 'function') {
@@ -180,7 +180,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       functions: Array.from(centralRegistry.publicFunctions.keys()),
     });
 
-    // --- 5. Initialization Phase ---
+    // --- 4b. Initialize Event Dispatcher --- (Initialize AFTER registry is populated)
+    console.log(
+      '[Init] Initializing EventDispatcher with registered handlers...'
+    );
+    try {
+      dispatcher.initialize(modulesData, centralRegistry.eventHandlers);
+    } catch (error) {
+      console.error('[Init] Failed to initialize EventDispatcher:', error);
+      // Potentially throw or handle this error more gracefully
+      throw error; // Stop initialization if dispatcher fails
+    }
+
+    // --- 5. Initialization Phase --- (Dispatcher is now ready)
     console.log(
       '[Init] Starting module initialization phase (in priority order)...'
     );
@@ -240,6 +252,62 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
     console.log('[Init] Module initialization phase complete.');
+
+    // --- 5b. Post-Initialization Phase ---
+    console.log(
+      '[Init] Starting module post-initialization phase (in priority order)...'
+    );
+    for (let i = 0; i < loadPriority.length; i++) {
+      const moduleId = loadPriority[i];
+      const definition = modulesData.moduleDefinitions[moduleId];
+      const moduleInstance = importedModules.get(moduleId);
+
+      if (
+        definition?.enabled &&
+        moduleInstance &&
+        typeof moduleInstance.postInitialize === 'function'
+      ) {
+        // Reuse the same initialization API structure
+        const initializationApi = {
+          getSettings: async () => settingsManager.getModuleSettings(moduleId),
+          getDispatcher: () => ({
+            publish: dispatcher.publish.bind(dispatcher),
+            publishToPredecessors:
+              dispatcher.publishToPredecessors.bind(dispatcher),
+          }),
+          getEventBus: () => eventBus,
+          getModuleFunction: (targetModuleId, functionName) => {
+            return centralRegistry.getPublicFunction(
+              targetModuleId,
+              functionName
+            );
+          },
+          // getSingleton: (name) => { /* Decide how to provide singletons */ },
+        };
+
+        try {
+          console.log(
+            `[Init] Post-initializing module: ${moduleId} (Priority ${i})`
+          );
+          // Post-initialization can also be async
+          await moduleInstance.postInitialize(initializationApi);
+        } catch (error) {
+          console.error(
+            `[Init] Error during post-initialization of module: ${moduleId}`,
+            error
+          );
+        }
+      } else if (
+        definition?.enabled &&
+        moduleInstance &&
+        typeof moduleInstance.postInitialize !== 'function'
+      ) {
+        // console.log(
+        //   `[Init] Enabled module ${moduleId} has no postInitialize function. Skipping.`
+        // );
+      }
+    }
+    console.log('[Init] Module post-initialization phase complete.');
 
     // --- 6. Golden Layout Setup ---
     console.log('[Init] Setting up Golden Layout...');

@@ -15,7 +15,9 @@ import ProgressUI from './ui/progressUI.js';
 import { loadMappingsFromStorage } from './utils/idMapping.js';
 
 // Main application
-import app from './app.js';
+// import app from './app.js';
+// REMOVED: Import for loadAndProcessDefaultRules
+// import { loadAndProcessDefaultRules } from './app.js';
 
 // Store module context for later use
 let moduleInitApi = null;
@@ -81,14 +83,12 @@ export function register(registrationApi) {
 export async function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(`[Client Module] Initializing with priority ${priorityIndex}...`);
 
-  // Store references for later use
+  // Store references needed during post-initialization
   moduleInitApi = initializationApi;
   moduleDispatcher = initializationApi.getDispatcher();
-  const settings = await initializationApi.getSettings();
-  const eventBus = initializationApi.getEventBus();
 
-  // Make sure eventBus is accessible globally
-  window.eventBus = eventBus;
+  // Make eventBus globally accessible early (if not already done elsewhere)
+  window.eventBus = initializationApi.getEventBus();
 
   // Initialize the core singletons
   storage.initialize();
@@ -109,37 +109,46 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     timerState.initialize();
   }
 
-  // Initialize UI components - will be fully activated when attached to DOM
+  // Initialize basic UI components
   ConsoleUI.initialize();
-  // ProgressUI.initialize(); // Moved to PanelManager wrapper for mainContentPanel
-
-  // Try to initialize the app (will load stateManager etc.)
-  try {
-    // The app is already being initialized in its own file
-    // Just log success
-    console.log('[Client Module] App initialized successfully');
-  } catch (error) {
-    console.error('[Client Module] Failed to initialize app:', error);
-  }
 
   // Make important instances available globally for debugging and legacy code
   window.connection = connection;
   window.messageHandler = messageHandler;
   window.ConsoleUI = ConsoleUI;
-  window.ProgressUI = ProgressUI;
+  window.ProgressUI = ProgressUI; // Keep ProgressUI available if needed
+
+  console.log('[Client Module] Basic initialization complete.');
+}
+
+/**
+ * Post-initialization function for the Client module.
+ * Sets up event listeners and performs auto-connect.
+ */
+export async function postInitialize(initializationApi) {
+  console.log('[Client Module] Post-initializing...');
+
+  const settings = await initializationApi.getSettings();
+  const eventBus = initializationApi.getEventBus();
 
   // Set up event listeners on eventBus for connection status changes
   eventBus.subscribe('connection:statusChanged', (status) => {
     console.log(`[Client Module] Connection status changed: ${status}`);
+    // Add any UI updates or further logic needed here
   });
+  console.log('[Client Module] Subscribed to connection status changes.');
 
   // Auto-connect to default server if configured
   if (settings?.autoConnect && settings?.defaultServer) {
-    console.log(`[Client Module] Auto-connecting to ${settings.defaultServer}`);
+    console.log(
+      `[Client Module] Auto-connecting to ${settings.defaultServer}...`
+    );
+    // Use the registered handler via dispatcher if appropriate, or connect directly
+    // Assuming direct connection is fine here as it's an initial setup action
     connection.connect(settings.defaultServer);
   }
 
-  console.log('[Client Module] Initialization complete.');
+  console.log('[Client Module] Post-initialization complete.');
 }
 
 // Export core singletons for other modules to import directly if needed

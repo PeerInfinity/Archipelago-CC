@@ -6,18 +6,33 @@ let editorInstance = null;
 let moduleEventBus = null;
 let editorUnsubscribe = null;
 
+// Handler for rules loaded event
+function handleRulesLoaded(eventData) {
+  console.log('[Editor Module] Received state:rulesLoaded');
+  if (editorInstance && eventData.jsonData) {
+    editorInstance.loadJsonData(eventData.jsonData);
+  } else {
+    console.warn(
+      '[Editor Module] Editor instance or jsonData not available for state:rulesLoaded.'
+    );
+  }
+}
+
 /**
  * Registration function for the Editor module.
- * Registers the editor panel component.
+ * Registers the editor panel component and event handler.
  */
 export function register(registrationApi) {
   console.log('[Editor Module] Registering...');
 
   // Register the panel component factory
-  registrationApi.registerPanelComponent(
-    'editorPanel',
-    () => new EditorUI() // Return a new instance directly
-  );
+  registrationApi.registerPanelComponent('editorPanel', () => {
+    editorInstance = new EditorUI();
+    return editorInstance;
+  });
+
+  // Register event handler for rules loaded
+  registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);
 
   // No specific settings schema for the editor itself is defined in the plan.
   // registrationApi.registerSettingsSchema({ ... });
@@ -34,7 +49,9 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // const dispatcher = initializationApi.getDispatcher();
 
   // EditorUI handles its own event bus subscriptions within its initialize/destroy methods.
-  // We could potentially subscribe here if global coordination is needed.
+  // We previously subscribed to 'editor:loadJsonData' there, which might now be redundant
+  // if state:rulesLoaded is the primary way data gets loaded initially.
+  // Consider reviewing EditorUI's subscriptions.
 
   console.log('[Editor Module] Initialization complete.');
 }

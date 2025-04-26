@@ -3,109 +3,135 @@ import { RegionUI } from './regionUI.js';
 
 // Store instance and dependencies
 let regionInstance = null;
-let pathAnalyzerUI = null; // To store the PathAnalyzerUI instance
+// Store the function to get the PathAnalyzerUI instance, not the instance itself yet.
+let getPathAnalyzerUIFunc = null;
+let pathAnalyzerUI = null; // Keep track of the instance once created
 let moduleEventBus = null;
 let regionUnsubscribeHandles = []; // Store multiple unsubscribe handles
 
+// Handler for rules loaded
+function handleRulesLoaded(eventData) {
+  console.log('[Regions Module] Received state:rulesLoaded');
+  // Check if instance exists before calling update
+  if (regionInstance) {
+    // Use setTimeout to ensure it runs after potential DOM updates
+    setTimeout(() => regionInstance.update(), 0);
+  } else {
+    console.warn(
+      '[Regions Module] regionInstance not available for state:rulesLoaded handler.'
+    );
+  }
+}
+
 /**
  * Registration function for the Regions module.
- * Registers the regions panel component.
+ * Registers the regions panel component and event handlers.
  */
 export function register(registrationApi) {
   console.log('[Regions Module] Registering...');
 
   // Register the panel component factory
-  registrationApi.registerPanelComponent(
-    'regionsPanel',
-    () => new RegionUI() // Return a new instance directly
-  );
+  registrationApi.registerPanelComponent('regionsPanel', () => {
+    regionInstance = new RegionUI(); // Instance is created here
+    // Now that regionInstance exists, try to link PathAnalyzer if function is ready
+    if (getPathAnalyzerUIFunc) {
+      tryLinkPathAnalyzer();
+    }
+    return regionInstance;
+  });
+
+  // Register event handler for rules loaded
+  registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);
 
   // No specific settings schema or primary event handlers for Regions registration.
 }
 
 /**
  * Initialization function for the Regions module.
- * Gets PathAnalyzerUI instance and subscribes to events.
+ * Minimal setup.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(
     `[Regions Module] Initializing with priority ${priorityIndex}...`
   );
+  // Store eventBus for postInitialize
   moduleEventBus = initializationApi.getEventBus();
 
-  // Ensure regionInstance is created before requesting PathAnalyzerUI
-  if (!regionInstance) {
-    regionInstance = new RegionUI(null, null);
-  }
-
-  // Get the PathAnalyzerUI instance from the pathAnalyzer module
-  try {
-    const getPathAnalyzerUI = initializationApi.getModuleFunction(
-      'pathAnalyzer',
-      'getPathAnalyzerUIInstance'
-    );
-    if (getPathAnalyzerUI) {
-      // Pass the regionInstance to the PathAnalyzer
-      pathAnalyzerUI = getPathAnalyzerUI(regionInstance);
-      if (pathAnalyzerUI) {
-        console.log(
-          '[Regions Module] Successfully obtained PathAnalyzerUI instance.'
-        );
-        // Update the regionInstance with the pathAnalyzerUI reference
-        regionInstance.pathAnalyzerUI = pathAnalyzerUI;
-      } else {
-        console.error(
-          '[Regions Module] Failed to get PathAnalyzerUI instance.'
-        );
-      }
-    } else {
-      console.error(
-        '[Regions Module] Could not find getPathAnalyzerUIInstance function.'
-      );
-    }
-  } catch (error) {
-    console.error('[Regions Module] Error getting PathAnalyzerUI:', error);
-  }
-
-  // Clean up previous subscriptions if any
+  // Clean up previous subscriptions if any (safe practice)
   regionUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
   regionUnsubscribeHandles = [];
 
-  if (moduleEventBus) {
+  console.log('[Regions Module] Basic initialization complete.');
+}
+
+/**
+ * Post-initialization function for the Regions module.
+ * Gets PathAnalyzerUI function reference and subscribes to events.
+ */
+export async function postInitialize(initializationApi) {
+  console.log('[Regions Module] Post-initializing...');
+  const eventBus = moduleEventBus || initializationApi.getEventBus();
+
+  // Get the function to create PathAnalyzerUI instance from the pathAnalyzer module
+  try {
+    getPathAnalyzerUIFunc = initializationApi.getModuleFunction(
+      'pathAnalyzer',
+      'getPathAnalyzerUIInstance'
+    );
+    if (!getPathAnalyzerUIFunc) {
+      console.error(
+        '[Regions Module] Could not find getPathAnalyzerUIInstance function during postInitialize.'
+      );
+    } else {
+      console.log(
+        '[Regions Module] Successfully obtained getPathAnalyzerUIInstance function reference.'
+      );
+      // If regionInstance was already created by the factory, try linking now
+      if (regionInstance) {
+        tryLinkPathAnalyzer();
+      }
+    }
+  } catch (error) {
+    console.error(
+      '[Regions Module] Error getting PathAnalyzerUI function reference:',
+      error
+    );
+  }
+
+  // Subscribe to events
+  if (eventBus) {
     const subscribe = (eventName, handler) => {
-      const unsubscribe = moduleEventBus.subscribe(eventName, handler);
+      console.log(`[Regions Module] Subscribing to ${eventName}`);
+      const unsubscribe = eventBus.subscribe(eventName, handler);
       regionUnsubscribeHandles.push(unsubscribe);
     };
 
     // Subscribe to state changes that affect region display
     subscribe('stateManager:inventoryChanged', () => {
-      regionInstance?.updateRegionDisplay();
+      regionInstance?.update();
     });
     subscribe('stateManager:regionsComputed', () => {
-      regionInstance?.updateRegionDisplay();
+      regionInstance?.update();
     });
     subscribe('stateManager:locationChecked', () => {
-      regionInstance?.updateRegionDisplay();
+      regionInstance?.update();
     });
     subscribe('stateManager:checkedLocationsCleared', () => {
-      regionInstance?.updateRegionDisplay();
-    });
-    subscribe('stateManager:jsonDataLoaded', () => {
-      setTimeout(() => regionInstance?.updateRegionDisplay(), 0);
+      regionInstance?.update();
     });
 
     // Subscribe to loop state changes
     subscribe('loop:stateChanged', () => {
-      regionInstance?.updateRegionDisplay();
+      regionInstance?.update();
     });
     subscribe('loop:actionCompleted', () => {
-      regionInstance?.updateRegionDisplay();
+      regionInstance?.update();
     });
     subscribe('loop:discoveryChanged', () => {
-      regionInstance?.updateRegionDisplay();
+      regionInstance?.update();
     });
     subscribe('loop:modeChanged', (isLoopMode) => {
-      regionInstance?.updateRegionDisplay();
+      regionInstance?.update();
       // Show/hide loop-specific controls if any in Regions panel
     });
 
@@ -113,9 +139,53 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     // subscribe('ui:navigateToRegion', (regionName) => { ... });
   } else {
     console.error(
-      '[Regions Module] EventBus not available during initialization.'
+      '[Regions Module] EventBus not available during post-initialization.'
     );
   }
 
-  console.log('[Regions Module] Initialization complete.');
+  console.log('[Regions Module] Post-initialization complete.');
 }
+
+// Helper function to link PathAnalyzerUI
+function tryLinkPathAnalyzer() {
+  if (!regionInstance) {
+    console.warn(
+      '[Regions Module] tryLinkPathAnalyzer called but regionInstance is missing.'
+    );
+    return;
+  }
+  if (!getPathAnalyzerUIFunc) {
+    console.warn(
+      '[Regions Module] tryLinkPathAnalyzer called but getPathAnalyzerUIFunc is missing.'
+    );
+    return;
+  }
+  if (pathAnalyzerUI) {
+    // Already linked
+    return;
+  }
+
+  console.log('[Regions Module] Attempting to link PathAnalyzerUI...');
+  try {
+    pathAnalyzerUI = getPathAnalyzerUIFunc(regionInstance); // Call the factory function
+    if (pathAnalyzerUI) {
+      console.log(
+        '[Regions Module] Successfully obtained and linked PathAnalyzerUI instance.'
+      );
+      // Link it back to the region instance
+      regionInstance.pathAnalyzerUI = pathAnalyzerUI;
+    } else {
+      console.error(
+        '[Regions Module] getPathAnalyzerUIFunc returned null or undefined.'
+      );
+    }
+  } catch (error) {
+    console.error(
+      '[Regions Module] Error calling getPathAnalyzerUIFunc:',
+      error
+    );
+  }
+}
+
+// Export the regionInstance or pathAnalyzerUI if needed (generally avoid)
+// export { regionInstance };

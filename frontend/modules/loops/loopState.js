@@ -9,6 +9,8 @@
  */
 
 import { stateManager } from '../stateManager/index.js';
+// Correctly import the default export from the singleton file if needed
+// import stateManagerSingleton from '../stateManager/stateManagerSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import {
   proposedLinearReduction,

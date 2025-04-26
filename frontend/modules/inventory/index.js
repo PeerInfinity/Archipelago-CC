@@ -6,19 +6,37 @@ let inventoryInstance = null;
 let moduleEventBus = null;
 let stateManagerUnsubscribe = null; // Handle for event bus subscription
 
+// Handler for the rules loaded event
+function handleRulesLoaded(eventData) {
+  console.log('[Inventory Module] Received state:rulesLoaded');
+  // Instance might have been created by registerPanelComponent factory,
+  // but check just in case before calling methods.
+  if (inventoryInstance) {
+    inventoryInstance.syncWithState();
+  } else {
+    console.warn(
+      '[Inventory Module] inventoryInstance not available for state:rulesLoaded handler.'
+    );
+  }
+}
+
 /**
  * Registration function for the Inventory module.
- * Registers the panel component.
+ * Registers the panel component and event handlers.
  */
 export function register(registrationApi) {
   console.log('[Inventory Module] Registering...');
 
   // Register the panel component factory
   // Golden Layout V2 expects the component factory to handle DOM element creation/attachment.
-  registrationApi.registerPanelComponent(
-    'inventoryPanel',
-    () => new InventoryUI() // Return a new instance directly
-  );
+  registrationApi.registerPanelComponent('inventoryPanel', () => {
+    // Create instance, assign to module scope, and return
+    inventoryInstance = new InventoryUI();
+    return inventoryInstance;
+  });
+
+  // Register event handler for rules loaded
+  registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);
 
   // Register settings schema if needed
 
@@ -27,62 +45,58 @@ export function register(registrationApi) {
 
 /**
  * Initialization function for the Inventory module.
- * Subscribes to state changes to keep the UI up-to-date.
+ * Minimal setup.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(
     `[Inventory Module] Initializing with priority ${priorityIndex}...`
   );
+  // Store eventBus for postInitialize
   moduleEventBus = initializationApi.getEventBus();
-  // const settings = await initializationApi.getSettings(); // If needed
-  // const dispatcher = initializationApi.getDispatcher(); // If needed
+
+  console.log('[Inventory Module] Basic initialization complete.');
+}
+
+/**
+ * Post-initialization function for the Inventory module.
+ * Subscribes to state changes to keep the UI up-to-date.
+ */
+export function postInitialize(initializationApi) {
+  console.log('[Inventory Module] Post-initializing...');
+
+  // Use the stored eventBus or get it again
+  const eventBus = moduleEventBus || initializationApi.getEventBus();
 
   // Subscribe to inventory changes from the stateManager module via eventBus
-  if (moduleEventBus) {
-    // Ensure previous subscription is cleaned up if re-initializing
+  if (eventBus) {
+    // Ensure previous subscription is cleaned up if somehow run multiple times
     if (stateManagerUnsubscribe) {
       stateManagerUnsubscribe();
     }
-    stateManagerUnsubscribe = moduleEventBus.subscribe(
+    stateManagerUnsubscribe = eventBus.subscribe(
       'stateManager:inventoryChanged',
       () => {
         console.log(
           '[Inventory Module] Received stateManager:inventoryChanged'
         );
-        // Ensure the inventoryInstance exists before calling sync
-        // This check is important because initialization might happen before the panel is rendered.
-        if (inventoryInstance) {
-          inventoryInstance.syncWithState(); // Update UI based on new state
-        } else {
-          console.warn(
-            '[Inventory Module] InventoryUI instance not yet available for syncWithState.'
-          );
-        }
+        // Instance might have been created by now, or shortly after.
+        // Golden Layout will create the instance when the panel is shown.
+        inventoryInstance?.syncWithState(); // Update UI based on new state
       }
     );
-    // Also subscribe to data loaded to potentially initialize items/groups
-    // This depends on whether InventoryUI needs item/group data passed to it.
-    moduleEventBus.subscribe('stateManager:jsonDataLoaded', () => {
-      console.log('[Inventory Module] Received stateManager:jsonDataLoaded');
-      // We might need to get itemData/groupData from stateManager here?
-      // Or perhaps InventoryUI fetches it directly.
-      // For now, assume InventoryUI handles its data needs internally or via syncWithState.
-      if (inventoryInstance) {
-        // Example: inventoryInstance.initialize(stateManager.getItemData(), stateManager.getGroupData());
-        // Needs access to stateManager instance/functions.
-        // For now, rely on syncWithState being sufficient.
-      }
-    });
+    console.log(
+      '[Inventory Module] Subscribed to stateManager:inventoryChanged.'
+    );
 
     // Subscribe to checked location changes if inventory needs to reflect this
-    // moduleEventBus.subscribe('stateManager:locationChecked', () => { ... });
+    // eventBus.subscribe('stateManager:locationChecked', () => { ... });
   } else {
     console.error(
-      '[Inventory Module] EventBus not available during initialization.'
+      '[Inventory Module] EventBus not available during post-initialization.'
     );
   }
 
-  console.log('[Inventory Module] Initialization complete.');
+  console.log('[Inventory Module] Post-initialization complete.');
 }
 
 // It might be useful to export the instance if other modules need direct access,

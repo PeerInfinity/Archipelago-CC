@@ -27,47 +27,76 @@ export function register(registrationApi) {
     handleLocationChecked
   ); // Although check happens in stateManager, loop might trigger rediscovery?
 
+  // Register handler for rules loaded
+  registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);
+
   // No panel component for Discovery module.
   // No settings schema specific to Discovery module itself.
 }
 
 /**
  * Initialization function for the Discovery module.
- * Initializes the singleton and potentially subscribes to other events.
+ * Minimal setup.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(
     `[Discovery Module] Initializing with priority ${priorityIndex}...`
   );
+  // Store initApi if needed later, although currently not used in postInitialize
   initApi = initializationApi;
 
-  // Initialize the DiscoveryState singleton (reads initial stateManager data)
-  discoveryStateSingleton.initialize();
-
-  // Clean up previous subscriptions
+  // Clean up previous subscriptions if any
   unsubscribeHandles.forEach((unsubscribe) => unsubscribe());
   unsubscribeHandles = [];
 
-  const subscribe = (eventName, handler) => {
-    const unsubscribe = eventBus.subscribe(eventName, handler);
-    unsubscribeHandles.push(unsubscribe);
-  };
+  console.log('[Discovery Module] Basic initialization complete.');
+}
 
-  // Subscribe to game data loading to re-initialize discovery
-  subscribe('stateManager:jsonDataLoaded', () => {
-    console.log('[Discovery Module] Re-initializing on jsonDataLoaded.');
-    discoveryStateSingleton.clearDiscovery(); // Clear and re-init based on new data
+/**
+ * Post-initialization function for the Discovery module.
+ * Initializes the singleton and subscribes to events.
+ */
+export function postInitialize(initializationApi) {
+  console.log('[Discovery Module] Post-initializing...');
+
+  // Initialize the DiscoveryState singleton (reads initial stateManager data)
+  // Ensure stateManager has loaded its data first.
+  console.log('[Discovery Module] Initializing DiscoveryState singleton...');
+  try {
     discoveryStateSingleton.initialize();
-  });
+    console.log('[Discovery Module] DiscoveryState singleton initialized.');
+  } catch (error) {
+    console.error(
+      '[Discovery Module] Error initializing DiscoveryState singleton:',
+      error
+    );
+    // Decide how to handle this - maybe prevent loop mode?
+  }
 
-  // Subscribe to loop reset events
-  subscribe('loop:reset', () => {
-    console.log('[Discovery Module] Clearing discovery on loop:reset.');
-    discoveryStateSingleton.clearDiscovery();
-    discoveryStateSingleton.initialize(); // Re-initialize base state
-  });
+  // Use global eventBus or get from API
+  const currentEventBus = eventBus || initializationApi.getEventBus();
 
-  console.log('[Discovery Module] Initialization complete.');
+  if (currentEventBus) {
+    const subscribe = (eventName, handler) => {
+      console.log(`[Discovery Module] Subscribing to ${eventName}`);
+      const unsubscribe = currentEventBus.subscribe(eventName, handler);
+      unsubscribeHandles.push(unsubscribe);
+    };
+
+    // Subscribe to loop reset events
+    subscribe('loop:reset', () => {
+      console.log('[Discovery Module] Clearing discovery on loop:reset.');
+      discoveryStateSingleton.clearDiscovery();
+      // Re-initialize base state, potentially reloading from stateManager if needed
+      discoveryStateSingleton.initialize();
+    });
+  } else {
+    console.error(
+      '[Discovery Module] EventBus not available for post-initialization subscriptions.'
+    );
+  }
+
+  console.log('[Discovery Module] Post-initialization complete.');
 }
 
 // --- Event Handlers --- //
@@ -125,6 +154,20 @@ function handleLocationChecked(eventData) {
     if (eventData.regionName) {
       discoveryStateSingleton.discoverRegion(eventData.regionName);
     }
+  }
+}
+
+// Handler for rules loaded event
+function handleRulesLoaded(eventData) {
+  console.log('[Discovery Module] Received state:rulesLoaded');
+  // Re-initialize discovery state based on the loaded rules
+  // Check if the singleton exists before trying to clear
+  if (discoveryStateSingleton) {
+    discoveryStateSingleton.clearDiscovery();
+  } else {
+    console.warn(
+      '[Discovery Module] Discovery singleton not available for state:rulesLoaded handler.'
+    );
   }
 }
 

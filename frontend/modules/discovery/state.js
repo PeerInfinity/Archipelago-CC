@@ -3,7 +3,8 @@ import eventBus from '../../app/core/eventBus.js';
 // Assume stateManager is accessible for initialization or provide it.
 // For now, assume it needs to be passed or accessed via singleton pattern.
 // Let's import the stateManager singleton directly for now.
-import { stateManager } from '../stateManager/index.js';
+// import { stateManager } from '../stateManager/index.js'; // Keep commented or remove if not used directly
+import stateManagerSingleton from '../stateManager/stateManagerSingleton.js'; // Correct default import
 
 /**
  * Manages the discovery state of regions, locations, and exits within the game.
@@ -33,7 +34,13 @@ export class DiscoveryState {
 
     // Add all exits from Menu to the discovered exits
     try {
-      const menuRegion = stateManager.regions['Menu'];
+      // Get the CURRENT instance from the singleton
+      const currentStateManager = stateManagerSingleton.instance;
+      if (!currentStateManager) {
+        throw new Error('StateManager instance is not available yet.');
+      }
+
+      const menuRegion = currentStateManager.regions['Menu'];
       if (menuRegion && menuRegion.exits) {
         const menuExits = this.discoveredExits.get('Menu');
         menuRegion.exits.forEach((exit) => {
