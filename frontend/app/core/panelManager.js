@@ -1,6 +1,7 @@
 // frontend/app/core/panelManager.js
 import eventBus from './eventBus.js';
 import panelManagerInstance from './panelManagerSingleton.js'; // Import the singleton instance
+import { GoldenLayout } from '../../libs/golden-layout/js/esm/golden-layout.js';
 
 class PanelManager {
   constructor() {
@@ -549,9 +550,10 @@ class PanelManager {
    * @param {string} componentType - The component type name (e.g., 'filesPanel').
    */
   destroyPanelByComponentType(componentType) {
-    if (!this.layout || !this.layout.root) {
+    const layoutInstance = window.goldenLayoutInstance; // Use global instance
+    if (!layoutInstance || !layoutInstance.root) {
       console.error(
-        'PanelManager: Layout not initialized, cannot destroy panel.'
+        '[PanelManager] Global GoldenLayout instance or root not available, cannot destroy panel.'
       );
       return;
     }
@@ -605,68 +607,40 @@ class PanelManager {
 
   /**
    * Creates and adds a panel for the given component type to the first available stack.
+   * Uses layout.addComponent with LocationSelector.
    * @param {string} componentType - The component type name (e.g., 'filesPanel').
    * @param {string} title - The title for the new panel.
    */
   createPanelForComponent(componentType, title) {
-    if (!this.layout || !this.layout.root) {
+    const layoutInstance = this.layout;
+    if (!layoutInstance) {
       console.error(
-        'PanelManager: Layout not initialized, cannot create panel.'
-      );
-      return;
-    }
-    console.log(
-      `[PanelManager] Attempting to create panel for componentType: ${componentType}`
-    );
-
-    // --- Debugging ---
-    console.log(
-      '[PanelManager Debug] Value of this.layout before check:',
-      this.layout
-    );
-    console.log(
-      '[PanelManager Debug] Type of this.layout.hasRegisteredComponentType:',
-      typeof this.layout?.hasRegisteredComponentType
-    );
-    // --- End Debugging ---
-
-    // Check if component type is registered (Use V2 API)
-    if (!this.layout.hasRegisteredComponentType(componentType)) {
-      console.error(
-        `[PanelManager] Cannot create panel. Component type '${componentType}' is not registered.`
+        '[PanelManager] Cannot add panel, layout instance is not available. Has PanelManager been initialized?'
       );
       return;
     }
 
-    // Find the first stack in the layout
-    const stacks = this.layout.root.getItemsByType('stack');
-    if (stacks.length > 0) {
-      const targetStack = stacks[0];
+    console.log(
+      `[PanelManager] Attempting to add panel for component type: ${componentType}`
+    );
+
+    try {
+      // Use layout.addComponent without location selectors
+      layoutInstance.addComponent(
+        componentType,
+        undefined, // componentState - can be passed if needed
+        title || componentType // Use provided title or default to componentType
+        // No locationSelectors argument needed - use default placement
+      );
       console.log(
-        '[PanelManager] Found target stack to add panel:',
-        targetStack
+        `[PanelManager] Successfully called layout.addComponent for ${componentType}.`
       );
-      try {
-        // Add the new component to the stack
-        targetStack.addChild({
-          type: 'component',
-          componentType: componentType,
-          title: title || componentType, // Use provided title or default to component type
-        });
-        console.log(
-          `[PanelManager] Successfully added panel for ${componentType} to stack.`
-        );
-      } catch (error) {
-        console.error(
-          `[PanelManager] Error adding child component ${componentType} to stack:`,
-          error
-        );
-      }
-    } else {
-      console.warn(
-        '[PanelManager] No stacks found in the layout to add the new panel.'
+    } catch (error) {
+      console.error(
+        `[PanelManager] Error calling layout.addComponent for ${componentType}:`,
+        error
       );
-      // TODO: Could potentially create a new stack or add to the root row/column as a fallback?
+      // Handle potential errors during addComponent, e.g., if the layout is full or misconfigured
     }
   }
 }

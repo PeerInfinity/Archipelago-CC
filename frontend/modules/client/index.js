@@ -37,11 +37,12 @@ export function register(registrationApi) {
     if (!mainContentInstance) {
       mainContentInstance = new MainContentUI();
     }
-    // Ensure elements are initialized within the provided container
-    mainContentInstance.initializeElements(container.element);
-    return {
-      element: mainContentInstance.getRootElement(),
-    };
+    // Let the PanelManager wrapper handle element initialization and retrieval
+    // Ensure the instance is ready before returning
+    // mainContentInstance.initializeElements(container.element); // This might be handled by the wrapper now
+
+    // *** FIX: Return the instance itself ***
+    return mainContentInstance;
   });
 
   // Register settings schema for client module

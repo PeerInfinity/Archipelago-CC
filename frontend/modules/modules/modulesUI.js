@@ -69,6 +69,8 @@ export class ModulesPanel {
     this.moduleStates = {}; // Store state like { moduleId: { enabled: true, definition: {...} } }
     this.loadPriority = [];
     this.rootElement = null;
+    this.buttonContainer = null; // Added
+    this.moduleListContainer = null; // Added
 
     // GoldenLayout specifics
     this.container.setTitle('Modules');
@@ -85,11 +87,27 @@ export class ModulesPanel {
     style.textContent = CSS;
     this.container.getElement().appendChild(style);
 
+    // Create main panel container
     this.rootElement = document.createElement('div');
     this.rootElement.className = 'modules-panel';
+
+    // Create container for buttons
+    this.buttonContainer = document.createElement('div');
+    this.buttonContainer.className = 'modules-panel-buttons';
+    this.rootElement.appendChild(this.buttonContainer);
+
+    // Create container for the module list
+    this.moduleListContainer = document.createElement('div');
+    this.moduleListContainer.className = 'modules-panel-list';
+    this.rootElement.appendChild(this.moduleListContainer);
+
+    // Append the main container to Golden Layout
     this.container.getElement().appendChild(this.rootElement);
 
-    // Request module data to populate the UI
+    // Add the test button to its container
+    this._addTestButton();
+
+    // Request module data to populate the list container
     this._requestModuleData();
 
     // TODO: Listen for external events (e.g., module state changed, panel closed)
@@ -100,26 +118,32 @@ export class ModulesPanel {
   async _requestModuleData() {
     if (!this.api || typeof this.api.getModuleManager !== 'function') {
       console.error('ModulesPanel: ModuleManager not available via initApi.');
-      this.rootElement.textContent =
-        'Error: Module management API not available.';
+      // Display error in the list container
+      if (this.moduleListContainer)
+        this.moduleListContainer.textContent =
+          'Error: Module management API not available.';
       return;
     }
     try {
       const moduleManager = this.api.getModuleManager();
-      this.moduleStates = await moduleManager.getAllModuleStates(); // Fetch current states { moduleId: { enabled: boolean, definition: {...} } }
-      this.loadPriority = await moduleManager.getCurrentLoadPriority(); // Fetch current priority
+      // Fetch data using await for clarity
+      this.moduleStates = await moduleManager.getAllModuleStates();
+      this.loadPriority = await moduleManager.getCurrentLoadPriority();
       this._renderModules();
     } catch (error) {
       console.error('ModulesPanel: Failed to fetch module data:', error);
-      this.rootElement.textContent = 'Error loading module data.';
+      if (this.moduleListContainer)
+        this.moduleListContainer.textContent = 'Error loading module data.';
     }
   }
 
   _renderModules() {
-    this.rootElement.innerHTML = ''; // Clear previous content
+    // Target the specific container for the list
+    if (!this.moduleListContainer) return;
+    this.moduleListContainer.innerHTML = ''; // Clear previous list content
 
     if (!this.loadPriority || this.loadPriority.length === 0) {
-      this.rootElement.textContent =
+      this.moduleListContainer.textContent =
         'No modules found or priority order missing.';
       return;
     }
@@ -127,18 +151,14 @@ export class ModulesPanel {
     // Render modules in the current load priority order
     this.loadPriority.forEach((moduleId, index) => {
       const state = this.moduleStates[moduleId];
-      if (!state || !state.definition) return; // Skip if data is missing
-
+      if (!state || !state.definition) return;
       const module = state.definition;
       const isEnabled = state.enabled;
       const isCoreModule =
-        moduleId === 'stateManager' || moduleId === 'modules'; // Prevent disabling core/self
-
+        moduleId === 'stateManager' || moduleId === 'modules';
       const entryDiv = document.createElement('div');
       entryDiv.className = 'module-entry';
       entryDiv.dataset.moduleId = moduleId;
-
-      // Info section
       const infoDiv = document.createElement('div');
       infoDiv.className = 'module-info';
       const nameDiv = document.createElement('div');
@@ -149,45 +169,35 @@ export class ModulesPanel {
       descDiv.textContent = module.description || 'No description';
       infoDiv.appendChild(nameDiv);
       infoDiv.appendChild(descDiv);
-
-      // Controls section
       const controlsDiv = document.createElement('div');
       controlsDiv.className = 'module-controls';
-
-      // Enable/Disable Checkbox
       const enableLabel = document.createElement('label');
       const enableCheckbox = document.createElement('input');
       enableCheckbox.type = 'checkbox';
       enableCheckbox.checked = isEnabled;
-      enableCheckbox.disabled = isCoreModule; // Disable checkbox for core modules
+      enableCheckbox.disabled = isCoreModule;
       enableCheckbox.addEventListener('change', (event) => {
         this._handleEnableToggle(moduleId, event.target.checked);
       });
       enableLabel.appendChild(enableCheckbox);
       enableLabel.appendChild(document.createTextNode('Enabled'));
       controlsDiv.appendChild(enableLabel);
-
-      // Priority Buttons (Placeholder - functionality deferred)
       const upButton = document.createElement('button');
       upButton.textContent = '▲';
       upButton.title = 'Increase Priority (Move Up)';
-      upButton.disabled = isCoreModule || index === 0; // Cannot move up if first or core
-      // upButton.addEventListener('click', () => this._handlePriorityChange(moduleId, 'up'));
-
+      upButton.disabled = isCoreModule || index === 0;
       const downButton = document.createElement('button');
       downButton.textContent = '▼';
       downButton.title = 'Decrease Priority (Move Down)';
       downButton.disabled =
-        isCoreModule || index === this.loadPriority.length - 1; // Cannot move down if last or core
-      // downButton.addEventListener('click', () => this._handlePriorityChange(moduleId, 'down'));
-
+        isCoreModule || index === this.loadPriority.length - 1;
       controlsDiv.appendChild(upButton);
       controlsDiv.appendChild(downButton);
-
-      // Assemble entry
       entryDiv.appendChild(infoDiv);
       entryDiv.appendChild(controlsDiv);
-      this.rootElement.appendChild(entryDiv);
+
+      // Append the entry to the list container
+      this.moduleListContainer.appendChild(entryDiv);
     });
   }
 
@@ -285,4 +295,45 @@ export class ModulesPanel {
     }
     // Other cleanup
   }
+
+  // --- Modify Test Button Method ---
+  _addTestButton() {
+    const testButton = document.createElement('button');
+    testButton.textContent = 'Add Test Panel';
+    testButton.style.marginBottom = '10px'; // Keep spacing
+    testButton.addEventListener('click', async () => {
+      console.log('[ModulesPanel] Test button clicked.');
+      if (!this.api || typeof this.api.getModuleManager !== 'function') {
+        console.error(
+          '[ModulesPanel] Cannot add test panel: ModuleManager API not available.'
+        );
+        return;
+      }
+      const moduleManager = this.api.getModuleManager();
+      const panelManager = window.panelManager; // Using global reference
+      if (
+        panelManager &&
+        typeof panelManager.createPanelForComponent === 'function'
+      ) {
+        console.log(
+          '[ModulesPanel] Calling panelManager.createPanelForComponent("testPanel", "Test")...'
+        );
+        try {
+          panelManager.createPanelForComponent('testPanel', 'Test');
+        } catch (error) {
+          console.error(
+            '[ModulesPanel] Error calling createPanelForComponent from test button:',
+            error
+          );
+        }
+      } else {
+        console.error(
+          '[ModulesPanel] PanelManager or createPanelForComponent not available.'
+        );
+      }
+    });
+    // Append to the dedicated button container
+    this.buttonContainer.appendChild(testButton);
+  }
+  // --- End Test Button Method ---
 }

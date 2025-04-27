@@ -11,6 +11,11 @@ import { GoldenLayout } from './libs/golden-layout/js/esm/golden-layout.js';
 // GoldenLayout (assuming it's loaded globally via script tag)
 // declare const goldenLayout: any; // Removed TypeScript declaration
 
+let layoutPresets = {};
+const importedModules = new Map(); // Map<moduleId, moduleObject>
+let dispatcher = null;
+let moduleManagerApi = {}; // Define placeholder for the API object
+
 // Keep track of runtime module state
 const runtimeModuleStates = new Map(); // Map<moduleId, { initialized: boolean, enabled: boolean }>
 
@@ -45,13 +50,8 @@ function getDefaultLayoutConfig() {
           content: [
             {
               type: 'component',
-              componentType: 'clientPanel', // Placeholder - adjust as modules register
+              componentType: 'clientPanel', // Uses mainContentPanel factory
               title: 'Client',
-            },
-            {
-              type: 'component',
-              componentType: 'stateManagerPanel', // Placeholder
-              title: 'State',
             },
             {
               type: 'component',
@@ -65,6 +65,111 @@ function getDefaultLayoutConfig() {
   };
 }
 
+// +++ Add the missing loadLayoutConfiguration function +++
+async function loadLayoutConfiguration(
+  layoutInstance,
+  activeLayoutId,
+  customConfig
+) {
+  let chosenLayoutConfig = null;
+
+  if (activeLayoutId === 'custom' && customConfig) {
+    console.log('[Init] Active layout is custom.');
+    chosenLayoutConfig = customConfig;
+  } else if (
+    typeof activeLayoutId === 'string' &&
+    layoutPresets[activeLayoutId]
+  ) {
+    console.log(`[Init] Active layout is preset: ${activeLayoutId}`);
+    chosenLayoutConfig = layoutPresets[activeLayoutId];
+  } else {
+    console.log(
+      `[Init] Active layout '${activeLayoutId}' not found or invalid, trying custom config.`
+    );
+    // Fallback to custom config if available, otherwise use hardcoded default
+    chosenLayoutConfig = customConfig || getDefaultLayoutConfig();
+    if (!customConfig) {
+      console.log('[Init] No custom layout found, using hardcoded default.');
+    }
+  }
+
+  // If after all checks, we still don't have a config, use the hardcoded default
+  if (!chosenLayoutConfig) {
+    console.warn(
+      '[Init] No valid layout configuration determined, falling back to hardcoded default.'
+    );
+    chosenLayoutConfig = getDefaultLayoutConfig();
+  }
+
+  // Load the chosen layout
+  console.log('[Init] Loading layout configuration into Golden Layout...');
+  // Assuming V2 loadLayout. Adjust if needed for V1 'load'.
+  layoutInstance.loadLayout(chosenLayoutConfig);
+}
+// +++ End restored function +++
+
+// --- Helper function to create the standard Initialization API ---
+function createInitializationApi(moduleId) {
+  // Note: dispatcher and centralRegistry need to be available in the outer scope
+  return {
+    getSettings: async () => settingsManager.getModuleSettings(moduleId),
+    getDispatcher: () => ({
+      publish: dispatcher.publish.bind(dispatcher),
+      publishToPredecessors: dispatcher.publishToPredecessors.bind(dispatcher),
+    }),
+    getEventBus: () => eventBus,
+    getModuleFunction: (targetModuleId, functionName) => {
+      return centralRegistry.getPublicFunction(targetModuleId, functionName);
+    },
+    getModuleManager: () => moduleManagerApi, // Provide the manager API itself
+    // getSingleton: (name) => { /* Decide how to provide singletons */ },
+  };
+}
+
+// --- Helper function to initialize a single module ---
+async function _initializeSingleModule(moduleId, index) {
+  const moduleInstance = importedModules.get(moduleId);
+  if (moduleInstance && typeof moduleInstance.initialize === 'function') {
+    const api = createInitializationApi(moduleId);
+    try {
+      console.log(
+        `[Init Helper] Initializing module: ${moduleId} (Priority ${index})`
+      );
+      await moduleInstance.initialize(moduleId, index, api);
+      runtimeModuleStates.get(moduleId).initialized = true; // Mark as initialized
+    } catch (error) {
+      console.error(
+        `[Init Helper] Error during initialization of module: ${moduleId}`,
+        error
+      );
+      // Potentially mark as failed?
+      runtimeModuleStates.get(moduleId).enabled = false; // Disable on error
+    }
+  } else if (moduleInstance) {
+    // Module exists but no initialize function
+    runtimeModuleStates.get(moduleId).initialized = true; // Still mark runtime state
+  }
+}
+
+// --- Helper function to post-initialize a single module ---
+async function _postInitializeSingleModule(moduleId) {
+  const moduleInstance = importedModules.get(moduleId);
+  if (moduleInstance && typeof moduleInstance.postInitialize === 'function') {
+    const api = createInitializationApi(moduleId);
+    try {
+      console.log(`[Init Helper] Post-initializing module: ${moduleId}`);
+      await moduleInstance.postInitialize(api);
+    } catch (error) {
+      console.error(
+        `[Init Helper] Error during post-initialization of module: ${moduleId}`,
+        error
+      );
+      // Potentially mark as failed and disable?
+      runtimeModuleStates.get(moduleId).enabled = false;
+    }
+  }
+}
+
 // --- Main Initialization Logic ---
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('[Init] Initializing modular application...');
@@ -76,9 +181,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.centralRegistry = centralRegistry; // Expose registry for debug
 
   let modulesData = null;
-  let layoutPresets = {};
-  const importedModules = new Map(); // Map<moduleId, moduleObject>
-  let dispatcher = null;
 
   try {
     // --- 1. Load Configuration Files ---
@@ -212,7 +314,183 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw error; // Stop initialization if dispatcher fails
     }
 
-    // --- 5. Initialization Phase --- (Dispatcher is now ready)
+    // --- Define the Module Manager API --- (Needs access to modulesData, importedModules, etc.)
+    moduleManagerApi = {
+      // Provide access to raw data (use carefully)
+      _getRawModulesData: () => modulesData,
+      _getRawImportedModules: () => importedModules,
+      _getRawRegistry: () => centralRegistry,
+      _getRawDispatcher: () => dispatcher,
+
+      // Provide access to current state information
+      getAllModuleStates: async () => {
+        const states = {};
+        for (const id in modulesData.moduleDefinitions) {
+          const definition = modulesData.moduleDefinitions[id];
+          const runtimeState = runtimeModuleStates.get(id) || {
+            enabled: false,
+            initialized: false,
+          };
+          states[id] = {
+            enabled: runtimeState.enabled,
+            initialized: runtimeState.initialized, // Add initialized status
+            definition: definition,
+          };
+        }
+        return states;
+      },
+      getCurrentLoadPriority: async () => {
+        // TODO: Allow runtime modification of priority?
+        return modulesData.loadPriority;
+      },
+
+      // --- Module Management Functions ---
+      enableModule: async (moduleId) => {
+        const definition = modulesData.moduleDefinitions[moduleId];
+        if (!definition || !importedModules.has(moduleId)) {
+          console.error(
+            `ModuleManager: Cannot enable unknown or failed-import module: ${moduleId}`
+          );
+          return;
+        }
+        const runtimeState = runtimeModuleStates.get(moduleId);
+        if (runtimeState?.enabled) {
+          console.log(`ModuleManager: Module ${moduleId} is already enabled.`);
+          return; // Already enabled
+        }
+
+        console.log(`ModuleManager: Enabling module ${moduleId}...`);
+        runtimeState.enabled = true;
+
+        // Initialize and Post-Initialize if needed
+        if (!runtimeState.initialized) {
+          console.log(
+            `ModuleManager: Performing first-time initialization for ${moduleId}...`
+          );
+          const priorityIndex = modulesData.loadPriority.indexOf(moduleId);
+          await _initializeSingleModule(moduleId, priorityIndex);
+          // Check if initialization failed (helper sets enabled to false on error)
+          if (!runtimeState.enabled) {
+            console.error(
+              `ModuleManager: Initialization failed for ${moduleId}. Aborting enable.`
+            );
+            return;
+          }
+          await _postInitializeSingleModule(moduleId);
+          // Check if post-initialization failed
+          if (!runtimeState.enabled) {
+            console.error(
+              `ModuleManager: Post-initialization failed for ${moduleId}. Aborting enable.`
+            );
+            return;
+          }
+        } else {
+          console.log(
+            `ModuleManager: Module ${moduleId} was previously initialized. Skipping init steps.`
+          );
+          // Potentially re-run postInitialize if needed? For now, no.
+        }
+
+        // --- Create Panel (Delayed) ---
+        const componentType =
+          centralRegistry.getComponentTypeForModule(moduleId);
+        if (componentType) {
+          setTimeout(() => {
+            console.log(
+              `ModuleManager: Requesting panel creation (delayed) for ${componentType}`
+            );
+            if (panelManagerInstance) {
+              panelManagerInstance.createPanelForComponent(
+                componentType,
+                definition.title || moduleId
+              );
+            } else {
+              console.error(
+                'ModuleManager: PanelManager instance not available for panel creation.'
+              );
+            }
+          }, 500); // Increased delay to 500ms
+        }
+        // --- End Create Panel ---
+
+        // TODO: Update EventDispatcher handlers (add handlers for this module)
+        console.log(`ModuleManager: Module ${moduleId} enabled.`);
+        eventBus.publish('module:stateChanged', { moduleId, isEnabled: true }); // Notify UI
+      },
+      disableModule: async (moduleId) => {
+        if (moduleId === 'stateManager' || moduleId === 'modules') {
+          console.warn(
+            `ModuleManager: Cannot disable core module: ${moduleId}`
+          );
+          return;
+        }
+        const definition = modulesData.moduleDefinitions[moduleId];
+        if (!definition) {
+          console.error(
+            `ModuleManager: Cannot disable unknown module: ${moduleId}`
+          );
+          return;
+        }
+        const runtimeState = runtimeModuleStates.get(moduleId);
+        if (!runtimeState?.enabled) {
+          console.log(`ModuleManager: Module ${moduleId} is already disabled.`);
+          return; // Already disabled
+        }
+
+        console.log(`ModuleManager: Disabling module ${moduleId}...`);
+        runtimeState.enabled = false;
+
+        // --- Destroy Panel First ---
+        const componentType =
+          centralRegistry.getComponentTypeForModule(moduleId);
+        if (componentType) {
+          console.log(
+            `ModuleManager: Requesting panel destruction for ${componentType}`
+          );
+          if (panelManagerInstance) {
+            panelManagerInstance.destroyPanelByComponentType(componentType);
+          } else {
+            console.error(
+              'ModuleManager: PanelManager instance not available for panel destruction.'
+            );
+          }
+        } // No else needed, module might not have a panel
+        // --- End Destroy Panel ---
+
+        // Call uninitialize if available
+        const moduleInstance = importedModules.get(moduleId);
+        if (
+          moduleInstance &&
+          typeof moduleInstance.uninitialize === 'function'
+        ) {
+          try {
+            console.log(
+              `ModuleManager: Calling uninitialize() for ${moduleId}`
+            );
+            await moduleInstance.uninitialize();
+            // TODO: Update EventDispatcher handlers for removed listeners
+          } catch (error) {
+            console.error(
+              `ModuleManager: Error uninitializing module ${moduleId}:`,
+              error
+            );
+            // Should we revert enabled state? Probably not, it's likely broken.
+          }
+        }
+
+        // TODO: Update EventDispatcher handlers (remove handlers for this module)
+        console.log(`ModuleManager: Module ${moduleId} disabled.`);
+        eventBus.publish('module:stateChanged', { moduleId, isEnabled: false }); // Notify UI
+      },
+      changeModulePriority: async (id, direction) => {
+        console.warn(
+          `ModuleManager: changeModulePriority(${id}, ${direction}) - Not implemented`
+        );
+      },
+    };
+    window.moduleManagerApi = moduleManagerApi; // Expose for debugging
+
+    // --- 5. Initialization Phase --- (Use helper function)
     console.log(
       '[Init] Starting module initialization phase (in priority order)...'
     );
@@ -220,301 +498,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (let i = 0; i < loadPriority.length; i++) {
       const moduleId = loadPriority[i];
       const definition = modulesData.moduleDefinitions[moduleId];
-      const moduleInstance = importedModules.get(moduleId);
 
-      if (
-        definition?.enabled &&
-        moduleInstance &&
-        typeof moduleInstance.initialize === 'function'
-      ) {
-        // Create the initialization API for this module
-        const initializationApi = {
-          getSettings: async () => settingsManager.getModuleSettings(moduleId),
-          getDispatcher: () => ({
-            publish: dispatcher.publish.bind(dispatcher),
-            publishToPredecessors:
-              dispatcher.publishToPredecessors.bind(dispatcher),
-          }),
-          getEventBus: () => eventBus, // Provide direct access to eventBus for non-priority events
-          getModuleFunction: (targetModuleId, functionName) => {
-            return centralRegistry.getPublicFunction(
-              targetModuleId,
-              functionName
-            );
-          },
-          // Add the new Module Manager API provider function
-          getModuleManager: () => ({
-            // Provide access to raw data (use carefully)
-            _getRawModulesData: () => modulesData,
-            _getRawImportedModules: () => importedModules,
-            _getRawRegistry: () => centralRegistry,
-            _getRawDispatcher: () => dispatcher,
-
-            // Provide access to current state information
-            getAllModuleStates: async () => {
-              const states = {};
-              for (const id in modulesData.moduleDefinitions) {
-                const definition = modulesData.moduleDefinitions[id];
-                const runtimeState = runtimeModuleStates.get(id) || {
-                  enabled: false,
-                }; // Get runtime state
-                states[id] = {
-                  enabled: runtimeState.enabled, // Use runtime state here
-                  definition: definition,
-                };
-              }
-              return states;
-            },
-            getCurrentLoadPriority: async () => {
-              return modulesData.loadPriority;
-            },
-
-            // --- Module Management Functions (Mirroring implementation from above) ---
-            enableModule: async (moduleId) => {
-              if (
-                !modulesData.moduleDefinitions[moduleId] ||
-                !importedModules.has(moduleId)
-              ) {
-                console.error(
-                  `ModuleManager: Cannot enable unknown or failed-import module: ${moduleId}`
-                );
-                return;
-              }
-              const runtimeState = runtimeModuleStates.get(moduleId);
-              if (runtimeState?.enabled) {
-                console.log(
-                  `ModuleManager: Module ${moduleId} is already enabled.`
-                );
-                return;
-              }
-              console.log(`ModuleManager: Enabling module ${moduleId}...`);
-              runtimeState.enabled = true;
-              if (!runtimeState.initialized) {
-                const moduleInstance = importedModules.get(moduleId);
-                if (typeof moduleInstance.initialize === 'function') {
-                  try {
-                    const priorityIndex =
-                      modulesData.loadPriority.indexOf(moduleId);
-                    const api = {
-                      getSettings: async () =>
-                        settingsManager.getModuleSettings(moduleId),
-                      getDispatcher: () => ({
-                        publish: dispatcher.publish.bind(dispatcher),
-                        publishToPredecessors:
-                          dispatcher.publishToPredecessors.bind(dispatcher),
-                      }),
-                      getEventBus: () => eventBus,
-                      getModuleFunction: (targetModuleId, functionName) =>
-                        centralRegistry.getPublicFunction(
-                          targetModuleId,
-                          functionName
-                        ),
-                      getModuleManager: () => {
-                        /* Avoid recursion */
-                      },
-                    };
-                    await moduleInstance.initialize(
-                      moduleId,
-                      priorityIndex,
-                      api
-                    );
-                    runtimeState.initialized = true;
-
-                    // --- Create Panel (Delayed) ---
-                    const componentType =
-                      centralRegistry.getComponentTypeForModule(moduleId);
-                    if (componentType) {
-                      const definition =
-                        modulesData.moduleDefinitions[moduleId];
-                      // Delay slightly
-                      setTimeout(() => {
-                        console.log(
-                          `ModuleManager (post-init API): Requesting panel creation (delayed) for ${componentType}`
-                        );
-                        if (panelManagerInstance) {
-                          panelManagerInstance.createPanelForComponent(
-                            componentType,
-                            definition.title || moduleId
-                          );
-                        } else {
-                          console.error(
-                            'ModuleManager (post-init API): PanelManager instance not available for panel creation.'
-                          );
-                        }
-                      }, 100);
-                    } // No else needed
-                    // --- End Create Panel ---
-
-                    // TODO: Update EventDispatcher handlers
-                  } catch (error) {
-                    console.error(
-                      `ModuleManager: Error initializing module ${moduleId} during enable:`,
-                      error
-                    );
-                    runtimeState.enabled = false;
-                  }
-                } else {
-                  runtimeState.initialized = true;
-                }
-              }
-              console.log(`ModuleManager: Module ${moduleId} enabled.`);
-              eventBus.publish('module:stateChanged', {
-                moduleId,
-                isEnabled: true,
-              });
-            },
-            disableModule: async (moduleId) => {
-              if (moduleId === 'stateManager' || moduleId === 'modules') {
-                console.warn(
-                  `ModuleManager: Cannot disable core module: ${moduleId}`
-                );
-                return;
-              }
-              if (!modulesData.moduleDefinitions[moduleId]) {
-                console.error(
-                  `ModuleManager: Cannot disable unknown module: ${moduleId}`
-                );
-                return;
-              }
-              const runtimeState = runtimeModuleStates.get(moduleId);
-              if (!runtimeState?.enabled) {
-                console.log(
-                  `ModuleManager: Module ${moduleId} is already disabled.`
-                );
-                return;
-              }
-              console.log(`ModuleManager: Disabling module ${moduleId}...`);
-              runtimeState.enabled = false;
-
-              // --- Destroy Panel First ---
-              const componentType =
-                centralRegistry.getComponentTypeForModule(moduleId);
-              if (componentType) {
-                console.log(
-                  `ModuleManager (post-init API): Requesting panel destruction for ${componentType}`
-                );
-                if (panelManagerInstance) {
-                  panelManagerInstance.destroyPanelByComponentType(
-                    componentType
-                  );
-                } else {
-                  console.error(
-                    'ModuleManager (post-init API): PanelManager instance not available for panel destruction.'
-                  );
-                }
-              } // No else needed
-              // --- End Destroy Panel ---
-
-              // Call uninitialize if available
-              const moduleInstance = importedModules.get(moduleId);
-              if (
-                moduleInstance &&
-                typeof moduleInstance.uninitialize === 'function'
-              ) {
-                try {
-                  await moduleInstance.uninitialize();
-                } catch (error) {
-                  console.error(
-                    `ModuleManager: Error uninitializing module ${moduleId}:`,
-                    error
-                  );
-                }
-              }
-              console.log(`ModuleManager: Module ${moduleId} disabled.`);
-              eventBus.publish('module:stateChanged', {
-                moduleId,
-                isEnabled: false,
-              });
-            },
-            changeModulePriority: async (id, direction) => {
-              console.warn(
-                `ModuleManager: changeModulePriority(${id}, ${direction}) - Not implemented`
-              );
-            },
-          }),
-          // getSingleton: (name) => { /* Decide how to provide singletons */ },
-        };
-
-        try {
-          console.log(
-            `[Init] Initializing module: ${moduleId} (Priority ${i})`
-          );
-          // Module initialization can be async if needed
-          await moduleInstance.initialize(moduleId, i, initializationApi);
-        } catch (error) {
-          console.error(
-            `[Init] Error during initialization of module: ${moduleId}`,
-            error
-          );
-        }
-      } else if (definition?.enabled && !moduleInstance) {
+      if (definition?.enabled && importedModules.has(moduleId)) {
+        // Use the helper function
+        await _initializeSingleModule(moduleId, i);
+      } else if (definition?.enabled && !importedModules.has(moduleId)) {
         console.warn(
           `[Init] Module ${moduleId} is enabled but failed to import. Skipping initialization.`
-        );
-      } else if (
-        definition?.enabled &&
-        moduleInstance &&
-        typeof moduleInstance.initialize !== 'function'
-      ) {
-        console.log(
-          `[Init] Enabled module ${moduleId} has no initialize function. Skipping.`
         );
       }
     }
     console.log('[Init] Module initialization phase complete.');
 
-    // --- 5b. Post-Initialization Phase ---
+    // --- 5b. Post-Initialization Phase --- (Use helper function)
     console.log(
       '[Init] Starting module post-initialization phase (in priority order)...'
     );
     for (let i = 0; i < loadPriority.length; i++) {
       const moduleId = loadPriority[i];
       const definition = modulesData.moduleDefinitions[moduleId];
-      const moduleInstance = importedModules.get(moduleId);
 
-      if (
-        definition?.enabled &&
-        moduleInstance &&
-        typeof moduleInstance.postInitialize === 'function'
-      ) {
-        // Reuse the same initialization API structure
-        const initializationApi = {
-          getSettings: async () => settingsManager.getModuleSettings(moduleId),
-          getDispatcher: () => ({
-            publish: dispatcher.publish.bind(dispatcher),
-            publishToPredecessors:
-              dispatcher.publishToPredecessors.bind(dispatcher),
-          }),
-          getEventBus: () => eventBus,
-          getModuleFunction: (targetModuleId, functionName) => {
-            return centralRegistry.getPublicFunction(
-              targetModuleId,
-              functionName
-            );
-          },
-          // getSingleton: (name) => { /* Decide how to provide singletons */ },
-        };
-
-        try {
-          console.log(
-            `[Init] Post-initializing module: ${moduleId} (Priority ${i})`
-          );
-          // Post-initialization can also be async
-          await moduleInstance.postInitialize(initializationApi);
-        } catch (error) {
-          console.error(
-            `[Init] Error during post-initialization of module: ${moduleId}`,
-            error
-          );
-        }
-      } else if (
-        definition?.enabled &&
-        moduleInstance &&
-        typeof moduleInstance.postInitialize !== 'function'
-      ) {
-        // console.log(
-        //   `[Init] Enabled module ${moduleId} has no postInitialize function. Skipping.`
-        // );
+      // Only run post-init if the module is currently enabled (it might have failed init)
+      const runtimeState = runtimeModuleStates.get(moduleId);
+      if (runtimeState?.enabled && importedModules.has(moduleId)) {
+        // Use the helper function
+        await _postInitializeSingleModule(moduleId);
       }
     }
     console.log('[Init] Module post-initialization phase complete.');
@@ -560,300 +568,98 @@ document.addEventListener('DOMContentLoaded', async () => {
     panelManagerInstance.initialize(layout, mockGameUI);
     console.log('[Init] PanelManager initialized with mock GameUI.');
 
-    // Register components discovered during module registration
+    // Register components discovered during module registration via PanelManager
     if (centralRegistry.panelComponents.size === 0) {
-      console.warn('[Init] No panel components were registered by any module!');
-    }
-
-    // Track which components we've already registered to avoid duplicates
-    const registeredComponents = new Set();
-
-    for (const componentType of centralRegistry.panelComponents.keys()) {
-      const factory = centralRegistry.panelComponents.get(componentType);
-      if (!factory) continue; // Skip if factory is missing
-
-      try {
-        // Register the component with Golden Layout via PanelManager
+      console.warn('[Init] No panel components were registered by modules.');
+    } else {
+      centralRegistry.panelComponents.forEach((componentFactory, name) => {
+        panelManagerInstance.registerPanelComponent(name, componentFactory);
         console.log(
-          `[Init] Registering panel component '${componentType}' with Golden Layout via PanelManager.`
+          `[Init] Registering panel component '${name}' with Golden Layout via PanelManager.`
         );
-
-        // ONLY call PanelManager's registration, which handles GL registration internally
-        panelManagerInstance.registerPanelComponent(componentType, factory);
-
-        // Mark as registered conceptually in init.js
-        registeredComponents.add(componentType);
-
-        // Remove the redundant direct registration and the inner try-catch for PanelManager
-        /*
-        layout.registerComponentConstructor(
-          componentType,
-          function (container, componentState) {
+        // --- Handle Aliases (Specific case for clientPanel -> mainContentPanel) ---
+        if (name === 'mainContentPanel') {
+          try {
             console.log(
-              `[GL Direct] Creating component '${componentType}' for container:`, container.element.id
+              `[Init] Attempting to register alias: clientPanel using mainContentPanel factory`
             );
-
-            try {
-              // Call the factory provided by the module
-              const uiProvider = factory(container, componentState);
-
-              // Store reference to the UI provider on the wrapper
-              this.uiProvider = uiProvider;
-
-              // Store unsubscribe handles for cleanup
-              this.unsubscribeHandles = [];
-
-              // Add container event handlers
-              container.on('destroy', () => {
-                console.log(
-                  `[GL Direct] Destroying component '${componentType}'`
-                );
-                if (
-                  this.uiProvider &&
-                  typeof this.uiProvider.dispose === 'function'
-                ) {
-                  this.uiProvider.dispose();
-                }
-
-                if (
-                  this.unsubscribeHandles &&
-                  this.unsubscribeHandles.length > 0
-                ) {
-                  this.unsubscribeHandles.forEach((unsubscribe) => {
-                    try {
-                      unsubscribe();
-                    } catch (e) { 
-                      // ignore 
-                    }
-                  });
-                }
-              });
-
-              // Add the UI provider to the panelManager's map for compatibility
-              try {
-                panelManagerInstance.addMapping(container, uiProvider);
-              } catch (error) {
-                console.warn(
-                  `[GL Direct] Error adding mapping to panelManager: ${error.message}`
-                );
-              }
-
-              // Return what Golden Layout expects - if component has an element, use it
-              if (uiProvider && uiProvider.element) {
-                return uiProvider;
-              }
-
-              // Otherwise just return the container element
-              return { element: container.element };
-            } catch (error) {
-              console.error(
-                `[GL Direct] Error creating component '${componentType}':`,
-                error
+            panelManagerInstance.registerPanelComponent(
+              'clientPanel',
+              componentFactory
+            );
+            console.log(
+              `[Init] Successfully registered alias 'clientPanel' via PanelManager using same factory.`
+            );
+          } catch (registerError) {
+            if (
+              registerError instanceof Error &&
+              registerError.message.toLowerCase().includes('already registered')
+            ) {
+              console.log(
+                `[Init] Alias 'clientPanel' component constructor was already registered.`
               );
-              return { element: container.element };
+            } else {
+              console.error(
+                "[Init] Error registering alias 'clientPanel' for 'mainContentPanel':",
+                registerError
+              );
             }
           }
-        );
-
-        // Mark as registered
-        registeredComponents.add(componentType);
-
-        // Also register with PanelManager for backwards compatibility
-        // But don't throw errors if it fails (might be already registered there)
-        try {
-          panelManagerInstance.registerPanelComponent(componentType, factory);
-        } catch (error) {
-          console.warn(
-            `[Init] Error registering '${componentType}' with PanelManager (non-fatal): ${error.message}`
-          );
         }
-        */
-      } catch (error) {
-        // Handle component already registered errors gracefully (this might now catch errors from the PanelManager registration)
-        if (error.message && error.message.includes('already registered')) {
-          console.warn(
-            `[Init] Component '${componentType}' already registered (via PanelManager?), skipping.`
+      });
+    }
+
+    // *** ADD Direct testPanel registration HERE (AFTER PanelManager init, BEFORE loadLayout) ***
+    try {
+      console.log(
+        "[Init] Attempting to register dummy 'testPanel' DIRECTLY with Golden Layout."
+      );
+      try {
+        layout.registerComponentConstructor(
+          'testPanel',
+          function (container, componentState) {
+            // Simple direct implementation for testing
+            container.element.innerHTML =
+              '<h2>Test Panel Content (Direct Reg)</h2>';
+            container.element.style.padding = '10px';
+          }
+        );
+        console.log(
+          "[Init] Successfully registered dummy 'testPanel' component constructor directly."
+        );
+      } catch (registerError) {
+        if (
+          registerError instanceof Error &&
+          registerError.message.toLowerCase().includes('already registered')
+        ) {
+          console.log(
+            "[Init] Dummy 'testPanel' component constructor was already directly registered."
           );
-          registeredComponents.add(componentType); // Still mark as conceptually registered
         } else {
           console.error(
-            `[Init] Error registering component '${componentType}' via PanelManager:`,
-            error
+            "[Init] Unexpected error registering dummy 'testPanel' directly:",
+            registerError
           );
         }
       }
+    } catch (e) {
+      console.error(
+        "[Init] General error during dummy 'testPanel' direct registration block:",
+        e
+      );
     }
+    // *** End Direct testPanel registration ***
 
-    // Check for filesPanel specifically - IF IT'S NOT using the new module pattern
-    // We need to ensure the files module IS actually registering its panel component via the API
-    // Let's comment out this special handling for now and see if the normal registration works.
-    /*
-    if (!registeredComponents.has('filesPanel')) {
-      console.log('[Init] Registering filesPanel component specially');
-
-      try {
-        // Get the Files module if it was imported
-        const filesModule = importedModules.get('files');
-
-        if (filesModule && filesModule.FilesUI) { // Check if FilesUI export exists
-          // Use PanelManager to register it, similar to other components
-          panelManagerInstance.registerPanelComponent(
-            'filesPanel',
-            () => {
-              console.log('[GL Direct] Creating filesPanel component (special case)');
-              const filesUI = new filesModule.FilesUI();
-              // Assuming FilesUI constructor doesn't need container/state
-              // and initialize is called separately if needed after DOM attachment
-              return filesUI; // Return the instance for PanelManager to handle
-            }
-          );
-          registeredComponents.add('filesPanel');
-          console.log('[Init] Successfully registered filesPanel component via PanelManager (special case)');
-
-        } else {
-          console.warn(
-            '[Init] Files module not imported or FilesUI class missing, cannot register filesPanel component'
-          );
-        }
-      } catch (error) {
-        console.error('[Init] Error registering filesPanel component specially:', error);
-      }
-    }
-    */
-
-    // Register component aliases for backward compatibility
-    try {
-      // If mainContentPanel exists but clientPanel doesn't, create an alias
-      if (
-        registeredComponents.has('mainContentPanel') &&
-        !registeredComponents.has('clientPanel')
-      ) {
-        console.log('[Init] Creating alias: clientPanel → mainContentPanel');
-
-        // Get the factory for mainContentPanel
-        const mainContentFactory =
-          centralRegistry.panelComponents.get('mainContentPanel');
-
-        if (mainContentFactory) {
-          // Register clientPanel with the same factory
-          layout.registerComponentConstructor(
-            'clientPanel',
-            function (container, componentState) {
-              console.log('[GL Direct] Creating component alias: clientPanel');
-
-              try {
-                // Create the component using the mainContent factory
-                const uiProvider = mainContentFactory(
-                  container,
-                  componentState
-                );
-
-                // Store reference to the UI provider on the wrapper
-                this.uiProvider = uiProvider;
-
-                // Store unsubscribe handles for cleanup
-                this.unsubscribeHandles = [];
-
-                // Add container event handlers
-                container.on('destroy', () => {
-                  console.log(
-                    '[GL Direct] Destroying component alias: clientPanel'
-                  );
-                  if (
-                    this.uiProvider &&
-                    typeof this.uiProvider.dispose === 'function'
-                  ) {
-                    this.uiProvider.dispose();
-                  }
-
-                  if (
-                    this.unsubscribeHandles &&
-                    this.unsubscribeHandles.length > 0
-                  ) {
-                    this.unsubscribeHandles.forEach((unsubscribe) => {
-                      try {
-                        unsubscribe();
-                      } catch (e) {
-                        /* ignore */
-                      }
-                    });
-                  }
-                });
-
-                // Add the UI provider to the panelManager's map for compatibility
-                try {
-                  panelManagerInstance.addMapping(container, uiProvider);
-                } catch (error) {
-                  console.warn(
-                    `[GL Direct] Error adding mapping to panelManager: ${error.message}`
-                  );
-                }
-
-                // Return what Golden Layout expects
-                if (uiProvider && uiProvider.element) {
-                  return uiProvider;
-                }
-
-                return { element: container.element };
-              } catch (error) {
-                console.error(
-                  '[GL Direct] Error creating component alias: clientPanel',
-                  error
-                );
-                return { element: container.element };
-              }
-            }
-          );
-
-          // Mark as registered
-          registeredComponents.add('clientPanel');
-          console.log('[Init] Successfully registered clientPanel alias');
-        }
-      }
-    } catch (error) {
-      console.error('[Init] Error registering component alias:', error);
-    }
-
-    // Determine the layout configuration to load
-    let chosenLayoutConfig = null;
+    // Load layout configuration from settings or use default
     const activeLayoutId = await settingsManager.getActiveLayoutIdentifier();
+    const customLayoutConfig = await settingsManager.getCustomLayoutConfig();
 
-    if (activeLayoutId === null) {
-      console.log('[Init] Active layout is custom.');
-      chosenLayoutConfig = await settingsManager.getCustomLayoutConfig();
-    } else if (
-      typeof activeLayoutId === 'string' &&
-      layoutPresets[activeLayoutId]
-    ) {
-      console.log(`[Init] Active layout is preset: ${activeLayoutId}`);
-      chosenLayoutConfig = layoutPresets[activeLayoutId];
-    } else {
-      console.log(
-        `[Init] Active layout '${activeLayoutId}' not found or invalid, using default.`
-      );
-      // Fallback to custom config if available, otherwise use hardcoded default
-      chosenLayoutConfig =
-        (await settingsManager.getCustomLayoutConfig()) ||
-        getDefaultLayoutConfig();
-      if (!(await settingsManager.getCustomLayoutConfig())) {
-        console.log('[Init] No custom layout found, using hardcoded default.');
-      }
-    }
-
-    // If after all checks, we still don't have a config, use the hardcoded default
-    if (!chosenLayoutConfig) {
-      console.warn(
-        '[Init] No valid layout configuration determined, falling back to hardcoded default.'
-      );
-      chosenLayoutConfig = getDefaultLayoutConfig();
-    }
-
-    // Load the chosen layout
-    console.log('[Init] Loading layout configuration into Golden Layout...');
-    layout.loadLayout(chosenLayoutConfig);
+    await loadLayoutConfiguration(layout, activeLayoutId, customLayoutConfig);
     console.log('[Init] Golden Layout configuration loaded.');
 
     console.log('[Init] Application initialization sequence complete.');
+    // Optional: Trigger event indicating app is ready
+    eventBus.publish('app:ready');
   } catch (error) {
     console.error('--- FATAL INITIALIZATION ERROR ---', error);
     // Display a user-friendly error message on the page?
