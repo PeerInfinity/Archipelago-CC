@@ -45,9 +45,7 @@ export function register(registrationApi) {
   console.log('[Files Module] Registering...');
 
   // Register files panel component with the central registry
-  registrationApi.registerPanelComponent('filesPanel', () => {
-    return new FilesUI();
-  });
+  registrationApi.registerPanelComponent('filesPanel', FilesUI);
 }
 
 /**
@@ -58,7 +56,7 @@ export async function initialize(moduleId, priority, initApi) {
   console.log(`[Files Module] Initializing with priority ${priority}...`);
 
   // Get settings if needed
-  const settings = await initApi.getSettings();
+  const settings = await initApi.getAllSettings();
 
   // Get event bus if needed for publishing events
   const eventBus = initApi.getEventBus();

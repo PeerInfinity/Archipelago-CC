@@ -32,18 +32,20 @@ export function register(registrationApi) {
   console.log('[Client Module] Registering...');
 
   // Register the main panel component factory
-  registrationApi.registerPanelComponent('mainContentPanel', (container) => {
-    // Golden Layout V2 provides the container. We manage the instance.
-    if (!mainContentInstance) {
-      mainContentInstance = new MainContentUI();
-    }
-    // Let the PanelManager wrapper handle element initialization and retrieval
-    // Ensure the instance is ready before returning
-    // mainContentInstance.initializeElements(container.element); // This might be handled by the wrapper now
+  // registrationApi.registerPanelComponent('mainContentPanel', (container) => {
+  //   // Golden Layout V2 provides the container. We manage the instance.
+  //   if (!mainContentInstance) {
+  //     mainContentInstance = new MainContentUI();
+  //   }
+  //   // Let the PanelManager wrapper handle element initialization and retrieval
+  //   // Ensure the instance is ready before returning
+  //   // mainContentInstance.initializeElements(container.element); // This might be handled by the wrapper now
 
-    // *** FIX: Return the instance itself ***
-    return mainContentInstance;
-  });
+  //   // *** FIX: Return the instance itself ***
+  //   return mainContentInstance;
+  // });
+  // Pass the class constructor directly
+  registrationApi.registerPanelComponent('mainContentPanel', MainContentUI);
 
   // Register settings schema for client module
   registrationApi.registerSettingsSchema({
@@ -129,7 +131,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 export async function postInitialize(initializationApi) {
   console.log('[Client Module] Post-initializing...');
 
-  const settings = await initializationApi.getSettings();
+  const settings = await initializationApi.getAllSettings();
   const eventBus = initializationApi.getEventBus();
 
   // Set up event listeners on eventBus for connection status changes

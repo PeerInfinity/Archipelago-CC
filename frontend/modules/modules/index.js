@@ -4,7 +4,7 @@ import eventBus from '../../app/core/eventBus.js';
 // Store module ID and API references
 let moduleId;
 let api;
-let modulesPanelInstance;
+let modulesPanelInstance = null;
 
 /**
  * Registers the modules panel component.
@@ -12,15 +12,11 @@ let modulesPanelInstance;
  */
 export function register(registrationApi) {
   console.log('Registering Modules module...');
-  registrationApi.registerPanelComponent(
-    'modulesPanel',
-    (container, componentState) => {
-      modulesPanelInstance = new ModulesPanel(container, componentState, api); // Pass api here
-      return modulesPanelInstance;
-    }
-  );
-  // register settings schema if needed
-  // register event handlers if needed (e.g., for external module state changes)
+
+  // Pass the class constructor directly
+  // ModulesPanel constructor no longer takes the initApi directly.
+  // It will access the moduleManager via window.moduleManagerApi.
+  registrationApi.registerPanelComponent('modulesPanel', ModulesPanel);
 }
 
 /**
@@ -29,12 +25,10 @@ export function register(registrationApi) {
  * @param {number} index - The module's load priority index.
  * @param {object} initApi - API for initialization phase.
  */
-export function initialize(id, index, initApi) {
+export async function initialize(id, index, initApi) {
+  console.log(`Initializing Modules module (ID: ${id}, Priority: ${index})`);
+  // api = initApi; // REMOVED: No longer needed for panel factory
   moduleId = id;
-  api = initApi; // Store api for later use in panel creation
-  console.log(
-    `Initializing Modules module (ID: ${moduleId}, Priority: ${index})`
-  );
 
   // Get necessary functions/data from initApi
   // const settings = api.getSettings();

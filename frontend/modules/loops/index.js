@@ -37,10 +37,11 @@ function handleRulesLoaded(eventData) {
 export function register(registrationApi) {
   console.log('[Loops Module] Registering...');
 
-  registrationApi.registerPanelComponent('loopsPanel', () => {
-    loopInstance = new LoopUI();
-    return loopInstance;
-  });
+  // registrationApi.registerPanelComponent('loopsPanel', () => {
+  //   loopInstance = new LoopUI();
+  //   return loopInstance;
+  // });
+  registrationApi.registerPanelComponent('loopsPanel', LoopUI);
 
   // Register Loops settings schema snippet
   registrationApi.registerSettingsSchema({
@@ -85,7 +86,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
  */
 export async function postInitialize(initializationApi) {
   console.log('[Loops Module] Post-initializing...');
-  const settings = await initializationApi.getSettings();
+  const settings = await initializationApi.getAllSettings();
   const eventBus = moduleEventBus || initializationApi.getEventBus();
 
   // Initialize LoopState singleton (which might load from storage)

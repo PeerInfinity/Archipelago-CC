@@ -27,11 +27,8 @@ function handleRulesLoaded(eventData) {
 export function register(registrationApi) {
   console.log('[Exits Module] Registering...');
 
-  // Register the panel component factory
-  registrationApi.registerPanelComponent('exitsPanel', () => {
-    exitInstance = new ExitUI();
-    return exitInstance;
-  });
+  // Register the panel component class constructor
+  registrationApi.registerPanelComponent('exitsPanel', ExitUI);
 
   // Register event handler for rules loaded
   registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);

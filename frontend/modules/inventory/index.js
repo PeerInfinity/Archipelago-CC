@@ -29,11 +29,13 @@ export function register(registrationApi) {
 
   // Register the panel component factory
   // Golden Layout V2 expects the component factory to handle DOM element creation/attachment.
-  registrationApi.registerPanelComponent('inventoryPanel', () => {
-    // Create instance, assign to module scope, and return
-    inventoryInstance = new InventoryUI();
-    return inventoryInstance;
-  });
+  // registrationApi.registerPanelComponent('inventoryPanel', () => {
+  //   // Create instance, assign to module scope, and return
+  //   inventoryInstance = new InventoryUI();
+  //   return inventoryInstance;
+  // });
+  // Pass the class constructor directly
+  registrationApi.registerPanelComponent('inventoryPanel', InventoryUI);
 
   // Register event handler for rules loaded
   registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);

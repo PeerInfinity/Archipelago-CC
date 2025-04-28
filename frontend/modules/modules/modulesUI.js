@@ -63,14 +63,14 @@ const CSS = `
 `;
 
 export class ModulesPanel {
-  constructor(container, componentState, api) {
+  constructor(container, componentState) {
     this.container = container;
-    this.api = api; // API provided during module initialization
     this.moduleStates = {}; // Store state like { moduleId: { enabled: true, definition: {...} } }
     this.loadPriority = [];
     this.rootElement = null;
     this.buttonContainer = null; // Added
     this.moduleListContainer = null; // Added
+    this.externalModuleCounter = 0; // Counter for unique external module IDs
 
     // GoldenLayout specifics
     this.container.setTitle('Modules');
@@ -104,20 +104,43 @@ export class ModulesPanel {
     // Append the main container to Golden Layout
     this.container.getElement().appendChild(this.rootElement);
 
-    // Add the test button to its container
-    this._addTestButton();
+    // Add controls like buttons to the button container
+    this._addControls(); // Renamed from _addTestButton
 
-    // Request module data to populate the list container
-    this._requestModuleData();
+    // Listen for initialization complete event before fetching data
+    this.initCompleteListener = eventBus.subscribe('init:complete', () => {
+      console.log(
+        '[ModulesPanel] Received init:complete, requesting module data...'
+      );
+      this._requestModuleData();
+      // Optionally unsubscribe after first fetch if it's only needed once
+      // if (this.initCompleteListener) {
+      //     this.initCompleteListener();
+      //     this.initCompleteListener = null;
+      // }
+    });
 
     // TODO: Listen for external events (e.g., module state changed, panel closed)
     // eventBus.subscribe('module:stateChanged', this._handleModuleStateChange.bind(this));
     // eventBus.subscribe('panel:closed', this._handlePanelClosed.bind(this));
+    eventBus.subscribe('module:loaded', this._handleModuleLoaded.bind(this)); // Listen for newly loaded modules
+    eventBus.subscribe(
+      'module:loadFailed',
+      this._handleModuleLoadFailed.bind(this)
+    ); // Listen for load failures
   }
 
   async _requestModuleData() {
-    if (!this.api || typeof this.api.getModuleManager !== 'function') {
-      console.error('ModulesPanel: ModuleManager not available via initApi.');
+    // Use the globally exposed moduleManagerApi
+    const moduleManager = window.moduleManagerApi;
+
+    if (
+      !moduleManager ||
+      typeof moduleManager.getAllModuleStates !== 'function'
+    ) {
+      console.error(
+        'ModulesPanel: ModuleManager not available via window.moduleManagerApi or missing expected functions.'
+      );
       // Display error in the list container
       if (this.moduleListContainer)
         this.moduleListContainer.textContent =
@@ -125,10 +148,11 @@ export class ModulesPanel {
       return;
     }
     try {
-      const moduleManager = this.api.getModuleManager();
       // Fetch data using await for clarity
       this.moduleStates = await moduleManager.getAllModuleStates();
       this.loadPriority = await moduleManager.getCurrentLoadPriority();
+      console.log('Fetched module states:', this.moduleStates); // Debug log
+      console.log('Fetched load priority:', this.loadPriority); // Debug log
       this._renderModules();
     } catch (error) {
       console.error('ModulesPanel: Failed to fetch module data:', error);
@@ -144,7 +168,7 @@ export class ModulesPanel {
 
     if (!this.loadPriority || this.loadPriority.length === 0) {
       this.moduleListContainer.textContent =
-        'No modules found or priority order missing.';
+        'No modules found or priority order missing. Check console for errors.'; // Updated message
       return;
     }
 
@@ -155,7 +179,8 @@ export class ModulesPanel {
       const module = state.definition;
       const isEnabled = state.enabled;
       const isCoreModule =
-        moduleId === 'stateManager' || moduleId === 'modules';
+        moduleId === 'stateManager' || moduleId === 'modules'; // Core modules cannot be disabled/moved initially
+      const isExternal = state.isExternal || false; // Check if it's an external module
       const entryDiv = document.createElement('div');
       entryDiv.className = 'module-entry';
       entryDiv.dataset.moduleId = moduleId;
@@ -167,6 +192,15 @@ export class ModulesPanel {
       const descDiv = document.createElement('div');
       descDiv.className = 'module-description';
       descDiv.textContent = module.description || 'No description';
+      if (isExternal) {
+        const externalTag = document.createElement('span');
+        externalTag.textContent = ' (External)';
+        externalTag.style.fontStyle = 'italic';
+        externalTag.style.marginLeft = '5px';
+        nameDiv.appendChild(externalTag);
+        // Potentially add path info to description or tooltip
+        descDiv.textContent += ` [${state.path || 'path unknown'}]`;
+      }
       infoDiv.appendChild(nameDiv);
       infoDiv.appendChild(descDiv);
       const controlsDiv = document.createElement('div');
@@ -177,6 +211,14 @@ export class ModulesPanel {
       enableCheckbox.checked = isEnabled;
       enableCheckbox.disabled = isCoreModule;
       enableCheckbox.addEventListener('change', (event) => {
+        // Prevent user interaction for now until full enable/disable cycle is implemented for external
+        if (isExternal) {
+          event.target.checked = !event.target.checked; // Revert UI
+          alert(
+            'Enabling/disabling external modules is not fully implemented yet.'
+          );
+          return;
+        }
         this._handleEnableToggle(moduleId, event.target.checked);
       });
       enableLabel.appendChild(enableCheckbox);
@@ -190,7 +232,7 @@ export class ModulesPanel {
       downButton.textContent = '▼';
       downButton.title = 'Decrease Priority (Move Down)';
       downButton.disabled =
-        isCoreModule || index === this.loadPriority.length - 1;
+        isCoreModule || index === this.loadPriority.length - 1 || isExternal; // Disable for external initially
       controlsDiv.appendChild(upButton);
       controlsDiv.appendChild(downButton);
       entryDiv.appendChild(infoDiv);
@@ -207,13 +249,19 @@ export class ModulesPanel {
         shouldBeEnabled ? 'enabled' : 'disabled'
       }`
     );
-    if (!this.api || typeof this.api.getModuleManager !== 'function') {
+    // Use the globally exposed moduleManagerApi
+    const moduleManager = window.moduleManagerApi;
+
+    if (
+      !moduleManager ||
+      typeof moduleManager.enableModule !== 'function' ||
+      typeof moduleManager.disableModule !== 'function'
+    ) {
       console.error('Cannot toggle module: ModuleManager not available.');
       this._updateCheckboxVisualState(moduleId, !shouldBeEnabled); // Revert visual state
       return;
     }
 
-    const moduleManager = this.api.getModuleManager();
     try {
       if (shouldBeEnabled) {
         await moduleManager.enableModule(moduleId);
@@ -221,7 +269,17 @@ export class ModulesPanel {
         await moduleManager.disableModule(moduleId);
       }
       // Update local state and potentially re-render or update just the checkbox
-      this.moduleStates[moduleId].enabled = shouldBeEnabled;
+      if (this.moduleStates[moduleId]) {
+        // Ensure state exists
+        this.moduleStates[moduleId].enabled = shouldBeEnabled;
+      } else {
+        console.warn(
+          `State for module ${moduleId} not found locally after toggle.`
+        );
+        // Request full update if state is missing?
+        this._requestModuleData();
+        return; // Avoid further processing as state is inconsistent
+      }
       console.log(`Module ${moduleId} state updated successfully.`);
       // Optional: Could trigger a full re-render if needed: this._renderModules();
     } catch (error) {
@@ -281,59 +339,110 @@ export class ModulesPanel {
     // }
   }
 
+  // Handler for when a module is successfully loaded (built-in or external)
+  _handleModuleLoaded({ moduleId }) {
+    console.log(`ModulesPanel notified that module ${moduleId} has loaded.`);
+    // Refresh the entire list to ensure order and state are correct
+    // This is simpler than trying to patch the DOM for now
+    this._requestModuleData();
+  }
+
+  // Handler for when a module fails to load
+  _handleModuleLoadFailed({ moduleId, path, error }) {
+    console.error(
+      `ModulesPanel notified that module ${moduleId} (${path}) failed to load:`,
+      error
+    );
+    // Optionally display a persistent error message in the panel
+    const errorDiv = document.createElement('div');
+    errorDiv.textContent = `Error loading module '${moduleId}' from ${path}. Check console.`;
+    errorDiv.style.color = 'red';
+    errorDiv.style.marginTop = '10px';
+    this.moduleListContainer.appendChild(errorDiv);
+    // Maybe remove this message after a timeout or on next refresh
+  }
+
+  // Renamed from _addTestButton
+  _addControls() {
+    if (!this.buttonContainer) return;
+    this.buttonContainer.innerHTML = ''; // Clear existing buttons
+
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Add External Module...';
+    addButton.title = 'Load a module from a local path or URL';
+    addButton.addEventListener(
+      'click',
+      this._handleAddExternalModule.bind(this)
+    );
+    this.buttonContainer.appendChild(addButton);
+
+    // Add other controls here if needed in the future
+    // e.g., a "Refresh List" button
+    // const refreshButton = document.createElement('button');
+    // refreshButton.textContent = 'Refresh List';
+    // refreshButton.addEventListener('click', () => this._requestModuleData());
+    // this.buttonContainer.appendChild(refreshButton);
+  }
+
+  _handleAddExternalModule() {
+    const modulePath = prompt("Enter path or URL to the module's index.js:");
+    if (!modulePath || modulePath.trim() === '') {
+      console.log('External module load cancelled.');
+      return;
+    }
+
+    // Basic sanitization and unique ID generation
+    const sanitizedPath = modulePath.replace(/[^a-zA-Z0-9]/g, '_');
+    this.externalModuleCounter++;
+    const moduleId = `external_${sanitizedPath}_${this.externalModuleCounter}`;
+
+    console.log(
+      `Requesting load for external module: ${moduleId} from ${modulePath}`
+    );
+    eventBus.publish('module:loadExternalRequest', { moduleId, modulePath });
+  }
+
   // Called by GoldenLayout when the panel is destroyed
   destroy() {
     console.log('Destroying ModulesPanel');
-    // Unsubscribe from events
-    // eventBus.unsubscribe('module:stateChanged', this._handleModuleStateChange.bind(this));
-    // eventBus.unsubscribe('panel:closed', this._handlePanelClosed.bind(this));
-
-    // Clean up DOM elements
-    if (this.rootElement) {
-      this.rootElement.remove();
-      this.rootElement = null;
+    // Remove event listeners
+    eventBus.unsubscribe('module:loaded', this._handleModuleLoaded.bind(this));
+    eventBus.unsubscribe(
+      'module:loadFailed',
+      this._handleModuleLoadFailed.bind(this)
+    );
+    // Unsubscribe from init:complete if listener exists
+    if (this.initCompleteListener) {
+      this.initCompleteListener();
+      this.initCompleteListener = null;
     }
-    // Other cleanup
+    // TODO: Add unsubscribe for other listeners if they were added
+
+    // Clean up DOM
+    if (this.rootElement && this.rootElement.parentNode) {
+      this.rootElement.parentNode.removeChild(this.rootElement);
+    }
+    this.rootElement = null;
+    this.container = null; // Release reference to GoldenLayout container
+    this.moduleStates = {};
+    this.loadPriority = [];
+    this.buttonContainer = null;
+    this.moduleListContainer = null;
   }
 
-  // --- Modify Test Button Method ---
+  // Add test button (if needed for other purposes) or remove if replaced by _addControls
+  /* // Original _addTestButton - keep for reference or remove if fully replaced
   _addTestButton() {
+    if (!this.buttonContainer) return; // Check if container exists
     const testButton = document.createElement('button');
-    testButton.textContent = 'Add Test Panel';
-    testButton.style.marginBottom = '10px'; // Keep spacing
-    testButton.addEventListener('click', async () => {
-      console.log('[ModulesPanel] Test button clicked.');
-      if (!this.api || typeof this.api.getModuleManager !== 'function') {
-        console.error(
-          '[ModulesPanel] Cannot add test panel: ModuleManager API not available.'
-        );
-        return;
-      }
-      const moduleManager = this.api.getModuleManager();
-      const panelManager = window.panelManager; // Using global reference
-      if (
-        panelManager &&
-        typeof panelManager.createPanelForComponent === 'function'
-      ) {
-        console.log(
-          '[ModulesPanel] Calling panelManager.createPanelForComponent("testPanel", "Test")...'
-        );
-        try {
-          panelManager.createPanelForComponent('testPanel', 'Test');
-        } catch (error) {
-          console.error(
-            '[ModulesPanel] Error calling createPanelForComponent from test button:',
-            error
-          );
-        }
-      } else {
-        console.error(
-          '[ModulesPanel] PanelManager or createPanelForComponent not available.'
-        );
-      }
-    });
-    // Append to the dedicated button container
+    testButton.textContent = 'Test Button';
+    testButton.onclick = () => {
+      console.log('Modules Panel Test Button Clicked');
+      // Example: Try to get module manager again or trigger refresh
+      this._requestModuleData();
+    };
+    // Ensure button container exists before appending
     this.buttonContainer.appendChild(testButton);
   }
-  // --- End Test Button Method ---
+  */
 }

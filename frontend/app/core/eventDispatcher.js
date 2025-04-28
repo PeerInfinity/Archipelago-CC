@@ -5,62 +5,45 @@
  * Allows prioritized handling and explicit propagation down the priority chain.
  */
 class EventDispatcher {
-  constructor() {
-    // Stores handlers: Map<eventName, Array<{moduleId, handlerFunction}>>
-    this.handlers = new Map();
+  /**
+   * Constructs the EventDispatcher.
+   * @param {function(): Map<string, Array<{moduleId: string, handlerFunction: Function}>>} getHandlersFunc - Function to get the current map of registered event handlers.
+   * @param {function(): Array<string>} getLoadPriorityFunc - Function to get the current load priority array.
+   * @param {function(string): boolean} isModuleEnabledFunc - Function to check if a module is currently enabled by its ID.
+   */
+  constructor(getHandlersFunc, getLoadPriorityFunc, isModuleEnabledFunc) {
+    if (typeof getHandlersFunc !== 'function') {
+      throw new Error(
+        'EventDispatcher: getHandlersFunc is required and must be a function.'
+      );
+    }
+    if (typeof getLoadPriorityFunc !== 'function') {
+      throw new Error(
+        'EventDispatcher: getLoadPriorityFunc is required and must be a function.'
+      );
+    }
+    if (typeof isModuleEnabledFunc !== 'function') {
+      throw new Error(
+        'EventDispatcher: isModuleEnabledFunc is required and must be a function.'
+      );
+    }
 
-    // Stores data loaded from modules.json
-    this.moduleData = {
-      definitions: {}, // { moduleId: { path, description, enabled }, ... }
-      loadPriority: [], // Array of moduleIds in load order
-    };
-    // Map<moduleId, priorityIndex>
-    this.priorityMap = new Map();
+    // Store the functions to retrieve dynamic data
+    this.getHandlers = getHandlersFunc;
+    this.getLoadPriority = getLoadPriorityFunc;
+    this.isModuleEnabled = isModuleEnabledFunc;
 
-    this.initialized = false;
-    console.log('EventDispatcher instance created.');
+    console.log('EventDispatcher instance created (dynamic data fetching).');
   }
 
   /**
-   * Initializes the dispatcher with module configuration data.
-   * MUST be called after modules are registered and before any events are published.
-   * @param {object} modulesData - The parsed content of modules.json
-   * @param {Map<string, Array<{moduleId: string, handler: function}>>} registeredHandlers - Handlers collected during module registration.
+   * Helper to get priority index on the fly.
+   * @param {string} moduleId
+   * @returns {number} Priority index or -1 if not found.
    */
-  initialize(modulesData, registeredHandlers) {
-    if (this.initialized) {
-      console.warn('EventDispatcher already initialized.');
-      return;
-    }
-    if (
-      !modulesData ||
-      !modulesData.loadPriority ||
-      !modulesData.moduleDefinitions
-    ) {
-      console.error(
-        'EventDispatcher: Invalid modulesData provided during initialization.'
-      );
-      return;
-    }
-    if (!registeredHandlers || !(registeredHandlers instanceof Map)) {
-      console.error(
-        'EventDispatcher: Invalid registeredHandlers provided during initialization.'
-      );
-      return;
-    }
-
-    console.log('Initializing EventDispatcher...');
-    this.moduleData = modulesData;
-    this.handlers = registeredHandlers; // Use the handlers collected during registration
-
-    // Pre-calculate priority indices for faster lookup
-    this.priorityMap.clear(); // Clear in case of re-initialization attempt
-    this.moduleData.loadPriority.forEach((moduleId, index) => {
-      this.priorityMap.set(moduleId, index);
-    });
-
-    this.initialized = true;
-    console.log('EventDispatcher initialized successfully.');
+  _getPriorityIndex(moduleId) {
+    const loadPriority = this.getLoadPriority();
+    return loadPriority.indexOf(moduleId);
   }
 
   /**
@@ -71,26 +54,26 @@ class EventDispatcher {
    * @param {'highestFirst'|'lowestFirst'} [options.direction='highestFirst'] - Order to check handlers.
    */
   publish(eventName, data, options = {}) {
-    if (!this.initialized) {
-      console.warn(
-        `EventDispatcher not initialized. Cannot publish event: ${eventName}`
-      );
-      return;
-    }
-
     const { direction = 'highestFirst' } = options;
 
-    const potentialHandlers = this.handlers.get(eventName) || [];
+    const allHandlers = this.getHandlers(); // Get current handlers
+    const potentialHandlers = allHandlers.get(eventName) || [];
+
     if (potentialHandlers.length === 0) {
       return; // No handlers registered for this event
     }
 
     // Filter for enabled modules and sort by priority
     const eligibleHandlers = potentialHandlers
-      .filter((entry) => this.moduleData.definitions[entry.moduleId]?.enabled)
+      .filter((entry) => this.isModuleEnabled(entry.moduleId)) // Use checker function
       .sort((a, b) => {
-        const priorityA = this.priorityMap.get(a.moduleId) ?? -1;
-        const priorityB = this.priorityMap.get(b.moduleId) ?? -1;
+        const priorityA = this._getPriorityIndex(a.moduleId); // Get current priority
+        const priorityB = this._getPriorityIndex(b.moduleId);
+
+        // Handle cases where module might not be in priority list (e.g., async loading issues)
+        if (priorityA === -1) return 1; // Put unknowns last
+        if (priorityB === -1) return -1;
+
         // Descending order for highestFirst (default), Ascending for lowestFirst
         return direction === 'lowestFirst'
           ? priorityA - priorityB
@@ -109,10 +92,17 @@ class EventDispatcher {
     );
     try {
       // Execute the handler
-      handlerEntry.handler(data); // Assumes handlers are stored with key 'handler'
+      // Ensure the handler function reference is correct
+      if (typeof handlerEntry.handlerFunction === 'function') {
+        handlerEntry.handlerFunction(data);
+      } else {
+        console.error(
+          `[Dispatcher] Invalid handlerFunction found for ${eventName} in module ${handlerEntry.moduleId}`
+        );
+      }
     } catch (error) {
       console.error(
-        `[EventDispatcher] Error executing handler for event "${eventName}" in module "${handlerEntry.moduleId}":`,
+        `[Dispatcher] Error executing handler for event "${eventName}" in module "${handlerEntry.moduleId}":`,
         error
       );
     }
@@ -127,22 +117,17 @@ class EventDispatcher {
    * @param {any} data - The data payload associated with the event.
    */
   publishToPredecessors(originModuleId, eventName, data) {
-    if (!this.initialized) {
+    const originPriority = this._getPriorityIndex(originModuleId); // Get current priority
+
+    if (originPriority === -1) {
       console.warn(
-        `EventDispatcher not initialized. Cannot publishToPredecessors event: ${eventName} from ${originModuleId}`
+        `[Dispatcher] publishToPredecessors called by module not in current priority list: ${originModuleId}`
       );
       return;
     }
 
-    const originPriority = this.priorityMap.get(originModuleId);
-    if (originPriority === undefined) {
-      console.warn(
-        `[EventDispatcher] publishToPredecessors called by unknown module: ${originModuleId}`
-      );
-      return;
-    }
-
-    const potentialHandlers = this.handlers.get(eventName) || [];
+    const allHandlers = this.getHandlers(); // Get current handlers
+    const potentialHandlers = allHandlers.get(eventName) || [];
     if (potentialHandlers.length === 0) {
       return; // No handlers registered for this event
     }
@@ -150,16 +135,19 @@ class EventDispatcher {
     // Filter for enabled modules loaded *before* the origin module, then sort by highest priority first
     const eligiblePredecessors = potentialHandlers
       .filter((entry) => {
-        const entryPriority = this.priorityMap.get(entry.moduleId);
+        const entryPriority = this._getPriorityIndex(entry.moduleId); // Get current priority
         return (
-          this.moduleData.definitions[entry.moduleId]?.enabled &&
-          entryPriority !== undefined &&
+          this.isModuleEnabled(entry.moduleId) && // Use checker function
+          entryPriority !== -1 &&
           entryPriority < originPriority // Only modules loaded BEFORE the origin
         );
       })
       .sort((a, b) => {
-        const priorityA = this.priorityMap.get(a.moduleId);
-        const priorityB = this.priorityMap.get(b.moduleId);
+        const priorityA = this._getPriorityIndex(a.moduleId);
+        const priorityB = this._getPriorityIndex(b.moduleId);
+        // Handle unknowns just in case, although filter should prevent -1 here
+        if (priorityA === -1) return 1;
+        if (priorityB === -1) return -1;
         return priorityB - priorityA; // Descending order (highest priority first)
       });
 
@@ -175,10 +163,16 @@ class EventDispatcher {
     );
     try {
       // Execute the handler
-      handlerEntry.handler(data); // Assumes handlers are stored with key 'handler'
+      if (typeof handlerEntry.handlerFunction === 'function') {
+        handlerEntry.handlerFunction(data);
+      } else {
+        console.error(
+          `[Dispatcher] Invalid predecessor handlerFunction found for ${eventName} in module ${handlerEntry.moduleId}`
+        );
+      }
     } catch (error) {
       console.error(
-        `[EventDispatcher] Error executing predecessor handler for event "${eventName}" in module "${handlerEntry.moduleId}":`,
+        `[Dispatcher] Error executing predecessor handler for event "${eventName}" in module "${handlerEntry.moduleId}":`,
         error
       );
     }

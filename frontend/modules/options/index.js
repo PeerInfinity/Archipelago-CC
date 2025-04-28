@@ -11,11 +11,8 @@ let optionsInstance = null;
 export function register(registrationApi) {
   console.log('[Options Module] Registering...');
 
-  // Register the panel component factory
-  registrationApi.registerPanelComponent('optionsPanel', () => {
-    optionsInstance = new OptionsUI();
-    return optionsInstance;
-  });
+  // Register the panel component class constructor
+  registrationApi.registerPanelComponent('optionsPanel', OptionsUI);
 
   // Options might have its own settings schema distinct from the main one it edits?
   // registrationApi.registerSettingsSchema({ ... });

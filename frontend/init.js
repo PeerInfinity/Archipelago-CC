@@ -111,6 +111,10 @@ async function loadLayoutConfiguration(
 // --- Helper function to create the standard Initialization API ---
 function createInitializationApi(moduleId) {
   // Note: dispatcher and centralRegistry need to be available in the outer scope
+  console.log(`[API Factory] Creating API for module: ${moduleId}`);
+  console.log('[API Factory] settingsManager:', settingsManager);
+  console.log('[API Factory] dispatcher:', dispatcher);
+
   return {
     getSettings: async () => settingsManager.getModuleSettings(moduleId),
     getDispatcher: () => ({
@@ -122,6 +126,23 @@ function createInitializationApi(moduleId) {
       return centralRegistry.getPublicFunction(targetModuleId, functionName);
     },
     getModuleManager: () => moduleManagerApi, // Provide the manager API itself
+    getAllSettings: async () => {
+      console.log(`[API Factory] ${moduleId} calling getAllSettings...`);
+      try {
+        const allSettings = await settingsManager.getSettings();
+        console.log(
+          `[API Factory] ${moduleId} received allSettings:`,
+          allSettings
+        );
+        return allSettings;
+      } catch (error) {
+        console.error(
+          `[API Factory] Error in getAllSettings called by ${moduleId}:`,
+          error
+        );
+        throw error; // Re-throw the error so the module still fails
+      }
+    },
     // getSingleton: (name) => { /* Decide how to provide singletons */ },
   };
 }
@@ -248,9 +269,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
 
     // --- 3. Instantiate Event Dispatcher ---
-    dispatcher = new EventDispatcher(); // New way: Construct first
+    // Define helper functions for the dispatcher BEFORE constructing it
+    const getHandlersFunc = () => centralRegistry.eventHandlers; // Get map from registry
+    const getLoadPriorityFunc = () => modulesData.loadPriority; // Get array from config
+    const isModuleEnabledFunc = (moduleId) => {
+      const state = runtimeModuleStates.get(moduleId);
+      return state ? state.enabled : false; // Check runtime state
+    };
+
+    // Construct the dispatcher with the required functions
+    dispatcher = new EventDispatcher(
+      getHandlersFunc,
+      getLoadPriorityFunc,
+      isModuleEnabledFunc
+    );
     window.dispatcher = dispatcher; // Expose for debugging
     // console.log('[Init] EventDispatcher instantiated.'); // Log happens inside constructor/init now
+    // --- Remove Old Initialization Logic for Dispatcher ---
 
     // --- 4. Registration Phase --- (Registry populated here)
     console.log('[Init] Starting module registration phase...');
@@ -301,18 +336,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       schemas: Array.from(centralRegistry.settingsSchemas.keys()),
       functions: Array.from(centralRegistry.publicFunctions.keys()),
     });
-
-    // --- 4b. Initialize Event Dispatcher --- (Initialize AFTER registry is populated)
-    console.log(
-      '[Init] Initializing EventDispatcher with registered handlers...'
-    );
-    try {
-      dispatcher.initialize(modulesData, centralRegistry.eventHandlers);
-    } catch (error) {
-      console.error('[Init] Failed to initialize EventDispatcher:', error);
-      // Potentially throw or handle this error more gracefully
-      throw error; // Stop initialization if dispatcher fails
-    }
 
     // --- Define the Module Manager API --- (Needs access to modulesData, importedModules, etc.)
     moduleManagerApi = {
@@ -568,12 +591,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     panelManagerInstance.initialize(layout, mockGameUI);
     console.log('[Init] PanelManager initialized with mock GameUI.');
 
+    // --- Helper function to create the getter with correct scope ---
+    const createUiInstanceGetter = (factoryObject) => {
+      // factoryObject is expected to be { moduleId, componentClass }
+      const componentClass = factoryObject.componentClass;
+      return (container, componentState) => {
+        // This function now closes over the 'componentClass' retrieved from the factoryObject
+        if (typeof componentClass !== 'function') {
+          console.error(
+            'Error: captured componentClass is not a function!',
+            componentClass,
+            'Original factory object:',
+            factoryObject
+          );
+          throw new TypeError('Invalid component class provided.');
+        }
+        return new componentClass(container, componentState);
+      };
+    };
+
     // Register components discovered during module registration via PanelManager
     if (centralRegistry.panelComponents.size === 0) {
       console.warn('[Init] No panel components were registered by modules.');
     } else {
       centralRegistry.panelComponents.forEach((componentFactory, name) => {
-        panelManagerInstance.registerPanelComponent(name, componentFactory);
+        // --- Adapt the component factory for PanelManager ---
+        // Create the getter using the helper function to ensure correct closure
+        const uiInstanceGetter = createUiInstanceGetter(componentFactory);
+
+        // Register with PanelManager using the correctly formatted getter
+        panelManagerInstance.registerPanelComponent(name, uiInstanceGetter);
         console.log(
           `[Init] Registering panel component '${name}' with Golden Layout via PanelManager.`
         );
@@ -583,9 +630,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log(
               `[Init] Attempting to register alias: clientPanel using mainContentPanel factory`
             );
+            // Use the same helper to create the getter function for the alias
+            const aliasInstanceGetter =
+              createUiInstanceGetter(componentFactory);
             panelManagerInstance.registerPanelComponent(
               'clientPanel',
-              componentFactory
+              aliasInstanceGetter // Pass the new getter for the alias
             );
             console.log(
               `[Init] Successfully registered alias 'clientPanel' via PanelManager using same factory.`
@@ -609,7 +659,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    // *** ADD Direct testPanel registration HERE (AFTER PanelManager init, BEFORE loadLayout) ***
+    // *** REMOVE Direct testPanel registration HERE ***
+    /*
     try {
       console.log(
         "[Init] Attempting to register dummy 'testPanel' DIRECTLY with Golden Layout."
@@ -648,9 +699,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         e
       );
     }
-    // *** End Direct testPanel registration ***
+    */
+    // *** End REMOVED Direct testPanel registration ***
 
-    // Load layout configuration from settings or use default
+    console.log(
+      '[Init] Golden Layout instance created and components registered.'
+    );
+
+    // --- Make API globally available BEFORE layout load ---
+    window.moduleManagerApi = moduleManagerApi;
+    console.log('[Init] Module Manager API assigned to window.');
+
+    // Determine and load the layout configuration
     const activeLayoutId = await settingsManager.getActiveLayoutIdentifier();
     const customLayoutConfig = await settingsManager.getCustomLayoutConfig();
 
@@ -658,8 +718,143 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('[Init] Golden Layout configuration loaded.');
 
     console.log('[Init] Application initialization sequence complete.');
-    // Optional: Trigger event indicating app is ready
-    eventBus.publish('app:ready');
+    // --- Publish the init:complete event ---
+    eventBus.publish('init:complete');
+    console.log("[Init] Published 'init:complete' event.");
+
+    // --- Listener for Dynamic Module Loading ---
+    eventBus.subscribe(
+      'module:loadExternalRequest',
+      async ({ moduleId, modulePath }) => {
+        console.log(
+          `[Init] Received module:loadExternalRequest for ${moduleId} from ${modulePath}`
+        );
+        try {
+          // 1. Dynamically import the module
+          const module = await import(modulePath);
+          console.log(
+            `[Init] Successfully imported external module: ${moduleId}`
+          );
+
+          // Add to internal tracking
+          importedModules.set(moduleId, module);
+          runtimeModuleStates.set(moduleId, {
+            initialized: false,
+            enabled: false, // Start disabled, enableModule will handle init
+            isExternal: true, // Mark as external
+            definition: {
+              // Create a basic definition
+              path: modulePath,
+              title: moduleId, // Use ID as default title
+              description: 'Dynamically loaded module',
+              // Assume enabled by default for loading? Let enableModule handle actual enablement
+            },
+          });
+
+          // Add to modulesData structure (or update if managing dynamically)
+          // For simplicity, just adding to the runtime map might be sufficient if
+          // ModuleManager relies primarily on that.
+          // Let's assume ModuleManager.enableModule can handle modules not initially in modulesData.moduleDefinitions
+          // We might need to add it there if enableModule fails.
+          modulesData.moduleDefinitions[moduleId] =
+            runtimeModuleStates.get(moduleId).definition;
+          modulesData.loadPriority.push(moduleId); // Add to end of priority list
+
+          // 2. Register the module
+          if (typeof module.register === 'function') {
+            const registrationApi = {
+              /* ... create registration API specific to this module ... */
+              registerPanelComponent: (componentType, componentFactory) => {
+                centralRegistry.registerPanelComponent(
+                  moduleId,
+                  componentType,
+                  componentFactory
+                );
+              },
+              registerEventHandler: (eventName, handlerFunction) => {
+                centralRegistry.registerEventHandler(
+                  moduleId,
+                  eventName,
+                  handlerFunction.bind(module)
+                );
+              },
+              registerSettingsSchema: (schemaSnippet) => {
+                centralRegistry.registerSettingsSchema(moduleId, schemaSnippet);
+              },
+              registerPublicFunction: (functionName, functionRef) => {
+                centralRegistry.registerPublicFunction(
+                  moduleId,
+                  functionName,
+                  functionRef
+                );
+              },
+            };
+            console.log(`[Init] Registering external module: ${moduleId}`);
+            module.register(registrationApi);
+
+            // **Re-register components with PanelManager**
+            // Since the registry changed, tell PanelManager about any *new* components
+            const componentType =
+              centralRegistry.getComponentTypeForModule(moduleId);
+            if (componentType) {
+              const componentFactory =
+                centralRegistry.panelComponents.get(componentType);
+              if (componentFactory) {
+                const uiInstanceGetter =
+                  createUiInstanceGetter(componentFactory);
+                console.log(
+                  `[Init] Registering new panel component '${componentType}' with Golden Layout via PanelManager.`
+                );
+                panelManagerInstance.registerPanelComponent(
+                  componentType,
+                  uiInstanceGetter
+                );
+              } else {
+                console.warn(
+                  `[Init] Could not find factory for new component ${componentType} in registry.`
+                );
+              }
+            }
+          } else {
+            console.warn(
+              `[Init] External module ${moduleId} has no register function.`
+            );
+          }
+
+          // 3. Enable the module (this should handle initialization)
+          console.log(`[Init] Enabling external module: ${moduleId}`);
+          await moduleManagerApi.enableModule(moduleId); // Use the existing API
+
+          // 4. Notify success
+          console.log(
+            `[Init] External module ${moduleId} loaded and enabled successfully.`
+          );
+          eventBus.publish('module:loaded', { moduleId }); // Notify ModulesPanel
+        } catch (error) {
+          console.error(
+            `[Init] Failed to load or initialize external module ${moduleId} from ${modulePath}:`,
+            error
+          );
+          // Clean up partial state if needed
+          importedModules.delete(moduleId);
+          runtimeModuleStates.delete(moduleId);
+          delete modulesData.moduleDefinitions[moduleId];
+          modulesData.loadPriority = modulesData.loadPriority.filter(
+            (id) => id !== moduleId
+          );
+          // Notify failure
+          eventBus.publish('module:loadFailed', {
+            moduleId,
+            modulePath,
+            error,
+          });
+        }
+      }
+    );
+    console.log("[Init] Listener added for 'module:loadExternalRequest'.");
+
+    // Optional: Trigger event indicating app is ready (if different from init:complete)
+    // eventBus.publish('app:ready');
   } catch (error) {
     console.error('--- FATAL INITIALIZATION ERROR ---', error);
     // Display a user-friendly error message on the page?

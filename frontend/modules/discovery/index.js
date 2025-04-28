@@ -61,17 +61,18 @@ export function postInitialize(initializationApi) {
 
   // Initialize the DiscoveryState singleton (reads initial stateManager data)
   // Ensure stateManager has loaded its data first.
-  console.log('[Discovery Module] Initializing DiscoveryState singleton...');
-  try {
-    discoveryStateSingleton.initialize();
-    console.log('[Discovery Module] DiscoveryState singleton initialized.');
-  } catch (error) {
-    console.error(
-      '[Discovery Module] Error initializing DiscoveryState singleton:',
-      error
-    );
-    // Decide how to handle this - maybe prevent loop mode?
-  }
+  // console.log('[Discovery Module] Initializing DiscoveryState singleton...');
+  // REMOVED: Initialization call - Moved to handleRulesLoaded
+  // try {
+  //   discoveryStateSingleton.initialize();
+  //   console.log('[Discovery Module] DiscoveryState singleton initialized.');
+  // } catch (error) {
+  //   console.error(
+  //     '[Discovery Module] Error initializing DiscoveryState singleton:',
+  //     error
+  //   );
+  //   // Decide how to handle this - maybe prevent loop mode?
+  // }
 
   // Use global eventBus or get from API
   const currentEventBus = eventBus || initializationApi.getEventBus();
@@ -164,6 +165,18 @@ function handleRulesLoaded(eventData) {
   // Check if the singleton exists before trying to clear
   if (discoveryStateSingleton) {
     discoveryStateSingleton.clearDiscovery();
+    // ADDED: Initialize discoverables now that rules are loaded
+    try {
+      console.log(
+        '[Discovery Module] Initializing discoverables from state:rulesLoaded handler...'
+      );
+      discoveryStateSingleton.initialize();
+    } catch (error) {
+      console.error(
+        '[Discovery Module] Error initializing discoverables after rules loaded:',
+        error
+      );
+    }
   } else {
     console.warn(
       '[Discovery Module] Discovery singleton not available for state:rulesLoaded handler.'

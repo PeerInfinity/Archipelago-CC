@@ -28,11 +28,8 @@ function handleRulesLoaded(eventData) {
 export function register(registrationApi) {
   console.log('[Locations Module] Registering...');
 
-  // Register the panel component factory
-  registrationApi.registerPanelComponent('locationsPanel', () => {
-    locationInstance = new LocationUI();
-    return locationInstance;
-  });
+  // Register the panel component class constructor
+  registrationApi.registerPanelComponent('locationsPanel', LocationUI);
 
   // Register event handler for rules loaded
   registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);

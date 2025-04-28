@@ -30,15 +30,8 @@ function handleRulesLoaded(eventData) {
 export function register(registrationApi) {
   console.log('[Regions Module] Registering...');
 
-  // Register the panel component factory
-  registrationApi.registerPanelComponent('regionsPanel', () => {
-    regionInstance = new RegionUI(); // Instance is created here
-    // Now that regionInstance exists, try to link PathAnalyzer if function is ready
-    if (getPathAnalyzerUIFunc) {
-      tryLinkPathAnalyzer();
-    }
-    return regionInstance;
-  });
+  // Register the panel component class constructor
+  registrationApi.registerPanelComponent('regionsPanel', RegionUI);
 
   // Register event handler for rules loaded
   registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);

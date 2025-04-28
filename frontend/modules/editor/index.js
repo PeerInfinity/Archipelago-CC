@@ -1,9 +1,9 @@
 // UI Class for this module
 import EditorUI from './editorUI.js';
 
-// Store instance if needed
+// Store instance and API
 let editorInstance = null;
-let moduleEventBus = null;
+let moduleEventBus = null; // Store eventBus reference if needed
 let editorUnsubscribe = null;
 
 // Handler for rules loaded event
@@ -25,11 +25,8 @@ function handleRulesLoaded(eventData) {
 export function register(registrationApi) {
   console.log('[Editor Module] Registering...');
 
-  // Register the panel component factory
-  registrationApi.registerPanelComponent('editorPanel', () => {
-    editorInstance = new EditorUI();
-    return editorInstance;
-  });
+  // Register the panel component class constructor directly
+  registrationApi.registerPanelComponent('editorPanel', EditorUI);
 
   // Register event handler for rules loaded
   registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);
