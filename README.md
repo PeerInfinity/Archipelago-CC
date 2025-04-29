@@ -96,3 +96,4 @@ See the [Project Roadmap](/docs/json/project-roadmap.md) for the latest status, 
 - Uses [Golden Layout](https://github.com/golden-layout/golden-layout)
 - Uses [vanilla-jsoneditor](https://github.com/josdejong/svelte-jsoneditor)
 - Uses [json-editor](https://github.com/json-editor/json-editor)
+- Uses [CodeMirror](https://github.com/codemirror/codemirror5)

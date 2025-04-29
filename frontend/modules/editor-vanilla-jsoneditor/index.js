@@ -3,8 +3,8 @@ import EditorUI from './editorUI.js';
 
 // --- Module Info ---
 export const moduleInfo = {
-  name: 'Plain Text Editor',
-  description: 'Text Editor panel.',
+  name: 'Vanilla JSON Editor',
+  description: 'JSON Editor panel.',
 };
 
 // Store instance and API
@@ -78,7 +78,7 @@ export function register(registrationApi) {
   console.log('[Editor Module] Registering...');
 
   // Register the panel component class constructor directly
-  registrationApi.registerPanelComponent('editorPanel', EditorUI);
+  registrationApi.registerPanelComponent('vanillaJSONEditorPanel', EditorUI);
 
   // Register event handler for rules loaded
   registrationApi.registerEventHandler('state:rulesLoaded', handleRulesLoaded);

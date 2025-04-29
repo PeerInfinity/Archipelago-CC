@@ -1,34 +1,25 @@
-import {
-  createJSONEditor,
-  expandAll,
-} from '../../libs/vanilla-jsoneditor/standalone.js';
-// Enable Dark theme CSS - REMOVED Import, will be loaded via <link> tag in HTML
-// import '../../libs/vanilla-jsoneditor/themes/jse-theme-dark.css';
 import eventBus from '../../app/core/eventBus.js'; // <<< Import eventBus
-// REMOVE Import the function to get pending data
-// import { getPendingJsonDataAndClear } from './index.js';
 // Import the function to set the module instance
 import { setEditorInstance } from './index.js';
 
 class EditorUI {
   constructor() {
-    console.log('EditorUI instance created');
+    console.log('EditorUI instance created with Textarea');
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('editor-panel-content'); // Add a class for styling if needed
-    this.rootElement.classList.add('jse-theme-dark');
     this.rootElement.style.width = '100%'; // Ensure it fills container width
     this.rootElement.style.height = '100%'; // Ensure it fills container height
-    this.editor = null;
+    this.rootElement.style.display = 'flex'; // Use flex to make textarea fill space
+    this.rootElement.style.flexDirection = 'column';
+
+    this.textAreaElement = null; // Will hold the <textarea>
     this.isInitialized = false; // Track initialization state
     this.unsubscribeHandle = null; // Store unsubscribe function
+    this._handleTextAreaInput = this._handleTextAreaInput.bind(this); // Bind listener method
 
-    // Initial content (can be updated later)
+    // Initial content - Storing as text now
     this.content = {
-      json: {
-        greeting: 'Hello World',
-        value: 123,
-      },
-      text: undefined,
+      text: '{\n  "greeting": "Hello World",\n  "value": 123\n}',
     };
 
     // Register this instance with the module logic
@@ -42,25 +33,16 @@ class EditorUI {
   // Called when the panel is first opened or shown
   initialize() {
     if (!this.isInitialized) {
-      console.log('Initializing EditorUI...');
+      console.log('Initializing EditorUI (Textarea)...');
       this.initializeEditor();
       this.subscribeToEvents(); // Subscribe to events on first init
       this.isInitialized = true;
-
-      // REMOVE Check for and load pending data received before initialization
-      /*
-      const pendingData = getPendingJsonDataAndClear();
-      if (pendingData) {
-        console.log('[EditorUI] Loading pending JSON data received before init...');
-        this.loadJsonData(pendingData);
-      }
-      */
     } else {
-      console.log('EditorUI already initialized.');
+      console.log('EditorUI (Textarea) already initialized.');
       // Potentially refresh or reload content if needed when re-opened
-      if (this.editor) {
-        this.editor.set(this.content);
-        this.editor.expand((path) => true); // Expand all nodes
+      // Ensure the textarea has the current content if the panel was hidden/reshown
+      if (this.textAreaElement) {
+        this.setContent(this.content);
       }
     }
   }
@@ -77,7 +59,8 @@ class EditorUI {
     this.unsubscribeHandle = eventBus.subscribe(
       'editor:loadJsonData',
       (payload) => {
-        if (!payload || !payload.data) {
+        if (!payload || typeof payload.data === 'undefined') {
+          // Check if data exists
           console.warn(
             "EditorUI received invalid payload for 'editor:loadJsonData'",
             payload
@@ -85,10 +68,21 @@ class EditorUI {
           return;
         }
         console.log(
-          `EditorUI received JSON data from: ${payload.source || 'unknown'}`
+          `EditorUI received data from: ${payload.source || 'unknown'}`
         );
-        // Wrap the data in the format expected by vanilla-jsoneditor's setContent
-        this.setContent({ json: payload.data });
+        // Assume incoming data is JSON, stringify it for the textarea
+        try {
+          const textData = JSON.stringify(payload.data, null, 2); // Pretty print
+          this.setContent({ text: textData });
+        } catch (error) {
+          console.error(
+            'Error stringifying received JSON data for textarea:',
+            error,
+            payload.data
+          );
+          // Fallback: display raw data as string if stringify fails
+          this.setContent({ text: String(payload.data) });
+        }
       }
     );
   }
@@ -102,70 +96,75 @@ class EditorUI {
     }
   }
 
+  // Bound method to handle textarea input events
+  _handleTextAreaInput(event) {
+    this.content = { text: event.target.value };
+    // Optional: Dispatch an event if other modules need to know about changes immediately
+    // eventBus.publish('editor:contentChanged', { text: this.content.text });
+  }
+
   initializeEditor() {
-    if (this.editor) {
-      console.log('Editor already exists. Destroying previous instance.');
+    if (this.textAreaElement) {
+      console.log('Textarea already exists. Destroying previous instance.');
       this.destroyEditor(); // Clean up existing editor if any
     }
-    console.log('Creating vanilla-jsoneditor instance...');
+    console.log('Creating <textarea> element...');
     try {
-      this.editor = createJSONEditor({
-        target: this.rootElement,
-        props: {
-          content: this.content,
-          onChange: (
-            updatedContent,
-            previousContent,
-            { contentErrors, patchResult }
-          ) => {
-            // Handle content changes
-            console.log('Editor content changed:', updatedContent);
-            this.content = updatedContent;
-            // You might want to dispatch an event or update state elsewhere
-          },
-          // Add other vanilla-jsoneditor options as needed
-          // mainMenuBar: true,
-          navigationBar: false, // Keep UI simple for now
-          statusBar: false,
-          // readOnly: false,
-          mode: 'text', // Changed back to text mode
-        },
-      });
-      console.log('vanilla-jsoneditor instance created successfully.');
+      this.textAreaElement = document.createElement('textarea');
+      this.textAreaElement.value = this.content.text || '';
+      this.textAreaElement.style.width = '100%';
+      this.textAreaElement.style.height = '100%';
+      this.textAreaElement.style.border = 'none'; // Optional: basic styling
+      this.textAreaElement.style.resize = 'none';
+      this.textAreaElement.style.flexGrow = '1'; // Make textarea fill flex container
+      // --- ADDED: Dark theme colors ---
+      this.textAreaElement.style.backgroundColor = '#000000'; // Black background
+      this.textAreaElement.style.color = '#FFFFFF'; // White text
+      // --- END ADDED ---
+      // Add specific class for textarea styling if needed
+      this.textAreaElement.classList.add('editor-textarea');
+
+      // Add event listener for input changes
+      this.textAreaElement.addEventListener('input', this._handleTextAreaInput);
+
+      // Append to the root element
+      this.rootElement.appendChild(this.textAreaElement);
+
+      console.log('<textarea> element created and attached successfully.');
     } catch (error) {
-      console.error('Failed to initialize JSONEditor:', error);
-      this.rootElement.textContent =
-        'Error loading JSON Editor. Check console.';
+      console.error('Failed to initialize Textarea:', error);
+      this.rootElement.textContent = 'Error loading Textarea.';
+      this.textAreaElement = null;
     }
   }
 
   // Called when the panel container is resized
   onPanelResize(width, height) {
-    console.log(`EditorUI resized to ${width}x${height}`);
-    // vanilla-jsoneditor might handle resize automatically, but
-    // you can add manual resize logic here if needed.
-    // this.rootElement.style.width = `${width}px`;
-    // this.rootElement.style.height = `${height}px`;
-    // if (this.editor && typeof this.editor.refresh === 'function') {
-    //     this.editor.refresh(); // Or other resize methods if available
-    // }
+    console.log(`EditorUI (Textarea) resized to ${width}x${height}`);
+    // Textarea with 100% width/height and flex layout should resize automatically.
+    // No specific action needed here unless manual adjustments are required.
   }
 
   destroyEditor() {
-    if (this.editor && typeof this.editor.destroy === 'function') {
-      console.log('Destroying vanilla-jsoneditor instance.');
-      this.editor.destroy();
-      this.editor = null;
-    }
-    // Clear the container
-    while (this.rootElement.firstChild) {
-      this.rootElement.removeChild(this.rootElement.firstChild);
+    if (this.textAreaElement) {
+      console.log('Destroying <textarea> instance.');
+      // Remove event listener
+      this.textAreaElement.removeEventListener(
+        'input',
+        this._handleTextAreaInput
+      );
+
+      // Remove element from DOM
+      if (this.textAreaElement.parentNode === this.rootElement) {
+        this.rootElement.removeChild(this.textAreaElement);
+      }
+      this.textAreaElement = null;
     }
   }
 
   // Called when the panel is about to be destroyed by Golden Layout
   onPanelDestroy() {
-    console.log('EditorUI destroyed');
+    console.log('EditorUI (Textarea) destroyed');
     this.destroyEditor();
     this.unsubscribeFromEvents(); // <<< Unsubscribe on destroy
     this.isInitialized = false;
@@ -173,45 +172,86 @@ class EditorUI {
 
   // Optional: General cleanup method
   dispose() {
-    console.log('Disposing EditorUI...');
+    console.log('Disposing EditorUI (Textarea)...');
     this.onPanelDestroy(); // Call destroy logic
     // Any other cleanup specific to EditorUI itself
   }
 
-  // Method to load JSON data into the editor
+  // Method to load JSON data into the editor (textarea)
   loadJsonData(jsonData) {
-    if (!jsonData) {
+    if (jsonData === null || typeof jsonData === 'undefined') {
       console.warn(
         '[EditorUI] loadJsonData called with null or undefined data.'
       );
+      // Optionally set empty content or keep existing
+      this.setContent({ text: '' });
       return;
     }
-    console.log('[EditorUI] Loading JSON data into editor...');
-    this.setContent({ json: jsonData });
-    // Optionally expand nodes after setting content - REMOVED for text mode
-    // if (this.editor) {
-    //   this.editor.expand((path) => true);
-    // }
+    console.log('[EditorUI] Loading JSON data into textarea...');
+    try {
+      const textData = JSON.stringify(jsonData, null, 2); // Pretty print
+      this.setContent({ text: textData });
+    } catch (error) {
+      console.error(
+        'Error stringifying JSON data for textarea:',
+        error,
+        jsonData
+      );
+      // Fallback: Display raw data as string if stringify fails
+      this.setContent({ text: String(jsonData) });
+    }
   }
 
-  // --- Example methods to interact with the editor ---
+  // --- Methods to interact with the editor (textarea) ---
   setContent(newContent) {
-    this.content = newContent;
-    if (this.editor) {
-      console.log('Setting editor content:', newContent);
-      this.editor.set(this.content);
+    // Expect newContent in { text: "..." } or { json: ... } format
+    let textToSet = '';
+    if (newContent && typeof newContent.text === 'string') {
+      textToSet = newContent.text;
+    } else if (newContent && typeof newContent.json !== 'undefined') {
+      console.log(
+        '[EditorUI] Received JSON content, stringifying for textarea...'
+      );
+      try {
+        textToSet = JSON.stringify(newContent.json, null, 2);
+      } catch (error) {
+        console.error(
+          '[EditorUI] Error stringifying JSON in setContent:',
+          error
+        );
+        textToSet = '[Error displaying JSON]';
+      }
+    } else if (newContent) {
+      // Handle direct string or other types by converting
+      textToSet = String(newContent);
+    } else {
+      console.warn(
+        '[EditorUI] setContent called with invalid/empty content:',
+        newContent
+      );
+      // Keep textToSet as '' (empty string)
+    }
+
+    this.content = { text: textToSet }; // Update internal state
+
+    if (this.textAreaElement) {
+      console.log('Setting textarea content.');
+      this.textAreaElement.value = this.content.text;
     } else {
       console.log(
-        'Editor not initialized yet. Content will be set on initialization.'
+        'Textarea not initialized yet. Content will be set on initialization.'
       );
     }
   }
 
   getContent() {
-    if (this.editor) {
-      return this.editor.get();
+    if (this.textAreaElement) {
+      // Always update internal state just before returning, in case user typed
+      this.content = { text: this.textAreaElement.value };
+      return this.content; // Return content in the { text: "..." } format
     }
-    return this.content; // Return stored content if editor isn't ready
+    // Return stored content if textarea isn't ready
+    return this.content;
   }
 }
 
