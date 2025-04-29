@@ -18,6 +18,11 @@ export function register(registrationApi) {
   console.log('[Events Module] Registering...');
   // Register the panel component class constructor
   registrationApi.registerPanelComponent('eventsPanel', EventsUI);
+  // Register intent to subscribe to module state changes for UI refresh
+  registrationApi.registerEventBusSubscriber(
+    'module:stateChanged',
+    EventsUI.prototype.handleModuleStateChange // Pass the prototype method
+  );
 }
 
 /**

@@ -1,4 +1,91 @@
 import { getInitApi } from './index.js';
+import eventBus from '../../app/core/eventBus.js'; // Import eventBus
+
+// Basic CSS for the panel
+const CSS = `
+.events-inspector {
+  padding: 10px;
+  font-family: sans-serif;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background-color: #282c34; /* Darker background for the whole panel */
+  color: #abb2bf; /* Lighter default text */
+}
+.events-inspector h2, .events-inspector h3, .events-inspector h4 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: #61afef; /* Brighter headings */
+  border-bottom: 1px solid #4b5263;
+  padding-bottom: 0.2em;
+}
+.events-inspector h4 {
+  color: #98c379; /* Different color for event names */
+  border-bottom: none;
+  margin-bottom: 0.8em;
+}
+.event-bus-section .category-block {
+  margin-bottom: 15px;
+  border-left: 2px solid #61afef; /* Use heading color for border */
+  padding-left: 10px;
+}
+.dispatcher-event, .event-bus-event {
+  margin-bottom: 20px;
+  border: 1px solid #4b5263; /* Darker border */
+  padding: 10px;
+  background-color: #323842; /* Slightly lighter dark background */
+  border-radius: 4px;
+}
+.module-block {
+  border: 1px dashed #4b5263; /* Darker dashed border */
+  padding: 5px 8px;
+  margin-bottom: 5px;
+  background-color: #282c34; /* Match panel background or slightly different dark */
+  display: flex; /* Use flexbox for columns */
+  align-items: center;
+  min-height: 24px; /* Ensure consistent height */
+  color: #dcdfe4; /* Light text for module names */
+  border-radius: 2px;
+}
+.module-name {
+  flex-grow: 1; /* Allow module name to take up remaining space */
+  font-weight: bold;
+  margin-right: 10px;
+}
+.symbols-column {
+  flex-basis: 30px; /* Fixed width for symbol columns */
+  text-align: center;
+  font-family: monospace; /* Monospace often aligns symbols well */
+  color: #abb2bf; /* Default light symbol color */
+}
+.publisher-symbol {
+  color: #61afef; /* Light Blue */
+}
+.subscriber-symbol {
+  color: #c678dd; /* Light Purple/Magenta */
+}
+.sender-symbol {
+  color: #61afef; /* Light Blue */
+}
+.handler-symbol {
+  color: #98c379; /* Light Green */
+}
+.connector {
+  height: 10px;
+  width: 1px;
+  background-color: #4b5263; /* Darker connector line */
+  margin: -2px auto 3px auto; /* Adjust margin for better visual connection */
+}
+.symbols-column input[type="checkbox"] {
+  margin-left: 4px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.disabled-interaction {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+`;
 
 class EventsUI {
   constructor(container, componentState) {
@@ -8,6 +95,7 @@ class EventsUI {
     this.eventBusSection = null;
     this.dispatcherSection = null;
     this.initApi = getInitApi(); // Get the API stored during module initialization
+    this.unsubscribeModuleState = null; // Handle for unsubscribing
 
     if (!this.initApi) {
       console.error('[EventsUI] Failed to get initApi!');
@@ -16,6 +104,23 @@ class EventsUI {
 
     this._createUI();
     this._loadAndRenderData();
+
+    // Subscribe to module state changes to refresh the UI
+    this.unsubscribeModuleState = eventBus.subscribe(
+      'module:stateChanged',
+      this.handleModuleStateChange.bind(this)
+    );
+
+    // Golden Layout: Listen for destroy event to unsubscribe
+    this.container.on('destroy', () => {
+      this.destroy();
+    });
+
+    // Add CSS styles
+    const style = document.createElement('style');
+    style.textContent = CSS;
+    // Prepend to ensure it's added early, avoid FOUC
+    this.container.element.prepend(style);
 
     // TODO: Set up listeners if needed (e.g., to refresh when modules are dynamically loaded/unloaded)
   }
@@ -28,10 +133,6 @@ class EventsUI {
   _createUI() {
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('events-inspector');
-    this.rootElement.style.padding = '10px';
-    this.rootElement.style.height = '100%';
-    this.rootElement.style.overflowY = 'auto'; // Allow scrolling
-
     this.rootElement.innerHTML = `
       <h2>Event Bus</h2>
       <div class="event-bus-section">Loading...</div>
@@ -96,6 +197,43 @@ class EventsUI {
       return;
     }
 
+    // --- Get Load Priority (needed for ordering the stack) ---
+    let loadPriority = [];
+    try {
+      const moduleManager = this.initApi.getModuleManager();
+      // Note: This relies on the async call in _loadAndRenderData having completed,
+      // or potentially making it sync if ModuleManager caches it.
+      // For simplicity here, assume moduleManager provides it synchronously or is cached.
+      // A more robust solution might pass loadPriority as an argument.
+      if (
+        moduleManager &&
+        typeof moduleManager.getCurrentLoadPriority === 'function'
+      ) {
+        // Attempt to get priority - this might need to be async if manager doesn't cache
+        // For now, let's proceed, but acknowledge this might need adjustment
+        // loadPriority = await moduleManager.getCurrentLoadPriority();
+        console.warn(
+          '[EventsUI] Getting loadPriority synchronously for EventBus rendering. Ensure ModuleManager provides this efficiently.'
+        );
+        // *** TEMPORARY WORKAROUND: Accessing _getRawModulesData - NOT IDEAL ***
+        // This assumes _getRawModulesData and loadPriority are available after init
+        const rawData = moduleManager._getRawModulesData();
+        loadPriority = rawData ? rawData.loadPriority : [];
+      } else {
+        throw new Error(
+          'ModuleManager or getCurrentLoadPriority not available.'
+        );
+      }
+    } catch (error) {
+      console.error(
+        '[EventsUI] Failed to get loadPriority for EventBus rendering:',
+        error
+      );
+      this.eventBusSection.innerHTML = 'Error loading module priority.';
+      return;
+    }
+    // --- End Get Load Priority ---
+
     // Group by category
     const eventsByCategory = {};
     allEventNames.forEach((eventName) => {
@@ -112,27 +250,111 @@ class EventsUI {
       .sort()
       .forEach((category) => {
         const categoryDiv = document.createElement('div');
+        categoryDiv.classList.add('category-block'); // Add class for styling
         categoryDiv.innerHTML = `<h3>${category}</h3>`;
         this.eventBusSection.appendChild(categoryDiv);
 
         eventsByCategory[category].sort().forEach((eventName) => {
           const publishers = publishersMap.get(eventName) || new Set();
           const subscribers = subscribersMap.get(eventName) || [];
+          const subscriberModuleIds = new Set(
+            subscribers.map((s) => s.moduleId)
+          );
 
-          const eventDiv = document.createElement('div');
-          eventDiv.style.marginBottom = '15px';
-          eventDiv.innerHTML = `
-            <h4>${eventName}</h4>
-            <div><strong>Published By:</strong> ${
-              publishers.size > 0 ? [...publishers].join(', ') : '<em>None</em>'
-            }</div>
-            <div><strong>Subscribed By:</strong> ${
-              subscribers.length > 0
-                ? subscribers.map((s) => s.moduleId).join(', ')
-                : '<em>None</em>'
-            }</div>
-          `;
-          categoryDiv.appendChild(eventDiv);
+          // Determine relevant modules for this event
+          const relevantModuleIds = new Set([
+            ...publishers,
+            ...subscriberModuleIds,
+          ]);
+
+          // Filter loadPriority to only include relevant modules, maintaining order
+          const relevantModulesInOrder = loadPriority.filter((moduleId) =>
+            relevantModuleIds.has(moduleId)
+          );
+
+          if (relevantModulesInOrder.length === 0) {
+            return; // Skip rendering if no relevant modules found (e.g., only unregistered modules involved)
+          }
+
+          const eventContainer = document.createElement('div');
+          eventContainer.classList.add('event-bus-event'); // Add class for styling
+          eventContainer.innerHTML = `<h4>${eventName}</h4>`;
+
+          relevantModulesInOrder.forEach((moduleId, index) => {
+            const publisherInfo = publishers.get(moduleId);
+            const isPublisher = !!publisherInfo;
+            const isPublisherEnabled =
+              isPublisher && publisherInfo.enabled !== false;
+
+            // Find subscriber info (assuming one per module/event for UI toggle)
+            const subscriberInfo = subscribers.find(
+              (s) => s.moduleId === moduleId
+            );
+            const isSubscriber = !!subscriberInfo;
+            const isSubscriberEnabled =
+              isSubscriber && subscriberInfo.enabled !== false;
+
+            const moduleDiv = document.createElement('div');
+            moduleDiv.classList.add('module-block');
+            // Add disabled class if BOTH publisher/subscriber roles (if applicable) are disabled
+            if (
+              isPublisher &&
+              !isPublisherEnabled &&
+              isSubscriber &&
+              !isSubscriberEnabled
+            ) {
+              moduleDiv.classList.add('disabled-interaction');
+            }
+
+            const nameDiv = document.createElement('div');
+            nameDiv.classList.add('module-name');
+            nameDiv.textContent = moduleId;
+
+            // --- Publisher Column --- //
+            const publisherCol = document.createElement('div');
+            publisherCol.classList.add('symbols-column', 'publisher-symbol');
+            if (isPublisher) {
+              publisherCol.textContent = '[P]';
+              const checkbox = this._createToggleCheckbox(
+                eventName,
+                moduleId,
+                'eventBusPublisher',
+                isPublisherEnabled
+              );
+              publisherCol.appendChild(checkbox);
+              if (!isPublisherEnabled)
+                publisherCol.classList.add('disabled-interaction');
+            }
+
+            // --- Subscriber Column --- //
+            const subscriberCol = document.createElement('div');
+            subscriberCol.classList.add('symbols-column', 'subscriber-symbol');
+            if (isSubscriber) {
+              subscriberCol.textContent = '[S]';
+              const checkbox = this._createToggleCheckbox(
+                eventName,
+                moduleId,
+                'eventBusSubscriber',
+                isSubscriberEnabled
+              );
+              subscriberCol.appendChild(checkbox);
+              if (!isSubscriberEnabled)
+                subscriberCol.classList.add('disabled-interaction');
+            }
+
+            moduleDiv.appendChild(nameDiv);
+            moduleDiv.appendChild(publisherCol);
+            moduleDiv.appendChild(subscriberCol);
+            eventContainer.appendChild(moduleDiv);
+
+            // Add connector
+            if (index < relevantModulesInOrder.length - 1) {
+              const connector = document.createElement('div');
+              connector.classList.add('connector');
+              eventContainer.appendChild(connector);
+            }
+          });
+          categoryDiv.appendChild(eventContainer);
         });
       });
   }
@@ -178,81 +400,83 @@ class EventsUI {
       const eventContainer = document.createElement('div');
       eventContainer.classList.add('dispatcher-event');
       eventContainer.style.marginBottom = '20px';
-      eventContainer.style.border = '1px solid #ccc';
+      eventContainer.style.border = '1px solid #4b5263';
       eventContainer.style.padding = '10px';
 
       eventContainer.innerHTML = `<h4>${eventName}</h4>`;
 
       // Create vertical stack using only the relevant modules in their load priority order
       relevantModulesInOrder.forEach((moduleId, index) => {
+        const senderInfo = senders.find((s) => s.moduleId === moduleId);
+        const isSender = !!senderInfo;
+        const isSenderEnabled = isSender && senderInfo.enabled !== false;
+
+        const handlerInfo = handlers.find((h) => h.moduleId === moduleId);
+        const isHandler = !!handlerInfo;
+        const isHandlerEnabled = isHandler && handlerInfo.enabled !== false;
+
         const moduleDiv = document.createElement('div');
         moduleDiv.classList.add('module-block');
-        moduleDiv.style.border = '1px dashed #eee';
-        moduleDiv.style.padding = '5px';
-        moduleDiv.style.marginBottom = '5px';
-        moduleDiv.style.position = 'relative'; // For absolute positioning of arrows
-        moduleDiv.textContent = moduleId;
-
-        // Find sender info for this module and event
-        const senderInfo = senders.find((s) => s.moduleId === moduleId);
-        if (senderInfo) {
-          // TODO: Add sender symbol (originating arrow)
-          const senderSymbol = document.createElement('span');
-          senderSymbol.textContent = ' [S] '; // Placeholder
-          senderSymbol.style.color = 'blue';
-          moduleDiv.appendChild(senderSymbol);
-          // TODO: Handle first/last wrap-around arrows
+        if (isSender && !isSenderEnabled && isHandler && !isHandlerEnabled) {
+          moduleDiv.classList.add('disabled-interaction');
         }
 
-        // Find handler info for this module and event
-        const handlerInfo = handlers.find((h) => h.moduleId === moduleId);
-        if (handlerInfo) {
-          // Display symbols based on propagation details
-          const handlerSymbols = document.createElement('span');
-          handlerSymbols.style.marginLeft = '5px'; // Add some space
-          let symbolsText = '';
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('module-name');
+        nameDiv.textContent = moduleId;
 
+        // --- Sender Column --- //
+        const senderCol = document.createElement('div');
+        senderCol.classList.add('symbols-column', 'sender-symbol');
+        if (isSender) {
+          senderCol.textContent = '[S]'; // Placeholder symbol
+          const checkbox = this._createToggleCheckbox(
+            eventName,
+            moduleId,
+            'dispatcherSender',
+            isSenderEnabled
+          );
+          senderCol.appendChild(checkbox);
+          if (!isSenderEnabled) senderCol.classList.add('disabled-interaction');
+          // TODO: Adjust sender symbol based on direction/target? Still needed.
+        }
+
+        // --- Handler Column --- //
+        const handlerCol = document.createElement('div');
+        handlerCol.classList.add('symbols-column', 'handler-symbol');
+        if (isHandler) {
+          let symbolsText = '';
           if (handlerInfo.propagationDetails) {
             const details = handlerInfo.propagationDetails;
-            // Direction Arrow
-            if (details.direction === 'highestFirst') {
-              symbolsText += '↓';
-            } else if (details.direction === 'lowestFirst') {
-              symbolsText += '↑';
-            } else {
-              // Default or 'none' - maybe a dot or nothing?
-              symbolsText += '●'; // Using a dot for non-propagating handlers
-            }
-
-            // Timing Symbol
-            if (details.timing === 'delayed') {
-              symbolsText += '⏳';
-            }
-
-            // Condition Symbol
-            if (details.condition === 'conditional') {
-              symbolsText += '❓';
-            }
+            if (details.direction === 'highestFirst') symbolsText += '↓';
+            else if (details.direction === 'lowestFirst') symbolsText += '↑';
+            else symbolsText += '●'; // Non-propagating handler
+            if (details.timing === 'delayed') symbolsText += '⏳';
+            if (details.condition === 'conditional') symbolsText += '❓';
           } else {
-            // Registered via old method - indicate basic handling without details
-            symbolsText = '[H]'; // Revert to old placeholder if no details
+            symbolsText = '[H]'; // Basic handler, no details
           }
-
-          handlerSymbols.textContent = ` ${symbolsText} `;
-          handlerSymbols.style.color = 'green'; // Keep green for handlers
-          moduleDiv.appendChild(handlerSymbols);
+          handlerCol.textContent = symbolsText;
+          const checkbox = this._createToggleCheckbox(
+            eventName,
+            moduleId,
+            'dispatcherHandler',
+            isHandlerEnabled
+          );
+          handlerCol.appendChild(checkbox);
+          if (!isHandlerEnabled)
+            handlerCol.classList.add('disabled-interaction');
         }
 
+        moduleDiv.appendChild(nameDiv);
+        moduleDiv.appendChild(senderCol); // Add sender column
+        moduleDiv.appendChild(handlerCol); // Add handler column
         eventContainer.appendChild(moduleDiv);
 
-        // Add connector placeholder (simple line for now)
-        // Skip after the last relevant module
+        // Add connector placeholder
         if (index < relevantModulesInOrder.length - 1) {
           const connector = document.createElement('div');
-          connector.style.height = '10px';
-          connector.style.width = '1px';
-          connector.style.backgroundColor = '#aaa';
-          connector.style.margin = '0 auto'; // Center the line
+          connector.classList.add('connector');
           eventContainer.appendChild(connector);
         }
       });
@@ -264,6 +488,90 @@ class EventsUI {
     console.warn(
       '[EventsUI] Dispatcher event rendering is basic. Needs symbol/arrow implementation.'
     );
+  }
+
+  // --- Helper to create toggle checkboxes --- //
+  _createToggleCheckbox(eventName, moduleId, type, isEnabled) {
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = isEnabled;
+    checkbox.title = `${isEnabled ? 'Disable' : 'Enable'} this interaction`;
+    checkbox.addEventListener('change', (event) => {
+      const newState = event.target.checked;
+      try {
+        const registry = this.initApi.getModuleManager()._getRawRegistry();
+        let success = false;
+        switch (type) {
+          case 'eventBusPublisher':
+            success = registry.setEventBusPublisherEnabled(
+              eventName,
+              moduleId,
+              newState
+            );
+            break;
+          case 'eventBusSubscriber':
+            success = registry.setEventBusSubscriberEnabled(
+              eventName,
+              moduleId,
+              newState
+            );
+            break;
+          case 'dispatcherSender':
+            success = registry.setDispatcherSenderEnabled(
+              eventName,
+              moduleId,
+              newState
+            );
+            break;
+          case 'dispatcherHandler':
+            success = registry.setDispatcherHandlerEnabled(
+              eventName,
+              moduleId,
+              newState
+            );
+            break;
+        }
+        if (success) {
+          console.log(
+            `Successfully toggled ${type} for ${moduleId} on ${eventName} to ${newState}`
+          );
+          // Update visual style immediately
+          event.target
+            .closest('.symbols-column')
+            .classList.toggle('disabled-interaction', !newState);
+          // Potentially update parent module-block style too
+        } else {
+          console.error(`Failed to toggle ${type} state in registry.`);
+          event.target.checked = !newState; // Revert checkbox on failure
+        }
+      } catch (error) {
+        console.error(
+          `Error calling registry toggle function for ${type}:`,
+          error
+        );
+        event.target.checked = !newState; // Revert checkbox on failure
+      }
+    });
+    return checkbox;
+  }
+
+  // Handler for module state changes
+  handleModuleStateChange(payload) {
+    console.log(
+      `[EventsUI] Received module:stateChanged for ${payload.moduleId}. Refreshing data...`
+    );
+    // Simple approach: reload all data and re-render
+    this._loadAndRenderData();
+  }
+
+  // Clean up subscriptions when the panel is destroyed
+  destroy() {
+    if (this.unsubscribeModuleState) {
+      this.unsubscribeModuleState();
+      this.unsubscribeModuleState = null;
+      console.log('[EventsUI] Unsubscribed from module:stateChanged.');
+    }
+    // Add any other cleanup needed
   }
 }
 

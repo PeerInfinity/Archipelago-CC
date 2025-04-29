@@ -2,14 +2,14 @@ class CentralRegistry {
   constructor() {
     this.panelComponents = new Map(); // componentType -> { moduleId: string, componentClass: Function }
     this.moduleIdToComponentType = new Map(); // moduleId -> componentType
-    this.dispatcherHandlers = new Map(); // eventName -> Array<{moduleId, handlerFunction, propagationDetails}>
+    this.dispatcherHandlers = new Map(); // eventName -> Array<{moduleId, handlerFunction, propagationDetails, enabled: boolean}>
     this.settingsSchemas = new Map(); // moduleId -> schemaSnippet
     this.publicFunctions = new Map(); // moduleId -> Map<functionName, functionRef>
 
     // New maps for event registration details
-    this.dispatcherSenders = new Map(); // eventName -> Array<{moduleId, direction: 'highestFirst'|'lowestFirst'|'next', target: 'first'|'last'|'next'}>
-    this.eventBusPublishers = new Map(); // eventName -> Set<moduleId>
-    this.eventBusSubscribers = new Map(); // eventName -> Array<{moduleId, callback}>
+    this.dispatcherSenders = new Map(); // eventName -> Array<{moduleId, direction: 'highestFirst'|'lowestFirst'|'next', target: 'first'|'last'|'next', enabled: boolean}>
+    this.eventBusPublishers = new Map(); // eventName -> Map<moduleId, { enabled: boolean }>
+    this.eventBusSubscribers = new Map(); // eventName -> Array<{moduleId, callback, enabled: boolean}>
 
     console.log('CentralRegistry initialized');
   }
@@ -57,6 +57,7 @@ class CentralRegistry {
       moduleId,
       handlerFunction,
       propagationDetails: null, // Default for basic registration
+      enabled: true, // Default enabled state
     });
   }
 
@@ -78,6 +79,7 @@ class CentralRegistry {
       moduleId,
       handlerFunction,
       propagationDetails, // Store the provided details
+      enabled: true, // Default enabled state
     });
   }
 
@@ -89,17 +91,20 @@ class CentralRegistry {
     console.log(
       `[Registry] Registering dispatcher sender for '${eventName}' from ${moduleId} (Direction: ${direction}, Target: ${target})`
     );
-    this.dispatcherSenders.get(eventName).push({ moduleId, direction, target });
+    this.dispatcherSenders
+      .get(eventName)
+      .push({ moduleId, direction, target, enabled: true }); // Default enabled state
   }
 
   registerEventBusPublisher(moduleId, eventName) {
     if (!this.eventBusPublishers.has(eventName)) {
-      this.eventBusPublishers.set(eventName, new Set());
+      this.eventBusPublishers.set(eventName, new Map());
     }
     console.log(
       `[Registry] Registering event bus publisher for '${eventName}' from ${moduleId}`
     );
-    this.eventBusPublishers.get(eventName).add(moduleId);
+    // Store publisher with enabled state
+    this.eventBusPublishers.get(eventName).set(moduleId, { enabled: true });
   }
 
   registerEventBusSubscriber(moduleId, eventName, callback) {
@@ -109,7 +114,9 @@ class CentralRegistry {
     console.log(
       `[Registry] Registering event bus subscriber for '${eventName}' from ${moduleId}`
     );
-    this.eventBusSubscribers.get(eventName).push({ moduleId, callback });
+    this.eventBusSubscribers
+      .get(eventName)
+      .push({ moduleId, callback, enabled: true }); // Default enabled state
   }
 
   registerSettingsSchema(moduleId, schemaSnippet) {
@@ -154,7 +161,7 @@ class CentralRegistry {
   /**
    * Returns the map of all registered event handlers with propagation details.
    * Expected propagationDetails structure: { direction: 'highestFirst'|'lowestFirst'|'none', condition: 'conditional'|'unconditional', timing: 'immediate'|'delayed' } | null
-   * @returns {Map<string, Array<{moduleId: string, handlerFunction: Function, propagationDetails: object | null}>>}
+   * @returns {Map<string, Array<{moduleId: string, handlerFunction: Function, propagationDetails: object | null, enabled: boolean}>>}
    */
   getAllDispatcherHandlers() {
     return this.dispatcherHandlers;
@@ -162,7 +169,7 @@ class CentralRegistry {
 
   /**
    * Returns the map of all registered dispatcher senders.
-   * @returns {Map<string, Array<{moduleId: string, direction: string, target: string}>>}
+   * @returns {Map<string, Array<{moduleId: string, direction: string, target: string, enabled: boolean}>>}
    */
   getAllDispatcherSenders() {
     return this.dispatcherSenders;
@@ -170,7 +177,7 @@ class CentralRegistry {
 
   /**
    * Returns the map of all registered EventBus publishers.
-   * @returns {Map<string, Set<string>>} Map of eventName -> Set<moduleId>
+   * @returns {Map<string, Map<string, {enabled: boolean}>>} Map of eventName -> Map<moduleId, {enabled}>
    */
   getAllEventBusPublishers() {
     return this.eventBusPublishers;
@@ -178,7 +185,7 @@ class CentralRegistry {
 
   /**
    * Returns the map of all registered EventBus subscribers.
-   * @returns {Map<string, Array<{moduleId: string, callback: Function}>>}
+   * @returns {Map<string, Array<{moduleId: string, callback: Function, enabled: boolean}>>}
    */
   getAllEventBusSubscribers() {
     return this.eventBusSubscribers;
@@ -193,6 +200,99 @@ class CentralRegistry {
   }
 
   // TODO: Add unregister methods? Needed for full module unloading.
+
+  // --- Methods to toggle enabled state --- //
+
+  _setEnabledState(map, eventName, moduleId, isEnabled, findCallback = null) {
+    if (!map.has(eventName)) {
+      console.warn(`[Registry Toggle] Event '${eventName}' not found in map.`);
+      return false;
+    }
+
+    const entries = map.get(eventName);
+    let found = false;
+
+    if (entries instanceof Map) {
+      // For eventBusPublishers
+      if (entries.has(moduleId)) {
+        entries.get(moduleId).enabled = isEnabled;
+        found = true;
+      }
+    } else if (Array.isArray(entries)) {
+      // For handlers, senders, subscribers
+      const entry = entries.find(
+        (e) =>
+          e.moduleId === moduleId &&
+          (!findCallback || e.callback === findCallback)
+      );
+      if (entry) {
+        entry.enabled = isEnabled;
+        found = true;
+      }
+    }
+
+    if (found) {
+      console.log(
+        `[Registry Toggle] Set '${eventName}' for module '${moduleId}' to enabled=${isEnabled}`
+      );
+    } else {
+      console.warn(
+        `[Registry Toggle] Could not find entry for '${eventName}' and module '${moduleId}'.`
+      );
+    }
+    return found;
+  }
+
+  setDispatcherHandlerEnabled(eventName, moduleId, isEnabled) {
+    return this._setEnabledState(
+      this.dispatcherHandlers,
+      eventName,
+      moduleId,
+      isEnabled
+    );
+  }
+
+  setDispatcherSenderEnabled(eventName, moduleId, isEnabled) {
+    return this._setEnabledState(
+      this.dispatcherSenders,
+      eventName,
+      moduleId,
+      isEnabled
+    );
+  }
+
+  setEventBusPublisherEnabled(eventName, moduleId, isEnabled) {
+    // Special handling because the value is an object { enabled: ...}
+    if (!this.eventBusPublishers.has(eventName)) {
+      console.warn(
+        `[Registry Toggle] Event '${eventName}' not found for EventBus publishers.`
+      );
+      return false;
+    }
+    const moduleMap = this.eventBusPublishers.get(eventName);
+    if (!moduleMap.has(moduleId)) {
+      console.warn(
+        `[Registry Toggle] Module '${moduleId}' not found for EventBus event '${eventName}'.`
+      );
+      return false;
+    }
+    moduleMap.get(moduleId).enabled = isEnabled;
+    console.log(
+      `[Registry Toggle] Set publisher '${eventName}' for module '${moduleId}' to enabled=${isEnabled}`
+    );
+    return true;
+  }
+
+  setEventBusSubscriberEnabled(eventName, moduleId, isEnabled) {
+    // We might need callback reference here if multiple callbacks per module+event are allowed
+    // For now, assuming one subscriber UI toggle per module+event
+    return this._setEnabledState(
+      this.eventBusSubscribers,
+      eventName,
+      moduleId,
+      isEnabled
+    );
+  }
 }
 
 // Export a singleton instance

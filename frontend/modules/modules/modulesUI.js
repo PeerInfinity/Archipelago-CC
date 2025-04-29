@@ -120,9 +120,12 @@ export class ModulesPanel {
       // }
     });
 
-    // TODO: Listen for external events (e.g., module state changed, panel closed)
-    // eventBus.subscribe('module:stateChanged', this._handleModuleStateChange.bind(this));
-    // eventBus.subscribe('panel:closed', this._handlePanelClosed.bind(this));
+    // Subscribe to external events
+    eventBus.subscribe(
+      'module:stateChanged',
+      this._handleModuleStateChange.bind(this)
+    );
+    // eventBus.subscribe('panel:closed', this._handlePanelClosed.bind(this)); // Keep commented for now
     eventBus.subscribe('module:loaded', this._handleModuleLoaded.bind(this)); // Listen for newly loaded modules
     eventBus.subscribe(
       'module:loadFailed',
@@ -318,10 +321,13 @@ export class ModulesPanel {
     console.log(
       `ModulesPanel received external state change for ${moduleId}: ${isEnabled}`
     );
+    // Update local state if the module exists
     if (this.moduleStates[moduleId]) {
       this.moduleStates[moduleId].enabled = isEnabled;
-      this._updateCheckboxVisualState(moduleId, isEnabled);
     }
+    // Update the visual state of the checkbox regardless
+    // (Handles cases where state might have been out of sync)
+    this._updateCheckboxVisualState(moduleId, isEnabled);
   }
 
   // Example handler for panel closing events
@@ -407,6 +413,10 @@ export class ModulesPanel {
   destroy() {
     console.log('Destroying ModulesPanel');
     // Remove event listeners
+    eventBus.unsubscribe(
+      'module:stateChanged',
+      this._handleModuleStateChange.bind(this)
+    );
     eventBus.unsubscribe('module:loaded', this._handleModuleLoaded.bind(this));
     eventBus.unsubscribe(
       'module:loadFailed',

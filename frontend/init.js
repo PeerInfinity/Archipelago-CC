@@ -568,6 +568,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.moduleManagerApi = moduleManagerApi; // Expose for debugging
 
+    // Register the 'modules' module as the publisher of state change events
+    centralRegistry.registerEventBusPublisher('modules', 'module:stateChanged');
+
     // --- 5. Initialization Phase --- (Use helper function)
     console.log(
       '[Init] Starting module initialization phase (in priority order)...'

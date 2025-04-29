@@ -66,6 +66,7 @@ class EventDispatcher {
     // Filter for enabled modules and sort by priority
     const eligibleHandlers = potentialHandlers
       .filter((entry) => this.isModuleEnabled(entry.moduleId)) // Use checker function
+      .filter((entry) => entry.enabled !== false) // Also check if the specific handler registration is enabled (default true)
       .sort((a, b) => {
         const priorityA = this._getPriorityIndex(a.moduleId); // Get current priority
         const priorityB = this._getPriorityIndex(b.moduleId);
@@ -138,7 +139,12 @@ class EventDispatcher {
     const eligibleNextHandlers = potentialHandlers
       .filter((entry) => {
         const entryPriority = this._getPriorityIndex(entry.moduleId);
-        if (!this.isModuleEnabled(entry.moduleId) || entryPriority === -1) {
+        // Check module enabled, handler enabled, and priority validity
+        if (
+          !this.isModuleEnabled(entry.moduleId) ||
+          entry.enabled === false ||
+          entryPriority === -1
+        ) {
           return false;
         }
         // If highestFirst, we want modules with lower priority index (loaded after)

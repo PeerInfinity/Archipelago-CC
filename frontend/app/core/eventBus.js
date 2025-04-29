@@ -1,4 +1,6 @@
 // eventBus.js
+import centralRegistry from './centralRegistry.js'; // Import registry
+
 export class EventBus {
   constructor() {
     this.events = {};
@@ -21,11 +23,37 @@ export class EventBus {
       return;
     }
 
+    // Get subscriber info from registry to check enabled status
+    const subscriberInfoMap = new Map();
+    const subscribers =
+      centralRegistry.getAllEventBusSubscribers().get(event) || [];
+    subscribers.forEach((sub) => {
+      // Assuming one entry per module for now, store enabled state by callback ref
+      subscriberInfoMap.set(sub.callback, {
+        moduleId: sub.moduleId,
+        enabled: sub.enabled,
+      });
+    });
+
     this.events[event].forEach((callback) => {
-      try {
-        callback(data);
-      } catch (error) {
-        console.error(`Error in event handler for ${event}:`, error);
+      const subInfo = subscriberInfoMap.get(callback);
+      // Check if the subscriber is registered AND enabled
+      if (subInfo && subInfo.enabled !== false) {
+        // Default to enabled if somehow missing
+        try {
+          callback(data);
+        } catch (error) {
+          console.error(`Error in event handler for ${event}:`, error);
+        }
+      } else if (subInfo && subInfo.enabled === false) {
+        // console.log(`[EventBus] Skipping disabled subscriber for ${event}: module ${subInfo.moduleId}`);
+      } else {
+        // This callback is subscribed but not found in centralRegistry - shouldn't happen if using registerEventBusSubscriber
+        // console.warn(`[EventBus] Callback for ${event} is subscribed but not found in registry. Executing anyway.`);
+        // Decide whether to execute unregistered callbacks - for now, let's skip them to encourage registration
+        console.warn(
+          `[EventBus] Skipping execution for ${event}: Callback not found or registered via centralRegistry.`
+        );
       }
     });
   }

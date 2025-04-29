@@ -2,6 +2,7 @@
 import eventBus from './eventBus.js';
 import panelManagerInstance from './panelManagerSingleton.js'; // Import the singleton instance
 import { GoldenLayout } from '../../libs/golden-layout/js/esm/golden-layout.js';
+import centralRegistry from './centralRegistry.js'; // Import Central Registry
 
 class PanelManager {
   constructor() {
@@ -429,6 +430,58 @@ class PanelManager {
         });
         container.on('destroy', () => {
           console.log(`   [${componentTypeName}] Panel Destroyed`);
+
+          // --- Disable the corresponding module --- //
+          try {
+            let moduleIdToDisable = null;
+            // Find moduleId associated with this componentType
+            for (const [
+              modId,
+              compType,
+            ] of centralRegistry.moduleIdToComponentType.entries()) {
+              if (compType === componentTypeName) {
+                moduleIdToDisable = modId;
+                break;
+              }
+            }
+
+            if (moduleIdToDisable) {
+              console.log(
+                `[PanelManager] Panel closed for ${componentTypeName}, requesting disable for module: ${moduleIdToDisable}`
+              );
+              // Access moduleManagerApi globally
+              const moduleManager = window.moduleManagerApi;
+              if (
+                moduleManager &&
+                typeof moduleManager.disableModule === 'function'
+              ) {
+                // Use await? Disable is async, but we might not need to wait here.
+                // If disableModule fails, it should log its own error.
+                moduleManager.disableModule(moduleIdToDisable).catch((err) => {
+                  console.error(
+                    `[PanelManager] Error occurred during async disableModule call for ${moduleIdToDisable}:`,
+                    err
+                  );
+                });
+              } else {
+                console.warn(
+                  `[PanelManager] Cannot disable module ${moduleIdToDisable}: moduleManagerApi or disableModule function not found.`
+                );
+              }
+            } else {
+              console.warn(
+                `[PanelManager] Could not find module ID associated with closed panel componentType: ${componentTypeName}`
+              );
+            }
+          } catch (error) {
+            console.error(
+              '[PanelManager] Error during module disable lookup/call on panel destroy:',
+              error
+            );
+          }
+          // --- End Disable Module --- //
+
+          // Original cleanup logic follows...
           if (
             this.uiProvider &&
             typeof this.uiProvider.onPanelDestroy === 'function'
