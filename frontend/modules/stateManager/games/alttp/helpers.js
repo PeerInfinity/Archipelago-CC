@@ -1,15 +1,19 @@
 import { GameHelpers } from '../../helpers/index.js';
-import { stateManager } from '../../../modules/stateManager/index.js';
 
 export class ALTTPHelpers extends GameHelpers {
+  constructor(stateManagerInstance) {
+    super();
+    this.stateManager = stateManagerInstance;
+  }
+
   // Following the same order as StateHelpers.py
 
   is_not_bunny(region) {
-    if (stateManager.inventory.has('Moon Pearl')) {
+    if (this.stateManager.inventory.has('Moon Pearl')) {
       return true;
     }
 
-    const isInverted = stateManager.state.gameMode === 'inverted';
+    const isInverted = this.stateManager.state.gameMode === 'inverted';
     return isInverted ? region.is_dark_world : region.is_light_world;
   }
 
@@ -17,19 +21,19 @@ export class ALTTPHelpers extends GameHelpers {
     return (
       this.can_use_bombs() &&
       this.is_not_bunny(region) &&
-      stateManager.inventory.has('Pegasus Boots')
+      this.stateManager.inventory.has('Pegasus Boots')
     );
   }
 
   can_buy_unlimited(item) {
     // This function checks if any accessible shop has an unlimited quantity of the item
-    const shops = stateManager.state.shops || [];
+    const shops = this.stateManager.state.shops || [];
 
     // Check all shops for unlimited items
     for (const shop of shops) {
       // Skip shops that can't be reached
       const shopRegion = shop.region_name;
-      if (!shopRegion || !stateManager.isRegionReachable(shopRegion)) {
+      if (!shopRegion || !this.stateManager.isRegionReachable(shopRegion)) {
         continue;
       }
 
@@ -48,7 +52,7 @@ export class ALTTPHelpers extends GameHelpers {
 
     // Fallback to checking for the item availability in hardcoded shops
     if (item === 'Green Potion' || item === 'Blue Potion') {
-      return stateManager.isRegionReachable('Potion Shop');
+      return this.stateManager.isRegionReachable('Potion Shop');
     }
 
     return false;
@@ -56,13 +60,13 @@ export class ALTTPHelpers extends GameHelpers {
 
   can_buy(item) {
     // This function checks if any accessible shop has the item in stock
-    const shops = stateManager.state.shops || [];
+    const shops = this.stateManager.state.shops || [];
 
     // Check all shops for the item
     for (const shop of shops) {
       // Skip shops that can't be reached
       const shopRegion = shop.region_name;
-      if (!shopRegion || !stateManager.isRegionReachable(shopRegion)) {
+      if (!shopRegion || !this.stateManager.isRegionReachable(shopRegion)) {
         continue;
       }
 
@@ -78,7 +82,7 @@ export class ALTTPHelpers extends GameHelpers {
 
     // Fallback logic for specific items
     if (item === 'Single Arrow') {
-      return stateManager.isRegionReachable('Kakariko Shop');
+      return this.stateManager.isRegionReachable('Kakariko Shop');
     }
 
     return false;
@@ -86,15 +90,15 @@ export class ALTTPHelpers extends GameHelpers {
 
   can_shoot_arrows(count = 0) {
     const hasBow =
-      stateManager.inventory.has('Bow') ||
-      stateManager.inventory.has('Silver Bow');
+      this.stateManager.inventory.has('Bow') ||
+      this.stateManager.inventory.has('Silver Bow');
 
     if (!hasBow) return false;
 
     // Check retro bow flag or setting
     if (
-      stateManager.state?.hasFlag('retro_bow') ||
-      stateManager.state?.gameSettings?.retro_bow
+      this.stateManager.state?.hasFlag('retro_bow') ||
+      this.stateManager.state?.gameSettings?.retro_bow
     ) {
       return hasBow && this.can_buy('Single Arrow');
     }
@@ -104,10 +108,10 @@ export class ALTTPHelpers extends GameHelpers {
 
   has_triforce_pieces() {
     // Get required count from state
-    const requiredCount = stateManager.state.treasureHuntRequired;
+    const requiredCount = this.stateManager.state.treasureHuntRequired;
 
-    const triforceCount = stateManager.inventory.count('Triforce Piece');
-    const powerStarCount = stateManager.inventory.count('Power Star');
+    const triforceCount = this.stateManager.inventory.count('Triforce Piece');
+    const powerStarCount = this.stateManager.inventory.count('Power Star');
 
     return triforceCount + powerStarCount >= requiredCount;
   }
@@ -115,11 +119,11 @@ export class ALTTPHelpers extends GameHelpers {
   has_crystals(count) {
     // Default to 7 if count is undefined
     const requiredCount = count === undefined ? 7 : count;
-    return stateManager.inventory.countGroup('Crystals') >= requiredCount;
+    return this.stateManager.inventory.countGroup('Crystals') >= requiredCount;
   }
 
   can_lift_rocks() {
-    if (!stateManager.inventory) {
+    if (!this.stateManager.inventory) {
       console.error('Inventory is undefined in can_lift_rocks!', {
         helperInstance: this,
         stackTrace: new Error().stack,
@@ -128,14 +132,14 @@ export class ALTTPHelpers extends GameHelpers {
     }
 
     const result =
-      stateManager.inventory.has('Power Glove') ||
-      stateManager.inventory.has('Titans Mitts');
+      this.stateManager.inventory.has('Power Glove') ||
+      this.stateManager.inventory.has('Titans Mitts');
 
     return result;
   }
 
   can_lift_heavy_rocks() {
-    const result = stateManager.inventory.has('Titans Mitts');
+    const result = this.stateManager.inventory.has('Titans Mitts');
 
     return result;
   }
@@ -143,8 +147,11 @@ export class ALTTPHelpers extends GameHelpers {
   bottle_count() {
     // Get the progressive bottle limit from state
     const bottleLimit =
-      stateManager.state.difficultyRequirements.progressive_bottle_limit;
-    return Math.min(bottleLimit, stateManager.inventory.countGroup('Bottles'));
+      this.stateManager.state.difficultyRequirements.progressive_bottle_limit;
+    return Math.min(
+      bottleLimit,
+      this.stateManager.inventory.countGroup('Bottles')
+    );
   }
 
   has_hearts(count) {
@@ -154,22 +161,22 @@ export class ALTTPHelpers extends GameHelpers {
   heart_count() {
     // Get difficulty requirements from state
     const bossHeartLimit =
-      stateManager.state.difficultyRequirements.boss_heart_container_limit;
+      this.stateManager.state.difficultyRequirements.boss_heart_container_limit;
     const heartPieceLimit =
-      stateManager.state.difficultyRequirements.heart_piece_limit;
+      this.stateManager.state.difficultyRequirements.heart_piece_limit;
 
     const bossHearts = Math.min(
-      stateManager.inventory.count('Boss Heart Container'),
+      this.stateManager.inventory.count('Boss Heart Container'),
       bossHeartLimit
     );
 
-    const sanctuaryHearts = stateManager.inventory.count(
+    const sanctuaryHearts = this.stateManager.inventory.count(
       'Sanctuary Heart Container'
     );
 
     const pieceHearts =
       Math.min(
-        stateManager.inventory.count('Piece of Heart'),
+        this.stateManager.inventory.count('Piece of Heart'),
         heartPieceLimit
       ) / 4;
 
@@ -180,9 +187,9 @@ export class ALTTPHelpers extends GameHelpers {
   can_extend_magic(smallmagic = 16, fullrefill = false) {
     // Calculate base magic capacity
     let basemagic = 8;
-    if (stateManager.inventory.has('Magic Upgrade (1/4)')) {
+    if (this.stateManager.inventory.has('Magic Upgrade (1/4)')) {
       basemagic = 32;
-    } else if (stateManager.inventory.has('Magic Upgrade (1/2)')) {
+    } else if (this.stateManager.inventory.has('Magic Upgrade (1/2)')) {
       basemagic = 16;
     }
 
@@ -193,7 +200,7 @@ export class ALTTPHelpers extends GameHelpers {
     ) {
       const bottleCount = this.bottle_count();
       const functionality =
-        stateManager.state.gameSettings.item_functionality || 'normal';
+        this.stateManager.state.gameSettings.item_functionality || 'normal';
 
       if (functionality === 'hard' && !fullrefill) {
         basemagic += Math.floor(basemagic * 0.5 * bottleCount);
@@ -208,26 +215,26 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   can_hold_arrows(quantity = 0) {
-    if (stateManager.state.gameSettings.shuffle_capacity_upgrades) {
+    if (this.stateManager.state.gameSettings.shuffle_capacity_upgrades) {
       if (quantity === 0) {
         return true;
       }
 
       let arrows = 30;
 
-      if (stateManager.inventory.has('Arrow Upgrade (70)')) {
+      if (this.stateManager.inventory.has('Arrow Upgrade (70)')) {
         arrows = 70;
       } else {
         // Add +5 upgrades
-        arrows += stateManager.inventory.count('Arrow Upgrade (+5)') * 5;
+        arrows += this.stateManager.inventory.count('Arrow Upgrade (+5)') * 5;
 
         // Add +10 upgrades
-        arrows += stateManager.inventory.count('Arrow Upgrade (+10)') * 10;
+        arrows += this.stateManager.inventory.count('Arrow Upgrade (+10)') * 10;
 
         // Arrow Upgrade (+5) beyond the 6th gives +10
         const extraUpgrades = Math.max(
           0,
-          stateManager.inventory.count('Arrow Upgrade (+5)') - 6
+          this.stateManager.inventory.count('Arrow Upgrade (+5)') - 6
         );
         arrows += extraUpgrades * 10;
       }
@@ -237,17 +244,17 @@ export class ALTTPHelpers extends GameHelpers {
 
     // Default case - non-shuffled capacity
     return (
-      quantity <= 30 || stateManager.inventory.has('Capacity Upgrade Shop')
+      quantity <= 30 || this.stateManager.inventory.has('Capacity Upgrade Shop')
     );
   }
 
   can_use_bombs(count = 1) {
-    const bombless = stateManager.state.hasFlag('bombless_start');
+    const bombless = this.stateManager.state.hasFlag('bombless_start');
     let bombs = bombless ? 0 : 10;
 
-    const plus5Count = stateManager.inventory.count('Bomb Upgrade (+5)');
-    const plus10Count = stateManager.inventory.count('Bomb Upgrade (+10)');
-    const plus50Count = stateManager.inventory.count('Bomb Upgrade (50)');
+    const plus5Count = this.stateManager.inventory.count('Bomb Upgrade (+5)');
+    const plus10Count = this.stateManager.inventory.count('Bomb Upgrade (+10)');
+    const plus50Count = this.stateManager.inventory.count('Bomb Upgrade (50)');
 
     bombs += plus5Count * 5;
     bombs += plus10Count * 10;
@@ -262,7 +269,9 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   can_bomb_or_bonk() {
-    return stateManager.inventory.has('Pegasus Boots') || this.can_use_bombs();
+    return (
+      this.stateManager.inventory.has('Pegasus Boots') || this.can_use_bombs()
+    );
   }
 
   can_activate_crystal_switch() {
@@ -270,44 +279,44 @@ export class ALTTPHelpers extends GameHelpers {
       this.has_melee_weapon() ||
       this.can_use_bombs() ||
       this.can_shoot_arrows() ||
-      stateManager.inventory.has('Hookshot') ||
-      stateManager.inventory.has('Cane of Somaria') ||
-      stateManager.inventory.has('Cane of Byrna') ||
-      stateManager.inventory.has('Fire Rod') ||
-      stateManager.inventory.has('Ice Rod') ||
-      stateManager.inventory.has('Blue Boomerang') ||
-      stateManager.inventory.has('Red Boomerang')
+      this.stateManager.inventory.has('Hookshot') ||
+      this.stateManager.inventory.has('Cane of Somaria') ||
+      this.stateManager.inventory.has('Cane of Byrna') ||
+      this.stateManager.inventory.has('Fire Rod') ||
+      this.stateManager.inventory.has('Ice Rod') ||
+      this.stateManager.inventory.has('Blue Boomerang') ||
+      this.stateManager.inventory.has('Red Boomerang')
     );
   }
 
   can_kill_most_things(count = 5) {
     return (
       this.has_melee_weapon() ||
-      stateManager.inventory.has('Cane of Somaria') ||
-      (stateManager.inventory.has('Cane of Byrna') &&
+      this.stateManager.inventory.has('Cane of Somaria') ||
+      (this.stateManager.inventory.has('Cane of Byrna') &&
         (count < 6 || this.can_extend_magic())) ||
       this.can_shoot_arrows() ||
-      stateManager.inventory.has('Fire Rod') ||
+      this.stateManager.inventory.has('Fire Rod') ||
       this.can_use_bombs(count * 4)
     );
   }
 
   can_get_good_bee() {
     // Check if the Good Bee Cave region is accessible
-    const caveAccessible = stateManager.isRegionReachable('Good Bee Cave');
+    const caveAccessible = this.stateManager.isRegionReachable('Good Bee Cave');
 
     return (
-      stateManager.inventory.countGroup('Bottles') > 0 &&
-      stateManager.inventory.has('Bug Catching Net') &&
-      (stateManager.inventory.has('Pegasus Boots') ||
-        (this.has_sword() && stateManager.inventory.has('Quake'))) &&
+      this.stateManager.inventory.countGroup('Bottles') > 0 &&
+      this.stateManager.inventory.has('Bug Catching Net') &&
+      (this.stateManager.inventory.has('Pegasus Boots') ||
+        (this.has_sword() && this.stateManager.inventory.has('Quake'))) &&
       caveAccessible &&
       this.is_not_bunny({ is_light_world: true, is_dark_world: false }) // Assuming Good Bee Cave is in light world
     );
   }
 
   can_retrieve_tablet() {
-    const hasBookOfMudora = stateManager.inventory.has('Book of Mudora');
+    const hasBookOfMudora = this.stateManager.inventory.has('Book of Mudora');
 
     if (!hasBookOfMudora) {
       return false;
@@ -315,94 +324,94 @@ export class ALTTPHelpers extends GameHelpers {
 
     // Check if we have beam sword OR (swordless mode AND hammer)
     const hasSword = this.has_beam_sword();
-    const isSwordlessMode = stateManager.state.hasFlag('swordless');
-    const hasHammer = stateManager.inventory.has('Hammer');
+    const isSwordlessMode = this.stateManager.state.hasFlag('swordless');
+    const hasHammer = this.stateManager.inventory.has('Hammer');
 
     return hasSword || (isSwordlessMode && hasHammer);
   }
 
   has_sword() {
     return (
-      stateManager.inventory.has('Fighter Sword') ||
-      stateManager.inventory.has('Master Sword') ||
-      stateManager.inventory.has('Tempered Sword') ||
-      stateManager.inventory.has('Golden Sword')
+      this.stateManager.inventory.has('Fighter Sword') ||
+      this.stateManager.inventory.has('Master Sword') ||
+      this.stateManager.inventory.has('Tempered Sword') ||
+      this.stateManager.inventory.has('Golden Sword')
     );
   }
 
   has_beam_sword() {
     return (
-      stateManager.inventory.has('Master Sword') ||
-      stateManager.inventory.has('Tempered Sword') ||
-      stateManager.inventory.has('Golden Sword')
+      this.stateManager.inventory.has('Master Sword') ||
+      this.stateManager.inventory.has('Tempered Sword') ||
+      this.stateManager.inventory.has('Golden Sword')
     );
   }
 
   has_melee_weapon() {
-    return this.has_sword() || stateManager.inventory.has('Hammer');
+    return this.has_sword() || this.stateManager.inventory.has('Hammer');
   }
 
   has_fire_source() {
     return (
-      stateManager.inventory.has('Fire Rod') ||
-      stateManager.inventory.has('Lamp')
+      this.stateManager.inventory.has('Fire Rod') ||
+      this.stateManager.inventory.has('Lamp')
     );
   }
 
   can_melt_things() {
     return (
-      stateManager.inventory.has('Fire Rod') ||
-      (stateManager.inventory.has('Bombos') &&
-        (stateManager.state.hasFlag('swordless') || this.has_sword()))
+      this.stateManager.inventory.has('Fire Rod') ||
+      (this.stateManager.inventory.has('Bombos') &&
+        (this.stateManager.state.hasFlag('swordless') || this.has_sword()))
     );
   }
 
   has_misery_mire_medallion() {
     // Get the specific medallion from state
     const medallion =
-      stateManager.state.gameSettings.misery_mire_medallion ||
-      stateManager.state.requiredMedallions[0] ||
+      this.stateManager.state.gameSettings.misery_mire_medallion ||
+      this.stateManager.state.requiredMedallions[0] ||
       'Ether';
-    return stateManager.inventory.has(medallion);
+    return this.stateManager.inventory.has(medallion);
   }
 
   has_turtle_rock_medallion() {
     // Get the specific medallion from state
     const medallion =
-      stateManager.state.gameSettings.turtle_rock_medallion ||
-      stateManager.state.requiredMedallions[1] ||
+      this.stateManager.state.gameSettings.turtle_rock_medallion ||
+      this.stateManager.state.requiredMedallions[1] ||
       'Quake';
-    return stateManager.inventory.has(medallion);
+    return this.stateManager.inventory.has(medallion);
   }
 
   can_boots_clip_lw() {
-    if (stateManager.state.gameMode === 'inverted') {
+    if (this.stateManager.state.gameMode === 'inverted') {
       return (
-        stateManager.inventory.has('Pegasus Boots') &&
-        stateManager.inventory.has('Moon Pearl')
+        this.stateManager.inventory.has('Pegasus Boots') &&
+        this.stateManager.inventory.has('Moon Pearl')
       );
     }
-    return stateManager.inventory.has('Pegasus Boots');
+    return this.stateManager.inventory.has('Pegasus Boots');
   }
 
   can_boots_clip_dw() {
-    if (stateManager.state.gameMode !== 'inverted') {
+    if (this.stateManager.state.gameMode !== 'inverted') {
       return (
-        stateManager.inventory.has('Pegasus Boots') &&
-        stateManager.inventory.has('Moon Pearl')
+        this.stateManager.inventory.has('Pegasus Boots') &&
+        this.stateManager.inventory.has('Moon Pearl')
       );
     }
-    return stateManager.inventory.has('Pegasus Boots');
+    return this.stateManager.inventory.has('Pegasus Boots');
   }
 
   can_get_glitched_speed_dw() {
     const hasRequiredItems = [
-      stateManager.inventory.has('Pegasus Boots'),
-      stateManager.inventory.has('Hookshot') || this.has_sword(),
+      this.stateManager.inventory.has('Pegasus Boots'),
+      this.stateManager.inventory.has('Hookshot') || this.has_sword(),
     ];
 
-    if (stateManager.state.gameMode !== 'inverted') {
-      hasRequiredItems.push(stateManager.inventory.has('Moon Pearl'));
+    if (this.stateManager.state.gameMode !== 'inverted') {
+      hasRequiredItems.push(this.stateManager.inventory.has('Moon Pearl'));
     }
 
     return hasRequiredItems.every(Boolean);
@@ -418,14 +427,14 @@ export class ALTTPHelpers extends GameHelpers {
     if (Array.isArray(arg2) && arg3 === undefined) {
       // Assume arg2 is the location pairs list, use stateManager's player slot
       location_name_player_pairs = arg2;
-      player = stateManager.playerSlot; // Use playerSlot from stateManager
+      player = this.stateManager.playerSlot; // Use playerSlot from stateManager
       //console.warn(
       //  `item_name_in_location_names potentially missing player arg, defaulting to stateManager.playerSlot (${player})`
       //);
     } else {
       // Assume standard arguments: item, player, location_pairs
       // Use arg2 as player if it's a number, otherwise default to stateManager's player slot
-      player = typeof arg2 === 'number' ? arg2 : stateManager.playerSlot;
+      player = typeof arg2 === 'number' ? arg2 : this.stateManager.playerSlot;
       location_name_player_pairs = arg3;
     }
 
@@ -470,7 +479,7 @@ export class ALTTPHelpers extends GameHelpers {
 
   old_man() {
     // Placeholder.  Todo - copy the logic from Rules.py
-    return stateManager.isLocationAccessible('Old Man');
+    return this.stateManager.isLocationAccessible('Old Man');
   }
 
   basement_key_rule() {
@@ -495,8 +504,8 @@ export class ALTTPHelpers extends GameHelpers {
     // Python: state.has('Hammer', player) and state.has('Moon Pearl', player)
     // Assuming player 1 (local player)
     return (
-      stateManager.inventory.has('Hammer') &&
-      stateManager.inventory.has('Moon Pearl')
+      this.stateManager.inventory.has('Hammer') &&
+      this.stateManager.inventory.has('Moon Pearl')
     );
   }
 
@@ -562,13 +571,13 @@ export class ALTTPHelpers extends GameHelpers {
   can_reach(region, type = 'Region', player = 1) {
     // The context-aware state manager handles position-specific constraints correctly
     if (type === 'Region') {
-      return stateManager.isRegionReachable(region);
+      return this.stateManager.isRegionReachable(region);
     } else if (type === 'Location') {
       // Find the location object
-      const location = stateManager.locations.find(
+      const location = this.stateManager.locations.find(
         (loc) => loc.name === region
       );
-      return location && stateManager.isLocationAccessible(location);
+      return location && this.stateManager.isLocationAccessible(location);
     }
 
     return false;
@@ -607,9 +616,9 @@ export class ALTTPHelpers extends GameHelpers {
     const player = playerParam === 'player' ? 1 : parseInt(playerParam, 10);
 
     // Get count of the specific key in inventory
-    const keyCount = stateManager.inventory.count(key);
+    const keyCount = this.stateManager.inventory.count(key);
 
-    if (stateManager.debugMode) {
+    if (this.stateManager.debugMode) {
       console.log(
         `_lttp_has_key: ${key}, player=${player}, count=${count}, has=${keyCount}`
       );
@@ -625,13 +634,13 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   GanonDefeatRule() {
-    const isSwordless = stateManager.state.hasFlag('swordless');
+    const isSwordless = this.stateManager.state.hasFlag('swordless');
 
     if (isSwordless) {
       return (
-        stateManager.inventory.has('Hammer') &&
+        this.stateManager.inventory.has('Hammer') &&
         this.has_fire_source() &&
-        stateManager.inventory.has('Silver Bow') &&
+        this.stateManager.inventory.has('Silver Bow') &&
         this.can_shoot_arrows()
       );
     }
@@ -642,22 +651,22 @@ export class ALTTPHelpers extends GameHelpers {
     // Check glitches setting - Assuming glitches_required is a string 'no_glitches' or other values
     // Accessing nested properties safely
     const glitchesRequired =
-      stateManager.state.gameSettings?.glitches_required || 'no_glitches';
+      this.stateManager.state.gameSettings?.glitches_required || 'no_glitches';
 
     if (glitchesRequired !== 'no_glitches') {
       return (
         common &&
-        (stateManager.inventory.has('Tempered Sword') ||
-          stateManager.inventory.has('Golden Sword') ||
-          (stateManager.inventory.has('Silver Bow') &&
+        (this.stateManager.inventory.has('Tempered Sword') ||
+          this.stateManager.inventory.has('Golden Sword') ||
+          (this.stateManager.inventory.has('Silver Bow') &&
             this.can_shoot_arrows()) ||
-          stateManager.inventory.has('Lamp') ||
+          this.stateManager.inventory.has('Lamp') ||
           this.can_extend_magic(12)) // Assuming 12 magic cost for lighting torches
       );
     } else {
       return (
         common &&
-        stateManager.inventory.has('Silver Bow') &&
+        this.stateManager.inventory.has('Silver Bow') &&
         this.can_shoot_arrows()
       );
     }
@@ -679,7 +688,7 @@ export class ALTTPHelpers extends GameHelpers {
         continue; // Skip non-string items
       }
       // Check if the player has at least one of this item
-      if (stateManager.inventory.count(item, player) > 0) {
+      if (this.stateManager.inventory.count(item, player) > 0) {
         return true; // Found one
       }
     }
@@ -917,11 +926,11 @@ export class ALTTPHelpers extends GameHelpers {
    * @private
    */
   _findLocationByName(locationName) {
-    if (!stateManager || !stateManager.locations) {
+    if (!this.stateManager || !this.stateManager.locations) {
       return null;
     }
 
-    return stateManager.locations.find((loc) => loc.name === locationName);
+    return this.stateManager.locations.find((loc) => loc.name === locationName);
   }
 
   /**
@@ -929,17 +938,21 @@ export class ALTTPHelpers extends GameHelpers {
    * Call this when loading locations
    */
   enhanceLocationsWithShopData() {
-    if (!stateManager || !stateManager.locations || !stateManager.regions) {
+    if (
+      !this.stateManager ||
+      !this.stateManager.locations ||
+      !this.stateManager.regions
+    ) {
       return;
     }
 
     // Process all locations
-    for (const location of stateManager.locations) {
+    for (const location of this.stateManager.locations) {
       // Skip locations without a region
       if (!location.region) continue;
 
       // Get the region data
-      const regionData = stateManager.regions[location.region];
+      const regionData = this.stateManager.regions[location.region];
       if (!regionData || !regionData.shop) continue;
 
       // If the region has a shop, find the matching shop item

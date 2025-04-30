@@ -59,7 +59,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
   // Propagate the event to the next module in the chain
   const dispatcher = initApi?.getDispatcher(); // Use the stored initApi
   if (dispatcher) {
-    const direction = propagationOptions.propagationDirection || 'highestFirst'; // Use incoming direction or default
+    const direction = propagationOptions.propagationDirection || 'up'; // Use incoming direction or default
     dispatcher.publishToNextModule('editor', 'state:rulesLoaded', eventData, {
       direction: direction,
     });

@@ -43,6 +43,14 @@ export function register(registrationApi) {
     'state:regionViewed'
   );
   registrationApi.registerEventBusPublisher('stateManager', 'rules:loadError');
+  registrationApi.registerEventBusPublisher(
+    'stateManager',
+    'stateManager:rulesLoaded' // Processed rules event (Published by internal class)
+  );
+  registrationApi.registerEventBusPublisher(
+    'stateManager',
+    'stateManager:rawJsonDataLoaded' // Raw rules event (Published by this module)
+  );
 
   // Register events this module subscribes to on the EventBus
   registrationApi.registerEventBusSubscriber(
@@ -143,10 +151,31 @@ export async function postInitialize(initializationApi) {
 
       try {
         // Load and process rules, which populates stateManagerSingleton.instance
-        // and internally publishes the 'rulesLoaded' event.
-        await loadAndProcessDefaultRules();
-        // No need to explicitly publish state:rulesLoaded here,
-        // the StateManager class instance handles publishing its internal event.
+        // and internally publishes the 'stateManager:rulesLoaded' event.
+        const rulesLoadResult = await loadAndProcessDefaultRules();
+
+        // Check if loading succeeded and we have raw JSON data
+        if (rulesLoadResult && rulesLoadResult.jsonData) {
+          // Publish the RAW JSON data for modules like the editor
+          if (eventBus) {
+            eventBus.publish('stateManager:rawJsonDataLoaded', {
+              source: 'default_rules.json',
+              rawJsonData: rulesLoadResult.jsonData, // Pass the original raw JSON
+            });
+            console.log(
+              '[StateManager Module] Published stateManager:rawJsonDataLoaded via eventBus.'
+            );
+          } else {
+            console.warn(
+              '[StateManager Module] EventBus not available, cannot publish rawJsonDataLoaded.'
+            );
+          }
+        } else if (rulesLoadResult) {
+          console.warn(
+            '[StateManager Module] Rules loaded, but no jsonData found in result to publish for rawJsonDataLoaded.'
+          );
+        }
+        // Note: The processed 'stateManager:rulesLoaded' event is published internally by StateManager.js
       } catch (error) {
         // Errors during fetch/processing are caught and logged within loadAndProcessDefaultRules
         // We just need to prevent crashing the postInitialize chain

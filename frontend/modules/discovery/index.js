@@ -17,28 +17,17 @@ export function register(registrationApi) {
   registrationApi.registerDispatcherReceiver(
     'loop:exploreCompleted',
     handleExploreCompleted,
-    null // No specific propagation details needed
+    null
   );
   registrationApi.registerDispatcherReceiver(
     'loop:moveCompleted',
     handleMoveCompleted,
-    null // No specific propagation details needed
+    null
   );
   registrationApi.registerDispatcherReceiver(
     'loop:locationChecked',
     handleLocationChecked,
-    null // No specific propagation details needed
-  ); // Although check happens in stateManager, loop might trigger rediscovery?
-
-  // Register handler for rules loaded
-  registrationApi.registerDispatcherReceiver(
-    'state:rulesLoaded',
-    handleRulesLoaded,
-    {
-      direction: 'highestFirst',
-      condition: 'unconditional',
-      timing: 'immediate',
-    } // Propagates
+    null
   );
 
   // No panel component for Discovery module.
@@ -190,7 +179,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
   // Propagate the event to the next module in the chain
   const dispatcher = initApi?.getDispatcher(); // Corrected variable name from moduleInitApi
   if (dispatcher) {
-    const direction = propagationOptions.propagationDirection || 'highestFirst'; // Use incoming direction or default
+    const direction = propagationOptions.propagationDirection || 'up'; // Use incoming direction or default
     dispatcher.publishToNextModule(
       'discovery',
       'state:rulesLoaded',

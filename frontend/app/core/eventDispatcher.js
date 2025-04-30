@@ -51,10 +51,10 @@ class EventDispatcher {
    * @param {string} eventName - The name of the event to publish.
    * @param {any} data - The data payload associated with the event.
    * @param {object} [options={}] - Optional parameters.
-   * @param {'highestFirst'|'lowestFirst'} [options.direction='highestFirst'] - Order to check handlers.
+   * @param {'top'|'bottom'} [options.direction='bottom'] - Order to check handlers.
    */
   publish(eventName, data, options = {}) {
-    const { direction = 'highestFirst' } = options;
+    const { direction = 'bottom' } = options;
 
     const allHandlers = this.getHandlers(); // Get current handlers
     const potentialHandlers = allHandlers.get(eventName) || [];
@@ -75,8 +75,8 @@ class EventDispatcher {
         if (priorityA === -1) return 1; // Put unknowns last
         if (priorityB === -1) return -1;
 
-        // Descending order for highestFirst (default), Ascending for lowestFirst
-        return direction === 'lowestFirst'
+        // Descending order for bottom (default), Ascending for top
+        return direction === 'bottom'
           ? priorityA - priorityB
           : priorityB - priorityA;
       });
@@ -116,10 +116,10 @@ class EventDispatcher {
    * @param {string} eventName - The name of the event to publish.
    * @param {any} data - The data payload associated with the event.
    * @param {object} [options={}] - Optional parameters.
-   * @param {'highestFirst'|'lowestFirst'} [options.direction='highestFirst'] - Order to check handlers (should match original publish direction).
+   * @param {'up'|'down'} [options.direction='up'] - Order to check handlers (should match original publish direction).
    */
   publishToNextModule(originModuleId, eventName, data, options = {}) {
-    const { direction = 'highestFirst' } = options;
+    const { direction = 'up' } = options;
     const originPriority = this._getPriorityIndex(originModuleId);
 
     if (originPriority === -1) {
@@ -147,9 +147,10 @@ class EventDispatcher {
         ) {
           return false;
         }
-        // If highestFirst, we want modules with lower priority index (loaded after)
-        // If lowestFirst, we want modules with higher priority index (loaded after)
-        return direction === 'highestFirst'
+        // If up, we want modules with lower priority index (loaded before)
+        // If down, we want modules with higher priority index (loaded after)
+        // Priority index increases as modules are loaded, so a higher priority index means a lower priority, and vice versa
+        return direction === 'up'
           ? entryPriority < originPriority
           : entryPriority > originPriority;
       })
@@ -161,7 +162,7 @@ class EventDispatcher {
         if (priorityB === -1) return -1;
 
         // Sort based on the desired direction to find the *next* one
-        return direction === 'lowestFirst'
+        return direction === 'down'
           ? priorityA - priorityB // Ascending order
           : priorityB - priorityA; // Descending order
       });

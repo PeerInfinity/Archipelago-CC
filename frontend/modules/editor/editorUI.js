@@ -1,6 +1,6 @@
 import eventBus from '../../app/core/eventBus.js'; // <<< Import eventBus
-// Import the function to set the module instance
-import { setEditorInstance } from './index.js';
+// REMOVED: Unnecessary import
+// import { setEditorInstance } from './index.js';
 
 class EditorUI {
   constructor() {
@@ -22,8 +22,8 @@ class EditorUI {
       text: '{\n  "greeting": "Hello World",\n  "value": 123\n}',
     };
 
-    // Register this instance with the module logic
-    setEditorInstance(this);
+    // REMOVED: No longer need to register instance with module index
+    // setEditorInstance(this);
   }
 
   getRootElement() {
@@ -54,35 +54,28 @@ class EditorUI {
         'EditorUI already subscribed to events. Unsubscribing previous first.'
       );
       this.unsubscribeHandle();
+      this.unsubscribeHandle = null; // Ensure it's reset
     }
-    console.log("EditorUI subscribing to 'editor:loadJsonData'");
+
+    console.log("EditorUI subscribing to 'stateManager:rawJsonDataLoaded'");
     this.unsubscribeHandle = eventBus.subscribe(
-      'editor:loadJsonData',
-      (payload) => {
-        if (!payload || typeof payload.data === 'undefined') {
-          // Check if data exists
+      'stateManager:rawJsonDataLoaded', // <-- Subscribe to correct event
+      (eventData) => {
+        if (!eventData || !eventData.rawJsonData) {
+          // <-- Check for rawJsonData
           console.warn(
-            "EditorUI received invalid payload for 'editor:loadJsonData'",
-            payload
+            "EditorUI received invalid payload for 'stateManager:rawJsonDataLoaded'",
+            eventData
           );
           return;
         }
         console.log(
-          `EditorUI received data from: ${payload.source || 'unknown'}`
+          `EditorUI received raw rules data from: ${
+            eventData.source || 'unknown'
+          }`
         );
-        // Assume incoming data is JSON, stringify it for the textarea
-        try {
-          const textData = JSON.stringify(payload.data, null, 2); // Pretty print
-          this.setContent({ text: textData });
-        } catch (error) {
-          console.error(
-            'Error stringifying received JSON data for textarea:',
-            error,
-            payload.data
-          );
-          // Fallback: display raw data as string if stringify fails
-          this.setContent({ text: String(payload.data) });
-        }
+        // Pass the raw JSON object directly to loadJsonData
+        this.loadJsonData(eventData.rawJsonData);
       }
     );
   }

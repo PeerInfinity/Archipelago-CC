@@ -1,8 +1,8 @@
 import { evaluateRule } from './ruleEngine.js';
 import eventBus from '../../app/core/eventBus.js';
-import { ALTTPInventory } from '../../app/games/alttp/inventory.js';
-import { ALTTPState } from '../../app/games/alttp/state.js';
-import { ALTTPHelpers } from '../../app/games/alttp/helpers.js';
+import { ALTTPInventory } from './games/alttp/inventory.js';
+import { ALTTPState } from './games/alttp/state.js';
+import { ALTTPHelpers } from './games/alttp/helpers.js';
 
 /**
  * Manages game state including inventory and reachable regions/locations.
@@ -14,7 +14,7 @@ export class StateManager {
     // Core state storage
     this.inventory = new ALTTPInventory();
     this.state = new ALTTPState();
-    this.helpers = new ALTTPHelpers();
+    this.helpers = new ALTTPHelpers(this);
 
     // Player identification
     this.playerSlot = 1; // Default player slot to 1 for single-player/offline
@@ -388,6 +388,23 @@ export class StateManager {
         groups: this.groupData,
       },
     });
+
+    // Notify listeners that the core data structure is loaded
+    this._publishEvent('jsonDataLoaded');
+
+    // Also publish the specific event for rules being fully loaded and processed
+    console.log('[StateManager Class] Publishing stateManager:rulesLoaded...'); // Log before publish
+    this._publishEvent('rulesLoaded'); // <-- Add this event
+
+    // Notify that the manager is ready (potentially after a short delay)
+    setTimeout(() => {
+      if (eventBus) {
+        console.log('Publishing stateManager:ready event');
+        eventBus.publish('stateManager:ready', {
+          playerSlot: this.playerSlot,
+        });
+      }
+    }, 0);
 
     return true;
   }

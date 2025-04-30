@@ -38,7 +38,7 @@ export function register(registrationApi) {
   // registrationApi.registerDispatcherReceiver(
   //   'state:rulesLoaded',
   //   handleRulesLoaded,
-  //   { direction: 'highestFirst', condition: 'unconditional', timing: 'immediate' } // Propagates
+  //   { direction: 'up', condition: 'unconditional', timing: 'immediate' } // Propagates
   // );
 
   // Register settings schema if needed

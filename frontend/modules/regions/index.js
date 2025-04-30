@@ -32,7 +32,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
   // Propagate the event to the next module in the chain
   const dispatcher = initApi?.getDispatcher(); // Use the stored initApi
   if (dispatcher) {
-    const direction = propagationOptions.propagationDirection || 'highestFirst'; // Use incoming direction or default
+    const direction = propagationOptions.propagationDirection || 'up'; // Use incoming direction or default
     dispatcher.publishToNextModule('regions', 'state:rulesLoaded', eventData, {
       direction: direction,
     });
@@ -52,17 +52,6 @@ export function register(registrationApi) {
 
   // Register the panel component class constructor
   registrationApi.registerPanelComponent('regionsPanel', RegionUI);
-
-  // Register event handler for rules loaded
-  registrationApi.registerDispatcherReceiver(
-    'state:rulesLoaded',
-    handleRulesLoaded,
-    {
-      direction: 'highestFirst',
-      condition: 'unconditional',
-      timing: 'immediate',
-    }
-  );
 
   // No specific settings schema or primary event handlers for Regions registration.
 }

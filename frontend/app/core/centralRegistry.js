@@ -7,7 +7,7 @@ class CentralRegistry {
     this.publicFunctions = new Map(); // moduleId -> Map<functionName, functionRef>
 
     // New maps for event registration details
-    this.dispatcherSenders = new Map(); // eventName -> Array<{moduleId, direction: 'highestFirst'|'lowestFirst'|'next', target: 'first'|'last'|'next', enabled: boolean}>
+    this.dispatcherSenders = new Map(); // eventName -> Array<{moduleId, direction: 'top'|'bottom'|'next', target: 'first'|'last'|'next', enabled: boolean}>
     this.eventBusPublishers = new Map(); // eventName -> Map<moduleId, { enabled: boolean }>
     this.eventBusSubscribers = new Map(); // eventName -> Array<{moduleId: string, enabled: boolean}>
 
@@ -56,7 +56,7 @@ class CentralRegistry {
    * @param {object | null} propagationDetails - Optional details about how this handler might propagate the event further.
    *   If null, it's treated as a basic handler that does not explicitly propagate via publishToNextModule.
    *   If an object, it should contain:
-   *   - direction {'highestFirst'|'lowestFirst'|'none'}: The direction the handler intends to propagate towards using publishToNextModule. Use 'none' or null if no propagation.
+   *   - direction {'up'|'down'|'none'}: The direction the handler intends to propagate towards using publishToNextModule. Use 'none' or null if no propagation.
    *   - condition {'conditional'|'unconditional'}: Whether the propagation call is conditional.
    *   - timing {'immediate'|'delayed'}: Whether the propagation happens immediately or is delayed.
    */
@@ -173,7 +173,7 @@ class CentralRegistry {
 
   /**
    * Returns the map of all registered event handlers with propagation details.
-   * Expected propagationDetails structure: { direction: 'highestFirst'|'lowestFirst'|'none', condition: 'conditional'|'unconditional', timing: 'immediate'|'delayed' } | null
+   * Expected propagationDetails structure: { direction: 'up'|'down'|'none', condition: 'conditional'|'unconditional', timing: 'immediate'|'delayed' } | null
    * @returns {Map<string, Array<{moduleId: string, handlerFunction: Function, propagationDetails: object | null, enabled: boolean}>>}
    */
   getAllDispatcherHandlers() {

@@ -1,7 +1,7 @@
 // locationUI.js
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import commonUI from '../commonUI/commonUI.js';
+import commonUI, { debounce } from '../commonUI/commonUI.js';
 import messageHandler from '../client/core/messageHandler.js';
 import loopState from '../loops/loopStateSingleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
@@ -13,9 +13,13 @@ export class LocationUI {
     this.columns = 2; // Default number of columns
     this.rootElement = this.createRootElement(); // Create the root element on instantiation
     this.locationsGrid = this.rootElement.querySelector('#locations-grid'); // Cache grid element
-    this.attachEventListeners();
+    this.stateUnsubscribeHandles = []; // Array to store unsubscribe functions for state/loop events
     this.settingsUnsubscribe = null;
+    // Attach control listeners immediately
+    this.attachEventListeners();
+    // Subscribe to settings and state events
     this.subscribeToSettings();
+    this.subscribeToStateEvents(); // <-- Call new subscription method
   }
 
   subscribeToSettings() {
@@ -38,11 +42,77 @@ export class LocationUI {
       this.settingsUnsubscribe();
       this.settingsUnsubscribe = null;
     }
+    this.unsubscribeFromStateEvents(); // <-- Call new unsubscribe method
   }
 
   dispose() {
     this.onPanelDestroy();
   }
+
+  // --- NEW: Event Subscription for State/Loop --- //
+  subscribeToStateEvents() {
+    try {
+      // Ensure no duplicate subscriptions
+      this.unsubscribeFromStateEvents();
+
+      console.log('[LocationUI] Subscribing to state and loop events...');
+      // Use the imported eventBus singleton directly
+      // REMOVED: const eventBus = window.eventBus;
+
+      if (!eventBus) {
+        // Check the imported eventBus
+        console.error('[LocationUI] Imported EventBus is not available!');
+        return;
+      }
+
+      const subscribe = (eventName, handler) => {
+        console.log(`[LocationUI] Subscribing to ${eventName}`);
+        const unsubscribe = eventBus.subscribe(eventName, handler);
+        this.stateUnsubscribeHandles.push(unsubscribe);
+      };
+
+      // Debounce handler to avoid rapid updates
+      const debouncedUpdate = debounce(() => this.updateLocationDisplay(), 50);
+
+      // Subscribe to state changes that affect location display
+      subscribe('stateManager:inventoryChanged', debouncedUpdate);
+      subscribe('stateManager:regionsComputed', debouncedUpdate);
+      subscribe('stateManager:locationChecked', debouncedUpdate);
+      subscribe('stateManager:checkedLocationsCleared', debouncedUpdate);
+      // Also need rules loaded to trigger initial display
+      subscribe('stateManager:rulesLoaded', () => {
+        console.log('[LocationUI] Received stateManager:rulesLoaded event.');
+        debouncedUpdate();
+      });
+
+      // Subscribe to loop state changes if relevant
+      subscribe('loop:stateChanged', debouncedUpdate);
+      subscribe('loop:actionCompleted', debouncedUpdate);
+      subscribe('loop:discoveryChanged', debouncedUpdate);
+      subscribe('loop:modeChanged', (isLoopMode) => {
+        debouncedUpdate(); // Update display based on mode change
+        // Show/hide loop-specific controls
+        const exploredCheckbox =
+          this.rootElement?.querySelector('#show-explored');
+        if (exploredCheckbox && exploredCheckbox.parentElement) {
+          exploredCheckbox.parentElement.style.display = isLoopMode
+            ? 'inline-block'
+            : 'none';
+        }
+      });
+    } catch (error) {
+      console.error('[LocationUI] Error during subscribeToStateEvents:', error);
+    }
+  }
+
+  unsubscribeFromStateEvents() {
+    if (this.stateUnsubscribeHandles.length > 0) {
+      console.log('[LocationUI] Unsubscribing from state and loop events...');
+      this.stateUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
+      this.stateUnsubscribeHandles = [];
+    }
+  }
+  // --- END NEW --- //
 
   // Creates the main DOM structure for the locations panel
   createRootElement() {
@@ -91,9 +161,10 @@ export class LocationUI {
   }
 
   initialize() {
-    // Don't need to call loadFromJSON since gameUI.js already does this
-    // stateManager.loadFromJSON(jsonData);
-    this.updateLocationDisplay();
+    // Subscriptions are now handled in constructor
+    // We still need the initial update call, potentially triggered by rulesLoaded
+    console.log('[LocationUI] Initializing panel...');
+    this.updateLocationDisplay(); // Call initial update
   }
 
   clear() {
@@ -178,7 +249,7 @@ export class LocationUI {
       // LOOP MODE BEHAVIOR
 
       // If location is already checked, do nothing
-      if (stateManager.isLocationChecked(location.name)) return;
+      if (stateManagerSingleton.isLocationChecked(location.name)) return;
 
       // Get the location's discovered status in loop mode
       const isUndiscovered = !loopState.isLocationDiscovered(location.name);
@@ -200,7 +271,7 @@ export class LocationUI {
         // If the location is discovered but unchecked and the last action is to check this location, do nothing
         if (
           !isUndiscovered &&
-          !stateManager.isLocationChecked(location.name) &&
+          !stateManagerSingleton.isLocationChecked(location.name) &&
           lastAction.type === 'checkLocation' &&
           lastAction.locationName === location.name
         ) {
@@ -232,7 +303,7 @@ export class LocationUI {
             const toRegion = path[i + 1];
 
             // Find the exit that connects these regions
-            const regionData = stateManager.regions[fromRegion];
+            const regionData = stateManagerSingleton.regions[fromRegion];
             const exitToUse = regionData?.exits?.find(
               (exit) => exit.connected_region === toRegion
             );
@@ -337,8 +408,8 @@ export class LocationUI {
     // STANDARD NON-LOOP MODE BEHAVIOR
 
     // If location is already checked, do nothing
-    if (stateManager.isLocationChecked(location.name)) return;
-    const isAccessible = stateManager.isLocationAccessible(location);
+    if (stateManagerSingleton.isLocationChecked(location.name)) return;
+    const isAccessible = stateManagerSingleton.isLocationAccessible(location);
     if (!isAccessible) return;
 
     // ALWAYS route the check through messageHandler, which handles local/networked logic
@@ -376,6 +447,7 @@ export class LocationUI {
   }
 
   updateLocationDisplay() {
+    console.log('[LocationUI] updateLocationDisplay called.');
     const showChecked =
       this.rootElement.querySelector('#show-checked')?.checked ?? true;
     const showReachable =
@@ -399,8 +471,16 @@ export class LocationUI {
         : 'none';
     }
 
-    // Get locations from state manager
-    const locations = stateManager.locations || [];
+    // Get locations from state manager instance directly
+    const instance = stateManagerSingleton.instance;
+    console.log(
+      '[LocationUI] Accessing stateManagerSingleton.instance:',
+      instance ? 'Exists' : 'MISSING'
+    ); // <-- Add log
+    const locations = instance?.locations || []; // <-- Access via .instance
+    console.log(
+      `[LocationUI] Found ${locations.length} locations in stateManager instance.`
+    );
 
     const locationsGrid = this.locationsGrid; // Use cached grid
     if (!locationsGrid) return;
@@ -420,13 +500,11 @@ export class LocationUI {
     // Apply filters
     let filteredLocations = locations.filter((location) => {
       // First check if the location is checked
-      const isChecked = stateManager.isLocationChecked(location.name);
+      const isChecked = instance.isLocationChecked(location.name);
       if (isChecked && !showChecked) return false;
 
       // Then apply reachable/unreachable filters
-      const isRegionAccessible = stateManager.isRegionReachable(
-        location.region
-      );
+      const isRegionAccessible = instance.isRegionReachable(location.region);
       const locationRulePasses =
         !location.access_rule || evaluateRule(location.access_rule);
 
@@ -460,8 +538,8 @@ export class LocationUI {
     // Apply sorting
     if (sorting === 'accessibility') {
       filteredLocations.sort((a, b) => {
-        const aRegionAccessible = stateManager.isRegionReachable(a.region);
-        const bRegionAccessible = stateManager.isRegionReachable(b.region);
+        const aRegionAccessible = instance.isRegionReachable(a.region);
+        const bRegionAccessible = instance.isRegionReachable(b.region);
 
         const aRulePasses = !a.access_rule || evaluateRule(a.access_rule);
         const bRulePasses = !b.access_rule || evaluateRule(b.access_rule);
@@ -491,6 +569,10 @@ export class LocationUI {
       });
     }
 
+    console.log(
+      `[LocationUI] Rendering ${filteredLocations.length} locations.`
+    );
+
     // Generate HTML for locations programmatically
     locationsGrid.innerHTML = ''; // Clear previous content
     filteredLocations.forEach((location) => {
@@ -499,11 +581,9 @@ export class LocationUI {
         true
       );
 
-      const isRegionAccessible = stateManager.isRegionReachable(
-        location.region
-      );
-      const isLocationAccessible = stateManager.isLocationAccessible(location);
-      const isChecked = stateManager.isLocationChecked(location.name);
+      const isRegionAccessible = instance.isRegionReachable(location.region);
+      const isLocationAccessible = instance.isLocationAccessible(location);
+      const isChecked = instance.isLocationChecked(location.name);
       const locationRulePasses =
         !location.access_rule || evaluateRule(location.access_rule);
 
@@ -650,9 +730,17 @@ export class LocationUI {
     const debug = document.getElementById('modal-debug');
     const info = document.getElementById('modal-info');
 
+    const instance = stateManagerSingleton.instance;
+    if (!instance) {
+      console.error(
+        '[LocationUI] StateManager instance not found in showLocationDetails'
+      );
+      return;
+    }
+
     title.textContent = location.name;
 
-    const region = stateManager.regions[location.region];
+    const region = instance.regions[location.region];
 
     if (this.gameUI.debugMode) {
       debug.classList.remove('hidden');
@@ -676,14 +764,14 @@ export class LocationUI {
         <div>
           <span class="font-semibold">Status: </span>
           ${
-            stateManager.isLocationChecked(location.name)
+            instance.isLocationChecked(location.name)
               ? 'Checked'
-              : stateManager.isLocationAccessible(location)
+              : instance.isLocationAccessible(location)
               ? 'Available'
-              : stateManager.isRegionReachable(location.region) &&
+              : instance.isRegionReachable(location.region) &&
                 (!location.access_rule || !evaluateRule(location.access_rule))
               ? 'Region accessible, but rule fails'
-              : !stateManager.isRegionReachable(location.region) &&
+              : !instance.isRegionReachable(location.region) &&
                 (!location.access_rule || evaluateRule(location.access_rule))
               ? 'Region inaccessible, but rule passes'
               : 'Locked'
@@ -711,8 +799,7 @@ export class LocationUI {
         }
         ${
           location.item &&
-          (stateManager.isLocationChecked(location.name) ||
-            this.gameUI.debugMode)
+          (instance.isLocationChecked(location.name) || this.gameUI.debugMode)
             ? `
             <div>
               <span class="font-semibold">Item: </span>${location.item.name}

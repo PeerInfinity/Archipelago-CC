@@ -38,9 +38,9 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
   // Propagate the event to the next module in the chain
   const dispatcher = moduleInitApi?.getDispatcher();
   if (dispatcher) {
-    // Assuming the original publish direction was 'highestFirst'
+    // Assuming the original publish direction was 'up'
     dispatcher.publishToNextModule('loops', 'state:rulesLoaded', eventData, {
-      direction: 'highestFirst',
+      direction: 'up',
     });
   } else {
     console.error(
@@ -72,23 +72,12 @@ export function register(registrationApi) {
     },
   });
 
-  // Register event handler for rules loaded
-  registrationApi.registerDispatcherReceiver(
-    'state:rulesLoaded',
-    handleRulesLoaded,
-    {
-      direction: 'highestFirst',
-      condition: 'unconditional',
-      timing: 'immediate',
-    }
-  );
-
   // Register primary handler for checking locations when in loop mode
   // Note: This handler should check if loop mode is active before proceeding
   registrationApi.registerDispatcherReceiver(
     'user:checkLocation',
     handleCheckLocationRequest,
-    { direction: 'highestFirst', condition: 'conditional', timing: 'immediate' }
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 }
 
@@ -200,12 +189,12 @@ function handleCheckLocationRequest(locationData) {
     // Use the stored moduleInitApi
     const dispatcher = moduleInitApi?.getDispatcher();
     if (dispatcher) {
-      // Assuming the original publish direction was 'highestFirst' for user:checkLocation
+      // Assuming the original publish direction was 'up' for user:checkLocation
       dispatcher.publishToNextModule(
         'loops',
         'user:checkLocation',
         locationData,
-        { direction: 'highestFirst' }
+        { direction: 'up' }
       );
     } else {
       console.error(

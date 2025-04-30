@@ -65,12 +65,6 @@ export class InventoryUI {
     return this.rootElement;
   }
 
-  initialize(itemData, groups) {
-    this.itemData = itemData;
-    this.groupNames = Array.isArray(groups) ? groups : [];
-    this.initializeUI(itemData, groups);
-  }
-
   restoreItemStates() {
     Object.entries(this.itemData).forEach(([name, _]) => {
       const count = stateManagerSingleton.instance.getItemCount(name);
@@ -307,19 +301,9 @@ export class InventoryUI {
     ) {
       this.initializeUI(eventData.rules.items, eventData.rules.groups);
     } else {
-      if (
-        stateManagerSingleton.instance.state &&
-        stateManagerSingleton.instance.state.rules
-      ) {
-        this.initializeUI(
-          stateManagerSingleton.instance.state.rules.items,
-          stateManagerSingleton.instance.state.rules.groups
-        );
-      } else {
-        console.error(
-          '[InventoryUI] Unable to initialize UI: No valid rules data found in event or stateManager.'
-        );
-      }
+      console.warn(
+        '[InventoryUI] rulesLoaded received, but eventData did not contain expected rules.items/groups.'
+      );
     }
   }
 
