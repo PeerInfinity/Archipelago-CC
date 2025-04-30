@@ -20,14 +20,51 @@ export const moduleInfo = {
  */
 export function register(registrationApi) {
   console.log('[StateManager Module] Registering...');
-  // Example: Register settings schema if StateManager had options
-  // registrationApi.registerSettingsSchema({
-  //     type: 'object',
-  //     properties: {
-  //         debugLogDepth: { type: 'integer', default: 1 }
-  //     }
-  // });
-  // No primary event handlers or panels registered here.
+
+  // Register events published by this module on the EventBus
+  registrationApi.registerEventBusPublisher(
+    'stateManager',
+    'state:rulesLoaded'
+  );
+  registrationApi.registerEventBusPublisher(
+    'stateManager',
+    'state:inventoryChanged'
+  );
+  registrationApi.registerEventBusPublisher(
+    'stateManager',
+    'state:locationChecked'
+  );
+  registrationApi.registerEventBusPublisher(
+    'stateManager',
+    'state:exitChecked'
+  );
+  registrationApi.registerEventBusPublisher(
+    'stateManager',
+    'state:regionViewed'
+  );
+  registrationApi.registerEventBusPublisher('stateManager', 'rules:loadError');
+
+  // Register events this module subscribes to on the EventBus
+  registrationApi.registerEventBusSubscriber(
+    'stateManager',
+    'init:postInitComplete'
+  );
+
+  // Note: StateManager currently uses the DISPATCHER to publish state:rulesLoaded
+  // as a test case. We register the intent to send it, but the actual handler
+  // registration (registerDispatcherReceiver) would happen in the module(s)
+  // intended to *receive* this prioritized event.
+  // If StateManager were also intended to *receive* dispatcher events, we'd use:
+  // registrationApi.registerDispatcherReceiver('stateManager', 'someEventName', someHandler);
+  // ~~If StateManager *sends* dispatcher events (like state:rulesLoaded currently):~~
+  // registrationApi.registerDispatcherSender(
+  //   'stateManager',
+  //   'state:rulesLoaded',
+  //   'highestFirst', // Default direction
+  //   'first' // Default target
+  // );
+
+  console.log('[StateManager Module] Registration complete.');
 }
 
 /**
@@ -76,7 +113,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
  */
 export async function postInitialize(initializationApi) {
   console.log('[StateManager Module] Post-initializing...');
-  const eventBus = initApi?.getEventBus() || initializationApi.getEventBus(); // Use stored or passed API
+  // Ensure we have the full initApi stored from the initialize step
+  const eventBus = initApi?.getEventBus();
 
   // Ensure the instance is definitely created before proceeding
   if (!isInitialized) {
@@ -92,11 +130,6 @@ export async function postInitialize(initializationApi) {
     }
   }
 
-  // --- Trigger loading of default rules MOVED TO EVENT LISTENER --- //
-  // console.log('[StateManager Module] Triggering load of default rules...');
-  // await loadAndProcessDefaultRules(initApi?.getDispatcher()); // Need dispatcher access
-  // ------------------------------------------------------------ //
-
   // Listen for the signal that all modules are post-initialized
   if (eventBus) {
     console.log(
@@ -107,13 +140,21 @@ export async function postInitialize(initializationApi) {
         '[StateManager Module] Received init:postInitComplete, triggering load of default rules...'
       );
       const dispatcher = initApi?.getDispatcher(); // Get dispatcher from stored API
-      if (!dispatcher) {
+
+      try {
+        // Load and process rules, which populates stateManagerSingleton.instance
+        // and internally publishes the 'rulesLoaded' event.
+        await loadAndProcessDefaultRules();
+        // No need to explicitly publish state:rulesLoaded here,
+        // the StateManager class instance handles publishing its internal event.
+      } catch (error) {
+        // Errors during fetch/processing are caught and logged within loadAndProcessDefaultRules
+        // We just need to prevent crashing the postInitialize chain
         console.error(
-          '[StateManager Module] Cannot load rules: Dispatcher not available from stored initApi.'
+          `[StateManager Module] Error during rule loading triggered by init:postInitComplete: ${error.message}`
         );
-        return;
+        // The rules:loadError event should have been published by loadAndProcessDefaultRules
       }
-      await loadAndProcessDefaultRules(dispatcher);
     });
   } else {
     console.error(
@@ -127,7 +168,7 @@ export async function postInitialize(initializationApi) {
 }
 
 // Export the class if direct instantiation is ever needed elsewhere (unlikely for a singleton module)
-export { StateManager };
+// export { StateManager };
 
 // Export the singleton - both the direct singleton object and a "stateManager"
 // convenience export for backward compatibility
@@ -139,21 +180,23 @@ const stateManager = stateManagerSingleton.instance;
 export { stateManager };
 
 // --- Moved from client/app.js: Function to load default rules ---
-async function loadAndProcessDefaultRules(dispatcher) {
-  // Pass eventBus if needed for publishing
+// Now returns { jsonData, selectedPlayerId } on success, or throws error on failure.
+async function loadAndProcessDefaultRules() {
   console.log('[StateManager Module] Attempting to load default_rules.json...');
+  let jsonData = null;
+  let selectedPlayerId = null;
+
   try {
     const response = await fetch('./default_rules.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const jsonData = await response.json();
+    jsonData = await response.json();
     console.log(
       '[StateManager Module] Successfully fetched default_rules.json'
     );
 
     // === Player Selection Logic ===
-    let selectedPlayerId = null;
     const playerIds = Object.keys(jsonData.player_names || {});
 
     if (playerIds.length === 0) {
@@ -166,9 +209,9 @@ async function loadAndProcessDefaultRules(dispatcher) {
     } else {
       const playerOptions = playerIds
         .map((id) => `${id}: ${jsonData.player_names[id]}`)
-        .join('\n');
+        .join('\\n');
       const choice = prompt(
-        `Multiple players found. Please enter the ID of the player to load:\n${playerOptions}`
+        `Multiple players found. Please enter the ID of the player to load:\\n${playerOptions}`
       );
 
       if (choice && jsonData.player_names[choice]) {
@@ -199,27 +242,15 @@ async function loadAndProcessDefaultRules(dispatcher) {
     console.log('[StateManager Module] Loaded rules data from JSON.');
     // --- End processing --- //
 
-    // Publish event via the DISPATCHER indicating rules are processed
-    if (dispatcher) {
-      dispatcher.publish('state:rulesLoaded', {
-        source: 'default_rules.json',
-        jsonData: jsonData, // Pass the raw JSON data
-        selectedPlayerId: selectedPlayerId,
-      });
-      console.log(
-        '[StateManager Module] Published state:rulesLoaded via dispatcher.'
-      );
-    } else {
-      console.warn(
-        '[StateManager Module] Dispatcher not provided, cannot publish state:rulesLoaded.'
-      );
-    }
+    // Return the processed data
+    return { jsonData, selectedPlayerId };
   } catch (error) {
     console.error(
       '[StateManager Module] Failed to load or process default rules:',
       error
     );
-    // Optionally publish an error event
+    // Optionally publish an error event via EventBus
+    const eventBus = initApi?.getEventBus(); // Access stored initApi for eventBus
     if (eventBus) {
       eventBus.publish('rules:loadError', { error: error, source: 'default' });
     }
@@ -230,5 +261,7 @@ async function loadAndProcessDefaultRules(dispatcher) {
         'error'
       );
     }
+    // Re-throw the error to signal failure to the caller (postInitialize)
+    throw error;
   }
 }

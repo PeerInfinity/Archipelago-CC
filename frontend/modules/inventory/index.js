@@ -7,133 +7,59 @@ export const moduleInfo = {
   description: 'Inventory display panel.',
 };
 
-// Store instances or state needed by the module
-let inventoryInstance = null;
-let moduleEventBus = null;
-let stateManagerUnsubscribe = null; // Handle for event bus subscription
-let initApi = null; // Store the full init API
+// // Store instances or state needed by the module
+// let inventoryInstance = null; // Instance managed by PanelManager/GoldenLayout
+// let moduleEventBus = null; // Get via API or import directly in UI class
+// let stateManagerUnsubscribe = null; // Handle for event bus subscription - Handled in UI class
+// let initApi = null; // Store the full init API - Handled in UI class if needed
 
-// Handler for the rules loaded event
-function handleRulesLoaded(eventData, propagationOptions = {}) {
-  console.log('[Inventory Module] Received state:rulesLoaded');
-  // Instance might have been created by registerPanelComponent factory,
-  // but check just in case before calling methods.
-  if (inventoryInstance) {
-    inventoryInstance.syncWithState();
-  } else {
-    console.warn(
-      '[Inventory Module] inventoryInstance not available for state:rulesLoaded handler.'
-    );
-  }
-
-  // Propagate the event to the next module in the chain
-  const dispatcher = initApi?.getDispatcher(); // Use the stored initApi
-  if (dispatcher) {
-    const direction = propagationOptions.propagationDirection || 'highestFirst'; // Use incoming direction or default
-    dispatcher.publishToNextModule(
-      'inventory',
-      'state:rulesLoaded',
-      eventData,
-      {
-        direction: direction,
-      }
-    );
-  } else {
-    console.error(
-      '[Inventory Module] Cannot propagate state:rulesLoaded: Dispatcher not available (initApi missing?).'
-    );
-  }
-}
+// // Handler for the rules loaded event - Moved to InventoryUI class
+// function handleRulesLoaded(eventData, propagationOptions = {}) { ... }
 
 /**
  * Registration function for the Inventory module.
- * Registers the panel component and event handlers.
+ * Registers the panel component and event bus subscribers.
  */
 export function register(registrationApi) {
   console.log('[Inventory Module] Registering...');
 
-  // Register the panel component factory
-  // Golden Layout V2 expects the component factory to handle DOM element creation/attachment.
-  // registrationApi.registerPanelComponent('inventoryPanel', () => {
-  //   // Create instance, assign to module scope, and return
-  //   inventoryInstance = new InventoryUI();
-  //   return inventoryInstance;
-  // });
-  // Pass the class constructor directly
+  // Register the panel component CLASS constructor
   registrationApi.registerPanelComponent('inventoryPanel', InventoryUI);
 
-  // Register event handler for rules loaded via Dispatcher
-  registrationApi.registerDispatcherReceiver(
-    'state:rulesLoaded',
-    handleRulesLoaded,
-    {
-      direction: 'highestFirst',
-      condition: 'unconditional',
-      timing: 'immediate',
-    }
+  // Register event bus subscribers via centralRegistry for tracking/control
+  // The actual subscription happens within the InventoryUI instance.
+  registrationApi.registerEventBusSubscriber('inventory', 'state:rulesLoaded');
+  registrationApi.registerEventBusSubscriber(
+    'inventory',
+    'stateManager:inventoryChanged'
   );
 
-  // Register settings schema if needed
+  // // REMOVED: Dispatcher receiver for state:rulesLoaded
+  // registrationApi.registerDispatcherReceiver(
+  //   'state:rulesLoaded',
+  //   handleRulesLoaded,
+  //   { direction: 'highestFirst', condition: 'unconditional', timing: 'immediate' } // Propagates
+  // );
 
-  // No settings schema or primary event handlers specific to Inventory registration.
+  // Register settings schema if needed
+  // No settings schema specific to Inventory registration.
 }
 
 /**
  * Initialization function for the Inventory module.
- * Minimal setup.
+ * Minimal setup, UI class handles its own initialization.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(
     `[Inventory Module] Initializing with priority ${priorityIndex}...`
   );
-  // Store the full API
-  initApi = initializationApi;
+  // Store API if needed by UI class (passed via constructor or method)
+  // Currently, UI class imports singletons directly.
 
   console.log('[Inventory Module] Basic initialization complete.');
 }
 
-/**
- * Post-initialization function for the Inventory module.
- * Subscribes to state changes to keep the UI up-to-date.
- */
-export function postInitialize(initializationApi) {
-  console.log('[Inventory Module] Post-initializing...');
+// REMOVED: postInitialize function. Logic moved to InventoryUI class.
+// export function postInitialize(initializationApi) { ... }
 
-  // Use the stored eventBus or get it again
-  const eventBus = moduleEventBus || initializationApi.getEventBus();
-
-  // Subscribe to inventory changes from the stateManager module via eventBus
-  if (eventBus) {
-    // Ensure previous subscription is cleaned up if somehow run multiple times
-    if (stateManagerUnsubscribe) {
-      stateManagerUnsubscribe();
-    }
-    stateManagerUnsubscribe = eventBus.subscribe(
-      'stateManager:inventoryChanged',
-      () => {
-        console.log(
-          '[Inventory Module] Received stateManager:inventoryChanged'
-        );
-        // Instance might have been created by now, or shortly after.
-        // Golden Layout will create the instance when the panel is shown.
-        inventoryInstance?.syncWithState(); // Update UI based on new state
-      }
-    );
-    console.log(
-      '[Inventory Module] Subscribed to stateManager:inventoryChanged.'
-    );
-
-    // Subscribe to checked location changes if inventory needs to reflect this
-    // eventBus.subscribe('stateManager:locationChecked', () => { ... });
-  } else {
-    console.error(
-      '[Inventory Module] EventBus not available during post-initialization.'
-    );
-  }
-
-  console.log('[Inventory Module] Post-initialization complete.');
-}
-
-// It might be useful to export the instance if other modules need direct access,
-// but this should generally be avoided. Communication via events/dispatcher is preferred.
-// export { inventoryInstance };
+// No need to export instance, PanelManager handles it.

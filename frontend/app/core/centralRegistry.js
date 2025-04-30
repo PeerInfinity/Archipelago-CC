@@ -9,7 +9,7 @@ class CentralRegistry {
     // New maps for event registration details
     this.dispatcherSenders = new Map(); // eventName -> Array<{moduleId, direction: 'highestFirst'|'lowestFirst'|'next', target: 'first'|'last'|'next', enabled: boolean}>
     this.eventBusPublishers = new Map(); // eventName -> Map<moduleId, { enabled: boolean }>
-    this.eventBusSubscribers = new Map(); // eventName -> Array<{moduleId, callback, enabled: boolean}>
+    this.eventBusSubscribers = new Map(); // eventName -> Array<{moduleId: string, enabled: boolean}>
 
     console.log('CentralRegistry initialized');
   }
@@ -106,16 +106,30 @@ class CentralRegistry {
     this.eventBusPublishers.get(eventName).set(moduleId, { enabled: true });
   }
 
-  registerEventBusSubscriber(moduleId, eventName, callback) {
+  /**
+   * Registers a module's intent to subscribe to a specific event on the EventBus.
+   * This is used for tracking and potentially enabling/disabling the module's ability
+   * to receive these events, but does not perform the actual subscription.
+   *
+   * @param {string} moduleId - The ID of the module intending to subscribe.
+   * @param {string} eventName - The name of the event.
+   */
+  registerEventBusSubscriber(moduleId, eventName) {
     if (!this.eventBusSubscribers.has(eventName)) {
       this.eventBusSubscribers.set(eventName, []);
     }
-    console.log(
-      `[Registry] Registering event bus subscriber for '${eventName}' from ${moduleId}`
-    );
-    this.eventBusSubscribers
-      .get(eventName)
-      .push({ moduleId, callback, enabled: true }); // Default enabled state
+    const subscribers = this.eventBusSubscribers.get(eventName);
+    // Avoid duplicate entries for the same module
+    if (!subscribers.some((sub) => sub.moduleId === moduleId)) {
+      console.log(
+        `[Registry] Registering event bus subscriber intent for '${eventName}' from ${moduleId}`
+      );
+      subscribers.push({ moduleId, enabled: true }); // Default enabled state
+    } else {
+      console.log(
+        `[Registry] Module ${moduleId} already registered subscriber intent for ${eventName}.`
+      );
+    }
   }
 
   registerSettingsSchema(moduleId, schemaSnippet) {
@@ -183,8 +197,8 @@ class CentralRegistry {
   }
 
   /**
-   * Returns the map of all registered EventBus subscribers.
-   * @returns {Map<string, Array<{moduleId: string, callback: Function, enabled: boolean}>>}
+   * Returns the map of all registered EventBus subscribers (intentions).
+   * @returns {Map<string, Array<{moduleId: string, enabled: boolean}>>}
    */
   getAllEventBusSubscribers() {
     return this.eventBusSubscribers;
@@ -219,11 +233,15 @@ class CentralRegistry {
       }
     } else if (Array.isArray(entries)) {
       // For handlers, senders, subscribers
-      const entry = entries.find(
-        (e) =>
-          e.moduleId === moduleId &&
-          (!findCallback || e.callback === findCallback)
-      );
+      const entry =
+        map === this.eventBusSubscribers
+          ? entries.find((e) => e.moduleId === moduleId) // Find by module ID only for eventBusSubscribers
+          : entries.find(
+              (e) =>
+                e.moduleId === moduleId &&
+                (!findCallback || e.callback === findCallback)
+            ); // Original logic otherwise
+
       if (entry) {
         entry.enabled = isEnabled;
         found = true;
@@ -283,13 +301,13 @@ class CentralRegistry {
   }
 
   setEventBusSubscriberEnabled(eventName, moduleId, isEnabled) {
-    // We might need callback reference here if multiple callbacks per module+event are allowed
-    // For now, assuming one subscriber UI toggle per module+event
+    // Find the subscriber entry by moduleId only
     return this._setEnabledState(
       this.eventBusSubscribers,
       eventName,
       moduleId,
       isEnabled
+      // No findCallback needed here
     );
   }
 }

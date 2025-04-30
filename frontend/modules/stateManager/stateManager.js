@@ -61,14 +61,17 @@ export class StateManager {
     // New maps for item and location IDs
     this.itemNameToId = {};
     this.locationNameToId = {};
+
+    console.log('[StateManager Class] Instance created.'); // Log instance creation
   }
 
   /**
    * Initializes inventory with loaded game data
    */
   initializeInventory(items, progressionMapping, itemData) {
-    // Create the inventory first
     this.inventory = new ALTTPInventory(items, progressionMapping, itemData);
+    this.itemData = itemData; // Store for convenience
+    // Do not publish here, wait for full rules load
   }
 
   registerUICallback(name, callback) {
@@ -91,53 +94,57 @@ export class StateManager {
   }
 
   clearInventory() {
-    // When clearing, make sure we preserve the existing progression mapping and item data
     const progressionMapping = this.inventory.progressionMapping || {};
     const itemData = this.inventory.itemData || {};
+    const groupData = this.inventory.groupData || {};
     this.inventory = new ALTTPInventory([], progressionMapping, itemData);
-    this.notifyUI('inventoryChanged');
+    this.inventory.groupData = groupData;
+    this.itemData = itemData;
+    this.groupData = groupData;
+    this._logDebug('[StateManager Class] Inventory cleared.');
+    this.invalidateCache();
+    this.computeReachableRegions(); // Recompute first
+    this._publishEvent('inventoryChanged'); // Publish after recompute
   }
 
   clearState() {
-    // When clearing state, preserve progression mapping and item data
     const progressionMapping = this.inventory.progressionMapping || {};
     const itemData = this.inventory.itemData || {};
+    const groupData = this.inventory.groupData || {};
     this.inventory = new ALTTPInventory([], progressionMapping, itemData);
-    this.clearCheckedLocations();
-    this.indirectConnections = new Map(); // Clear indirect connections
+    this.inventory.groupData = groupData;
+    this.itemData = itemData;
+    this.groupData = groupData;
+    this.state = new ALTTPState();
+    this.clearCheckedLocations(); // This calls _publishEvent('checkedLocationsCleared')
+    this.indirectConnections = new Map();
     this.invalidateCache();
-    this.notifyUI('inventoryChanged');
+    this._logDebug('[StateManager Class] Full state cleared.');
+    this.computeReachableRegions(); // Recompute first
+    this._publishEvent('inventoryChanged'); // Publish inventory change after state clear
   }
 
   /**
    * Adds an item and notifies all registered callbacks
    */
   addItemToInventory(itemName) {
-    // Skip adding if we don't have valid item data for this item
-    if (!this.inventory.itemData || !this.inventory.itemData[itemName]) {
-      console.warn(`Attempted to add unknown item: ${itemName}`);
+    if (!this.itemData || !this.itemData[itemName]) {
+      console.warn(
+        `[StateManager Class] Attempted to add unknown item: ${itemName}`
+      );
       return false;
     }
-
     if (this._batchMode) {
-      // In batch mode, collect updates without triggering callbacks
       const currentCount =
         this._batchedUpdates.get(itemName) || this.inventory.count(itemName);
       this._batchedUpdates.set(itemName, currentCount + 1);
     } else {
-      // Normal single-item mode
       this.inventory.addItem(itemName);
-
-      // Process progressive items immediately regardless of region computation
-      this._processProgressiveItem(itemName);
-
-      this.notifyUI('inventoryChanged');
-
-      // Invalidate cache and recompute after item add (if not batching)
+      this._logDebug(`[StateManager Class] Added item: ${itemName}`);
       this.invalidateCache();
-      this.computeReachableRegions();
+      this.computeReachableRegions(); // Recompute first
+      this._publishEvent('inventoryChanged'); // Publish after recompute
     }
-
     return true;
   }
 
@@ -161,6 +168,9 @@ export class StateManager {
    * @param {string} selectedPlayerId - The ID of the player whose data should be loaded.
    */
   loadFromJSON(jsonData, selectedPlayerId) {
+    this._logDebug(
+      `[StateManager Class] Loading JSON for player ${selectedPlayerId}...`
+    );
     if (!jsonData.schema_version || jsonData.schema_version !== 3) {
       throw new Error('Invalid JSON format: requires schema version 3');
     }
@@ -173,28 +183,44 @@ export class StateManager {
     console.log(`StateManager playerSlot set to: ${this.playerSlot}`);
 
     // Load data for the selected player
-    this.regions = jsonData.regions[selectedPlayerId];
-    const itemData = jsonData.items[selectedPlayerId];
-    const groupData = jsonData.item_groups[selectedPlayerId];
-    const progressionMapping = jsonData.progression_mapping[selectedPlayerId];
+    const playerData = {
+      regions: jsonData.regions?.[selectedPlayerId],
+      itemData: jsonData.items?.[selectedPlayerId],
+      groupData: jsonData.item_groups?.[selectedPlayerId],
+      progressionMapping: jsonData.progression_mapping?.[selectedPlayerId],
+      itempoolCounts: jsonData.itempool_counts?.[selectedPlayerId],
+      settings: jsonData.settings?.[selectedPlayerId],
+      startRegions: jsonData.start_regions?.[selectedPlayerId],
+      mode: jsonData.mode?.[selectedPlayerId],
+    };
 
-    // NEW: Store the itempool counts if available for the selected player
-    this.itempool_counts = jsonData.itempool_counts?.[selectedPlayerId] || null;
+    if (
+      !playerData.regions ||
+      !playerData.itemData ||
+      !playerData.groupData ||
+      !playerData.progressionMapping ||
+      !playerData.settings
+    ) {
+      throw new Error('Invalid player data format');
+    }
 
-    // Debug logging for itempool_counts
-    console.log('Loaded JSON data:', {
-      hasItemPoolCounts: Boolean(jsonData.itempool_counts),
-      itemPoolCountsKeys: jsonData.itempool_counts
-        ? Object.keys(jsonData.itempool_counts)
-        : [],
-    });
+    this.regions = playerData.regions;
+    this.itemData = playerData.itemData;
+    this.groupData = playerData.groupData;
+    this.settings = playerData.settings;
+    this.startRegions = playerData.startRegions;
+    this.mode = playerData.mode;
+    this.itempool_counts = playerData.itempoolCounts;
 
     // Create a map of item names to IDs for fast lookup (using selected player's items)
     this.itemNameToId = {};
-    if (itemData) {
-      Object.entries(itemData).forEach(([itemName, data]) => {
+    if (this.itemData) {
+      Object.entries(this.itemData).forEach(([itemName, data]) => {
         if (data.id !== undefined && data.id !== null) {
           this.itemNameToId[itemName] = data.id;
+          if (this.inventory.itemData[itemName]) {
+            this.inventory.itemData[itemName].id = data.id;
+          }
         }
       });
       console.log(`Loaded ${Object.keys(this.itemNameToId).length} item IDs`);
@@ -208,9 +234,9 @@ export class StateManager {
 
     // Update the inventory's progression mapping and item data if inventory exists
     if (this.inventory) {
-      this.inventory.progressionMapping = progressionMapping;
-      this.inventory.itemData = itemData;
-      this.inventory.groupData = groupData;
+      this.inventory.progressionMapping = this.progressionMapping;
+      this.inventory.itemData = this.itemData;
+      this.inventory.groupData = this.groupData;
 
       // Store item IDs directly on item data objects for easier access
       if (this.itemNameToId) {
@@ -274,20 +300,19 @@ export class StateManager {
     // Initialize the state object with settings and data for the selected player
     if (this.state) {
       // Pass the settings for the selected player to the state for loading
-      this.state.loadSettings(jsonData.settings?.[selectedPlayerId]);
+      this.state.loadSettings(this.settings);
 
       // Pass shop data (assuming shops might be player-specific or need filtering later)
       this.state.loadShops(shops);
 
       // Store game mode in state for the selected player
-      if (jsonData.mode?.[selectedPlayerId]) {
-        this.state.gameMode = jsonData.mode[selectedPlayerId];
+      if (this.mode) {
+        this.state.gameMode = this.mode;
       }
 
       // Store start regions in state for the selected player
-      if (jsonData.start_regions?.[selectedPlayerId]?.default) {
-        this.state.startRegions =
-          jsonData.start_regions[selectedPlayerId].default;
+      if (this.startRegions && this.startRegions.length > 0) {
+        this.state.startRegions = [...this.startRegions];
       } else {
         // Default might need adjustment based on game logic if start regions differ per player
         this.state.startRegions = ['Menu'];
@@ -352,6 +377,18 @@ export class StateManager {
       console.warn('Could not publish jsonDataLoaded event:', e);
     }
 
+    this._logDebug('[StateManager Class] Finished processing JSON load.');
+
+    // Publish rulesLoaded *after* processing and initial computation
+    this._publishEvent('rulesLoaded', {
+      source: 'jsonData',
+      selectedPlayerId: selectedPlayerId,
+      rules: {
+        items: this.itemData,
+        groups: this.groupData,
+      },
+    });
+
     return true;
   }
 
@@ -360,44 +397,23 @@ export class StateManager {
    * Identifies exits that depend on regions in their access rules
    */
   buildIndirectConnections() {
-    // Analyze all exits to find indirect dependencies
-    for (const regionName in this.regions) {
-      const region = this.regions[regionName];
-
-      // Skip if region has no exits
-      if (!region.exits || !region.exits.length) continue;
-
-      for (const exit of region.exits) {
-        // Skip if no access rule
-        if (!exit.access_rule) continue;
-
-        // Analyze rule to find region dependencies
-        const dependencies = this.findRegionDependencies(exit.access_rule);
-
-        // Register dependencies
-        for (const depRegion of dependencies) {
-          if (!this.indirectConnections.has(depRegion)) {
-            this.indirectConnections.set(depRegion, new Set());
-          }
-          this.indirectConnections.get(depRegion).add({
-            fromRegion: regionName,
-            exit: exit,
+    this.indirectConnections.clear();
+    if (!this.regions) return;
+    Object.values(this.regions).forEach((region) => {
+      region.exits.forEach((exit) => {
+        if (exit.rule) {
+          const dependencies = this.findRegionDependencies(exit.rule);
+          dependencies.forEach((depRegionName) => {
+            if (!this.indirectConnections.has(depRegionName)) {
+              this.indirectConnections.set(depRegionName, new Set());
+            }
+            if (exit.name) {
+              this.indirectConnections.get(depRegionName).add(exit.name);
+            }
           });
         }
-      }
-    }
-
-    if (this.debugMode) {
-      console.log(
-        'Built indirect connections map:',
-        Object.fromEntries(
-          [...this.indirectConnections].map(([k, v]) => [
-            k,
-            [...v].map((e) => `${e.fromRegion}->${e.exit.name}`),
-          ])
-        )
-      );
-    }
+      });
+    });
   }
 
   /**
@@ -405,31 +421,35 @@ export class StateManager {
    */
   findRegionDependencies(rule) {
     const dependencies = new Set();
-
     if (!rule) return dependencies;
-
-    // Check for direct state_method can_reach
-    if (
-      rule.type === 'state_method' &&
-      rule.method === 'can_reach' &&
-      rule.args &&
-      rule.args.length > 0 &&
-      typeof rule.args[0] === 'string' &&
-      rule.args[1] === 'Region'
-    ) {
-      dependencies.add(rule.args[0]);
-    }
-
-    // Check children recursively for composite rules
-    if ((rule.type === 'and' || rule.type === 'or') && rule.conditions) {
-      for (const condition of rule.conditions) {
-        const childDeps = this.findRegionDependencies(condition);
-        for (const dep of childDeps) {
-          dependencies.add(dep);
+    if (typeof rule === 'string') {
+      if (this.regions && this.regions[rule]) {
+        dependencies.add(rule);
+      } else {
+        const match = rule.match(/@helper\/[^\(]+\(([^\)]+)\)/);
+        if (match && match[1]) {
+          const args = match[1].split(/,\s*/);
+          args.forEach((arg) => {
+            const cleanArg = arg.replace(/['"]/g, '');
+            if (this.regions && this.regions[cleanArg]) {
+              dependencies.add(cleanArg);
+            }
+          });
         }
       }
+    } else if (Array.isArray(rule)) {
+      rule.forEach((subRule) => {
+        this.findRegionDependencies(subRule).forEach((dep) =>
+          dependencies.add(dep)
+        );
+      });
+    } else if (typeof rule === 'object') {
+      Object.values(rule).forEach((subRule) => {
+        this.findRegionDependencies(subRule).forEach((dep) =>
+          dependencies.add(dep)
+        );
+      });
     }
-
     return dependencies;
   }
 
@@ -437,8 +457,9 @@ export class StateManager {
     this.cacheValid = false;
     this.knownReachableRegions.clear();
     this.knownUnreachableRegions.clear();
-    this.path.clear();
-    this.blockedConnections.clear();
+    this.path = new Map();
+    this.blockedConnections = new Set();
+    this._logDebug('[StateManager Instance] Cache invalidated.');
   }
 
   /**
@@ -545,6 +566,7 @@ export class StateManager {
     }
 
     this.notifyUI('reachableRegionsComputed');
+    this._publishEvent('regionsComputed'); // Publish event here
     return this.knownReachableRegions;
   }
 
@@ -553,81 +575,63 @@ export class StateManager {
    * Implements Python's _update_reachable_regions_auto_indirect_conditions approach
    */
   runBFSPass() {
-    let newRegionsFound = false;
-
-    // Exactly match Python's nested loop structure
-    let newConnection = true;
-    while (newConnection) {
-      newConnection = false;
-
-      let queue = [...this.blockedConnections];
-      while (queue.length > 0) {
-        const connection = queue.shift();
-        const { fromRegion, exit } = connection;
-        const targetRegion = exit.connected_region;
-
-        // Skip if the target region is already reachable
-        if (this.knownReachableRegions.has(targetRegion)) {
-          this.blockedConnections.delete(connection);
-          continue;
-        }
-
-        // Check if exit is traversable
-        const canTraverse = !exit.access_rule || evaluateRule(exit.access_rule);
-
-        if (canTraverse) {
-          // Region is now reachable
-          this.knownReachableRegions.add(targetRegion);
-          newRegionsFound = true;
-          newConnection = true; // Signal that we found a new connection
-
-          // Remove from blocked connections
-          this.blockedConnections.delete(connection);
-
-          // Record the path taken to reach this region
-          this.path.set(targetRegion, {
-            name: targetRegion,
-            entrance: exit.name,
-            previousRegion: fromRegion,
-          });
-
-          // Add all exits from the newly reachable region
-          const region = this.regions[targetRegion];
-          if (region && region.exits) {
-            for (const newExit of region.exits) {
-              const newConnection = {
-                fromRegion: targetRegion,
-                exit: newExit,
-              };
-              this.blockedConnections.add(newConnection);
-              queue.push(newConnection);
-            }
-          }
-
-          // Check for indirect connections affected by this region
-          if (this.indirectConnections.has(targetRegion)) {
-            for (const indirectExit of this.indirectConnections.get(
-              targetRegion
-            )) {
-              // Only process if the exit's source region is reachable
-              if (this.knownReachableRegions.has(indirectExit.fromRegion)) {
-                queue.push(indirectExit);
-              }
-            }
-          }
-        }
+    const queue = this.getStartRegions();
+    const reachedInPass = new Set(queue);
+    const visitedEntrances = new Set();
+    queue.forEach((regionName) => {
+      if (!this.path.has(regionName)) {
+        this.path.set(regionName, {
+          name: regionName,
+          entrance: null,
+          previousRegion: null,
+        });
       }
-
-      // Python equivalent: queue.extend(blocked_connections)
-      // We've finished the current queue, next iteration will recheck all blocked connections
-      if (this.debugMode && newConnection) {
-        this._logDebug(
-          'BFS pass: Found new regions, rechecking blocked connections'
+    });
+    let head = 0;
+    while (head < queue.length) {
+      const currentRegionName = queue[head++];
+      const currentRegion = this.regions[currentRegionName];
+      if (!currentRegion) {
+        this._logDebug(`Warning: Region data missing for ${currentRegionName}`);
+        continue;
+      }
+      currentRegion.exits.forEach((exit) => {
+        const destinationRegionName = exit.connects;
+        const entranceName = exit.name;
+        if (!destinationRegionName || !this.regions[destinationRegionName]) {
+          return;
+        }
+        if (visitedEntrances.has(entranceName)) {
+          return;
+        }
+        const ruleContext = { region: currentRegion, exit: exit };
+        const canPass = this.evaluateRuleWithPathContext(
+          exit.rule,
+          ruleContext
         );
-      }
+        if (canPass) {
+          visitedEntrances.add(entranceName);
+          this.blockedConnections.delete(entranceName);
+          if (!reachedInPass.has(destinationRegionName)) {
+            reachedInPass.add(destinationRegionName);
+            queue.push(destinationRegionName);
+            this._logDebug(
+              `Reached ${destinationRegionName} via ${entranceName}`
+            );
+            if (!this.path.has(destinationRegionName)) {
+              this.path.set(destinationRegionName, {
+                name: destinationRegionName,
+                entrance: entranceName,
+                previousRegion: currentRegionName,
+              });
+            }
+          }
+        } else {
+          this.blockedConnections.add(entranceName);
+        }
+      });
     }
-
-    return newRegionsFound;
+    return reachedInPass;
   }
 
   /**
@@ -875,16 +879,15 @@ export class StateManager {
    * Mark a location as checked
    */
   checkLocation(locationName) {
-    this.checkedLocations.add(locationName);
-    this.notifyUI('locationChecked');
-
-    // Also emit to eventBus for ProgressUI
-    try {
-      if (eventBus) {
-        eventBus.publish(`stateManager:locationChecked`, {});
-      }
-    } catch (e) {
-      console.warn('Could not publish to eventBus:', e);
+    if (!this.checkedLocations.has(locationName)) {
+      this.checkedLocations.add(locationName);
+      this._logDebug(`[StateManager Class] Checked location: ${locationName}`);
+      const location = this.locations.find((loc) => loc.name === locationName);
+      // Publish event AFTER adding to the set
+      this._publishEvent('locationChecked', {
+        locationName: locationName,
+        regionName: location?.region,
+      });
     }
   }
 
@@ -892,7 +895,12 @@ export class StateManager {
    * Clear all checked locations
    */
   clearCheckedLocations() {
-    this.checkedLocations.clear();
+    if (this.checkedLocations.size > 0) {
+      this.checkedLocations.clear();
+      this._logDebug('[StateManager Class] Cleared checked locations.');
+      // Publish event AFTER clearing
+      this._publishEvent('checkedLocationsCleared');
+    }
   }
 
   /**
@@ -913,23 +921,40 @@ export class StateManager {
       return; // Not in batch mode, nothing to do
     }
 
+    this._logDebug('[StateManager Class] Committing batch update...');
+    this._batchMode = false;
+    let inventoryChanged = false;
+
     // Process all batched updates
     for (const [itemName, count] of this._batchedUpdates.entries()) {
       const existingCount = this.inventory.count(itemName);
       const diff = count - existingCount;
 
-      for (let i = 0; i < diff; i++) {
-        this.inventory.addItem(itemName);
+      if (diff > 0) {
+        for (let i = 0; i < diff; i++) {
+          this.inventory.addItem(itemName);
+        }
+        inventoryChanged = true;
+      } else if (diff < 0) {
+        console.warn(`Batch commit needs inventory.removeItem for ${itemName}`);
       }
     }
 
-    this._batchMode = false;
-    this._deferRegionComputation = false;
-    this._batchedUpdates = new Map();
+    this._batchedUpdates.clear();
 
-    // Invalidate and recompute after batch commit
-    this.invalidateCache();
-    this.computeReachableRegions(); // This will notify UI via 'reachableRegionsComputed'
+    if (inventoryChanged) {
+      this._logDebug('Inventory changed during batch update.');
+      this.invalidateCache();
+    }
+    if (!this._deferRegionComputation || inventoryChanged) {
+      this._logDebug('Recomputing regions after batch commit.');
+      this.computeReachableRegions(); // Recompute regions first
+    }
+    // Publish inventoryChanged *after* recomputation, only if it actually changed
+    if (inventoryChanged) {
+      this._publishEvent('inventoryChanged');
+    }
+    this._logDebug('[StateManager Class] Batch update committed.');
   }
 
   /**
@@ -938,35 +963,35 @@ export class StateManager {
    */
   _logDebug(message, data = null) {
     if (this.debugMode) {
-      const timestamp = new Date().toISOString().slice(11, 23); // Get time in HH:MM:SS.mmm format
-      const logMsg = `[StateManager ${timestamp}] ${message}`;
-
-      if (data !== null) {
-        if (typeof data === 'object' && data !== null) {
-          // For objects, provide more readable format
-          if (data instanceof Set) {
-            console.log(logMsg, [...data]);
-          } else if (data instanceof Map) {
-            console.log(logMsg, Object.fromEntries([...data]));
-          } else {
-            // For any other object
-            console.log(logMsg, JSON.parse(JSON.stringify(data)));
-          }
-        } else {
-          // For primitives
-          console.log(logMsg, data);
+      if (data) {
+        try {
+          const clonedData = JSON.parse(JSON.stringify(data));
+          console.debug(message, clonedData);
+        } catch (e) {
+          console.debug(message, '[Could not clone data]', data);
         }
       } else {
-        console.log(logMsg);
+        console.debug(message);
       }
+    }
+  }
 
-      // In ultra verbose mode, also log stack trace for certain messages
-      if (
-        this.debugMode === 'ultra' &&
-        (message.includes('reachable') || message.includes('path'))
-      ) {
-        console.trace(logMsg);
-      }
+  /**
+   * Notifies listeners via the event bus.
+   */
+  _publishEvent(eventType, eventData = {}) {
+    try {
+      const fullEventName = `stateManager:${eventType}`;
+      eventBus.publish(fullEventName, eventData);
+      this._logDebug(
+        `[StateManager Class] Published ${fullEventName} via eventBus`,
+        eventData
+      );
+    } catch (e) {
+      console.warn(
+        `[StateManager Class] Could not publish ${eventType} to eventBus:`,
+        e
+      );
     }
   }
 
@@ -1043,6 +1068,10 @@ export class StateManager {
    */
   can_reach(region, type = 'Region', player = 1) {
     // The context-aware state manager handles position-specific constraints correctly
+    if (player !== this.playerSlot) {
+      this._logDebug(`can_reach check for wrong player (${player})`);
+      return false;
+    }
     if (type === 'Region') {
       return this.isRegionReachable(region);
     } else if (type === 'Location') {

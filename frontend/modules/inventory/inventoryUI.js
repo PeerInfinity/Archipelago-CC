@@ -1,24 +1,27 @@
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
 import connection from '../client/core/connection.js';
 import messageHandler from '../client/core/messageHandler.js';
+import eventBus from '../../app/core/eventBus.js';
 
 export class InventoryUI {
   // Add constants for special groups
   static SPECIAL_GROUPS = {
-    EVERYTHING: 'Everything',
     EVENTS: 'Events',
   };
 
   constructor(gameUI) {
     this.gameUI = gameUI;
     this.itemData = null;
+    this.groupNames = [];
     this.hideUnowned = true;
     this.hideCategories = false;
     this.sortAlphabetically = false;
     this.rootElement = this.createRootElement();
     this.groupedContainer = this.rootElement.querySelector('#inventory-groups');
     this.flatContainer = this.rootElement.querySelector('#inventory-flat');
-    this.attachEventListeners();
+    this.unsubscribeHandles = [];
+    this.attachControlEventListeners();
+    this.attachEventBusListeners();
   }
 
   createRootElement() {
@@ -64,12 +67,13 @@ export class InventoryUI {
 
   initialize(itemData, groups) {
     this.itemData = itemData;
+    this.groupNames = Array.isArray(groups) ? groups : [];
     this.initializeUI(itemData, groups);
   }
 
   restoreItemStates() {
     Object.entries(this.itemData).forEach(([name, _]) => {
-      const count = stateManager.getItemCount(name);
+      const count = stateManagerSingleton.instance.getItemCount(name);
       if (count > 0) {
         const buttons = document.querySelectorAll(`[data-item="${name}"]`);
         buttons.forEach((button) => {
@@ -90,22 +94,13 @@ export class InventoryUI {
     });
   }
 
-  initializeUI(itemData, groups) {
-    this.itemData = itemData; // Store item data for re-sorting/filtering
-
-    // --- NEW: Add fallback check for groups ---
-    if (!groups || typeof groups !== 'object' || Array.isArray(groups)) {
-      console.warn(
-        "[InventoryUI] Invalid 'groups' data received in initializeUI. Defaulting to empty object.",
-        groups
-      );
-      groups = {}; // Use empty object as fallback
-    }
-    // --- END NEW CHECK ---
+  initializeUI(itemData, groupNames) {
+    this.itemData = itemData || {};
+    this.groupNames = Array.isArray(groupNames) ? groupNames : [];
 
     const groupedContainer = this.groupedContainer;
     const flatContainer = this.flatContainer;
-    groupedContainer.innerHTML = ''; // Clear previous groups
+    groupedContainer.innerHTML = '';
     flatContainer.innerHTML = '';
     const flatGroup = document.createElement('div');
     flatGroup.className = 'inventory-group';
@@ -114,25 +109,14 @@ export class InventoryUI {
     flatGroup.appendChild(flatItems);
     flatContainer.appendChild(flatGroup);
 
-    // --- Use Object.keys on the validated groups object ---
-    const groupNames = Object.keys(groups);
+    const sortedGroupNames = [...this.groupNames].sort((a, b) =>
+      a.localeCompare(b)
+    );
 
-    // Sort group names, ensuring "Everything" is always first as it contains all items
-    const sortedGroupNames = groupNames.sort((a, b) => {
-      if (a === InventoryUI.SPECIAL_GROUPS.EVERYTHING) return -1;
-      if (b === InventoryUI.SPECIAL_GROUPS.EVERYTHING) return 1;
-      // Use the group definition from the `groups` object for sorting if needed, otherwise localeCompare
-      const nameA = groups[a]?.name || a;
-      const nameB = groups[b]?.name || b;
-      return nameA.localeCompare(nameB);
-    });
-
-    // Handle regular item groups using sortedGroupNames
-    sortedGroupNames.forEach((groupKey) => {
-      // Find items belonging to this groupKey based on itemData's groups array
-      const groupItems = Object.entries(itemData).filter(
+    sortedGroupNames.forEach((groupName) => {
+      const groupItems = Object.entries(this.itemData).filter(
         ([_, data]) =>
-          data.groups && data.groups.includes(groupKey) && !data.event
+          data.groups && data.groups.includes(groupName) && !data.event
       );
 
       if (this.sortAlphabetically) {
@@ -140,14 +124,11 @@ export class InventoryUI {
       }
 
       if (groupItems.length > 0) {
-        // Use the group's display name if available, otherwise the key
-        const displayGroupName = groups[groupKey]?.name || groupKey;
-        this.createGroupDiv(groupedContainer, displayGroupName, groupItems);
+        this.createGroupDiv(groupedContainer, groupName, groupItems);
       }
     });
 
-    // Handle event items
-    const eventItems = Object.entries(itemData).filter(
+    const eventItems = Object.entries(this.itemData).filter(
       ([_, data]) => data.event
     );
 
@@ -163,9 +144,8 @@ export class InventoryUI {
       );
     }
 
-    // Create flat view with unique items
     const addedToFlat = new Set();
-    let flatItemsList = Object.entries(itemData);
+    let flatItemsList = Object.entries(this.itemData);
     if (this.sortAlphabetically) {
       flatItemsList.sort(([a], [b]) => a.localeCompare(b));
     }
@@ -232,7 +212,6 @@ export class InventoryUI {
         }
       });
 
-      // Only hide the group if we're in grouped mode and there are no visible items
       if (!this.hideCategories) {
         group.style.display = visibleItems > 0 ? '' : 'none';
       }
@@ -264,7 +243,7 @@ export class InventoryUI {
     });
   }
 
-  attachEventListeners() {
+  attachControlEventListeners() {
     const hideUnownedCheckbox = this.rootElement.querySelector('#hide-unowned');
     const hideCategoriesCheckbox =
       this.rootElement.querySelector('#hide-categories');
@@ -272,33 +251,91 @@ export class InventoryUI {
       '#sort-alphabetically'
     );
 
-    if (hideUnownedCheckbox) {
-      hideUnownedCheckbox.addEventListener('change', (e) => {
-        this.hideUnowned = e.target.checked;
-        this.updateDisplay();
-      });
+    hideUnownedCheckbox.addEventListener('change', (event) => {
+      this.hideUnowned = event.target.checked;
+      this.updateDisplay();
+    });
+
+    hideCategoriesCheckbox.addEventListener('change', (event) => {
+      this.hideCategories = event.target.checked;
+      this.updateDisplay();
+    });
+
+    sortAlphabeticallyCheckbox.addEventListener('change', (event) => {
+      this.sortAlphabetically = event.target.checked;
+      if (this.itemData && this.groupNames) {
+        this.initializeUI(this.itemData, this.groupNames);
+      } else {
+        console.warn(
+          '[InventoryUI] Cannot re-sort: State or rules not available.'
+        );
+      }
+    });
+  }
+
+  attachEventBusListeners() {
+    if (this.unsubscribeHandles.length > 0) {
+      console.warn(
+        '[InventoryUI] attachEventBusListeners called multiple times? Clearing previous listeners.'
+      );
+      this.destroy();
     }
 
-    if (hideCategoriesCheckbox) {
-      hideCategoriesCheckbox.addEventListener('change', (e) => {
-        this.hideCategories = e.target.checked;
-        this.updateDisplay();
-      });
-    }
+    console.log('[InventoryUI] Attaching event bus listeners...');
 
-    if (sortAlphabeticallyCheckbox) {
-      sortAlphabeticallyCheckbox.addEventListener('change', (e) => {
-        this.sortAlphabetically = e.target.checked;
-        if (this.itemData) {
-          const groups = [
-            ...new Set(
-              Object.values(this.itemData).flatMap((data) => data.groups)
-            ),
-          ];
-          this.initializeUI(this.itemData, groups);
-        }
-      });
+    let unsubscribeRules = eventBus.subscribe(
+      'stateManager:rulesLoaded',
+      this._handleRulesLoaded.bind(this)
+    );
+    this.unsubscribeHandles.push(unsubscribeRules);
+    console.log('[InventoryUI] Subscribed to stateManager:rulesLoaded');
+
+    let unsubscribeInventory = eventBus.subscribe(
+      'stateManager:inventoryChanged',
+      this._handleInventoryChanged.bind(this)
+    );
+    this.unsubscribeHandles.push(unsubscribeInventory);
+    console.log('[InventoryUI] Subscribed to stateManager:inventoryChanged');
+  }
+
+  _handleRulesLoaded(eventData) {
+    if (
+      eventData &&
+      eventData.rules &&
+      eventData.rules.items &&
+      Array.isArray(eventData.rules.groups)
+    ) {
+      this.initializeUI(eventData.rules.items, eventData.rules.groups);
+    } else {
+      if (
+        stateManagerSingleton.instance.state &&
+        stateManagerSingleton.instance.state.rules
+      ) {
+        this.initializeUI(
+          stateManagerSingleton.instance.state.rules.items,
+          stateManagerSingleton.instance.state.rules.groups
+        );
+      } else {
+        console.error(
+          '[InventoryUI] Unable to initialize UI: No valid rules data found in event or stateManager.'
+        );
+      }
     }
+  }
+
+  _handleInventoryChanged() {
+    this.syncWithState();
+  }
+
+  destroy() {
+    console.log('[InventoryUI] Destroying listeners...');
+    this.unsubscribeHandles.forEach((unsubscribe) => {
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    });
+    this.unsubscribeHandles = [];
+    console.log('[InventoryUI] Listeners destroyed.');
   }
 
   createOrUpdateCountBadge(container, count) {
@@ -321,37 +358,29 @@ export class InventoryUI {
 
   modifyItemCount(itemName, isShiftPressed = false) {
     if (!connection.isConnected() || isShiftPressed) {
-      // For removing items or when not connected, use local logic
       if (isShiftPressed) {
-        // Remove the item
-        if (stateManager.inventory && stateManager.inventory.removeItem) {
-          stateManager.inventory.removeItem(itemName);
-          // Update UI
+        if (
+          stateManagerSingleton.instance.inventory &&
+          stateManagerSingleton.instance.inventory.removeItem
+        ) {
+          stateManagerSingleton.instance.inventory.removeItem(itemName);
           this.syncWithState();
           if (window.consoleManager) {
             window.consoleManager.print(`Removed item: ${itemName}`, 'info');
           }
         }
       } else {
-        // Add item locally
-        stateManager.addItemToInventory(itemName);
-        // Update UI
+        stateManagerSingleton.instance.addItemToInventory(itemName);
         this.syncWithState();
         if (window.consoleManager) {
           window.consoleManager.print(`Added item: ${itemName}`, 'info');
         }
       }
     } else {
-      // For adding items when connected to server:
-      // 1. Mark this item as clicked by user to prevent double-processing
       window._userClickedItems.add(itemName);
-      // 2. Update the inventory locally
-      stateManager.addItemToInventory(itemName);
-      // 3. Update UI
+      stateManagerSingleton.instance.addItemToInventory(itemName);
       this.syncWithState();
-      // 4. Send to server via messageHandler
       messageHandler.sendMessage(`!getitem ${itemName}`);
-      // 5. Remove from tracking after a delay
       setTimeout(() => {
         window._userClickedItems.delete(itemName);
       }, 5000);
@@ -373,33 +402,32 @@ export class InventoryUI {
       }
     });
 
-    // Clear both containers
     const groupedContainer = this.groupedContainer;
     const flatContainer = this.flatContainer;
     if (groupedContainer) groupedContainer.innerHTML = '';
     if (flatContainer) flatContainer.innerHTML = '';
   }
 
-  // Add method to sync UI with state
   syncWithState() {
-    // combine all quiet sync logic here:
-    // read item states from stateManager in one pass
-    // update button classes and count badges
-    // do not individually call handleEventCollection
+    let sampleItemCount = 'N/A';
+    try {
+      sampleItemCount =
+        stateManagerSingleton.instance.getItemCount('Progressive Sword');
+    } catch (e) {
+      console.error('Error during syncWithState item count check:', e);
+    }
 
     document.querySelectorAll('.item-button').forEach((button) => {
       const itemName = button.dataset.item;
-      const count = stateManager.getItemCount(itemName);
+      const count = stateManagerSingleton.instance.getItemCount(itemName);
       const container = button.closest('.item-container');
 
       if (button && container) {
-        // Add null check for both button and container
         button.classList.toggle('active', count > 0);
         this.createOrUpdateCountBadge(container, count);
       }
     });
 
-    // Update display for this UI component only (this handles group visibility and group colorblind class)
     this.updateDisplay();
   }
 }

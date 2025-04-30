@@ -191,13 +191,9 @@ function createRegistrationApi(moduleId, moduleInstance) {
     registerEventBusPublisher: (eventName) => {
       centralRegistry.registerEventBusPublisher(moduleId, eventName);
     },
-    // New EventBus subscriber registration (for tracking, actual subscribe is separate)
-    registerEventBusSubscriber: (eventName, callback) => {
-      centralRegistry.registerEventBusSubscriber(
-        moduleId,
-        eventName,
-        callback.bind(moduleInstance) // Ensure correct 'this'
-      );
+    // New EventBus subscriber registration (for tracking intent only)
+    registerEventBusSubscriber: (eventName) => {
+      centralRegistry.registerEventBusSubscriber(moduleId, eventName);
     },
     registerSettingsSchema: (schemaSnippet) => {
       centralRegistry.registerSettingsSchema(moduleId, schemaSnippet);
