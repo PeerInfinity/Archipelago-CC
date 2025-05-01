@@ -1,6 +1,8 @@
 import { getInitApi } from './index.js';
 import eventBus from '../../app/core/eventBus.js'; // Import eventBus
-import centralRegistry from '../../app/core/centralRegistry.js'; // Import registry
+import { centralRegistry } from '../../app/core/centralRegistry.js'; // Corrected Import
+import commonUI from '../commonUI/index.js';
+// import ModuleManagerAPI from '../managerAPI.js'; // REMOVED - Use window.moduleManagerApi indirectly via initApi
 
 // Basic CSS for the panel
 const CSS = `

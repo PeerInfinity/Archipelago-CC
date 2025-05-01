@@ -8,7 +8,7 @@
  * - Region and location discovery
  */
 
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
 // Correctly import the default export from the singleton file if needed
 // import stateManagerSingleton from '../stateManager/stateManagerSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -92,7 +92,7 @@ export class LoopState {
     }
 
     // Add all exits from Menu to the discovered exits
-    const menuRegion = stateManager.regions['Menu'];
+    const menuRegion = stateManagerSingleton.instance.regions['Menu'];
     if (menuRegion && menuRegion.exits) {
       const menuExits = this.discoveredExits.get('Menu');
       menuRegion.exits.forEach((exit) => {
@@ -110,8 +110,11 @@ export class LoopState {
     let itemCount = 0;
 
     // Count all items in inventory
-    if (stateManager.inventory && stateManager.inventory.items) {
-      stateManager.inventory.items.forEach((count, item) => {
+    if (
+      stateManagerSingleton.instance.inventory &&
+      stateManagerSingleton.instance.inventory.items
+    ) {
+      stateManagerSingleton.instance.inventory.items.forEach((count, item) => {
         if (count > 0) {
           itemCount += count;
         }
@@ -473,7 +476,7 @@ export class LoopState {
         // For explore actions on fully explored regions, give 4x XP (Farm Region XP mode)
         if (this.currentAction.type === 'explore') {
           const regionName = this.currentAction.regionName;
-          const regionData = stateManager.regions[regionName];
+          const regionData = stateManagerSingleton.instance.regions[regionName];
 
           if (regionData) {
             // Check if region is fully explored
@@ -630,7 +633,9 @@ export class LoopState {
       // Check if it's a checkLocation action for an already checked location
       if (
         nextAction.type === 'checkLocation' &&
-        stateManager.isLocationChecked(nextAction.locationName)
+        stateManagerSingleton.instance.isLocationChecked(
+          nextAction.locationName
+        )
       ) {
         //console.log(
         //  `Skipping already checked location: ${nextAction.locationName}. Removing action.`
@@ -707,7 +712,7 @@ export class LoopState {
   _handleExploreCompletion(action) {
     // Get region data
     const regionName = action.regionName;
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.instance.regions[regionName];
 
     if (!regionData) {
       return;
@@ -744,14 +749,14 @@ export class LoopState {
   _handleLocationCheckCompletion(action) {
     // Mark location as checked
     const locationName = action.locationName;
-    stateManager.checkLocation(locationName);
+    stateManagerSingleton.instance.checkLocation(locationName);
 
     // Get item from location if available
-    const location = stateManager.locations.find(
+    const location = stateManagerSingleton.instance.locations.find(
       (loc) => loc.name === locationName
     );
     if (location && location.item) {
-      stateManager.addItemToInventory(location.item.name);
+      stateManagerSingleton.instance.addItemToInventory(location.item.name);
     }
 
     // No XP bonus on completion - XP is awarded continuously during the action
@@ -779,7 +784,7 @@ export class LoopState {
    * @returns {number} - Count of undiscovered locations
    */
   _countUndiscoveredLocations(regionName) {
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.instance.regions[regionName];
     if (!regionData || !regionData.locations) {
       return 0;
     }
@@ -800,7 +805,7 @@ export class LoopState {
    * @returns {number} - Count of undiscovered exits
    */
   _countUndiscoveredExits(regionName) {
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.instance.regions[regionName];
     if (!regionData || !regionData.exits) {
       return 0;
     }
@@ -822,7 +827,7 @@ export class LoopState {
    * @param {string} regionName - Name of the region
    */
   _revealRandomLocation(regionName) {
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.instance.regions[regionName];
     if (!regionData || !regionData.locations) {
       return;
     }
@@ -857,7 +862,7 @@ export class LoopState {
    * @param {string} regionName - Name of the region
    */
   _revealRandomExit(regionName) {
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.instance.regions[regionName];
     if (!regionData || !regionData.exits) {
       return;
     }
@@ -1073,7 +1078,8 @@ export class LoopState {
    */
   isLocationDiscovered(locationName) {
     // If location is checked, consider it discovered
-    if (stateManager.isLocationChecked(locationName)) return true;
+    if (stateManagerSingleton.instance.isLocationChecked(locationName))
+      return true;
 
     // Otherwise check discovery state
     return this.discoveredLocations.has(locationName);

@@ -1,9 +1,9 @@
 // loopUI.js - UI for the Loop mode
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
 import loopState from './loopStateSingleton.js';
 import discoveryStateSingleton from '../discovery/singleton.js'; // <<< Added import
 import eventBus from '../../app/core/eventBus.js';
-import commonUI from '../commonUI/commonUI.js';
+import commonUI from '../commonUI/index.js';
 import {
   levelFromXP,
   xpForNextLevel,
@@ -973,7 +973,7 @@ export class LoopUI {
    * @param {string} regionName - Name of the region
    */
   _updateDiscoveredItems(regionName) {
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.regions[regionName];
     if (!regionData) {
       console.warn(`Region data not found for ${regionName}`);
       return; // Exit if region data is not found
@@ -1043,7 +1043,7 @@ export class LoopUI {
    * @param {string} regionName - Name of the region
    */
   _updateDiscoveryCountDisplay(regionName) {
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.regions[regionName];
     if (!regionData) return;
 
     const isRegionDiscovered =
@@ -1145,7 +1145,7 @@ export class LoopUI {
    */
   _updateDiscoveredLocations(regionName, container) {
     container.innerHTML = ''; // Clear previous content
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.regions[regionName];
     if (!regionData || !regionData.locations) return;
 
     // Use colorblind setting from settingsManager
@@ -1164,7 +1164,7 @@ export class LoopUI {
       ); // <<< Use discoveryStateSingleton
       if (!isDiscovered) return;
 
-      const isChecked = stateManager.isLocationChecked(loc.name);
+      const isChecked = stateManagerSingleton.isLocationChecked(loc.name);
       const isAccessible = stateManager.isLocationAccessible(loc);
 
       const div = document.createElement('div');
@@ -1234,7 +1234,7 @@ export class LoopUI {
    */
   _updateDiscoveredExits(regionName, container) {
     container.innerHTML = ''; // Clear previous content
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.regions[regionName];
     if (!regionData || !regionData.exits) return;
 
     // Use colorblind setting from settingsManager
@@ -1618,7 +1618,7 @@ export class LoopUI {
     });
 
     sortedRegions.forEach((regionName) => {
-      const region = stateManager.regions[regionName];
+      const region = stateManagerSingleton.regions[regionName];
       if (!region) return;
       // Show regions that are 'Menu', have actions queued, or are the destination of a move action
       const isDestination = loopState.actionQueue.some(
@@ -1751,7 +1751,7 @@ export class LoopUI {
       detailEl.appendChild(xpDisplay);
 
       // Discovery Stats
-      const regionData = stateManager.regions[regionName]; // Get full data
+      const regionData = stateManagerSingleton.regions[regionName]; // Get full data
       const totalLocations = regionData?.locations?.length || 0;
       const totalExits = regionData?.exits?.length || 0;
       const discoveredLocationCount =

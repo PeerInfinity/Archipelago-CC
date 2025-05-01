@@ -1,5 +1,6 @@
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 import eventBus from '../../app/core/eventBus.js';
-import centralRegistry from '../../app/core/centralRegistry.js';
+// import ModuleManagerAPI from '../managerAPI.js'; // REMOVED - Use window.moduleManagerApi instead
 
 // Basic CSS for the panel
 const CSS = `

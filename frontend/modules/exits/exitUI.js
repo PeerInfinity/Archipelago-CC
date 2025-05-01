@@ -1,7 +1,7 @@
 // exitUI.js
 import { stateManagerSingleton } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import commonUI, { debounce } from '../commonUI/commonUI.js';
+import commonUI, { debounce } from '../commonUI/index.js';
 import loopState from '../loops/loopStateSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';

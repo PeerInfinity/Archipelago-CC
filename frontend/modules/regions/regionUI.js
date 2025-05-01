@@ -1,12 +1,13 @@
 // regionUI.js
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
 import { PathAnalyzerUI } from '../pathAnalyzer/pathAnalyzerUI.js';
-import commonUI from '../commonUI/commonUI.js';
+import commonUI from '../commonUI/index.js';
 import messageHandler from '../client/core/messageHandler.js';
 import loopState from '../loops/loopStateSingleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 export class RegionUI {
   constructor(gameUI) {
@@ -47,7 +48,6 @@ export class RegionUI {
       'settings:changed',
       ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.regions')) {
-          console.log('RegionUI reacting to settings change:', key);
           this.update();
         }
       }
@@ -177,9 +177,13 @@ export class RegionUI {
   }
 
   showStartRegion(startRegionName) {
-    if (!stateManager.regions[startRegionName]) {
+    if (
+      !stateManagerSingleton.instance ||
+      !stateManagerSingleton.instance.regions ||
+      !stateManagerSingleton.instance.regions[startRegionName]
+    ) {
       this.log(
-        `Warning: start region ${startRegionName} not found in stateManager.regions.`
+        `Warning: start region ${startRegionName} not found in stateManager.instance.regions.`
       );
       return;
     }
@@ -231,19 +235,21 @@ export class RegionUI {
 
   expandAllRegions() {
     if (this.showAll) {
-      Object.keys(stateManager.regions).forEach((regionName, index) => {
-        const uid = `all_${index}`;
-        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-        if (regionObj) {
-          regionObj.expanded = true;
-        } else {
-          this.visitedRegions.push({
-            name: regionName,
-            expanded: true,
-            uid: uid,
-          });
+      Object.keys(stateManagerSingleton.regions).forEach(
+        (regionName, index) => {
+          const uid = `all_${index}`;
+          const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+          if (regionObj) {
+            regionObj.expanded = true;
+          } else {
+            this.visitedRegions.push({
+              name: regionName,
+              expanded: true,
+              uid: uid,
+            });
+          }
         }
-      });
+      );
     } else {
       this.visitedRegions.forEach((region) => {
         region.expanded = true;
@@ -254,19 +260,21 @@ export class RegionUI {
 
   collapseAllRegions() {
     if (this.showAll) {
-      Object.keys(stateManager.regions).forEach((regionName, index) => {
-        const uid = `all_${index}`;
-        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-        if (regionObj) {
-          regionObj.expanded = false;
-        } else {
-          this.visitedRegions.push({
-            name: regionName,
-            expanded: false,
-            uid: uid,
-          });
+      Object.keys(stateManagerSingleton.regions).forEach(
+        (regionName, index) => {
+          const uid = `all_${index}`;
+          const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+          if (regionObj) {
+            regionObj.expanded = false;
+          } else {
+            this.visitedRegions.push({
+              name: regionName,
+              expanded: false,
+              uid: uid,
+            });
+          }
         }
-      });
+      );
     } else {
       this.visitedRegions.forEach((region) => {
         region.expanded = false;
@@ -290,27 +298,29 @@ export class RegionUI {
     );
 
     if (this.showAll) {
-      // Show all regions ignoring path logic
-      Object.keys(stateManager.regions).forEach((regionName, index) => {
-        const rData = stateManager.regions[regionName];
-        const uid = `all_${index}`; // or any stable unique key
-        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-        const expanded = regionObj ? regionObj.expanded : true; // expand all by default
-        const regionBlock = this.buildRegionBlock(
-          rData,
-          regionName,
-          expanded,
-          uid,
-          useRegionColorblind
-        );
-        container.appendChild(regionBlock);
-      });
+      Object.keys(stateManagerSingleton.regions).forEach(
+        (regionName, index) => {
+          const rData = stateManagerSingleton.regions[regionName];
+          const uid = `all_${index}`; // or any stable unique key
+          const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+          const expanded = regionObj ? regionObj.expanded : true; // expand all by default
+          const regionBlock = this.buildRegionBlock(
+            rData,
+            regionName,
+            expanded,
+            uid,
+            useRegionColorblind
+          );
+          container.appendChild(regionBlock);
+        }
+      );
     } else {
-      // Normal visited chain
       for (const regionObj of this.visitedRegions) {
         const { name: regionName, expanded, uid } = regionObj;
-        const rData = stateManager.regions[regionName];
-        if (!rData) continue;
+        const rData = stateManagerSingleton.regions[regionName];
+        if (!rData) {
+          continue;
+        }
         const regionBlock = this.buildRegionBlock(
           rData,
           regionName,
@@ -334,10 +344,7 @@ export class RegionUI {
    * @param {string} regionName - The name of the region to navigate to.
    */
   navigateToRegion(regionName) {
-    console.log(`[RegionUI] Navigating to region: ${regionName}`);
-
     if (!this.regionsContainer) {
-      console.error('[RegionUI] regionsContainer not found, cannot navigate.');
       return;
     }
 
@@ -353,9 +360,6 @@ export class RegionUI {
 
     // If block not found, maybe it's because "Show All" is off?
     if (!regionBlock && !this.showAll) {
-      console.log(
-        `[RegionUI] Block for ${regionName} not found and Show All is off. Checking checkbox...`
-      );
       const showAllCheckbox =
         this.rootElement.querySelector('#show-all-regions');
       if (showAllCheckbox) {
@@ -367,19 +371,14 @@ export class RegionUI {
           `.region-block[data-region="${regionName}"]`
         );
         if (regionBlock) {
-          console.log(
-            `[RegionUI] Found region block for ${regionName} after enabling Show All.`
-          );
+          return;
         }
       } else {
-        console.warn(
-          '[RegionUI] Could not find #show-all-regions checkbox to enable it.'
-        );
+        return;
       }
     }
 
     if (regionBlock) {
-      console.log(`[RegionUI] Found region block for ${regionName}`);
       const uidString = regionBlock.dataset.uid;
 
       // Use uidString to check if it's a 'visited' region (numeric UID) or 'all' region
@@ -389,10 +388,6 @@ export class RegionUI {
       // Only try to expand visited regions by UID, 'all' regions are handled by showAll
       if (!isExpanded && isVisitedRegion) {
         const uid = parseInt(uidString, 10);
-        console.log(
-          `[RegionUI] Visited region ${regionName} (uid: ${uid}) is collapsed, expanding...`
-        );
-        // Find the corresponding object in visitedRegions to set expanded state
         const regionData = this.visitedRegions.find((r) => r.uid === uid);
         if (regionData) {
           regionData.expanded = true;
@@ -403,16 +398,11 @@ export class RegionUI {
           );
           if (newRegionBlock) {
             regionBlock = newRegionBlock; // Update reference if found
-          } else {
-            console.error(
-              '[RegionUI] Region block lost after expansion re-render.'
-            );
           }
         }
       }
 
       // Scroll the region block into view
-      console.log(`[RegionUI] Scrolling ${regionName} into view...`);
       regionBlock.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest', // Use 'nearest' to minimize scrolling
@@ -423,10 +413,6 @@ export class RegionUI {
       setTimeout(() => {
         regionBlock.classList.remove('highlight-region');
       }, 1500); // Highlight for 1.5 seconds
-    } else {
-      console.warn(`[RegionUI] Could not find region block for ${regionName}.`);
-      // Optionally, temporarily enable 'showAll' and try again?
-      // Or display a message to the user?
     }
   }
 
@@ -436,23 +422,12 @@ export class RegionUI {
    * @param {string} regionName - The name of the region containing the location
    */
   navigateToLocation(locationName, regionName) {
-    console.log(
-      `[RegionUI] Navigating to location: ${locationName} in ${regionName}`
-    );
-
-    // Ensure the region block itself is visible first (might require expanding)
-    // We assume navigateToRegion was already called or the region is visible.
     const regionBlock = this.regionsContainer.querySelector(
       `.region-block[data-region="${regionName}"]`
     );
 
     if (!regionBlock) {
-      console.warn(
-        `[RegionUI] Cannot navigate to location ${locationName}. Parent region block ${regionName} not found or not rendered.`
-      );
-      // Attempt to force the region to be visible, similar to navigateToRegion
       this.navigateToRegion(regionName); // Call navigateToRegion to handle visibility
-      // Retry finding the location after a delay to allow rendering
       setTimeout(() => this.navigateToLocation(locationName, regionName), 200);
       return;
     }
@@ -462,11 +437,7 @@ export class RegionUI {
       const uidString = regionBlock.dataset.uid;
       const isVisitedRegion = uidString && !isNaN(parseInt(uidString, 10));
       if (isVisitedRegion) {
-        console.log(
-          `[RegionUI] Expanding region ${regionName} to find location ${locationName}.`
-        );
         this.toggleRegionByUID(parseInt(uidString, 10));
-        // Retry after a delay to allow re-render
         setTimeout(
           () => this.navigateToLocation(locationName, regionName),
           200
@@ -481,7 +452,6 @@ export class RegionUI {
       `.location-wrapper .location-link[data-location="${locationName}"]`
     );
     if (locationElement) {
-      console.log(`[RegionUI] Scrolling to location ${locationName}.`);
       locationElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       // Highlight the parent wrapper for better visibility
       const wrapper = locationElement.closest('.location-wrapper');
@@ -491,10 +461,6 @@ export class RegionUI {
           wrapper.classList.remove('highlight-location');
         }, 2000);
       }
-    } else {
-      console.warn(
-        `[RegionUI] Could not find location element for ${locationName} within region ${regionName}.`
-      );
     }
   }
 
@@ -523,12 +489,12 @@ export class RegionUI {
     regionBlock.classList.toggle('colorblind-mode', useColorblind);
 
     // Check if we have a valid inventory before evaluating rules
-    const inventory = stateManager?.inventory;
+    const inventory = stateManagerSingleton?.inventory;
     if (!inventory) {
       return document.createElement('div'); // Return empty div if no inventory
     }
 
-    const isAccessible = stateManager.isRegionReachable(regionName);
+    const isAccessible = stateManagerSingleton.isRegionReachable(regionName);
 
     // Check if Loop Mode is active
     const isLoopModeActive = window.loopUIInstance?.isLoopModeActive;
@@ -704,7 +670,7 @@ export class RegionUI {
 
           // Remove inventory parameter
           const canAccess = evaluateRule(loc.access_rule);
-          const isChecked = stateManager.isLocationChecked(loc.name);
+          const isChecked = stateManagerSingleton.isLocationChecked(loc.name);
           const colorClass = isChecked
             ? 'checked-loc'
             : canAccess
@@ -763,8 +729,6 @@ export class RegionUI {
                   this._handleLocalCheck(loc);
                 }
               } catch (error) {
-                console.error('Error checking location:', error);
-                // Fallback to original behavior on error
                 this._handleLocalCheck(loc);
               }
 
@@ -913,16 +877,9 @@ export class RegionUI {
    * @private
    */
   _handleLocalCheck(location) {
-    console.log(
-      `[RegionUI] Routing local check for ${location.name} (ID: ${location.id}) through MessageHandler`
-    );
     // Use the globally accessible messageHandler instance
     const handler = window.messageHandler || messageHandler;
     handler.checkLocation(location).catch((error) => {
-      console.error(
-        `[RegionUI] Error calling messageHandler.checkLocation:`,
-        error
-      );
       // Optional: Display an error message to the user
     });
   }

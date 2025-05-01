@@ -1,5 +1,6 @@
-import { stateManager } from '../stateManager/index.js';
-import commonUI from '../commonUI/commonUI.js';
+import commonUI from '../commonUI/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
+// import { TestCase } from '../../tests/TestCase.js'; // Removed unused import
 import eventBus from '../../app/core/eventBus.js';
 
 export class TestCaseUI {
@@ -315,12 +316,12 @@ export class TestCaseUI {
 
       // First initialize inventory with the test rules data
       console.log('Loading rules data into state manager');
-      stateManager.loadFromJSON(this.testRules, '1');
+      stateManagerSingleton.loadFromJSON(this.testRules, '1');
 
       // Verify state manager was properly initialized
       if (
-        !stateManager.regions ||
-        Object.keys(stateManager.regions).length === 0
+        !stateManagerSingleton.regions ||
+        Object.keys(stateManagerSingleton.regions).length === 0
       ) {
         console.error('State manager not properly initialized with regions');
         statusElement.innerHTML = `<div class="test-error">Error: State manager initialization failed</div>`;
@@ -333,7 +334,10 @@ export class TestCaseUI {
         excludedItems,
       });
       try {
-        stateManager.initializeInventoryForTest(requiredItems, excludedItems);
+        stateManagerSingleton.initializeInventoryForTest(
+          requiredItems,
+          excludedItems
+        );
       } catch (inventoryError) {
         console.error('Error initializing inventory:', inventoryError);
         statusElement.innerHTML = `<div class="test-error">Error: ${inventoryError.message}</div>`;
@@ -343,8 +347,8 @@ export class TestCaseUI {
       // Force UI sync and cache invalidation - with additional error handling
       try {
         console.log('Invalidating cache and computing reachable regions');
-        stateManager.invalidateCache();
-        stateManager.computeReachableRegions();
+        stateManagerSingleton.invalidateCache();
+        stateManagerSingleton.computeReachableRegions();
       } catch (reachabilityError) {
         console.error('Error computing reachability:', reachabilityError);
         statusElement.innerHTML = `<div class="test-error">Error: ${reachabilityError.message}</div>`;
@@ -374,14 +378,14 @@ export class TestCaseUI {
 
       // Check if location is accessible
       const locationAccessible =
-        stateManager.isLocationAccessible(locationData);
+        stateManagerSingleton.isLocationAccessible(locationData);
       const passed = locationAccessible === expectedResult;
 
       // SAVE THE CURRENT INVENTORY STATE BEFORE PARTIAL TESTING
       const saveInventoryState = () => {
         // Create a deep copy of the current inventory state
         const savedItems = new Map();
-        stateManager.inventory.items.forEach((count, item) => {
+        stateManagerSingleton.inventory.items.forEach((count, item) => {
           savedItems.set(item, count);
         });
         return savedItems;
@@ -400,13 +404,13 @@ export class TestCaseUI {
       ) {
         for (const missingItem of requiredItems) {
           // Create inventory without this item
-          stateManager.initializeInventoryForTest(
+          stateManagerSingleton.initializeInventoryForTest(
             requiredItems.filter((item) => item !== missingItem),
             excludedItems
           );
 
           // Check if still accessible
-          if (stateManager.isLocationAccessible(locationData)) {
+          if (stateManagerSingleton.isLocationAccessible(locationData)) {
             validationFailed = missingItem;
             break;
           }
@@ -416,18 +420,18 @@ export class TestCaseUI {
       // RESTORE THE SAVED INVENTORY STATE
       const restoreInventoryState = (savedItems) => {
         // Clear the current inventory first
-        stateManager.inventory.items.forEach((_, item) => {
-          stateManager.inventory.items.set(item, 0);
+        stateManagerSingleton.inventory.items.forEach((_, item) => {
+          stateManagerSingleton.inventory.items.set(item, 0);
         });
 
         // Restore the saved counts
         savedItems.forEach((count, item) => {
-          stateManager.inventory.items.set(item, count);
+          stateManagerSingleton.inventory.items.set(item, count);
         });
 
         // Force UI sync and cache invalidation
-        stateManager.invalidateCache();
-        stateManager.computeReachableRegions();
+        stateManagerSingleton.invalidateCache();
+        stateManagerSingleton.computeReachableRegions();
       };
 
       // Restore inventory state after all tests
@@ -1018,7 +1022,7 @@ export class TestCaseUI {
     debugButton.style.color = '#fff';
 
     debugButton.addEventListener('click', () => {
-      stateManager.debugCriticalRegions();
+      stateManagerSingleton.debugCriticalRegions();
     });
 
     container.appendChild(debugButton);

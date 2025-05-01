@@ -1,186 +1,160 @@
-// Core client logic and singletons
-import connection from './core/connection.js';
-import messageHandler from './core/messageHandler.js';
-import storage from './core/storage.js';
-import timerState from './core/timerState.js';
-import locationManager from './core/locationManager.js';
-import Config from './core/config.js';
+// client/index.js - TEMPORARILY SIMPLIFIED FOR DEBUGGING
 
-// UI Components
 import MainContentUI from './ui/mainContentUI.js';
-import ConsoleUI from './ui/consoleUI.js';
-import ProgressUI from './ui/progressUI.js';
-
-// Utils
+import storage from './core/storage.js';
+import connection from './core/connection.js';
 import { loadMappingsFromStorage } from './utils/idMapping.js';
+import messageHandler from './core/messageHandler.js';
+import LocationManager from './core/locationManager.js';
+// import {
+//   initializeTimerState,
+//   attachLoopModeListeners,
+// } from './core/timerState.js'; // Commented out
+import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+// import ProgressUI from './ui/progressUI.js'; // REMOVED Import
 
-// Main application
-// import app from './app.js';
-// REMOVED: Import for loadAndProcessDefaultRules
-// import { loadAndProcessDefaultRules } from './app.js';
-
-// Store module context for later use
-let moduleInitApi = null;
-let moduleDispatcher = null;
-let mainContentInstance = null;
-
-// --- Module Info ---
+// --- Module Info --- //
 export const moduleInfo = {
-  name: 'Console & Status',
-  description: 'Network connection, console, status.',
+  name: 'Client',
+  description: 'Handles Archipelago client connection and communication.',
 };
 
-/**
- * Registration function for the Client module.
- * Registers the main panel component and any settings schemas.
- */
+// --- Settings Schema --- //
+// const settingsSchema = {
+//   clientSettings: {
+//     connection: {
+//       serverAddress: {
+//         type: 'text',
+//         label: 'Server Address',
+//         default: 'ws://localhost:38281',
+//         description: 'WebSocket address of the Archipelago server.',
+//       },
+//       password: {
+//         type: 'password',
+//         label: 'Server Password',
+//         default: '',
+//         description: 'Password for the Archipelago server (if required).',
+//       },
+//     },
+//     timing: {
+//       minCheckDelay: {
+//         type: 'number',
+//         label: 'Min Check Delay (s)',
+//         default: 30,
+//         min: 1,
+//         description: 'Minimum time before the client checks a location.',
+//       },
+//       maxCheckDelay: {
+//         type: 'number',
+//         label: 'Max Check Delay (s)',
+//         default: 60,
+//         min: 1,
+//         description: 'Maximum time before the client checks a location.',
+//       },
+//     },
+//   },
+// };
+
+// --- Registration --- //
 export function register(registrationApi) {
   console.log('[Client Module] Registering...');
 
-  // Register the main panel component factory
-  // registrationApi.registerPanelComponent('mainContentPanel', (container) => {
-  //   // Golden Layout V2 provides the container. We manage the instance.
-  //   if (!mainContentInstance) {
-  //     mainContentInstance = new MainContentUI();
-  //   }
-  //   // Let the PanelManager wrapper handle element initialization and retrieval
-  //   // Ensure the instance is ready before returning
-  //   // mainContentInstance.initializeElements(container.element); // This might be handled by the wrapper now
+  centralRegistry.registerPanelComponent(
+    moduleInfo.name,
+    'clientPanel',
+    MainContentUI
+  );
 
-  //   // *** FIX: Return the instance itself ***
-  //   return mainContentInstance;
-  // });
-  // Pass the class constructor directly
-  registrationApi.registerPanelComponent('mainContentPanel', MainContentUI);
+  // registrationApi.registerSettingsSchema(moduleInfo.name, settingsSchema);
 
-  // Register settings schema for client module
-  registrationApi.registerSettingsSchema({
-    type: 'object',
-    properties: {
-      defaultServer: {
-        type: 'string',
-        format: 'uri',
-        default: 'ws://localhost:38281',
-      },
-      autoConnect: {
-        type: 'boolean',
-        default: true,
-      },
-      maxReconnectAttempts: {
-        type: 'integer',
-        default: 10,
-        minimum: 1,
-        maximum: 50,
-      },
-    },
-  });
-
-  // Register network event handlers using the dispatcher receiver with null details
+  // Register dispatcher listeners
   registrationApi.registerDispatcherReceiver(
     'network:connectRequest',
-    (data) => {
-      console.log('[Client Module] Received network:connectRequest', data);
-      // Call the actual connect function
-      connectToServer(
-        data?.serverUrl ||
-          settingsManager.getModuleSetting('client', 'defaultServer')
-      );
-    },
-    null
+    handleConnectRequest
   );
-
   registrationApi.registerDispatcherReceiver(
     'network:disconnectRequest',
-    () => {
-      console.log('[Client Module] Received network:disconnectRequest');
-      // Call the actual disconnect function
-      disconnectFromServer();
-    }
+    handleDisconnectRequest
   );
 }
 
-/**
- * Initialization function for the Client module.
- * Initializes core logic like connection, message handling, console.
- */
+// --- Initialization --- //
 export async function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(`[Client Module] Initializing with priority ${priorityIndex}...`);
-
-  // Store references needed during post-initialization
-  moduleInitApi = initializationApi;
-  moduleDispatcher = initializationApi.getDispatcher();
-
-  // Make eventBus globally accessible early (if not already done elsewhere)
-  window.eventBus = initializationApi.getEventBus();
-
-  // Initialize the core singletons
-  storage.initialize();
+  // Restore initializers
+  storage.initialize(); // Assuming storage has an initialize method
   connection.initialize();
+  loadMappingsFromStorage(); // Try loading mappings early
+  messageHandler.initialize(); // Assuming messageHandler has an initialize method
+  LocationManager.initialize();
+  // initializeTimerState(); // Still commented out
+  // attachLoopModeListeners(); // Still commented out
 
-  // Load cached data package mappings if available
+  // Attach ProgressUI to window for PanelManager  <- REMOVED
+  // window.ProgressUI = ProgressUI;                 <- REMOVED
+  // console.log('[Client Module] ProgressUI attached to window.'); <- REMOVED
+
+  // Apply settings (Restore this section)
+  console.log('[Client Module] Attempting to get settings...');
+  let settings = null;
   try {
-    loadMappingsFromStorage();
+    settings = await initializationApi.getSettings(); // Add await
+    console.log('[Client Module] Settings retrieved:', settings);
   } catch (error) {
-    console.warn('[Client Module] Error loading data package mappings:', error);
+    console.error('[Client Module] Error getting settings:', error);
+    // Decide how to handle settings error - potentially return or throw
   }
 
-  // Initialize remaining core services
-  messageHandler.initialize();
-  locationManager.initialize();
-
-  if (timerState) {
-    timerState.initialize();
+  if (settings?.timing) {
+    // Access timerState appropriately if/when restored
+    // const timerState = window.timerState;
+    console.log('[Client Module] Timing settings found:', settings.timing);
   }
 
-  // Initialize basic UI components
-  ConsoleUI.initialize();
-
-  // Make important instances available globally for debugging and legacy code
-  window.connection = connection;
-  window.messageHandler = messageHandler;
-  window.ConsoleUI = ConsoleUI;
-  window.ProgressUI = ProgressUI; // Keep ProgressUI available if needed
-
-  console.log('[Client Module] Basic initialization complete.');
+  console.log('[Client Module] Initialization complete.');
 }
 
-/**
- * Post-initialization function for the Client module.
- * Sets up event listeners and performs auto-connect.
- */
-export async function postInitialize(initializationApi) {
+// --- Post-Initialization --- //
+export function postInitialize(postInitializationApi) {
   console.log('[Client Module] Post-initializing...');
+  // const settings = postInitializationApi.getSettings(); // Use await? Check settingsManager
 
-  const settings = await initializationApi.getAllSettings();
-  const eventBus = initializationApi.getEventBus();
-
-  // Set up event listeners on eventBus for connection status changes
-  eventBus.subscribe('connection:statusChanged', (status) => {
-    console.log(`[Client Module] Connection status changed: ${status}`);
-    // Add any UI updates or further logic needed here
-  });
-  console.log('[Client Module] Subscribed to connection status changes.');
-
-  // Auto-connect to default server if configured
-  if (settings?.autoConnect && settings?.defaultServer) {
-    console.log(
-      `[Client Module] Auto-connecting to ${settings.defaultServer}...`
-    );
-    // Use the registered handler via dispatcher if appropriate, or connect directly
-    // Assuming direct connection is fine here as it's an initial setup action
-    connection.connect(settings.defaultServer);
-  }
-
-  console.log('[Client Module] Post-initialization complete.');
+  // Example: Connect automatically if settings allow (or based on a specific setting)
+  // if (settings?.autoConnect) {
+  //    handleConnectRequest({}, postInitializationApi); // Pass API as context?
+  // }
 }
 
-// Export core singletons for other modules to import directly if needed
-export {
-  connection,
-  messageHandler,
-  ConsoleUI,
-  ProgressUI,
-  storage,
-  timerState,
-  locationManager,
-};
+// --- Dispatcher Handlers --- //
+function handleConnectRequest(data, context) {
+  console.log('[Client Module] Received connect request via dispatcher.');
+  // Ensure connection is initialized (it should be by now)
+  // const storage = getStorage(); // How to get storage now? Maybe context?
+  const settings = storage.getItem('clientSettings') // Need access to storage
+    ? JSON.parse(storage.getItem('clientSettings'))
+    : {}; // Get settings
+
+  // Use provided data if available, otherwise use stored settings
+  const connectAddress =
+    data?.serverAddress || settings?.connection?.serverAddress;
+  const connectPassword = data?.password || settings?.connection?.password;
+
+  if (connectAddress) {
+    connection.connect(connectAddress, connectPassword);
+  } else {
+    console.warn(
+      '[Client Module] Cannot connect: Connection settings not found.'
+    );
+    // Optionally publish an error event
+    eventBus.publish('error:client', {
+      message: 'Connection settings not found.',
+    });
+  }
+}
+
+function handleDisconnectRequest(data, context) {
+  console.log('[Client Module] Received disconnect request via dispatcher.');
+  // Ensure connection is initialized
+  connection.disconnect();
+}

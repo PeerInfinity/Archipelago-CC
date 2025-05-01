@@ -4,7 +4,7 @@
 import panelManagerInstance from './app/core/panelManagerSingleton.js';
 import eventBus from './app/core/eventBus.js';
 import settingsManager from './app/core/settingsManager.js';
-import centralRegistry from './app/core/centralRegistry.js';
+import { centralRegistry } from './app/core/centralRegistry.js';
 import EventDispatcher from './app/core/eventDispatcher.js';
 import { GoldenLayout } from './libs/golden-layout/js/esm/golden-layout.js';
 

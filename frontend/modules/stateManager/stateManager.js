@@ -392,10 +392,6 @@ export class StateManager {
     // Notify listeners that the core data structure is loaded
     this._publishEvent('jsonDataLoaded');
 
-    // Also publish the specific event for rules being fully loaded and processed
-    console.log('[StateManager Class] Publishing stateManager:rulesLoaded...'); // Log before publish
-    this._publishEvent('rulesLoaded'); // <-- Add this event
-
     // Notify that the manager is ready (potentially after a short delay)
     setTimeout(() => {
       if (eventBus) {

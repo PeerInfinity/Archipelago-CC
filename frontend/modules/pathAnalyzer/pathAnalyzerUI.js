@@ -1,10 +1,11 @@
 // pathAnalyzerUI.js
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
 import { PathAnalyzerLogic } from './pathAnalyzerLogic.js';
-import commonUI from '../commonUI/commonUI.js';
+import commonUI from '../commonUI/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
+import loopState from '../loops/loopStateSingleton.js';
 
 /**
  * Handles UI aspects of path analysis for regions in the game
@@ -166,7 +167,7 @@ export class PathAnalyzerUI {
 
     // PHASE 1: Check actual reachability using stateManager
     const isRegionActuallyReachable =
-      stateManager.isRegionReachable(regionName);
+      stateManagerSingleton.isRegionReachable(regionName);
 
     // Create the status indicator first - this will appear at the top
     const statusIndicator = document.createElement('div');
@@ -522,7 +523,7 @@ export class PathAnalyzerUI {
     // Display the path regions
     path.forEach((region, index) => {
       // Check region's general accessibility
-      const regionAccessible = stateManager.isRegionReachable(region);
+      const regionAccessible = stateManagerSingleton.isRegionReachable(region);
 
       // Determine color based on accessibility and path integrity
       let regionColor;
@@ -770,7 +771,7 @@ export class PathAnalyzerUI {
 
     // Get analysis data from the logic component
     const analysisResult = this.logic.analyzeDirectConnections(regionName);
-    const regionData = stateManager.regions[regionName];
+    const regionData = stateManagerSingleton.regions[regionName];
 
     // 1. Analyze region's own rules
     if (regionData?.region_rules?.length > 0) {
@@ -1158,12 +1159,12 @@ export class PathAnalyzerUI {
    */
   _appendPossibleRegionLink(container, text) {
     // Get the list of all known regions from stateManager.regions (not getRegions)
-    const allRegions = Object.keys(stateManager.regions || {});
+    const allRegions = Object.keys(stateManagerSingleton.regions || {});
 
     // Check if the text matches a known region name
     if (allRegions.includes(text)) {
       // Check accessibility for color coding
-      const regionAccessible = stateManager.isRegionReachable(text);
+      const regionAccessible = stateManagerSingleton.isRegionReachable(text);
 
       // Create a span with appropriate styling
       const regionSpan = document.createElement('span');
@@ -1439,7 +1440,7 @@ export class PathAnalyzerUI {
       const regionName = link.dataset.region;
       if (!regionName) return;
 
-      const isReachable = stateManager.isRegionReachable(regionName);
+      const isReachable = stateManagerSingleton.isRegionReachable(regionName);
 
       // Add colorblind symbol if needed
       if (useColorblind) {

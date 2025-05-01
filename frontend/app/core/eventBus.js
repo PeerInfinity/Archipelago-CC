@@ -1,5 +1,5 @@
 // eventBus.js
-import centralRegistry from './centralRegistry.js'; // Import registry - No longer needed for publish check
+import { centralRegistry } from './centralRegistry.js'; // Corrected import
 
 export class EventBus {
   constructor() {

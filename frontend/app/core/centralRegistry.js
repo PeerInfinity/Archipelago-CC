@@ -312,6 +312,6 @@ class CentralRegistry {
   }
 }
 
-// Export a singleton instance
+// Create and export a singleton instance
 const centralRegistry = new CentralRegistry();
-export default centralRegistry;
+export { centralRegistry }; // Export the instance

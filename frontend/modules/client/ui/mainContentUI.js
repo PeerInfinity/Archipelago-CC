@@ -3,7 +3,8 @@
 import ConsoleUI from './consoleUI.js';
 import eventBus from '../../../app/core/eventBus.js';
 import connection from '../core/connection.js';
-import { stateManager } from '../../stateManager/index.js';
+import { stateManagerSingleton } from '../../stateManager/index.js';
+import ProgressUI from './progressUI.js';
 
 class MainContentUI {
   constructor() {
@@ -18,20 +19,16 @@ class MainContentUI {
     this.checksSentElement = null;
     this.controlButton = null;
     this.quickCheckButton = null;
-
     // Subscribe to connection events
     eventBus.subscribe('connection:open', () => {
       this.updateConnectionStatus(true);
     });
-
     eventBus.subscribe('connection:close', () => {
       this.updateConnectionStatus(false);
     });
-
     eventBus.subscribe('connection:error', () => {
       this.updateConnectionStatus(false);
     });
-
     eventBus.subscribe('connection:reconnecting', () => {
       this.updateConnectionStatus('connecting');
     });
@@ -42,7 +39,7 @@ class MainContentUI {
     if (!this.rootElement) {
       console.log('[MainContentUI] Creating new root element');
       this.rootElement = document.createElement('div');
-      this.rootElement.className = 'main-content-panel';
+      this.rootElement.className = 'main-content-panel'; // Restore class name
       this.rootElement.style.width = '100%';
       this.rootElement.style.height = '100%';
       this.rootElement.style.display = 'flex';
@@ -52,8 +49,8 @@ class MainContentUI {
       this.rootElement.style.padding = '10px';
       this.rootElement.style.boxSizing = 'border-box';
 
-      // Create structure based on the original HTML structure
-      this.rootElement.innerHTML = `
+      // Restore the original HTML structure
+      this.rootElement.innerHTML = ` 
         <div style="margin-bottom: 10px; border-bottom: 1px solid #666; padding-bottom: 5px;">
           <h3 style="margin: 0 0 10px 0;">Console & Status</h3>
           
@@ -178,6 +175,20 @@ class MainContentUI {
     this.updateConnectionStatus(
       connection.isConnected() ? 'connected' : 'disconnected'
     );
+
+    // Initialize ProgressUI within this component's root element
+    try {
+      if (ProgressUI && typeof ProgressUI.initializeWithin === 'function') {
+        console.log('[MainContentUI] Initializing ProgressUI within root...');
+        ProgressUI.initializeWithin(root); // Pass the root element
+      } else {
+        console.warn(
+          '[MainContentUI] ProgressUI or initializeWithin method not found.'
+        );
+      }
+    } catch (error) {
+      console.error('[MainContentUI] Error initializing ProgressUI:', error);
+    }
 
     console.log('[MainContentUI] Elements initialized and references stored');
   }
@@ -367,15 +378,17 @@ class MainContentUI {
   registerConsoleCommands() {
     // Command to show current game state
     this.registerCommand('state', 'Show current game state.', () => {
-      const currentState = stateManager.getStateForPlayer(
-        stateManager.selectedPlayerId
+      const currentState = stateManagerSingleton.getStateForPlayer(
+        stateManagerSingleton.selectedPlayerId
       );
       this.appendConsoleMessage(JSON.stringify(currentState, null, 2), 'info');
     });
 
     // Command to list reachable locations
     this.registerCommand('reachable', 'List reachable locations.', () => {
-      const reachable = stateManager.getPathAnalyzer()?.getReachableLocations();
+      const reachable = stateManagerSingleton
+        .getPathAnalyzer()
+        ?.getReachableLocations();
       this.appendConsoleMessage(
         `Reachable locations: ${reachable?.join(', ') || 'None'}`,
         'info'
@@ -384,7 +397,7 @@ class MainContentUI {
 
     // Command to list inventory items
     this.registerCommand('inventory', 'List current inventory items.', () => {
-      const inventory = stateManager.getCurrentInventory();
+      const inventory = stateManagerSingleton.getCurrentInventory();
       this.appendConsoleMessage(
         `Inventory: ${inventory.join(', ') || 'Empty'}`,
         'info'
@@ -393,8 +406,8 @@ class MainContentUI {
 
     // Command to toggle debug mode
     this.registerCommand('debug', 'Toggle debug mode.', () => {
-      const debugMode = !stateManager.getDebugMode();
-      stateManager.setDebugMode?.(debugMode);
+      const debugMode = !stateManagerSingleton.getDebugMode();
+      stateManagerSingleton.setDebugMode?.(debugMode);
       this.appendConsoleMessage(
         `Debug mode ${debugMode ? 'enabled' : 'disabled'}.`,
         'info'
