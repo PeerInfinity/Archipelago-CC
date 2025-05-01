@@ -1,7 +1,7 @@
 // exitUI.js
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerSingleton } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import commonUI from '../commonUI/commonUI.js';
+import commonUI, { debounce } from '../commonUI/commonUI.js';
 import loopState from '../loops/loopStateSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
@@ -12,9 +12,11 @@ export class ExitUI {
     this.columns = 2; // Default number of columns
     this.rootElement = this.createRootElement();
     this.exitsGrid = this.rootElement.querySelector('#exits-grid');
-    this.attachEventListeners();
+    this.stateUnsubscribeHandles = [];
     this.settingsUnsubscribe = null;
+    this.attachEventListeners();
     this.subscribeToSettings();
+    this.subscribeToStateEvents();
   }
 
   subscribeToSettings() {
@@ -37,10 +39,56 @@ export class ExitUI {
       this.settingsUnsubscribe();
       this.settingsUnsubscribe = null;
     }
+    this.unsubscribeFromStateEvents();
   }
 
   dispose() {
     this.onPanelDestroy();
+  }
+
+  subscribeToStateEvents() {
+    this.unsubscribeFromStateEvents();
+    console.log('[ExitUI] Subscribing to state and loop events...');
+
+    if (!eventBus) {
+      console.error('[ExitUI] EventBus not available!');
+      return;
+    }
+
+    const subscribe = (eventName, handler) => {
+      console.log(`[ExitUI] Subscribing to ${eventName}`);
+      const unsubscribe = eventBus.subscribe(eventName, handler);
+      this.stateUnsubscribeHandles.push(unsubscribe);
+    };
+
+    const debouncedUpdate = debounce(() => this.updateExitDisplay(), 50);
+
+    subscribe('stateManager:inventoryChanged', debouncedUpdate);
+    subscribe('stateManager:regionsComputed', debouncedUpdate);
+    subscribe('stateManager:rulesLoaded', debouncedUpdate);
+
+    subscribe('loop:stateChanged', debouncedUpdate);
+    subscribe('loop:actionCompleted', debouncedUpdate);
+    subscribe('loop:discoveryChanged', debouncedUpdate);
+    subscribe('loop:modeChanged', (isLoopMode) => {
+      debouncedUpdate();
+      const exploredCheckbox = this.rootElement?.querySelector(
+        '#exit-show-explored'
+      );
+      if (exploredCheckbox && exploredCheckbox.parentElement) {
+        exploredCheckbox.parentElement.style.display = isLoopMode
+          ? 'inline-block'
+          : 'none';
+      }
+    });
+  }
+
+  unsubscribeFromStateEvents() {
+    if (this.stateUnsubscribeHandles.length > 0) {
+      console.log('[ExitUI] Unsubscribing from state and loop events...');
+      this.stateUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
+      this.stateUnsubscribeHandles = [];
+    }
   }
 
   createRootElement() {
@@ -160,7 +208,8 @@ export class ExitUI {
           const toRegion = path[i + 1];
 
           // Find the exit that connects these regions (using discovered exits)
-          const regionData = stateManager.regions[fromRegion];
+          const instance = stateManagerSingleton.instance;
+          const regionData = instance?.regions[fromRegion];
           // Important: Find the exit within the *discovered* exits for the 'fromRegion'
           const exitToUse = regionData?.exits?.find(
             (e) =>
@@ -253,7 +302,7 @@ export class ExitUI {
   }
 
   initialize() {
-    // Don't need to call loadFromJSON since gameUI.js already does this
+    console.log('[ExitUI] Initializing panel...');
     this.updateExitDisplay();
   }
 
@@ -299,6 +348,7 @@ export class ExitUI {
   }
 
   updateExitDisplay() {
+    console.log('[ExitUI] updateExitDisplay called.');
     const showReachable =
       this.rootElement.querySelector('#exit-show-reachable')?.checked ?? true;
     const showUnreachable =
@@ -308,15 +358,22 @@ export class ExitUI {
     const sorting =
       this.rootElement.querySelector('#exit-sort-select')?.value ?? 'original';
 
-    // Get all exits from all regions
-    const exits = this.getAllExits();
+    const instance = stateManagerSingleton.instance;
+    console.log(
+      '[ExitUI] Accessing stateManagerSingleton.instance:',
+      instance ? 'Exists' : 'MISSING'
+    );
+    if (!instance) return;
+
+    const allExits = this.getAllExits(instance);
+    console.log(`[ExitUI] Found ${allExits.length} total exits.`);
 
     const exitsGrid = this.exitsGrid;
     if (!exitsGrid) return;
 
     exitsGrid.style.gridTemplateColumns = `repeat(${this.columns}, minmax(0, 1fr))`; // Set the number of columns
 
-    if (exits.length === 0) {
+    if (allExits.length === 0) {
       exitsGrid.innerHTML = `
         <div class="empty-message">
           Upload a JSON file to see exits or adjust filters
@@ -326,14 +383,14 @@ export class ExitUI {
     }
 
     // Apply filters
-    let filteredExits = exits;
+    let filteredExits = allExits;
 
     // Only show discovered exits in Loop Mode if not showing all
     const isLoopModeActive = window.loopUIInstance?.isLoopModeActive;
     if (isLoopModeActive) {
       const showingExplored = showExplored;
 
-      filteredExits = exits.filter((exit) => {
+      filteredExits = allExits.filter((exit) => {
         const regionDiscovered = loopState.isRegionDiscovered(exit.region);
         if (!regionDiscovered) return false;
 
@@ -347,14 +404,11 @@ export class ExitUI {
 
     // Filter reachable/unreachable
     filteredExits = filteredExits.filter((exit) => {
-      const regionAccessible = stateManager.isRegionReachable(exit.region);
-      const exitRulePasses =
-        !exit.access_rule || evaluateRule(exit.access_rule);
+      const isReachable =
+        instance.isRegionReachable(exit.region) &&
+        (!exit.access_rule || evaluateRule(exit.access_rule));
 
-      // Reachable = region accessible AND rule passes
-      if (regionAccessible && exitRulePasses) {
-        return showReachable;
-      }
+      if (isReachable && !showReachable) return false;
       // All other cases are considered unreachable
       else {
         return showUnreachable;
@@ -364,23 +418,24 @@ export class ExitUI {
     // Sort exits
     if (sorting === 'accessibility') {
       filteredExits.sort((a, b) => {
-        const aRegionAccessible = stateManager.isRegionReachable(a.region);
-        const bRegionAccessible = stateManager.isRegionReachable(b.region);
-
-        const aRulePasses = !a.access_rule || evaluateRule(a.access_rule);
-        const bRulePasses = !b.access_rule || evaluateRule(b.access_rule);
+        const aReachable =
+          instance.isRegionReachable(a.region) &&
+          (!a.access_rule || evaluateRule(a.access_rule));
+        const bReachable =
+          instance.isRegionReachable(b.region) &&
+          (!b.access_rule || evaluateRule(b.access_rule));
 
         // Fully traversable exits first (region reachable + rule passes)
-        const aFullyTraversable = aRegionAccessible && aRulePasses;
-        const bFullyTraversable = bRegionAccessible && bRulePasses;
+        const aFullyTraversable = aReachable;
+        const bFullyTraversable = bReachable;
 
         // Then region accessible but rule fails
-        const aRegionOnlyAccessible = aRegionAccessible && !aRulePasses;
-        const bRegionOnlyAccessible = bRegionAccessible && !bRulePasses;
+        const aRegionOnlyAccessible = aReachable && !aReachable;
+        const bRegionOnlyAccessible = bReachable && !bReachable;
 
         // Then rule passes but region not accessible
-        const aRuleOnlyPasses = !aRegionAccessible && aRulePasses;
-        const bRuleOnlyPasses = !bRegionAccessible && bRulePasses;
+        const aRuleOnlyPasses = !aReachable;
+        const bRuleOnlyPasses = !bReachable;
 
         // Compare in priority order
         if (aFullyTraversable !== bFullyTraversable) {
@@ -405,7 +460,7 @@ export class ExitUI {
     );
 
     filteredExits.forEach((exit) => {
-      const isRegionAccessible = stateManager.isRegionReachable(exit.region);
+      const isRegionAccessible = instance.isRegionReachable(exit.region);
       const exitRulePasses =
         !exit.access_rule || evaluateRule(exit.access_rule);
 
@@ -461,51 +516,41 @@ export class ExitUI {
       playerDiv.textContent = `Player ${exit.player || '1'}`;
       card.appendChild(playerDiv);
 
-      // Source Region (with clickable link)
-      const sourceRegionDiv = document.createElement('div');
-      sourceRegionDiv.className = 'text-sm';
-      sourceRegionDiv.textContent = 'From: ';
-      const sourceRegionLink = commonUI.createRegionLink(
+      // Origin Region Info (with clickable link)
+      const originRegionDiv = document.createElement('div');
+      originRegionDiv.className = 'text-sm';
+      originRegionDiv.textContent = 'Origin: ';
+      const originRegionLink = commonUI.createRegionLink(
         exit.region,
         useExitColorblind
-      ); // <<< Pass setting
-      // Add necessary styles/attributes if needed
-      sourceRegionLink.style.color = isRegionAccessible ? 'inherit' : 'red';
-      sourceRegionDiv.appendChild(sourceRegionLink);
-      sourceRegionDiv.appendChild(
+      );
+      const isOriginReachable = instance.isRegionReachable(exit.region);
+      originRegionLink.style.color = isOriginReachable ? 'inherit' : 'red';
+      originRegionDiv.appendChild(originRegionLink);
+      originRegionDiv.appendChild(
         document.createTextNode(
-          ` (${isRegionAccessible ? 'Accessible' : 'Inaccessible'})`
+          ` (${isOriginReachable ? 'Accessible' : 'Inaccessible'})`
         )
       );
-      card.appendChild(sourceRegionDiv);
+      card.appendChild(originRegionDiv);
 
-      // Connected Region Info (with clickable link)
-      if (exit.connected_region) {
-        let connectedRegionName = exit.connected_region;
-        let isConnectedRegionDiscovered = true;
-        if (isLoopModeActive) {
-          isConnectedRegionDiscovered = loopState.isRegionDiscovered(
-            exit.connected_region
-          );
-          if (!isConnectedRegionDiscovered) {
-            connectedRegionName = '???';
-          }
-        }
-        const connectedRegionDiv = document.createElement('div');
-        connectedRegionDiv.className = 'text-sm';
-        connectedRegionDiv.textContent = 'To: ';
-        const connectedRegionLink = commonUI.createRegionLink(
-          exit.connected_region,
-          useExitColorblind
-        ); // <<< Pass setting
-        // Ensure the real region name is stored for navigation even if displayed as '???'
-        connectedRegionLink.dataset.region = exit.connected_region;
-        if (isLoopModeActive && !isConnectedRegionDiscovered) {
-          connectedRegionLink.classList.add('undiscovered'); // Add class for styling if needed
-        }
-        connectedRegionDiv.appendChild(connectedRegionLink);
-        card.appendChild(connectedRegionDiv);
-      }
+      // Destination Region Info (with clickable link)
+      const destRegionDiv = document.createElement('div');
+      destRegionDiv.className = 'text-sm';
+      destRegionDiv.textContent = 'Destination: ';
+      const destRegionLink = commonUI.createRegionLink(
+        exit.connected_region,
+        useExitColorblind
+      );
+      const isDestReachable = instance.isRegionReachable(exit.connected_region);
+      destRegionLink.style.color = isDestReachable ? 'inherit' : 'red';
+      destRegionDiv.appendChild(destRegionLink);
+      destRegionDiv.appendChild(
+        document.createTextNode(
+          ` (${isDestReachable ? 'Accessible' : 'Inaccessible'})`
+        )
+      );
+      card.appendChild(destRegionDiv);
 
       // Exit Logic Tree
       const logicDiv = document.createElement('div');
@@ -581,26 +626,28 @@ export class ExitUI {
         }
       });
     });
+
+    console.log(`[ExitUI] Rendering ${filteredExits.length} exits.`);
   }
 
-  getAllExits() {
-    const allExits = [];
+  getAllExits(instance) {
+    if (!instance || !instance.regions) return [];
 
-    // Iterate through all regions to collect exits
-    Object.entries(stateManager.regions).forEach(([regionName, region]) => {
-      if (region.exits && Array.isArray(region.exits)) {
+    const exits = [];
+    Object.values(instance.regions).forEach((region) => {
+      if (region.exits) {
         region.exits.forEach((exit) => {
           // Add region name to each exit for reference
-          allExits.push({
+          exits.push({
             ...exit,
-            region: regionName,
+            region: region.name,
             player: region.player || 1,
           });
         });
       }
     });
 
-    return allExits;
+    return exits;
   }
 }
 
