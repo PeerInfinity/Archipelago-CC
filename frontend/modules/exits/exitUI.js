@@ -375,145 +375,105 @@ export class ExitUI {
       !!staticData
     );
     // --- End log ---
+
+    // --- ADDED: Readiness Check --- >
+    if (!snapshot || !staticData || !staticData.exits || !staticData.regions) {
+      console.warn(
+        '[ExitUI] Snapshot or static data (exits/regions) not ready. Aborting render.'
+      );
+      this.exitsGrid.innerHTML = '<p>Loading exit data...</p>';
+      return;
+    }
+    // --- END CHECK --- >
+
     if (!this.exitsGrid) {
       console.warn('[ExitUI] exitsGrid element not found.');
       return;
     }
 
-    const snapshotInterface = createStateSnapshotInterface(
-      snapshot,
-      staticData
-    ); // Now guaranteed to have data
+    // Main processing logic - USE AGGREGATED EXITS
+    const allExits = Object.values(staticData.exits); // <-- Use aggregated exits
+    let displayExits = [];
 
-    // --- Get Filter/Sort Options --- //
-    const sortBy =
-      this.rootElement.querySelector('#exit-sort-select')?.value || 'original';
-    const showReachable =
-      this.rootElement.querySelector('#exit-show-reachable')?.checked ?? true;
-    const showUnreachable =
-      this.rootElement.querySelector('#exit-show-unreachable')?.checked ?? true;
-    const showExplored =
-      this.rootElement.querySelector('#exit-show-explored')?.checked ?? true;
-    const isLoopModeActive = loopStateSingleton.isLoopModeActive ?? false;
+    // Filter and process exits
+    allExits.forEach((exit) => {
+      const fromRegionName = exit.parentRegion;
+      const toRegionName = exit.connectedRegion;
 
-    // --- Get Data From Snapshot --- //
-    const allRegions = snapshot.regions || {}; // Get regions from snapshot
-    const reachableRegionsSet =
-      snapshot.reachableRegions instanceof Set
-        ? snapshot.reachableRegions
-        : new Set(snapshot.reachableRegions || []);
-    const discoveredExits = loopStateSingleton.discoveredExits || new Map(); // Get from loopState
-    const discoveredRegions = loopStateSingleton.discoveredRegions || new Set(); // Get from loopState
-    const useColorblind = settingsManager.getSetting(
-      'colorblindMode.exits',
-      true
-    );
+      // Check reachability based on snapshot
+      const fromRegionStatus =
+        snapshot.reachability?.[fromRegionName] ?? 'unknown';
+      const toRegionStatus = snapshot.reachability?.[toRegionName] ?? 'unknown';
 
-    // --- Process Exits --- //
-    console.log(`[ExitUI] Processing regions from snapshot.`);
-    let allExits = [];
-    if (!snapshotInterface) {
-      console.warn(
-        '[ExitUI] Failed to create snapshot interface for rule evaluation.'
-      );
-      return;
-    }
-
-    Object.entries(allRegions).forEach(([regionName, regionData]) => {
-      if (regionData.exits && Array.isArray(regionData.exits)) {
-        regionData.exits.forEach((exit) => {
-          allExits.push({ ...exit, region: regionName }); // Add region name to exit data
-        });
+      // Determine exit status (e.g., 'open', 'closed', 'mixed', 'unknown')
+      let exitStatus = 'unknown';
+      if (fromRegionStatus === 'reachable' && toRegionStatus === 'reachable') {
+        exitStatus = 'open'; // Both sides reachable
+      } else if (
+        fromRegionStatus === 'reachable' ||
+        toRegionStatus === 'reachable'
+      ) {
+        exitStatus = 'partial'; // One side reachable
+      } else if (
+        fromRegionStatus !== 'unknown' &&
+        toRegionStatus !== 'unknown'
+      ) {
+        exitStatus = 'closed'; // Neither side reachable
       }
-    });
 
-    let filteredExits = allExits.map((exit) => {
-      const isRegionReachable = reachableRegionsSet.has(exit.region);
-      const ruleResult =
-        !exit.access_rule || evaluateRule(exit.access_rule, snapshotInterface);
-      const isReachable = isRegionReachable && ruleResult;
-      const isExitExplored =
-        discoveredRegions.has(exit.region) &&
-        (discoveredExits.get(exit.region)?.has(exit.name) ?? false);
-      const isDestinationRegionExplored = discoveredRegions.has(
-        exit.connected_region
-      );
-      const isExplored = isExitExplored && isDestinationRegionExplored; // Both exit and dest must be explored
-      return { ...exit, isReachable, isExplored }; // Add derived properties
-    });
+      // TODO: Incorporate exit rules evaluation using createStateSnapshotInterface if needed
+      // const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+      // const ruleResult = evaluateRule(exit.rule, snapshotInterface);
 
-    // Filter based on checkboxes
-    filteredExits = filteredExits.filter((exit) => {
-      if (!showReachable && exit.isReachable) return false;
-      if (!showUnreachable && !exit.isReachable) return false;
-      if (isLoopModeActive && !showExplored && !exit.isExplored) return false;
-      return true;
-    });
+      // Decide whether to display based on filters (Add filters later if needed)
+      // For now, display all processed exits
 
-    // Sort based on selection
-    if (sortBy === 'accessibility') {
-      filteredExits.sort((a, b) => {
-        if (a.isReachable !== b.isReachable) return a.isReachable ? -1 : 1; // Reachable first
-        return (a.region + a.name).localeCompare(b.region + b.name); // Fallback sort
+      displayExits.push({
+        ...exit,
+        status: exitStatus, // Add calculated status
       });
-    } else {
-      // Default: original (region + name)
-      filteredExits.sort((a, b) =>
-        (a.region + a.name).localeCompare(b.region + b.name)
-      );
-    }
-
-    // --- Render Grid --- //
-    this.exitsGrid.innerHTML = ''; // Clear previous content
-    this.exitsGrid.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
-
-    if (filteredExits.length === 0) {
-      this.exitsGrid.innerHTML =
-        '<div class="no-exits-message">No exits match filters.</div>';
-      return;
-    }
-
-    filteredExits.forEach((exit) => {
-      const exitElement = document.createElement('div');
-      exitElement.classList.add('exit');
-      exitElement.dataset.exitName = exit.name;
-      exitElement.dataset.regionName = exit.region;
-
-      let statusClass = exit.isReachable ? 'reachable' : 'unreachable';
-      exitElement.classList.add(statusClass);
-      if (isLoopModeActive && exit.isExplored) {
-        exitElement.classList.add('explored');
-      }
-
-      // Colorblind indicator text
-      let cbIndicator = '';
-      if (useColorblind) {
-        cbIndicator = exit.isReachable ? ' [R]' : ' [U]';
-      }
-
-      exitElement.textContent = `${exit.region} -> ${exit.name} -> ${
-        exit.connected_region || '???'
-      }${cbIndicator}`;
-      exitElement.title = `From: ${exit.region} - To: ${
-        exit.connected_region || '???'
-      } - ${statusClass.toUpperCase()}`;
-
-      // Attach click listener for loop mode interaction
-      if (isLoopModeActive) {
-        exitElement.addEventListener('click', () => this.handleExitClick(exit));
-      }
-
-      // Render logic tree only if access rule exists
-      if (exit.access_rule) {
-        const logicTreeContainer = document.createElement('div');
-        logicTreeContainer.classList.add('logic-tree');
-        logicTreeContainer.textContent = '(No specific rule)'; // Indicate if no rule
-        exitElement.appendChild(logicTreeContainer);
-      }
-
-      this.exitsGrid.appendChild(exitElement);
     });
-    console.log(`[ExitUI] Rendered ${filteredExits.length} exits.`);
+
+    console.log(`[ExitUI] Processing ${displayExits.length} exits.`);
+
+    // Render exits
+    this.exitsGrid.innerHTML = ''; // Clear previous content
+    // --- ADD: Render the processed exits --- >
+    const fragment = document.createDocumentFragment();
+
+    displayExits.forEach((exit) => {
+      const card = document.createElement('div');
+      card.className = `exit exit-card ${exit.status}`; // Use calculated status
+      card.dataset.exitName = exit.name;
+      card.dataset.regionName = exit.parentRegion;
+
+      // Apply colorblind class (assuming commonUI has a suitable function or we adapt)
+      // TODO: Adapt or find appropriate commonUI function if needed
+      // commonUI.applyColorblindClass(card, exit.status, settingsManager.getSetting('colorblindMode.exits'));
+
+      // Exit Name & Regions
+      const title = document.createElement('span');
+      title.className = 'exit-title';
+      title.textContent = exit.name;
+
+      const regions = document.createElement('span');
+      regions.className = 'exit-regions';
+      regions.textContent = ` (${exit.parentRegion} <=> ${exit.connectedRegion})`; // Use parentRegion/connectedRegion
+
+      const header = document.createElement('div');
+      header.className = 'exit-header';
+      header.appendChild(title);
+      header.appendChild(regions);
+      card.appendChild(header);
+
+      // Add click listener for loop mode interaction
+      card.addEventListener('click', () => this.handleExitClick(exit));
+
+      fragment.appendChild(card);
+    });
+
+    this.exitsGrid.appendChild(fragment);
+    // --- END ADD --- >
   }
 
   getAllExits(instance) {

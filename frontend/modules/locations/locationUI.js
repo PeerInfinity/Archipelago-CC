@@ -11,6 +11,7 @@ import commonUI, {
 import loopStateSingleton from '../loops/loopStateSingleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 export class LocationUI {
   constructor(gameUI) {
@@ -411,17 +412,6 @@ export class LocationUI {
     // });
     // --- END DEBUG LOG ---
 
-    // --- Detailed check before the if statement --- >
-    console.log('[LocationUI] Inspecting staticData right before check:', {
-      staticDataExists: !!staticData,
-      locationsExist: !!staticData?.locations,
-      staticDataType: typeof staticData,
-      locationsType: typeof staticData?.locations,
-      // Avoid logging the full object if it's huge, just check keys
-      staticDataKeys: staticData ? Object.keys(staticData) : 'N/A',
-    });
-    // --- End Detailed check --- >
-
     if (!staticData?.locations) {
       console.warn(
         '[LocationUI] Static location data not ready. (Check failed)'
@@ -447,17 +437,15 @@ export class LocationUI {
     let filteredLocations = Object.values(staticData.locations).filter(
       (loc) => {
         const status = this.getLocationStatus(loc.name, snapshot);
-        const isExplored = loopStateSingleton.isLocationExplored(loc.name); // Check loop state
+        const isExplored = discoveryStateSingleton.isLocationDiscovered(
+          loc.name
+        );
 
         // Visibility checks
         if (status === 'checked' && !showChecked) return false;
         if (status === 'reachable' && !showReachable) return false;
         if (status === 'unreachable' && !showUnreachable) return false;
-        if (
-          loopStateSingleton.isLoopModeActive() &&
-          isExplored &&
-          !showExplored
-        )
+        if (loopStateSingleton.isProcessing && isExplored && !showExplored)
           return false; // Hide explored if unchecked in loop mode
 
         // Search term check (match name or region)
@@ -514,16 +502,44 @@ export class LocationUI {
       const fragment = document.createDocumentFragment();
       filteredLocations.forEach((location) => {
         const status = this.getLocationStatus(location.name, snapshot);
-        const isExplored = loopStateSingleton.isLocationExplored(location.name);
-        const element = commonUI.createLocationElement(
-          location,
-          status,
-          this.colorblindSettings, // Pass colorblind settings
-          loopStateSingleton.isLoopModeActive() && isExplored // Pass explored status only if in loop mode
+        const isExplored = discoveryStateSingleton.isLocationDiscovered(
+          location.name
         );
-        // Add data attribute for click handler
-        element.dataset.locationName = location.name;
-        fragment.appendChild(element);
+
+        // --- REVERTED: Manually create location element like in old code --- >
+        const card = document.createElement('div');
+        card.className = `location location-card ${status}`;
+        card.dataset.locationName = location.name; // Use simple name for click handler
+
+        // Apply colorblind class
+        commonUI.applyColorblindClass(card, status, this.colorblindSettings);
+
+        // Location Name Link
+        const locationNameElement = commonUI.createLocationLink(
+          location.name,
+          location.region,
+          this.colorblindSettings
+        );
+        locationNameElement.className = 'location-title'; // Add specific class if needed
+        card.appendChild(locationNameElement);
+
+        // Add Region Name (Optional - maybe just use tooltip or detail view)
+        // const regionText = document.createElement('span');
+        // regionText.className = 'location-region';
+        // regionText.textContent = ` (${location.region})`;
+        // card.appendChild(regionText);
+
+        // Add Explored Indicator if in loop mode
+        if (loopStateSingleton.isProcessing && isExplored) {
+          const exploredIndicator = document.createElement('span');
+          exploredIndicator.className = 'location-explored-indicator';
+          exploredIndicator.textContent = ' [E]'; // Simple text indicator
+          exploredIndicator.title = 'Explored in current loop';
+          card.appendChild(exploredIndicator);
+        }
+
+        fragment.appendChild(card);
+        // --- END REVERTED --- >
       });
       this.locationsGrid.appendChild(fragment);
     }

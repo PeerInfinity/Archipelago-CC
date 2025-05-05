@@ -310,15 +310,16 @@ class StateManagerProxy {
   }
 
   // Method to accept and cache static data (items, groups, locations, regions)
-  setStaticData(itemData, groupData, locationData, regionData) {
+  setStaticData(itemData, groupData, locationData, regionData, exitData) {
     console.log(
-      '[StateManagerProxy] Caching static item/group/location/region data.'
+      '[StateManagerProxy] Caching static item/group/location(aggregated)/region(original)/exit(aggregated) data.'
     );
     this.staticDataCache = {
       items: itemData,
       groups: groupData,
       locations: locationData,
       regions: regionData,
+      exits: exitData,
     };
     this.staticDataIsSet = true; // Set flag when static data arrives
     // Log the structure briefly
@@ -327,6 +328,7 @@ class StateManagerProxy {
       groups: groupData ? Object.keys(groupData).length : 0,
       locations: locationData ? Object.keys(locationData).length : 0,
       regions: regionData ? Object.keys(regionData).length : 0,
+      exits: exitData ? Object.keys(exitData).length : 0,
     });
 
     // Check if ready to publish event

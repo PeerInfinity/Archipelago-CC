@@ -121,15 +121,20 @@ async function postInitialize(initializationApi) {
       '[StateManager Module] Received init:postInitComplete, triggering load of default rules...'
     );
 
+    // --- RESTRUCTURED LOGIC --- >
+    let jsonData = null;
+    let playerInfo = null;
+    let itemData = null;
+    let groupData = null;
+    let regionData = null;
+    let aggregatedLocationData = {}; // Initialize empty
+    let aggregatedExitData = {}; // Initialize empty
+
     try {
+      // 1. Fetch Rules JSON
       console.log(
         '[StateManager Module] Attempting to load default_rules.json...'
       );
-      let jsonData = null;
-      let selectedPlayerId = null;
-      let playerInfo = null;
-
-      // Fetch the rules JSON
       const response = await fetch('./default_rules.json');
       if (!response.ok) {
         throw new Error(
@@ -140,13 +145,11 @@ async function postInitialize(initializationApi) {
       console.log(
         '[StateManager Module] Successfully fetched default_rules.json'
       );
-      // --- ADD FULL JSON LOG --- >
-      console.log('[StateManager Module] Full jsonData after parse:', jsonData);
-      // --- END FULL JSON LOG --- >
 
-      // Player Selection Logic (from old loadAndProcessDefaultRules)
+      // 2. Select Player
       const playerIds = Object.keys(jsonData.player_names || {});
       const playerNames = jsonData.player_names || {};
+      let selectedPlayerId = null;
 
       if (playerIds.length === 0) {
         throw new Error('No players found in the JSON data.');
@@ -156,88 +159,100 @@ async function postInitialize(initializationApi) {
           `[StateManager Module] Auto-selected single player ID: ${selectedPlayerId}`
         );
       } else {
-        // TODO: Implement proper player selection UI or logic for multiple players
-        // For now, just pick the first one as a default fallback
-        selectedPlayerId = playerIds[0];
+        selectedPlayerId = playerIds[0]; // Default to first for now
         console.warn(
           `[StateManager Module] Multiple players found, auto-selecting first ID: ${selectedPlayerId}. Implement proper selection.`
         );
-        // Example prompt logic (replace with actual UI interaction):
-        // const playerOptions = playerIds.map(id => `${id}: ${playerNames[id]}`).join('\n');
-        // const choice = prompt(`Select player:\n${playerOptions}`, playerIds[0]);
-        // selectedPlayerId = choice ? choice.split(':')[0] : playerIds[0];
       }
-
-      // Construct playerInfo object for the proxy
       playerInfo = {
         playerId: selectedPlayerId,
         playerName:
           playerNames[selectedPlayerId] || `Player ${selectedPlayerId}`,
-        // TODO: Determine team correctly if applicable
-        team: 0, // Defaulting team to 0
+        team: 0,
       };
-
       console.log(`[StateManager Module] Selected player info:`, playerInfo);
 
-      // --> ADD CACHING LOGIC HERE <--
-      // Store static data on the proxy before sending load command
+      // 3. Extract Core Static Data
       const playerKey = playerInfo.playerId;
-      // Need to access items and groups correctly based on JSON structure
-      const itemData = jsonData.items?.[playerKey]; // Assuming items are per player
-      const groupData = jsonData.item_groups; // Assuming groups are global or handle per player if needed
+      itemData = jsonData.items?.[playerKey];
+      groupData = jsonData.item_groups;
+      regionData = jsonData.regions?.[playerKey] ?? jsonData.regions;
 
-      if (itemData && groupData) {
-        try {
-          // Pass location data too if available at top level or per player
-          const locationData = jsonData.locations?.[playerKey];
-          const regionData = jsonData.regions?.[playerKey] ?? jsonData.regions;
-          // --- ADD LOGGING BEFORE CALL --- >
-          console.log('[StateManager Module] Before setStaticData:', {
-            itemDataExists: !!itemData,
-            groupDataExists: !!groupData,
-            locationDataExists: !!locationData,
-            regionDataExists: !!regionData,
-            locationDataType: typeof locationData,
-            playerKeyUsed: playerKey,
-          });
-          // --- END LOGGING --- >
-          // Update setStaticData to accept all static data needed
-          stateManagerProxySingleton.setStaticData(
-            itemData,
-            groupData,
-            locationData,
-            regionData
-          );
-          console.log(
-            '[StateManager Module] Static item/group/location/region data cached on proxy.'
-          );
-        } catch (e) {
-          console.error(
-            '[StateManager Module] Failed to cache static data on proxy:',
-            e
-          );
-          // Decide if this is critical? Probably.
-          throw new Error(`Failed to cache static data: ${e.message}`);
-        }
-      } else {
-        console.error(
-          '[StateManager Module] Could not extract itemData or groupData for caching.'
+      if (!itemData) {
+        console.warn(
+          '[StateManager Module] itemData not found for player',
+          playerKey
         );
-        // This is likely a critical error
-        throw new Error(
-          'Failed to extract necessary static item/group data from rules JSON.'
-        );
+        // Decide if this is critical? Maybe not if default items exist?
       }
-      // --> END CACHING LOGIC <--
+      if (!groupData) {
+        console.warn('[StateManager Module] groupData not found globally.');
+        // Decide if this is critical?
+      }
+      if (!regionData) {
+        console.warn(
+          '[StateManager Module] regionData not found for player or globally',
+          playerKey
+        );
+        // This IS critical for aggregation
+        throw new Error('Region data is missing, cannot proceed.');
+      }
 
-      // Send rules to the worker via the proxy
+      // 4. Aggregate Locations and Exits (if regionData exists)
+      console.log(
+        '[StateManager Module] Aggregating locations/exits from regions...'
+      );
+      for (const regionName in regionData) {
+        const region = regionData[regionName];
+        // Locations
+        if (region && region.locations) {
+          for (const locationName in region.locations) {
+            const compositeLocationKey = `${regionName}-${locationName}`;
+            aggregatedLocationData[compositeLocationKey] = {
+              ...region.locations[locationName],
+              parentRegion: regionName,
+            };
+          }
+        }
+        // Exits
+        if (region && region.exits) {
+          for (const exitName in region.exits) {
+            const compositeExitKey = `${regionName}-${exitName}`;
+            aggregatedExitData[compositeExitKey] = {
+              ...region.exits[exitName],
+              parentRegion: regionName,
+              connectedRegion: region.exits[exitName].connected_region,
+            };
+          }
+        }
+      }
+      console.log(
+        `[StateManager Module] Aggregated ${
+          Object.keys(aggregatedLocationData).length
+        } locations and ${Object.keys(aggregatedExitData).length} exits.`
+      );
+
+      // 5. Cache ALL Static Data on Proxy
+      console.log('[StateManager Module] Caching static data on proxy...');
+      stateManagerProxySingleton.setStaticData(
+        itemData, // Might be null/undefined, proxy should handle
+        groupData, // Might be null/undefined
+        aggregatedLocationData,
+        regionData, // Original regions
+        aggregatedExitData
+      );
+      console.log(
+        '[StateManager Module] Static data successfully cached on proxy.'
+      );
+
+      // 6. Send Rules to Worker (only after static data is cached)
       console.log('[StateManager Module] Sending rules to worker via proxy...');
       await stateManagerProxySingleton.loadRules(jsonData, playerInfo);
       console.log(
         '[StateManager Module] Worker confirmed rules loaded (proxy loadRules resolved).'
       );
 
-      // Optional: Publish raw JSON data if needed by other modules (like editor)
+      // 7. Publish Raw Data (Optional)
       eventBus.publish('stateManager:rawJsonDataLoaded', {
         source: 'default_rules.json',
         rawJsonData: jsonData,
@@ -247,28 +262,16 @@ async function postInitialize(initializationApi) {
         '[StateManager Module] Published stateManager:rawJsonDataLoaded.'
       );
     } catch (error) {
+      // Catch ANY error during the fetch/process/cache/load sequence
       console.error(
-        `[StateManager Module] Error during rule loading: ${error.message}`,
+        `[StateManager Module] CRITICAL ERROR during rule loading/processing: ${error.message}`,
         error
       );
-      // Publish error event
       eventBus.publish('stateManager:error', {
-        message: `Failed to load default rules: ${error.message}`,
-        isCritical: true, // Treat failure to load rules as critical
+        message: `Failed to load/process default rules: ${error.message}`,
+        isCritical: true,
       });
-      // Optionally re-throw or handle differently
     }
+    // --- END RESTRUCTURED LOGIC --- >
   });
-
-  console.log(
-    '[StateManager Module] Post-initialization complete (subscribed to init:postInitComplete).'
-  );
 }
-
-// Remove old exports
-// export { StateManager }; // Class no longer exported directly
-// export { stateManagerSingleton }; // Old singleton removed
-// export { stateManager }; // Old instance constant removed
-
-// Remove old internal function
-// async function loadAndProcessDefaultRules() { ... }
