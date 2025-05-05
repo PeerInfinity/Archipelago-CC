@@ -1462,93 +1462,106 @@ export class StateManager {
   }
 
   /**
-   * Generates a serializable snapshot of the current state.
-   * Used for sending state to the main thread proxy.
-   * @returns {object} A plain JavaScript object representing the state snapshot.
+   * Generates a snapshot of the current state suitable for sending to the UI thread.
+   * Includes inventory, flags, reachability, settings, and potentially locations/regions/exits.
+   * Crucially, it now calculates and embeds accessibility status directly into the snapshot data.
+   * @returns {object} - A snapshot object containing the current state.
    */
   getSnapshot() {
-    this._logDebug('[StateManager Class] Generating state snapshot...');
-
     // 1. Inventory: Create simple { itemName: count } map
     const inventorySnapshot = {};
-    if (this.inventory && this.inventory.items) {
-      // Access the internal Map directly for efficiency
-      for (const [itemName, count] of this.inventory.items.entries()) {
-        if (count > 0) {
-          // Only include items the player has
-          inventorySnapshot[itemName] = count;
-        }
+    if (this.inventory && typeof this.inventory.entries === 'function') {
+      for (const [item, data] of this.inventory.entries()) {
+        inventorySnapshot[item] = data.count !== undefined ? data.count : 0;
+      }
+    } else {
+      console.warn(
+        `[StateManager Class] Inventory is not Map-like in getSnapshot. Type: ${typeof this
+          .inventory}, Constructor: ${this.inventory?.constructor?.name}`
+      );
+    }
+
+    // 2. Flags: Convert Set to Array
+    const flagsSnapshot = Array.from(this.flags || []);
+
+    // 3. Reachability (basic): Convert Set to Array
+    const reachabilitySnapshot = Array.from(this.knownReachableRegions || []);
+
+    // 4. Settings: Direct copy
+    const settingsSnapshot = this.settings ? { ...this.settings } : {};
+
+    // --- MODIFIED: Embed Accessibility in Regions, Exits, Locations ---
+    // Deep clone regions and locations to avoid modifying the internal state directly
+    const regionsSnapshot = this.regions
+      ? JSON.parse(JSON.stringify(this.regions))
+      : {};
+    const locationsSnapshot = this.locations
+      ? JSON.parse(JSON.stringify(this.locations))
+      : [];
+
+    // Create the snapshot interface for internal evaluation *within the worker*
+    // This interface should ideally have access to the *actual* state manager methods if needed
+    // For now, let's try using the basic one and see if evaluateRule handles it internally
+    // NO - we need the REAL evaluateRule here. StateManager has access to it directly.
+
+    // Iterate through regions and add accessibility
+    for (const regionName in regionsSnapshot) {
+      const regionData = regionsSnapshot[regionName];
+      regionData.isAccessible = this.knownReachableRegions.has(regionName);
+
+      // Iterate through exits in the region
+      if (regionData.exits) {
+        regionData.exits.forEach((exit) => {
+          // Use the *worker's* evaluateRule for accurate assessment
+          exit.isAccessible = this.evaluateRule(exit.access_rule, this); // Pass 'this' StateManager instance
+        });
+      }
+
+      // Iterate through locations in the region
+      if (regionData.locations) {
+        regionData.locations.forEach((loc) => {
+          // Use the worker's isLocationAccessible method
+          loc.isAccessible = this.isLocationAccessible(loc);
+          // Also add checked status directly for convenience
+          loc.isChecked = this.checkedLocations.has(loc.name);
+        });
       }
     }
 
-    // 2. Flags: Get active flags from ALTTPState
-    // TODO: Confirm how flags are stored in ALTTPState - assuming a simple array or Set for now
-    const flagsSnapshot = this.state ? Array.from(this.state.getFlags()) : []; // Assuming getFlags() returns a Set or Array
+    // Enhance locations array as well (if locations are stored separately)
+    locationsSnapshot.forEach((loc) => {
+      // Use the worker's isLocationAccessible method
+      loc.isAccessible = this.isLocationAccessible(loc);
+      // Also add checked status directly for convenience
+      loc.isChecked = this.checkedLocations.has(loc.name);
+    });
 
-    // 3. Reachability: Combine known regions and checked locations
-    // This is a simplified representation. Needs refinement based on how UI uses it.
-    const reachabilitySnapshot = {};
-    if (this.locations) {
-      this.locations.forEach((loc) => {
-        const locationName = loc.name;
-        if (this.isLocationChecked(locationName)) {
-          reachabilitySnapshot[locationName] = 'checked';
-        } else {
-          // Determine reachability based on region
-          const region = this.regions[loc.region];
-          if (region) {
-            if (this.knownReachableRegions.has(loc.region)) {
-              // Check if the location itself is accessible given its rule and current state
-              // This requires evaluating the rule against the *current* inventory/state
-              // For simplicity in the snapshot, we might just mark based on region reachability
-              // or perform a quick rule check here.
-              // Let's assume for now: if region reachable, location is reachable (needs rule eval ideally)
-              if (this.isLocationAccessible(loc)) {
-                // Use existing method
-                reachabilitySnapshot[locationName] = 'reachable';
-              } else {
-                reachabilitySnapshot[locationName] = 'unreachable'; // If rule fails
-              }
-            } else {
-              reachabilitySnapshot[locationName] = 'unreachable';
-            }
-          } else {
-            reachabilitySnapshot[locationName] = 'unknown'; // Should not happen if data is consistent
-          }
-        }
-      });
-    }
-    // Add region reachability status as well?
-    if (this.regions) {
-      Object.keys(this.regions).forEach((regionName) => {
-        if (!reachabilitySnapshot[regionName]) {
-          // Don't overwrite location status if name overlaps
-          if (this.knownReachableRegions.has(regionName)) {
-            reachabilitySnapshot[regionName] = 'reachable';
-          } else {
-            reachabilitySnapshot[regionName] = 'unreachable'; // Could also check knownUnreachable
-          }
-        }
-      });
-    }
+    // --- END MODIFIED ---
 
-    // 4. Settings: Include relevant game settings
-    const settingsSnapshot = this.settings || {};
-
+    // 5. Combine into final snapshot object
     const snapshot = {
       inventory: inventorySnapshot,
       flags: flagsSnapshot,
-      reachability: reachabilitySnapshot,
+      reachability: reachabilitySnapshot, // Keep the raw list of reachable region names
       settings: settingsSnapshot,
-      locations: this.locations || [], // Include the raw location definitions
-      regions: this.regions || {}, // Include the raw region definitions (contains exits)
-      checkedLocations: Array.from(this.checkedLocations || []), // Include checked locations set explicitly
-      reachableRegions: Array.from(this.knownReachableRegions || []), // Include reachable regions set explicitly
+      // --- Use the modified structures ---
+      locations: locationsSnapshot, // Array with embedded isAccessible & isChecked
+      regions: regionsSnapshot, // Object with embedded isAccessible in regions & exits
+      // --- End Use modified ---
+      checkedLocations: Array.from(this.checkedLocations || []), // Keep this raw list too
+      reachableRegions: Array.from(this.knownReachableRegions || []), // Explicit list
       playerSlot: this.playerSlot,
       mode: this.mode,
     };
 
-    this._logDebug('[StateManager Class] Snapshot generated.', snapshot);
+    // --- ADDED DEBUG LOG ---
+    console.debug(
+      '[StateManager getSnapshot] Inventory Snapshot:',
+      inventorySnapshot
+    );
+    // --- END DEBUG LOG ---
+
+    //this._logDebug('[StateManager Class] Snapshot generated.', snapshot); // Too verbose now
     return snapshot;
   }
 

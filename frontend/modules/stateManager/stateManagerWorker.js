@@ -124,11 +124,11 @@ async function processInternalQueue() {
             '[stateManagerWorker] Handling addItemToInventory...',
             message.payload
           );
-          // stateManagerInstance.addItemToInventory(message.payload.item); // Assuming quantity is handled internally or refactored
+          stateManagerInstance.addItemToInventory(message.payload.item); // Assuming quantity is handled internally or refactored
           // TODO: StateManager needs modification to trigger snapshot/event posting via self.postMessage
-          console.log(
-            '[stateManagerWorker] addItemToInventory handled (placeholder).'
-          );
+          // console.log(
+          //   '[stateManagerWorker] addItemToInventory handled (placeholder).'
+          // ); // REMOVED placeholder log
           break;
         case 'getFullSnapshot':
           console.log('[stateManagerWorker] Handling getFullSnapshot query...');
@@ -137,6 +137,23 @@ async function processInternalQueue() {
           console.log(
             '[stateManagerWorker] getFullSnapshot handled (placeholder).'
           );
+          break;
+        case 'checkLocation':
+          console.log(
+            '[stateManagerWorker] Handling checkLocation...',
+            message.payload
+          );
+          if (message.payload?.locationName) {
+            stateManagerInstance.checkLocation(message.payload.locationName);
+            // StateManager.checkLocation should trigger snapshot update internally
+            console.log(
+              `[stateManagerWorker] checkLocation handled for ${message.payload.locationName}.`
+            );
+          } else {
+            console.warn(
+              '[stateManagerWorker] Invalid payload for checkLocation.'
+            );
+          }
           break;
         // TODO: Add handlers for other commands/queries (checkLocation, syncCheckedLocationsFromServer, etc.)
         default:

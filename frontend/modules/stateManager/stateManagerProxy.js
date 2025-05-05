@@ -18,6 +18,10 @@ class StateManagerProxy {
 
     this._setupInitialLoadPromise();
     this.initializeWorker();
+    console.log(
+      '[StateManagerProxy Constructor] this._sendCommand type:',
+      typeof this._sendCommand
+    );
   }
 
   _setupInitialLoadPromise() {
@@ -104,7 +108,10 @@ class StateManagerProxy {
         }
         break;
       case 'stateSnapshot':
-        // console.debug('[stateManagerProxy] State snapshot received.');
+        console.debug(
+          '[StateManagerProxy] Received stateSnapshot from worker.',
+          message.snapshot
+        );
         if (message.snapshot) {
           this.uiCache = message.snapshot;
           // Publish a generic event indicating the cache is updated
@@ -175,144 +182,6 @@ class StateManagerProxy {
     }
   }
 
-  // --- Public API Methods ---
-
-  /**
-   * Sends the initial rules and player info to the worker.
-   * Returns a promise that resolves when the worker confirms loading is complete.
-   */
-  async loadRules(rulesData, playerInfo) {
-    if (!this.worker) {
-      return Promise.reject(new Error('Worker not initialized.'));
-    }
-    console.log(
-      '[stateManagerProxy] Sending loadRules command to worker (rules only)...'
-    );
-    this.sendCommandToWorker({
-      command: 'loadRules',
-      payload: { rulesData, playerInfo }, // Send full rulesData
-    });
-    // Return the promise that tracks the initial load confirmation
-    return this.initialLoadPromise;
-  }
-
-  /**
-   * Waits until the initial rules load is confirmed by the worker.
-   */
-  async ensureReady() {
-    if (!this.worker) {
-      throw new Error('Worker not initialized.');
-    }
-    if (this.uiCache !== null) {
-      return true; // Already loaded
-    }
-    console.log('[stateManagerProxy] Waiting for worker initial load...');
-    return this.initialLoadPromise;
-  }
-
-  /**
-   * Returns the latest state snapshot received from the worker.
-   * Returns null if no snapshot has been received yet.
-   */
-  getSnapshot() {
-    // It's recommended to use ensureReady() before calling this
-    // if you need to guarantee a non-null snapshot on initial load.
-    // However, event handlers reacting to snapshotUpdated can call this safely.
-    return this.uiCache;
-  }
-
-  // ADD setStaticData method
-  setStaticData(itemData, groupData) {
-    console.log('[StateManagerProxy] Caching static item/group data.');
-    this.itemData = itemData;
-    this.groupData = groupData;
-  }
-
-  async addItemToInventory(item, quantity = 1) {
-    await this.ensureReady(); // Ensure worker is loaded before sending commands
-    console.log(
-      `[stateManagerProxy] Sending addItemToInventory command for ${item}`
-    );
-    this.sendCommandToWorker({
-      command: 'addItemToInventory',
-      payload: { item, quantity },
-    });
-    // Fire-and-forget - updates come via stateSnapshot events
-  }
-
-  async checkLocation(locationName) {
-    await this.ensureReady();
-    console.log(
-      `[stateManagerProxy] Sending checkLocation command for ${locationName}`
-    );
-    this.sendCommandToWorker({
-      command: 'checkLocation',
-      payload: { locationName },
-    });
-  }
-
-  async syncCheckedLocationsFromServer(checkedLocationIds) {
-    await this.ensureReady();
-    console.log(
-      `[stateManagerProxy] Sending syncCheckedLocationsFromServer command.`
-    );
-    this.sendCommandToWorker({
-      command: 'syncCheckedLocationsFromServer',
-      payload: { checkedLocationIds },
-    });
-  }
-
-  async toggleQueueReporting(enabled) {
-    await this.ensureReady();
-    console.log(
-      `[stateManagerProxy] Sending toggleQueueReporting command (${enabled}).`
-    );
-    this.sendCommandToWorker({
-      command: 'toggleQueueReporting',
-      payload: { enabled },
-    });
-  }
-
-  // --- Queries ---
-
-  async getFullSnapshot() {
-    await this.ensureReady();
-    console.log('[stateManagerProxy] Querying for full snapshot...');
-    return this.sendQueryToWorker({ command: 'getFullSnapshot' });
-  }
-
-  async getWorkerQueueStatus() {
-    await this.ensureReady();
-    console.log('[stateManagerProxy] Querying for worker queue status...');
-    return this.sendQueryToWorker({ command: 'getWorkerQueueStatus' });
-  }
-
-  /**
-   * Synchronously returns the latest state snapshot held by the proxy.
-   * Returns null if the initial snapshot hasn't been received yet.
-   */
-  getLatestStateSnapshot() {
-    // Synchronous access to the cached state
-    return this.uiCache;
-  }
-
-  // Method to get the current UI cache snapshot
-  // getSnapshot() { // REMOVED DUPLICATE
-  //     return this.uiCache;
-  // }
-
-  // START ADDED GETTERS
-  getItemData() {
-    // Assuming itemData is stored after initial load
-    return this.itemData;
-  }
-
-  getGroupData() {
-    // Assuming groupData is stored after initial load
-    return this.groupData;
-  }
-  // END ADDED GETTERS
-
   // --- Internal Helper Methods ---
 
   sendCommandToWorker(message) {
@@ -379,6 +248,146 @@ class StateManagerProxy {
       }
     });
   }
+
+  // --- Public API Methods ---
+
+  /**
+   * Sends the initial rules and player info to the worker.
+   * Returns a promise that resolves when the worker confirms loading is complete.
+   */
+  async loadRules(rulesData, playerInfo) {
+    if (!this.worker) {
+      return Promise.reject(new Error('Worker not initialized.'));
+    }
+    console.log(
+      '[stateManagerProxy] Sending loadRules command to worker (rules only)...'
+    );
+    this.sendCommandToWorker({
+      command: 'loadRules',
+      payload: { rulesData, playerInfo }, // Send full rulesData
+    });
+    // Return the promise that tracks the initial load confirmation
+    return this.initialLoadPromise;
+  }
+
+  /**
+   * Waits until the initial rules load is confirmed by the worker.
+   */
+  async ensureReady() {
+    if (!this.worker) {
+      throw new Error('Worker not initialized.');
+    }
+    if (this.uiCache !== null) {
+      return true; // Already loaded
+    }
+    console.log('[stateManagerProxy] Waiting for worker initial load...');
+    return this.initialLoadPromise;
+  }
+
+  /**
+   * Returns the latest state snapshot received from the worker.
+   * Returns null if no snapshot has been received yet.
+   */
+  getSnapshot() {
+    // It's recommended to use ensureReady() before calling this
+    // if you need to guarantee a non-null snapshot on initial load.
+    // However, event handlers reacting to snapshotUpdated can call this safely.
+    return this.uiCache;
+  }
+
+  // ADD setStaticData method
+  setStaticData(itemData, groupData) {
+    console.log('[StateManagerProxy] Caching static item/group data.');
+    this.itemData = itemData;
+    this.groupData = groupData;
+  }
+
+  async addItemToInventory(item, quantity = 1) {
+    await this.ensureReady(); // Ensure worker is loaded before sending commands
+    console.log(
+      `[stateManagerProxy] Sending addItemToInventory command for ${item}`
+    );
+    this.sendCommandToWorker({
+      command: 'addItemToInventory',
+      payload: { item, quantity },
+    });
+    // Fire-and-forget - updates come via stateSnapshot events
+  }
+
+  async checkLocation(locationName) {
+    console.log(
+      '[StateManagerProxy checkLocation] Context:',
+      this,
+      'Has _sendCommand:',
+      typeof this._sendCommand
+    );
+    console.log(
+      `[StateManagerProxy] Sending checkLocation command for ${locationName}`
+    );
+    return this.sendCommandToWorker('checkLocation', { locationName });
+  }
+
+  async syncCheckedLocationsFromServer(checkedLocationIds) {
+    await this.ensureReady();
+    console.log(
+      `[stateManagerProxy] Sending syncCheckedLocationsFromServer command.`
+    );
+    this.sendCommandToWorker({
+      command: 'syncCheckedLocationsFromServer',
+      payload: { checkedLocationIds },
+    });
+  }
+
+  async toggleQueueReporting(enabled) {
+    await this.ensureReady();
+    console.log(
+      `[stateManagerProxy] Sending toggleQueueReporting command (${enabled}).`
+    );
+    this.sendCommandToWorker({
+      command: 'toggleQueueReporting',
+      payload: { enabled },
+    });
+  }
+
+  // --- Queries ---
+
+  async getFullSnapshot() {
+    await this.ensureReady();
+    console.log('[stateManagerProxy] Querying for full snapshot...');
+    return this.sendQueryToWorker({ command: 'getFullSnapshot' });
+  }
+
+  async getWorkerQueueStatus() {
+    await this.ensureReady();
+    console.log('[stateManagerProxy] Querying for worker queue status...');
+    return this.sendQueryToWorker({ command: 'getWorkerQueueStatus' });
+  }
+
+  /**
+   * Synchronously returns the latest state snapshot held by the proxy.
+   * Returns null if the initial snapshot hasn't been received yet.
+   */
+  getLatestStateSnapshot() {
+    // Synchronous access to the cached state
+    return this.uiCache;
+  }
+
+  // Method to get the current UI cache snapshot
+  // getSnapshot() { // REMOVED DUPLICATE
+  //     return this.uiCache;
+  // }
+
+  // START ADDED GETTERS
+  getItemData() {
+    // Assuming itemData is stored after initial load
+    return this.itemData;
+  }
+
+  getGroupData() {
+    // Assuming groupData is stored after initial load
+    return this.groupData;
+  }
+  // END ADDED GETTERS
 
   terminateWorker() {
     if (this.worker) {

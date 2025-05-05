@@ -509,6 +509,14 @@ export class ExitUI {
         exitElement.addEventListener('click', () => this.handleExitClick(exit));
       }
 
+      // Render logic tree only if access rule exists
+      if (exit.access_rule) {
+        const logicTreeContainer = document.createElement('div');
+        logicTreeContainer.classList.add('logic-tree');
+        logicTreeContainer.textContent = '(No specific rule)'; // Indicate if no rule
+        exitElement.appendChild(logicTreeContainer);
+      }
+
       this.exitsGrid.appendChild(exitElement);
     });
     console.log(`[ExitUI] Rendered ${filteredExits.length} exits.`);

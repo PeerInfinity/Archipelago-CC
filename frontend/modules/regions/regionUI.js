@@ -689,8 +689,8 @@ export class RegionUI {
           const exitWrapper = document.createElement('div');
           exitWrapper.classList.add('exit-wrapper');
 
-          // Evaluate rule using the interface
-          const canAccess = evaluateRule(exit.access_rule, snapshotInterface);
+          // Evaluate rule using the interface - NOW USE PRE-CALCULATED VALUE
+          const canAccess = exit.isAccessible;
           const colorClass = canAccess ? 'accessible' : 'inaccessible';
 
           // In Loop Mode, check if the exit is discovered
@@ -804,8 +804,8 @@ export class RegionUI {
           const locDiv = document.createElement('div');
           locDiv.classList.add('location-wrapper');
 
-          // Evaluate rule using the interface
-          const canAccess = evaluateRule(loc.access_rule, snapshotInterface);
+          // Evaluate rule using the interface - NOW USE PRE-CALCULATED VALUE
+          const canAccess = loc.isAccessible;
           const isChecked = checkedLocations.has(loc.name);
           const colorClass = isChecked
             ? 'checked-loc'
@@ -858,23 +858,23 @@ export class RegionUI {
           checkBtn.addEventListener('click', async () => {
             if (canAccess && !isChecked) {
               try {
-                // Use the already imported messageHandler
-                if (
-                  messageHandler &&
-                  typeof messageHandler.checkLocation === 'function'
-                ) {
-                  // This will handle server communication and prevent duplicates
-                  await messageHandler.checkLocation(loc);
-                } else {
-                  // Fallback to original behavior if messageHandler not available
-                  this._handleLocalCheck(loc);
-                }
+                console.log(
+                  `[RegionUI] Sending checkLocation command for: ${loc.name}`
+                );
+                // Directly use the StateManagerProxySingleton (aliased as stateManager)
+                await stateManager.checkLocation(loc.name);
+                // No need to call renderAllRegions here, snapshot update will trigger it
               } catch (error) {
-                this._handleLocalCheck(loc);
+                console.error(
+                  `[RegionUI] Error sending checkLocation command for ${loc.name}:`,
+                  error
+                );
+                // Optionally display error to user?
               }
-
-              // Always update the UI after checking
-              this.renderAllRegions();
+            } else {
+              console.log(
+                `[RegionUI] Check button clicked for ${loc.name}, but cannot check (canAccess: ${canAccess}, isChecked: ${isChecked})`
+              );
             }
           });
           locDiv.appendChild(checkBtn);

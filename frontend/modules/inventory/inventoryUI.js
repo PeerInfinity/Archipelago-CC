@@ -314,6 +314,18 @@ export class InventoryUI {
         '[InventoryUI] Snapshot updated, but missing itemData or groupData from proxy cache.'
       );
     }
+
+    // Subscribe to state changes
+    const snapshotUpdateHandler = (snapshot) => {
+      // --- ADDED DEBUG LOG ---
+      console.debug(
+        '[InventoryUI] Received stateManager:snapshotUpdated',
+        snapshot
+      );
+      // --- END DEBUG LOG ---
+      this.itemData = snapshot.itemData || {}; // Ensure itemData is updated from snapshot
+      this.renderInventory(snapshot); // Re-render with the full snapshot
+    };
   }
 
   _handleInventoryChanged() {
@@ -437,17 +449,43 @@ export class InventoryUI {
       this.itemData = itemData;
     }
 
+    // --- ADDED DEBUG LOG ---
+    let foundButton = false;
+    let checkedItemName = null;
+    // --- END ADDED ---
+
     this.rootElement.querySelectorAll('.item-button').forEach((button) => {
       const itemName = button.dataset.item;
       // Get count from the snapshot's inventory if available
       const count = inventoryCounts[itemName] || 0;
       const container = button.closest('.item-container');
 
+      // --- ADDED DEBUG LOG ---
+      if (itemName === 'Big Key (Eastern Palace)') {
+        // Example item, adjust if needed
+        foundButton = true;
+        checkedItemName = itemName;
+        console.debug(
+          `[InventoryUI syncWithState] Found button for ${itemName}. Count in snapshot: ${count}. Toggling active class to: ${
+            count > 0
+          }`
+        );
+      }
+      // --- END ADDED ---
+
       if (button && container) {
         button.classList.toggle('active', count > 0);
         this.createOrUpdateCountBadge(container, count);
       }
     });
+
+    // --- ADDED DEBUG LOG ---
+    if (!foundButton && checkedItemName) {
+      console.warn(
+        `[InventoryUI syncWithState] Did not find button for ${checkedItemName} during sync.`
+      );
+    }
+    // --- END ADDED ---
 
     // Update visibility based on owned status
     this.updateDisplay();
