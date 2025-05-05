@@ -144,13 +144,12 @@ export class LoopState {
     // const snapshot = this.stateManager.getSnapshot();
 
     // Count all items in inventory from the provided snapshot argument
-    if (snapshot && snapshot.inventory && snapshot.inventory.items) {
-      // Assuming snapshot.inventory.items is a Map or similar iterable
-      // Ensure items is iterable (it might be a plain object from JSON)
-      const itemsIterable =
-        snapshot.inventory.items instanceof Map
-          ? snapshot.inventory.items.entries()
-          : Object.entries(snapshot.inventory.items);
+    if (snapshot && snapshot.inventory) {
+      // Check snapshot.inventory directly
+
+      // Assuming snapshot.inventory is a plain object { item: count }
+      // Iterate the inventory object directly
+      const itemsIterable = Object.entries(snapshot.inventory);
 
       for (const [item, count] of itemsIterable) {
         if (count > 0) {

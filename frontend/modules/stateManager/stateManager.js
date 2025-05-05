@@ -1540,7 +1540,10 @@ export class StateManager {
       flags: flagsSnapshot,
       reachability: reachabilitySnapshot,
       settings: settingsSnapshot,
-      // Add other relevant state if needed (e.g., playerSlot, mode)
+      locations: this.locations || [], // Include the raw location definitions
+      regions: this.regions || {}, // Include the raw region definitions (contains exits)
+      checkedLocations: Array.from(this.checkedLocations || []), // Include checked locations set explicitly
+      reachableRegions: Array.from(this.knownReachableRegions || []), // Include reachable regions set explicitly
       playerSlot: this.playerSlot,
       mode: this.mode,
     };

@@ -169,9 +169,8 @@ export class LocationUI {
     try {
       await stateManager.ensureReady(); // Wait for proxy
       console.log(
-        '[LocationUI] Proxy ready, performing initial display update.'
+        '[LocationUI] Proxy ready. Initial display will occur via snapshotUpdated event.'
       );
-      this.updateLocationDisplay(); // Call initial update after proxy is ready
     } catch (error) {
       console.error(
         '[LocationUI] Error waiting for proxy during initialization:',

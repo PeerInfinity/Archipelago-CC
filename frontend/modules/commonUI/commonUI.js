@@ -7,9 +7,17 @@ import eventBus from '../../app/core/eventBus.js';
 /**
  * A shared UI utility class that contains common functions for use across multiple components
  */
-export class CommonUI {
+class CommonUI {
   constructor() {
     // REMOVED internal state: this.colorblindMode = true;
+    // Add state for colorblind mode, managed via setColorblindMode
+    this._colorblindMode = false; // Default to false
+  }
+
+  // Add a method to set colorblind mode externally
+  setColorblindMode(isEnabled) {
+    console.log(`[CommonUI] Setting colorblind mode: ${isEnabled}`);
+    this._colorblindMode = !!isEnabled;
   }
 
   /**
@@ -70,6 +78,9 @@ export class CommonUI {
       root.appendChild(symbolSpan);
     }
 
+    // Determine if we should use the instance's colorblind setting
+    const useColorblind = useColorblindMode ?? this._colorblindMode;
+
     const label = document.createElement('div');
     label.classList.add('logic-label');
     label.textContent = `Type: ${rule.type}`;
@@ -100,7 +111,7 @@ export class CommonUI {
           itemExpr.appendChild(
             this.renderLogicTree(
               rule.item,
-              useColorblindMode,
+              useColorblind,
               stateSnapshotInterface
             )
           );
@@ -120,7 +131,7 @@ export class CommonUI {
         } else if (rule.item && rule.item.type === 'constant') {
           itemText = rule.item.value;
         } else if (rule.item) {
-          itemText = `(complex expression)`;
+          itemText = '(complex expression)';
         }
 
         if (typeof rule.count === 'number') {
@@ -155,7 +166,7 @@ export class CommonUI {
             itemExpr.appendChild(
               this.renderLogicTree(
                 rule.item,
-                useColorblindMode,
+                useColorblind,
                 stateSnapshotInterface
               )
             );
@@ -172,7 +183,7 @@ export class CommonUI {
             countExpr.appendChild(
               this.renderLogicTree(
                 rule.count,
-                useColorblindMode,
+                useColorblind,
                 stateSnapshotInterface
               )
             );
@@ -204,7 +215,7 @@ export class CommonUI {
           groupExpr.appendChild(
             this.renderLogicTree(
               rule.group,
-              useColorblindMode,
+              useColorblind,
               stateSnapshotInterface
             )
           );
@@ -276,7 +287,7 @@ export class CommonUI {
 
               const argTree = this.renderLogicTree(
                 arg,
-                useColorblindMode,
+                useColorblind,
                 stateSnapshotInterface
               );
               argsContainer.appendChild(argTree);
@@ -297,7 +308,7 @@ export class CommonUI {
         objectEl.appendChild(
           this.renderLogicTree(
             rule.object,
-            useColorblindMode,
+            useColorblind,
             stateSnapshotInterface
           )
         );
@@ -321,7 +332,7 @@ export class CommonUI {
         arrayEl.appendChild(
           this.renderLogicTree(
             rule.value,
-            useColorblindMode,
+            useColorblind,
             stateSnapshotInterface
           )
         );
@@ -337,7 +348,7 @@ export class CommonUI {
         indexEl.appendChild(
           this.renderLogicTree(
             rule.index,
-            useColorblindMode,
+            useColorblind,
             stateSnapshotInterface
           )
         );
@@ -361,7 +372,7 @@ export class CommonUI {
         functionEl.appendChild(
           this.renderLogicTree(
             rule.function,
-            useColorblindMode,
+            useColorblind,
             stateSnapshotInterface
           )
         );
@@ -380,11 +391,7 @@ export class CommonUI {
           for (const arg of rule.args) {
             const argItem = document.createElement('li');
             argItem.appendChild(
-              this.renderLogicTree(
-                arg,
-                useColorblindMode,
-                stateSnapshotInterface
-              )
+              this.renderLogicTree(arg, useColorblind, stateSnapshotInterface)
             );
             argsList.appendChild(argItem);
           }
@@ -412,7 +419,7 @@ export class CommonUI {
 
           const conditionNode = this.renderLogicTree(
             condition,
-            useColorblindMode,
+            useColorblind,
             stateSnapshotInterface
           );
           conditionsContainer.appendChild(conditionNode);
@@ -470,7 +477,7 @@ export class CommonUI {
 
               const argTree = this.renderLogicTree(
                 arg,
-                useColorblindMode,
+                useColorblind,
                 stateSnapshotInterface
               );
               argsContainer.appendChild(argTree);
@@ -529,7 +536,7 @@ export class CommonUI {
             leftEl.appendChild(
               this.renderLogicTree(
                 rule.left,
-                useColorblindMode,
+                useColorblind,
                 stateSnapshotInterface
               )
             );
@@ -546,7 +553,7 @@ export class CommonUI {
             rightEl.appendChild(
               this.renderLogicTree(
                 rule.right,
-                useColorblindMode,
+                useColorblind,
                 stateSnapshotInterface
               )
             );
@@ -569,7 +576,7 @@ export class CommonUI {
 
         const leftNode = this.renderLogicTree(
           rule.left,
-          useColorblindMode,
+          useColorblind,
           stateSnapshotInterface
         );
         leftNode.style.marginLeft = '10px';
@@ -596,7 +603,7 @@ export class CommonUI {
               listItems.appendChild(
                 this.renderLogicTree(
                   item,
-                  useColorblindMode,
+                  useColorblind,
                   stateSnapshotInterface
                 )
               );
@@ -608,7 +615,7 @@ export class CommonUI {
             rightNode.appendChild(
               this.renderLogicTree(
                 rule.right,
-                useColorblindMode,
+                useColorblind,
                 stateSnapshotInterface
               )
             );
@@ -639,17 +646,19 @@ export class CommonUI {
    * Creates a region link element for use in UI components
    * @param {string} regionName - The name of the region to link to
    * @param {boolean} useColorblindMode - Whether to use colorblind indicators.
+   * @param {object} snapshot - The current state snapshot containing reachability info.
    * @returns {HTMLElement} - The created region link
    */
-  createRegionLink(regionName, useColorblindMode) {
+  createRegionLink(regionName, useColorblindMode, snapshot) {
     const link = document.createElement('span');
     link.textContent = regionName;
     link.classList.add('region-link');
     link.dataset.region = regionName;
     link.title = `Click to view the ${regionName} region`;
 
-    // Determine if region is reachable
-    const isReachable = stateManager.isRegionReachable(regionName);
+    // Determine if region is reachable FROM THE SNAPSHOT
+    const reachableRegions = new Set(snapshot?.reachableRegions || []);
+    const isReachable = reachableRegions.has(regionName);
 
     // Set appropriate color
     link.style.color = isReachable ? 'inherit' : 'red';
@@ -681,9 +690,10 @@ export class CommonUI {
    * @param {string} locationName - The name of the location to link to
    * @param {string} regionName - The region containing this location
    * @param {boolean} useColorblindMode - Whether to use colorblind indicators.
+   * @param {object} snapshot - The current state snapshot containing location/reachability info.
    * @returns {HTMLElement} - The created location link
    */
-  createLocationLink(locationName, regionName, useColorblindMode) {
+  createLocationLink(locationName, regionName, useColorblindMode, snapshot) {
     const link = document.createElement('span');
     link.textContent = locationName;
     link.classList.add('location-link');
@@ -691,20 +701,19 @@ export class CommonUI {
     link.dataset.region = regionName;
     link.title = `Click to view ${locationName} in the ${regionName} region`;
 
-    // Find the location data
+    // Find the location data FROM THE SNAPSHOT
     let locationData = null;
-    for (const loc of stateManager.locations || []) {
+    for (const loc of snapshot?.locations || []) {
       if (loc.name === locationName && loc.region === regionName) {
         locationData = loc;
         break;
       }
     }
 
-    // Determine if location is accessible and checked
-    const isAccessible =
-      locationData && stateManager.isLocationAccessible(locationData);
-    const isChecked =
-      locationData && stateManager.isLocationChecked(locationData?.name);
+    // Determine if location is accessible and checked FROM THE SNAPSHOT
+    const isAccessible = locationData?.isAccessible === true;
+    const checkedLocations = new Set(snapshot?.checkedLocations || []);
+    const isChecked = checkedLocations.has(locationName);
 
     // Set appropriate class
     if (isChecked) {
@@ -760,17 +769,33 @@ export class CommonUI {
 }
 
 // Create a singleton instance
-const commonUI = new CommonUI();
-export default commonUI;
+const commonUIInstance = new CommonUI(); // Rename instance for clarity
+
+// --- Export bound methods as named constants ---
+export const renderLogicTree =
+  commonUIInstance.renderLogicTree.bind(commonUIInstance);
+export const setColorblindMode =
+  commonUIInstance.setColorblindMode.bind(commonUIInstance);
+export const createRegionLink =
+  commonUIInstance.createRegionLink.bind(commonUIInstance);
+export const createLocationLink =
+  commonUIInstance.createLocationLink.bind(commonUIInstance);
+export const applyColorblindClass =
+  commonUIInstance.applyColorblindClass.bind(commonUIInstance);
+
+// Also keep the default export of the instance for potential compatibility
+export default commonUIInstance;
 
 // --- Utility Functions ---
 
 /**
  * Debounce function: Limits the rate at which a function can fire.
  * @param {Function} func The function to debounce.
- * @param {number} wait The number of milliseconds to delay.
- * @param {boolean} immediate If true, trigger the function on the leading edge instead of the trailing.
- * @returns {Function} The debounced function.
+ * @param {number} wait The number of millisconds to delay.
+ * @param {boole
+a n} immediate If true, trigger the function on the leading edge instead of the trailing.
+ *
+  @returns {Function} The debounced function.
  */
 export function debounce(func, wait, immediate = false) {
   let timeout;

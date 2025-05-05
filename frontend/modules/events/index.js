@@ -1,6 +1,6 @@
 import EventsUI from './eventsUI.js';
 
-let moduleInitApi = null; // Store the Initialization API
+// let moduleInitApi = null; // REMOVED - Store the Initialization API
 
 // Module metadata (optional but good practice)
 export const moduleInfo = {
@@ -38,12 +38,13 @@ export async function initialize(moduleId, index, initApi) {
   console.log(
     `[Events Module] Initializing (ID: ${moduleId}, Priority: ${index})...`
   );
-  moduleInitApi = initApi;
+  // moduleInitApi = initApi; // REMOVED assignment
   // We might not need to do anything else immediately,
   // the UI component will fetch data when it's created/shown.
 }
 
 // Export the initApi for the UI component to use (or pass it during construction)
+/* REMOVED getInitApi function
 export function getInitApi() {
   if (!moduleInitApi) {
     console.warn(
@@ -52,6 +53,7 @@ export function getInitApi() {
   }
   return moduleInitApi;
 }
+*/
 
 // Optional: Post-initialization logic if needed
 // export async function postInitialize(initApi) {

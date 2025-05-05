@@ -10,6 +10,7 @@ import eventBus from '../../app/core/eventBus.js';
 import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
 import { moduleDispatcher } from './index.js';
+import { createStateSnapshotInterface } from '../commonUI/index.js';
 
 export class RegionUI {
   constructor() {
@@ -64,12 +65,23 @@ export class RegionUI {
     };
 
     // Specific handler for rules loaded to set initial state
-    const rulesLoadedHandler = (data) => {
+    const rulesLoadedHandler = async (data) => {
       console.log(`[RegionUI] Event received: stateManager:rulesLoaded`, data);
-      // Attempt to show the start region first
-      this.showStartRegion('Menu');
-      // Then trigger a general update (debounced)
-      debouncedUpdate();
+      try {
+        await stateManager.ensureReady();
+        console.log(
+          '[RegionUI] Proxy confirmed ready after rulesLoaded event.'
+        );
+        // Attempt to show the start region first
+        this.showStartRegion('Menu');
+        // Then trigger a general update (debounced)
+        debouncedUpdate();
+      } catch (error) {
+        console.error(
+          '[RegionUI] Error during rulesLoadedHandler after ensureReady:',
+          error
+        );
+      }
     };
 
     // Wrap handlers with logging and use debounced update
@@ -344,8 +356,10 @@ export class RegionUI {
 
     // Use region data from the snapshot
     const allRegionData = snapshot.regions;
-    const reachableRegions = snapshot.reachableRegions || new Set();
-    const checkedLocations = snapshot.checkedLocations || new Set();
+    const reachableRegionsArray = snapshot.reachableRegions || [];
+    const reachableRegions = new Set(reachableRegionsArray);
+    const checkedLocationsArray = snapshot.checkedLocations || [];
+    const checkedLocations = new Set(checkedLocationsArray);
 
     // Determine which regions to show based on 'showAll' flag or visited history
     let regionsToShow;
@@ -422,9 +436,9 @@ export class RegionUI {
     this._updateColorblindIndicators();
   }
 
-  createRegionLink(regionName) {
+  createRegionLink(regionName, snapshot) {
     // Just call commonUI directly, which now handles event publishing
-    return commonUI.createRegionLink(regionName, this.colorblindMode);
+    return commonUI.createRegionLink(regionName, this.colorblindMode, snapshot);
   }
 
   /**
@@ -559,12 +573,13 @@ export class RegionUI {
    * @param {string} regionName - The region containing this location
    * @returns {HTMLElement} - A clickable span element
    */
-  createLocationLink(locationName, regionName) {
+  createLocationLink(locationName, regionName, snapshot) {
     // Just call commonUI directly, which now handles event publishing
     return commonUI.createLocationLink(
       locationName,
       regionName,
-      this.colorblindMode
+      this.colorblindMode,
+      snapshot
     );
   }
 
@@ -583,9 +598,22 @@ export class RegionUI {
       return null;
     }
 
+    // --- Create Snapshot Interface ---
+    const snapshotInterface = createStateSnapshotInterface(snapshot);
+    if (!snapshotInterface) {
+      console.warn(
+        '[RegionUI] Failed to create snapshot interface in buildRegionBlock.'
+      );
+      // Decide how to handle this - return null or a basic block?
+      // return null;
+    }
+    // --- End Snapshot Interface ---
+
     // Get data from snapshot
-    const reachableRegions = snapshot.reachableRegions || new Set();
-    const checkedLocations = snapshot.checkedLocations || new Set();
+    const reachableRegionsArray = snapshot.reachableRegions || [];
+    const reachableRegions = new Set(reachableRegionsArray);
+    const checkedLocationsArray = snapshot.checkedLocations || [];
+    const checkedLocations = new Set(checkedLocationsArray);
 
     const isAccessible = reachableRegions.has(regionName);
 
@@ -644,7 +672,7 @@ export class RegionUI {
           logicDiv.classList.add('logic-tree');
           logicDiv.innerHTML = `<strong>Rule #${idx + 1}:</strong>`;
           logicDiv.appendChild(
-            commonUI.renderLogicTree(rule, useColorblind, snapshot)
+            commonUI.renderLogicTree(rule, useColorblind, snapshotInterface)
           );
           rrContainer.appendChild(logicDiv);
         });
@@ -661,7 +689,8 @@ export class RegionUI {
           const exitWrapper = document.createElement('div');
           exitWrapper.classList.add('exit-wrapper');
 
-          const canAccess = evaluateRule(exit.access_rule, snapshot);
+          // Evaluate rule using the interface
+          const canAccess = evaluateRule(exit.access_rule, snapshotInterface);
           const colorClass = canAccess ? 'accessible' : 'inaccessible';
 
           // In Loop Mode, check if the exit is discovered
@@ -706,7 +735,11 @@ export class RegionUI {
               }
             }
 
-            const regionLink = this.createRegionLink(connectedRegionName);
+            // Pass the snapshot to createRegionLink
+            const regionLink = this.createRegionLink(
+              connectedRegionName,
+              snapshot
+            );
             regionLink.dataset.realRegion = exit.connected_region; // Store the real region name
             regionLink.classList.add(colorClass);
 
@@ -749,7 +782,7 @@ export class RegionUI {
               commonUI.renderLogicTree(
                 exit.access_rule,
                 useColorblind,
-                snapshot
+                snapshotInterface
               )
             );
             exitWrapper.appendChild(logicTreeDiv);
@@ -771,11 +804,9 @@ export class RegionUI {
           const locDiv = document.createElement('div');
           locDiv.classList.add('location-wrapper');
 
-          // Remove inventory parameter
-          const canAccess = evaluateRule(loc.access_rule);
-          const isChecked = stateManagerSingleton.instance.isLocationChecked(
-            loc.name
-          );
+          // Evaluate rule using the interface
+          const canAccess = evaluateRule(loc.access_rule, snapshotInterface);
+          const isChecked = checkedLocations.has(loc.name);
           const colorClass = isChecked
             ? 'checked-loc'
             : canAccess
@@ -797,7 +828,12 @@ export class RegionUI {
           // Create a location link instead of a simple span
           const locationName =
             isLoopModeActive && !isDiscovered ? '???' : loc.name;
-          const locLink = this.createLocationLink(locationName, regionName);
+          // Pass the snapshot to createLocationLink
+          const locLink = this.createLocationLink(
+            locationName,
+            regionName,
+            snapshot
+          );
           locLink.dataset.realName = loc.name; // Store the real location name
           locLink.classList.add(colorClass);
 
@@ -854,7 +890,11 @@ export class RegionUI {
             const logicTreeDiv = document.createElement('div');
             logicTreeDiv.classList.add('logic-tree');
             logicTreeDiv.appendChild(
-              commonUI.renderLogicTree(loc.access_rule, useColorblind)
+              commonUI.renderLogicTree(
+                loc.access_rule,
+                useColorblind,
+                snapshotInterface
+              )
             );
             locDiv.appendChild(logicTreeDiv);
           }

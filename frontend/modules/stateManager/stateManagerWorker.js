@@ -92,12 +92,19 @@ async function processInternalQueue() {
           // We might need to ensure that computation finishes before snapshotting.
           // For now, assume loadFromJSON handles initial computation or call it explicitly if needed.
           // stateManagerInstance.computeReachableRegions(); // Example if needed
+          console.log(
+            '[stateManagerWorker] Computing initial reachable regions...'
+          );
+          await stateManagerInstance.computeReachableRegions(); // Ensure initial computation runs
+          console.log(
+            '[stateManagerWorker] Initial reachability computation complete.'
+          );
 
-          // Get the initial snapshot after loading
+          // Get the initial snapshot after loading AND computation
           const initialSnapshot = stateManagerInstance.getSnapshot();
           if (!initialSnapshot) {
             throw new Error(
-              'Failed to generate initial snapshot after loading rules.'
+              'Failed to generate initial snapshot after loading rules and computing reachability.'
             );
           }
 

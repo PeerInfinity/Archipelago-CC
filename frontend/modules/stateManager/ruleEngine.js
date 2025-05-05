@@ -166,36 +166,28 @@ export const evaluateRule = (rule, stateSnapshotInterface, depth = 0) => {
 
   switch (ruleType) {
     case 'helper': {
-      // Check if the snapshot interface provides a way to execute helpers
-      if (typeof stateSnapshotInterface.executeHelper === 'function') {
-        // Process arguments - they may be complex objects needing evaluation
-        const processedArgs = (rule.args || []).map((arg) => {
-          if (arg && typeof arg === 'object' && arg.type) {
-            // Recursively evaluate argument using the same snapshot interface
-            return evaluateRule(arg, stateSnapshotInterface, depth + 1);
-          }
-          return arg; // Primitives or non-rule objects passed as-is
-        });
+      // On main thread, snapshot interface doesn't have complex execution methods
+      // Log a warning and return false (or a suitable default for the helper)
+      console.warn(
+        `[evaluateRule] Cannot execute helper '${rule.name}' on main thread via snapshot interface. Assuming false.`
+      );
+      result = false;
+      break;
+    }
 
-        try {
-          result = stateSnapshotInterface.executeHelper(
-            rule.name,
-            ...processedArgs
-          );
-        } catch (e) {
-          console.error(
-            `[evaluateRule] Error executing helper '${rule.name}' via snapshot interface:`,
-            e,
-            { args: processedArgs }
-          );
-          result = false;
-        }
-      } else {
-        console.warn(
-          `[evaluateRule] stateSnapshotInterface does not provide executeHelper method. Cannot execute helper: ${rule.name}`
-        );
-        result = false;
-      }
+    case 'state_method': {
+      console.warn(
+        `[evaluateRule] Cannot execute state_method '${rule.method}' on main thread via snapshot interface. Assuming false.`
+      );
+      result = false;
+      break;
+    }
+
+    case 'subscript': {
+      console.warn(
+        `[evaluateRule] Cannot evaluate rule type 'subscript' on main thread via snapshot interface. Assuming false.`
+      );
+      result = false;
       break;
     }
 
@@ -562,7 +554,20 @@ export const evaluateRule = (rule, stateSnapshotInterface, depth = 0) => {
         stateSnapshotInterface,
         depth + 1
       );
-      switch (rule.op) {
+      const op = rule.op;
+
+      // --- ADDED: Handle 'in' operator on main thread ---
+      if (op === 'in') {
+        console.warn(
+          `[evaluateRule] Cannot evaluate operator 'in' on main thread via snapshot interface. Assuming false.`
+        );
+        result = false;
+        break; // Exit the switch case for 'comparison'
+      }
+      // --- End Added ---
+
+      // Standard comparison logic
+      switch (op) {
         case '==':
           result = leftValue === rightValue;
           break;

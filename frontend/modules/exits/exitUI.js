@@ -1,7 +1,8 @@
 // exitUI.js
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import commonUI, { debounce } from '../commonUI/index.js';
+import commonUI from '../commonUI/index.js';
+const { debounce, createStateSnapshotInterface } = commonUI;
 import loopStateSingleton from '../loops/loopStateSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
@@ -306,18 +307,16 @@ export class ExitUI {
 
   async initialize() {
     console.log('[ExitUI] Initializing panel...');
-    // Subscriptions are handled in constructor
-    // Need initial update after ensuring proxy is ready
     try {
       await stateManager.ensureReady(); // Wait for proxy
-      console.log('[ExitUI] Proxy ready, performing initial display update.');
-      this.updateExitDisplay(); // Call initial update after proxy is ready
+      console.log(
+        '[ExitUI] Proxy ready. Initial display will occur via event handler.'
+      );
     } catch (error) {
       console.error(
         '[ExitUI] Error waiting for proxy during initialization:',
         error
       );
-      // Display an error state in the UI?
       if (this.exitsGrid) {
         this.exitsGrid.innerHTML =
           '<div class="error-message">Error initializing exit data.</div>';
@@ -418,6 +417,14 @@ export class ExitUI {
     // --- Process Exits --- //
     console.log(`[ExitUI] Processing regions from snapshot.`);
     let allExits = [];
+    const snapshotInterface = createStateSnapshotInterface(snapshot);
+    if (!snapshotInterface) {
+      console.warn(
+        '[ExitUI] Failed to create snapshot interface for rule evaluation.'
+      );
+      return;
+    }
+
     Object.entries(allRegions).forEach(([regionName, regionData]) => {
       if (regionData.exits && Array.isArray(regionData.exits)) {
         regionData.exits.forEach((exit) => {
@@ -429,7 +436,7 @@ export class ExitUI {
     let filteredExits = allExits.map((exit) => {
       const isRegionReachable = reachableRegionsSet.has(exit.region);
       const ruleResult =
-        !exit.access_rule || evaluateRule(exit.access_rule, snapshot); // Pass snapshot to evaluateRule
+        !exit.access_rule || evaluateRule(exit.access_rule, snapshotInterface);
       const isReachable = isRegionReachable && ruleResult;
       const isExitExplored =
         discoveredRegions.has(exit.region) &&

@@ -251,7 +251,8 @@ export class ProgressUI {
     let totalEventCount = 0;
 
     const locations = snapshot.locations || [];
-    const checkedLocationsSet = snapshot.checkedLocations || new Set();
+    const checkedLocationsArray = snapshot.checkedLocations || [];
+    const checkedLocationsSet = new Set(checkedLocationsArray);
 
     locations.forEach((loc) => {
       const isEventLocation = loc.id === null || loc.id === undefined;

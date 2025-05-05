@@ -1,4 +1,4 @@
-import { getInitApi } from './index.js';
+// import { getInitApi } from './index.js'; // REMOVED Import
 import eventBus from '../../app/core/eventBus.js'; // Import eventBus
 import { centralRegistry } from '../../app/core/centralRegistry.js'; // Corrected Import
 import commonUI from '../commonUI/index.js';
@@ -129,18 +129,21 @@ class EventsUI {
     this.rootElement = null;
     this.eventBusSection = null;
     this.dispatcherSection = null;
-    this.initApi = getInitApi(); // Get the API stored during module initialization
+    // this.initApi = getInitApi(); // REMOVED Call to getInitApi
     this.moduleStateChangeHandler = this.handleModuleStateChange.bind(this);
     this.unsubscribeModuleState = null; // Handle for unsubscribing
     this.moduleId = 'events'; // Assume module ID is known
 
+    /* REMOVED initApi check
     if (!this.initApi) {
       console.error('[EventsUI] Failed to get initApi!');
       // Handle error - maybe display a message in the panel?
     }
+    */
 
     this._createUI();
-    this._loadAndRenderData();
+    // Pass centralRegistry directly instead of relying on initApi
+    this._loadAndRenderData(centralRegistry); // Pass centralRegistry
 
     // Subscribe to module state changes to refresh the UI
     this.unsubscribeModuleState = eventBus.subscribe(
@@ -198,8 +201,8 @@ class EventsUI {
     this.container.element.appendChild(this.rootElement);
   }
 
-  async _loadAndRenderData() {
-    if (!this.initApi) {
+  async _loadAndRenderData(registry) {
+    if (!registry) {
       this.eventBusSection.textContent = 'Error: Initialization API not found.';
       this.dispatcherSection.textContent =
         'Error: Initialization API not found.';
@@ -207,11 +210,10 @@ class EventsUI {
     }
 
     try {
-      const registry = this.initApi.getModuleManager()._getRawRegistry();
-      const moduleManager = this.initApi.getModuleManager();
+      const moduleManager = window.moduleManagerApi;
 
-      if (!registry || !moduleManager) {
-        throw new Error('Failed to retrieve registry or module manager.');
+      if (!moduleManager) {
+        throw new Error('Failed to retrieve module manager.');
       }
 
       const eventBusPublishers = registry.getAllEventBusPublishers();
@@ -561,32 +563,31 @@ class EventsUI {
     checkbox.addEventListener('change', (event) => {
       const newState = event.target.checked;
       try {
-        const registry = this.initApi.getModuleManager()._getRawRegistry();
         let success = false;
         switch (type) {
           case 'eventBusPublisher':
-            success = registry.setEventBusPublisherEnabled(
+            success = window.moduleManagerApi.setEventBusPublisherEnabled(
               eventName,
               moduleId,
               newState
             );
             break;
           case 'eventBusSubscriber':
-            success = registry.setEventBusSubscriberEnabled(
+            success = window.moduleManagerApi.setEventBusSubscriberEnabled(
               eventName,
               moduleId,
               newState
             );
             break;
           case 'dispatcherSender':
-            success = registry.setDispatcherSenderEnabled(
+            success = window.moduleManagerApi.setDispatcherSenderEnabled(
               eventName,
               moduleId,
               newState
             );
             break;
           case 'dispatcherHandler':
-            success = registry.setDispatcherHandlerEnabled(
+            success = window.moduleManagerApi.setDispatcherHandlerEnabled(
               eventName,
               moduleId,
               newState
@@ -623,7 +624,7 @@ class EventsUI {
       `[EventsUI] Received module:stateChanged for ${payload.moduleId}. Refreshing data...`
     );
     // Simple approach: reload all data and re-render
-    this._loadAndRenderData();
+    this._loadAndRenderData(centralRegistry);
   }
 
   // Clean up subscriptions when the panel is destroyed
