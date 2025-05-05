@@ -15,6 +15,8 @@ class StateManagerProxy {
     this.pendingQueries = new Map(); // Map<queryId, { resolve, reject, timeoutId? }>
     this.initialLoadPromise = null;
     this.initialLoadResolver = null;
+    this.staticDataIsSet = false; // Flag for static data readiness
+    this.isReadyPublished = false; // Flag to prevent multiple ready events
 
     this._setupInitialLoadPromise();
     this.initializeWorker();
@@ -90,23 +92,35 @@ class StateManagerProxy {
       case 'queryResponse':
         this._handleQueryResponse(message);
         break;
-      case 'rulesLoadedConfirmation':
+      case 'rulesLoadedConfirmation': {
         console.log('[stateManagerProxy] Rules loaded confirmation received.');
-        this.uiCache = message.initialSnapshot;
+        // Cache the initial snapshot sent with the confirmation
+        // --- FIX: Access snapshot via message.initialSnapshot (matching worker) ---
+        if (message.initialSnapshot) {
+          this.uiCache = message.initialSnapshot;
+          // --- END FIX ---
+          console.debug(
+            '[stateManagerProxy] Initial snapshot cached from confirmation.',
+            this.uiCache
+          );
+        } else {
+          console.warn(
+            '[stateManagerProxy] rulesLoadedConfirmation received without initial snapshot.'
+          );
+        }
+        // Resolve the initial load promise
         if (this.initialLoadResolver) {
-          this.initialLoadResolver(true); // Resolve the initial load promise
-          this.initialLoadResolver = null; // Ensure it's only called once
+          this.initialLoadResolver(true);
+          this.initialLoadResolver = null; // Prevent multiple resolves
+        } else {
+          console.warn(
+            '[StateManagerProxy] Initial load promise already resolved or resolver missing.'
+          );
         }
-        this.eventBus.publish('stateManager:rulesLoaded', {
-          snapshot: this.uiCache,
-        });
-        // Optionally publish initial queue status if provided
-        if (message.workerQueueSummary) {
-          this.eventBus.publish('stateManager:workerQueueStatus', {
-            queueSummary: message.workerQueueSummary,
-          });
-        }
+        // Call the readiness check instead
+        this._checkAndPublishReady();
         break;
+      }
       case 'stateSnapshot':
         console.debug(
           '[StateManagerProxy] Received stateSnapshot from worker.',
@@ -295,11 +309,38 @@ class StateManagerProxy {
     return this.uiCache;
   }
 
-  // ADD setStaticData method
-  setStaticData(itemData, groupData) {
-    console.log('[StateManagerProxy] Caching static item/group data.');
-    this.itemData = itemData;
-    this.groupData = groupData;
+  // Method to accept and cache static data (items, groups, locations, regions)
+  setStaticData(itemData, groupData, locationData, regionData) {
+    console.log(
+      '[StateManagerProxy] Caching static item/group/location/region data.'
+    );
+    this.staticDataCache = {
+      items: itemData,
+      groups: groupData,
+      locations: locationData,
+      regions: regionData,
+    };
+    this.staticDataIsSet = true; // Set flag when static data arrives
+    // Log the structure briefly
+    console.debug('[StateManagerProxy] Cached static data structure:', {
+      items: itemData ? Object.keys(itemData).length : 0,
+      groups: groupData ? Object.keys(groupData).length : 0,
+      locations: locationData ? Object.keys(locationData).length : 0,
+      regions: regionData ? Object.keys(regionData).length : 0,
+    });
+
+    // Check if ready to publish event
+    this._checkAndPublishReady();
+  }
+
+  // Method to retrieve all cached static data
+  getStaticData() {
+    if (!this.staticDataCache) {
+      console.warn(
+        '[StateManagerProxy] Attempted to get static data before it was set.'
+      );
+    }
+    return this.staticDataCache;
   }
 
   async addItemToInventory(item, quantity = 1) {
@@ -372,23 +413,6 @@ class StateManagerProxy {
     return this.uiCache;
   }
 
-  // Method to get the current UI cache snapshot
-  // getSnapshot() { // REMOVED DUPLICATE
-  //     return this.uiCache;
-  // }
-
-  // START ADDED GETTERS
-  getItemData() {
-    // Assuming itemData is stored after initial load
-    return this.itemData;
-  }
-
-  getGroupData() {
-    // Assuming groupData is stored after initial load
-    return this.groupData;
-  }
-  // END ADDED GETTERS
-
   terminateWorker() {
     if (this.worker) {
       console.log('[stateManagerProxy] Terminating worker.');
@@ -405,6 +429,29 @@ class StateManagerProxy {
       this.uiCache = null;
     }
   }
+
+  // --- ADDED: Helper to check readiness and publish event --- >
+  _checkAndPublishReady() {
+    console.log('[StateManagerProxy] _checkAndPublishReady called. Status:', {
+      uiCacheNotNull: !!this.uiCache,
+      staticDataIsSet: this.staticDataIsSet,
+      isReadyPublished: this.isReadyPublished,
+    });
+    if (this.uiCache && this.staticDataIsSet && !this.isReadyPublished) {
+      if (this.eventBus) {
+        console.log(
+          '[stateManagerProxy] Publishing stateManager:ready event (Snapshot & Static Data Ready).'
+        );
+        this.eventBus.publish('stateManager:ready');
+        this.isReadyPublished = true; // Prevent publishing again
+      } else {
+        console.warn(
+          '[stateManagerProxy] EventBus not available to publish stateManager:ready.'
+        );
+      }
+    }
+  }
+  // --- END ADDED --- >
 }
 
 export default StateManagerProxy;

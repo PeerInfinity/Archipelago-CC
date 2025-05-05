@@ -24,13 +24,13 @@ export class StateManager {
     this.postMessageCallback = null; // For worker communication
     this.evaluateRuleFromEngine = evaluateRuleFunction; // Store the injected rule evaluator
 
+    // --- ADDED Check for missing evaluator --- >
     if (!this.evaluateRuleFromEngine) {
-      // If not provided (e.g., running standalone?), log a warning.
-      // Internal rule evaluations might fail.
       console.warn(
-        '[StateManager] evaluateRuleFunction not provided to constructor. Internal rule evaluations may fail.'
+        '[StateManager Constructor] evaluateRuleFunction was not provided. Rule evaluation within the worker might fail if called directly.'
       );
     }
+    // --- END Check ---
 
     // Player identification
     this.playerSlot = 1; // Default player slot to 1 for single-player/offline
@@ -600,9 +600,11 @@ export class StateManager {
           continue;
         }
 
-        // Check if exit is traversable using evaluateRule
+        // Check if exit is traversable using the *injected* evaluateRule engine
+        const snapshotInterface = this._createSelfSnapshotInterface();
         const canTraverse =
-          !exit.access_rule || this.evaluateRule(exit.access_rule);
+          !exit.access_rule ||
+          this.evaluateRuleFromEngine(exit.access_rule, snapshotInterface);
 
         if (canTraverse) {
           // Region is now reachable
@@ -729,9 +731,13 @@ export class StateManager {
     }
     if (!location.access_rule) return true;
 
-    // Use this.evaluateRule, which uses the _createSelfSnapshotInterface
+    // Use the *injected* evaluateRule engine
     try {
-      return this.evaluateRule(location.access_rule);
+      const snapshotInterface = this._createSelfSnapshotInterface();
+      return this.evaluateRuleFromEngine(
+        location.access_rule,
+        snapshotInterface
+      );
     } catch (e) {
       console.error(
         `Error evaluating internal rule for location ${location.name}:`,
@@ -1174,9 +1180,14 @@ export class StateManager {
         if (regionData.exits) {
           const exit = regionData.exits.find((e) => e.name === region);
           if (exit) {
+            const snapshotInterface = this._createSelfSnapshotInterface();
             return (
               this.isRegionReachable(regionName) &&
-              (!exit.access_rule || this.evaluateRule(exit.access_rule))
+              (!exit.access_rule ||
+                this.evaluateRuleFromEngine(
+                  exit.access_rule,
+                  snapshotInterface
+                ))
             );
           }
         }
@@ -1256,7 +1267,9 @@ export class StateManager {
           );
 
           connectingExits.forEach((exit) => {
-            const exitAccessible = this.evaluateRule(exit.access_rule);
+            const exitAccessible = this.evaluateRuleFromEngine(
+              exit.access_rule
+            );
             console.log(
               `  - Exit: ${exit.name} (${
                 exitAccessible ? 'ACCESSIBLE' : 'BLOCKED'
@@ -1284,7 +1297,7 @@ export class StateManager {
           `\n${regionName} has ${region.region_rules.length} region rules:`
         );
         region.region_rules.forEach((rule, i) => {
-          const ruleResult = this.evaluateRule(rule);
+          const ruleResult = this.evaluateRuleFromEngine(rule);
           console.log(`- Rule #${i + 1}: ${ruleResult ? 'PASSES' : 'FAILS'}`);
           this.debugRuleEvaluation(rule);
         });
@@ -1318,7 +1331,8 @@ export class StateManager {
     // Get result using internal evaluation
     let ruleResult = false;
     try {
-      ruleResult = this.evaluateRule(rule);
+      const snapshotInterface = this._createSelfSnapshotInterface();
+      ruleResult = this.evaluateRuleFromEngine(rule, snapshotInterface);
     } catch (e) {}
 
     switch (rule.type) {
@@ -1331,7 +1345,11 @@ export class StateManager {
         );
         let allResults = [];
         rule.conditions.forEach((condition, i) => {
-          const result = this.evaluateRule(condition);
+          const snapshotInterfaceInner = this._createSelfSnapshotInterface();
+          const result = this.evaluateRuleFromEngine(
+            condition,
+            snapshotInterfaceInner
+          );
           allResults.push(result);
           console.log(
             `${indent}- Condition #${i + 1}: ${result ? 'PASS' : 'FAIL'}`
@@ -1408,209 +1426,198 @@ export class StateManager {
         }
         break;
 
+      case 'conditional':
+        const testResult = this.evaluateRuleFromEngine(rule.test);
+        return testResult
+          ? this.evaluateRuleFromEngine(rule.if_true)
+          : this.evaluateRuleFromEngine(rule.if_false);
+
+      case 'comparison':
+      case 'compare':
+        const left = this.evaluateRuleFromEngine(rule.left);
+        const right = this.evaluateRuleFromEngine(rule.right);
+        let op = rule.op.trim();
+        switch (op) {
+          case '==':
+            return left == right;
+          case '!=':
+            return left != right;
+          case '<=':
+            return left <= right;
+          case '<':
+            return left < right;
+          case '>=':
+            return left >= right;
+          case '>':
+            return left > right;
+          case 'in':
+            if (Array.isArray(right) || typeof right === 'string') {
+              return right.includes(left);
+            } else if (right instanceof Set) {
+              return right.has(left);
+            }
+            console.warn(
+              `[StateManager._internalEvaluateRule] 'in' operator requires iterable right-hand side (Array, String, Set). Got:`,
+              right
+            );
+            return false;
+          case 'not in':
+            if (Array.isArray(right) || typeof right === 'string') {
+              return !right.includes(left);
+            } else if (right instanceof Set) {
+              return !right.has(left);
+            }
+            console.warn(
+              `[StateManager._internalEvaluateRule] 'not in' operator requires iterable right-hand side (Array, String, Set). Got:`,
+              right
+            );
+            return true;
+          default:
+            console.warn(
+              `[StateManager._internalEvaluateRule] Unsupported comparison operator: ${rule.op}`
+            );
+            return false;
+        }
+
+      case 'binary_op':
+        const leftOp = this.evaluateRuleFromEngine(rule.left);
+        const rightOp = this.evaluateRuleFromEngine(rule.right);
+        switch (rule.op) {
+          case '+':
+            return leftOp + rightOp;
+          case '-':
+            return leftOp - rightOp;
+          case '*':
+            return leftOp * rightOp;
+          case '/':
+            return rightOp !== 0 ? leftOp / rightOp : Infinity;
+          default:
+            console.warn(
+              `[StateManager._internalEvaluateRule] Unsupported binary operator: ${rule.op}`
+            );
+            return undefined;
+        }
+
+      case 'attribute':
+        const baseObject = this.evaluateRuleFromEngine(rule.object);
+        if (baseObject && typeof baseObject === 'object') {
+          const attrValue = baseObject[rule.attr];
+          if (typeof attrValue === 'function') {
+            return attrValue.bind(baseObject);
+          }
+          return attrValue;
+        } else {
+          return undefined;
+        }
+
+      case 'function_call':
+        const func = this.evaluateRuleFromEngine(rule.function);
+        if (typeof func !== 'function') {
+          console.error(
+            '[StateManager._internalEvaluateRule] Attempted to call non-function:',
+            func,
+            { rule }
+          );
+          return false;
+        }
+        const args = rule.args
+          ? rule.args.map((arg) => this.evaluateRuleFromEngine(arg))
+          : [];
+        let thisContext = null;
+        try {
+          return func.apply(thisContext, args);
+        } catch (callError) {
+          console.error(
+            '[StateManager._internalEvaluateRule] Error executing function call:',
+            callError,
+            { rule, funcName: rule.function?.attr || rule.function?.id }
+          );
+          return false;
+        }
+
+      case 'constant':
+        return rule.value;
+
+      case 'bool':
+        return rule.value;
+
+      case 'string':
+        return rule.value;
+
+      case 'number':
+        return rule.value;
+
+      case 'name':
+        if (rule.id === 'True') return true;
+        if (rule.id === 'False') return false;
+        if (rule.id === 'None') return null;
+        if (rule.id === 'self') return this;
+        if (this.settings && this.settings.hasOwnProperty(rule.id)) {
+          return this.settings[rule.id];
+        }
+        if (this.helpers && typeof this.helpers[rule.id] === 'function') {
+          return this.helpers[rule.id].bind(this.helpers);
+        }
+        if (typeof this[rule.id] === 'function') {
+          return this[rule.id].bind(this);
+        }
+        console.warn(
+          `[StateManager._internalEvaluateRule] Unresolved name: ${rule.id}`
+        );
+        return undefined;
+
       default:
-        console.log(`${indent}${rule.type} - ${ruleResult ? 'PASS' : 'FAIL'}`);
+        if (
+          typeof rule === 'string' ||
+          typeof rule === 'number' ||
+          typeof rule === 'boolean' ||
+          rule === null
+        ) {
+          return rule;
+        }
+        console.warn(
+          `[StateManager._internalEvaluateRule] Unsupported rule type or invalid rule: ${rule.type}`,
+          rule
+        );
+        return false;
     }
-  }
-
-  /**
-   * Get an item ID from its name
-   * @param {string} itemName - Name of the item
-   * @returns {number|null} - The item ID or null if not found
-   */
-  getItemId(itemName) {
-    return this.itemNameToId[itemName] ?? null;
-  }
-
-  /**
-   * Get an item name from its ID
-   * @param {number} itemId - ID of the item
-   * @returns {string|null} - The item name or null if not found
-   */
-  getItemNameFromId(itemId) {
-    // Look up name by ID
-    for (const [name, id] of Object.entries(this.itemNameToId)) {
-      if (id === itemId) {
-        return name;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Get a location ID from its name
-   * @param {string} locationName - Name of the location
-   * @returns {number|null} - The location ID or null if not found
-   */
-  getLocationId(locationName) {
-    return this.locationNameToId[locationName] ?? null;
-  }
-
-  /**
-   * Get a location name from its ID
-   * @param {number} locationId - ID of the location
-   * @returns {string|null} - The location name or null if not found
-   */
-  getLocationNameFromId(locationId) {
-    // Look up name by ID
-    for (const [name, id] of Object.entries(this.locationNameToId)) {
-      if (id === locationId) {
-        return name;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Generates a snapshot of the current state suitable for sending to the UI thread.
-   * Includes inventory, flags, reachability, settings, and potentially locations/regions/exits.
-   * Crucially, it now calculates and embeds accessibility status directly into the snapshot data.
-   * @returns {object} - A snapshot object containing the current state.
-   */
-  getSnapshot() {
-    // 1. Inventory: Create simple { itemName: count } map
-    const inventorySnapshot = {};
-    if (this.inventory && typeof this.inventory.entries === 'function') {
-      for (const [item, data] of this.inventory.entries()) {
-        inventorySnapshot[item] = data.count !== undefined ? data.count : 0;
-      }
-    } else {
-      console.warn(
-        `[StateManager Class] Inventory is not Map-like in getSnapshot. Type: ${typeof this
-          .inventory}, Constructor: ${this.inventory?.constructor?.name}`
-      );
-    }
-
-    // 2. Flags: Convert Set to Array
-    const flagsSnapshot = Array.from(this.flags || []);
-
-    // 3. Reachability (basic): Convert Set to Array
-    const reachabilitySnapshot = Array.from(this.knownReachableRegions || []);
-
-    // 4. Settings: Direct copy
-    const settingsSnapshot = this.settings ? { ...this.settings } : {};
-
-    // --- MODIFIED: Embed Accessibility in Regions, Exits, Locations ---
-    // Deep clone regions and locations to avoid modifying the internal state directly
-    const regionsSnapshot = this.regions
-      ? JSON.parse(JSON.stringify(this.regions))
-      : {};
-    const locationsSnapshot = this.locations
-      ? JSON.parse(JSON.stringify(this.locations))
-      : [];
-
-    // Create the snapshot interface for internal evaluation *within the worker*
-    // This interface should ideally have access to the *actual* state manager methods if needed
-    // For now, let's try using the basic one and see if evaluateRule handles it internally
-    // NO - we need the REAL evaluateRule here. StateManager has access to it directly.
-
-    // Iterate through regions and add accessibility
-    for (const regionName in regionsSnapshot) {
-      const regionData = regionsSnapshot[regionName];
-      regionData.isAccessible = this.knownReachableRegions.has(regionName);
-
-      // Iterate through exits in the region
-      if (regionData.exits) {
-        regionData.exits.forEach((exit) => {
-          // Use the *worker's* evaluateRule for accurate assessment
-          exit.isAccessible = this.evaluateRule(exit.access_rule, this); // Pass 'this' StateManager instance
-        });
-      }
-
-      // Iterate through locations in the region
-      if (regionData.locations) {
-        regionData.locations.forEach((loc) => {
-          // Use the worker's isLocationAccessible method
-          loc.isAccessible = this.isLocationAccessible(loc);
-          // Also add checked status directly for convenience
-          loc.isChecked = this.checkedLocations.has(loc.name);
-        });
-      }
-    }
-
-    // Enhance locations array as well (if locations are stored separately)
-    locationsSnapshot.forEach((loc) => {
-      // Use the worker's isLocationAccessible method
-      loc.isAccessible = this.isLocationAccessible(loc);
-      // Also add checked status directly for convenience
-      loc.isChecked = this.checkedLocations.has(loc.name);
-    });
-
-    // --- END MODIFIED ---
-
-    // 5. Combine into final snapshot object
-    const snapshot = {
-      inventory: inventorySnapshot,
-      flags: flagsSnapshot,
-      reachability: reachabilitySnapshot, // Keep the raw list of reachable region names
-      settings: settingsSnapshot,
-      // --- Use the modified structures ---
-      locations: locationsSnapshot, // Array with embedded isAccessible & isChecked
-      regions: regionsSnapshot, // Object with embedded isAccessible in regions & exits
-      // --- End Use modified ---
-      checkedLocations: Array.from(this.checkedLocations || []), // Keep this raw list too
-      reachableRegions: Array.from(this.knownReachableRegions || []), // Explicit list
-      playerSlot: this.playerSlot,
-      mode: this.mode,
-    };
-
-    // --- ADDED DEBUG LOG ---
-    console.debug(
-      '[StateManager getSnapshot] Inventory Snapshot:',
-      inventorySnapshot
-    );
-    // --- END DEBUG LOG ---
-
-    //this._logDebug('[StateManager Class] Snapshot generated.', snapshot); // Too verbose now
-    return snapshot;
   }
 
   // Helper to create a snapshot-like interface from the instance itself
   // Needed for internal methods that rely on rule evaluation (like isLocationAccessible)
   _createSelfSnapshotInterface() {
-    // This requires ALTTPHelpers to be instantiated with this interface too?
-    // Or maybe helpers isn't needed for the rules used in isLocationAccessible?
-    // Let's assume helpers aren't needed directly by access_rules evaluated here.
     const self = this;
     return {
       hasItem: (itemName) => self.inventory.has(itemName),
-      countItem: (itemName) => self.inventory.count(itemName),
+      getItemCount: (itemName) => self.inventory.count(itemName),
+      hasGroup: (groupName) => self.inventory.countGroup(groupName) > 0,
       countGroup: (groupName) => self.inventory.countGroup(groupName),
-      hasFlag: (flagName) => self.state?.hasFlag(flagName),
-      getFlags: () =>
-        self.state?.getFlags ? self.state.getFlags() : new Set(),
-      getGameMode: () => self.mode,
-      getShops: () => self.state?.shops,
-      getDifficultyRequirements: () => self.state?.difficultyRequirements,
+      hasFlag: (flagName) =>
+        self.flags.has(flagName) || self.checkedLocations.has(flagName),
       getSetting: (settingName) =>
         self.settings ? self.settings[settingName] : undefined,
       getAllSettings: () => self.settings,
-      isRegionReachable: (regionName) => self.isRegionReachable(regionName), // Recursive? Careful!
+      isRegionReachable: (regionName) => self.isRegionReachable(regionName),
       isLocationChecked: (locName) => self.isLocationChecked(locName),
       executeHelper: (name, ...args) => {
         if (!self.helpers) {
-          console.error(
-            'StateManager._createSelfSnapshotInterface: Helpers not available for executeHelper'
-          );
+          console.error('[SelfSnapshotInterface] Helpers not initialized!');
           return false;
         }
-        // Use the internal helper execution method which handles context
+        // Helpers might need the ability to evaluate rules themselves
+        // The helper instance already has access to 'this.manager' (which is 'self')
+        // Let the helper decide if it needs evaluateRuleFromEngine or direct state access
         return self.helpers.executeHelper(name, ...args);
       },
       executeStateManagerMethod: (name, ...args) => {
         // Directly call the state manager's method execution logic
         return self.executeStateMethod(name, ...args);
       },
-      getItemData: (itemName) =>
-        self.itemData ? self.itemData[itemName] : undefined,
-      getLocationData: (locName) => self._findLocationByName(locName),
-      getRegionData: (regionName) =>
-        self.regions ? self.regions[regionName] : undefined,
-      getAllLocations: () => self.locations,
-      getAllRegions: () => self.regions,
+      getCurrentRegion: () => self.currentRegionName,
+      getAllItems: () => self.itemData,
+      getAllLocations: () => self.locations, // Use the enhanced locations array
+      getAllRegions: () => self.regions, // Use the enhanced regions object
       getPlayerSlot: () => self.playerSlot,
-      // Cannot provide evaluateRule itself here easily
-      // Cannot provide raw snapshot easily
     };
   }
 
@@ -1638,35 +1645,43 @@ export class StateManager {
           '[StateManager Class] Error sending state snapshot update:',
           error
         );
-        // Optionally send an error message back?
-        // this.postMessageCallback({ type: 'error', message: 'Failed to send snapshot' });
       }
     } else {
-      // Only log warning if not using callback (e.g., running standalone)
-      // console.warn('[StateManager Class] Communication channel not set, cannot send snapshot update.');
     }
   }
 
-  // Restore the previous implementation of evaluateRule
-  // This method now calls the refactored evaluateRule from ruleEngine.js
-  // (passed into the constructor) using a self-generated snapshot-like interface.
-  evaluateRule(rule) {
-    if (!this.evaluateRuleFromEngine) {
-      console.error(
-        '[StateManager.evaluateRule] Rule engine function is not available.'
+  getSnapshot() {
+    // 1. Inventory: Create simple { itemName: count } map
+    const inventorySnapshot = {};
+    // --- MODIFIED: Iterate over the internal 'items' Map --- >
+    if (this.inventory && this.inventory.items instanceof Map) {
+      for (const [item, count] of this.inventory.items.entries()) {
+        inventorySnapshot[item] = count !== undefined ? count : 0;
+      }
+    } else {
+      // Keep the warning
+      console.warn(
+        `[StateManager Class] Inventory or inventory.items is not a Map in getSnapshot. Type: ${typeof this
+          .inventory?.items}, Constructor: ${
+          this.inventory?.items?.constructor?.name
+        }`
       );
-      return false;
     }
-    try {
-      const selfInterface = this._createSelfSnapshotInterface();
-      // Call the stored rule evaluation function
-      return this.evaluateRuleFromEngine(rule, selfInterface);
-    } catch (e) {
-      console.error(
-        '[StateManager.evaluateRule] Error calling internal rule evaluation:',
-        e
-      );
-      return false;
-    }
+    // --- END MODIFIED ---
+
+    // 2. Flags: Convert Set to Array
+    const flagsSnapshot = Array.from(this.flags || []);
+
+    // --- ADDED DEBUG LOG ---
+    console.debug(
+      '[StateManager getSnapshot] Inventory Snapshot:',
+      inventorySnapshot
+    );
+    // --- END DEBUG LOG ---
+
+    return {
+      inventory: inventorySnapshot,
+      flags: flagsSnapshot,
+    };
   }
 }

@@ -4,6 +4,10 @@
 
 // Import the singleton proxy instance
 import stateManagerProxySingleton from './stateManagerProxySingleton.js';
+// REMOVE: import { createStateSnapshotInterface } from './stateManagerProxy.js';
+import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 // Keep track of when initialization is complete
 // let isInitialized = false; // No longer needed directly here
@@ -16,12 +20,22 @@ export const moduleInfo = {
   description: 'Core game state management via Web Worker.',
 };
 
+// --- Exports for init system & other modules ---
+// Export the registration function
+export { register };
+// Export the initialization functions
+export { initialize, postInitialize };
+// Export the singleton instance of the proxy
+export { stateManagerProxySingleton };
+// REMOVE: Export the function to create the snapshot interface
+// REMOVE: export { createStateSnapshotInterface };
+
 /**
  * Registration function for the StateManager module.
  * Registers events published by the StateManagerProxy.
  * @param {object} registrationApi - API provided by the initialization script.
  */
-export function register(registrationApi) {
+function register(registrationApi) {
   console.log('[StateManager Module] Registering...');
 
   // Register events published by the StateManagerProxy on the EventBus
@@ -65,7 +79,7 @@ export function register(registrationApi) {
  * @param {number} priorityIndex - The loading priority index.
  * @param {object} initializationApi - API provided by the initialization script.
  */
-export async function initialize(moduleId, priorityIndex, initializationApi) {
+async function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(
     `[StateManager Module] Initializing with priority ${priorityIndex}...`
   );
@@ -86,7 +100,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
  * Waits for the worker to confirm loading is complete.
  * @param {object} initializationApi - API provided by the initialization script.
  */
-export async function postInitialize(initializationApi) {
+async function postInitialize(initializationApi) {
   console.log('[StateManager Module] Post-initializing...');
   // Ensure we have the full initApi stored from the initialize step
   const eventBus = initApi?.getEventBus();
@@ -126,6 +140,9 @@ export async function postInitialize(initializationApi) {
       console.log(
         '[StateManager Module] Successfully fetched default_rules.json'
       );
+      // --- ADD FULL JSON LOG --- >
+      console.log('[StateManager Module] Full jsonData after parse:', jsonData);
+      // --- END FULL JSON LOG --- >
 
       // Player Selection Logic (from old loadAndProcessDefaultRules)
       const playerIds = Object.keys(jsonData.player_names || {});
@@ -165,13 +182,34 @@ export async function postInitialize(initializationApi) {
       // --> ADD CACHING LOGIC HERE <--
       // Store static data on the proxy before sending load command
       const playerKey = playerInfo.playerId;
-      const itemData = jsonData.items?.[playerKey];
-      const groupData = jsonData.item_groups?.[playerKey];
+      // Need to access items and groups correctly based on JSON structure
+      const itemData = jsonData.items?.[playerKey]; // Assuming items are per player
+      const groupData = jsonData.item_groups; // Assuming groups are global or handle per player if needed
+
       if (itemData && groupData) {
         try {
-          stateManagerProxySingleton.setStaticData(itemData, groupData);
+          // Pass location data too if available at top level or per player
+          const locationData = jsonData.locations?.[playerKey];
+          const regionData = jsonData.regions?.[playerKey] ?? jsonData.regions;
+          // --- ADD LOGGING BEFORE CALL --- >
+          console.log('[StateManager Module] Before setStaticData:', {
+            itemDataExists: !!itemData,
+            groupDataExists: !!groupData,
+            locationDataExists: !!locationData,
+            regionDataExists: !!regionData,
+            locationDataType: typeof locationData,
+            playerKeyUsed: playerKey,
+          });
+          // --- END LOGGING --- >
+          // Update setStaticData to accept all static data needed
+          stateManagerProxySingleton.setStaticData(
+            itemData,
+            groupData,
+            locationData,
+            regionData
+          );
           console.log(
-            '[StateManager Module] Static item/group data cached on proxy.'
+            '[StateManager Module] Static item/group/location/region data cached on proxy.'
           );
         } catch (e) {
           console.error(
@@ -179,6 +217,7 @@ export async function postInitialize(initializationApi) {
             e
           );
           // Decide if this is critical? Probably.
+          throw new Error(`Failed to cache static data: ${e.message}`);
         }
       } else {
         console.error(
@@ -186,7 +225,7 @@ export async function postInitialize(initializationApi) {
         );
         // This is likely a critical error
         throw new Error(
-          'Failed to extract necessary static data from rules JSON.'
+          'Failed to extract necessary static item/group data from rules JSON.'
         );
       }
       // --> END CACHING LOGIC <--
@@ -225,9 +264,6 @@ export async function postInitialize(initializationApi) {
     '[StateManager Module] Post-initialization complete (subscribed to init:postInitComplete).'
   );
 }
-
-// Export the singleton proxy instance
-export { stateManagerProxySingleton };
 
 // Remove old exports
 // export { StateManager }; // Class no longer exported directly

@@ -11,7 +11,7 @@ console.log(
   '[stateManagerWorker] Dependencies loaded (StateManager, evaluateRule).'
 );
 
-// Instantiate the main StateManager, passing the rule evaluation function
+// Instantiate the main StateManager, passing the evaluateRule function from ruleEngine
 const stateManagerInstance = new StateManager(evaluateRule);
 
 // Set the communication channel using an arrow function to preserve 'self' context for postMessage

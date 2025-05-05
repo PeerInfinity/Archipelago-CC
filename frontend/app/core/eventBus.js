@@ -1,5 +1,5 @@
 // eventBus.js
-import { centralRegistry } from './centralRegistry.js'; // Corrected import
+import { centralRegistry } from './centralRegistry.js'; // Use named import
 
 export class EventBus {
   constructor() {

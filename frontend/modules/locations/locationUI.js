@@ -1,8 +1,13 @@
 // locationUI.js
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import {
+  stateManagerProxySingleton as stateManager,
+  // REMOVE: createStateSnapshotInterface, // Import from stateManager index
+} from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import commonUI, { debounce } from '../commonUI/index.js';
-import messageHandler from '../client/core/messageHandler.js';
+import commonUI, {
+  debounce,
+  createStateSnapshotInterface,
+} from '../commonUI/index.js';
 import loopStateSingleton from '../loops/loopStateSingleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -15,23 +20,32 @@ export class LocationUI {
     this.locationsGrid = this.rootElement.querySelector('#locations-grid'); // Cache grid element
     this.stateUnsubscribeHandles = []; // Array to store unsubscribe functions for state/loop events
     this.settingsUnsubscribe = null;
+    this.colorblindSettings = {}; // Cache colorblind settings
+    this.isInitialized = false; // Add flag
+
     // Attach control listeners immediately
     this.attachEventListeners();
-    // Subscribe to settings and state events
+    // Subscribe to settings
     this.subscribeToSettings();
-    this.subscribeToStateEvents(); // <-- Call new subscription method
   }
 
   subscribeToSettings() {
     if (this.settingsUnsubscribe) {
       this.settingsUnsubscribe();
     }
+    // Update local cache on any settings change
+    this.colorblindSettings =
+      settingsManager.getSetting('colorblindMode.locations') || {};
+
     this.settingsUnsubscribe = eventBus.subscribe(
       'settings:changed',
       ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.locations')) {
           console.log('LocationUI reacting to settings change:', key);
-          this.updateLocationDisplay();
+          // Update cache
+          this.colorblindSettings =
+            settingsManager.getSetting('colorblindMode.locations') || {};
+          this.updateLocationDisplay(); // Trigger redraw
         }
       }
     );
@@ -52,15 +66,10 @@ export class LocationUI {
   // --- NEW: Event Subscription for State/Loop --- //
   subscribeToStateEvents() {
     try {
-      // Ensure no duplicate subscriptions
       this.unsubscribeFromStateEvents();
 
       console.log('[LocationUI] Subscribing to state and loop events...');
-      // Use the imported eventBus singleton directly
-      // REMOVED: const eventBus = window.eventBus;
-
       if (!eventBus) {
-        // Check the imported eventBus
         console.error('[LocationUI] Imported EventBus is not available!');
         return;
       }
@@ -71,26 +80,63 @@ export class LocationUI {
         this.stateUnsubscribeHandles.push(unsubscribe);
       };
 
-      // Debounce handler to avoid rapid updates
-      const debouncedUpdate = debounce(() => this.updateLocationDisplay(), 50);
+      // --- ADDED: Handler for stateManager:ready ---
+      const handleReady = () => {
+        console.log('[LocationUI] Received stateManager:ready event.');
+        if (!this.isInitialized) {
+          // --- Removing setTimeout diagnostic --- >
+          console.log('[LocationUI] Performing initial setup and render.');
+          // const currentSnapshot = stateManager.getLatestStateSnapshot();
+          // const currentStaticData = stateManager.getStaticData();
+          // console.log('[LocationUI inside setTimeout] Snapshot:', !!currentSnapshot, 'Static Data:', !!currentStaticData);
+          // this.showStartRegion('Menu'); // Start region logic might need re-evaluation
+          this.updateLocationDisplay(); // Initial render
+          this.isInitialized = true;
+          // --- End Removing setTimeout --- >
+        }
+      };
+      subscribe('stateManager:ready', handleReady);
+      // --- END ADDED ---
+
+      // Debounce handler for subsequent updates
+      const debouncedUpdate = debounce(() => {
+        if (this.isInitialized) {
+          // Only update if initialized
+          this.updateLocationDisplay();
+        }
+      }, 50);
 
       // Subscribe to state changes that affect location display
       subscribe('stateManager:snapshotUpdated', debouncedUpdate);
-      subscribe('stateManager:inventoryChanged', debouncedUpdate);
-      subscribe('stateManager:regionsComputed', debouncedUpdate);
-      subscribe('stateManager:locationChecked', debouncedUpdate);
-      subscribe('stateManager:checkedLocationsCleared', debouncedUpdate);
-      // Also need rules loaded to trigger initial display
-      subscribe('stateManager:rulesLoaded', () => {
+
+      // Keep other subscriptions for logging or potentially fine-grained updates if needed later
+      subscribe('stateManager:inventoryChanged', () =>
+        console.log('[LocationUI] Saw inventoryChanged (handled by snapshot)')
+      ); // No update needed, handled by snapshot
+      subscribe('stateManager:regionsComputed', () =>
+        console.log('[LocationUI] Saw regionsComputed (handled by snapshot)')
+      ); // No update needed, handled by snapshot
+      subscribe('stateManager:locationChecked', () =>
+        console.log('[LocationUI] Saw locationChecked (handled by snapshot)')
+      ); // No update needed, handled by snapshot
+      subscribe('stateManager:checkedLocationsCleared', () =>
+        console.log(
+          '[LocationUI] Saw checkedLocationsCleared (handled by snapshot)'
+        )
+      ); // No update needed, handled by snapshot
+
+      // Subscribe to loop state changes if relevant
+      // Also need rules loaded to trigger initial display and get static data
+      subscribe('stateManager:rulesLoaded', (/* payload */) => {
         console.log('[LocationUI] Received stateManager:rulesLoaded event.');
-        // No need to call update directly, snapshotUpdated will follow
-        // debouncedUpdate();
+        // Now static data should be available via proxy
+        // Initial display will happen via the first snapshotUpdated event
       });
 
       // Subscribe to loop state changes if relevant
-      subscribe('loop:stateChanged', debouncedUpdate);
-      subscribe('loop:actionCompleted', debouncedUpdate);
-      subscribe('loop:discoveryChanged', debouncedUpdate);
+      subscribe('loop:stateChanged', debouncedUpdate); // May affect explored status visibility
+      subscribe('loop:actionCompleted', debouncedUpdate); // May affect explored status
+      subscribe('loop:discoveryChanged', debouncedUpdate); // May affect explored status
       subscribe('loop:modeChanged', (isLoopMode) => {
         debouncedUpdate(); // Update display based on mode change
         // Show/hide loop-specific controls
@@ -125,12 +171,14 @@ export class LocationUI {
     element.style.height = '100%';
     element.style.overflow = 'hidden';
 
-    // Recreate controls similar to index.html
+    // Recreate controls similar to index.html / old file
     element.innerHTML = `
       <div class="control-group location-controls" style="padding: 0.5rem; border-bottom: 1px solid #666; flex-shrink: 0;">
+        <input type="search" id="location-search" placeholder="Search locations..." style="margin-right: 10px;">
         <select id="sort-select">
           <option value="original">Original Order</option>
           <option value="accessibility">Sort by Accessibility</option>
+          <option value="name">Sort by Name</option> <!-- Added Name sort -->
         </select>
         <label>
           <input type="checkbox" id="show-checked" checked />
@@ -149,10 +197,26 @@ export class LocationUI {
           Show Explored
         </label>
         <button id="decrease-columns">-</button>
+        <span id="column-count" style="margin: 0 5px;">${this.columns}</span> <!-- Display column count -->
         <button id="increase-columns">+</button>
       </div>
       <div id="locations-grid" style="flex-grow: 1; overflow-y: auto;">
         <!-- Populated by updateLocationDisplay -->
+      </div>
+
+      <!-- Modal Structure from old file -->
+      <div id="location-modal" class="modal hidden">
+        <div class="modal-content">
+          <span class="modal-close" id="modal-close">&times;</span>
+          <h2 id="modal-location-name">Location Name</h2>
+          <div id="modal-location-details">
+            <!-- Details will be populated here -->
+          </div>
+          <h3>Accessibility Rule:</h3>
+          <div id="modal-rule-tree">
+            <!-- Rule tree visualization -->
+          </div>
+        </div>
       </div>
     `;
     return element;
@@ -162,32 +226,19 @@ export class LocationUI {
     return this.rootElement;
   }
 
+  // Called when the panel is initialized
   async initialize() {
-    // Subscriptions are now handled in constructor
-    // We still need the initial update call, triggered after ensuring proxy is ready
+    // Make async
     console.log('[LocationUI] Initializing panel...');
-    try {
-      await stateManager.ensureReady(); // Wait for proxy
-      console.log(
-        '[LocationUI] Proxy ready. Initial display will occur via snapshotUpdated event.'
-      );
-    } catch (error) {
-      console.error(
-        '[LocationUI] Error waiting for proxy during initialization:',
-        error
-      );
-      // Display an error state in the UI?
-      if (this.locationsGrid) {
-        this.locationsGrid.innerHTML =
-          '<div class="error-message">Error initializing location data.</div>';
-      }
-    }
+
+    // Initialization now relies solely on the stateManager:ready event handler.
+    this.subscribeToStateEvents(); // Ensure subscriptions are set up
   }
 
   clear() {
-    const locationsGrid = document.getElementById('locations-grid');
-    if (locationsGrid) {
-      locationsGrid.innerHTML = '';
+    // const locationsGrid = document.getElementById('locations-grid'); // Use cached element
+    if (this.locationsGrid) {
+      this.locationsGrid.innerHTML = '';
     }
   }
 
@@ -197,6 +248,15 @@ export class LocationUI {
 
   attachEventListeners() {
     // Attach listeners to controls within this.rootElement
+    const searchInput = this.rootElement.querySelector('#location-search');
+    if (searchInput) {
+      // Debounce search input
+      searchInput.addEventListener(
+        'input',
+        debounce(() => this.updateLocationDisplay(), 250)
+      );
+    }
+
     [
       'sort-select',
       'show-checked',
@@ -204,520 +264,380 @@ export class LocationUI {
       'show-unreachable',
       'show-explored',
     ].forEach((id) => {
-      this.rootElement
-        .querySelector(`#${id}`)
-        ?.addEventListener('change', () => this.updateLocationDisplay());
+      const element = this.rootElement.querySelector(`#${id}`);
+      element?.addEventListener('change', () => this.updateLocationDisplay());
     });
 
-    // Modal listeners remain on document for now, might need adjustment
-    document.getElementById('modal-close')?.addEventListener('click', () => {
-      document.getElementById('location-modal').classList.add('hidden');
-    });
-
-    document
-      .getElementById('location-modal')
-      ?.addEventListener('click', (e) => {
-        if (e.target === document.getElementById('location-modal')) {
-          document.getElementById('location-modal').classList.add('hidden');
-        }
-      });
-
-    // Click listener is now on the specific grid within this panel
-    this.locationsGrid?.addEventListener('click', (e) => {
-      // Only handle clicks that aren't on other clickable elements like links
-      if (
-        e.target.closest('.region-link') ||
-        e.target.closest('.location-link')
-      ) {
-        return;
-      }
-
-      const locationCard = e.target.closest('.location-card');
-      if (locationCard) {
-        try {
-          const encoded = locationCard.dataset.location.replace(/&quot;/g, '"');
-          const locationData = JSON.parse(decodeURIComponent(encoded));
-          this.handleLocationClick(locationData);
-        } catch (error) {
-          console.error('Error parsing location data:', error);
-        }
-      }
-    });
-
-    // Column adjustment buttons within this.rootElement
-    this.rootElement
-      .querySelector('#increase-columns')
-      ?.addEventListener('click', () => this.changeColumns(1));
+    // Column buttons
     this.rootElement
       .querySelector('#decrease-columns')
       ?.addEventListener('click', () => this.changeColumns(-1));
+    this.rootElement
+      .querySelector('#increase-columns')
+      ?.addEventListener('click', () => this.changeColumns(1));
+
+    // Modal listeners - attach to the root element where the modal lives
+    this.rootElement
+      .querySelector('#modal-close')
+      ?.addEventListener('click', () => {
+        this.rootElement
+          .querySelector('#location-modal')
+          ?.classList.add('hidden');
+      });
+
+    // Use event delegation for location clicks on the grid
+    this.locationsGrid.addEventListener('click', (event) => {
+      // Find the closest ancestor element that represents a location
+      const locationElement = event.target.closest('.location');
+      if (locationElement) {
+        const locationName = locationElement.dataset.locationName;
+        if (locationName) {
+          const staticData = stateManager.getStaticData();
+          const locationData = staticData?.locations?.[locationName];
+          if (locationData) {
+            // Use ctrlKey or metaKey (for Mac) for showing details
+            if (event.ctrlKey || event.metaKey) {
+              this.showLocationDetails(locationData);
+            } else {
+              this.handleLocationClick(locationData);
+            }
+          } else {
+            console.warn(
+              `[LocationUI] Clicked location element but couldn't find static data for: ${locationName}`
+            );
+          }
+        } else {
+          console.warn(
+            '[LocationUI] Clicked location element missing data-location-name attribute.'
+          );
+        }
+      }
+    });
   }
 
   changeColumns(delta) {
-    this.columns = Math.max(1, this.columns + delta); // Ensure at least 1 column
-    this.updateLocationDisplay();
+    const newColumns = Math.max(1, Math.min(10, this.columns + delta)); // Clamp between 1 and 10
+    if (newColumns !== this.columns) {
+      this.columns = newColumns;
+      this.rootElement.querySelector('#column-count').textContent =
+        this.columns; // Update display
+      this.updateLocationDisplay(); // Redraw with new column count
+    }
   }
 
-  handleLocationClick(location) {
-    // Log the click event
-    console.log('Location clicked:', location);
-
-    // Check if loop mode is active
-    const isLoopModeActive = loopStateSingleton.isLoopModeActive;
-
-    if (isLoopModeActive) {
-      // LOOP MODE BEHAVIOR
-
-      // If location is already checked, do nothing
-      if (stateManager.isLocationChecked(location.name)) return;
-
-      // Get the location's discovered status in loop mode
-      const isUndiscovered = !loopStateSingleton.isLocationDiscovered(
-        location.name
+  async handleLocationClick(location) {
+    if (!location || !location.name) {
+      console.error('[LocationUI] Invalid location data for click:', location);
+      return;
+    }
+    console.log(`[LocationUI] Clicked location: ${location.name}`);
+    const snapshot = stateManager.getLatestStateSnapshot();
+    if (!snapshot) {
+      console.error(
+        '[LocationUI] Cannot handle click, snapshot not available.'
       );
-
-      // Check if the last action in the queue is already handling this location
-      if (loopStateSingleton.actionQueue.length > 0) {
-        const lastAction =
-          loopStateSingleton.actionQueue[
-            loopStateSingleton.actionQueue.length - 1
-          ];
-
-        // If the location is undiscovered and the last action is an explore for this region, do nothing
-        if (
-          isUndiscovered &&
-          lastAction.type === 'explore' &&
-          lastAction.regionName === location.region
-        ) {
-          return;
-        }
-
-        // If the location is discovered but unchecked and the last action is to check this location, do nothing
-        if (
-          !isUndiscovered &&
-          !stateManager.isLocationChecked(location.name) &&
-          lastAction.type === 'checkLocation' &&
-          lastAction.locationName === location.name
-        ) {
-          return;
-        }
-      }
-
-      // Import the path analyzer logic
-      import('../logic/pathAnalyzerLogic.js').then((module) => {
-        const pathAnalyzerLogic = new module.PathAnalyzerLogic();
-
-        // Find path from Menu to the region containing this location
-        const path = pathAnalyzerLogic.findPathInLoopMode(location.region);
-
-        if (path) {
-          // Path found - process it
-
-          // Pause processing the action queue
-          loopStateSingleton.setPaused(true);
-
-          // Clear the current queue
-          loopStateSingleton.actionQueue = [];
-          loopStateSingleton.currentAction = null;
-          loopStateSingleton.currentActionIndex = 0;
-
-          // Queue move actions for each region transition
-          for (let i = 0; i < path.length - 1; i++) {
-            const fromRegion = path[i];
-            const toRegion = path[i + 1];
-
-            // Find the exit that connects these regions
-            const regionData = stateManager.regions[fromRegion];
-            const exitToUse = regionData?.exits?.find(
-              (exit) => exit.connected_region === toRegion
-            );
-
-            if (exitToUse) {
-              // Create and queue a move action
-              const moveAction = {
-                id: `action_${Date.now()}_${
-                  Math.floor(Math.random() * 10000) + i
-                }`,
-                type: 'moveToRegion',
-                regionName: fromRegion,
-                exitName: exitToUse.name,
-                destinationRegion: toRegion,
-                progress: 0,
-                completed: false,
-              };
-
-              loopStateSingleton.actionQueue.push(moveAction);
-
-              // Make sure the loopUI knows these regions are in the queue
-              if (loopStateSingleton) {
-                loopStateSingleton.regionsInQueue.add(fromRegion);
-                loopStateSingleton.regionsInQueue.add(toRegion);
-              }
-
-              // Also, mark the source region to repeat explore
-              // This ensures the player doesn't get stuck if the only way forward was through the region just moved from.
-              if (loopStateSingleton) {
-                loopStateSingleton.setRepeatExplore(fromRegion, true);
-              }
-            }
-          }
-
-          // Add the appropriate action at the final region
-          if (isUndiscovered) {
-            // If location is undiscovered, queue an explore action
-            const exploreAction = {
-              id: `action_${Date.now()}_${
-                Math.floor(Math.random() * 10000) + path.length
-              }`,
-              type: 'explore',
-              regionName: location.region,
-              progress: 0,
-              completed: false,
-            };
-
-            loopStateSingleton.actionQueue.push(exploreAction);
-
-            // Set the region's "repeat explore action" checkbox to checked
-            if (loopStateSingleton && loopStateSingleton.repeatExploreStates) {
-              loopStateSingleton.repeatExploreStates.set(location.region, true);
-            }
-          } else {
-            // If location is discovered but unchecked, queue a check location action
-            const checkAction = {
-              id: `action_${Date.now()}_${
-                Math.floor(Math.random() * 10000) + path.length
-              }`,
-              type: 'checkLocation',
-              regionName: location.region,
-              locationName: location.name,
-              progress: 0,
-              completed: false,
-            };
-
-            loopStateSingleton.actionQueue.push(checkAction);
-          }
-
-          // Begin processing the action queue
-          loopStateSingleton.setPaused(false);
-          loopStateSingleton.startProcessing();
-
-          // Notify UI components about queue changes
-          if (window.eventBus) {
-            window.eventBus.publish('loopState:queueUpdated', {
-              queue: loopStateSingleton.actionQueue,
-            });
-          }
-
-          // Update the loop UI
-          if (loopStateSingleton) {
-            loopStateSingleton.renderLoopPanel();
-          }
-        } else {
-          // Path not found - display error message
-          const errorMessage = `Cannot find a path to ${location.region} in loop mode.`;
-          console.error(errorMessage);
-
-          // Show error in console or alert
-          if (window.consoleManager) {
-            window.consoleManager.print(errorMessage, 'error');
-          } else {
-            alert(errorMessage);
-          }
-        }
-      });
-
       return;
     }
 
-    // STANDARD NON-LOOP MODE BEHAVIOR
+    const status = this.getLocationStatus(location.name, snapshot);
 
-    // If location is already checked, do nothing
-    if (stateManager.isLocationChecked(location.name)) return;
-    const isAccessible = stateManager.isLocationAccessible(location);
-    if (!isAccessible) return;
-
-    // ALWAYS route the check through messageHandler, which handles local/networked logic
-    console.log(
-      `[LocationUI] Routing check for ${location.name} (ID: ${location.id}) through MessageHandler`
-    );
-    // Use the globally accessible messageHandler instance if window.messageHandler exists, otherwise fallback
-    const handler = window.messageHandler || messageHandler; // Assuming messageHandler is exported/available
-    handler
-      .checkLocation(location)
-      .then((success) => {
-        if (success) {
-          // Logic inside .then() is optional now, as stateManager notifications handle UI updates.
-          // You might still want to show the modal details here if desired.
-          // console.log(`[LocationUI] MessageHandler successfully processed check for ${location.name}`);
-          // this.showLocationDetails(location); // Optional: Show details modal on success
-        } else {
-          console.warn(
-            `[LocationUI] MessageHandler reported failure checking location ${location.name}`
+    // Allow checking reachable/unreachable locations
+    // Prevent checking already checked locations (allow unchecking later if needed?)
+    if (status !== 'checked') {
+      try {
+        // Check if loop mode is active and intercept if necessary
+        if (loopStateSingleton.isLoopModeActive()) {
+          console.log(
+            `[LocationUI] Loop mode active, dispatching check request for ${location.name}`
           );
-          // Optional: Display an error message to the user if needed
+          // Dispatch message for Loop module to handle
+          eventBus.publish('user:checkLocationRequest', {
+            locationData: location,
+          });
+          // The loop module will then call the proxy if appropriate
+        } else {
+          console.log(
+            `[LocationUI] Sending checkLocation command for ${location.name}`
+          );
+          await stateManager.checkLocation(location.name);
+          // UI update will happen via snapshotUpdated event
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(
-          `[LocationUI] Error calling messageHandler.checkLocation:`,
+          `[LocationUI] Error sending checkLocation command for ${location.name}:`,
           error
         );
-        // Optional: Display an error message to the user
-      });
+        // Optionally show user feedback
+      }
+    } else {
+      console.log(`[LocationUI] Location ${location.name} is already checked.`);
+      // Maybe implement unchecking later? Requires proxy command.
+      // Example: await stateManager.uncheckLocation(location.name);
+      // Or allow details view via Ctrl+Click
+      this.showLocationDetails(location);
+    }
   }
 
+  // Restore syncWithState - primarily for fetching latest state and updating display
   syncWithState() {
+    console.log(
+      '[LocationUI] syncWithState called (now just triggers updateLocationDisplay)'
+    );
     this.updateLocationDisplay();
   }
 
+  // --- Main Rendering Logic ---
   updateLocationDisplay() {
     console.log('[LocationUI] updateLocationDisplay called.');
-    if (!this.locationsGrid) {
-      console.warn('[LocationUI] locationsGrid element not found.');
-      return;
-    }
-
-    // Get current snapshot - it SHOULD be ready if this is called after initialize or via event
-    let snapshot;
-    try {
-      snapshot = stateManager.getSnapshot();
-    } catch (e) {
-      console.error('[LocationUI] Error getting snapshot:', e);
-      this.locationsGrid.innerHTML =
-        '<div class="error-message">Error retrieving location data.</div>';
-      return;
-    }
-
-    if (!snapshot || !snapshot.locations) {
-      console.log('[LocationUI] Snapshot not ready or no locations found.');
-      this.locationsGrid.innerHTML =
-        '<div class="loading-message">Loading location data...</div>';
-      return;
-    }
-
-    // --- Get Filter/Sort Options --- //
-    const sortBy =
-      this.rootElement.querySelector('#sort-select')?.value || 'original';
-    const showChecked =
-      this.rootElement.querySelector('#show-checked')?.checked ?? true;
-    const showReachable =
-      this.rootElement.querySelector('#show-reachable')?.checked ?? true;
-    const showUnreachable =
-      this.rootElement.querySelector('#show-unreachable')?.checked ?? true;
-    const showExplored =
-      this.rootElement.querySelector('#show-explored')?.checked ?? true;
-    const isLoopModeActive = loopStateSingleton.isLoopModeActive ?? false;
-
-    // --- Get Data From Snapshot --- //
-    // Use Object.values if locations is an object, or assume it's an array
-    const allLocations = Array.isArray(snapshot.locations)
-      ? snapshot.locations
-      : Object.values(snapshot.locations);
-    const checkedLocationsSet =
-      snapshot.checkedLocations instanceof Set
-        ? snapshot.checkedLocations
-        : new Set(snapshot.checkedLocations || []);
-    const reachableRegionsSet =
-      snapshot.reachableRegions instanceof Set
-        ? snapshot.reachableRegions
-        : new Set(snapshot.reachableRegions || []);
-    const discoveredLocations =
-      loopStateSingleton.discoveredLocations || new Set(); // Get from loopState
-    const discoveredRegions = loopStateSingleton.discoveredRegions || new Set(); // Get from loopState
-    // Colorblind settings
-    const useColorblind = settingsManager.getSetting(
-      'colorblindMode.locations',
-      true
-    );
-
-    // --- Process Locations --- //
+    // --- Log data state at function start --- >
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData();
     console.log(
-      `[LocationUI] Processing ${allLocations.length} locations from snapshot.`
+      '[LocationUI updateLocationDisplay] Start State - Snapshot:',
+      !!snapshot,
+      'Static Data:',
+      !!staticData
     );
-    let filteredLocations = allLocations.map((loc) => {
-      const isChecked = checkedLocationsSet.has(loc.name);
-      // Ensure loc.region exists and is a string
-      const regionName = typeof loc.region === 'string' ? loc.region : '';
-      const isReachable =
-        reachableRegionsSet.has(regionName) && loc.isAccessible !== false; // Consider direct accessibility flag if present
-      const isExplored =
-        discoveredRegions.has(regionName) && discoveredLocations.has(loc.name);
-      return { ...loc, isChecked, isReachable, isExplored }; // Add derived properties
-    });
+    // --- End log ---
 
-    // Filter based on checkboxes
-    filteredLocations = filteredLocations.filter((loc) => {
-      if (!showChecked && loc.isChecked) return false;
-      if (!showReachable && loc.isReachable && !loc.isChecked) return false; // Hide reachable only if unchecked
-      if (!showUnreachable && !loc.isReachable && !loc.isChecked) return false; // Hide unreachable only if unchecked
-      if (isLoopModeActive && !showExplored && !loc.isExplored) return false;
-      return true;
-    });
+    // --- ADDED DEBUG LOG ---
+    // console.debug('[LocationUI] Data Check:', { // Commenting out older debug log
+    //   hasSnapshot: !!snapshot,
+    //   hasStaticData: !!staticData,
+    //   hasLocations: !!staticData?.locations,
+    //   locationCount: staticData?.locations
+    //     ? Object.keys(staticData.locations).length
+    //     : 'N/A',
+    // });
+    // --- END DEBUG LOG ---
 
-    // Sort based on selection
-    if (sortBy === 'accessibility') {
-      filteredLocations.sort((a, b) => {
-        // Checked < Reachable < Unreachable
-        if (a.isChecked !== b.isChecked) return a.isChecked ? 1 : -1;
-        if (a.isReachable !== b.isReachable) return a.isReachable ? -1 : 1;
-        return a.name.localeCompare(b.name); // Fallback sort by name
-      });
-    } else {
-      // Default: original (often ID-based) or alphabetical if no original order
-      // Assuming original order is inherent or use alphabetical
-      filteredLocations.sort((a, b) => a.name.localeCompare(b.name));
+    // --- Detailed check before the if statement --- >
+    console.log('[LocationUI] Inspecting staticData right before check:', {
+      staticDataExists: !!staticData,
+      locationsExist: !!staticData?.locations,
+      staticDataType: typeof staticData,
+      locationsType: typeof staticData?.locations,
+      // Avoid logging the full object if it's huge, just check keys
+      staticDataKeys: staticData ? Object.keys(staticData) : 'N/A',
+    });
+    // --- End Detailed check --- >
+
+    if (!staticData?.locations) {
+      console.warn(
+        '[LocationUI] Static location data not ready. (Check failed)'
+      ); // Added note
+      this.locationsGrid.innerHTML = '<p>Loading location data...</p>';
+      return;
     }
 
-    // --- Render Grid --- //
+    // Get filter/sort states from controls
+    const showChecked = this.rootElement.querySelector('#show-checked').checked;
+    const showReachable =
+      this.rootElement.querySelector('#show-reachable').checked;
+    const showUnreachable =
+      this.rootElement.querySelector('#show-unreachable').checked;
+    const showExplored =
+      this.rootElement.querySelector('#show-explored').checked; // For loop mode
+    const sortMethod = this.rootElement.querySelector('#sort-select').value;
+    const searchTerm = this.rootElement
+      .querySelector('#location-search')
+      .value.toLowerCase();
+
+    // Filter locations
+    let filteredLocations = Object.values(staticData.locations).filter(
+      (loc) => {
+        const status = this.getLocationStatus(loc.name, snapshot);
+        const isExplored = loopStateSingleton.isLocationExplored(loc.name); // Check loop state
+
+        // Visibility checks
+        if (status === 'checked' && !showChecked) return false;
+        if (status === 'reachable' && !showReachable) return false;
+        if (status === 'unreachable' && !showUnreachable) return false;
+        if (
+          loopStateSingleton.isLoopModeActive() &&
+          isExplored &&
+          !showExplored
+        )
+          return false; // Hide explored if unchecked in loop mode
+
+        // Search term check (match name or region)
+        if (searchTerm) {
+          const nameMatch = loc.name.toLowerCase().includes(searchTerm);
+          const regionMatch = loc.region?.toLowerCase().includes(searchTerm);
+          // Add more fields to search? e.g., item name if available?
+          if (!nameMatch && !regionMatch) return false;
+        }
+
+        return true; // Keep location if not filtered out
+      }
+    );
+
+    // Sort locations
+    const sortOrder = { unreachable: 0, reachable: 1, checked: 2, other: 3 }; // Define accessibility sort order
+
+    filteredLocations.sort((a, b) => {
+      if (sortMethod === 'accessibility') {
+        const statusA = this.getLocationStatus(a.name, snapshot);
+        const statusB = this.getLocationStatus(b.name, snapshot);
+        const orderA = sortOrder[statusA] ?? sortOrder.other;
+        const orderB = sortOrder[statusB] ?? sortOrder.other;
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+        // Fallback to name sort within the same status
+        return a.name.localeCompare(b.name);
+      } else if (sortMethod === 'name') {
+        return a.name.localeCompare(b.name);
+      } else {
+        // 'original' or default
+        // Maintain original order (requires locations to have an order property or sort by key)
+        // Assuming Object.values preserves insertion order (usually true, but not guaranteed)
+        // A safer way is to sort by original key if available, or just fallback to name
+        return a.name.localeCompare(b.name); // Fallback for 'original' if no index
+      }
+    });
+
+    console.log(
+      `[LocationUI] Processing ${filteredLocations.length} locations from snapshot.`
+    );
+
+    // Render
     this.locationsGrid.innerHTML = ''; // Clear previous content
-    this.locationsGrid.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
+    this.locationsGrid.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`; // Apply columns
+    this.locationsGrid.style.display = 'grid'; // Ensure grid display
+    this.locationsGrid.style.gap = '5px'; // Add gap
 
     if (filteredLocations.length === 0) {
       this.locationsGrid.innerHTML =
-        '<div class="no-locations-message">No locations match filters.</div>';
-      return;
+        '<p>No locations match the current filters.</p>';
+    } else {
+      const fragment = document.createDocumentFragment();
+      filteredLocations.forEach((location) => {
+        const status = this.getLocationStatus(location.name, snapshot);
+        const isExplored = loopStateSingleton.isLocationExplored(location.name);
+        const element = commonUI.createLocationElement(
+          location,
+          status,
+          this.colorblindSettings, // Pass colorblind settings
+          loopStateSingleton.isLoopModeActive() && isExplored // Pass explored status only if in loop mode
+        );
+        // Add data attribute for click handler
+        element.dataset.locationName = location.name;
+        fragment.appendChild(element);
+      });
+      this.locationsGrid.appendChild(fragment);
     }
-
-    filteredLocations.forEach((location) => {
-      const locationElement = document.createElement('div');
-      locationElement.classList.add('location');
-      locationElement.dataset.locationName = location.name; // Store name for click handler
-
-      let statusClass = location.isChecked
-        ? 'checked'
-        : location.isReachable
-        ? 'reachable'
-        : 'unreachable';
-      locationElement.classList.add(statusClass);
-      if (isLoopModeActive && location.isExplored) {
-        locationElement.classList.add('explored');
-      }
-
-      // Colorblind indicator text
-      let cbIndicator = '';
-      if (useColorblind) {
-        if (location.isChecked) cbIndicator = ' [C]';
-        else if (location.isReachable) cbIndicator = ' [R]';
-        else cbIndicator = ' [U]';
-      }
-
-      locationElement.textContent = location.name + cbIndicator;
-      locationElement.title = `Region: ${
-        location.region || 'Unknown'
-      } - ${statusClass.toUpperCase()}`;
-
-      // Attach click listener for details/checking
-      locationElement.addEventListener('click', () =>
-        this.handleLocationClick(location)
-      );
-
-      this.locationsGrid.appendChild(locationElement);
-    });
     console.log(`[LocationUI] Rendered ${filteredLocations.length} locations.`);
   }
 
-  showLocationDetails(location) {
-    const modal = document.getElementById('location-modal');
-    const title = document.getElementById('modal-title');
-    const debug = document.getElementById('modal-debug');
-    const info = document.getElementById('modal-info');
+  // Helper to determine status based on snapshot
+  getLocationStatus(locationName, snapshot) {
+    if (!snapshot || !snapshot.reachability) {
+      return 'unknown'; // Or some default/loading state
+    }
+    const reachabilityStatus = snapshot.reachability[locationName];
 
-    const instance = stateManager.instance;
-    if (!instance) {
-      console.error(
-        '[LocationUI] StateManager instance not found in showLocationDetails'
-      );
+    // Check if the location is marked as checked (this might be in flags or a dedicated set)
+    // Adapt this based on how 'checked' status is stored in the snapshot
+    const isChecked =
+      snapshot.flags?.includes(locationName) ||
+      snapshot.checkedLocations?.includes(locationName); // Example check
+
+    if (isChecked) {
+      return 'checked';
+    }
+
+    // Interpret reachability status
+    if (reachabilityStatus === 'reachable') {
+      return 'reachable';
+    } else if (
+      reachabilityStatus === 'unreachable' ||
+      reachabilityStatus === 'partial'
+    ) {
+      // Treat partial as unreachable for basic UI
+      return 'unreachable';
+    } else if (reachabilityStatus === 'processing') {
+      return 'processing'; // Add a specific style for this?
+    }
+
+    // Fallback if status isn't recognized
+    return 'unreachable'; // Default to unreachable if not explicitly reachable or checked
+  }
+
+  // --- Modal Logic (Restored and Adapted) ---
+  showLocationDetails(location) {
+    const modal = this.rootElement.querySelector('#location-modal');
+    const modalName = this.rootElement.querySelector('#modal-location-name');
+    const modalDetails = this.rootElement.querySelector(
+      '#modal-location-details'
+    );
+    const modalRuleTree = this.rootElement.querySelector('#modal-rule-tree');
+
+    if (!modal || !modalName || !modalDetails || !modalRuleTree || !location) {
+      console.error('[LocationUI] Modal elements or location data missing.');
       return;
     }
 
-    title.textContent = location.name;
+    modalName.textContent = location.name;
 
-    const region = instance.regions[location.region];
+    // Populate details
+    let detailsHtml = ``;
+    if (location.region) {
+      detailsHtml += `<p><strong>Region:</strong> ${location.region}</p>`;
+    }
+    // Add other relevant details from location data if available
+    detailsHtml += `<p><strong>Type:</strong> ${location.type || 'N/A'}</p>`;
+    // Display item if known (might be in location data or need lookup)
+    // detailsHtml += `<p><strong>Item:</strong> ${location.item || 'Unknown'}</p>`;
 
-    if (this.gameUI.debugMode) {
-      debug.classList.remove('hidden');
-      debug.textContent = JSON.stringify(
-        {
-          access_rule: location.access_rule,
-          path_rules: location.path_rules,
-          region_rules: region?.region_rules,
-          dungeon: region?.dungeon,
-          shop: region?.shop,
-        },
-        null,
-        2
+    // Get current status from snapshot
+    const snapshot = stateManager.getLatestStateSnapshot();
+    if (snapshot) {
+      const status = this.getLocationStatus(location.name, snapshot);
+      detailsHtml += `<p><strong>Current Status:</strong> <span class="location-status-${status}">${status}</span></p>`;
+
+      // Create snapshot interface for rule evaluation display
+      // Pass BOTH snapshot and staticData to the interface creator
+      const staticData = stateManager.getStaticData(); // Get static data separately
+      const snapshotInterface = createStateSnapshotInterface(
+        snapshot,
+        staticData
       );
+
+      // Display Rule
+      modalRuleTree.innerHTML = ''; // Clear previous
+      if (location.rule) {
+        try {
+          const ruleElement = commonUI.renderLogicTree(
+            location.rule,
+            snapshotInterface, // Pass the interface (now created correctly)
+            evaluateRule, // Pass the evaluateRule function
+            false // isExpanded initially false
+          );
+          if (ruleElement) {
+            modalRuleTree.appendChild(ruleElement);
+          } else {
+            modalRuleTree.innerHTML = '<p>Could not render rule tree.</p>';
+          }
+        } catch (error) {
+          console.error(
+            `[LocationUI] Error rendering rule tree for ${location.name}:`,
+            error
+          );
+          modalRuleTree.innerHTML = '<p>Error rendering rule tree.</p>';
+        }
+      } else {
+        modalRuleTree.innerHTML =
+          '<p>No specific accessibility rule defined (always accessible?).</p>';
+      }
     } else {
-      debug.classList.add('hidden');
+      detailsHtml +=
+        '<p><strong>Current Status:</strong> Unknown (Snapshot not available)</p>';
+      modalRuleTree.innerHTML =
+        '<p>Cannot display rule (Snapshot not available).</p>';
     }
 
-    info.innerHTML = `
-      <div class="space-y-2">
-        <div>
-          <span class="font-semibold">Status: </span>
-          ${
-            instance.isLocationChecked(location.name)
-              ? 'Checked'
-              : instance.isLocationAccessible(location)
-              ? 'Available'
-              : instance.isRegionReachable(location.region) &&
-                (!location.access_rule || !evaluateRule(location.access_rule))
-              ? 'Region accessible, but rule fails'
-              : !instance.isRegionReachable(location.region) &&
-                (!location.access_rule || evaluateRule(location.access_rule))
-              ? 'Region inaccessible, but rule passes'
-              : 'Locked'
-          }
-        </div>
-        <div>
-          <span class="font-semibold">Player: </span>${location.player}
-        </div>
-        <div>
-          <span class="font-semibold">Region: </span>
-          <span class="region-link" data-region="${location.region}">${
-      location.region
-    }</span>
-          ${region?.is_light_world ? ' (Light World)' : ''}
-          ${region?.is_dark_world ? ' (Dark World)' : ''}
-        </div>
-        ${
-          region?.dungeon
-            ? `
-            <div>
-              <span class="font-semibold">Dungeon: </span>${region.dungeon.name}
-            </div>
-          `
-            : ''
-        }
-        ${
-          location.item &&
-          (instance.isLocationChecked(location.name) || this.gameUI.debugMode)
-            ? `
-            <div>
-              <span class="font-semibold">Item: </span>${location.item.name}
-              ${location.item.advancement ? ' (Progression)' : ''}
-              ${location.item.priority ? ' (Priority)' : ''}
-            </div>
-          `
-            : ''
-        }
-      </div>
-    `;
-
-    // Remove event listeners from region links in the modal, as commonUI handles this
-    /* // Old listener removed - commonUI.createRegionLink handles this now
-    info.querySelectorAll('.region-link').forEach((link) => {
-      link.addEventListener('click', () => {
-        const regionName = link.dataset.region;
-        if (regionName) {
-          // Close the modal first
-          document.getElementById('location-modal').classList.add('hidden');
-          // Then navigate to the region
-          this.gameUI.regionUI.navigateToRegion(regionName);
-        }
-      });
-    });
-    */
+    modalDetails.innerHTML = detailsHtml;
 
     modal.classList.remove('hidden');
   }

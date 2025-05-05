@@ -449,12 +449,32 @@ export class ALTTPHelpers extends GameHelpers {
     return hasRequiredItems.every(Boolean);
   }
 
-  item_name_in_location_names(item, arg2, arg3) {
-    console.warn(
-      '[ALTTPHelpers] item_name_in_location_names needs refactoring for snapshot/manager context.'
+  item_name_in_location_names(itemName, locationNames) {
+    if (!this.manager || !this.manager.locations) {
+      console.warn(
+        '[ALTTPHelpers] item_name_in_location_names: StateManager or locations not available.'
+      );
+      return false;
+    }
+
+    if (typeof itemName !== 'string' || !Array.isArray(locationNames)) {
+      console.warn(
+        '[ALTTPHelpers] item_name_in_location_names: Invalid arguments.',
+        { itemName, locationNames }
+      );
+      return false;
+    }
+
+    const targetLocations = this.manager.locations.filter((loc) =>
+      locationNames.includes(loc.name)
     );
-    // This needs access to location data which might differ based on context.
-    // Placeholder implementation:
+
+    for (const location of targetLocations) {
+      if (location.item === itemName) {
+        return true;
+      }
+    }
+
     return false;
   }
 

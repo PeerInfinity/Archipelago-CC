@@ -28,6 +28,7 @@ export class RegionUI {
 
     // If set to true, we'll show **all** regions, ignoring the visited chain
     this.showAll = false;
+    this.isInitialized = false; // Add flag
 
     // Add colorblind mode property
     this.colorblindMode = false;
@@ -36,27 +37,35 @@ export class RegionUI {
     this.pathAnalyzer = new PathAnalyzerUI(this);
     this.rootElement = this.createRootElement();
     this.regionsContainer = this.rootElement.querySelector(
-      '#regions-panel-content'
+      '#region-details-container' // Changed selector
     );
+    this.statusElement = null; // Initialize status element ref
 
     // Subscribe to necessary events when the instance is created
-    this._subscribeToEvents();
+    // REMOVE: this._subscribeToEvents(); // Called by initialize
 
     this.attachEventListeners();
   }
 
+  // Called by PanelManager when panel is created/shown
+  initialize() {
+    console.log('[RegionUI] Initializing panel...');
+    this.isInitialized = false; // Reset flag
+    this.clear(); // Clear previous state
+    this._subscribeToEvents(); // Subscribe here
+    // Initial render is triggered by stateManager:ready
+  }
+
   _subscribeToEvents() {
     console.log('[RegionUI] Subscribing instance to EventBus events...');
+    // Ensure unsubscribed first
+    this.unsubscribeHandles.forEach((u) => u());
+    this.unsubscribeHandles = [];
+
     if (!eventBus) {
       console.error('[RegionUI] EventBus not available for subscriptions.');
       return;
     }
-
-    // Debounced update function
-    const debouncedUpdate = debounce(() => {
-      console.log('[RegionUI] Debounced update triggered.');
-      this.update();
-    }, 50); // 50ms debounce
 
     const subscribe = (eventName, handler) => {
       console.log(`[RegionUI] Subscribing to ${eventName}`);
@@ -64,33 +73,44 @@ export class RegionUI {
       this.unsubscribeHandles.push(unsubscribe);
     };
 
-    // Specific handler for rules loaded to set initial state
-    const rulesLoadedHandler = async (data) => {
-      console.log(`[RegionUI] Event received: stateManager:rulesLoaded`, data);
-      try {
-        await stateManager.ensureReady();
-        console.log(
-          '[RegionUI] Proxy confirmed ready after rulesLoaded event.'
-        );
-        // Attempt to show the start region first
-        this.showStartRegion('Menu');
-        // Then trigger a general update (debounced)
-        debouncedUpdate();
-      } catch (error) {
-        console.error(
-          '[RegionUI] Error during rulesLoadedHandler after ensureReady:',
-          error
-        );
+    // --- ADDED: Handler for stateManager:ready ---
+    const handleReady = () => {
+      console.log('[RegionUI] Received stateManager:ready event.');
+      if (!this.isInitialized) {
+        console.log('[RegionUI] Performing initial setup and render.');
+        this.update(); // Initial render
+        this.isInitialized = true;
       }
     };
+    subscribe('stateManager:ready', handleReady);
+    // --- END ADDED ---
 
-    // Wrap handlers with logging and use debounced update
+    // Debounced update function for subsequent changes
+    const debouncedUpdate = debounce(() => {
+      if (this.isInitialized) {
+        // Only update if initialized
+        console.log('[RegionUI] Debounced update triggered.');
+        this.update();
+      } else {
+        // console.log('[RegionUI] Debounced update skipped (not initialized).');
+      }
+    }, 50);
+
+    // REMOVE: Specific handler for rules loaded (now handled by :ready)
+    /*
+    const rulesLoadedHandler = async (data) => { ... };
+    subscribe('stateManager:rulesLoaded', rulesLoadedHandler);
+    */
+
+    // Wrap other handlers
     const updateHandler = (eventData) => {
-      console.log(
-        `[RegionUI] Event received, triggering debounced update. Event: ${eventData.eventName}`,
-        eventData
-      );
-      debouncedUpdate();
+      if (this.isInitialized) {
+        console.log(
+          `[RegionUI] Event received, triggering debounced update. Event: ${eventData.eventName}`,
+          eventData
+        );
+        debouncedUpdate();
+      }
     };
 
     const settingsHandler = ({ key, value }) => {
@@ -98,7 +118,7 @@ export class RegionUI {
         console.log(
           `[RegionUI] Settings changed (${key}), triggering debounced update.`
         );
-        debouncedUpdate();
+        if (this.isInitialized) debouncedUpdate();
       }
     };
 
@@ -115,8 +135,6 @@ export class RegionUI {
     subscribe('stateManager:checkedLocationsCleared', (data) =>
       updateHandler({ eventName: 'stateManager:checkedLocationsCleared', data })
     );
-    // Use specific handler for rulesLoaded
-    subscribe('stateManager:rulesLoaded', rulesLoadedHandler);
 
     // Subscribe to loop state changes
     subscribe('loop:stateChanged', (data) =>
@@ -166,8 +184,16 @@ export class RegionUI {
         </label>
         <button id="expand-collapse-all">Expand All</button>
       </div>
-      <div id="regions-panel-content" style="flex-grow: 1; overflow-y: auto;">
-        <!-- Region blocks are injected here -->
+      <div id="region-details-container" style="flex-grow: 1; overflow-y: auto; padding: 0.5rem;">
+          <div id="available-regions-section" class="region-category">
+              <h3>Available</h3>
+              <div class="region-category-content"></div>
+          </div>
+          <div id="unavailable-regions-section" class="region-category">
+              <h3>Unavailable / Unknown</h3>
+              <div class="region-category-content"></div>
+          </div>
+           <!-- Add other sections if needed (e.g., completed) -->
       </div>
     `;
     return element;
@@ -203,30 +229,45 @@ export class RegionUI {
     }
   }
 
-  initialize() {
-    this.clear();
-    console.log('[RegionUI] Initialized (cleared container).');
-  }
-
   clear() {
+    console.log('[RegionUI] Clearing visited regions state.');
     this.visitedRegions = [];
     this.nextUID = 1;
-    if (this.regionsContainer) {
-      this.regionsContainer.innerHTML = '';
-    }
+    // REMOVED: Direct DOM manipulation, renderAllRegions handles clearing content
+    /*
+    if (this.regionsContainer) { ... }
+    this._updateSectionVisibility(); 
+    */
   }
 
   update() {
+    // No readiness check needed here, it's event driven or called after initialize ensures ready
     console.log('[RegionUI] update() called, calling renderAllRegions().');
     this.renderAllRegions();
   }
 
-  showStartRegion(startRegionName) {
+  async showStartRegion(startRegionName) {
+    console.log(
+      `[RegionUI] Attempting to show start region: ${startRegionName}`
+    );
+    // --- REMOVED: Wait for proxy readiness ---
+    /*
+    if (!stateManager) { ... }
+    try { ... await stateManager.ensureReady(); ... } catch { ... }
+    */
+    // --- END REMOVED ---
+
     // Ensure instance and regions are available before proceeding
-    const snapshot = stateManager.getSnapshot();
-    if (!snapshot || !snapshot.regions || !snapshot.regions[startRegionName]) {
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData(); // Also check static data
+
+    if (
+      !snapshot ||
+      !staticData?.regions ||
+      !staticData.regions[startRegionName]
+    ) {
       console.warn(
-        `[RegionUI] Warning: start region ${startRegionName} not found or state not ready.`
+        `[RegionUI] Warning: start region ${startRegionName} not found or state/static data not ready.`
       );
       return false; // Indicate failure
     }
@@ -239,7 +280,6 @@ export class RegionUI {
       },
     ];
     // Don't call renderAllRegions here, let the calling context handle it
-    // this.renderAllRegions();
     return true; // Indicate success
   }
 
@@ -340,100 +380,97 @@ export class RegionUI {
   }
 
   renderAllRegions() {
-    // Clear the container first
-    this.regionsContainer.innerHTML = '';
-    const useColorblind = this.colorblindMode;
+    // REMOVE ensureReady checks (if any)
+    // --- Log data state at function start --- >
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData();
+    console.log(
+      '[RegionUI renderAllRegions] Start State - Snapshot:',
+      !!snapshot,
+      'Static Data:',
+      !!staticData
+    );
+    // --- End log ---
 
-    // Get the current state snapshot
-    const snapshot = stateManager.getSnapshot();
-    if (!snapshot || !snapshot.regions) {
-      console.warn(
-        '[RegionUI] Cannot render regions: Snapshot or regions data missing.'
-      );
-      this.regionsContainer.textContent = 'Region data not available.';
+    // Keep data check
+    if (!snapshot || !staticData || !staticData.regions) {
+      // console.warn('[RegionUI] Snapshot or static region data not ready for renderAllRegions.');
+      if (
+        this.regionsContainer &&
+        !this.regionsContainer.innerHTML.includes('Loading')
+      ) {
+        this.regionsContainer.innerHTML = '<p>Loading region data...</p>';
+      }
       return;
     }
 
-    // Use region data from the snapshot
-    const allRegionData = snapshot.regions;
-    const reachableRegionsArray = snapshot.reachableRegions || [];
-    const reachableRegions = new Set(reachableRegionsArray);
-    const checkedLocationsArray = snapshot.checkedLocations || [];
-    const checkedLocations = new Set(checkedLocationsArray);
+    // --- Clear content first ---
+    const availableContentContainer = this.regionsContainer.querySelector(
+      '#available-regions-section .region-category-content'
+    );
+    const unavailableContentContainer = this.regionsContainer.querySelector(
+      '#unavailable-regions-section .region-category-content'
+    );
+    if (availableContentContainer) availableContentContainer.innerHTML = '';
+    if (unavailableContentContainer) unavailableContentContainer.innerHTML = '';
+    if (this.statusElement) this.statusElement.textContent = '';
+    // --- End Clearing ---
 
-    // Determine which regions to show based on 'showAll' flag or visited history
-    let regionsToShow;
-    if (this.showAll) {
-      regionsToShow = Object.keys(allRegionData).sort();
-    } else {
-      // Use visitedRegions if showAll is false
-      regionsToShow = this.visitedRegions.map((r) => r.name);
+    const regionContainer = this.rootElement.querySelector(
+      '#region-details-container'
+    );
+    if (!regionContainer) {
+      console.error('[RegionUI] region-details-container not found!');
+      return;
     }
 
-    // Render each region block
-    regionsToShow.forEach((regionName) => {
-      const rData = allRegionData[regionName];
-      if (rData) {
-        // Find if the region exists in visitedRegions to get its expanded state and UID
-        const visitedEntry = this.visitedRegions.find(
-          (vr) => vr.name === regionName
-        );
-        const expanded = visitedEntry ? visitedEntry.expanded : false;
-        const uid = visitedEntry ? visitedEntry.uid : -1; // Use -1 or similar to indicate it wasn't in visited
+    // Create fragments for performance
+    const availableFragment = document.createDocumentFragment();
+    const unavailableFragment = document.createDocumentFragment();
+    const unknownFragment = document.createDocumentFragment(); // Keep if needed for unknown state
 
-        // Skip rendering if showAll is false and the region wasn't visited
-        if (!this.showAll && uid === -1) {
-          return;
-        }
+    // Use staticData.regions as the source of truth for region definitions
+    const sortedRegionNames = Object.keys(staticData.regions).sort();
 
-        // Generate a UID if this region wasn't previously visited (only happens if showAll is true)
-        const blockUid = uid !== -1 ? uid : this.nextUID++;
+    for (const regionName of sortedRegionNames) {
+      const regionData = staticData.regions[regionName];
+      const isReachable =
+        snapshot.reachableRegions?.includes(regionName) || false;
 
-        // Add to visitedRegions if showing all and it's not already there
-        if (this.showAll && uid === -1) {
-          this.visitedRegions.push({
-            name: regionName,
-            expanded: false,
-            uid: blockUid,
-          });
-        }
+      // Pass staticData to buildRegionBlock
+      const regionBlock = this.buildRegionBlock(
+        regionName,
+        regionData,
+        snapshot,
+        staticData,
+        isReachable
+      );
 
-        const regionBlock = this.buildRegionBlock(
-          rData,
-          regionName,
-          expanded,
-          blockUid,
-          useColorblind,
-          snapshot
-        );
-        if (regionBlock) {
-          this.regionsContainer.appendChild(regionBlock);
-        }
+      if (!regionBlock) continue; // Skip if block creation failed
+
+      if (isReachable) {
+        availableFragment.appendChild(regionBlock);
       } else {
-        console.warn(
-          `[RegionUI] Data for region '${regionName}' not found in snapshot.`
-        );
+        unavailableFragment.appendChild(regionBlock);
       }
-    });
-
-    // If showing only visited and the list is empty, display a message
-    if (!this.showAll && this.visitedRegions.length === 0) {
-      // Optionally check if the start region is reachable to provide a better hint
-      const startRegion = 'Menu'; // Or get dynamically if needed
-      const startReachable = reachableRegions.has(startRegion);
-      this.regionsContainer.innerHTML = `
-        <div style="padding: 1em; text-align: center;">
-          No regions visited yet.${
-            startReachable
-              ? ` Try exploring from '${startRegion}'.`
-              : ' Start region may be inaccessible.'
-          }
-        </div>
-      `;
     }
 
-    // Update colorblind indicators after rendering
-    this._updateColorblindIndicators();
+    // --- Moved Declarations Down and Renamed ---
+    // Now query for the containers *again* before appending
+    const availableSectionContent = this.regionsContainer.querySelector(
+      '#available-regions-section .region-category-content'
+    );
+    const unavailableSectionContent = this.regionsContainer.querySelector(
+      '#unavailable-regions-section .region-category-content'
+    );
+
+    if (availableSectionContent)
+      availableSectionContent.appendChild(availableFragment);
+    if (unavailableSectionContent)
+      unavailableSectionContent.appendChild(unavailableFragment);
+    // --- End Moved Declarations ---
+
+    this._updateSectionVisibility();
   }
 
   createRegionLink(regionName, snapshot) {
@@ -583,361 +620,163 @@ export class RegionUI {
     );
   }
 
-  buildRegionBlock(rData, regionName, expanded, uid, useColorblind, snapshot) {
+  // Modify buildRegionBlock to accept staticData and use it
+  buildRegionBlock(
+    regionName,
+    regionStaticData,
+    snapshot,
+    staticData,
+    isReachable
+  ) {
+    // Determine if the region is currently expanded based on visitedRegions
+    const visitedEntry = this.visitedRegions.find(
+      (vr) => vr.name === regionName
+    );
+    const expanded = visitedEntry ? visitedEntry.expanded : false;
+    const uid = visitedEntry ? visitedEntry.uid : this.nextUID++; // Assign UID if new
+
+    // Add to visitedRegions if not already there (e.g., when showAll is true)
+    if (!visitedEntry) {
+      this.visitedRegions.push({
+        name: regionName,
+        expanded: false,
+        uid: uid,
+      });
+    }
+
     // Outer container
     const regionBlock = document.createElement('div');
     regionBlock.classList.add('region-block');
     regionBlock.dataset.uid = uid;
     regionBlock.dataset.region = regionName;
     regionBlock.classList.add(expanded ? 'expanded' : 'collapsed');
-    regionBlock.classList.toggle('colorblind-mode', useColorblind);
+    regionBlock.classList.toggle('colorblind-mode', this.colorblindMode);
 
-    // Check if we have a valid snapshot before evaluating rules
-    if (!snapshot) {
-      console.warn('[RegionUI] buildRegionBlock called without a snapshot.');
-      return null;
+    // Determine accessibility based on the passed 'isReachable' flag (from snapshot)
+    const regionIsAccessible = isReachable;
+
+    // Determine completion status (example logic)
+    let totalLocations = regionStaticData.locations?.length || 0;
+    let checkedLocationsCount = 0;
+    if (regionStaticData.locations && snapshot.checkedLocations) {
+      const checkedSet = new Set(snapshot.checkedLocations);
+      checkedLocationsCount = regionStaticData.locations.filter((loc) =>
+        checkedSet.has(loc.name)
+      ).length;
     }
+    const isComplete =
+      totalLocations > 0 && checkedLocationsCount === totalLocations;
 
-    // --- Create Snapshot Interface ---
-    const snapshotInterface = createStateSnapshotInterface(snapshot);
-    if (!snapshotInterface) {
-      console.warn(
-        '[RegionUI] Failed to create snapshot interface in buildRegionBlock.'
-      );
-      // Decide how to handle this - return null or a basic block?
-      // return null;
-    }
-    // --- End Snapshot Interface ---
-
-    // Get data from snapshot
-    const reachableRegionsArray = snapshot.reachableRegions || [];
-    const reachableRegions = new Set(reachableRegionsArray);
-    const checkedLocationsArray = snapshot.checkedLocations || [];
-    const checkedLocations = new Set(checkedLocationsArray);
-
-    const isAccessible = reachableRegions.has(regionName);
-
-    // Check if Loop Mode is active
-    const isLoopModeActive = loopStateSingleton.isLoopModeActive;
-
-    // In Loop Mode, only show discovered regions
-    if (
-      isLoopModeActive &&
-      !loopStateSingleton.isRegionDiscovered(regionName)
-    ) {
-      return null; // Return null for undiscovered regions
-    }
-
-    // Header
+    // --- Header ---
     const headerEl = document.createElement('div');
     headerEl.classList.add('region-header');
     const regionLabel = regionName + this._suffixIfDuplicate(regionName, uid);
 
     headerEl.innerHTML = `
-    <span class="region-name" style="color: ${
-      isAccessible ? 'inherit' : 'red'
-    }">${regionLabel}${
-      useColorblind
-        ? `<span class="colorblind-symbol ${
-            isAccessible ? 'accessible' : 'inaccessible'
-          }">
-        ${isAccessible ? ' ✓' : ' ✗'}
-      </span>`
-        : ''
-    }</span>
-    <button class="collapse-btn">${expanded ? 'Collapse' : 'Expand'}</button>
-  `;
-    regionBlock.appendChild(headerEl);
+        <span class="region-name" title="${regionName}">${regionLabel}</span>
+        <span class="region-status">(${checkedLocationsCount}/${totalLocations})</span>
+        ${
+          this.colorblindMode
+            ? `<span class="colorblind-symbol ${
+                regionIsAccessible ? 'accessible' : 'inaccessible'
+              }">${regionIsAccessible ? '✓' : '✗'}</span>`
+            : ''
+        }
+        <button class="collapse-btn">${
+          expanded ? 'Collapse' : 'Expand'
+        }</button>
+      `;
+    // Add accessibility classes to header
+    headerEl.classList.toggle('accessible', regionIsAccessible);
+    headerEl.classList.toggle('inaccessible', !regionIsAccessible);
+    headerEl.classList.toggle('completed-region', isComplete);
 
-    // Collapse button event listener
-    headerEl.querySelector('.collapse-btn').addEventListener('click', () => {
+    // --- ADD Click Listener to Header --- >
+    headerEl.addEventListener('click', (e) => {
+      // Prevent collapse button click from triggering header toggle
+      if (e.target.classList.contains('collapse-btn')) {
+        e.stopPropagation(); // Stop event from bubbling up
+      }
       this.toggleRegionByUID(uid);
     });
+    // --- END Add Click Listener ---
 
-    if (expanded) {
-      const detailEl = document.createElement('div');
-      detailEl.classList.add('region-details');
+    // --- Content (Exits and Locations) ---
+    const contentEl = document.createElement('div');
+    contentEl.classList.add('region-content');
+    contentEl.style.display = expanded ? 'block' : 'none'; // Control visibility
 
-      detailEl.innerHTML += `
-      <div><strong>Light world?</strong> ${rData.is_light_world}</div>
-      <div><strong>Dark world?</strong> ${rData.is_dark_world}</div>
-    `;
+    // Exits List
+    const exitsList = document.createElement('ul');
+    exitsList.classList.add('region-exits-list');
+    if (regionStaticData.exits && regionStaticData.exits.length > 0) {
+      // Find the corresponding region data in the snapshot which has calculated accessibility
+      const snapshotRegionData = snapshot.regions?.[regionName];
+      regionStaticData.exits.forEach((exitDef) => {
+        // Find the corresponding exit in the snapshot data to get its accessibility
+        const snapshotExit = snapshotRegionData?.exits?.find(
+          (e) => e.name === exitDef.name
+        );
+        const exitAccessible = snapshotExit?.isAccessible ?? false; // Default to false if not found in snapshot
 
-      // Region rules
-      if (rData.region_rules?.length > 0) {
-        const rrContainer = document.createElement('div');
-        rrContainer.innerHTML = '<h4>Region Rules</h4>';
-        rData.region_rules.forEach((rule, idx) => {
-          const logicDiv = document.createElement('div');
-          logicDiv.classList.add('logic-tree');
-          logicDiv.innerHTML = `<strong>Rule #${idx + 1}:</strong>`;
-          logicDiv.appendChild(
-            commonUI.renderLogicTree(rule, useColorblind, snapshotInterface)
-          );
-          rrContainer.appendChild(logicDiv);
-        });
-        detailEl.appendChild(rrContainer);
-      }
-
-      // Exits
-      if (rData.exits?.length > 0) {
-        const exitsContainer = document.createElement('div');
-        exitsContainer.classList.add('region-exits-container');
-        exitsContainer.innerHTML = '<h4>Exits</h4>';
-
-        rData.exits.forEach((exit) => {
-          const exitWrapper = document.createElement('div');
-          exitWrapper.classList.add('exit-wrapper');
-
-          // Evaluate rule using the interface - NOW USE PRE-CALCULATED VALUE
-          const canAccess = exit.isAccessible;
-          const colorClass = canAccess ? 'accessible' : 'inaccessible';
-
-          // In Loop Mode, check if the exit is discovered
-          let isDiscovered = true;
-          const showExplored =
-            document.getElementById('show-explored')?.checked ?? true;
-
-          if (isLoopModeActive) {
-            isDiscovered = loopStateSingleton.isExitDiscovered(
-              regionName,
-              exit.name
-            );
-            // Skip this exit if it's not discovered and we're not showing explored
-            if (!isDiscovered && !showExplored) {
-              return; // Using 'return' here inside forEach callback instead of 'continue'
-            }
-          }
-
-          // Create wrapper for exit info
-          const exitInfo = document.createElement('span');
-          exitInfo.classList.add(colorClass);
-
-          // In Loop Mode, show ??? for undiscovered exits
-          const exitName =
-            isLoopModeActive && !isDiscovered ? '???' : exit.name;
-          exitInfo.textContent = `${exitName} → `;
-
-          if (!isDiscovered) {
-            exitInfo.classList.add('undiscovered-exit');
-          }
-
-          // Add connected region as a link if it exists
-          if (exit.connected_region) {
-            let connectedRegionName = exit.connected_region;
-
-            // In Loop Mode, check if the connected region is discovered
-            if (isLoopModeActive) {
-              const isConnectedRegionDiscovered =
-                loopStateSingleton.isRegionDiscovered(exit.connected_region);
-              if (!isConnectedRegionDiscovered) {
-                connectedRegionName = '???';
-              }
-            }
-
-            // Pass the snapshot to createRegionLink
-            const regionLink = this.createRegionLink(
-              connectedRegionName,
-              snapshot
-            );
-            regionLink.dataset.realRegion = exit.connected_region; // Store the real region name
-            regionLink.classList.add(colorClass);
-
-            if (
-              isLoopModeActive &&
-              !loopStateSingleton.isRegionDiscovered(exit.connected_region)
-            ) {
-              regionLink.classList.add('undiscovered-region');
-            }
-
-            exitInfo.appendChild(regionLink);
-          } else {
-            exitInfo.textContent += '(none)';
-          }
-
-          exitWrapper.appendChild(exitInfo);
-
-          // Add move button
-          const moveBtn = document.createElement('button');
-          moveBtn.classList.add('move-btn');
-          moveBtn.textContent = 'Move';
-          moveBtn.disabled = !(canAccess && exit.connected_region);
-
-          // In Loop Mode, disable the button for undiscovered exits
-          if (isLoopModeActive && !isDiscovered) {
-            moveBtn.disabled = true;
-          }
-
-          moveBtn.addEventListener('click', () => {
-            if (canAccess && exit.connected_region) {
-              this.moveToRegion(regionName, exit.connected_region);
-            }
-          });
-          exitWrapper.appendChild(moveBtn);
-
-          if (exit.access_rule) {
-            const logicTreeDiv = document.createElement('div');
-            logicTreeDiv.classList.add('logic-tree');
-            logicTreeDiv.appendChild(
-              commonUI.renderLogicTree(
-                exit.access_rule,
-                useColorblind,
-                snapshotInterface
-              )
-            );
-            exitWrapper.appendChild(logicTreeDiv);
-          }
-
-          exitsContainer.appendChild(exitWrapper);
-        });
-
-        detailEl.appendChild(exitsContainer);
-      }
-
-      // Locations
-      if (rData.locations?.length > 0) {
-        const locContainer = document.createElement('div');
-        locContainer.classList.add('region-locations-container');
-        locContainer.innerHTML = '<h4>Locations</h4>';
-
-        rData.locations.forEach((loc) => {
-          const locDiv = document.createElement('div');
-          locDiv.classList.add('location-wrapper');
-
-          // Evaluate rule using the interface - NOW USE PRE-CALCULATED VALUE
-          const canAccess = loc.isAccessible;
-          const isChecked = checkedLocations.has(loc.name);
-          const colorClass = isChecked
-            ? 'checked-loc'
-            : canAccess
-            ? 'accessible'
-            : 'inaccessible';
-
-          // In Loop Mode, check if the location is discovered
-          let isDiscovered = true;
-          const showExplored =
-            document.getElementById('show-explored')?.checked ?? true;
-
-          if (isLoopModeActive) {
-            isDiscovered = loopStateSingleton.isLocationDiscovered(loc.name);
-            if (!isDiscovered && !showExplored) {
-              return; // Skip this location if it's not discovered and we're not showing explored
-            }
-          }
-
-          // Create a location link instead of a simple span
-          const locationName =
-            isLoopModeActive && !isDiscovered ? '???' : loc.name;
-          // Pass the snapshot to createLocationLink
-          const locLink = this.createLocationLink(
-            locationName,
-            regionName,
-            snapshot
-          );
-          locLink.dataset.realName = loc.name; // Store the real location name
-          locLink.classList.add(colorClass);
-
-          if (isLoopModeActive && !isDiscovered) {
-            locLink.classList.add('undiscovered-location');
-          }
-
-          locDiv.appendChild(locLink);
-
-          // Add check button and check mark
-          const checkBtn = document.createElement('button');
-          checkBtn.classList.add('check-loc-btn');
-          checkBtn.textContent = 'Check';
-          checkBtn.style.display = isChecked ? 'none' : '';
-          checkBtn.disabled = !canAccess;
-
-          // In Loop Mode, disable the button for undiscovered locations
-          if (isLoopModeActive && !isDiscovered) {
-            checkBtn.disabled = true;
-          }
-
-          checkBtn.addEventListener('click', async () => {
-            if (canAccess && !isChecked) {
-              try {
-                console.log(
-                  `[RegionUI] Sending checkLocation command for: ${loc.name}`
-                );
-                // Directly use the StateManagerProxySingleton (aliased as stateManager)
-                await stateManager.checkLocation(loc.name);
-                // No need to call renderAllRegions here, snapshot update will trigger it
-              } catch (error) {
-                console.error(
-                  `[RegionUI] Error sending checkLocation command for ${loc.name}:`,
-                  error
-                );
-                // Optionally display error to user?
-              }
-            } else {
-              console.log(
-                `[RegionUI] Check button clicked for ${loc.name}, but cannot check (canAccess: ${canAccess}, isChecked: ${isChecked})`
-              );
-            }
-          });
-          locDiv.appendChild(checkBtn);
-
-          if (isChecked) {
-            const checkMark = document.createElement('span');
-            checkMark.classList.add('check-mark');
-            checkMark.textContent = '✓';
-            locDiv.appendChild(checkMark);
-          }
-
-          if (loc.access_rule) {
-            const logicTreeDiv = document.createElement('div');
-            logicTreeDiv.classList.add('logic-tree');
-            logicTreeDiv.appendChild(
-              commonUI.renderLogicTree(
-                loc.access_rule,
-                useColorblind,
-                snapshotInterface
-              )
-            );
-            locDiv.appendChild(logicTreeDiv);
-          }
-
-          locContainer.appendChild(locDiv);
-        });
-
-        detailEl.appendChild(locContainer);
-      }
-
-      // Add Show Paths button at the bottom of the region details
-      const pathsControlDiv = document.createElement('div');
-      pathsControlDiv.classList.add('paths-control');
-      pathsControlDiv.innerHTML = `
-      <div class="paths-buttons">
-        <button class="analyze-paths-btn">Analyze Paths</button>
-        <span class="paths-count" style="display: none;"></span>
-      </div>
-    `;
-      detailEl.appendChild(pathsControlDiv);
-
-      // Add the paths container
-      const pathsContainer = document.createElement('div');
-      pathsContainer.classList.add('region-paths');
-      pathsContainer.style.display = 'none';
-      detailEl.appendChild(pathsContainer);
-
-      // Comprehensive "Analyze Paths" button functionality
-      const analyzePathsBtn =
-        pathsControlDiv.querySelector('.analyze-paths-btn');
-      const pathsCountSpan = pathsControlDiv.querySelector('.paths-count');
-
-      // Set up the path analysis button using the PathAnalyzerUI
-      this.setupAnalyzePathsButton(
-        analyzePathsBtn,
-        pathsCountSpan,
-        pathsContainer,
-        regionName
-      );
-
-      // Append detailEl to regionBlock
-      regionBlock.appendChild(detailEl);
+        const li = document.createElement('li');
+        li.innerHTML = commonUI.createRegionLink(
+          exitDef.connected_region,
+          exitDef.name,
+          exitAccessible, // Use pre-calculated value
+          this.colorblindMode
+        );
+        li.classList.toggle('accessible', exitAccessible);
+        li.classList.toggle('inaccessible', !exitAccessible);
+        exitsList.appendChild(li);
+      });
+    } else {
+      exitsList.innerHTML = '<li>No exits defined.</li>';
     }
+    contentEl.appendChild(exitsList);
+
+    // Locations List
+    const locationsList = document.createElement('ul');
+    locationsList.classList.add('region-locations-list');
+    if (regionStaticData.locations && regionStaticData.locations.length > 0) {
+      regionStaticData.locations.forEach((locationDef) => {
+        // Find the corresponding location in the snapshot data (top-level locations array)
+        const snapshotLocation = snapshot.locations?.find(
+          (l) => l.name === locationDef.name
+        );
+        const locAccessible = snapshotLocation?.isAccessible ?? false;
+        const locChecked = snapshotLocation?.isChecked ?? false; // Use isChecked from snapshot
+
+        const li = document.createElement('li');
+        li.innerHTML = commonUI.createLocationLink(
+          locationDef.name,
+          locAccessible, // Use pre-calculated value
+          locChecked, // Use pre-calculated value
+          this.colorblindMode
+        );
+        li.classList.toggle('accessible', locAccessible);
+        li.classList.toggle('inaccessible', !locAccessible);
+        li.classList.toggle('checked-location', locChecked);
+        locationsList.appendChild(li);
+      });
+    } else {
+      locationsList.innerHTML = '<li>No locations defined.</li>';
+    }
+    contentEl.appendChild(locationsList);
+
+    // Append header and content
+    regionBlock.appendChild(headerEl);
+    regionBlock.appendChild(contentEl);
+
+    // --- ADD Collapse Button Listener --- >
+    const collapseBtn = headerEl.querySelector('.collapse-btn');
+    if (collapseBtn) {
+      collapseBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent header click listener
+        this.toggleRegionByUID(uid);
+      });
+    }
+    // --- END Add Collapse Button Listener --- >
 
     return regionBlock;
   }
@@ -1043,6 +882,36 @@ export class RegionUI {
       );
     }
   }
+
+  // --- ADDED: Helper to show/hide region categories ---
+  _updateSectionVisibility() {
+    if (!this.rootElement) return;
+
+    const availableContent = this.rootElement.querySelector(
+      '#available-regions-section .region-category-content'
+    );
+    const unavailableContent = this.rootElement.querySelector(
+      '#unavailable-regions-section .region-category-content'
+    );
+
+    const availableSection = this.rootElement.querySelector(
+      '#available-regions-section'
+    );
+    const unavailableSection = this.rootElement.querySelector(
+      '#unavailable-regions-section'
+    );
+
+    if (availableSection) {
+      availableSection.style.display =
+        availableContent && availableContent.hasChildNodes() ? '' : 'none';
+    }
+    if (unavailableSection) {
+      unavailableSection.style.display =
+        unavailableContent && unavailableContent.hasChildNodes() ? '' : 'none';
+    }
+    // Add checks for other sections (e.g., completed) if they exist
+  }
+  // --- END ADDED ---
 }
 
 export default RegionUI;

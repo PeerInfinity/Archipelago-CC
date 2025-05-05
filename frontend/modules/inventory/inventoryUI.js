@@ -21,7 +21,7 @@ export class InventoryUI {
     this.flatContainer = this.rootElement.querySelector('#inventory-flat');
     this.unsubscribeHandles = [];
     this.attachControlEventListeners();
-    this.attachEventBusListeners();
+    this.isInitialized = false;
   }
 
   createRootElement() {
@@ -253,6 +253,17 @@ export class InventoryUI {
 
     console.log('[InventoryUI] Attaching event bus listeners...');
 
+    const readyUnsubscribe = eventBus.subscribe('stateManager:ready', () => {
+      console.log('[InventoryUI] Received stateManager:ready event.');
+      if (!this.isInitialized) {
+        console.log('[InventoryUI] Performing initial sync and render.');
+        this.syncWithState();
+        this.isInitialized = true;
+      }
+    });
+    this.unsubscribeHandles.push(readyUnsubscribe);
+    console.log('[InventoryUI] Subscribed to stateManager:ready');
+
     let unsubscribeSnapshot = eventBus.subscribe(
       'stateManager:snapshotUpdated',
       this._handleSnapshotUpdated.bind(this)
@@ -269,87 +280,20 @@ export class InventoryUI {
   }
 
   _handleSnapshotUpdated(snapshotData) {
-    console.log('[InventoryUI] Received snapshotUpdated event.');
-    // snapshotData IS the snapshot from the worker
-
-    if (!stateManager) {
-      console.error(
-        '[InventoryUI] StateManager proxy singleton not available!'
-      );
-      return;
-    }
-
-    // Get static data (should be cached on proxy after initial load)
-    let itemData, groupData;
-    try {
-      itemData = stateManager.getItemData();
-      groupData = stateManager.getGroupData();
-    } catch (e) {
-      console.error(
-        '[InventoryUI] Error getting item/group data from proxy:',
-        e
-      );
-      return; // Cannot proceed without static data
-    }
-
-    if (itemData && groupData) {
-      // Initialize UI structure if not already done (or if data changed)
-      // Check if itemData has changed since last init?
-      if (!this.itemData || Object.keys(this.itemData).length === 0) {
-        // Basic check if not initialized
-        console.log('[InventoryUI] Initializing UI structure...');
-        this.initializeUI(itemData, groupData); // Initializes structure
-      }
-
-      // Sync item counts using the received snapshotData
+    if (this.isInitialized) {
       if (snapshotData) {
-        this.syncWithState(snapshotData); // Applies counts from snapshot
+        this.syncWithState();
       } else {
         console.warn(
           '[InventoryUI] snapshotUpdated event received null snapshotData?'
         );
       }
-    } else {
-      console.warn(
-        '[InventoryUI] Snapshot updated, but missing itemData or groupData from proxy cache.'
-      );
     }
-
-    // Subscribe to state changes
-    const snapshotUpdateHandler = (snapshot) => {
-      // --- ADDED DEBUG LOG ---
-      console.debug(
-        '[InventoryUI] Received stateManager:snapshotUpdated',
-        snapshot
-      );
-      // --- END DEBUG LOG ---
-      this.itemData = snapshot.itemData || {}; // Ensure itemData is updated from snapshot
-      this.renderInventory(snapshot); // Re-render with the full snapshot
-    };
   }
 
   _handleInventoryChanged() {
-    // This might be redundant if snapshotUpdated covers all changes
-    console.log(
-      '[InventoryUI] Received inventoryChanged event (potentially redundant).'
-    );
-    // Re-sync using the latest cache from the proxy
-    // Ensure we access the singleton correctly
-    let latestSnapshot = null;
-    if (stateManager && typeof stateManager.getSnapshot === 'function') {
-      latestSnapshot = stateManager.getSnapshot();
-    } else {
-      console.error(
-        '[InventoryUI] Cannot get latest snapshot in _handleInventoryChanged'
-      );
-    }
-
-    if (latestSnapshot) {
-      this.syncWithState(latestSnapshot);
-    } else {
-      console.warn(
-        '[InventoryUI] Could not get latest snapshot for sync in _handleInventoryChanged.'
-      );
+    if (this.isInitialized) {
+      this.syncWithState();
     }
   }
 
@@ -389,36 +333,17 @@ export class InventoryUI {
       );
       return;
     }
-    // TODO: Re-enable connection checks if needed
-    // if (!connection.isConnected() || isShiftPressed) {
     if (isShiftPressed) {
-      // Check if inventory modification methods exist on the proxy?
-      // Currently stateManager only has commands, not direct manipulation.
-      // We should send commands to the worker.
       console.warn(
         '[InventoryUI] Shift-click (remove item) not yet implemented via worker command.'
       );
-      // stateManager.removeItemFromInventory(itemName); // Needs proxy method -> worker command
     } else {
-      stateManager.addItemToInventory(itemName); // This sends command
+      stateManager.addItemToInventory(itemName);
     }
-    // } else {
-    //   window._userClickedItems.add(itemName);
-    //   stateManager.addItemToInventory(itemName);
-    //   messageHandler.sendMessage(`!getitem ${itemName}`);
-    //   setTimeout(() => {
-    //     window._userClickedItems.delete(itemName);
-    //   }, 5000);
-    //   if (window.consoleManager) {
-    //     window.consoleManager.print(`Sent item request: ${itemName}`, 'info');
-    //   }
-    // }
-    // Syncing should happen automatically via snapshot updates, so commenting out direct call
-    // this.syncWithState();
   }
 
   clear() {
-    this.itemData = null; // Clear local reference
+    this.itemData = null;
     this.rootElement.querySelectorAll('.item-button').forEach((button) => {
       button.classList.remove('active');
       const countBadge = button
@@ -435,59 +360,77 @@ export class InventoryUI {
     if (flatContainer) flatContainer.innerHTML = '';
   }
 
-  syncWithState(snapshotData) {
-    // Primarily use the inventory counts from the snapshotData
-    const inventoryCounts = snapshotData?.inventory || {};
+  initialize() {
+    console.log('[InventoryUI] Initializing panel...');
+    this.isInitialized = false;
+    this.attachEventBusListeners();
+  }
 
-    if (!this.itemData) {
-      console.warn(
-        '[InventoryUI] syncWithState called before itemData is loaded.'
-      );
-      // Try to fetch static data again?
-      let itemData = stateManager?.getItemData();
-      if (!itemData) return; // Cannot proceed
-      this.itemData = itemData;
+  async syncWithState() {
+    console.log('[InventoryUI] syncWithState called.');
+
+    const snapshotData = stateManager.getLatestStateSnapshot();
+    if (!snapshotData) {
+      console.warn('[InventoryUI] syncWithState: Snapshot data is null.');
+      this.displayError('Snapshot data not available.');
+      return;
     }
 
-    // --- ADDED DEBUG LOG ---
-    let foundButton = false;
-    let checkedItemName = null;
-    // --- END ADDED ---
-
-    this.rootElement.querySelectorAll('.item-button').forEach((button) => {
-      const itemName = button.dataset.item;
-      // Get count from the snapshot's inventory if available
-      const count = inventoryCounts[itemName] || 0;
-      const container = button.closest('.item-container');
-
-      // --- ADDED DEBUG LOG ---
-      if (itemName === 'Big Key (Eastern Palace)') {
-        // Example item, adjust if needed
-        foundButton = true;
-        checkedItemName = itemName;
-        console.debug(
-          `[InventoryUI syncWithState] Found button for ${itemName}. Count in snapshot: ${count}. Toggling active class to: ${
-            count > 0
-          }`
+    if (!this.itemData) {
+      let staticData = stateManager?.getStaticData();
+      let itemData = staticData?.items;
+      let groupData = staticData?.groups;
+      let groupNames = groupData ? Object.keys(groupData) : [];
+      if (!itemData || !groupData) {
+        console.error(
+          '[InventoryUI] Failed to get item/group data from proxy in syncWithState.'
         );
+        this.displayError('Failed to retrieve static item/group data.');
+        return;
       }
-      // --- END ADDED ---
+      this.itemData = itemData;
+      console.log(
+        '[InventoryUI] Initializing UI structure with fetched static data.'
+      );
+      this.initializeUI(this.itemData, groupNames);
+    }
 
-      if (button && container) {
-        button.classList.toggle('active', count > 0);
+    const inventoryCounts = snapshotData.inventory || {};
+
+    if (!this.rootElement) {
+      console.error('[InventoryUI] syncWithState: rootElement is null!');
+      return;
+    }
+
+    Object.keys(this.itemData).forEach((itemName) => {
+      const count = inventoryCounts[itemName] || 0;
+      const itemElement = this.rootElement.querySelector(
+        `.item-button[data-item="${itemName}"]`
+      );
+      if (itemElement) {
+        itemElement.classList.toggle('active', count > 0);
+        const container = itemElement.closest('.item-container');
         this.createOrUpdateCountBadge(container, count);
       }
     });
 
-    // --- ADDED DEBUG LOG ---
-    if (!foundButton && checkedItemName) {
-      console.warn(
-        `[InventoryUI syncWithState] Did not find button for ${checkedItemName} during sync.`
-      );
-    }
-    // --- END ADDED ---
-
-    // Update visibility based on owned status
     this.updateDisplay();
+  }
+
+  displayError(message) {
+    if (this.rootElement) {
+      let errorContainer = this.rootElement.querySelector(
+        '.inventory-error-message'
+      );
+      if (!errorContainer) {
+        errorContainer = document.createElement('div');
+        errorContainer.className =
+          'inventory-error-message panel-error-message';
+        this.rootElement.prepend(errorContainer);
+      }
+      errorContainer.textContent = message;
+      const grid = this.rootElement.querySelector('#inventory-grid');
+      if (grid) grid.style.display = 'none';
+    }
   }
 }

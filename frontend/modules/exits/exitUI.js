@@ -15,9 +15,9 @@ export class ExitUI {
     this.exitsGrid = this.rootElement.querySelector('#exits-grid');
     this.stateUnsubscribeHandles = [];
     this.settingsUnsubscribe = null;
+    this.isInitialized = false;
     this.attachEventListeners();
     this.subscribeToSettings();
-    this.subscribeToStateEvents();
   }
 
   subscribeToSettings() {
@@ -62,22 +62,32 @@ export class ExitUI {
       this.stateUnsubscribeHandles.push(unsubscribe);
     };
 
-    const debouncedUpdate = debounce(() => this.updateExitDisplay(), 50);
+    const handleReady = () => {
+      console.log('[ExitUI] Received stateManager:ready event.');
+      if (!this.isInitialized) {
+        console.log('[ExitUI] Performing initial render.');
+        this.updateExitDisplay();
+        this.isInitialized = true;
+      }
+    };
+    subscribe('stateManager:ready', handleReady);
+
+    const debouncedUpdate = debounce(() => {
+      if (this.isInitialized) {
+        this.updateExitDisplay();
+      }
+    }, 50);
 
     subscribe('stateManager:snapshotUpdated', debouncedUpdate);
-    subscribe('stateManager:inventoryChanged', debouncedUpdate);
-    subscribe('stateManager:regionsComputed', debouncedUpdate);
-    subscribe('stateManager:rulesLoaded', debouncedUpdate);
-
     subscribe('loop:stateChanged', debouncedUpdate);
     subscribe('loop:actionCompleted', debouncedUpdate);
     subscribe('loop:discoveryChanged', debouncedUpdate);
     subscribe('loop:modeChanged', (isLoopMode) => {
-      debouncedUpdate();
+      if (this.isInitialized) debouncedUpdate();
       const exploredCheckbox = this.rootElement?.querySelector(
         '#exit-show-explored'
       );
-      if (exploredCheckbox && exploredCheckbox.parentElement) {
+      if (exploredCheckbox?.parentElement) {
         exploredCheckbox.parentElement.style.display = isLoopMode
           ? 'inline-block'
           : 'none';
@@ -305,23 +315,11 @@ export class ExitUI {
     });
   }
 
-  async initialize() {
+  // Called when the panel is initialized by PanelManager
+  initialize() {
     console.log('[ExitUI] Initializing panel...');
-    try {
-      await stateManager.ensureReady(); // Wait for proxy
-      console.log(
-        '[ExitUI] Proxy ready. Initial display will occur via event handler.'
-      );
-    } catch (error) {
-      console.error(
-        '[ExitUI] Error waiting for proxy during initialization:',
-        error
-      );
-      if (this.exitsGrid) {
-        this.exitsGrid.innerHTML =
-          '<div class="error-message">Error initializing exit data.</div>';
-      }
-    }
+    this.isInitialized = false;
+    this.subscribeToStateEvents();
   }
 
   clear() {
@@ -367,28 +365,25 @@ export class ExitUI {
 
   updateExitDisplay() {
     console.log('[ExitUI] updateExitDisplay called.');
+    // --- Log data state at function start --- >
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData();
+    console.log(
+      '[ExitUI updateExitDisplay] Start State - Snapshot:',
+      !!snapshot,
+      'Static Data:',
+      !!staticData
+    );
+    // --- End log ---
     if (!this.exitsGrid) {
       console.warn('[ExitUI] exitsGrid element not found.');
       return;
     }
 
-    // Get current snapshot
-    let snapshot;
-    try {
-      snapshot = stateManager.getSnapshot();
-    } catch (e) {
-      console.error('[ExitUI] Error getting snapshot:', e);
-      this.exitsGrid.innerHTML =
-        '<div class="error-message">Error retrieving exit data.</div>';
-      return;
-    }
-
-    if (!snapshot || !snapshot.regions) {
-      console.log('[ExitUI] Snapshot not ready or no region data found.');
-      this.exitsGrid.innerHTML =
-        '<div class="loading-message">Loading exit data...</div>';
-      return;
-    }
+    const snapshotInterface = createStateSnapshotInterface(
+      snapshot,
+      staticData
+    ); // Now guaranteed to have data
 
     // --- Get Filter/Sort Options --- //
     const sortBy =
@@ -417,7 +412,6 @@ export class ExitUI {
     // --- Process Exits --- //
     console.log(`[ExitUI] Processing regions from snapshot.`);
     let allExits = [];
-    const snapshotInterface = createStateSnapshotInterface(snapshot);
     if (!snapshotInterface) {
       console.warn(
         '[ExitUI] Failed to create snapshot interface for rule evaluation.'
