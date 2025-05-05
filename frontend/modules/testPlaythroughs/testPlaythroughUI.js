@@ -1,4 +1,4 @@
-import { stateManagerSingleton } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 
 export class TestPlaythroughUI {
   constructor() {
@@ -451,7 +451,7 @@ export class TestPlaythroughUI {
 
       case 'initial_state':
         this.log('state', 'Comparing initial state...');
-        stateManagerSingleton.computeReachableRegions(); // Ensure initial compute after load
+        stateManager.computeReachableRegions(); // Ensure initial compute after load
         this.compareAccessibleLocations(
           event.accessible_locations,
           'Initial State'
@@ -463,7 +463,7 @@ export class TestPlaythroughUI {
           const locName = event.location.name;
           this.log('info', `Simulating check for location: "${locName}"`);
 
-          const locData = stateManagerSingleton.locations.find(
+          const locData = stateManager.locations.find(
             (l) => l.name === locName
           );
 
@@ -473,12 +473,8 @@ export class TestPlaythroughUI {
               `Location "${locName}" from log not found in current rules. Skipping check.`
             );
           } else {
-            const wasAccessible =
-              stateManagerSingleton.isLocationAccessible(locData);
-            if (
-              !wasAccessible &&
-              !stateManagerSingleton.isLocationChecked(locName)
-            ) {
+            const wasAccessible = stateManager.isLocationAccessible(locData);
+            if (!wasAccessible && !stateManager.isLocationChecked(locName)) {
               this.log(
                 'error',
                 `Log indicates checking "${locName}", but it was NOT accessible according to current logic!`
@@ -488,15 +484,12 @@ export class TestPlaythroughUI {
               );
             }
 
-            if (
-              locData.item &&
-              !stateManagerSingleton.isLocationChecked(locName)
-            ) {
+            if (locData.item && !stateManager.isLocationChecked(locName)) {
               this.log(
                 'info',
                 `Found item "${locData.item.name}" at "${locName}". Adding to inventory.`
               );
-              const itemAdded = stateManagerSingleton.addItemToInventory(
+              const itemAdded = stateManager.addItemToInventory(
                 locData.item.name
               );
               if (!itemAdded) {
@@ -507,7 +500,7 @@ export class TestPlaythroughUI {
               }
             }
 
-            stateManagerSingleton.checkLocation(locName);
+            stateManager.checkLocation(locName);
             this.log('info', `Location "${locName}" marked as checked.`);
           }
         } else {
@@ -641,7 +634,7 @@ export class TestPlaythroughUI {
             this.gameUI.currentRules = jsonData; // Track current rules
 
             // Use stateManager directly
-            stateManagerSingleton.initializeInventory(
+            stateManager.initializeInventory(
               [], // Start with empty inventory for preset load
               jsonData.progression_mapping?.[playerId],
               jsonData.items?.[playerId],
@@ -649,7 +642,7 @@ export class TestPlaythroughUI {
             );
 
             // Load settings, shops, starting items etc. via stateManager
-            stateManagerSingleton.loadFromJSON(jsonData, playerId);
+            stateManager.loadFromJSON(jsonData, playerId);
 
             // Initialize the main UI (regions, locations etc.) - Crucial for inventoryUI setup
             this.gameUI.initializeUI(jsonData, playerId);
@@ -722,9 +715,9 @@ export class TestPlaythroughUI {
 
   compareAccessibleLocations(logAccessible, context) {
     // Get reachable but unchecked locations from stateManager
-    const stateAccessibleUnchecked = stateManagerSingleton
+    const stateAccessibleUnchecked = stateManager
       .getProcessedLocations(undefined, true, false) // Get only reachable locations
-      .filter((loc) => !stateManagerSingleton.isLocationChecked(loc.name)) // Filter out checked locations
+      .filter((loc) => !stateManager.isLocationChecked(loc.name)) // Filter out checked locations
       .map((loc) => loc.name);
 
     const stateAccessibleSet = new Set(stateAccessibleUnchecked);

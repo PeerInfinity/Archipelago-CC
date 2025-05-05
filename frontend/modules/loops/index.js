@@ -20,7 +20,7 @@ let _moduleDispatcher = null;
 let loopUnsubscribeHandles = [];
 
 // --- Import the actual singletons needed for injection ---
-import { stateManagerSingleton } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 // ----------------------------------------------------- //
 
 // --- Event Handlers --- //
@@ -180,7 +180,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       // Inject dependencies BEFORE initializing loopState itself
       loopStateSingleton.setDependencies({
         eventBus: _moduleEventBus,
-        stateManager: stateManagerSingleton,
+        stateManager: stateManager,
       });
 
       loopStateSingleton.initialize();

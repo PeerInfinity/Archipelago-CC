@@ -88,8 +88,15 @@ export class LoopState {
       );
       return;
     }
-    this.eventBus.subscribe('stateManager:inventoryChanged', () => {
-      this.recalculateMaxMana();
+    // Subscribe to snapshot updates for mana recalculation
+    this.eventBus.subscribe('stateManager:snapshotUpdated', (eventData) => {
+      if (eventData && eventData.snapshot) {
+        this.recalculateMaxMana(eventData.snapshot); // Pass snapshot data
+      } else {
+        console.warn(
+          '[LoopState] Received snapshotUpdated event without snapshot data.'
+        );
+      }
     });
   }
 
@@ -102,8 +109,9 @@ export class LoopState {
       console.error('[LoopState] Cannot initialize: Dependencies not set.');
       return;
     }
-    // Calculate initial mana based on current inventory
-    this.recalculateMaxMana();
+    // REMOVED: Calculate initial mana based on current inventory
+    // Initial mana will be set when the first snapshot arrives via the event listener.
+    // this.recalculateMaxMana();
 
     // REMOVED: Initialize discoverable regions and exits
     // this._initializeDiscoverableData();
@@ -112,17 +120,19 @@ export class LoopState {
     this._setupAutoSave();
 
     // Try to load saved state
-    this.loadFromStorage();
+    this.loadFromStorage(); // Load saved mana/xp etc AFTER setting listeners
   }
 
   /**
-   * Calculate max mana based on inventory items
+   * Calculate max mana based on inventory items from a snapshot
+   * @param {object} snapshot - The state snapshot containing inventory data.
    */
-  recalculateMaxMana() {
-    // Ensure dependencies are set
+  recalculateMaxMana(snapshot) {
+    // Accepts snapshot as argument
+    // Dependencies should already be set if this is called via event listener
     if (!this.stateManager || !this.eventBus) {
       console.warn(
-        '[LoopState] Cannot recalculate max mana: Dependencies not set.'
+        '[LoopState] Cannot recalculate max mana: Dependencies not set (should not happen via event).'
       );
       return;
     }
@@ -130,16 +140,27 @@ export class LoopState {
     const baseMana = 100;
     let itemCount = 0;
 
-    // Count all items in inventory
-    if (
-      this.stateManager.instance.inventory &&
-      this.stateManager.instance.inventory.items
-    ) {
-      this.stateManager.instance.inventory.items.forEach((count, item) => {
+    // REMOVED: Get current snapshot from the proxy
+    // const snapshot = this.stateManager.getSnapshot();
+
+    // Count all items in inventory from the provided snapshot argument
+    if (snapshot && snapshot.inventory && snapshot.inventory.items) {
+      // Assuming snapshot.inventory.items is a Map or similar iterable
+      // Ensure items is iterable (it might be a plain object from JSON)
+      const itemsIterable =
+        snapshot.inventory.items instanceof Map
+          ? snapshot.inventory.items.entries()
+          : Object.entries(snapshot.inventory.items);
+
+      for (const [item, count] of itemsIterable) {
         if (count > 0) {
           itemCount += count;
         }
-      });
+      }
+    } else {
+      console.warn(
+        '[LoopState] Could not get inventory data from state snapshot.'
+      );
     }
 
     this.maxMana = baseMana + itemCount * this.manaPerItem;
@@ -969,27 +990,18 @@ export class LoopState {
   loadFromSerializedState(state) {
     if (!state) return;
 
-    // Always recalculate maxMana based on current inventory
-    this.recalculateMaxMana();
+    // REMOVED: Always recalculate maxMana based on current inventory
+    // Max mana will be calculated when the first snapshot event arrives.
+    // this.recalculateMaxMana();
 
-    // Cap current mana at the max value
-    this.currentMana = Math.min(
-      state.currentMana ?? this.maxMana,
-      this.maxMana
-    );
+    // Load current mana, cap at a reasonable default if needed (e.g., 100) until snapshot arrives
+    // We don't know the true maxMana yet.
+    this.currentMana = state.currentMana ?? 100;
 
     // Load region XP
     this.regionXP = new Map(state.regionXP || []);
 
     // REMOVED: Discovery state loading
-    // this.discoveredRegions = new Set(state.discoveredRegions || ['Menu']);
-    // this.discoveredLocations = new Set(state.discoveredLocations || []);
-    // this.discoveredExits = new Map();
-    // (state.discoveredExits || []).forEach(([region, exits]) => {
-    //   this.discoveredExits.set(region, new Set(exits));
-    // });
-    // Ensure Menu region is discovered with its exits
-    // this._initializeDiscoverableData(); // <-- No longer needed/exists
 
     // Load game speed
     this.gameSpeed = state.gameSpeed ?? 10;
@@ -1010,7 +1022,14 @@ export class LoopState {
     this.repeatExploreStates = new Map(state.repeatExploreStates || []);
 
     // Notify state loaded
-    this.eventBus.publish('loopState:stateLoaded', {});
+    if (this.eventBus) {
+      // Ensure eventBus is available
+      this.eventBus.publish('loopState:stateLoaded', {});
+    } else {
+      console.warn(
+        '[LoopState] EventBus not available during loadFromSerializedState to publish stateLoaded event.'
+      );
+    }
   }
 
   /**

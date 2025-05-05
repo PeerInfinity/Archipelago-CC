@@ -1,10 +1,10 @@
-import stateManagerSingleton from './stateManagerSingleton.js';
+// frontend/modules/stateManager/ruleEngine.js
 
-// Instead of accessing instance immediately, create a getter function
-// that will only access the instance when the function is called
-function getStateManager() {
-  return stateManagerSingleton.instance;
-}
+// Remove stateManagerSingleton import and getter
+// import stateManagerSingleton from './stateManagerSingleton.js';
+// function getStateManager() {
+//   return stateManagerSingleton.instance;
+// }
 
 // Evaluation trace object for capturing debug info
 class RuleTrace {
@@ -44,9 +44,10 @@ class RuleTrace {
 /**
  * Recursively checks if a rule object contains defeat methods in its chain
  * @param {Object} ruleObj - The rule object to check
+ * @param {StateSnapshotInterface} stateSnapshotInterface - Provides state access methods
  * @returns {boolean} - True if a defeat method was found in the chain
  */
-function hasDefeatMethod(ruleObj) {
+function hasDefeatMethod(ruleObj, stateSnapshotInterface) {
   if (!ruleObj || typeof ruleObj !== 'object') return false;
 
   // Check if this is an attribute access to can_defeat or defeat_rule
@@ -59,12 +60,14 @@ function hasDefeatMethod(ruleObj) {
 
   // Recursively check object property for attribute chains
   if (ruleObj.object) {
-    return hasDefeatMethod(ruleObj.object);
+    // Pass the interface down
+    return hasDefeatMethod(ruleObj.object, stateSnapshotInterface);
   }
 
   // Check function property for function calls
   if (ruleObj.function) {
-    return hasDefeatMethod(ruleObj.function);
+    // Pass the interface down
+    return hasDefeatMethod(ruleObj.function, stateSnapshotInterface);
   }
 
   return false;
@@ -84,11 +87,10 @@ function safeLog(message, level = 'debug') {
 /**
  * Specifically checks if a rule is a boss defeat check using targeted pattern matching
  * @param {Object} rule - The rule object to check
+ * @param {StateSnapshotInterface} stateSnapshotInterface - Provides state access methods
  * @returns {boolean} - True if this is a boss defeat check
  */
-function isBossDefeatCheck(rule) {
-  const stateManager = getStateManager();
-
+function isBossDefeatCheck(rule, stateSnapshotInterface) {
   // Direct check for simple cases
   if (
     rule.type === 'attribute' &&
@@ -129,715 +131,519 @@ function isBossDefeatCheck(rule) {
   return false;
 }
 
-export const evaluateRule = (rule, depth = 0) => {
+/**
+ * Evaluates a rule against the provided state snapshot.
+ * @param {any} rule - The rule object (or primitive) to evaluate.
+ * @param {object} stateSnapshotInterface - An object providing methods to access state (e.g., hasItem, hasFlag, getSetting).
+ * @param {number} [depth=0] - Current recursion depth for debugging.
+ * @returns {boolean|any} - The result of the rule evaluation.
+ */
+export const evaluateRule = (rule, stateSnapshotInterface, depth = 0) => {
   if (!rule) {
-    return true;
+    return true; // Empty rule is true
   }
 
-  // Get stateManager only when needed
-  const stateManager = getStateManager();
-
-  if (!stateManager.inventory) {
-    return false; // Add early return if inventory is undefined
-  }
-
-  // Debug check for specific boss defeat patterns
+  // Validate the state snapshot interface (basic check)
   if (
-    rule &&
-    rule.type === 'function_call' &&
-    rule.function &&
-    rule.function.type === 'attribute' &&
-    rule.function.attr === 'can_defeat'
+    !stateSnapshotInterface ||
+    typeof stateSnapshotInterface.hasItem !== 'function'
   ) {
-    //console.log('FOUND DIRECT can_defeat CALL', {
-    //  rule: rule,
-    //  depth: depth,
-    //});
+    console.error(
+      '[evaluateRule] Invalid or missing stateSnapshotInterface provided.',
+      { rule }
+    );
+    // Depending on strictness, either throw an error or return false
+    // Returning false might mask issues but prevents crashes.
+    return false;
   }
 
   // Create trace object for this evaluation
   const trace = new RuleTrace(rule, depth);
 
   let result = false;
-  switch (rule.type) {
+  // Use a consistent type check for the rule itself
+  const ruleType = rule?.type;
+
+  switch (ruleType) {
     case 'helper': {
-      if (
-        stateManager.helpers &&
-        typeof stateManager.helpers.executeHelper === 'function'
-      ) {
-        // Process arguments - they may now be complex objects instead of simple values
+      // Check if the snapshot interface provides a way to execute helpers
+      if (typeof stateSnapshotInterface.executeHelper === 'function') {
+        // Process arguments - they may be complex objects needing evaluation
         const processedArgs = (rule.args || []).map((arg) => {
-          // If the arg is a complex object with its own type, evaluate it first
           if (arg && typeof arg === 'object' && arg.type) {
-            return evaluateRule(arg, depth + 1);
+            // Recursively evaluate argument using the same snapshot interface
+            return evaluateRule(arg, stateSnapshotInterface, depth + 1);
           }
-          // Otherwise return it as-is
-          return arg;
+          return arg; // Primitives or non-rule objects passed as-is
         });
 
-        // Call the helper with processed arguments
-        //console.log(`Calling helper: ${rule.name} with args:`, processedArgs);
-        result = stateManager.helpers.executeHelper(
-          rule.name,
-          ...processedArgs
-        );
+        try {
+          result = stateSnapshotInterface.executeHelper(
+            rule.name,
+            ...processedArgs
+          );
+        } catch (e) {
+          console.error(
+            `[evaluateRule] Error executing helper '${rule.name}' via snapshot interface:`,
+            e,
+            { args: processedArgs }
+          );
+          result = false;
+        }
       } else {
-        safeLog(`No helper implementation available for: ${rule.name}`, {
-          availableHelpers: stateManager.helpers
-            ? Object.keys(stateManager.helpers)
-            : [],
-        });
+        console.warn(
+          `[evaluateRule] stateSnapshotInterface does not provide executeHelper method. Cannot execute helper: ${rule.name}`
+        );
         result = false;
       }
       break;
     }
 
     case 'and': {
-      // For AND rules, short-circuit on first failure
       result = true;
-      for (const condition of rule.conditions) {
-        const conditionResult = evaluateRule(condition, depth + 1);
+      for (const condition of rule.conditions || []) {
+        // Add default empty array
+        const conditionResult = evaluateRule(
+          condition,
+          stateSnapshotInterface,
+          depth + 1
+        );
         trace.addChild(
           new RuleTrace(condition, depth + 1).complete(conditionResult)
         );
         if (!conditionResult) {
           result = false;
-          break; // Short-circuit on first false condition
+          break; // Short-circuit
         }
       }
       break;
     }
 
     case 'or': {
-      // For OR rules, short-circuit on first success
       result = false;
-      for (const condition of rule.conditions) {
-        const conditionResult = evaluateRule(condition, depth + 1);
+      for (const condition of rule.conditions || []) {
+        // Add default empty array
+        const conditionResult = evaluateRule(
+          condition,
+          stateSnapshotInterface,
+          depth + 1
+        );
         trace.addChild(
           new RuleTrace(condition, depth + 1).complete(conditionResult)
         );
         if (conditionResult) {
           result = true;
-          break; // Short-circuit on first true condition
+          break; // Short-circuit
         }
       }
       break;
     }
 
     case 'item_check': {
-      // Handle item_check with the new structure
-      // Now 'item' might be a complex object instead of a direct string
       let itemName;
       if (typeof rule.item === 'string') {
-        // Legacy format: direct string
         itemName = rule.item;
       } else if (rule.item && rule.item.type === 'constant') {
-        // New format: {type: 'constant', value: 'ItemName'}
         itemName = rule.item.value;
       } else if (rule.item) {
-        // Other complex expression - evaluate it
-        itemName = evaluateRule(rule.item, depth + 1);
+        // Evaluate complex item expression
+        itemName = evaluateRule(rule.item, stateSnapshotInterface, depth + 1);
       }
 
-      // Check if we got a valid string for the item name
       if (typeof itemName === 'string') {
-        result = stateManager.inventory.has?.(itemName) ?? false;
+        try {
+          result = stateSnapshotInterface.hasItem(itemName);
+        } catch (e) {
+          console.error(
+            `[evaluateRule] Error calling hasItem for '${itemName}':`,
+            e
+          );
+          result = false;
+        }
       } else {
+        console.warn(
+          '[evaluateRule] item_check resolved to non-string value:',
+          itemName
+        );
         result = false;
       }
       break;
     }
 
     case 'count_check': {
-      // Handle count_check with the new structure
-      // Both item and count might be complex objects
-      let itemName, countValue;
+      let itemName;
+      let requiredCount = 0;
 
-      // Process item
+      // Resolve item name
       if (typeof rule.item === 'string') {
         itemName = rule.item;
-      } else if (rule.item && rule.item.type === 'constant') {
+      } else if (rule.item?.type === 'constant') {
         itemName = rule.item.value;
       } else if (rule.item) {
-        itemName = evaluateRule(rule.item, depth + 1);
+        itemName = evaluateRule(rule.item, stateSnapshotInterface, depth + 1);
       }
 
-      // Process count
+      // Resolve required count
       if (typeof rule.count === 'number') {
-        countValue = rule.count;
-      } else if (rule.count && rule.count.type === 'constant') {
-        countValue = rule.count.value;
+        requiredCount = rule.count;
+      } else if (rule.count?.type === 'constant') {
+        requiredCount = Number(rule.count.value); // Ensure numeric
       } else if (rule.count) {
-        countValue = evaluateRule(rule.count, depth + 1);
-      } else {
-        countValue = 1; // Default count
+        requiredCount = Number(
+          evaluateRule(rule.count, stateSnapshotInterface, depth + 1)
+        ); // Ensure numeric
       }
 
-      // Make the comparison
-      result = (stateManager.inventory.count?.(itemName) ?? 0) >= countValue;
+      if (typeof itemName === 'string' && !isNaN(requiredCount)) {
+        try {
+          const currentCount = stateSnapshotInterface.countItem(itemName);
+          result = currentCount >= requiredCount;
+        } catch (e) {
+          console.error(
+            `[evaluateRule] Error calling countItem for '${itemName}':`,
+            e
+          );
+          result = false;
+        }
+      } else {
+        console.warn('[evaluateRule] count_check had invalid item or count:', {
+          itemName,
+          requiredCount,
+        });
+        result = false;
+      }
       break;
     }
 
     case 'group_check': {
-      // Handle group_check with the new structure
+      // Added Group Check
       let groupName;
+      let requiredCount = 0;
+
+      // Resolve group name
       if (typeof rule.group === 'string') {
         groupName = rule.group;
-      } else if (rule.group && rule.group.type === 'constant') {
+      } else if (rule.group?.type === 'constant') {
         groupName = rule.group.value;
       } else if (rule.group) {
-        groupName = evaluateRule(rule.group, depth + 1);
+        groupName = evaluateRule(rule.group, stateSnapshotInterface, depth + 1);
       }
 
-      result =
-        groupName &&
-        stateManager.inventory.countGroup(groupName) >= (rule.count || 1);
-      break;
-    }
-
-    case 'constant': {
-      result = rule.value;
-      break;
-    }
-
-    case 'count': {
-      let itemName;
-      if (typeof rule.item === 'string') {
-        itemName = rule.item;
-      } else if (rule.item && rule.item.type === 'constant') {
-        itemName = rule.item.value;
-      } else if (rule.item) {
-        itemName = evaluateRule(rule.item, depth + 1);
+      // Resolve required count
+      if (typeof rule.count === 'number') {
+        requiredCount = rule.count;
+      } else if (rule.count?.type === 'constant') {
+        requiredCount = Number(rule.count.value);
+      } else if (rule.count) {
+        requiredCount = Number(
+          evaluateRule(rule.count, stateSnapshotInterface, depth + 1)
+        );
       }
 
-      result = stateManager.inventory.count(itemName);
-      break;
-    }
-
-    case 'state_flag': {
-      let flagName;
-      if (typeof rule.flag === 'string') {
-        flagName = rule.flag;
-      } else if (rule.flag && rule.flag.type === 'constant') {
-        flagName = rule.flag.value;
-      } else if (rule.flag) {
-        flagName = evaluateRule(rule.flag, depth + 1);
-      }
-
-      result = flagName && stateManager.state?.hasFlag(flagName);
-      break;
-    }
-
-    // NEW NODE TYPES
-
-    case 'attribute': {
-      // Check if this is a boss defeat attribute check
-      if (rule.attr === 'can_defeat' || rule.attr === 'defeat_rule') {
-        if (stateManager.debugMode) {
-          console.log('Detected boss defeat check via attribute');
-        }
-        result = true;
-        break;
-      }
-
-      // Handle attribute access (e.g., foo.bar)
-      // First evaluate the object
-      let baseObject = evaluateRule(rule.object, depth + 1);
-
-      // Check if we have a valid base object
-      if (baseObject == null) {
-        result = false;
-        break;
-      }
-
-      // Handle special cases for common Python builtins
-      if (rule.object.type === 'name' && rule.object.name === 'builtins') {
-        // Handle Python builtins
-        if (rule.attr === 'len') {
-          return stateManager.helpers.len;
-        } else if (rule.attr === 'zip') {
-          return stateManager.helpers.zip;
-        } else if (rule.attr === 'range') {
-          return stateManager.helpers.range;
-        } else if (rule.attr === 'all') {
-          return stateManager.helpers.all;
-        } else if (rule.attr === 'any') {
-          return stateManager.helpers.any;
-        } else if (rule.attr === 'bool') {
-          return stateManager.helpers.to_bool;
-        }
-      }
-
-      // Look up the attribute - specifically handle Python-like attribute access
-      if (typeof baseObject === 'object' && baseObject !== null) {
-        // Standard attribute lookup
-        result = baseObject[rule.attr];
-
-        // Special handling for getattr
-        if (
-          result === undefined &&
-          stateManager.helpers &&
-          typeof stateManager.helpers.getattr === 'function'
-        ) {
-          result = stateManager.helpers.getattr(baseObject, rule.attr);
-        }
-
-        // If the result is a function, don't call it yet - function_call will do that
-        if (typeof result === 'function') {
-          // Return the function reference
-          return result;
-        }
-      } else {
-        // Invalid base object, return false
-        result = false;
-      }
-      break;
-    }
-
-    case 'subscript': {
-      // Handle subscript access (e.g., foo[bar])
-      // First evaluate the value and index
-      const containerValue = evaluateRule(rule.value, depth + 1);
-      const indexValue = evaluateRule(rule.index, depth + 1);
-
-      // If we have a valid container, access the index
-      if (containerValue !== undefined && containerValue !== null) {
-        result = containerValue[indexValue];
-      } else {
-        result = false;
-      }
-      break;
-    }
-
-    case 'function_call': {
-      // First check if this is a boss defeat check using our enhanced detection
-      if (isBossDefeatCheck(rule)) {
-        if (stateManager.debugMode) {
-          console.log('Detected boss defeat check via enhanced detection');
-        }
-        result = true;
-        break;
-      }
-
-      // Existing detailed debugging for depth 5 patterns (likely boss defeat checks)
       if (
-        depth === 5 &&
-        rule &&
-        rule.type === 'function_call' &&
-        rule.function &&
-        rule.function.type === 'attribute'
+        typeof groupName === 'string' &&
+        !isNaN(requiredCount) &&
+        typeof stateSnapshotInterface.countGroup === 'function'
       ) {
-        console.log('EXAMINING POTENTIAL BOSS DEFEAT CHECK', {
-          rule: rule,
-          functionAttr: rule.function.attr,
-          depth: depth,
-          isBossCheck: isBossDefeatCheck(rule),
-        });
-      }
-
-      // Extract function path and name
-      let functionPath = '';
-      let functionName = '';
-
-      // Process the function identifier
-      if (rule.function.type === 'attribute') {
-        // Build the function path (e.g., "state.multiworld.get_region")
-        functionName = rule.function.attr;
-
-        // Traverse the attribute chain to build the full path
-        let currentObj = rule.function.object;
-        let pathComponents = [];
-
-        // Special case for region.can_reach pattern
-        if (
-          functionName === 'can_reach' &&
-          currentObj.type === 'function_call'
-        ) {
-          // This might be state.multiworld.get_region("RegionName").can_reach()
-          if (
-            currentObj.function.type === 'attribute' &&
-            currentObj.function.attr === 'get_region' &&
-            currentObj.args &&
-            currentObj.args.length > 0
-          ) {
-            // Extract region name from the get_region call
-            let regionName = null;
-            if (currentObj.args[0].type === 'constant') {
-              regionName = currentObj.args[0].value;
-            } else {
-              // If the region name is a complex expression, evaluate it
-              regionName = evaluateRule(currentObj.args[0], depth + 1);
-            }
-
-            if (regionName) {
-              // Directly return the region accessibility check
-              return stateManager.can_reach(regionName, 'Region', 1);
-            }
-          }
-        }
-
-        while (currentObj) {
-          if (currentObj.type === 'attribute') {
-            pathComponents.unshift(currentObj.attr);
-            currentObj = currentObj.object;
-          } else if (currentObj.type === 'name') {
-            pathComponents.unshift(currentObj.name);
-            currentObj = null;
-          } else if (currentObj.type === 'function_call') {
-            // Handle function calls in the chain - just extract the function name
-            if (currentObj.function.type === 'attribute') {
-              pathComponents.unshift(currentObj.function.attr);
-              currentObj = currentObj.function.object;
-            } else {
-              // Unknown function structure, break the loop
-              break;
-            }
-          } else {
-            // Stop traversal for other node types
-            break;
-          }
-        }
-
-        functionPath = pathComponents.join('.');
-        if (functionName) {
-          functionPath += '.' + functionName;
-        }
-      } else if (rule.function.type === 'name') {
-        // Direct function name
-        functionName = rule.function.name;
-        functionPath = functionName;
-      } else {
-        // Unknown function type
-        console.warn('Unhandled function type:', rule.function.type, rule);
-        result = false;
-        break;
-      }
-
-      // Process arguments
-      const processedArgs = (rule.args || []).map((arg) =>
-        evaluateRule(arg, depth + 1)
-      );
-
-      // Map function path to our helpers system
-      if (functionPath.startsWith('state.multiworld.')) {
-        // Handle state.multiworld.X methods
-        const method = functionPath.split('.').pop();
-
-        if (method === 'get_region') {
-          // Map to can_reach with Region type
-          const regionName = processedArgs[0];
-          result = stateManager.can_reach(regionName, 'Region', 1);
-        } else if (method === 'get_location') {
-          // Map to can_reach with Location type
-          const locationName = processedArgs[0];
-          result = stateManager.can_reach(locationName, 'Location', 1);
-        } else if (method === 'get_entrance') {
-          // Map to can_reach with Entrance type
-          const entranceName = processedArgs[0];
-          result = stateManager.can_reach(entranceName, 'Entrance', 1);
-        } else if (method === 'can_reach') {
-          // Handle direct state.multiworld.can_reach(spot, type, player) calls
-          const spotName = processedArgs[0];
-          const typeHint = processedArgs[1] || 'Region'; // Default hint
-          const player = processedArgs[2] || 1; // Default player
-          // Use the helpers.can_reach method which correctly uses stateManager
-          if (
-            stateManager.helpers &&
-            typeof stateManager.helpers.executeHelper === 'function'
-          ) {
-            result = stateManager.helpers.executeHelper(
-              'can_reach',
-              spotName,
-              typeHint,
-              player
-            );
-          } else {
-            console.error(
-              'Cannot execute can_reach: helpers or executeHelper not found.'
-            );
-            result = false;
-          }
-        } else {
-          // For unknown multiworld methods, log and default to false
-          console.warn('Unknown multiworld method:', method, processedArgs);
-          result = false;
-        }
-      } else if (functionPath === 'world.get_location') {
-        // Handle world.get_location("Location Name") -> return "Location Name"
-        // This allows it to be passed as an argument to other helpers
-        if (processedArgs.length > 0) {
-          result = processedArgs[0]; // Return the evaluated location name
-        } else {
-          console.warn('world.get_location called with no arguments');
-          result = undefined;
-        }
-      } else if (
-        functionPath.includes('.can_defeat') ||
-        functionPath.includes('.defeat_rule') ||
-        // Note: The explicit isBossDefeatCheck is handled at the start of this case
-        // but we keep these simpler checks for backward compatibility
-        (rule.function &&
-          rule.function.type === 'attribute' &&
-          rule.function.attr === 'can_defeat') ||
-        hasDefeatMethod(rule.function)
-      ) {
-        // Boss defeat checks - these typically evaluate to true in our frontend system
-        // since we don't have complex boss fight mechanics
-
-        if (stateManager.debugMode) {
-          console.log('Boss defeat check detected via function path:', {
-            functionPath,
-            rule: rule,
-          });
-        }
-
-        // Always return true for boss defeat checks
-        result = true;
-      } else if (functionPath.includes('.can_reach')) {
-        // Handle region can_reach calls
-
-        // Check for deeper structure where the path might include get_region
-        if (functionPath.includes('get_region')) {
-          // The path contains get_region, try to extract region name from processed args
-          // This might be set already if we found a direct get_region call
-          let regionName = null;
-
-          // Look for the region name in the path parts and args
-          const pathParts = functionPath.split('.');
-          const getRegionIndex = pathParts.indexOf('get_region');
-
-          if (getRegionIndex !== -1 && processedArgs.length > 0) {
-            // If get_region is in the path and we have args, the first arg is likely the region name
-            regionName = processedArgs[0];
-          }
-
-          if (regionName) {
-            result = stateManager.can_reach(regionName, 'Region', 1);
-          } else {
-            console.warn('Could not determine region name for', functionPath);
-            result = false;
-          }
-        } else {
-          // Traditional format: region.can_reach(state)
-          const pathParts = functionPath.split('.');
-          // Get the first part which should be the region name
-          const regionName = pathParts[0];
-          result = stateManager.can_reach(regionName, 'Region', 1);
-        }
-      } else if (
-        stateManager.helpers &&
-        typeof stateManager.helpers.executeHelper === 'function'
-      ) {
-        // Try to map to a helper function
         try {
-          result = stateManager.helpers.executeHelper(
-            functionName,
-            ...processedArgs
-          );
-        } catch (error) {
-          console.warn(
-            'Error executing helper for function:',
-            functionPath,
-            error
+          const currentCount = stateSnapshotInterface.countGroup(groupName);
+          result = currentCount >= requiredCount;
+        } catch (e) {
+          console.error(
+            `[evaluateRule] Error calling countGroup for '${groupName}':`,
+            e
           );
           result = false;
         }
       } else {
-        // Log unhandled function calls
-        console.warn('Unhandled function call:', functionPath, processedArgs);
+        if (typeof stateSnapshotInterface.countGroup !== 'function')
+          console.warn(
+            '[evaluateRule] countGroup not available on snapshot interface.'
+          );
+        console.warn('[evaluateRule] group_check had invalid group or count:', {
+          groupName,
+          requiredCount,
+        });
         result = false;
       }
-
       break;
     }
 
-    case 'name': {
-      // Handle name resolution (e.g., 'player')
-      if (rule.name === 'player') {
-        // Assuming player ID is stored in stateManager.playerSlot
-        result = stateManager.playerSlot;
-        // console.log(`[evaluateRule] Name 'player' resolved to: ${result} (Type: ${typeof result})`); // DEBUG LOG
-      } else {
-        // Handle other named variables if needed
-        safeLog(`Unsupported name variable: ${rule.name}`);
-        result = undefined; // Or null, or throw error
+    case 'setting_check': {
+      // Added Setting Check
+      let settingName;
+      let expectedValue = true; // Default assumption for boolean settings
+
+      // Resolve setting name
+      if (typeof rule.setting === 'string') {
+        settingName = rule.setting;
+      } else if (rule.setting?.type === 'constant') {
+        settingName = rule.setting.value;
+      } else if (rule.setting) {
+        settingName = evaluateRule(
+          rule.setting,
+          stateSnapshotInterface,
+          depth + 1
+        );
       }
-      break;
-    }
 
-    case 'comparison': {
-      const leftValue =
-        typeof rule.left === 'object' && rule.left.type
-          ? evaluateRule(rule.left, depth + 1)
-          : rule.left;
-      const rightValue =
-        typeof rule.right === 'object' && rule.right.type
-          ? evaluateRule(rule.right, depth + 1)
-          : rule.right;
+      // Resolve expected value (if provided)
+      if (rule.value !== undefined) {
+        if (rule.value?.type) {
+          expectedValue = evaluateRule(
+            rule.value,
+            stateSnapshotInterface,
+            depth + 1
+          );
+        } else {
+          expectedValue = rule.value;
+        }
+      }
 
-      switch (rule.op) {
-        case 'GtE':
-          result = leftValue >= rightValue;
-          break;
-        case 'Gt':
-          result = leftValue > rightValue;
-          break;
-        case 'LtE':
-          result = leftValue <= rightValue;
-          break;
-        case 'Lt':
-          result = leftValue < rightValue;
-          break;
-        case 'Eq':
-          result = leftValue === rightValue;
-          break;
-        default:
+      if (
+        typeof settingName === 'string' &&
+        typeof stateSnapshotInterface.getSetting === 'function'
+      ) {
+        try {
+          const actualValue = stateSnapshotInterface.getSetting(settingName);
+          result = actualValue === expectedValue;
+        } catch (e) {
+          console.error(
+            `[evaluateRule] Error calling getSetting for '${settingName}':`,
+            e
+          );
           result = false;
+        }
+      } else {
+        if (typeof stateSnapshotInterface.getSetting !== 'function')
+          console.warn(
+            '[evaluateRule] getSetting not available on snapshot interface.'
+          );
+        console.warn('[evaluateRule] setting_check had invalid setting name:', {
+          settingName,
+        });
+        result = false;
       }
       break;
     }
 
     case 'state_method': {
-      const startTime = performance.now();
-
-      // Process arguments - now they might be complex objects
-      const processedArgs = (rule.args || []).map((arg) => {
-        if (arg && typeof arg === 'object' && arg.type) {
-          return evaluateRule(arg, depth + 1);
-        }
-        return arg;
-      });
-
-      //console.log(
-      //  `Calling state_method: ${rule.method} with args:`,
-      //  processedArgs
-      //);
-
-      // Try using stateManager's executeStateMethod
+      // Added State Method execution
       if (
-        stateManager &&
-        typeof stateManager.executeStateMethod === 'function'
+        typeof stateSnapshotInterface.executeStateManagerMethod === 'function'
       ) {
-        result = stateManager.executeStateMethod(rule.method, ...processedArgs);
-      }
-      // Fall back to helpers if stateManager doesn't have the method
-      else if (
-        stateManager.helpers &&
-        typeof stateManager.helpers.executeStateMethod === 'function'
-      ) {
-        result = stateManager.helpers.executeStateMethod(
-          rule.method,
-          ...processedArgs
-        );
-      } else {
-        safeLog(
-          `No state method implementation available for: ${rule.method}`,
-          {
-            availableHelpers: stateManager.helpers
-              ? Object.keys(stateManager.helpers)
-              : [],
+        const processedArgs = (rule.args || []).map((arg) => {
+          if (arg && typeof arg === 'object' && arg.type) {
+            return evaluateRule(arg, stateSnapshotInterface, depth + 1);
           }
+          return arg;
+        });
+        try {
+          result = stateSnapshotInterface.executeStateManagerMethod(
+            rule.method,
+            ...processedArgs
+          );
+        } catch (e) {
+          console.error(
+            `[evaluateRule] Error executing state method '${rule.method}' via snapshot interface:`,
+            e,
+            { args: processedArgs }
+          );
+          result = false;
+        }
+      } else {
+        console.warn(
+          `[evaluateRule] stateSnapshotInterface does not provide executeStateManagerMethod. Cannot execute: ${rule.method}`
         );
         result = false;
       }
-
-      const duration = performance.now() - startTime;
-      if (duration > 5) {
-        // Only log slow method calls
-        safeLog(
-          `State method ${rule.method} took ${duration.toFixed(2)}ms`,
-          {
-            args: processedArgs || [],
-            result,
-          },
-          'warn'
-        );
-      }
-
       break;
     }
 
-    case 'compare': {
-      const leftValue = evaluateRule(rule.left, depth + 1);
-      let rightValue = rule.right;
+    case 'constant': {
+      // Constants simply evaluate to their value
+      result = rule.value;
+      break;
+    }
 
-      // If the right side is complex, evaluate it
-      if (rightValue && typeof rightValue === 'object' && rightValue.type) {
-        if (rightValue.type === 'list') {
-          // Evaluate each element in the list
-          rightValue = rightValue.value.map((item) =>
-            evaluateRule(item, depth + 1)
+    case 'attribute': {
+      // Evaluate the base object
+      const baseObject = evaluateRule(
+        rule.object,
+        stateSnapshotInterface,
+        depth + 1
+      );
+      // Access the attribute if the base object is valid
+      if (baseObject !== null && baseObject !== undefined) {
+        try {
+          result = baseObject[rule.attr];
+        } catch (e) {
+          console.error(
+            `[evaluateRule] Error accessing attribute '${rule.attr}' on object:`,
+            { baseObject, error: e }
           );
-        } else {
-          // Evaluate other complex types
-          rightValue = evaluateRule(rightValue, depth + 1);
+          result = undefined; // Indicate failure to access
         }
+      } else {
+        result = undefined; // Indicate failure to access
       }
+      break;
+    }
 
-      // Perform comparison
+    case 'function_call': {
+      // This is complex. Could be calling a helper, state method, or something else.
+      // Simplified: Assume it resolves to a callable function (perhaps via state_method or helper)
+      // Proper implementation would need to evaluate rule.function to get the function reference.
+      // For now, let's try treating it like a state_method call if the structure fits
+      if (rule.function?.type === 'attribute' && rule.function?.object?.type) {
+        // Heuristic: looks like object.method()
+        const methodName = rule.function.attr;
+        if (
+          typeof stateSnapshotInterface.executeStateManagerMethod === 'function'
+        ) {
+          const processedArgs = (rule.args || []).map((arg) => {
+            if (arg && typeof arg === 'object' && arg.type) {
+              return evaluateRule(arg, stateSnapshotInterface, depth + 1);
+            }
+            return arg;
+          });
+          try {
+            // This assumes the method exists on the conceptual 'state manager' represented by the interface
+            result = stateSnapshotInterface.executeStateManagerMethod(
+              methodName,
+              ...processedArgs
+            );
+          } catch (e) {
+            console.error(
+              `[evaluateRule] Error executing method '${methodName}' from function_call:`,
+              e,
+              { args: processedArgs }
+            );
+            result = false;
+          }
+        } else {
+          console.warn(
+            `[evaluateRule] Cannot execute function_call '${methodName}', executeStateManagerMethod not available.`
+          );
+          result = false;
+        }
+      } else {
+        console.warn('[evaluateRule] Unhandled function_call type:', rule);
+        result = false;
+      }
+      break;
+    }
+
+    // START NEW CASE
+    case 'conditional': {
+      // Evaluate the test condition first
+      const testResult = evaluateRule(rule.test, stateSnapshotInterface);
+      // Evaluate the appropriate branch based on the test result
+      const branchToEvaluate = testResult ? rule.if_true : rule.if_false;
+      if (branchToEvaluate) {
+        return evaluateRule(branchToEvaluate, stateSnapshotInterface);
+      } else {
+        // If the chosen branch doesn't exist, the condition effectively evaluates to false/unmet
+        // (or true if testResult was true and only if_true existed, but standard is usually false if branch missing)
+        return false;
+      }
+    }
+    // END NEW CASE
+
+    // START NEW COMPARE CASE
+    case 'compare': {
+      const leftValue = evaluateRule(
+        rule.left,
+        stateSnapshotInterface,
+        depth + 1
+      );
+      const rightValue = evaluateRule(
+        rule.right,
+        stateSnapshotInterface,
+        depth + 1
+      );
       switch (rule.op) {
         case '==':
-          // Basic deep comparison for arrays/objects
-          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
-            result =
-              leftValue.length === rightValue.length &&
-              leftValue.every((val, index) => val === rightValue[index]);
-          } else if (
-            typeof leftValue === 'object' &&
-            leftValue !== null &&
-            typeof rightValue === 'object' &&
-            rightValue !== null
-          ) {
-            // Simple object comparison (can be enhanced)
-            result = JSON.stringify(leftValue) === JSON.stringify(rightValue);
-          } else {
-            result = leftValue === rightValue;
-          }
+          result = leftValue === rightValue;
           break;
         case '!=':
-          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
-            result =
-              leftValue.length !== rightValue.length ||
-              leftValue.some((val, index) => val !== rightValue[index]);
-          } else if (
-            typeof leftValue === 'object' &&
-            leftValue !== null &&
-            typeof rightValue === 'object' &&
-            rightValue !== null
-          ) {
-            result = JSON.stringify(leftValue) !== JSON.stringify(rightValue);
-          } else {
-            result = leftValue !== rightValue;
-          }
+          result = leftValue !== rightValue;
           break;
-        // Add other operators (>, <, >=, <=) as needed
+        case '>':
+          result = leftValue > rightValue;
+          break;
+        case '>=':
+          result = leftValue >= rightValue;
+          break;
+        case '<':
+          result = leftValue < rightValue;
+          break;
+        case '<=':
+          result = leftValue <= rightValue;
+          break;
         default:
-          safeLog(`Unsupported comparison operator: ${rule.op}`);
+          console.warn(
+            `[evaluateRule] Unknown comparison operator: ${rule.op}`
+          );
           result = false;
       }
       break;
     }
+    // END NEW COMPARE CASE
 
+    // START NEW LIST CASE
     case 'list': {
-      // Handle list literals (e.g., [item1, item2])
-      if (Array.isArray(rule.value)) {
-        // Evaluate each element in the list
-        result = rule.value.map((element) => evaluateRule(element, depth + 1));
+      // Evaluate each element in the list
+      result = (rule.value || []).map((element) =>
+        evaluateRule(element, stateSnapshotInterface, depth + 1)
+      );
+      break;
+    }
+    // END NEW LIST CASE
+
+    // START NEW NAME CASE
+    case 'name': {
+      // Attempt to resolve the name from the snapshot context
+      // Simple cases first: player slot?
+      if (
+        rule.name === 'player' &&
+        typeof stateSnapshotInterface.getPlayerSlot === 'function'
+      ) {
+        result = stateSnapshotInterface.getPlayerSlot();
       } else {
-        console.warn('List rule type found, but value is not an array:', rule);
-        result = []; // Return empty array on error
+        // TODO: Need a more general way to resolve names/variables
+        // console.warn(`[evaluateRule] Unhandled name reference: ${rule.name}`);
+        result = undefined; // Return undefined for unresolved names
       }
       break;
     }
+    // END NEW NAME CASE
 
-    default: {
-      safeLog(`Unknown rule type: ${rule.type}`);
-      result = false;
-    }
+    // Basic types / Fallback
+    case 'string':
+    case 'number':
+    case 'boolean':
+      result = rule; // Primitives evaluate to themselves in this context
+      break;
+
+    default:
+      // If the rule is just a string (legacy format? e.g., region name for can_reach)
+      // Handle simple string rules as potential region checks for can_reach? Risky.
+      // Let's explicitly require rule objects for clarity.
+      if (typeof rule === 'string') {
+        console.warn(
+          `[evaluateRule] Encountered raw string rule '${rule}'. Evaluation logic might be incomplete. Assuming false.`
+        );
+        result = false;
+      } else {
+        console.warn('[evaluateRule] Unknown rule type:', ruleType, rule);
+        result = false; // Default to false for unknown types
+      }
   }
 
-  // Complete the trace but don't try to add it to inventory debug
+  // Complete the trace
   trace.complete(result);
+  // TODO: Add trace logging/storage if needed
 
   return result;
 };

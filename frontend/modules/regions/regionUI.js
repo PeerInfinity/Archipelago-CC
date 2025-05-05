@@ -1,5 +1,5 @@
 // regionUI.js
-import { stateManagerSingleton } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
 import { PathAnalyzerUI } from '../pathAnalyzer/index.js';
 import commonUI from '../commonUI/index.js';
@@ -211,11 +211,8 @@ export class RegionUI {
 
   showStartRegion(startRegionName) {
     // Ensure instance and regions are available before proceeding
-    if (
-      !stateManagerSingleton.instance ||
-      !stateManagerSingleton.instance.regions ||
-      !stateManagerSingleton.instance.regions[startRegionName]
-    ) {
+    const snapshot = stateManager.getSnapshot();
+    if (!snapshot || !snapshot.regions || !snapshot.regions[startRegionName]) {
       console.warn(
         `[RegionUI] Warning: start region ${startRegionName} not found or state not ready.`
       );
@@ -271,31 +268,27 @@ export class RegionUI {
   }
 
   expandAllRegions() {
+    const snapshot = stateManager.getSnapshot();
     if (this.showAll) {
-      if (
-        !stateManagerSingleton.instance ||
-        !stateManagerSingleton.instance.regions
-      ) {
+      if (!snapshot || !snapshot.regions) {
         console.warn(
           '[RegionUI] StateManager instance or regions not ready in expandAllRegions'
         );
         return;
       }
-      Object.keys(stateManagerSingleton.instance.regions).forEach(
-        (regionName, index) => {
-          const uid = `all_${index}`;
-          const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-          if (regionObj) {
-            regionObj.expanded = true;
-          } else {
-            this.visitedRegions.push({
-              name: regionName,
-              expanded: true,
-              uid: uid,
-            });
-          }
+      Object.keys(snapshot.regions).forEach((regionName, index) => {
+        const uid = `all_${index}`;
+        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+        if (regionObj) {
+          regionObj.expanded = true;
+        } else {
+          this.visitedRegions.push({
+            name: regionName,
+            expanded: true,
+            uid: uid,
+          });
         }
-      );
+      });
     } else {
       this.visitedRegions.forEach((region) => {
         region.expanded = true;
@@ -305,31 +298,27 @@ export class RegionUI {
   }
 
   collapseAllRegions() {
+    const snapshot = stateManager.getSnapshot();
     if (this.showAll) {
-      if (
-        !stateManagerSingleton.instance ||
-        !stateManagerSingleton.instance.regions
-      ) {
+      if (!snapshot || !snapshot.regions) {
         console.warn(
           '[RegionUI] StateManager instance or regions not ready in collapseAllRegions'
         );
         return;
       }
-      Object.keys(stateManagerSingleton.instance.regions).forEach(
-        (regionName, index) => {
-          const uid = `all_${index}`;
-          const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-          if (regionObj) {
-            regionObj.expanded = false;
-          } else {
-            this.visitedRegions.push({
-              name: regionName,
-              expanded: false,
-              uid: uid,
-            });
-          }
+      Object.keys(snapshot.regions).forEach((regionName, index) => {
+        const uid = `all_${index}`;
+        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
+        if (regionObj) {
+          regionObj.expanded = false;
+        } else {
+          this.visitedRegions.push({
+            name: regionName,
+            expanded: false,
+            uid: uid,
+          });
         }
-      );
+      });
     } else {
       this.visitedRegions.forEach((region) => {
         region.expanded = false;
@@ -339,103 +328,98 @@ export class RegionUI {
   }
 
   renderAllRegions() {
-    const container = this.regionsContainer;
-    if (!container) {
-      console.warn('[RegionUI] No #regions-panel-content element found');
-      return;
-    }
-    container.innerHTML = '';
+    // Clear the container first
+    this.regionsContainer.innerHTML = '';
+    const useColorblind = this.colorblindMode;
 
-    // Get setting once for the panel
-    const useRegionColorblind = settingsManager.getSetting(
-      'colorblindMode.regions',
-      true
-    );
-
-    const allRegionData = stateManagerSingleton.instance.regions;
-    if (!allRegionData) {
-      console.log(
-        '[RegionUI] Region data not yet available in stateManagerSingleton.instance during renderAllRegions.'
+    // Get the current state snapshot
+    const snapshot = stateManager.getSnapshot();
+    if (!snapshot || !snapshot.regions) {
+      console.warn(
+        '[RegionUI] Cannot render regions: Snapshot or regions data missing.'
       );
-      container.innerHTML =
-        '<div class="loading-message">Loading region data...</div>';
+      this.regionsContainer.textContent = 'Region data not available.';
       return;
     }
 
-    console.log(
-      `[RegionUI] Rendering regions. ShowAll: ${this.showAll}, Visited Count: ${this.visitedRegions.length}`
-    );
+    // Use region data from the snapshot
+    const allRegionData = snapshot.regions;
+    const reachableRegions = snapshot.reachableRegions || new Set();
+    const checkedLocations = snapshot.checkedLocations || new Set();
 
+    // Determine which regions to show based on 'showAll' flag or visited history
+    let regionsToShow;
     if (this.showAll) {
-      Object.keys(allRegionData).forEach((regionName, index) => {
-        const rData = allRegionData[regionName];
-        const uid = `all_${index}`; // or any stable unique key
-        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-        const expanded = regionObj ? regionObj.expanded : true; // expand all by default
+      regionsToShow = Object.keys(allRegionData).sort();
+    } else {
+      // Use visitedRegions if showAll is false
+      regionsToShow = this.visitedRegions.map((r) => r.name);
+    }
+
+    // Render each region block
+    regionsToShow.forEach((regionName) => {
+      const rData = allRegionData[regionName];
+      if (rData) {
+        // Find if the region exists in visitedRegions to get its expanded state and UID
+        const visitedEntry = this.visitedRegions.find(
+          (vr) => vr.name === regionName
+        );
+        const expanded = visitedEntry ? visitedEntry.expanded : false;
+        const uid = visitedEntry ? visitedEntry.uid : -1; // Use -1 or similar to indicate it wasn't in visited
+
+        // Skip rendering if showAll is false and the region wasn't visited
+        if (!this.showAll && uid === -1) {
+          return;
+        }
+
+        // Generate a UID if this region wasn't previously visited (only happens if showAll is true)
+        const blockUid = uid !== -1 ? uid : this.nextUID++;
+
+        // Add to visitedRegions if showing all and it's not already there
+        if (this.showAll && uid === -1) {
+          this.visitedRegions.push({
+            name: regionName,
+            expanded: false,
+            uid: blockUid,
+          });
+        }
+
         const regionBlock = this.buildRegionBlock(
           rData,
           regionName,
           expanded,
-          uid,
-          useRegionColorblind
+          blockUid,
+          useColorblind,
+          snapshot
         );
         if (regionBlock) {
-          container.appendChild(regionBlock);
+          this.regionsContainer.appendChild(regionBlock);
         }
-      });
-    } else {
-      // If visitedRegions is empty AND region data is available, try setting the start region
-      if (this.visitedRegions.length === 0) {
-        console.log(
-          '[RegionUI] No visited regions, attempting to show start region.'
+      } else {
+        console.warn(
+          `[RegionUI] Data for region '${regionName}' not found in snapshot.`
         );
-        const success = this.showStartRegion('Menu'); // Try to set start region
-        if (success) {
-          // If successful, re-render immediately with the new visitedRegions list
-          console.log('[RegionUI] Start region set, re-rendering...');
-          // We need to re-query container/data as this is a recursive call essentially
-          const currentContainer = this.regionsContainer;
-          const currentData = stateManagerSingleton.instance.regions;
-          if (currentContainer && currentData) {
-            currentContainer.innerHTML = ''; // Clear loading message
-            this.visitedRegions.forEach((regionObj) => {
-              const rData = currentData[regionObj.name];
-              if (rData) {
-                const regionBlock = this.buildRegionBlock(
-                  rData,
-                  regionObj.name,
-                  regionObj.expanded,
-                  regionObj.uid,
-                  settingsManager.getSetting('colorblindMode.regions', true)
-                );
-                if (regionBlock) {
-                  currentContainer.appendChild(regionBlock);
-                }
-              }
-            });
+      }
+    });
+
+    // If showing only visited and the list is empty, display a message
+    if (!this.showAll && this.visitedRegions.length === 0) {
+      // Optionally check if the start region is reachable to provide a better hint
+      const startRegion = 'Menu'; // Or get dynamically if needed
+      const startReachable = reachableRegions.has(startRegion);
+      this.regionsContainer.innerHTML = `
+        <div style="padding: 1em; text-align: center;">
+          No regions visited yet.${
+            startReachable
+              ? ` Try exploring from '${startRegion}'.`
+              : ' Start region may be inaccessible.'
           }
-        }
-        // Whether success or failure, return here to avoid rendering empty list below
-        return;
-      }
-      // Render existing visited regions
-      for (const regionObj of this.visitedRegions) {
-        const rData = allRegionData[regionObj.name];
-        if (!rData) {
-          continue;
-        }
-        const regionBlock = this.buildRegionBlock(
-          rData,
-          regionObj.name,
-          regionObj.expanded,
-          regionObj.uid,
-          settingsManager.getSetting('colorblindMode.regions', true) // Get setting again
-        );
-        if (regionBlock) {
-          container.appendChild(regionBlock);
-        }
-      }
+        </div>
+      `;
     }
+
+    // Update colorblind indicators after rendering
+    this._updateColorblindIndicators();
   }
 
   createRegionLink(regionName) {
@@ -584,7 +568,7 @@ export class RegionUI {
     );
   }
 
-  buildRegionBlock(rData, regionName, expanded, uid, useColorblind) {
+  buildRegionBlock(rData, regionName, expanded, uid, useColorblind, snapshot) {
     // Outer container
     const regionBlock = document.createElement('div');
     regionBlock.classList.add('region-block');
@@ -593,14 +577,17 @@ export class RegionUI {
     regionBlock.classList.add(expanded ? 'expanded' : 'collapsed');
     regionBlock.classList.toggle('colorblind-mode', useColorblind);
 
-    // Check if we have a valid inventory before evaluating rules
-    const inventory = stateManagerSingleton?.instance?.inventory;
-    if (!inventory) {
-      return document.createElement('div'); // Return empty div if no inventory
+    // Check if we have a valid snapshot before evaluating rules
+    if (!snapshot) {
+      console.warn('[RegionUI] buildRegionBlock called without a snapshot.');
+      return null;
     }
 
-    const isAccessible =
-      stateManagerSingleton.instance.isRegionReachable(regionName);
+    // Get data from snapshot
+    const reachableRegions = snapshot.reachableRegions || new Set();
+    const checkedLocations = snapshot.checkedLocations || new Set();
+
+    const isAccessible = reachableRegions.has(regionName);
 
     // Check if Loop Mode is active
     const isLoopModeActive = loopStateSingleton.isLoopModeActive;
@@ -610,7 +597,7 @@ export class RegionUI {
       isLoopModeActive &&
       !loopStateSingleton.isRegionDiscovered(regionName)
     ) {
-      return document.createElement('div'); // Return empty div for undiscovered regions
+      return null; // Return null for undiscovered regions
     }
 
     // Header
@@ -622,7 +609,7 @@ export class RegionUI {
     <span class="region-name" style="color: ${
       isAccessible ? 'inherit' : 'red'
     }">${regionLabel}${
-      this.colorblindMode
+      useColorblind
         ? `<span class="colorblind-symbol ${
             isAccessible ? 'accessible' : 'inaccessible'
           }">
@@ -656,7 +643,9 @@ export class RegionUI {
           const logicDiv = document.createElement('div');
           logicDiv.classList.add('logic-tree');
           logicDiv.innerHTML = `<strong>Rule #${idx + 1}:</strong>`;
-          logicDiv.appendChild(commonUI.renderLogicTree(rule, useColorblind));
+          logicDiv.appendChild(
+            commonUI.renderLogicTree(rule, useColorblind, snapshot)
+          );
           rrContainer.appendChild(logicDiv);
         });
         detailEl.appendChild(rrContainer);
@@ -672,8 +661,7 @@ export class RegionUI {
           const exitWrapper = document.createElement('div');
           exitWrapper.classList.add('exit-wrapper');
 
-          // Remove inventory parameter
-          const canAccess = evaluateRule(exit.access_rule);
+          const canAccess = evaluateRule(exit.access_rule, snapshot);
           const colorClass = canAccess ? 'accessible' : 'inaccessible';
 
           // In Loop Mode, check if the exit is discovered
@@ -758,7 +746,11 @@ export class RegionUI {
             const logicTreeDiv = document.createElement('div');
             logicTreeDiv.classList.add('logic-tree');
             logicTreeDiv.appendChild(
-              commonUI.renderLogicTree(exit.access_rule, useColorblind)
+              commonUI.renderLogicTree(
+                exit.access_rule,
+                useColorblind,
+                snapshot
+              )
             );
             exitWrapper.appendChild(logicTreeDiv);
           }

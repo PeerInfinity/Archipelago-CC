@@ -1,7 +1,7 @@
 // commonUI.js - Common UI functions that can be shared between components
 
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import { stateManager } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js';
 
 /**
@@ -17,9 +17,10 @@ export class CommonUI {
    * Enhanced version that supports colorblind mode and displays full rule details
    * @param {Object} rule - The rule object to render
    * @param {boolean} useColorblindMode - Whether to show colorblind indicators.
+   * @param {object} stateSnapshotInterface - The interface providing state access methods.
    * @returns {HTMLElement} - The rendered logic tree
    */
-  renderLogicTree(rule, useColorblindMode) {
+  renderLogicTree(rule, useColorblindMode, stateSnapshotInterface) {
     const root = document.createElement('div');
     root.classList.add('logic-node');
 
@@ -28,8 +29,28 @@ export class CommonUI {
       return root;
     }
 
-    // Evaluate the rule first
-    const result = evaluateRule(rule);
+    // Evaluate the rule using the provided interface
+    let result = false;
+    if (stateSnapshotInterface) {
+      try {
+        result = evaluateRule(rule, stateSnapshotInterface);
+      } catch (e) {
+        console.error('Error evaluating rule in renderLogicTree:', e, rule);
+        result = false; // Default to false on error
+      }
+    } else {
+      console.warn(
+        'renderLogicTree called without stateSnapshotInterface. Rule evaluation might be inaccurate.'
+      );
+      // Attempt evaluation without interface? Risky.
+      try {
+        // This call will likely fail for complex rules needing state
+        result = evaluateRule(rule, {}); // Pass dummy interface
+      } catch (e) {
+        result = false;
+      }
+    }
+
     root.classList.toggle('pass', !!result);
     root.classList.toggle('fail', !result);
 
@@ -77,7 +98,11 @@ export class CommonUI {
           const itemExpr = document.createElement('div');
           itemExpr.style.marginLeft = '20px';
           itemExpr.appendChild(
-            this.renderLogicTree(rule.item, useColorblindMode)
+            this.renderLogicTree(
+              rule.item,
+              useColorblindMode,
+              stateSnapshotInterface
+            )
           );
           root.appendChild(itemExpr);
         }
@@ -128,7 +153,11 @@ export class CommonUI {
             const itemExpr = document.createElement('div');
             itemExpr.style.marginLeft = '10px';
             itemExpr.appendChild(
-              this.renderLogicTree(rule.item, useColorblindMode)
+              this.renderLogicTree(
+                rule.item,
+                useColorblindMode,
+                stateSnapshotInterface
+              )
             );
             exprsContainer.appendChild(itemExpr);
           }
@@ -141,7 +170,11 @@ export class CommonUI {
             const countExpr = document.createElement('div');
             countExpr.style.marginLeft = '10px';
             countExpr.appendChild(
-              this.renderLogicTree(rule.count, useColorblindMode)
+              this.renderLogicTree(
+                rule.count,
+                useColorblindMode,
+                stateSnapshotInterface
+              )
             );
             exprsContainer.appendChild(countExpr);
           }
@@ -169,7 +202,11 @@ export class CommonUI {
           const groupExpr = document.createElement('div');
           groupExpr.style.marginLeft = '20px';
           groupExpr.appendChild(
-            this.renderLogicTree(rule.group, useColorblindMode)
+            this.renderLogicTree(
+              rule.group,
+              useColorblindMode,
+              stateSnapshotInterface
+            )
           );
           root.appendChild(groupExpr);
         }
@@ -237,7 +274,11 @@ export class CommonUI {
               argLabel.textContent = `Arg ${i + 1}:`;
               argsContainer.appendChild(argLabel);
 
-              const argTree = this.renderLogicTree(arg, useColorblindMode);
+              const argTree = this.renderLogicTree(
+                arg,
+                useColorblindMode,
+                stateSnapshotInterface
+              );
               argsContainer.appendChild(argTree);
             }
           });
@@ -254,7 +295,11 @@ export class CommonUI {
         objectEl.classList.add('attribute-object');
         objectEl.style.marginLeft = '10px';
         objectEl.appendChild(
-          this.renderLogicTree(rule.object, useColorblindMode)
+          this.renderLogicTree(
+            rule.object,
+            useColorblindMode,
+            stateSnapshotInterface
+          )
         );
         root.appendChild(objectEl);
         break;
@@ -274,7 +319,11 @@ export class CommonUI {
         const arrayEl = document.createElement('div');
         arrayEl.style.marginLeft = '10px';
         arrayEl.appendChild(
-          this.renderLogicTree(rule.value, useColorblindMode)
+          this.renderLogicTree(
+            rule.value,
+            useColorblindMode,
+            stateSnapshotInterface
+          )
         );
         container.appendChild(arrayEl);
 
@@ -286,7 +335,11 @@ export class CommonUI {
         const indexEl = document.createElement('div');
         indexEl.style.marginLeft = '10px';
         indexEl.appendChild(
-          this.renderLogicTree(rule.index, useColorblindMode)
+          this.renderLogicTree(
+            rule.index,
+            useColorblindMode,
+            stateSnapshotInterface
+          )
         );
         container.appendChild(indexEl);
 
@@ -306,7 +359,11 @@ export class CommonUI {
         const functionEl = document.createElement('div');
         functionEl.style.marginLeft = '20px';
         functionEl.appendChild(
-          this.renderLogicTree(rule.function, useColorblindMode)
+          this.renderLogicTree(
+            rule.function,
+            useColorblindMode,
+            stateSnapshotInterface
+          )
         );
         root.appendChild(functionEl);
 
@@ -322,7 +379,13 @@ export class CommonUI {
 
           for (const arg of rule.args) {
             const argItem = document.createElement('li');
-            argItem.appendChild(this.renderLogicTree(arg, useColorblindMode));
+            argItem.appendChild(
+              this.renderLogicTree(
+                arg,
+                useColorblindMode,
+                stateSnapshotInterface
+              )
+            );
             argsList.appendChild(argItem);
           }
 
@@ -349,7 +412,8 @@ export class CommonUI {
 
           const conditionNode = this.renderLogicTree(
             condition,
-            useColorblindMode
+            useColorblindMode,
+            stateSnapshotInterface
           );
           conditionsContainer.appendChild(conditionNode);
         });
@@ -404,7 +468,11 @@ export class CommonUI {
               argLabel.textContent = `Arg ${i + 1}:`;
               argsContainer.appendChild(argLabel);
 
-              const argTree = this.renderLogicTree(arg, useColorblindMode);
+              const argTree = this.renderLogicTree(
+                arg,
+                useColorblindMode,
+                stateSnapshotInterface
+              );
               argsContainer.appendChild(argTree);
             }
           });
@@ -459,7 +527,11 @@ export class CommonUI {
             const leftEl = document.createElement('div');
             leftEl.style.marginLeft = '10px';
             leftEl.appendChild(
-              this.renderLogicTree(rule.left, useColorblindMode)
+              this.renderLogicTree(
+                rule.left,
+                useColorblindMode,
+                stateSnapshotInterface
+              )
             );
             container.appendChild(leftEl);
           }
@@ -472,7 +544,11 @@ export class CommonUI {
             const rightEl = document.createElement('div');
             rightEl.style.marginLeft = '10px';
             rightEl.appendChild(
-              this.renderLogicTree(rule.right, useColorblindMode)
+              this.renderLogicTree(
+                rule.right,
+                useColorblindMode,
+                stateSnapshotInterface
+              )
             );
             container.appendChild(rightEl);
           }
@@ -491,7 +567,11 @@ export class CommonUI {
         leftLabel.textContent = 'Left Operand:';
         compareDetails.appendChild(leftLabel);
 
-        const leftNode = this.renderLogicTree(rule.left, useColorblindMode);
+        const leftNode = this.renderLogicTree(
+          rule.left,
+          useColorblindMode,
+          stateSnapshotInterface
+        );
         leftNode.style.marginLeft = '10px';
         compareDetails.appendChild(leftNode);
 
@@ -514,7 +594,11 @@ export class CommonUI {
             listItems.style.marginLeft = '10px';
             rule.right.value.forEach((item, index) => {
               listItems.appendChild(
-                this.renderLogicTree(item, useColorblindMode)
+                this.renderLogicTree(
+                  item,
+                  useColorblindMode,
+                  stateSnapshotInterface
+                )
               );
             });
             rightNode.appendChild(listItems);
@@ -522,7 +606,11 @@ export class CommonUI {
           } else {
             // Render other complex types recursively
             rightNode.appendChild(
-              this.renderLogicTree(rule.right, useColorblindMode)
+              this.renderLogicTree(
+                rule.right,
+                useColorblindMode,
+                stateSnapshotInterface
+              )
             );
           }
         } else {

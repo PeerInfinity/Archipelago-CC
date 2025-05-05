@@ -1,5 +1,5 @@
 // locationUI.js
-import { stateManagerSingleton } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
 import commonUI, { debounce } from '../commonUI/index.js';
 import messageHandler from '../client/core/messageHandler.js';
@@ -75,6 +75,7 @@ export class LocationUI {
       const debouncedUpdate = debounce(() => this.updateLocationDisplay(), 50);
 
       // Subscribe to state changes that affect location display
+      subscribe('stateManager:snapshotUpdated', debouncedUpdate);
       subscribe('stateManager:inventoryChanged', debouncedUpdate);
       subscribe('stateManager:regionsComputed', debouncedUpdate);
       subscribe('stateManager:locationChecked', debouncedUpdate);
@@ -82,7 +83,8 @@ export class LocationUI {
       // Also need rules loaded to trigger initial display
       subscribe('stateManager:rulesLoaded', () => {
         console.log('[LocationUI] Received stateManager:rulesLoaded event.');
-        debouncedUpdate();
+        // No need to call update directly, snapshotUpdated will follow
+        // debouncedUpdate();
       });
 
       // Subscribe to loop state changes if relevant
@@ -160,11 +162,27 @@ export class LocationUI {
     return this.rootElement;
   }
 
-  initialize() {
+  async initialize() {
     // Subscriptions are now handled in constructor
-    // We still need the initial update call, potentially triggered by rulesLoaded
+    // We still need the initial update call, triggered after ensuring proxy is ready
     console.log('[LocationUI] Initializing panel...');
-    this.updateLocationDisplay(); // Call initial update
+    try {
+      await stateManager.ensureReady(); // Wait for proxy
+      console.log(
+        '[LocationUI] Proxy ready, performing initial display update.'
+      );
+      this.updateLocationDisplay(); // Call initial update after proxy is ready
+    } catch (error) {
+      console.error(
+        '[LocationUI] Error waiting for proxy during initialization:',
+        error
+      );
+      // Display an error state in the UI?
+      if (this.locationsGrid) {
+        this.locationsGrid.innerHTML =
+          '<div class="error-message">Error initializing location data.</div>';
+      }
+    }
   }
 
   clear() {
@@ -252,7 +270,7 @@ export class LocationUI {
       // LOOP MODE BEHAVIOR
 
       // If location is already checked, do nothing
-      if (stateManagerSingleton.isLocationChecked(location.name)) return;
+      if (stateManager.isLocationChecked(location.name)) return;
 
       // Get the location's discovered status in loop mode
       const isUndiscovered = !loopStateSingleton.isLocationDiscovered(
@@ -278,7 +296,7 @@ export class LocationUI {
         // If the location is discovered but unchecked and the last action is to check this location, do nothing
         if (
           !isUndiscovered &&
-          !stateManagerSingleton.isLocationChecked(location.name) &&
+          !stateManager.isLocationChecked(location.name) &&
           lastAction.type === 'checkLocation' &&
           lastAction.locationName === location.name
         ) {
@@ -310,7 +328,7 @@ export class LocationUI {
             const toRegion = path[i + 1];
 
             // Find the exit that connects these regions
-            const regionData = stateManagerSingleton.regions[fromRegion];
+            const regionData = stateManager.regions[fromRegion];
             const exitToUse = regionData?.exits?.find(
               (exit) => exit.connected_region === toRegion
             );
@@ -415,8 +433,8 @@ export class LocationUI {
     // STANDARD NON-LOOP MODE BEHAVIOR
 
     // If location is already checked, do nothing
-    if (stateManagerSingleton.isLocationChecked(location.name)) return;
-    const isAccessible = stateManagerSingleton.isLocationAccessible(location);
+    if (stateManager.isLocationChecked(location.name)) return;
+    const isAccessible = stateManager.isLocationAccessible(location);
     if (!isAccessible) return;
 
     // ALWAYS route the check through messageHandler, which handles local/networked logic
@@ -455,6 +473,32 @@ export class LocationUI {
 
   updateLocationDisplay() {
     console.log('[LocationUI] updateLocationDisplay called.');
+    if (!this.locationsGrid) {
+      console.warn('[LocationUI] locationsGrid element not found.');
+      return;
+    }
+
+    // Get current snapshot - it SHOULD be ready if this is called after initialize or via event
+    let snapshot;
+    try {
+      snapshot = stateManager.getSnapshot();
+    } catch (e) {
+      console.error('[LocationUI] Error getting snapshot:', e);
+      this.locationsGrid.innerHTML =
+        '<div class="error-message">Error retrieving location data.</div>';
+      return;
+    }
+
+    if (!snapshot || !snapshot.locations) {
+      console.log('[LocationUI] Snapshot not ready or no locations found.');
+      this.locationsGrid.innerHTML =
+        '<div class="loading-message">Loading location data...</div>';
+      return;
+    }
+
+    // --- Get Filter/Sort Options --- //
+    const sortBy =
+      this.rootElement.querySelector('#sort-select')?.value || 'original';
     const showChecked =
       this.rootElement.querySelector('#show-checked')?.checked ?? true;
     const showReachable =
@@ -463,272 +507,114 @@ export class LocationUI {
       this.rootElement.querySelector('#show-unreachable')?.checked ?? true;
     const showExplored =
       this.rootElement.querySelector('#show-explored')?.checked ?? true;
-    const sorting =
-      this.rootElement.querySelector('#sort-select')?.value ?? 'original';
+    const isLoopModeActive = loopStateSingleton.isLoopModeActive ?? false;
 
-    // Check if Loop Mode is active
-    const isLoopModeActive = loopStateSingleton.isLoopModeActive;
-
-    // Toggle visibility of the "Show Explored" checkbox based on Loop Mode
-    const showExploredCheckbox =
-      this.rootElement.querySelector('#show-explored');
-    if (showExploredCheckbox) {
-      showExploredCheckbox.parentElement.style.display = isLoopModeActive
-        ? 'inline'
-        : 'none';
-    }
-
-    // Get locations from state manager instance directly
-    const instance = stateManagerSingleton.instance;
-    console.log(
-      '[LocationUI] Accessing stateManagerSingleton.instance:',
-      instance ? 'Exists' : 'MISSING'
-    ); // <-- Add log
-    const locations = instance?.locations || []; // <-- Access via .instance
-    console.log(
-      `[LocationUI] Found ${locations.length} locations in stateManager instance.`
+    // --- Get Data From Snapshot --- //
+    // Use Object.values if locations is an object, or assume it's an array
+    const allLocations = Array.isArray(snapshot.locations)
+      ? snapshot.locations
+      : Object.values(snapshot.locations);
+    const checkedLocationsSet =
+      snapshot.checkedLocations instanceof Set
+        ? snapshot.checkedLocations
+        : new Set(snapshot.checkedLocations || []);
+    const reachableRegionsSet =
+      snapshot.reachableRegions instanceof Set
+        ? snapshot.reachableRegions
+        : new Set(snapshot.reachableRegions || []);
+    const discoveredLocations =
+      loopStateSingleton.discoveredLocations || new Set(); // Get from loopState
+    const discoveredRegions = loopStateSingleton.discoveredRegions || new Set(); // Get from loopState
+    // Colorblind settings
+    const useColorblind = settingsManager.getSetting(
+      'colorblindMode.locations',
+      true
     );
 
-    const locationsGrid = this.locationsGrid; // Use cached grid
-    if (!locationsGrid) return;
+    // --- Process Locations --- //
+    console.log(
+      `[LocationUI] Processing ${allLocations.length} locations from snapshot.`
+    );
+    let filteredLocations = allLocations.map((loc) => {
+      const isChecked = checkedLocationsSet.has(loc.name);
+      // Ensure loc.region exists and is a string
+      const regionName = typeof loc.region === 'string' ? loc.region : '';
+      const isReachable =
+        reachableRegionsSet.has(regionName) && loc.isAccessible !== false; // Consider direct accessibility flag if present
+      const isExplored =
+        discoveredRegions.has(regionName) && discoveredLocations.has(loc.name);
+      return { ...loc, isChecked, isReachable, isExplored }; // Add derived properties
+    });
 
-    locationsGrid.style.gridTemplateColumns = `repeat(${this.columns}, minmax(0, 1fr))`; // Set the number of columns
+    // Filter based on checkboxes
+    filteredLocations = filteredLocations.filter((loc) => {
+      if (!showChecked && loc.isChecked) return false;
+      if (!showReachable && loc.isReachable && !loc.isChecked) return false; // Hide reachable only if unchecked
+      if (!showUnreachable && !loc.isReachable && !loc.isChecked) return false; // Hide unreachable only if unchecked
+      if (isLoopModeActive && !showExplored && !loc.isExplored) return false;
+      return true;
+    });
 
-    // Check if locations exist or is empty array
-    if (!locations || !Array.isArray(locations) || locations.length === 0) {
-      locationsGrid.innerHTML = `
-        <div class="empty-message">
-          Upload a JSON file to see locations or adjust filters
-        </div>
-      `;
+    // Sort based on selection
+    if (sortBy === 'accessibility') {
+      filteredLocations.sort((a, b) => {
+        // Checked < Reachable < Unreachable
+        if (a.isChecked !== b.isChecked) return a.isChecked ? 1 : -1;
+        if (a.isReachable !== b.isReachable) return a.isReachable ? -1 : 1;
+        return a.name.localeCompare(b.name); // Fallback sort by name
+      });
+    } else {
+      // Default: original (often ID-based) or alphabetical if no original order
+      // Assuming original order is inherent or use alphabetical
+      filteredLocations.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // --- Render Grid --- //
+    this.locationsGrid.innerHTML = ''; // Clear previous content
+    this.locationsGrid.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
+
+    if (filteredLocations.length === 0) {
+      this.locationsGrid.innerHTML =
+        '<div class="no-locations-message">No locations match filters.</div>';
       return;
     }
 
-    // Apply filters
-    let filteredLocations = locations.filter((location) => {
-      // First check if the location is checked
-      const isChecked = instance.isLocationChecked(location.name);
-      if (isChecked && !showChecked) return false;
-
-      // Then apply reachable/unreachable filters
-      const isRegionAccessible = instance.isRegionReachable(location.region);
-      const locationRulePasses =
-        !location.access_rule || evaluateRule(location.access_rule);
-
-      // Fully reachable location - needs both region accessible and rule passes
-      if (isRegionAccessible && locationRulePasses) {
-        return showReachable;
-      }
-      // All other cases are considered unreachable
-      else {
-        return showUnreachable;
-      }
-    });
-
-    // Apply Loop Mode filtering if active
-    if (isLoopModeActive) {
-      filteredLocations = filteredLocations.filter((location) => {
-        // Only show locations from discovered regions
-        const isRegionDiscovered = loopStateSingleton.isRegionDiscovered(
-          location.region
-        );
-        if (!isRegionDiscovered) return false;
-
-        // Handle exploring filter
-        const isLocationDiscovered = loopStateSingleton.isLocationDiscovered(
-          location.name
-        );
-        return showExplored || !isLocationDiscovered;
-      });
-    }
-
-    // Apply sorting
-    if (sorting === 'accessibility') {
-      filteredLocations.sort((a, b) => {
-        const aRegionAccessible = instance.isRegionReachable(a.region);
-        const bRegionAccessible = instance.isRegionReachable(b.region);
-
-        const aRulePasses = !a.access_rule || evaluateRule(a.access_rule);
-        const bRulePasses = !b.access_rule || evaluateRule(b.access_rule);
-
-        // Fully accessible locations first (region reachable + rule passes)
-        const aFullyAccessible = aRegionAccessible && aRulePasses;
-        const bFullyAccessible = bRegionAccessible && bRulePasses;
-
-        // Then region accessible but rule fails
-        const aRegionOnlyAccessible = aRegionAccessible && !aRulePasses;
-        const bRegionOnlyAccessible = bRegionAccessible && !bRulePasses;
-
-        // Then rule passes but region not accessible
-        const aRuleOnlyPasses = !aRegionAccessible && aRulePasses;
-        const bRuleOnlyPasses = !bRegionAccessible && bRulePasses;
-
-        // Compare in priority order
-        if (aFullyAccessible !== bFullyAccessible) {
-          return bFullyAccessible - aFullyAccessible; // true sorts before false
-        } else if (aRegionOnlyAccessible !== bRegionOnlyAccessible) {
-          return bRegionOnlyAccessible - aRegionOnlyAccessible;
-        } else if (aRuleOnlyPasses !== bRuleOnlyPasses) {
-          return bRuleOnlyPasses - aRuleOnlyPasses;
-        } else {
-          return 0; // Same accessibility level
-        }
-      });
-    }
-
-    console.log(
-      `[LocationUI] Rendering ${filteredLocations.length} locations.`
-    );
-
-    // Generate HTML for locations programmatically
-    locationsGrid.innerHTML = ''; // Clear previous content
     filteredLocations.forEach((location) => {
-      const useLocationColorblind = settingsManager.getSetting(
-        'colorblindMode.locations',
-        true
-      );
+      const locationElement = document.createElement('div');
+      locationElement.classList.add('location');
+      locationElement.dataset.locationName = location.name; // Store name for click handler
 
-      const isRegionAccessible = instance.isRegionReachable(location.region);
-      const isLocationAccessible = instance.isLocationAccessible(location);
-      const isChecked = instance.isLocationChecked(location.name);
-      const locationRulePasses =
-        !location.access_rule || evaluateRule(location.access_rule);
-
-      let stateClass = '';
-      if (isChecked) {
-        stateClass = 'checked';
-      } else if (isLocationAccessible) {
-        stateClass = 'reachable';
-      } else if (isRegionAccessible && !locationRulePasses) {
-        stateClass = 'region-accessible-but-locked';
-      } else if (!isRegionAccessible && locationRulePasses) {
-        stateClass = 'region-inaccessible-but-unlocked';
-      } else {
-        stateClass = 'unreachable';
+      let statusClass = location.isChecked
+        ? 'checked'
+        : location.isReachable
+        ? 'reachable'
+        : 'unreachable';
+      locationElement.classList.add(statusClass);
+      if (isLoopModeActive && location.isExplored) {
+        locationElement.classList.add('explored');
       }
 
-      // Handle Loop Mode display
-      let locationName = location.name;
-      let regionName = location.region;
-
-      if (isLoopModeActive) {
-        const isRegionDiscovered = loopStateSingleton.isRegionDiscovered(
-          location.region
-        );
-        const isLocationDiscovered = loopStateSingleton.isLocationDiscovered(
-          location.name
-        );
-        if (!isRegionDiscovered || !isLocationDiscovered) {
-          locationName = '???';
-          stateClass += ' undiscovered';
-        }
-        if (!isRegionDiscovered) {
-          regionName = '???';
-        }
+      // Colorblind indicator text
+      let cbIndicator = '';
+      if (useColorblind) {
+        if (location.isChecked) cbIndicator = ' [C]';
+        else if (location.isReachable) cbIndicator = ' [R]';
+        else cbIndicator = ' [U]';
       }
 
-      // Create card element
-      const card = document.createElement('div');
-      card.className = `location-card ${stateClass}`;
-      card.dataset.location = encodeURIComponent(
-        JSON.stringify(location)
-      ).replace(/"/g, '&quot;');
+      locationElement.textContent = location.name + cbIndicator;
+      locationElement.title = `Region: ${
+        location.region || 'Unknown'
+      } - ${statusClass.toUpperCase()}`;
 
-      // Apply colorblind class based on setting
-      const isColorblind = settingsManager.getSetting(
-        'colorblindMode.locations',
-        true
-      ); // Default to true
-      card.classList.toggle('colorblind-mode', isColorblind);
-
-      // Location Name (as a clickable link)
-      const locationLink = commonUI.createLocationLink(
-        locationName,
-        location.region,
-        useLocationColorblind
+      // Attach click listener for details/checking
+      locationElement.addEventListener('click', () =>
+        this.handleLocationClick(location)
       );
-      // TODO: Ensure createLocationLink uses eventBus if needed, or retains its own handler
-      locationLink.className = 'font-medium location-link'; // Add back necessary classes
-      locationLink.dataset.location = location.name; // Use real name for navigation
-      locationLink.dataset.region = location.region;
-      card.appendChild(locationLink);
 
-      // Player Info
-      const playerDiv = document.createElement('div');
-      playerDiv.className = 'text-sm';
-      playerDiv.textContent = `Player ${location.player}`;
-      card.appendChild(playerDiv);
-
-      // Region Info (with clickable link)
-      const regionDiv = document.createElement('div');
-      regionDiv.className = 'text-sm';
-      regionDiv.textContent = 'Region: ';
-      const regionLinkElement = commonUI.createRegionLink(
-        regionName,
-        useLocationColorblind
-      ); // Use commonUI instance
-      // Add necessary attributes/styles if commonUI doesn't handle them fully
-      regionLinkElement.dataset.region = location.region; // Use real region name
-      regionLinkElement.style.color = isRegionAccessible ? 'inherit' : 'red';
-      regionDiv.appendChild(regionLinkElement);
-      regionDiv.appendChild(
-        document.createTextNode(
-          ` (${isRegionAccessible ? 'Accessible' : 'Inaccessible'})`
-        )
-      );
-      card.appendChild(regionDiv);
-
-      // Location Logic Tree
-      const logicDiv = document.createElement('div');
-      logicDiv.className = 'text-sm';
-      logicDiv.textContent = 'Location: ';
-      logicDiv.appendChild(
-        commonUI.renderLogicTree(location.access_rule, useLocationColorblind)
-      ); // Use commonUI instance
-      card.appendChild(logicDiv);
-
-      // Status Text
-      const statusDiv = document.createElement('div');
-      statusDiv.className = 'text-sm';
-      statusDiv.textContent = isChecked
-        ? 'Checked'
-        : isLocationAccessible
-        ? 'Available'
-        : isRegionAccessible && !locationRulePasses
-        ? 'Region accessible, but rule fails'
-        : !isRegionAccessible && locationRulePasses
-        ? 'Region inaccessible, but rule passes'
-        : 'Locked';
-      card.appendChild(statusDiv);
-
-      // Append the constructed card to the grid
-      locationsGrid.appendChild(card);
+      this.locationsGrid.appendChild(locationElement);
     });
-
-    // Remove the redundant click handlers for region links, as commonUI handles this now
-    /*
-    document.querySelectorAll('.region-link').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent opening the location modal
-        const regionName = link.dataset.region;
-        if (regionName) {
-          this.gameUI.regionUI.navigateToRegion(regionName);
-        }
-      });
-    });
-    */
-
-    // Add click handlers for location links (assuming commonUI doesn't handle this yet)
-    document.querySelectorAll('.location-link').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent capturing click on parent card
-        const locationName = link.dataset.location;
-        const regionName = link.dataset.region;
-        if (locationName && regionName) {
-          this.gameUI.regionUI.navigateToLocation(locationName, regionName);
-        }
-      });
-    });
+    console.log(`[LocationUI] Rendered ${filteredLocations.length} locations.`);
   }
 
   showLocationDetails(location) {
@@ -737,7 +623,7 @@ export class LocationUI {
     const debug = document.getElementById('modal-debug');
     const info = document.getElementById('modal-info');
 
-    const instance = stateManagerSingleton.instance;
+    const instance = stateManager.instance;
     if (!instance) {
       console.error(
         '[LocationUI] StateManager instance not found in showLocationDetails'

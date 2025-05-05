@@ -1,4 +1,4 @@
-import { stateManagerSingleton } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 
 export class PresetUI {
   constructor() {
@@ -559,14 +559,14 @@ export class PresetUI {
     // Initialize inventory with the new rules and starting items
     // For presets, we usually start with an empty inventory unless specified
     const startingItems = jsonData.starting_inventory || [];
-    stateManagerSingleton.initializeInventory(
+    stateManager.initializeInventory(
       startingItems,
       jsonData.progression_mapping[playerId],
       jsonData.items[playerId]
     );
 
     // Load the complete rules data into the state manager, passing the selected player ID
-    stateManagerSingleton.loadFromJSON(jsonData, playerId);
+    stateManager.loadFromJSON(jsonData, playerId);
 
     // --- Explicitly Initialize InventoryUI ---
     // InventoryUI needs the raw item and group structure from the JSON
@@ -582,7 +582,7 @@ export class PresetUI {
     // --- End InventoryUI Init ---
 
     // Explicitly compute reachability after loading new state and initializing inventory UI
-    stateManagerSingleton.computeReachableRegions();
+    stateManager.computeReachableRegions();
 
     // Display success message
     if (statusElement) {

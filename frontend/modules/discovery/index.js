@@ -3,7 +3,8 @@ import discoveryStateSingleton from './singleton.js'; // <<< IMPORT SINGLETON
 // REMOVED: import eventBus from '../../app/core/eventBus.js';
 
 // Import singletons needed for injection
-import { stateManagerSingleton } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+// import stateManagerSingleton from '../stateManager/stateManagerSingleton.js'; // OLD
 
 // --- Module Scope Variables ---
 // REMOVED: let _discoveryStateInstance = null;
@@ -70,10 +71,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   // _discoveryStateInstance = new DiscoveryState();
 
   // Inject dependencies into the SINGLETON instance
-  if (discoveryStateSingleton && _moduleEventBus && stateManagerSingleton) {
+  if (discoveryStateSingleton && _moduleEventBus && stateManager) {
     discoveryStateSingleton.setDependencies({
       eventBus: _moduleEventBus,
-      stateManager: stateManagerSingleton,
+      stateManager: stateManager,
     });
     console.log(
       '[Discovery Module] Dependencies injected into DiscoveryState Singleton.'

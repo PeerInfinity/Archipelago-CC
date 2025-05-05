@@ -7,7 +7,7 @@ import locationManager from './locationManager.js';
 
 // Import loopState for loop mode interaction
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
-import stateManager from '../../stateManager/stateManagerSingleton.js';
+import { stateManagerProxySingleton as stateManager } from '../../stateManager/index.js';
 
 // <<< IMPORT SHARED STATE >>>
 import { sharedClientState } from './sharedState.js';
@@ -52,23 +52,6 @@ export class TimerState {
 
   getMaxCheckDelay() {
     return this.maxCheckDelay;
-  }
-
-  async _getStateManager() {
-    if (this.stateManager) {
-      return this.stateManager;
-    }
-
-    try {
-      const module = await import(
-        '../../stateManager/stateManagerSingleton.js'
-      );
-      this.stateManager = module.default;
-      return this.stateManager;
-    } catch (error) {
-      console.error('Error loading stateManager:', error);
-      return null;
-    }
   }
 
   initialize() {
@@ -176,7 +159,6 @@ export class TimerState {
 
   // Check if there are any unchecked accessible locations left
   async _areAnyLocationsLeftToCheck() {
-    const stateManager = await this._getStateManager();
     if (!stateManager) return false;
 
     const locations = stateManager.getProcessedLocations();
@@ -418,15 +400,14 @@ export class TimerState {
 
   // Internal method to find and check a location
   async _checkNextAvailableLocation() {
-    // Get stateManager
-    const stateManager = await this._getStateManager();
     if (!stateManager) {
-      console.error('Failed to check location: stateManager not available');
-      return;
+      console.warn('_checkNextAvailableLocation: stateManager not available');
+      return false;
     }
 
-    // Find an accessible, unchecked location
-    const locations = stateManager.getProcessedLocations();
+    // !!! THIS SECTION NEEDS COMPLETE REFACTOR using getSnapshot() !!!
+    let locations = stateManager.getProcessedLocations('accessibility');
+
     const locationToCheck = locations.find(
       (loc) =>
         stateManager.isLocationAccessible(loc) &&
@@ -542,6 +523,13 @@ export class TimerState {
 
   // Update the item counter from stateManager data
   async _updateItemCount() {
+    if (!stateManager) {
+      console.warn('_updateItemCount: stateManager not available');
+      return;
+    }
+
+    // !!! THIS NEEDS REFACTOR using getSnapshot() !!!
+    const totalLocations = stateManager.locations.length;
     // Instead of duplicating logic, use ProgressUI's method
     try {
       const progressUIModule = await import('../ui/progressUI.js');

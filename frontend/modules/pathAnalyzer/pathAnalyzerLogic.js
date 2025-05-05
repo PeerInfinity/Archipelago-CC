@@ -1,7 +1,6 @@
 // pathAnalyzerLogic.js
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import { stateManagerSingleton } from '../stateManager/index.js';
-const stateManager = stateManagerSingleton;
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import loopState from '../loops/loopStateSingleton.js';
 
 /**

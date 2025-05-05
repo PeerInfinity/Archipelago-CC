@@ -1,4 +1,3 @@
-import { evaluateRule } from './ruleEngine.js';
 import { ALTTPInventory } from './games/alttp/inventory.js';
 import { ALTTPState } from './games/alttp/state.js';
 import { ALTTPHelpers } from './games/alttp/helpers.js';
@@ -9,14 +8,29 @@ import { ALTTPHelpers } from './games/alttp/helpers.js';
  * All state (including events) is tracked through the inventory system.
  */
 export class StateManager {
-  constructor() {
+  /**
+   * @param {function} [evaluateRuleFunction] - The rule evaluation function (from ruleEngine.js).
+   *                                             Required when running in worker/isolated context.
+   */
+  constructor(evaluateRuleFunction) {
     // Core state storage
     this.inventory = new ALTTPInventory();
     this.state = new ALTTPState();
+    // Pass 'this' (the manager instance) to helpers when running in worker context
     this.helpers = new ALTTPHelpers(this);
 
     // Injected dependencies
-    this.eventBus = null;
+    this.eventBus = null; // Legacy/optional
+    this.postMessageCallback = null; // For worker communication
+    this.evaluateRuleFromEngine = evaluateRuleFunction; // Store the injected rule evaluator
+
+    if (!this.evaluateRuleFromEngine) {
+      // If not provided (e.g., running standalone?), log a warning.
+      // Internal rule evaluations might fail.
+      console.warn(
+        '[StateManager] evaluateRuleFunction not provided to constructor. Internal rule evaluations may fail.'
+      );
+    }
 
     // Player identification
     this.playerSlot = 1; // Default player slot to 1 for single-player/offline
@@ -64,16 +78,32 @@ export class StateManager {
     this.itemNameToId = {};
     this.locationNameToId = {};
 
-    console.log('[StateManager Class] Instance created.'); // Log instance creation
+    console.log('[StateManager Class] Instance created.');
   }
 
   /**
-   * Sets the event bus instance dependency.
+   * Sets the event bus instance dependency (legacy/optional).
    * @param {object} eventBusInstance - The application's event bus.
    */
   setEventBus(eventBusInstance) {
-    console.log('[StateManager Class] Setting EventBus instance...');
+    console.log('[StateManager Class] Setting EventBus instance (legacy)...');
     this.eventBus = eventBusInstance;
+  }
+
+  /**
+   * Sets the communication callback function for sending messages (e.g., to the proxy).
+   * @param {function} callback - The function to call (e.g., self.postMessage).
+   */
+  setCommunicationChannel(callback) {
+    console.log('[StateManager Class] Setting communication channel...');
+    if (typeof callback === 'function') {
+      this.postMessageCallback = callback;
+    } else {
+      console.error(
+        '[StateManager Class] Invalid communication channel provided.'
+      );
+      this.postMessageCallback = null;
+    }
   }
 
   /**
@@ -115,7 +145,7 @@ export class StateManager {
     this._logDebug('[StateManager Class] Inventory cleared.');
     this.invalidateCache();
     this.computeReachableRegions(); // Recompute first
-    this._publishEvent('inventoryChanged'); // Publish after recompute
+    // this._publishEvent('inventoryChanged'); // Snapshot update implies this
   }
 
   clearState() {
@@ -127,11 +157,12 @@ export class StateManager {
     this.itemData = itemData;
     this.groupData = groupData;
     this.state = new ALTTPState();
-    this.clearCheckedLocations(); // This calls _publishEvent('checkedLocationsCleared')
+    this.clearCheckedLocations(); // This calls _publishEvent('checkedLocationsCleared') -> maybe keep this specific event?
     this.indirectConnections = new Map();
     this.invalidateCache();
     this._logDebug('[StateManager Class] Full state cleared.');
-    this._publishEvent('inventoryChanged'); // Publish inventory change after state clear
+    this.computeReachableRegions(); // Recompute, triggers snapshot update
+    // this._publishEvent('inventoryChanged'); // Snapshot update implies this
   }
 
   /**
@@ -152,8 +183,8 @@ export class StateManager {
       this.inventory.addItem(itemName);
       this._logDebug(`[StateManager Class] Added item: ${itemName}`);
       this.invalidateCache();
-      this.computeReachableRegions(); // Recompute first
-      this._publishEvent('inventoryChanged'); // Publish after recompute
+      this.computeReachableRegions(); // Recompute, triggers snapshot update
+      // this._publishEvent('inventoryChanged'); // Snapshot implies this
     }
     return true;
   }
@@ -359,6 +390,7 @@ export class StateManager {
     this.invalidateCache();
 
     // Immediately compute reachable regions to collect initial events
+    // This will trigger the snapshot update via computeReachableRegions finishing
     this.computeReachableRegions();
 
     // Add this line at the end of the method to enhance locations with shop data
@@ -369,49 +401,7 @@ export class StateManager {
       this.helpers.enhanceLocationsWithShopData();
     }
 
-    // Emit a specific event for JSON data load completion
-    try {
-      // Use setTimeout to ensure this event fires after returning from the method
-      setTimeout(() => {
-        if (this.eventBus) {
-          console.log('Publishing stateManager:jsonDataLoaded event');
-          this.eventBus.publish('stateManager:jsonDataLoaded', {});
-          // Publish ready event immediately after data loaded event (within timeout)
-          console.log('Publishing stateManager:ready event (delayed)');
-          this.eventBus.publish('stateManager:ready', {
-            playerSlot: this.playerSlot,
-          });
-        }
-      }, 0);
-    } catch (e) {
-      console.warn('Could not publish jsonDataLoaded event:', e);
-    }
-
     this._logDebug('[StateManager Class] Finished processing JSON load.');
-
-    // Publish rulesLoaded *after* processing and initial computation
-    this._publishEvent('rulesLoaded', {
-      source: 'jsonData',
-      selectedPlayerId: selectedPlayerId,
-      rules: {
-        items: this.itemData,
-        groups: this.groupData,
-      },
-    });
-
-    // Notify listeners that the core data structure is loaded
-    this._publishEvent('jsonDataLoaded');
-
-    // Notify that the manager is ready (potentially after a short delay)
-    setTimeout(() => {
-      if (this.eventBus) {
-        console.log('Publishing stateManager:ready event');
-        this.eventBus.publish('stateManager:ready', {
-          playerSlot: this.playerSlot,
-        });
-      }
-    }, 0);
-
     return true;
   }
 
@@ -541,28 +531,14 @@ export class StateManager {
         // Auto-collect events
         for (const loc of this.eventLocations.values()) {
           if (this.knownReachableRegions.has(loc.region)) {
-            const canAccessLoc =
-              !loc.access_rule || evaluateRule(loc.access_rule);
+            const canAccessLoc = this.isLocationAccessible(loc);
             if (canAccessLoc && !this.inventory.has(loc.item.name)) {
-              // 1. Add the item to inventory
               this.inventory.addItem(loc.item.name);
-
-              // 2. Mark location as checked LOCALLY only
               this.checkedLocations.add(loc.name);
-
-              // 3. Set flags for UI refresh
               newEventCollected = true;
-
-              // 4. Log for debugging
-              if (this.debugMode) {
-                console.log(
-                  `Auto-collected event item: ${loc.item.name} from ${loc.name}`
-                );
-              }
-
-              // 5. Notify UI of changes (both inventory and location)
-              this.notifyUI('inventoryChanged');
-              this.notifyUI('locationChecked');
+              this._logDebug(
+                `Auto-collected event item: ${loc.item.name} from ${loc.name}`
+              );
             }
           }
         }
@@ -588,10 +564,10 @@ export class StateManager {
       this._computing = false;
     }
 
-    // this.notifyUI('reachableRegionsComputed'); // Removed redundant call
-    this._publishEvent('regionsComputed', {
-      knownReachableRegions: this.knownReachableRegions,
-    }); // Publish event here with data
+    // Send snapshot update AFTER computation is fully complete
+    this._sendSnapshotUpdate();
+    // this._publishEvent('regionsComputed', ...); // Covered by snapshot
+
     return this.knownReachableRegions;
   }
 
@@ -625,7 +601,8 @@ export class StateManager {
         }
 
         // Check if exit is traversable using evaluateRule
-        const canTraverse = !exit.access_rule || evaluateRule(exit.access_rule);
+        const canTraverse =
+          !exit.access_rule || this.evaluateRule(exit.access_rule);
 
         if (canTraverse) {
           // Region is now reachable
@@ -719,7 +696,7 @@ export class StateManager {
    */
   evaluateRuleWithPathContext(rule, context) {
     // Standard rule evaluation is now sufficient with our improved BFS
-    return evaluateRule(rule);
+    return this.evaluateRule(rule);
   }
 
   getStartRegions() {
@@ -750,9 +727,19 @@ export class StateManager {
     if (!reachableRegions.has(location.region)) {
       return false;
     }
+    if (!location.access_rule) return true;
 
-    // Simply return the rule evaluation result
-    return !location.access_rule || evaluateRule(location.access_rule);
+    // Use this.evaluateRule, which uses the _createSelfSnapshotInterface
+    try {
+      return this.evaluateRule(location.access_rule);
+    } catch (e) {
+      console.error(
+        `Error evaluating internal rule for location ${location.name}:`,
+        e,
+        location.access_rule
+      );
+      return false;
+    }
   }
 
   getProcessedLocations(
@@ -961,11 +948,10 @@ export class StateManager {
       this.checkedLocations.add(locationName);
       this._logDebug(`[StateManager Class] Checked location: ${locationName}`);
       const location = this.locations.find((loc) => loc.name === locationName);
-      // Publish event AFTER adding to the set
-      this._publishEvent('locationChecked', {
-        locationName: locationName,
-        regionName: location?.region,
-      });
+      // Publish specific event for this?
+      // this._publishEvent('locationChecked', ...);
+      // Send a full snapshot update instead/as well
+      this._sendSnapshotUpdate();
     }
   }
 
@@ -976,8 +962,10 @@ export class StateManager {
     if (this.checkedLocations.size > 0) {
       this.checkedLocations.clear();
       this._logDebug('[StateManager Class] Cleared checked locations.');
-      // Publish event AFTER clearing
-      this._publishEvent('checkedLocationsCleared');
+      // Publish specific event for this?
+      this._publishEvent('checkedLocationsCleared'); // Maybe keep this one
+      // Send snapshot update
+      this._sendSnapshotUpdate();
     }
   }
 
@@ -1024,14 +1012,16 @@ export class StateManager {
       this._logDebug('Inventory changed during batch update.');
       this.invalidateCache();
     }
+    // Compute regions if not deferred OR if inventory changed (which invalidates cache)
     if (!this._deferRegionComputation || inventoryChanged) {
       this._logDebug('Recomputing regions after batch commit.');
-      this.computeReachableRegions(); // Recompute regions first
+      // computeReachableRegions will trigger the snapshot update
+      this.computeReachableRegions();
     }
     // Publish inventoryChanged *after* recomputation, only if it actually changed
-    if (inventoryChanged) {
-      this._publishEvent('inventoryChanged');
-    }
+    // if (inventoryChanged) {
+    //   this._publishEvent('inventoryChanged'); // Covered by snapshot
+    // }
     this._logDebug('[StateManager Class] Batch update committed.');
   }
 
@@ -1055,21 +1045,39 @@ export class StateManager {
   }
 
   /**
-   * Notifies listeners via the event bus.
+   * Notifies listeners via the event bus (Legacy or specific events).
    */
   _publishEvent(eventType, eventData = {}) {
-    // Publish state changes to the event bus if available
+    // Only publish essential/non-snapshot events or if specifically configured?
+    const snapshotEvents = [
+      'inventoryChanged',
+      'locationChecked',
+      'regionsComputed',
+      'rulesLoaded',
+    ]; // Events covered by snapshot
+    if (snapshotEvents.includes(eventType) && this.postMessageCallback) {
+      // If using callback (worker mode), assume snapshot covers these
+      this._logDebug(
+        `[StateManager Class] Suppressing event '${eventType}' in worker mode (covered by snapshot).`
+      );
+      return;
+    }
+
+    // Publish specific events like checkedLocationsCleared or errors via EventBus if available
     if (this.eventBus) {
       try {
         this.eventBus.publish(`stateManager:${eventType}`, eventData);
-        this._logDebug(`[StateManager Class] Published ${eventType} event.`);
+        this._logDebug(
+          `[StateManager Class] Published ${eventType} event via EventBus.`
+        );
       } catch (error) {
         console.error(
-          `[StateManager Class] Error publishing ${eventType} event:`,
+          `[StateManager Class] Error publishing ${eventType} event via EventBus:`,
           error
         );
       }
-    } else {
+    } else if (!this.postMessageCallback) {
+      // Only warn if not in worker mode and eventBus is missing
       console.warn(
         `[StateManager Class] Event bus not available to publish ${eventType}.`
       );
@@ -1168,7 +1176,7 @@ export class StateManager {
           if (exit) {
             return (
               this.isRegionReachable(regionName) &&
-              (!exit.access_rule || evaluateRule(exit.access_rule))
+              (!exit.access_rule || this.evaluateRule(exit.access_rule))
             );
           }
         }
@@ -1248,8 +1256,7 @@ export class StateManager {
           );
 
           connectingExits.forEach((exit) => {
-            const exitAccessible =
-              !exit.access_rule || evaluateRule(exit.access_rule);
+            const exitAccessible = this.evaluateRule(exit.access_rule);
             console.log(
               `  - Exit: ${exit.name} (${
                 exitAccessible ? 'ACCESSIBLE' : 'BLOCKED'
@@ -1277,7 +1284,7 @@ export class StateManager {
           `\n${regionName} has ${region.region_rules.length} region rules:`
         );
         region.region_rules.forEach((rule, i) => {
-          const ruleResult = evaluateRule(rule);
+          const ruleResult = this.evaluateRule(rule);
           console.log(`- Rule #${i + 1}: ${ruleResult ? 'PASSES' : 'FAILS'}`);
           this.debugRuleEvaluation(rule);
         });
@@ -1308,6 +1315,12 @@ export class StateManager {
 
     const indent = '    ' + '  '.repeat(depth);
 
+    // Get result using internal evaluation
+    let ruleResult = false;
+    try {
+      ruleResult = this.evaluateRule(rule);
+    } catch (e) {}
+
     switch (rule.type) {
       case 'and':
       case 'or':
@@ -1318,7 +1331,7 @@ export class StateManager {
         );
         let allResults = [];
         rule.conditions.forEach((condition, i) => {
-          const result = evaluateRule(condition);
+          const result = this.evaluateRule(condition);
           allResults.push(result);
           console.log(
             `${indent}- Condition #${i + 1}: ${result ? 'PASS' : 'FAIL'}`
@@ -1396,9 +1409,7 @@ export class StateManager {
         break;
 
       default:
-        console.log(
-          `${indent}${rule.type} - ${evaluateRule(rule) ? 'PASS' : 'FAIL'}`
-        );
+        console.log(`${indent}${rule.type} - ${ruleResult ? 'PASS' : 'FAIL'}`);
     }
   }
 
@@ -1448,5 +1459,198 @@ export class StateManager {
       }
     }
     return null;
+  }
+
+  /**
+   * Generates a serializable snapshot of the current state.
+   * Used for sending state to the main thread proxy.
+   * @returns {object} A plain JavaScript object representing the state snapshot.
+   */
+  getSnapshot() {
+    this._logDebug('[StateManager Class] Generating state snapshot...');
+
+    // 1. Inventory: Create simple { itemName: count } map
+    const inventorySnapshot = {};
+    if (this.inventory && this.inventory.items) {
+      // Access the internal Map directly for efficiency
+      for (const [itemName, count] of this.inventory.items.entries()) {
+        if (count > 0) {
+          // Only include items the player has
+          inventorySnapshot[itemName] = count;
+        }
+      }
+    }
+
+    // 2. Flags: Get active flags from ALTTPState
+    // TODO: Confirm how flags are stored in ALTTPState - assuming a simple array or Set for now
+    const flagsSnapshot = this.state ? Array.from(this.state.getFlags()) : []; // Assuming getFlags() returns a Set or Array
+
+    // 3. Reachability: Combine known regions and checked locations
+    // This is a simplified representation. Needs refinement based on how UI uses it.
+    const reachabilitySnapshot = {};
+    if (this.locations) {
+      this.locations.forEach((loc) => {
+        const locationName = loc.name;
+        if (this.isLocationChecked(locationName)) {
+          reachabilitySnapshot[locationName] = 'checked';
+        } else {
+          // Determine reachability based on region
+          const region = this.regions[loc.region];
+          if (region) {
+            if (this.knownReachableRegions.has(loc.region)) {
+              // Check if the location itself is accessible given its rule and current state
+              // This requires evaluating the rule against the *current* inventory/state
+              // For simplicity in the snapshot, we might just mark based on region reachability
+              // or perform a quick rule check here.
+              // Let's assume for now: if region reachable, location is reachable (needs rule eval ideally)
+              if (this.isLocationAccessible(loc)) {
+                // Use existing method
+                reachabilitySnapshot[locationName] = 'reachable';
+              } else {
+                reachabilitySnapshot[locationName] = 'unreachable'; // If rule fails
+              }
+            } else {
+              reachabilitySnapshot[locationName] = 'unreachable';
+            }
+          } else {
+            reachabilitySnapshot[locationName] = 'unknown'; // Should not happen if data is consistent
+          }
+        }
+      });
+    }
+    // Add region reachability status as well?
+    if (this.regions) {
+      Object.keys(this.regions).forEach((regionName) => {
+        if (!reachabilitySnapshot[regionName]) {
+          // Don't overwrite location status if name overlaps
+          if (this.knownReachableRegions.has(regionName)) {
+            reachabilitySnapshot[regionName] = 'reachable';
+          } else {
+            reachabilitySnapshot[regionName] = 'unreachable'; // Could also check knownUnreachable
+          }
+        }
+      });
+    }
+
+    // 4. Settings: Include relevant game settings
+    const settingsSnapshot = this.settings || {};
+
+    const snapshot = {
+      inventory: inventorySnapshot,
+      flags: flagsSnapshot,
+      reachability: reachabilitySnapshot,
+      settings: settingsSnapshot,
+      // Add other relevant state if needed (e.g., playerSlot, mode)
+      playerSlot: this.playerSlot,
+      mode: this.mode,
+    };
+
+    this._logDebug('[StateManager Class] Snapshot generated.', snapshot);
+    return snapshot;
+  }
+
+  // Helper to create a snapshot-like interface from the instance itself
+  // Needed for internal methods that rely on rule evaluation (like isLocationAccessible)
+  _createSelfSnapshotInterface() {
+    // This requires ALTTPHelpers to be instantiated with this interface too?
+    // Or maybe helpers isn't needed for the rules used in isLocationAccessible?
+    // Let's assume helpers aren't needed directly by access_rules evaluated here.
+    const self = this;
+    return {
+      hasItem: (itemName) => self.inventory.has(itemName),
+      countItem: (itemName) => self.inventory.count(itemName),
+      countGroup: (groupName) => self.inventory.countGroup(groupName),
+      hasFlag: (flagName) => self.state?.hasFlag(flagName),
+      getFlags: () =>
+        self.state?.getFlags ? self.state.getFlags() : new Set(),
+      getGameMode: () => self.mode,
+      getShops: () => self.state?.shops,
+      getDifficultyRequirements: () => self.state?.difficultyRequirements,
+      getSetting: (settingName) =>
+        self.settings ? self.settings[settingName] : undefined,
+      getAllSettings: () => self.settings,
+      isRegionReachable: (regionName) => self.isRegionReachable(regionName), // Recursive? Careful!
+      isLocationChecked: (locName) => self.isLocationChecked(locName),
+      executeHelper: (name, ...args) => {
+        if (!self.helpers) {
+          console.error(
+            'StateManager._createSelfSnapshotInterface: Helpers not available for executeHelper'
+          );
+          return false;
+        }
+        // Use the internal helper execution method which handles context
+        return self.helpers.executeHelper(name, ...args);
+      },
+      executeStateManagerMethod: (name, ...args) => {
+        // Directly call the state manager's method execution logic
+        return self.executeStateMethod(name, ...args);
+      },
+      getItemData: (itemName) =>
+        self.itemData ? self.itemData[itemName] : undefined,
+      getLocationData: (locName) => self._findLocationByName(locName),
+      getRegionData: (regionName) =>
+        self.regions ? self.regions[regionName] : undefined,
+      getAllLocations: () => self.locations,
+      getAllRegions: () => self.regions,
+      getPlayerSlot: () => self.playerSlot,
+      // Cannot provide evaluateRule itself here easily
+      // Cannot provide raw snapshot easily
+    };
+  }
+
+  /**
+   * Sends a state snapshot update via the communication channel.
+   * @private
+   */
+  _sendSnapshotUpdate() {
+    if (this.postMessageCallback) {
+      try {
+        const snapshot = this.getSnapshot();
+        if (snapshot) {
+          this.postMessageCallback({
+            type: 'stateSnapshot',
+            snapshot: snapshot,
+          });
+          this._logDebug('[StateManager Class] Sent stateSnapshot update.');
+        } else {
+          console.warn(
+            '[StateManager Class] Failed to generate snapshot for update.'
+          );
+        }
+      } catch (error) {
+        console.error(
+          '[StateManager Class] Error sending state snapshot update:',
+          error
+        );
+        // Optionally send an error message back?
+        // this.postMessageCallback({ type: 'error', message: 'Failed to send snapshot' });
+      }
+    } else {
+      // Only log warning if not using callback (e.g., running standalone)
+      // console.warn('[StateManager Class] Communication channel not set, cannot send snapshot update.');
+    }
+  }
+
+  // Restore the previous implementation of evaluateRule
+  // This method now calls the refactored evaluateRule from ruleEngine.js
+  // (passed into the constructor) using a self-generated snapshot-like interface.
+  evaluateRule(rule) {
+    if (!this.evaluateRuleFromEngine) {
+      console.error(
+        '[StateManager.evaluateRule] Rule engine function is not available.'
+      );
+      return false;
+    }
+    try {
+      const selfInterface = this._createSelfSnapshotInterface();
+      // Call the stored rule evaluation function
+      return this.evaluateRuleFromEngine(rule, selfInterface);
+    } catch (e) {
+      console.error(
+        '[StateManager.evaluateRule] Error calling internal rule evaluation:',
+        e
+      );
+      return false;
+    }
   }
 }

@@ -1,7 +1,7 @@
 // MainContentUI - Central panel containing console and connection status
 
 import ConsoleUI from './consoleUI.js';
-import { stateManagerSingleton } from '../../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../../stateManager/index.js';
 import ProgressUI from './progressUI.js';
 import timerState from '../core/timerState.js'; // Import timerState singleton
 import messageHandler from '../core/messageHandler.js'; // Import messageHandler singleton
@@ -29,7 +29,7 @@ class MainContentUI {
     this.connection = connection;
 
     // Store references needed by console commands
-    this.stateManager = stateManagerSingleton; // Keep direct ref for now
+    this.stateManager = stateManager;
     this.timerState = timerState;
     this.messageHandler = messageHandler;
 

@@ -2,6 +2,8 @@
  * progressUI.js - Handles the UI display for action progress and mana in loop mode.
  */
 import loopState from '../../loops/loopStateSingleton.js';
+// Import the PROXY singleton directly
+import { stateManagerProxySingleton as stateManager } from '../../stateManager/index.js';
 
 export class ProgressUI {
   static rootElement = null;
@@ -9,15 +11,12 @@ export class ProgressUI {
   static checksCounter = null;
   static controlButton = null;
   static quickCheckButton = null;
-  static stateManager = null;
+  // static stateManager = null; // No longer needed
   static isLoopModeActive = false;
   static eventBus = null;
   static unsubscribeHandles = [];
 
-  /**
-   * Get the stateManager instance dynamically
-   * @returns {Promise<Object>} - The stateManager instance or null
-   */
+  /* <<< COMMENT OUT _getStateManager >>>
   static async _getStateManager() {
     if (this.stateManager) {
       return this.stateManager;
@@ -25,7 +24,7 @@ export class ProgressUI {
 
     try {
       const module = await import(
-        '../../stateManager/stateManagerSingleton.js'
+        '../../stateManager/stateManagerSingleton.js' // OLD PATH
       );
       this.stateManager = module.default;
       return this.stateManager;
@@ -34,6 +33,7 @@ export class ProgressUI {
       return null;
     }
   }
+  <<< END COMMENT OUT >>> */
 
   static setEventBus(busInstance) {
     console.log('[ProgressUI] Setting EventBus instance.');
@@ -71,24 +71,35 @@ export class ProgressUI {
     }
 
     this.progressBar.setAttribute('value', '0');
-    this.checksCounter.innerText = 'Ready';
+    this.checksCounter.innerText = 'Loading...';
     this.controlButton.textContent = 'Begin!';
     this.quickCheckButton.disabled = true;
     this.controlButton.disabled = true;
 
     this._setupEventListeners();
 
-    const stateManager = await this._getStateManager();
-    if (stateManager?.instance?.gameData?.locations) {
-      console.log('[ProgressUI] Rules seem loaded, enabling controls.');
-      this.enableControls(true);
-    } else {
-      console.log('[ProgressUI] Rules not loaded initially.');
+    // Wait for proxy readiness before initial check
+    try {
+      await stateManager.ensureReady();
+      const snapshot = stateManager.getSnapshot();
+      if (snapshot && snapshot.locations && snapshot.locations.length > 0) {
+        console.log('[ProgressUI] Initial snapshot ready, enabling controls.');
+        this.enableControls(true);
+      } else {
+        console.log('[ProgressUI] Initial snapshot empty or not ready.');
+        this.enableControls(false);
+      }
+      this.updateProgress(snapshot);
+    } catch (e) {
+      console.error(
+        '[ProgressUI] Error during initial state check in initializeWithin:',
+        e
+      );
       this.enableControls(false);
+      this.updateProgress();
     }
 
     console.log('[ProgressUI] Initialized within element.');
-    this.updateProgress();
 
     return () => {
       console.log('[ProgressUI] Cleaning up listeners...');
@@ -105,11 +116,12 @@ export class ProgressUI {
 
     const subscribe = (eventName, handler) => {
       if (!this.eventBus) return;
-      const unsub = this.eventBus.subscribe(eventName, handler);
+      const unsub = this.eventBus.subscribe(eventName, handler.bind(this));
       this.unsubscribeHandles.push(unsub);
     };
 
-    subscribe('connection:open', () => {
+    subscribe('connection:open', async () => {
+      await stateManager.ensureReady();
       this.enableControls(true);
       this.updateProgress();
     });
@@ -117,28 +129,18 @@ export class ProgressUI {
       this.enableControls(false);
       this.updateProgress();
     });
-    subscribe('stateManager:rulesLoaded', () => {
-      this.enableControls(true);
-      this.updateProgress();
-    });
-    subscribe('stateManager:jsonDataLoaded', () => {
+    subscribe('stateManager:rulesLoaded', (eventData) => {
       console.log(
-        '[ProgressUI] stateManager:jsonDataLoaded, updating progress'
+        '[ProgressUI] stateManager:rulesLoaded received, enabling controls and updating progress.'
       );
-      this.updateProgress();
+      this.enableControls(true);
+      this.updateProgress(eventData?.snapshot);
     });
-    subscribe('messageHandler:printJSONProcessed', () => {
-      console.log('[ProgressUI] PrintJSON processed, updating progress');
-      this.updateProgress();
-    });
-    subscribe('stateManager:locationChecked', () => {
-      this.updateProgress();
-    });
-    subscribe('stateManager:inventoryChanged', () => {
-      this.updateProgress();
-    });
-    subscribe('stateManager:regionsComputed', () => {
-      this.updateProgress();
+    subscribe('stateManager:snapshotUpdated', (eventData) => {
+      console.log(
+        '[ProgressUI] stateManager:snapshotUpdated received, updating progress.'
+      );
+      this.updateProgress(eventData?.snapshot);
     });
     subscribe('loop:modeChanged', (data) => {
       this.isLoopModeActive = data.active;
@@ -195,19 +197,50 @@ export class ProgressUI {
   }
 
   static async _checkInitialControls() {
-    const stateManager = await this._getStateManager();
-    if (stateManager?.instance?.gameData?.locations) {
-      this.enableControls(true);
-    } else {
+    try {
+      await stateManager.ensureReady();
+      const snapshot = stateManager.getSnapshot();
+      if (snapshot && snapshot.locations && snapshot.locations.length > 0) {
+        this.enableControls(true);
+      } else {
+        this.enableControls(false);
+      }
+    } catch (e) {
+      console.error(
+        '[ProgressUI] Error calling getSnapshot in _checkInitialControls:',
+        e
+      );
       this.enableControls(false);
     }
   }
 
-  static async updateProgress() {
-    if (!this.checksCounter) return;
+  static updateProgress(snapshot = null) {
+    if (!this.checksCounter) {
+      console.warn('[ProgressUI] checksCounter element not found.');
+      return;
+    }
 
-    const stateManager = await this._getStateManager();
-    if (!stateManager) return;
+    if (!snapshot) {
+      try {
+        snapshot = stateManager.getSnapshot();
+      } catch (e) {
+        console.error(
+          '[ProgressUI] Error calling getSnapshot in updateProgress (fallback path):',
+          e
+        );
+        this.checksCounter.innerText = 'Error';
+        this.checksCounter.title = 'Error getting game state';
+        if (this.progressBar) this.progressBar.value = 0;
+        return;
+      }
+    }
+
+    if (!snapshot || !snapshot.locations) {
+      this.checksCounter.innerText = 'Loading...';
+      this.checksCounter.title = 'Waiting for game data...';
+      if (this.progressBar) this.progressBar.value = 0;
+      return;
+    }
 
     let checkedCount = 0;
     let reachableCount = 0;
@@ -217,32 +250,37 @@ export class ProgressUI {
     let checkedEventCount = 0;
     let totalEventCount = 0;
 
-    if (stateManager.locations) {
-      stateManager.locations.forEach((loc) => {
-        const isEventLocation = loc.id === null || loc.id === undefined;
+    const locations = snapshot.locations || [];
+    const checkedLocationsSet = snapshot.checkedLocations || new Set();
 
-        if (isEventLocation) {
-          totalEventCount++;
-          if (stateManager.isLocationChecked(loc.name)) {
-            checkedEventCount++;
+    locations.forEach((loc) => {
+      const isEventLocation = loc.id === null || loc.id === undefined;
+      const isChecked = checkedLocationsSet.has(loc.name);
+      const isAccessible = loc.isAccessible === true;
+
+      if (isEventLocation) {
+        totalEventCount++;
+        if (isChecked) {
+          checkedEventCount++;
+        }
+      } else {
+        totalCount++;
+
+        if (isChecked) {
+          checkedCount++;
+        }
+
+        if (isAccessible) {
+          if (!isChecked) {
+            reachableCount++;
           }
         } else {
-          totalCount++;
-
-          if (stateManager.isLocationChecked(loc.name)) {
-            checkedCount++;
-          }
-
-          if (stateManager.isLocationAccessible(loc)) {
-            if (!stateManager.isLocationChecked(loc.name)) {
-              reachableCount++;
-            }
-          } else {
+          if (!isChecked) {
             unreachableCount++;
           }
         }
-      });
-    }
+      }
+    });
 
     const statsLine = `Checked: ${checkedCount}/${totalCount}, Reachable: ${reachableCount}, Unreachable: ${unreachableCount}, Events: ${checkedEventCount}/${totalEventCount}`;
 

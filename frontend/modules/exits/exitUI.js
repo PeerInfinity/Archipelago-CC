@@ -1,5 +1,5 @@
 // exitUI.js
-import { stateManagerSingleton } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
 import commonUI, { debounce } from '../commonUI/index.js';
 import loopStateSingleton from '../loops/loopStateSingleton.js';
@@ -63,6 +63,7 @@ export class ExitUI {
 
     const debouncedUpdate = debounce(() => this.updateExitDisplay(), 50);
 
+    subscribe('stateManager:snapshotUpdated', debouncedUpdate);
     subscribe('stateManager:inventoryChanged', debouncedUpdate);
     subscribe('stateManager:regionsComputed', debouncedUpdate);
     subscribe('stateManager:rulesLoaded', debouncedUpdate);
@@ -213,7 +214,7 @@ export class ExitUI {
           const toRegion = path[i + 1];
 
           // Find the exit that connects these regions (using discovered exits)
-          const instance = stateManagerSingleton.instance;
+          const instance = stateManager.instance;
           const regionData = instance?.regions[fromRegion];
           // Important: Find the exit within the *discovered* exits for the 'fromRegion'
           const exitToUse = regionData?.exits?.find(
@@ -303,9 +304,25 @@ export class ExitUI {
     });
   }
 
-  initialize() {
+  async initialize() {
     console.log('[ExitUI] Initializing panel...');
-    this.updateExitDisplay();
+    // Subscriptions are handled in constructor
+    // Need initial update after ensuring proxy is ready
+    try {
+      await stateManager.ensureReady(); // Wait for proxy
+      console.log('[ExitUI] Proxy ready, performing initial display update.');
+      this.updateExitDisplay(); // Call initial update after proxy is ready
+    } catch (error) {
+      console.error(
+        '[ExitUI] Error waiting for proxy during initialization:',
+        error
+      );
+      // Display an error state in the UI?
+      if (this.exitsGrid) {
+        this.exitsGrid.innerHTML =
+          '<div class="error-message">Error initializing exit data.</div>';
+      }
+    }
   }
 
   clear() {
@@ -351,289 +368,143 @@ export class ExitUI {
 
   updateExitDisplay() {
     console.log('[ExitUI] updateExitDisplay called.');
+    if (!this.exitsGrid) {
+      console.warn('[ExitUI] exitsGrid element not found.');
+      return;
+    }
+
+    // Get current snapshot
+    let snapshot;
+    try {
+      snapshot = stateManager.getSnapshot();
+    } catch (e) {
+      console.error('[ExitUI] Error getting snapshot:', e);
+      this.exitsGrid.innerHTML =
+        '<div class="error-message">Error retrieving exit data.</div>';
+      return;
+    }
+
+    if (!snapshot || !snapshot.regions) {
+      console.log('[ExitUI] Snapshot not ready or no region data found.');
+      this.exitsGrid.innerHTML =
+        '<div class="loading-message">Loading exit data...</div>';
+      return;
+    }
+
+    // --- Get Filter/Sort Options --- //
+    const sortBy =
+      this.rootElement.querySelector('#exit-sort-select')?.value || 'original';
     const showReachable =
       this.rootElement.querySelector('#exit-show-reachable')?.checked ?? true;
     const showUnreachable =
       this.rootElement.querySelector('#exit-show-unreachable')?.checked ?? true;
     const showExplored =
       this.rootElement.querySelector('#exit-show-explored')?.checked ?? true;
-    const sorting =
-      this.rootElement.querySelector('#exit-sort-select')?.value ?? 'original';
+    const isLoopModeActive = loopStateSingleton.isLoopModeActive ?? false;
 
-    const instance = stateManagerSingleton.instance;
-    console.log(
-      '[ExitUI] Accessing stateManagerSingleton.instance:',
-      instance ? 'Exists' : 'MISSING'
-    );
-    if (!instance) return;
-
-    const allExits = this.getAllExits(instance);
-    console.log(`[ExitUI] Found ${allExits.length} total exits.`);
-
-    const exitsGrid = this.exitsGrid;
-    if (!exitsGrid) return;
-
-    exitsGrid.style.gridTemplateColumns = `repeat(${this.columns}, minmax(0, 1fr))`; // Set the number of columns
-
-    if (allExits.length === 0) {
-      exitsGrid.innerHTML = `
-        <div class="empty-message">
-          Upload a JSON file to see exits or adjust filters
-        </div>
-      `;
-      return;
-    }
-
-    // Apply filters
-    let filteredExits = allExits;
-
-    // Only show discovered exits in Loop Mode if not showing all
-    const isLoopModeActive = loopStateSingleton.isLoopModeActive;
-    if (isLoopModeActive) {
-      const showingExplored = showExplored;
-
-      filteredExits = allExits.filter((exit) => {
-        const regionDiscovered = loopStateSingleton.isRegionDiscovered(
-          exit.region
-        );
-        if (!regionDiscovered) return false;
-
-        const exitDiscovered = loopStateSingleton.isExitDiscovered(
-          exit.region,
-          exit.name
-        );
-        return showingExplored || !exitDiscovered;
-      });
-    }
-
-    // Filter reachable/unreachable
-    filteredExits = filteredExits.filter((exit) => {
-      const isReachable =
-        instance.isRegionReachable(exit.region) &&
-        (!exit.access_rule || evaluateRule(exit.access_rule));
-
-      if (isReachable && !showReachable) return false;
-      // All other cases are considered unreachable
-      else {
-        return showUnreachable;
-      }
-    });
-
-    // Sort exits
-    if (sorting === 'accessibility') {
-      filteredExits.sort((a, b) => {
-        const aReachable =
-          instance.isRegionReachable(a.region) &&
-          (!a.access_rule || evaluateRule(a.access_rule));
-        const bReachable =
-          instance.isRegionReachable(b.region) &&
-          (!b.access_rule || evaluateRule(b.access_rule));
-
-        // Fully traversable exits first (region reachable + rule passes)
-        const aFullyTraversable = aReachable;
-        const bFullyTraversable = bReachable;
-
-        // Then region accessible but rule fails
-        const aRegionOnlyAccessible = aReachable && !aReachable;
-        const bRegionOnlyAccessible = bReachable && !bReachable;
-
-        // Then rule passes but region not accessible
-        const aRuleOnlyPasses = !aReachable;
-        const bRuleOnlyPasses = !bReachable;
-
-        // Compare in priority order
-        if (aFullyTraversable !== bFullyTraversable) {
-          return bFullyTraversable - aFullyTraversable; // true sorts before false
-        } else if (aRegionOnlyAccessible !== bRegionOnlyAccessible) {
-          return bRegionOnlyAccessible - aRegionOnlyAccessible;
-        } else if (aRuleOnlyPasses !== bRuleOnlyPasses) {
-          return bRuleOnlyPasses - aRuleOnlyPasses;
-        } else {
-          return 0; // Same accessibility level
-        }
-      });
-    }
-
-    // Generate HTML for exits programmatically
-    exitsGrid.innerHTML = ''; // Clear previous content
-
-    // <<< Get setting once >>>
-    const useExitColorblind = settingsManager.getSetting(
+    // --- Get Data From Snapshot --- //
+    const allRegions = snapshot.regions || {}; // Get regions from snapshot
+    const reachableRegionsSet =
+      snapshot.reachableRegions instanceof Set
+        ? snapshot.reachableRegions
+        : new Set(snapshot.reachableRegions || []);
+    const discoveredExits = loopStateSingleton.discoveredExits || new Map(); // Get from loopState
+    const discoveredRegions = loopStateSingleton.discoveredRegions || new Set(); // Get from loopState
+    const useColorblind = settingsManager.getSetting(
       'colorblindMode.exits',
       true
     );
 
+    // --- Process Exits --- //
+    console.log(`[ExitUI] Processing regions from snapshot.`);
+    let allExits = [];
+    Object.entries(allRegions).forEach(([regionName, regionData]) => {
+      if (regionData.exits && Array.isArray(regionData.exits)) {
+        regionData.exits.forEach((exit) => {
+          allExits.push({ ...exit, region: regionName }); // Add region name to exit data
+        });
+      }
+    });
+
+    let filteredExits = allExits.map((exit) => {
+      const isRegionReachable = reachableRegionsSet.has(exit.region);
+      const ruleResult =
+        !exit.access_rule || evaluateRule(exit.access_rule, snapshot); // Pass snapshot to evaluateRule
+      const isReachable = isRegionReachable && ruleResult;
+      const isExitExplored =
+        discoveredRegions.has(exit.region) &&
+        (discoveredExits.get(exit.region)?.has(exit.name) ?? false);
+      const isDestinationRegionExplored = discoveredRegions.has(
+        exit.connected_region
+      );
+      const isExplored = isExitExplored && isDestinationRegionExplored; // Both exit and dest must be explored
+      return { ...exit, isReachable, isExplored }; // Add derived properties
+    });
+
+    // Filter based on checkboxes
+    filteredExits = filteredExits.filter((exit) => {
+      if (!showReachable && exit.isReachable) return false;
+      if (!showUnreachable && !exit.isReachable) return false;
+      if (isLoopModeActive && !showExplored && !exit.isExplored) return false;
+      return true;
+    });
+
+    // Sort based on selection
+    if (sortBy === 'accessibility') {
+      filteredExits.sort((a, b) => {
+        if (a.isReachable !== b.isReachable) return a.isReachable ? -1 : 1; // Reachable first
+        return (a.region + a.name).localeCompare(b.region + b.name); // Fallback sort
+      });
+    } else {
+      // Default: original (region + name)
+      filteredExits.sort((a, b) =>
+        (a.region + a.name).localeCompare(b.region + b.name)
+      );
+    }
+
+    // --- Render Grid --- //
+    this.exitsGrid.innerHTML = ''; // Clear previous content
+    this.exitsGrid.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
+
+    if (filteredExits.length === 0) {
+      this.exitsGrid.innerHTML =
+        '<div class="no-exits-message">No exits match filters.</div>';
+      return;
+    }
+
     filteredExits.forEach((exit) => {
-      const isRegionAccessible = instance.isRegionReachable(exit.region);
-      const exitRulePasses =
-        !exit.access_rule || evaluateRule(exit.access_rule);
+      const exitElement = document.createElement('div');
+      exitElement.classList.add('exit');
+      exitElement.dataset.exitName = exit.name;
+      exitElement.dataset.regionName = exit.region;
 
-      let stateClass = '';
-      if (isRegionAccessible && exitRulePasses) {
-        stateClass = 'traversable';
-      } else if (isRegionAccessible && !exitRulePasses) {
-        stateClass = 'region-accessible-but-locked';
-      } else if (!isRegionAccessible && exitRulePasses) {
-        stateClass = 'region-inaccessible-but-unlocked';
-      } else {
-        stateClass = 'not-traversable';
+      let statusClass = exit.isReachable ? 'reachable' : 'unreachable';
+      exitElement.classList.add(statusClass);
+      if (isLoopModeActive && exit.isExplored) {
+        exitElement.classList.add('explored');
       }
 
-      // Handle Loop Mode display
-      let exitName = exit.name;
-      const isLoopModeActive = loopStateSingleton.isLoopModeActive;
+      // Colorblind indicator text
+      let cbIndicator = '';
+      if (useColorblind) {
+        cbIndicator = exit.isReachable ? ' [R]' : ' [U]';
+      }
 
+      exitElement.textContent = `${exit.region} -> ${exit.name} -> ${
+        exit.connected_region || '???'
+      }${cbIndicator}`;
+      exitElement.title = `From: ${exit.region} - To: ${
+        exit.connected_region || '???'
+      } - ${statusClass.toUpperCase()}`;
+
+      // Attach click listener for loop mode interaction
       if (isLoopModeActive) {
-        const isRegionDiscovered = loopStateSingleton.isRegionDiscovered(
-          exit.region
-        );
-        const isExitDiscovered = loopStateSingleton.isExitDiscovered(
-          exit.region,
-          exit.name
-        );
-        if (!isRegionDiscovered || !isExitDiscovered) {
-          exitName = '???';
-          stateClass += ' undiscovered';
-        }
+        exitElement.addEventListener('click', () => this.handleExitClick(exit));
       }
 
-      // Create card element
-      const card = document.createElement('div');
-      card.className = `exit-card ${stateClass}`;
-      card.dataset.exit = encodeURIComponent(JSON.stringify(exit)).replace(
-        /'/g,
-        "'"
-      );
-
-      // <<< Apply colorblind class to card >>>
-      card.classList.toggle('colorblind-mode', useExitColorblind);
-
-      // Exit Name
-      const exitNameDiv = document.createElement('div');
-      exitNameDiv.className = 'font-medium exit-link'; // Keep class if styling relies on it
-      exitNameDiv.dataset.exit = exit.name;
-      exitNameDiv.dataset.region = exit.region;
-      exitNameDiv.textContent = exitName;
-      card.appendChild(exitNameDiv);
-
-      // Player Info
-      const playerDiv = document.createElement('div');
-      playerDiv.className = 'text-sm';
-      playerDiv.textContent = `Player ${exit.player || '1'}`;
-      card.appendChild(playerDiv);
-
-      // Origin Region Info (with clickable link)
-      const originRegionDiv = document.createElement('div');
-      originRegionDiv.className = 'text-sm';
-      originRegionDiv.textContent = 'Origin: ';
-      const originRegionLink = commonUI.createRegionLink(
-        exit.region,
-        useExitColorblind
-      );
-      const isOriginReachable = instance.isRegionReachable(exit.region);
-      originRegionLink.style.color = isOriginReachable ? 'inherit' : 'red';
-      originRegionDiv.appendChild(originRegionLink);
-      originRegionDiv.appendChild(
-        document.createTextNode(
-          ` (${isOriginReachable ? 'Accessible' : 'Inaccessible'})`
-        )
-      );
-      card.appendChild(originRegionDiv);
-
-      // Destination Region Info (with clickable link)
-      const destRegionDiv = document.createElement('div');
-      destRegionDiv.className = 'text-sm';
-      destRegionDiv.textContent = 'Destination: ';
-      const destRegionLink = commonUI.createRegionLink(
-        exit.connected_region,
-        useExitColorblind
-      );
-      const isDestReachable = instance.isRegionReachable(exit.connected_region);
-      destRegionLink.style.color = isDestReachable ? 'inherit' : 'red';
-      destRegionDiv.appendChild(destRegionLink);
-      destRegionDiv.appendChild(
-        document.createTextNode(
-          ` (${isDestReachable ? 'Accessible' : 'Inaccessible'})`
-        )
-      );
-      card.appendChild(destRegionDiv);
-
-      // Exit Logic Tree
-      const logicDiv = document.createElement('div');
-      logicDiv.className = 'text-sm';
-      logicDiv.textContent = 'Requires: ';
-      logicDiv.appendChild(
-        commonUI.renderLogicTree(exit.access_rule, useExitColorblind)
-      ); // <<< Pass setting
-      card.appendChild(logicDiv);
-
-      // Status Text
-      const statusDiv = document.createElement('div');
-      statusDiv.className = 'text-sm';
-      statusDiv.textContent =
-        isRegionAccessible && exitRulePasses
-          ? 'Traversable'
-          : isRegionAccessible && !exitRulePasses
-          ? 'Region accessible, but rule fails'
-          : !isRegionAccessible && exitRulePasses
-          ? 'Region inaccessible, but rule passes'
-          : 'Not traversable';
-      card.appendChild(statusDiv);
-
-      // Append the constructed card to the grid
-      exitsGrid.appendChild(card);
+      this.exitsGrid.appendChild(exitElement);
     });
-
-    // Remove redundant event listeners as commonUI handles links now
-    /*
-    document.querySelectorAll('.region-link').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent grid click
-        const regionName = link.dataset.region;
-        if (regionName && this.gameUI.regionUI) {
-          this.gameUI.regionUI.navigateToRegion(regionName);
-        }
-      });
-    });
-
-    document.querySelectorAll('.location-link').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent grid click
-        const locationName = link.dataset.location;
-        const regionName = link.dataset.region;
-        if (locationName && regionName && this.gameUI.regionUI) {
-          this.gameUI.regionUI.navigateToLocation(locationName, regionName);
-        }
-      });
-    });
-    */
-
-    // Add click listeners to the exit cards themselves (for loop mode interaction)
-    this.exitsGrid.querySelectorAll('.exit-card').forEach((card) => {
-      card.addEventListener('click', (e) => {
-        // Only handle clicks that aren't on other clickable elements
-        if (
-          e.target.closest('.region-link') ||
-          e.target.closest('.exit-link')
-        ) {
-          return;
-        }
-
-        try {
-          // Get the exit data from the data attribute
-          const exitData = JSON.parse(
-            decodeURIComponent(card.dataset.exit.replace(/&quot;/g, '"'))
-          );
-          if (exitData) {
-            this.handleExitClick(exitData);
-          }
-        } catch (error) {
-          console.error('Error parsing exit data:', error);
-        }
-      });
-    });
-
-    console.log(`[ExitUI] Rendering ${filteredExits.length} exits.`);
+    console.log(`[ExitUI] Rendered ${filteredExits.length} exits.`);
   }
 
   getAllExits(instance) {

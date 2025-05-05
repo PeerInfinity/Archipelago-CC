@@ -1,5 +1,5 @@
 // loopUI.js - UI for the Loop mode
-import { stateManagerSingleton } from '../stateManager/index.js'; // <<< Re-added import
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // <<< Re-added import
 import loopState from './loopStateSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import commonUI from '../commonUI/index.js';
@@ -1409,7 +1409,7 @@ export class LoopUI {
     });
 
     sortedRegions.forEach((regionName) => {
-      const region = stateManagerSingleton.instance.regions[regionName];
+      const region = stateManager.instance.regions[regionName];
       if (!region) return;
       // Show regions that are 'Menu', have actions queued, or are the destination of a move action
       const isDestination = loopState.actionQueue.some(
@@ -1543,7 +1543,7 @@ export class LoopUI {
 
       // Discovery Stats
       // Use stateManagerSingleton directly
-      const regionData = stateManagerSingleton.instance.regions[regionName]; // Get full data
+      const regionData = stateManager.instance.regions[regionName]; // Get full data
       const totalLocations = regionData?.locations?.length || 0;
       const totalExits = regionData?.exits?.length || 0;
       // <<< Use discoveryStateSingleton
@@ -1657,7 +1657,7 @@ export class LoopUI {
    */
   _renderLocationList(regionName, container, useColorblind) {
     container.innerHTML = ''; // Clear previous content
-    const regionData = stateManagerSingleton.instance.regions[regionName];
+    const regionData = stateManager.instance.regions[regionName];
     if (!regionData || !regionData.locations) return;
 
     const sortedLocations = [...regionData.locations].sort((a, b) =>
@@ -1675,11 +1675,8 @@ export class LoopUI {
         return; // Skip undiscovered locations
       }
 
-      const isChecked = stateManagerSingleton.instance.isLocationChecked(
-        loc.name
-      );
-      const isAccessible =
-        stateManagerSingleton.instance.isLocationAccessible(loc);
+      const isChecked = stateManager.instance.isLocationChecked(loc.name);
+      const isAccessible = stateManager.instance.isLocationAccessible(loc);
 
       const div = document.createElement('div');
       div.className = 'loop-location-wrapper';
@@ -1743,7 +1740,7 @@ export class LoopUI {
    */
   _renderExitList(regionName, container, useColorblind) {
     container.innerHTML = ''; // Clear previous content
-    const regionData = stateManagerSingleton.instance.regions[regionName];
+    const regionData = stateManager.instance.regions[regionName];
     if (!regionData || !regionData.exits) return;
 
     const sortedExits = [...regionData.exits].sort((a, b) =>
@@ -1767,7 +1764,7 @@ export class LoopUI {
         discoveryStateSingleton.isRegionDiscovered(targetRegion);
       const isAccessible =
         isTargetRegionDiscovered &&
-        stateManagerSingleton.instance.helpers.evaluateRule(exit.rule);
+        stateManager.instance.helpers.evaluateRule(exit.rule);
 
       const div = document.createElement('div');
       div.className = 'loop-exit-wrapper';
