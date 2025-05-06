@@ -27,8 +27,6 @@ export { register };
 export { initialize, postInitialize };
 // Export the singleton instance of the proxy
 export { stateManagerProxySingleton };
-// REMOVE: Export the function to create the snapshot interface
-// REMOVE: export { createStateSnapshotInterface };
 
 /**
  * Registration function for the StateManager module.

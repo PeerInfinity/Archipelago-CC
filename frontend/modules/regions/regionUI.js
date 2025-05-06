@@ -10,7 +10,7 @@ import eventBus from '../../app/core/eventBus.js';
 import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
 import { moduleDispatcher } from './index.js';
-import { createStateSnapshotInterface } from '../commonUI/index.js';
+import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
 
 export class RegionUI {
   constructor() {

@@ -540,4 +540,42 @@ class StateManagerProxy {
   // <<< END ADDED >>>
 }
 
+// --- ADDED: Function to create the main-thread snapshot interface ---
+/**
+ * Creates an interface object suitable for main-thread rule evaluation
+ * based on the latest cached snapshot data.
+ * @param {object | null} snapshot - The raw state snapshot from the worker (or null if not available).
+ * @param {object | null} staticData - The cached static data (items, groups, etc.).
+ * @returns {object} - An object conforming to the StateSnapshotInterface.
+ */
+export function createStateSnapshotInterface(snapshot, staticData) {
+  // Handle cases where snapshot or static data might be missing
+  const inv = snapshot?.inventory || {};
+  const flags = new Set(snapshot?.flags || []);
+  const reach = snapshot?.reachability || {};
+  const settings = snapshot?.settings || {};
+  const items = staticData?.itemData || {}; // Assuming structure from setStaticData
+  const groups = staticData?.groupData || {}; // Assuming structure from setStaticData
+
+  // Helper to count items within a group
+  const countGroupItems = (groupName) => {
+    const group = groups[groupName];
+    if (!group || !group.items) return 0;
+    return group.items.reduce((sum, itemName) => sum + (inv[itemName] || 0), 0);
+  };
+
+  return {
+    hasItem: (itemName) => (inv[itemName] || 0) > 0,
+    countItem: (itemName) => inv[itemName] || 0,
+    countGroup: (groupName) => countGroupItems(groupName), // Use helper
+    hasFlag: (flagName) => flags.has(flagName),
+    getReachabilityStatus: (name) => reach[name] || 'unknown', // Default to 'unknown' if not present
+    getSetting: (settingName) => settings[settingName],
+    // Add any other methods required by the evaluateRule function when running on the main thread
+    // Ensure this aligns with the expectations outlined in the planning doc (Section 6)
+    // NOTE: This interface CANNOT execute helpers or state methods directly.
+  };
+}
+// --- END ADDED FUNCTION ---
+
 export default StateManagerProxy;

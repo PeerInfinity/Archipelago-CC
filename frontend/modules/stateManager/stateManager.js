@@ -1615,9 +1615,10 @@ export class StateManager {
       },
       getCurrentRegion: () => self.currentRegionName,
       getAllItems: () => self.itemData,
-      getAllLocations: () => self.locations, // Use the enhanced locations array
+      getAllLocations: () => [...self.locations], // Return a copy of the array
       getAllRegions: () => self.regions, // Use the enhanced regions object
       getPlayerSlot: () => self.playerSlot,
+      helpers: self.helpers, // Provide access to game-specific helpers
     };
   }
 

@@ -4,14 +4,13 @@ import {
   // REMOVE: createStateSnapshotInterface, // Import from stateManager index
 } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
-import commonUI, {
-  debounce,
-  createStateSnapshotInterface,
-} from '../commonUI/index.js';
+import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
+import commonUI, { debounce } from '../commonUI/index.js';
 import loopStateSingleton from '../loops/loopStateSingleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { renderLogicTree, applyColorblindClass } from '../commonUI/index.js';
 
 export class LocationUI {
   constructor(gameUI) {

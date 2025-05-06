@@ -139,17 +139,17 @@ export const evaluateRule = (rule, context, depth = 0) => {
   }
 
   // --- Context Detection ---
-  // --- ADDED LOGGING ---
-  console.log(
-    `[evaluateRule Debug] Depth: ${depth}, Context Type: ${typeof context}, Has executeHelper: ${typeof context?.executeHelper}`
-  );
-  if (context && typeof context.executeHelper !== 'function') {
-    console.log(
-      '[evaluateRule Debug] Context object keys:',
-      Object.keys(context)
-    );
-  }
-  // --- END LOGGING ---
+  // --- REMOVED LOGGING ---
+  // console.log(
+  //   `[evaluateRule Debug] Depth: ${depth}, Context Type: ${typeof context}, Has executeHelper: ${typeof context?.executeHelper}`
+  // );
+  // if (context && typeof context.executeHelper !== 'function') {
+  //   console.log(
+  //     '[evaluateRule Debug] Context object keys:',
+  //     Object.keys(context)
+  //   );
+  // }
+  // --- END REMOVED LOGGING ---
   // Check if we have full state manager capabilities (worker context) vs. just snapshot access (main thread)
   const isWorkerContext =
     context && typeof context.executeHelper === 'function'; // Use executeHelper as a marker
@@ -265,11 +265,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
         // Check if obj is valid before accessing attribute
         if (obj === null || typeof obj === 'undefined') {
-          // The base object evaluated to null/undefined
-          // console.warn(`[evaluateRule] Base object for attribute '${rule.attr}' evaluated to null/undefined.`, { rule });
           result = undefined; // Propagate undefined/failure
         } else {
-          // Base object is valid, try accessing attribute
+          // --- REMOVED: Special handling for location.can_reach --- >
+          // --- REVERTED: Original attribute access logic --- >
           if (typeof obj[rule.attr] !== 'undefined') {
             result = obj[rule.attr];
           } else if (obj instanceof Map && typeof obj.get === 'function') {
@@ -277,10 +276,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
           } else if (obj instanceof Set && typeof obj.has === 'function') {
             result = obj.has(rule.attr);
           } else {
-            // Attribute doesn't exist on the object/map/set
-            // console.debug(`[evaluateRule] Attribute '${rule.attr}' not found on object:`, obj, { rule });
+            console.warn(
+              `[evaluateRule Attribute] Attribute '${rule.attr}' not found on object`,
+              {
+                objectType: typeof obj,
+                objectKeys: typeof obj === 'object' ? Object.keys(obj) : null,
+              }
+            ); // Added logging
             result = undefined; // Attribute not found
           }
+          // --- END REVERTED --- >
         }
         break;
       }
@@ -504,14 +509,23 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'name': {
-        if (isWorkerContext && rule.name === 'player') {
-          result = context.getPlayerSlot ? context.getPlayerSlot() : undefined;
+        // --- REVERTED: Only check helpers.entities in worker --- >
+        if (isWorkerContext && context.helpers?.entities?.[rule.name]) {
+          // Resolve to the entity object from helpers
+          result = context.helpers.entities[rule.name];
+          console.log(
+            `[evaluateRule Name] Resolved "${rule.name}" via context.helpers.entities`
+          ); // Keep log
         } else {
+          // Default behavior: Unhandled name reference (could be main thread or worker with no entity)
           console.warn(
-            `[evaluateRule] Unhandled 'name' type reference: ${rule.name}. Returning undefined.`
+            `[evaluateRule] Unhandled 'name' type reference: ${
+              rule.name
+            }. Context type: ${typeof context}, IsWorker: ${isWorkerContext}. Returning undefined.`
           );
-          result = undefined;
+          result = undefined; // Return undefined for unhandled names
         }
+        // --- END REVERTED --- >
         break;
       }
 

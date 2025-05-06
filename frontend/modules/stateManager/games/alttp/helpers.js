@@ -9,18 +9,15 @@ export class ALTTPHelpers extends GameHelpers {
    */
   constructor(context) {
     super();
+    // --- ORIGINAL CONTEXT DETECTION ---
     this.manager = null;
     this.snapshot = null;
-
-    // Check if the context looks like a StateManager instance or a snapshot interface
     if (context && typeof context.getSnapshot === 'function') {
-      // Heuristic: StateManager has getSnapshot
       console.log(
         '[ALTTPHelpers] Initializing with StateManager instance (Worker context).'
       );
       this.manager = context;
     } else if (context && typeof context.hasItem === 'function') {
-      // Heuristic: Snapshot interface has hasItem
       console.log(
         '[ALTTPHelpers] Initializing with StateSnapshotInterface (Main thread context).'
       );
@@ -34,11 +31,21 @@ export class ALTTPHelpers extends GameHelpers {
         'ALTTPHelpers requires a valid StateManager or StateSnapshotInterface.'
       );
     }
+    // --- END ORIGINAL CONTEXT DETECTION ---
+
+    // --- ADDED: Game-specific entities --- >
+    this.entities = {
+      old_man: {
+        can_reach: () => {
+          // Use internal helper which checks manager or snapshot
+          return this._isLocationAccessible('Old Man');
+        },
+      },
+    };
+    // --- END ADDED --- >
   }
 
   // --- Internal Accessor Helpers ---
-  // These simplify accessing state regardless of context
-
   _hasItem(itemName) {
     return this.manager
       ? this.manager.inventory.has(itemName)
@@ -64,13 +71,12 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   _getSetting(settingName) {
-    const defaultValue = undefined; // Or set appropriate defaults per setting if needed
+    const defaultValue = undefined;
     if (this.manager) {
       return this.manager.settings
         ? this.manager.settings[settingName]
         : defaultValue;
     } else {
-      // Assuming snapshot interface provides getSetting
       return this.snapshot.getSetting
         ? this.snapshot.getSetting(settingName)
         : defaultValue;
@@ -85,6 +91,26 @@ export class ALTTPHelpers extends GameHelpers {
     return this.manager
       ? this.manager.isRegionReachable(regionName)
       : this.snapshot.isRegionReachable(regionName);
+  }
+
+  // Internal helper for location accessibility, handling both contexts
+  _isLocationAccessible(locationOrName) {
+    if (this.manager) {
+      // StateManager expects the location object
+      const location =
+        typeof locationOrName === 'string'
+          ? this.manager.locations?.find((l) => l.name === locationOrName)
+          : locationOrName;
+      return location ? this.manager.isLocationAccessible(location) : false;
+    } else if (this.snapshot) {
+      // Snapshot interface expects the location name (or handles object? Check interface)
+      const locationName =
+        typeof locationOrName === 'object'
+          ? locationOrName.name
+          : locationOrName;
+      return this.snapshot.isLocationAccessible(locationName); // Assuming snapshot can take name
+    }
+    return false; // No valid context
   }
 
   _getPlayerSlot() {
@@ -111,9 +137,7 @@ export class ALTTPHelpers extends GameHelpers {
       : this.snapshot.getRegionData(regionName);
   }
 
-  // Add more accessors as needed for other state parts...
-
-  // --- Original Helper Methods (Refactored) ---
+  // --- Original Helper Methods (Now use internal accessors) ---
 
   is_not_bunny(region) {
     if (this._hasItem('Moon Pearl')) {
@@ -121,7 +145,7 @@ export class ALTTPHelpers extends GameHelpers {
     }
     const regionData =
       typeof region === 'string' ? this._getRegionData(region) : region;
-    if (!regionData) return true;
+    if (!regionData) return true; // Default true if region data missing?
 
     const isInverted = this._getGameMode() === 'inverted';
     return isInverted ? regionData.is_dark_world : regionData.is_light_world;
@@ -311,9 +335,6 @@ export class ALTTPHelpers extends GameHelpers {
     }
   }
 
-  // Remove the old can_use_bombs(count = 1) version
-  // can_use_bombs(count = 1) { ... }
-
   can_bomb_or_bonk() {
     return this._hasItem('Pegasus Boots') || this.can_use_bombs(); // Use the unified can_use_bombs
   }
@@ -403,10 +424,13 @@ export class ALTTPHelpers extends GameHelpers {
   has_misery_mire_medallion() {
     // TODO: Fix requiredMedallions access
     const gameSettings =
-      this.manager?.settings || this.snapshot?.getAllSettings();
+      (this._getSetting('misery_mire_medallion') ||
+        this._getSetting('crystals_needed_for_gt')) ??
+      7;
     const requiredMeds =
-      this.manager?.state?.requiredMedallions ||
-      this.snapshot?.getRequiredMedallions();
+      this._getSetting('requiredMedallions') ||
+      this._getSetting('crystals_needed_for_gt')?.[0] ||
+      'Ether';
     const medallion =
       gameSettings?.misery_mire_medallion || requiredMeds?.[0] || 'Ether';
     return this._hasItem(medallion);
@@ -415,10 +439,13 @@ export class ALTTPHelpers extends GameHelpers {
   has_turtle_rock_medallion() {
     // TODO: Fix requiredMedallions access
     const gameSettings =
-      this.manager?.settings || this.snapshot?.getAllSettings();
+      (this._getSetting('turtle_rock_medallion') ||
+        this._getSetting('crystals_needed_for_gt')) ??
+      7;
     const requiredMeds =
-      this.manager?.state?.requiredMedallions ||
-      this.snapshot?.getRequiredMedallions();
+      this._getSetting('requiredMedallions') ||
+      this._getSetting('crystals_needed_for_gt')?.[1] ||
+      'Quake';
     const medallion =
       gameSettings?.turtle_rock_medallion || requiredMeds?.[1] || 'Quake';
     return this._hasItem(medallion);
@@ -480,16 +507,15 @@ export class ALTTPHelpers extends GameHelpers {
 
   old_man() {
     // Use snapshot interface method if available, otherwise manager method
-    if (this.snapshot?.isLocationAccessible) {
-      return this.snapshot.isLocationAccessible('Old Man');
-    } else if (this.manager?.isLocationAccessible) {
+    if (this._isLocationAccessible) {
+      return this._isLocationAccessible('Old Man');
+    } else {
       // manager.isLocationAccessible needs context (location object)
       const location = this.manager.locations?.find(
         (l) => l.name === 'Old Man'
       );
-      return location ? this.manager.isLocationAccessible(location) : false;
+      return location ? this._isLocationAccessible(location) : false;
     }
-    return false;
   }
 
   basement_key_rule() {
@@ -519,9 +545,9 @@ export class ALTTPHelpers extends GameHelpers {
           const location = this.manager.locations?.find(
             (l) => l.name === target
           );
-          return location ? this.manager.isLocationAccessible(location) : false;
+          return location ? this._isLocationAccessible(location) : false;
         } else {
-          return this.snapshot.isLocationAccessible(target); // Assumes snapshot handles name
+          return this._isLocationAccessible(target); // Assumes snapshot handles name
         }
       } else if (type === 'Entrance') {
         console.warn(
@@ -664,14 +690,14 @@ export class ALTTPHelpers extends GameHelpers {
       );
       return location?.item?.name ?? null;
     } else if (
-      this.snapshot &&
-      typeof this.snapshot.getAllLocations === 'function'
+      this.manager &&
+      typeof this.manager.getAllLocations === 'function'
     ) {
       // Use getAllLocations if available on the snapshot interface
       console.log(
         '[ALTTPHelpers] location_item_name: Using snapshot.getAllLocations...'
       );
-      const locations = this.snapshot.getAllLocations();
+      const locations = this.manager.getAllLocations();
       console.log(
         '[ALTTPHelpers] location_item_name: getAllLocations returned:',
         locations ? locations.length + ' locations' : 'null/undefined'
@@ -691,23 +717,13 @@ export class ALTTPHelpers extends GameHelpers {
   executeHelper(name, ...args) {
     if (typeof this[name] === 'function') {
       try {
-        return this[name](...args);
-      } catch (e) {
-        console.error(`Error executing helper '${name}' internally:`, e, {
-          args,
-        });
+        return this[name].apply(this, args);
+      } catch (error) {
+        console.error(`Error executing helper ${name}:`, error);
         return false;
       }
     } else {
-      if (typeof super[name] === 'function') {
-        try {
-          return super[name](...args);
-        } catch (e) {
-          console.error(`Error executing base helper '${name}':`, e, { args });
-          return false;
-        }
-      }
-      console.warn(`[ALTTPHelpers] Unknown helper requested: ${name}`);
+      console.warn(`[ALTTPHelpers] Unknown helper function: ${name}`);
       return false;
     }
   }
