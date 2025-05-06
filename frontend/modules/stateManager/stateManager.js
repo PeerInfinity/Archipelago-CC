@@ -954,6 +954,31 @@ export class StateManager {
       this.checkedLocations.add(locationName);
       this._logDebug(`[StateManager Class] Checked location: ${locationName}`);
       const location = this.locations.find((loc) => loc.name === locationName);
+
+      // --- ADDED: Grant item from location --- >
+      if (location && location.item && typeof location.item.name === 'string') {
+        this._logDebug(
+          `[StateManager Class] Location ${locationName} contains item: ${location.item.name}`
+        );
+        this.inventory.addItem(location.item.name);
+        this._logDebug(
+          `[StateManager Class] Added ${location.item.name} to inventory.`
+        );
+        // Potentially trigger an event for item acquisition if needed by other systems
+        // this._publishEvent('itemAcquired', { itemName: location.item.name, locationName });
+      } else if (location && location.item) {
+        this._logDebug(
+          `[StateManager Class] Location ${locationName} has an item, but item.name is not a string: ${JSON.stringify(
+            location.item
+          )}`
+        );
+      } else {
+        this._logDebug(
+          `[StateManager Class] Location ${locationName} has no item or location data is incomplete.`
+        );
+      }
+      // --- END ADDED --- >
+
       // Publish specific event for this?
       // this._publishEvent('locationChecked', ...);
       // Send a full snapshot update instead/as well
@@ -1682,15 +1707,21 @@ export class StateManager {
 
     // --- ADDED: Reachability Snapshot --- >
     const reachabilitySnapshot = {};
-    if (this.knownReachableRegions instanceof Set) {
-      for (const regionName of this.knownReachableRegions) {
-        reachabilitySnapshot[regionName] = true;
+    // --- MODIFIED: Populate with location-specific reachability ---
+    if (this.locations && Array.isArray(this.locations)) {
+      for (const location of this.locations) {
+        if (location && location.name) {
+          // Ensure location and name are valid
+          reachabilitySnapshot[location.name] =
+            this.isLocationAccessible(location);
+        }
       }
     } else {
       console.warn(
-        '[StateManager getSnapshot] knownReachableRegions is not a Set.'
+        '[StateManager getSnapshot] this.locations is not an array or is undefined.'
       );
     }
+    // --- END MODIFIED ---
 
     // --- ADDED: Checked Locations Snapshot --- >
     const checkedLocationsSnapshot = Array.from(this.checkedLocations || []);

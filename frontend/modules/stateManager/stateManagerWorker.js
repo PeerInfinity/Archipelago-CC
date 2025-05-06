@@ -59,6 +59,10 @@ async function processInternalQueue() {
 
   while (internalQueue.length > 0) {
     const message = internalQueue.shift();
+    console.log(
+      '[stateManagerWorker processInternalQueue] Dequeued message:',
+      JSON.stringify(message)
+    );
     console.log('[stateManagerWorker] Processing message:', message);
     try {
       // Route command/query to stateManagerInstance method
@@ -141,17 +145,25 @@ async function processInternalQueue() {
         case 'checkLocation':
           console.log(
             '[stateManagerWorker] Handling checkLocation...',
-            message.payload
+            message.payload // Payload is expected to be the location name string
           );
-          if (message.payload?.locationName) {
-            stateManagerInstance.checkLocation(message.payload.locationName);
+          if (typeof message.payload === 'string') {
+            stateManagerInstance.checkLocation(message.payload);
             // StateManager.checkLocation should trigger snapshot update internally
             console.log(
-              `[stateManagerWorker] checkLocation handled for ${message.payload.locationName}.`
+              `[stateManagerWorker] checkLocation handled for ${message.payload}.`
             );
+            // --- ADDED: Send confirmation back to proxy --- >
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              result: { success: true, checked: message.payload }, // Indicate success
+            });
+            // --- END ADDED --- >
           } else {
             console.warn(
-              '[stateManagerWorker] Invalid payload for checkLocation.'
+              '[stateManagerWorker] Invalid payload type for checkLocation (expected string): ',
+              typeof message.payload
             );
           }
           break;
@@ -244,6 +256,10 @@ async function processInternalQueue() {
 }
 
 self.onmessage = (event) => {
+  console.log(
+    '[stateManagerWorker onmessage] Raw event.data:',
+    JSON.stringify(event.data)
+  );
   console.log('[stateManagerWorker] Received message:', event.data);
   internalQueue.push(event.data);
   // Trigger processing asynchronously

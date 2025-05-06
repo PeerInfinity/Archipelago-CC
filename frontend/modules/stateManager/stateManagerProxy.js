@@ -364,8 +364,13 @@ class StateManagerProxy {
     console.log(
       `[StateManagerProxy] Sending checkLocation command for ${locationName}`
     );
-    this.isPotentialStaleSnapshot = true; // <<< ADDED: Set flag
-    return this.sendCommandToWorker('checkLocation', { locationName }); // <<< FIX: Pass command and payload
+    const messageToSend = { command: 'checkLocation', payload: locationName };
+    console.log(
+      '[StateManagerProxy checkLocation] Message to send to worker:',
+      JSON.stringify(messageToSend)
+    ); // ADDED DEBUG
+    // Await the response (even if it's just an ack or error)
+    return this.sendQueryToWorker(messageToSend);
   }
 
   async syncCheckedLocationsFromServer(checkedLocationIds) {

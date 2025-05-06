@@ -22,6 +22,7 @@ export class LocationUI {
     this.settingsUnsubscribe = null;
     this.colorblindSettings = {}; // Cache colorblind settings
     this.isInitialized = false; // Add flag
+    this.originalLocationOrder = []; // ADDED: To store original keys
 
     // Attach control listeners immediately
     this.attachEventListeners();
@@ -84,15 +85,18 @@ export class LocationUI {
       const handleReady = () => {
         console.log('[LocationUI] Received stateManager:ready event.');
         if (!this.isInitialized) {
-          // --- Removing setTimeout diagnostic --- >
           console.log('[LocationUI] Performing initial setup and render.');
-          // const currentSnapshot = stateManager.getLatestStateSnapshot();
-          // const currentStaticData = stateManager.getStaticData();
-          // console.log('[LocationUI inside setTimeout] Snapshot:', !!currentSnapshot, 'Static Data:', !!currentStaticData);
-          // this.showStartRegion('Menu'); // Start region logic might need re-evaluation
+          const currentStaticData = stateManager.getStaticData(); // Get static data
+          if (currentStaticData && currentStaticData.locations) {
+            this.originalLocationOrder = Object.keys(
+              currentStaticData.locations
+            );
+            console.log(
+              `[LocationUI] Stored ${this.originalLocationOrder.length} location keys for original order.`
+            );
+          }
           this.updateLocationDisplay(); // Initial render
           this.isInitialized = true;
-          // --- End Removing setTimeout --- >
         }
       };
       subscribe('stateManager:ready', handleReady);
@@ -287,30 +291,40 @@ export class LocationUI {
 
     // Use event delegation for location clicks on the grid
     this.locationsGrid.addEventListener('click', (event) => {
+      console.log('[LocationUI] locationsGrid click event:', event.target); // ADDED for debugging
       // Find the closest ancestor element that represents a location
-      const locationElement = event.target.closest('.location');
+      const locationElement = event.target.closest('.location-card'); // CORRECTED class name
       if (locationElement) {
-        const locationName = locationElement.dataset.locationName;
-        if (locationName) {
-          const staticData = stateManager.getStaticData();
-          const locationData = staticData?.locations?.[locationName];
-          if (locationData) {
-            // Use ctrlKey or metaKey (for Mac) for showing details
-            if (event.ctrlKey || event.metaKey) {
-              this.showLocationDetails(locationData);
+        const locationString = locationElement.dataset.location; // GET stringified data
+        if (locationString) {
+          try {
+            const locationData = JSON.parse(decodeURIComponent(locationString)); // PARSE data
+            if (locationData) {
+              // Use ctrlKey or metaKey (for Mac) for showing details
+              if (event.ctrlKey || event.metaKey) {
+                this.showLocationDetails(locationData);
+              } else {
+                this.handleLocationClick(locationData); // PASS parsed data
+              }
             } else {
-              this.handleLocationClick(locationData);
+              console.warn(
+                '[LocationUI] Failed to parse location data from dataset.'
+              );
             }
-          } else {
-            console.warn(
-              `[LocationUI] Clicked location element but couldn't find static data for: ${locationName}`
+          } catch (e) {
+            console.error(
+              '[LocationUI] Error parsing location data from dataset:',
+              e,
+              locationString
             );
           }
         } else {
           console.warn(
-            '[LocationUI] Clicked location element missing data-location-name attribute.'
+            '[LocationUI] Clicked location card missing data-location attribute.'
           );
         }
+      } else {
+        // console.log('[LocationUI] Click was not on a location-card or its child.'); // Optional: for clicks on grid but not card
       }
     });
   }
@@ -346,7 +360,7 @@ export class LocationUI {
     if (status !== 'checked') {
       try {
         // Check if loop mode is active and intercept if necessary
-        if (loopStateSingleton.isLoopModeActive()) {
+        if (loopStateSingleton.isLoopModeActive) {
           console.log(
             `[LocationUI] Loop mode active, dispatching check request for ${location.name}`
           );
@@ -444,36 +458,42 @@ export class LocationUI {
       .value.toLowerCase();
 
     // Filter locations
-    let filterLogCount = 0; // Counter for logging
     let filteredLocations = Object.values(staticData.locations).filter(
       (loc) => {
-        // --- ADD: Log filtering step --- >
-        const originalName = loc.name;
-        const status = this.getLocationStatus(originalName, snapshot);
-        if (filterLogCount < 5) {
-          // Log first 5 attempts
-          //console.log(
-          //  `[LocationUI Filter] Name: ${originalName}, Status: ${status}`
-          //);
-          filterLogCount++;
-        }
-        // --- END LOG --- >
-        const isExplored = discoveryStateSingleton.isLocationDiscovered(
-          originalName // Use originalName here too
-        );
+        const name = loc.name;
+        const isReachableFromSnapshot = !!snapshot?.reachability?.[name]; // Ensure boolean
+        const isChecked = !!snapshot?.checkedLocations?.includes(name); // Ensure boolean
 
-        // Visibility checks
-        if (status === 'checked' && !showChecked) return false;
-        if (status === 'reachable' && !showReachable) return false;
-        if (status === 'unreachable' && !showUnreachable) return false;
-        if (loopStateSingleton.isProcessing && isExplored && !showExplored)
+        // Debug logging (can be removed later)
+        if (
+          name === "Aginah's Cave" ||
+          name === "King's Tomb" ||
+          name === 'Floodgate Chest' ||
+          name === 'Sahasrahla'
+        ) {
+          console.log(
+            `[LocationUI Filter Debug] Loc: ${name}, showReachable: ${showReachable}, showUnreachable: ${showUnreachable}, showChecked: ${showChecked}, isReachable: ${isReachableFromSnapshot}, isChecked: ${isChecked}`
+          );
+        }
+
+        const isExplored = discoveryStateSingleton.isLocationDiscovered(name);
+
+        // --- Simplified Visibility Filtering ---
+        if (isChecked && !showChecked) return false;
+        if (isReachableFromSnapshot && !isChecked && !showReachable)
+          return false; // Filter reachable (and not checked)
+        if (!isReachableFromSnapshot && !isChecked && !showUnreachable)
+          return false; // Filter unreachable (and not checked)
+
+        if (loopStateSingleton.isLoopModeActive && isExplored && !showExplored)
+          // Use isLoopModeActive property
           return false; // Hide explored if unchecked in loop mode
+        // --- End Simplified Filtering ---
 
         // Search term check (match name or region)
         if (searchTerm) {
           const nameMatch = loc.name.toLowerCase().includes(searchTerm);
           const regionMatch = loc.region?.toLowerCase().includes(searchTerm);
-          // Add more fields to search? e.g., item name if available?
           if (!nameMatch && !regionMatch) return false;
         }
 
@@ -482,7 +502,7 @@ export class LocationUI {
     );
 
     // Sort locations
-    const sortOrder = { unreachable: 0, reachable: 1, checked: 2, other: 3 }; // Define accessibility sort order
+    const sortOrder = { checked: 0, reachable: 1, unreachable: 2, other: 3 }; // Define accessibility sort order
 
     filteredLocations.sort((a, b) => {
       if (sortMethod === 'accessibility') {
@@ -499,10 +519,21 @@ export class LocationUI {
         return a.name.localeCompare(b.name);
       } else {
         // 'original' or default
-        // Maintain original order (requires locations to have an order property or sort by key)
-        // Assuming Object.values preserves insertion order (usually true, but not guaranteed)
-        // A safer way is to sort by original key if available, or just fallback to name
-        return a.name.localeCompare(b.name); // Fallback for 'original' if no index
+        if (
+          this.originalLocationOrder &&
+          this.originalLocationOrder.length > 0
+        ) {
+          return (
+            this.originalLocationOrder.indexOf(a.name) -
+            this.originalLocationOrder.indexOf(b.name)
+          );
+        } else {
+          // Fallback to name sort if original order isn't available for some reason
+          console.warn(
+            '[LocationUI] Original location order not available, falling back to name sort.'
+          );
+          return a.name.localeCompare(b.name);
+        }
       }
     });
 
@@ -522,45 +553,79 @@ export class LocationUI {
     } else {
       const fragment = document.createDocumentFragment();
       filteredLocations.forEach((location) => {
-        const status = this.getLocationStatus(location.name, snapshot);
         const isExplored = discoveryStateSingleton.isLocationDiscovered(
           location.name
         );
 
-        // --- REVERTED: Manually create location element like in old code --- >
-        const card = document.createElement('div');
-        card.className = `location location-card ${status}`;
-        card.dataset.locationName = location.name; // Use simple name for click handler
+        const locationCard = document.createElement('div');
+        locationCard.className = 'location-card'; // Base class
+        const name = location.name;
 
-        // Apply colorblind class
-        commonUI.applyColorblindClass(card, status, this.colorblindSettings);
+        // Determine reachability and checked status directly from snapshot for class toggling
+        const isReachableFromSnapshot = !!snapshot?.reachability?.[name]; // Ensure boolean
+        const isChecked = !!snapshot?.checkedLocations?.includes(name); // Ensure boolean
 
-        // Location Name Link
-        const locationNameElement = commonUI.createLocationLink(
-          location.name,
-          location.region,
+        locationCard.classList.toggle('checked', isChecked);
+        locationCard.classList.toggle(
+          'reachable',
+          isReachableFromSnapshot && !isChecked
+        );
+        locationCard.classList.toggle(
+          'unreachable',
+          !isReachableFromSnapshot && !isChecked
+        );
+
+        locationCard.classList.toggle(
+          'explored',
+          loopStateSingleton.isLoopModeActive && !!isExplored
+        );
+
+        // Determine the status string for colorblind and potentially other specific styling
+        let statusForColorblind = 'unreachable'; // Default
+        if (isChecked) {
+          statusForColorblind = 'checked';
+        } else if (isReachableFromSnapshot) {
+          statusForColorblind = 'reachable';
+        }
+        // Add other statuses if your getLocationStatus has them, e.g., 'processing'
+        // For now, this covers the primary visual states.
+
+        // Apply colorblind class (using the determined status string)
+        applyColorblindClass(
+          locationCard,
+          statusForColorblind,
           this.colorblindSettings
         );
-        locationNameElement.className = 'location-title'; // Add specific class if needed
-        card.appendChild(locationNameElement);
 
-        // Add Region Name (Optional - maybe just use tooltip or detail view)
-        // const regionText = document.createElement('span');
-        // regionText.className = 'location-region';
-        // regionText.textContent = ` (${location.region})`;
-        // card.appendChild(regionText);
-
-        // Add Explored Indicator if in loop mode
-        if (loopStateSingleton.isProcessing && isExplored) {
-          const exploredIndicator = document.createElement('span');
-          exploredIndicator.className = 'location-explored-indicator';
-          exploredIndicator.textContent = ' [E]'; // Simple text indicator
-          exploredIndicator.title = 'Explored in current loop';
-          card.appendChild(exploredIndicator);
+        // Store full data for click handler
+        try {
+          locationCard.dataset.location = encodeURIComponent(
+            JSON.stringify(location)
+          );
+        } catch (e) {
+          console.error('Error stringifying location data:', location, e);
         }
 
-        fragment.appendChild(card);
-        // --- END REVERTED --- >
+        locationCard.innerHTML = `
+            <span class="location-name">${name}</span>
+            ${
+              location.parent_region
+                ? `<span class="location-region">(${commonUI.createRegionLink(
+                    location.parent_region
+                  )})</span>`
+                : ''
+            }
+        `;
+        // Add Explored Indicator if in loop mode and explored (visual only)
+        if (loopStateSingleton.isLoopModeActive && !!isExplored) {
+          const exploredIndicator = document.createElement('span');
+          exploredIndicator.className = 'location-explored-indicator';
+          exploredIndicator.textContent = ' [E]';
+          exploredIndicator.title = 'Explored in current loop';
+          locationCard.appendChild(exploredIndicator);
+        }
+
+        fragment.appendChild(locationCard);
       });
       this.locationsGrid.appendChild(fragment);
     }
@@ -577,10 +642,9 @@ export class LocationUI {
       //);
       return 'unknown'; // Or some default/loading state
     }
-    const reachabilityStatus = snapshot.reachability[locationName];
-    const isChecked =
-      snapshot.flags?.includes(locationName) ||
-      snapshot.checkedLocations?.includes(locationName); // Example check
+    // Reachability is now expected to be a boolean in the snapshot
+    const isReachable = snapshot.reachability[locationName] === true;
+    const isChecked = snapshot.checkedLocations?.includes(locationName);
     //console.log(
     //  `[LocationUI getLocationStatus] Name: ${locationName}, Reachability: ${reachabilityStatus}, Checked: ${isChecked}`
     //);
@@ -590,21 +654,14 @@ export class LocationUI {
       return 'checked';
     }
 
-    // Interpret reachability status
-    if (reachabilityStatus === 'reachable') {
+    // Interpret reachability status - CORRECTED FOR BOOLEAN
+    if (isReachable) {
       return 'reachable';
-    } else if (
-      reachabilityStatus === 'unreachable' ||
-      reachabilityStatus === 'partial'
-    ) {
-      // Treat partial as unreachable for basic UI
+    } else {
+      // Assuming false means unreachable if not checked
       return 'unreachable';
-    } else if (reachabilityStatus === 'processing') {
-      return 'processing'; // Add a specific style for this?
     }
-
-    // Fallback if status isn't recognized
-    return 'unreachable'; // Default to unreachable if not explicitly reachable or checked
+    // We no longer expect string values like 'partial' or 'processing' here from the boolean snapshot
   }
 
   /**
