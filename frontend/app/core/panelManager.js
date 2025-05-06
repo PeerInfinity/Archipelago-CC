@@ -358,33 +358,21 @@ class PanelManager {
 
         container.on('open', () => {
           console.log(`   [${componentTypeName}] Panel Opened`);
-          // --- UPDATED: Call syncWithState for inventory instead of initialize ---
-          if (componentTypeName === 'inventoryPanel') {
-            if (
-              this.uiProvider &&
-              typeof this.uiProvider.syncWithState === 'function'
-            ) {
-              console.log(
-                `   [${componentTypeName}] Calling syncWithState() on open`
-              );
-              this.uiProvider.syncWithState();
-            } else {
-              console.warn(
-                `   [${componentTypeName}] syncWithState method not found on open`
-              );
-            }
+          // --- REVERTED: Always call initialize() if it exists --- >
+          // Original logic for all panels
+          if (
+            this.uiProvider &&
+            typeof this.uiProvider.initialize === 'function'
+          ) {
+            console.log(
+              `   [${componentTypeName}] Calling initialize() on open`
+            );
+            this.uiProvider.initialize();
           } else {
-            // Original logic for other panels (like LoopUI)
-            if (
-              this.uiProvider &&
-              typeof this.uiProvider.initialize === 'function'
-            ) {
-              console.log(
-                `   [${componentTypeName}] Calling initialize() on open`
-              );
-              this.uiProvider.initialize();
-            }
+            // Optional: Log if initialize doesn't exist, but maybe too noisy
+            // console.warn(`   [${componentTypeName}] initialize method not found on open`);
           }
+          // --- END REVERTED --- >
         });
         container.on('resize', () => {
           console.log(`   [${componentTypeName}] Panel Resized`);

@@ -148,19 +148,44 @@ export class InventoryUI {
   }
 
   updateDisplay() {
-    if (!this.itemData) return;
+    if (!this.rootElement || !this.itemData) {
+      console.warn(
+        '[InventoryUI updateDisplay] Called before initialization or itemData is missing.'
+      );
+      return;
+    }
 
+    // --- MOVED & REVISED: Get latest counts and apply state (active class, badges) --- >
+    const snapshotData = stateManager.getLatestStateSnapshot();
+    const inventoryCounts = snapshotData?.inventory || {};
+
+    // Apply active state and counts to ALL item elements (both flat and grouped)
+    Object.keys(this.itemData).forEach((itemName) => {
+      const count = inventoryCounts[itemName] || 0;
+      // Important: Query ALL matching elements, not just one
+      const itemElements = this.rootElement.querySelectorAll(
+        `.item-button[data-item="${itemName}"]`
+      );
+      itemElements.forEach((itemElement) => {
+        itemElement.classList.toggle('active', count > 0);
+        const container = itemElement.closest('.item-container');
+        this.createOrUpdateCountBadge(container, count);
+      });
+    });
+    // --- END MOVED & REVISED --- >
+
+    // Existing logic to toggle container visibility and call updateVisibility
     const groupedContainer = this.groupedContainer;
     const flatContainer = this.flatContainer;
 
     if (this.hideCategories) {
       groupedContainer.style.display = 'none';
       flatContainer.style.display = '';
-      this.updateVisibility(flatContainer);
+      this.updateVisibility(flatContainer); // Pass counts
     } else {
       flatContainer.style.display = 'none';
       groupedContainer.style.display = '';
-      this.updateVisibility(groupedContainer);
+      this.updateVisibility(groupedContainer); // Pass counts
     }
   }
 
@@ -170,14 +195,15 @@ export class InventoryUI {
       const items = group.querySelectorAll('.item-container');
       let visibleItems = 0;
 
-      items.forEach((container) => {
-        const button = container.querySelector('.item-button');
+      items.forEach((itemContainer) => {
+        const button = itemContainer.querySelector('.item-button');
+        if (!button) return;
         const isOwned = button.classList.contains('active');
 
         if (this.hideUnowned && !isOwned) {
-          container.style.display = 'none';
+          itemContainer.style.display = 'none';
         } else {
-          container.style.display = '';
+          itemContainer.style.display = '';
           visibleItems++;
         }
       });
@@ -235,6 +261,7 @@ export class InventoryUI {
       this.sortAlphabetically = event.target.checked;
       if (this.itemData && this.groupNames) {
         this.initializeUI(this.itemData, this.groupNames);
+        this.syncWithState();
       } else {
         console.warn(
           '[InventoryUI] Cannot re-sort: State or rules not available.'
@@ -370,49 +397,51 @@ export class InventoryUI {
     console.log('[InventoryUI] syncWithState called.');
 
     const snapshotData = stateManager.getLatestStateSnapshot();
-    if (!snapshotData) {
-      console.warn('[InventoryUI] syncWithState: Snapshot data is null.');
-      this.displayError('Snapshot data not available.');
+    const staticData = stateManager.getStaticData();
+
+    if (
+      !snapshotData ||
+      !staticData ||
+      !staticData.items ||
+      !staticData.groups
+    ) {
+      console.warn(
+        '[InventoryUI] syncWithState: Snapshot or Static Data (items/groups) not yet available.',
+        { hasSnapshot: !!snapshotData, hasStatic: !!staticData }
+      );
       return;
     }
 
     if (!this.itemData) {
-      let staticData = stateManager?.getStaticData();
-      let itemData = staticData?.items;
-      let groupData = staticData?.groups;
-      let groupNames = groupData ? Object.keys(groupData) : [];
-      if (!itemData || !groupData) {
-        console.error(
-          '[InventoryUI] Failed to get item/group data from proxy in syncWithState.'
-        );
-        this.displayError('Failed to retrieve static item/group data.');
-        return;
+      this.itemData = staticData.items;
+      let groupNames = [];
+      if (staticData.groups) {
+        const firstPlayerId = Object.keys(staticData.groups)[0];
+        if (firstPlayerId && Array.isArray(staticData.groups[firstPlayerId])) {
+          groupNames = staticData.groups[firstPlayerId];
+        } else {
+          console.warn(
+            '[InventoryUI] staticData.groups structure unexpected:',
+            staticData.groups
+          );
+        }
       }
-      this.itemData = itemData;
       console.log(
         '[InventoryUI] Initializing UI structure with fetched static data.'
       );
       this.initializeUI(this.itemData, groupNames);
     }
 
-    const inventoryCounts = snapshotData.inventory || {};
-
-    if (!this.rootElement) {
-      console.error('[InventoryUI] syncWithState: rootElement is null!');
-      return;
+    const errorContainer = this.rootElement.querySelector(
+      '.inventory-error-message'
+    );
+    if (errorContainer) {
+      errorContainer.remove();
+      const groupedContainer = this.groupedContainer;
+      const flatContainer = this.flatContainer;
+      if (groupedContainer) groupedContainer.style.display = '';
+      if (flatContainer) flatContainer.style.display = '';
     }
-
-    Object.keys(this.itemData).forEach((itemName) => {
-      const count = inventoryCounts[itemName] || 0;
-      const itemElement = this.rootElement.querySelector(
-        `.item-button[data-item="${itemName}"]`
-      );
-      if (itemElement) {
-        itemElement.classList.toggle('active', count > 0);
-        const container = itemElement.closest('.item-container');
-        this.createOrUpdateCountBadge(container, count);
-      }
-    });
 
     this.updateDisplay();
   }

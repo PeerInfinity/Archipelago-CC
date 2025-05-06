@@ -32,6 +32,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(
     'stateManager:inventoryChanged'
   );
+  registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
 
   // // REMOVED: Dispatcher receiver for state:rulesLoaded
   // registrationApi.registerDispatcherReceiver(
