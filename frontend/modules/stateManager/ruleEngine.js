@@ -620,26 +620,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'name': {
         if (isSnapshotInterfaceContext) {
           if (typeof context.resolveRuleObject === 'function') {
-            if (rule.name === 'player') {
-              console.log(
-                "[evaluateRule SnapshotIF 'player'] Rule before resolve:",
-                JSON.parse(JSON.stringify(rule))
-              );
-              console.log(
-                "[evaluateRule SnapshotIF 'player'] Context before resolve:",
-                {
-                  isSnapshotInterface: context._isSnapshotInterface,
-                  hasPlayer: !!(context.snapshot && context.snapshot.player),
-                  playerSlot: context.snapshot?.player?.slot,
-                }
-              );
-            }
             result = context.resolveRuleObject(rule);
-            if (rule.name === 'player') {
-              console.log(
-                `[evaluateRule SnapshotIF 'player'] Value of 'result' after call: ${result} (type: ${typeof result})`
-              );
-            }
             if (result === undefined) {
               console.warn(
                 `[evaluateRule SnapshotIF] Name '${rule.name}' resolved to undefined by resolveRuleObject.`

@@ -447,7 +447,7 @@ export class LocationUI {
     const showUnreachable =
       this.rootElement.querySelector('#show-unreachable').checked;
     const showExplored =
-      this.rootElement.querySelector('#show-explored').checked; // For loop mode
+      this.rootElement.querySelector('#show-explored').checked;
     const sortMethod = this.rootElement.querySelector('#sort-select').value;
     const searchTerm = this.rootElement
       .querySelector('#location-search')
@@ -457,34 +457,89 @@ export class LocationUI {
     let filteredLocations = Object.values(staticData.locations).filter(
       (loc) => {
         const name = loc.name;
-        const isReachableFromSnapshot = !!snapshot?.reachability?.[name]; // Ensure boolean
-        const isChecked = !!snapshot?.checkedLocations?.includes(name); // Ensure boolean
+        const isChecked = !!snapshot?.checkedLocations?.includes(name);
 
-        // Debug logging (can be removed later)
+        // Determine detailed status for filtering
+        const parentRegionName = loc.parent_region || loc.region; // Use parent_region, fallback to region
+        const parentRegionReachabilityStatus =
+          snapshot?.reachability?.[parentRegionName];
+        const isParentRegionEffectivelyReachable =
+          parentRegionReachabilityStatus === 'reachable' ||
+          parentRegionReachabilityStatus === 'checked';
+        const locationAccessRule = loc.access_rule;
+        let locationRuleEvalResult = true; // Default to true if no rule
+        if (locationAccessRule) {
+          locationRuleEvalResult = evaluateRule(
+            locationAccessRule,
+            snapshotInterface
+          );
+        }
+        const doesLocationRuleEffectivelyPass = locationRuleEvalResult === true;
+
+        let detailedStatus = 'fully_unreachable';
+        if (isChecked) {
+          detailedStatus = 'checked';
+        } else if (
+          isParentRegionEffectivelyReachable &&
+          doesLocationRuleEffectivelyPass
+        ) {
+          detailedStatus = 'fully_reachable';
+        } else if (
+          !isParentRegionEffectivelyReachable &&
+          doesLocationRuleEffectivelyPass
+        ) {
+          detailedStatus = 'location_rule_passes_region_fails';
+        } else if (
+          isParentRegionEffectivelyReachable &&
+          !doesLocationRuleEffectivelyPass
+        ) {
+          detailedStatus = 'region_accessible_location_rule_fails';
+        }
+
+        // Debug logging for specific locations
         if (
-          name === "Aginah's Cave" ||
+          name === 'Mushroom' ||
           name === "King's Tomb" ||
-          name === 'Floodgate Chest' ||
+          name === 'Potion Shop' ||
           name === 'Sahasrahla'
         ) {
-          console.log(
-            `[LocationUI Filter Debug] Loc: ${name}, showReachable: ${showReachable}, showUnreachable: ${showUnreachable}, showChecked: ${showChecked}, isReachable: ${isReachableFromSnapshot}, isChecked: ${isChecked}`
-          );
+          // Add more names if needed
+          console.log(`[LocationUI Filter DEBUG] Loc: '${name}'`, {
+            isChecked,
+            parentRegionName,
+            parentRegionReachabilityStatus,
+            isParentRegionEffectivelyReachable,
+            locationAccessRuleExists: !!locationAccessRule,
+            locationRuleEvalResult,
+            doesLocationRuleEffectivelyPass,
+            detailedStatus,
+            showChecked,
+            showReachable,
+            showUnreachable,
+          });
         }
 
         const isExplored = discoveryStateSingleton.isLocationDiscovered(name);
 
-        // --- Simplified Visibility Filtering ---
-        if (isChecked && !showChecked) return false;
-        if (isReachableFromSnapshot && !isChecked && !showReachable)
-          return false; // Filter reachable (and not checked)
-        if (!isReachableFromSnapshot && !isChecked && !showUnreachable)
-          return false; // Filter unreachable (and not checked)
+        // Visibility Filtering Logic (Using detailedStatus)
+        if (detailedStatus === 'checked') {
+          if (!showChecked) return false;
+        } else if (detailedStatus === 'fully_reachable') {
+          if (!showReachable) return false;
+        } else if (detailedStatus === 'location_rule_passes_region_fails') {
+          if (!showReachable) return false; // Consider reachable for filter
+        } else if (detailedStatus === 'region_accessible_location_rule_fails') {
+          if (!showReachable) return false; // Consider reachable for filter
+        } else if (detailedStatus === 'fully_unreachable') {
+          if (!showUnreachable) return false;
+        } else {
+          // Default for any unknown detailedStatus if necessary
+          if (parentRegionReachabilityStatus === undefined && !showUnreachable)
+            return false;
+        }
 
         if (loopStateSingleton.isLoopModeActive && isExplored && !showExplored)
-          // Use isLoopModeActive property
-          return false; // Hide explored if unchecked in loop mode
-        // --- End Simplified Filtering ---
+          return false;
 
         // Search term check (match name or region)
         if (searchTerm) {
@@ -498,18 +553,94 @@ export class LocationUI {
     );
 
     // Sort locations
-    const sortOrder = { checked: 0, reachable: 1, unreachable: 2, other: 3 }; // Define accessibility sort order
+    const accessibilitySortOrder = {
+      checked: 0,
+      fully_reachable: 1,
+      region_accessible_location_rule_fails: 2,
+      location_rule_passes_region_fails: 3,
+      fully_unreachable: 4,
+      unknown: 5, // Should ideally not happen with new logic
+    };
 
     filteredLocations.sort((a, b) => {
       if (sortMethod === 'accessibility') {
-        const statusA = this.getLocationStatus(a.name, snapshot);
-        const statusB = this.getLocationStatus(b.name, snapshot);
-        const orderA = sortOrder[statusA] ?? sortOrder.other;
-        const orderB = sortOrder[statusB] ?? sortOrder.other;
+        // Recalculate detailedStatus for item a
+        const isCheckedA = !!snapshot?.checkedLocations?.includes(a.name);
+        const parentRegionNameA = a.parent_region || a.region;
+        const parentRegionReachabilityStatusA =
+          snapshot?.reachability?.[parentRegionNameA];
+        const isParentRegionEffectivelyReachableA =
+          parentRegionReachabilityStatusA === 'reachable' ||
+          parentRegionReachabilityStatusA === 'checked';
+        const locationAccessRuleA = a.access_rule;
+        const locationRuleEvalResultA = locationAccessRuleA
+          ? evaluateRule(locationAccessRuleA, snapshotInterface)
+          : true;
+        const doesLocationRuleEffectivelyPassA =
+          locationRuleEvalResultA === true;
+        let detailedStatusA = 'fully_unreachable';
+        if (isCheckedA) {
+          detailedStatusA = 'checked';
+        } else if (
+          isParentRegionEffectivelyReachableA &&
+          doesLocationRuleEffectivelyPassA
+        ) {
+          detailedStatusA = 'fully_reachable';
+        } else if (
+          !isParentRegionEffectivelyReachableA &&
+          doesLocationRuleEffectivelyPassA
+        ) {
+          detailedStatusA = 'location_rule_passes_region_fails';
+        } else if (
+          isParentRegionEffectivelyReachableA &&
+          !doesLocationRuleEffectivelyPassA
+        ) {
+          detailedStatusA = 'region_accessible_location_rule_fails';
+        }
+
+        // Recalculate detailedStatus for item b
+        const isCheckedB = !!snapshot?.checkedLocations?.includes(b.name);
+        const parentRegionNameB = b.parent_region || b.region;
+        const parentRegionReachabilityStatusB =
+          snapshot?.reachability?.[parentRegionNameB];
+        const isParentRegionEffectivelyReachableB =
+          parentRegionReachabilityStatusB === 'reachable' ||
+          parentRegionReachabilityStatusB === 'checked';
+        const locationAccessRuleB = b.access_rule;
+        const locationRuleEvalResultB = locationAccessRuleB
+          ? evaluateRule(locationAccessRuleB, snapshotInterface)
+          : true;
+        const doesLocationRuleEffectivelyPassB =
+          locationRuleEvalResultB === true;
+        let detailedStatusB = 'fully_unreachable';
+        if (isCheckedB) {
+          detailedStatusB = 'checked';
+        } else if (
+          isParentRegionEffectivelyReachableB &&
+          doesLocationRuleEffectivelyPassB
+        ) {
+          detailedStatusB = 'fully_reachable';
+        } else if (
+          !isParentRegionEffectivelyReachableB &&
+          doesLocationRuleEffectivelyPassB
+        ) {
+          detailedStatusB = 'location_rule_passes_region_fails';
+        } else if (
+          isParentRegionEffectivelyReachableB &&
+          !doesLocationRuleEffectivelyPassB
+        ) {
+          detailedStatusB = 'region_accessible_location_rule_fails';
+        }
+
+        const orderA =
+          accessibilitySortOrder[detailedStatusA] ??
+          accessibilitySortOrder.unknown;
+        const orderB =
+          accessibilitySortOrder[detailedStatusB] ??
+          accessibilitySortOrder.unknown;
         if (orderA !== orderB) {
           return orderA - orderB;
         }
-        // Fallback to name sort within the same status
         return a.name.localeCompare(b.name);
       } else if (sortMethod === 'name') {
         return a.name.localeCompare(b.name);
@@ -556,33 +687,69 @@ export class LocationUI {
         const locationCard = document.createElement('div');
         locationCard.className = 'location-card'; // Base class
         const name = location.name;
-
-        const isReachableFromSnapshot = !!snapshot?.reachability?.[name];
         const isChecked = !!snapshot?.checkedLocations?.includes(name);
 
-        // Determine detailed status for text and classes
-        let statusText = 'Locked';
-        let stateClass = 'unreachable'; // Default class
+        // Determine detailed status for rendering
+        const parentRegionName = location.parent_region || location.region;
+        const parentRegionReachabilityStatus =
+          snapshot?.reachability?.[parentRegionName];
+        const isParentRegionEffectivelyReachable =
+          parentRegionReachabilityStatus === 'reachable' ||
+          parentRegionReachabilityStatus === 'checked';
+        const locationAccessRule = location.access_rule;
+        const locationRuleEvalResult = locationAccessRule
+          ? evaluateRule(locationAccessRule, snapshotInterface)
+          : true;
+        const doesLocationRuleEffectivelyPass = locationRuleEvalResult === true;
+
+        let detailedStatus = 'fully_unreachable';
+        let statusText = 'Unknown';
+        let stateClass = 'unknown';
 
         if (isChecked) {
+          detailedStatus = 'checked';
           statusText = 'Checked';
           stateClass = 'checked';
-        } else if (isReachableFromSnapshot) {
+        } else if (
+          isParentRegionEffectivelyReachable &&
+          doesLocationRuleEffectivelyPass
+        ) {
+          detailedStatus = 'fully_reachable';
           statusText = 'Available';
-          stateClass = 'reachable';
+          stateClass = 'fully-reachable'; // Use new class
+        } else if (
+          !isParentRegionEffectivelyReachable &&
+          doesLocationRuleEffectivelyPass
+        ) {
+          detailedStatus = 'location_rule_passes_region_fails';
+          statusText = 'Rule Met, Region Inaccessible';
+          stateClass = 'location-only-reachable'; // Use new class
+        } else if (
+          isParentRegionEffectivelyReachable &&
+          !doesLocationRuleEffectivelyPass
+        ) {
+          detailedStatus = 'region_accessible_location_rule_fails';
+          statusText = 'Region Accessible, Rule Fails';
+          stateClass = 'region-only-reachable'; // Use new class
         } else {
-          // More detailed status if not simply reachable or checked
-          // This requires evaluating the region's reachability and the location's own rule separately
-          // For now, we'll stick to simpler states based on direct snapshot.
-          // To get finer-grained status like "Region accessible, but rule fails",
-          // we'd need to evaluate location.access_rule and region reachability here.
-          // This might be slow if done for every card. The snapshot's `isLocationAccessible`
-          // already did this combined check.
-          statusText = 'Unreachable'; // Default for not reachable & not checked
-          stateClass = 'unreachable';
+          // Fully Unreachable
+          detailedStatus = 'fully_unreachable';
+          statusText = 'Locked';
+          stateClass = 'fully-unreachable'; // Use new class
         }
 
         // Apply primary state class
+        // Remove old classes before adding the new one to avoid conflicts
+        locationCard.classList.remove(
+          'checked',
+          'reachable',
+          'unreachable',
+          'unknown',
+          'fully-reachable',
+          'location-only-reachable',
+          'region-only-reachable',
+          'fully-unreachable'
+        );
         locationCard.classList.add(stateClass);
 
         locationCard.classList.toggle(
@@ -591,9 +758,12 @@ export class LocationUI {
         );
 
         // Apply colorblind class (using the primary state class)
+        console.log(
+          `[LocationUI Render] Applying class '${stateClass}' for location '${name}'`
+        );
         applyColorblindClass(
           locationCard,
-          stateClass, // Use 'checked', 'reachable', or 'unreachable'
+          stateClass, // Use the calculated stateClass
           this.colorblindSettings
         );
 
@@ -620,7 +790,8 @@ export class LocationUI {
           // or assume parent_region accessibility is part of the location's accessibility.
           // A more accurate way would be to check snapshot.reachability for the region itself,
           // but that data isn't structured per region in the current snapshot.
-          const regionIsAccessible = isReachableFromSnapshot; // Approximation
+          const regionIsAccessible =
+            parentRegionReachabilityStatus === 'reachable'; // Approximation
           const regionLink = commonUI.createRegionLink(
             location.parent_region,
             this.colorblindSettings

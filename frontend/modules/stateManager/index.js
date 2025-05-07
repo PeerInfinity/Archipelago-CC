@@ -216,7 +216,7 @@ async function postInitialize(initializationApi) {
 
             aggregatedLocationData[uniqueLocationName] = {
               ...location,
-              parentRegion: regionName,
+              parent_region: regionName,
             };
           }
         }

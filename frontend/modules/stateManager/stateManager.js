@@ -212,6 +212,33 @@ export class StateManager {
     this._logDebug(
       `[StateManager Class] Loading JSON for player ${selectedPlayerId}...`
     );
+    if (jsonData?.regions?.[selectedPlayerId]) {
+      const sampleRegionName = Object.keys(
+        jsonData.regions[selectedPlayerId]
+      )[0];
+      if (sampleRegionName) {
+        const sampleRegionLocations =
+          jsonData.regions[selectedPlayerId][sampleRegionName]?.locations;
+        if (sampleRegionLocations) {
+          console.log(
+            `[StateManager loadFromJSON ENTRY] Player ${selectedPlayerId}, Sample region \'${sampleRegionName}\' location keys:`,
+            Object.keys(sampleRegionLocations)
+          );
+        } else {
+          console.log(
+            `[StateManager loadFromJSON ENTRY] Player ${selectedPlayerId}, Sample region \'${sampleRegionName}\' has no locations object.`
+          );
+        }
+      } else {
+        console.log(
+          `[StateManager loadFromJSON ENTRY] Player ${selectedPlayerId} has no regions.`
+        );
+      }
+    } else {
+      console.log(
+        `[StateManager loadFromJSON ENTRY] No regions data for player ${selectedPlayerId} in jsonData.`
+      );
+    }
     if (!jsonData.schema_version || jsonData.schema_version !== 3) {
       throw new Error('Invalid JSON format: requires schema version 3');
     }
@@ -265,22 +292,43 @@ export class StateManager {
     this.locationNameToId = {};
     for (const regionName in this.regions) {
       const region = this.regions[regionName];
-      if (region.locations) {
-        for (const locName in region.locations) {
-          const locationData = region.locations[locName];
-          // Ensure location objects have a name property for easy lookup
-          const fullLocationObject = {
-            ...locationData,
-            name: locName, // The key is the name
-            id: this.locations.length, // Assign a temporary numeric ID or use a more robust one if available
-            region: regionName,
-            // Item details (name, player) will be populated by the fill algorithm or game setup
-            // For now, it might be undefined or null.
-            item: locationData.item || null,
+      if (region.locations && Array.isArray(region.locations)) {
+        // Ensure it's an array
+        region.locations.forEach((locationDataItem) => {
+          // Iterate array of location objects
+          const descriptiveName = locationDataItem.name; // e.g., "Mushroom", "Bottle Merchant"
+
+          if (!descriptiveName) {
+            console.warn(
+              `[StateManager loadFromJSON] Location data in region '${regionName}' is missing a 'name' property:`,
+              locationDataItem
+            );
+            return; // Skip this malformed location data
+          }
+
+          // Create the object to be stored in this.locations array.
+          // It should retain its original properties (like its original id from JSON, item, access_rule, etc.)
+          // and crucially, its 'name' property must be the descriptive one.
+          const locationObjectForArray = {
+            ...locationDataItem, // Spread all original properties (includes original name, id, item, etc.)
+            region: regionName, // Add/ensure region context is present
           };
-          this.locations.push(fullLocationObject);
-          this.locationNameToId[locName] = fullLocationObject.id; // Or a more stable ID from data if present
-        }
+
+          this.locations.push(locationObjectForArray);
+
+          // The locationNameToId map should map the descriptive name to the index in the this.locations array
+          // for quick retrieval if needed, or to its original ID if that's more useful.
+          // Given the previous structure `this.locationNameToId[locName] = fullLocationObject.id` where `fullLocationObject.id` was `this.locations.length`,
+          // mapping to the array index seems intended.
+          this.locationNameToId[descriptiveName] = this.locations.length - 1;
+        });
+      } else if (region.locations) {
+        // If region.locations exists but is not an array, log a warning.
+        // This could happen if the JSON structure is unexpectedly an object here.
+        console.warn(
+          `[StateManager loadFromJSON] region.locations for region '${regionName}' is not an array:`,
+          region.locations
+        );
       }
     }
     console.log(`Loaded ${this.locations.length} location IDs`);

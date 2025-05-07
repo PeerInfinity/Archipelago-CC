@@ -402,7 +402,35 @@ select:hover {
   color: #cecece;
 }
 
-.location-card.reachable,
+/* --- NEW Detailed Location Card Statuses --- */
+.location-card.checked {
+  background-color: #000000; /* Black/Dark Gray for Checked */
+  color: #cecece;
+  border-color: #666;
+}
+
+.location-card.fully-reachable {
+  background-color: #0a3318; /* Green for Fully Reachable */
+}
+
+.location-card.region-only-reachable {
+  background-color: #665508; /* Yellow-ish for Region Accessible, Rule Fails */
+}
+
+.location-card.location-only-reachable {
+  background-color: #6e3b00; /* Orange-ish for Rule Met, Region Inaccessible */
+}
+
+.location-card.fully-unreachable {
+  background-color: #3a0808; /* Red for Fully Unreachable */
+}
+
+.location-card.unknown {
+  background-color: #333333; /* Default gray for unknown state */
+}
+/* --- END NEW Detailed Statuses --- */
+
+.location-card.reachable, /* Keep old for compatibility? Or remove if fully transitioned */
 .exit-card.traversable {
   background-color: #0a3318;
 }
@@ -426,12 +454,6 @@ select:hover {
 
 .exit-card.region-inaccessible-but-unlocked {
   background-color: #6e3b00; /* Orange-ish */
-}
-
-.location-card.checked {
-  background-color: #000000;
-  color: #cecece;
-  border-color: #666;
 }
 
 .location-card.checked:hover {
