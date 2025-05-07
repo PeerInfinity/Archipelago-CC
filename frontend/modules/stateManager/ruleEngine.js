@@ -350,10 +350,12 @@ export const evaluateRule = (rule, context, depth = 0) => {
             }
             if (!wasSettingLookup) {
               // If it wasn't a setting lookup that returned undefined, then the attr is unknown.
+              /* // Commented out for cleaner console
               console.warn(
-                `[evaluateRule SnapshotIF] Attribute \'${rule.attr}\' resolved to undefined on object. Assuming rule node is undefined. Object:`,
+                `[evaluateRule SnapshotIF] Attribute '${rule.attr}' resolved to undefined on object. Assuming rule node is undefined. Object:`,
                 objectResult
               );
+              */
               result = undefined;
             }
             // If it *was* a setting lookup that returned undefined, 'result' is already correctly undefined (the setting's value).
@@ -477,15 +479,28 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
       case 'item_check': {
         const itemName = evaluateRule(rule.item, context, depth + 1);
-        if (typeof context.hasItem === 'function') {
-          result = context.hasItem(itemName);
+        if (isSnapshotInterfaceContext) {
+          if (typeof context.hasItem === 'function') {
+            result = context.hasItem(itemName);
+          } else {
+            console.warn(
+              '[evaluateRule SnapshotIF] context.hasItem is not a function for item_check.'
+            );
+            result = undefined;
+          }
         } else {
-          console.warn(
-            `[evaluateRule ${
-              isSnapshotInterfaceContext ? 'SnapshotIF' : 'Worker'
-            }] context.hasItem is not a function for item_check.`
-          );
-          result = isSnapshotInterfaceContext ? undefined : false;
+          // Worker Context
+          if (
+            context.inventory &&
+            typeof context.inventory.has === 'function'
+          ) {
+            result = context.inventory.has(itemName);
+          } else {
+            console.warn(
+              '[evaluateRule Worker] context.inventory.has is not a function for item_check.'
+            );
+            result = false;
+          }
         }
         break;
       }
@@ -493,52 +508,80 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'count_check': {
         const itemName = evaluateRule(rule.item, context, depth + 1);
         const requiredCount = evaluateRule(rule.count, context, depth + 1);
-        if (typeof context.countItem === 'function') {
-          // ADDING DETAILED LOG FOR THIS SPECIFIC CASE
-          if (isSnapshotInterfaceContext) {
-            console.log('[evaluateRule count_check SnapshotIF Specific Log]', {
-              contextType: typeof context,
-              isSnapshotInterfaceProp: context._isSnapshotInterface,
-              hasCountItemMethod: typeof context.countItem,
-              itemName,
-              requiredCount,
-            });
-          }
-          const currentCount = context.countItem(itemName);
-          if (currentCount === undefined && isSnapshotInterfaceContext) {
-            // If countItem itself returns undefined
-            result = undefined;
+        if (isSnapshotInterfaceContext) {
+          if (typeof context.countItem === 'function') {
+            // ADDING DETAILED LOG FOR THIS SPECIFIC CASE
+            if (isSnapshotInterfaceContext) {
+              console.log(
+                '[evaluateRule count_check SnapshotIF Specific Log]',
+                {
+                  contextType: typeof context,
+                  isSnapshotInterfaceProp: context._isSnapshotInterface,
+                  hasCountItemMethod: typeof context.countItem,
+                  itemName,
+                  requiredCount,
+                }
+              );
+            }
+            const currentCount = context.countItem(itemName);
+            if (currentCount === undefined && isSnapshotInterfaceContext) {
+              // If countItem itself returns undefined
+              result = undefined;
+            } else {
+              result = (currentCount || 0) >= requiredCount;
+            }
           } else {
-            result = (currentCount || 0) >= requiredCount;
+            console.warn(
+              '[evaluateRule SnapshotIF] context.countItem is not a function for count_check.'
+            );
+            result = undefined;
           }
         } else {
-          console.warn(
-            `[evaluateRule ${
-              isSnapshotInterfaceContext ? 'SnapshotIF' : 'Worker'
-            }] context.countItem is not a function for count_check.`
-          );
-          result = isSnapshotInterfaceContext ? undefined : false;
+          // Worker Context
+          if (
+            context.inventory &&
+            typeof context.inventory.count === 'function'
+          ) {
+            const currentCount = context.inventory.count(itemName);
+            result = (currentCount || 0) >= requiredCount;
+          } else {
+            console.warn(
+              '[evaluateRule Worker] context.inventory.count is not a function for count_check.'
+            );
+            result = false;
+          }
         }
         break;
       }
 
       case 'group_check': {
         const groupName = evaluateRule(rule.group, context, depth + 1);
-        const requiredCount = evaluateRule(rule.count, context, depth + 1);
-        if (typeof context.countGroup === 'function') {
-          const currentCount = context.countGroup(groupName);
-          if (currentCount === undefined && isSnapshotInterfaceContext) {
-            result = undefined;
+        const requiredCount = evaluateRule(rule.count, context, depth + 1); // Assuming count is always present
+        if (isSnapshotInterfaceContext) {
+          if (typeof context.countGroup === 'function') {
+            const currentCount = context.countGroup(groupName);
+            if (currentCount === undefined) result = undefined;
+            else result = (currentCount || 0) >= requiredCount;
           } else {
-            result = (currentCount || 0) >= requiredCount;
+            console.warn(
+              '[evaluateRule SnapshotIF] context.countGroup is not a function for group_check.'
+            );
+            result = undefined;
           }
         } else {
-          console.warn(
-            `[evaluateRule ${
-              isSnapshotInterfaceContext ? 'SnapshotIF' : 'Worker'
-            }] context.countGroup is not a function for group_check.`
-          );
-          result = isSnapshotInterfaceContext ? undefined : false;
+          // Worker Context
+          if (
+            context.inventory &&
+            typeof context.inventory.countGroup === 'function'
+          ) {
+            const currentCount = context.inventory.countGroup(groupName);
+            result = (currentCount || 0) >= requiredCount;
+          } else {
+            console.warn(
+              '[evaluateRule Worker] context.inventory.countGroup is not a function for group_check.'
+            );
+            result = false;
+          }
         }
         break;
       }
@@ -564,51 +607,56 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'name': {
-        if (
-          isSnapshotInterfaceContext &&
-          typeof context.resolveRuleObject === 'function'
-        ) {
-          result = context.resolveRuleObject(rule); // Use the new method on snapshot interface
-          if (result === undefined) {
-            // If resolveRuleObject explicitly returns undefined
-            // This means the object itself is unknown, not just a property on it.
-            console.warn(
-              `[evaluateRule SnapshotIF] Name \'${rule.name}\' resolved to undefined by resolveRuleObject.`
-            );
+        if (isSnapshotInterfaceContext) {
+          if (typeof context.resolveRuleObject === 'function') {
+            result = context.resolveRuleObject(rule);
+            if (result === undefined) {
+              console.warn(
+                `[evaluateRule SnapshotIF] Name '${rule.name}' resolved to undefined by resolveRuleObject.`
+              );
+            }
+          } else {
+            // Fallback for snapshot if resolveRuleObject isn't there
+            if (
+              rule.name === 'state' ||
+              rule.name === 'settings' ||
+              rule.name === 'inventory'
+            )
+              result = context;
+            else if (rule.name === 'helpers') result = context.helpers;
+            else if (context.entities && context.entities[rule.name])
+              result = context.entities[rule.name];
+            else {
+              console.warn(
+                `[evaluateRule SnapshotIF] Name '${rule.name}' could not be resolved (no resolveRuleObject).`
+              );
+              result = undefined;
+            }
           }
-        } else if (isWorkerContext) {
+        } else {
+          // Worker Context
           if (rule.name === 'state')
-            result = context; // or context.state if it's nested
+            result = context.state; // StateManager has a .state property
           else if (rule.name === 'inventory') result = context.inventory;
           else if (rule.name === 'helpers') result = context.helpers;
           else if (rule.name === 'settings')
-            result = context.settings || context;
-          // settings might be top-level or on context
-          else if (context.entities && context.entities[rule.name])
-            result = context.entities[rule.name];
-          else if (context[rule.name] !== undefined)
-            result = context[rule.name]; // Direct property on context
-          else {
-            console.warn(
-              `[evaluateRule Worker] Name \'${rule.name}\' not found on worker context.`
-            );
-            result = null; // Or some other indicator of not found
+            result = context.settings; // StateManager has a .settings property
+          // Check for entities within helpers first for worker context
+          else if (
+            context.helpers &&
+            context.helpers.entities &&
+            context.helpers.entities[rule.name]
+          ) {
+            result = context.helpers.entities[rule.name];
           }
-        } else {
-          // Fallback for snapshot if resolveRuleObject isn't there or other cases
-          if (rule.name === 'state' || rule.name === 'settings')
-            result = context; // these should have getSetting/hasFlag
-          else if (rule.name === 'inventory')
-            result = context; // hasItem/countItem are on context
-          else if (rule.name === 'helpers')
-            result = context.helpers; // context now has .helpers
-          else if (context.entities && context.entities[rule.name])
-            result = context.entities[rule.name];
+          // Then check for direct properties on StateManager (context) itself as a fallback
+          else if (context[rule.name] !== undefined)
+            result = context[rule.name];
           else {
             console.warn(
-              `[evaluateRule SnapshotIF] Name \'${rule.name}\' could not be resolved.`
+              `[evaluateRule Worker] Name '${rule.name}' not found on worker context or its sub-properties (state, inventory, helpers, settings, helpers.entities).`
             );
-            result = undefined; // Cannot resolve name in snapshot
+            result = null; // Consistent with previous worker behavior for not found names
           }
         }
         break;
@@ -630,6 +678,92 @@ export const evaluateRule = (rule, context, depth = 0) => {
             result = evaluateRule(rule.if_false, context, depth + 1);
           }
         }
+        break;
+      }
+      // --- END ADDED --- >
+
+      // --- ADDED: Handle 'binary_op' rule type --- >
+      case 'binary_op': {
+        const left = evaluateRule(rule.left, context, depth + 1);
+        const right = evaluateRule(rule.right, context, depth + 1);
+        const op = rule.op; //  e.g., '+', '-', '*', '/', '==', '!=', '<', '>', '<=', '>=', 'AND', 'OR', etc.
+
+        if (left === undefined || right === undefined) {
+          result = undefined; // If any operand is unknown, the result is unknown
+          break;
+        }
+
+        switch (op) {
+          case '+':
+            result = left + right;
+            break;
+          case '-':
+            result = left - right;
+            break;
+          case '*':
+            result = left * right;
+            break;
+          case '/':
+            result = right !== 0 ? left / right : undefined;
+            break; // Handle division by zero
+          case '==':
+            result = left == right;
+            break;
+          case '!=':
+            result = left != right;
+            break;
+          case '<':
+            result = left < right;
+            break;
+          case '>':
+            result = left > right;
+            break;
+          case '<=':
+            result = left <= right;
+            break;
+          case '>=':
+            result = left >= right;
+            break;
+          // Logical operators - assuming they might appear here, though 'and'/'or' types exist
+          case 'AND':
+          case 'and':
+            result = left && right;
+            break;
+          case 'OR':
+          case 'or':
+            result = left || right;
+            break;
+          // Bitwise operators (add if needed)
+          // case '|': result = left | right; break;
+          // case '&': result = left & right; break;
+          // case '^': result = left ^ right; break;
+          default:
+            console.warn(`[evaluateRule] Unknown binary_op operator: ${op}`, {
+              rule,
+            });
+            result = isSnapshotInterfaceContext ? undefined : false;
+        }
+        break;
+      }
+      // --- END ADDED --- >
+
+      // --- ADDED: Handle 'list' rule type --- >
+      case 'list': {
+        if (!Array.isArray(rule.value)) {
+          console.warn(
+            '[evaluateRule] List rule does not have an array value:',
+            rule
+          );
+          result = isSnapshotInterfaceContext ? undefined : []; // Default to empty list or undefined
+          break;
+        }
+        const evaluatedList = rule.value.map((itemRule) =>
+          evaluateRule(itemRule, context, depth + 1)
+        );
+        // If any item in the list evaluated to undefined, the entire list result might be considered undefined
+        // depending on how it's used. For now, let's return the list with undefined values in it.
+        // A more stringent approach would be: if (evaluatedList.some(item => item === undefined)) result = undefined;
+        result = evaluatedList;
         break;
       }
       // --- END ADDED --- >

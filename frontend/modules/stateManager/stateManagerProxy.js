@@ -343,9 +343,10 @@ class StateManagerProxy {
   // Method to retrieve all cached static data
   getStaticData() {
     if (!this.staticDataCache) {
-      console.warn(
-        '[StateManagerProxy] Attempted to get static data before it was set.'
-      );
+      // console.warn( // Quieting this down as UI handles null return
+      //   '[StateManagerProxy] Attempted to get static data before it was set.'
+      // );
+      return null;
     }
     return this.staticDataCache;
   }
@@ -420,6 +421,12 @@ class StateManagerProxy {
    * Returns null if the initial snapshot hasn't been received yet.
    */
   getLatestStateSnapshot() {
+    if (!this.uiCache) {
+      // console.warn( // Quieting this down
+      //   '[StateManagerProxy] Attempted to get latest snapshot before it was set.'
+      // );
+      return null;
+    }
     // Synchronous access to the cached state
     return this.uiCache;
   }
@@ -729,36 +736,29 @@ export function createStateSnapshotInterface(snapshot, staticData) {
     // Method for evaluateRule to get the 'this' for function calls on entities like 'old_man.can_reach()'
     // It should resolve 'old_man' to the entity object provided by ALTTPHelpers.
     resolveRuleObject: (ruleObjectPath) => {
-      // ruleObjectPath could be like { type: 'name', name: 'old_man' }
-      // or { type: 'attribute', object: { type: 'name', name: 'state'}, attr: 'helpers'}
-      // This is a simplified placeholder. A more robust resolver might be needed
-      // if evaluateRule doesn't already handle this by passing the core context around.
       if (ruleObjectPath && ruleObjectPath.type === 'name') {
-        if (ruleObjectPath.name === 'helpers' && altlpHelpersInstance) {
+        const name = ruleObjectPath.name;
+        if (name === 'helpers' && altlpHelpersInstance) {
           return altlpHelpersInstance;
         }
-        if (
-          ruleObjectPath.name === 'state' ||
-          ruleObjectPath.name === 'settings'
-        ) {
-          // for state.getSetting, settings.goal etc.
-          // Return the snapshotInterface itself, as it has getSetting, hasFlag etc.
+        if (name === 'state' || name === 'settings' || name === 'inventory') {
+          // For state.getSetting, inventory.hasItem etc., the methods are directly on the snapshotInterfaceInstance
           return snapshotInterfaceInstance;
+        }
+        if (name === 'player') {
+          // Added player resolution
+          return snapshot?.playerSlot; // Get from the raw snapshot data
         }
         if (
           altlpHelpersInstance &&
           altlpHelpersInstance.entities &&
-          altlpHelpersInstance.entities[ruleObjectPath.name]
+          altlpHelpersInstance.entities[name]
         ) {
-          return altlpHelpersInstance.entities[ruleObjectPath.name];
+          return altlpHelpersInstance.entities[name];
         }
       }
-      // If we are trying to access an attribute of the snapshotInterface (e.g. "inventory.hasItem")
-      // then 'inventory' would be resolved, and 'hasItem' called on it.
-      // The challenge is when a rule is like `state.can_reach_old_man()`. `state` resolves to snapshotInterface.
-      // Then `can_reach_old_man` needs to be found on it (likely via helpers).
-      // This indicates that `context.helpers` or `context.executeHelper` is the cleaner path.
-      return snapshotInterfaceInstance; // Default to the main interface
+      // Default to returning the interface itself for chained calls or if no specific resolution.
+      return snapshotInterfaceInstance;
     },
   };
   return snapshotInterfaceInstance;

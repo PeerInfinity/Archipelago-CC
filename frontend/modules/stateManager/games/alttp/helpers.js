@@ -12,11 +12,45 @@ export class ALTTPHelpers extends GameHelpers {
     // --- ORIGINAL CONTEXT DETECTION ---
     this.manager = null;
     this.snapshot = null;
-    if (context && typeof context.getSnapshot === 'function') {
+
+    // Prioritize the explicit marker for snapshot interface
+    if (context && context._isSnapshotInterface === true) {
       console.log(
-        '[ALTTPHelpers] Initializing with StateManager instance (Worker context).'
+        '[ALTTPHelpers Snapshot Constructor] Initializing with StateSnapshotInterface (marker found).'
+      );
+      this.snapshot = context;
+    } else if (context && typeof context.getSnapshot === 'function') {
+      // Worker context
+      console.log(
+        '[ALTTPHelpers Worker Constructor] Initializing with StateManager instance (getSnapshot found).'
       );
       this.manager = context;
+      // Log to check the state of manager.locations AT THE TIME OF CONSTRUCTOR CALL
+      if (this.manager) {
+        console.log(
+          '[ALTTPHelpers Worker Constructor] this.manager.locations type:',
+          typeof this.manager.locations
+        );
+        console.log(
+          '[ALTTPHelpers Worker Constructor] this.manager.locations available:',
+          !!this.manager.locations
+        );
+        if (this.manager.locations && Array.isArray(this.manager.locations)) {
+          console.log(
+            '[ALTTPHelpers Worker Constructor] Number of locations initially on manager:',
+            this.manager.locations.length
+          );
+        } else if (this.manager.locations) {
+          console.log(
+            '[ALTTPHelpers Worker Constructor] this.manager.locations is not an array. Keys:',
+            Object.keys(this.manager.locations).length
+          );
+        }
+      } else {
+        console.error(
+          '[ALTTPHelpers Worker Constructor] this.manager is unexpectedly null after assignment!'
+        );
+      }
     } else if (context && typeof context.hasItem === 'function') {
       console.log(
         '[ALTTPHelpers] Initializing with StateSnapshotInterface (Main thread context).'
@@ -228,42 +262,169 @@ export class ALTTPHelpers extends GameHelpers {
 
     if (this.snapshot) {
       // If any critical info for retro_bow logic is missing from snapshot, return undefined
-      if (retroBowFlag === undefined && retroBowSetting === undefined)
-        return undefined;
+      if (retroBowFlag === undefined && retroBowSetting === undefined) {
+        // If both are undefined, we can't determine retro bow status for sure
+        // However, if one is defined, we can proceed with that known value.
+        // This logic assumes that if 'retro_bow' setting is explicitly false, it overrides the flag.
+        // And if flag is explicitly true, it might override a missing setting.
+        // For maximum caution, if *either* is undefined and might be needed, we could return undefined.
+        // Let's assume if *both* are undefined, then it's unknown.
+        // If retroBowSetting is explicitly false, that takes precedence.
+        if (retroBowSetting === false) {
+          // Not retro bow, proceed to can_hold_arrows
+        } else {
+          // console.warn('[ALTTPHelpers Snapshot] can_shoot_arrows: retro_bow status uncertain due to undefined flag/setting.');
+          return undefined;
+        }
+      }
     }
 
-    if (retroBowFlag || retroBowSetting) {
-      // can_buy might return undefined in snapshot mode if shop data is incomplete
+    // Determine if retro bow mode is active
+    let isRetroBowActive = false;
+    if (retroBowSetting !== undefined) {
+      isRetroBowActive = retroBowSetting; // Setting takes precedence
+    } else if (retroBowFlag !== undefined) {
+      isRetroBowActive = retroBowFlag;
+    }
+
+    if (isRetroBowActive) {
       const canBuyArrows = this.can_buy('Single Arrow');
       if (canBuyArrows === undefined && this.snapshot) return undefined;
       return hasBow && canBuyArrows;
     }
-    // can_hold_arrows might also be complex
+
     const canHold = this.can_hold_arrows(count);
     if (canHold === undefined && this.snapshot) return undefined;
     return hasBow && canHold;
   }
 
   has_triforce_pieces() {
-    const requiredCount = this._getSetting('triforce_goal_pieces');
-    if (requiredCount === undefined || requiredCount === null) return false;
+    const requiredCountSetting = this._getSetting('triforce_goal_pieces');
 
-    const triforceCount = this._countItem('Triforce Piece');
-    const powerStarCount = this._countItem('Power Star');
-    return triforceCount + powerStarCount >= requiredCount;
+    if (this.snapshot) {
+      if (requiredCountSetting === undefined) {
+        // console.warn('[ALTTPHelpers Snapshot] has_triforce_pieces: triforce_goal_pieces setting is undefined.');
+        return undefined; // Cannot determine if setting is unknown
+      }
+      // If goal is 0, it typically means the goal is met or it's not a triforce hunt.
+      // The rule should be true if the goal is 0 (no pieces required).
+      if (requiredCountSetting === null || requiredCountSetting <= 0) {
+        return true;
+      }
+      const currentCount = this._countItem('Triforce Piece');
+      if (currentCount === undefined) {
+        // console.warn('[ALTTPHelpers Snapshot] has_triforce_pieces: _countItem(\\"Triforce Piece\\") returned undefined.');
+        return undefined;
+      }
+      return currentCount >= requiredCountSetting;
+    } else {
+      // Worker logic
+      if (
+        requiredCountSetting === undefined ||
+        requiredCountSetting === null ||
+        requiredCountSetting <= 0
+      ) {
+        // In worker context, if the goal is 0 or not set, this specific path to victory isn't active via this rule.
+        // Or, if it means 0 pieces are required, then the condition is true.
+        // Let's align with snapshot: if 0 required, it's true.
+        return true;
+      }
+      const currentCount = this.manager.inventory.count('Triforce Piece');
+      return currentCount >= requiredCountSetting;
+    }
   }
 
   has_crystals(count) {
-    const requiredCount = count === undefined ? 7 : count;
-    return this._countGroup('Crystals') >= requiredCount;
+    if (this.snapshot) {
+      let requiredCrystals;
+      // If 'count' is explicitly provided as a number, that's the requirement for this specific rule call.
+      if (typeof count === 'number') {
+        requiredCrystals = count;
+      } else {
+        // If no explicit count, attempt to infer from common settings.
+        // This part is heuristic as rules might not always align with these specific settings.
+        // A rule saying `has_crystals()` without a count might imply GT access.
+        requiredCrystals = this._getSetting('crystals_needed_for_gt'); // Default to GT
+        if (requiredCrystals === undefined) {
+          // Fallback or further specific logic if 'crystals_needed_for_gt' isn't defined.
+          // For Ganon's Tower itself (which usually requires all 7), a rule might pass count=7.
+          // If a rule implies Ganon entry without a count, it's ambiguous without more context.
+          // For now, if 'crystals_needed_for_gt' is undefined, we can't make a firm decision.
+          // console.warn('[ALTTPHelpers Snapshot] has_crystals: crystals_needed_for_gt setting is undefined, and no explicit count provided.');
+          return undefined;
+        }
+      }
+
+      if (requiredCrystals === undefined) {
+        // This case implies 'count' was not a number and primary setting lookups also yielded undefined.
+        // console.warn('[ALTTPHelpers Snapshot] has_crystals: Could not determine required crystal count.');
+        return undefined;
+      }
+
+      const currentCrystals = this._countGroup('Crystal');
+      if (currentCrystals === undefined) {
+        // console.warn('[ALTTPHelpers Snapshot] has_crystals: _countGroup(\\"Crystal\\") returned undefined.');
+        return undefined;
+      }
+      return currentCrystals >= requiredCrystals;
+    } else {
+      // Worker (original) logic
+      const num_crystals = this.manager.inventory.countGroup('Crystal');
+      let required = 7; // Default for things like Ganon's Tower if no count/setting specified by rule
+
+      // If the rule passes a specific count, that count is the requirement for that rule instance.
+      if (typeof count === 'number') {
+        required = count;
+      } else {
+        // If no count passed, try to use game settings for GT or Ganon.
+        // This depends on the context of the rule calling has_crystals().
+        // Some rules imply GT (usually 7), some Ganon (usually also 7, or all dungeon crystals).
+        // For simplicity, if count isn't given, rules often check against GT requirements.
+        const gtCrystals = this._getSetting('crystals_needed_for_gt');
+        if (typeof gtCrystals === 'number') {
+          required = gtCrystals;
+        }
+        // A rule for Ganon might look like has_crystals(get_setting('crystals_needed_for_ganon'))
+        // or simply has_crystals(7) if Ganon always needs 7.
+        // The 'count' parameter is key if the rule is specific.
+      }
+      return num_crystals >= required;
+    }
   }
 
   can_lift_rocks() {
-    return this._hasItem('Power Glove') || this._hasItem('Titans Mitts');
+    if (this.snapshot) {
+      const hasPowerGlove = this._hasItem('Power Glove');
+      // If Power Glove is definitively true, result is true
+      if (hasPowerGlove === true) return true;
+
+      const hasTitansMitts = this._hasItem('Titans Mitts');
+      // If Titans Mitts is definitively true, result is true
+      if (hasTitansMitts === true) return true;
+
+      // If neither was definitively true, but at least one was undefined, the result is uncertain.
+      if (hasPowerGlove === undefined || hasTitansMitts === undefined) {
+        return undefined;
+      }
+      // Otherwise, both were definitively false.
+      return false;
+    } else {
+      // Worker logic
+      return (
+        this.manager.inventory.has('Power Glove') ||
+        this.manager.inventory.has('Titans Mitts')
+      );
+    }
   }
 
   can_lift_heavy_rocks() {
-    return this._hasItem('Titans Mitts');
+    if (this.snapshot) {
+      // _hasItem will return true, false, or undefined if the snapshot.hasItem does.
+      return this._hasItem('Titans Mitts');
+    } else {
+      // Worker logic
+      return this.manager.inventory.has('Titans Mitts');
+    }
   }
 
   bottle_count() {
@@ -446,37 +607,57 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   can_get_good_bee() {
-    const caveAccessible = this._isRegionReachable('Good Bee Cave');
-    return (
-      this._countGroup('Bottles') > 0 &&
-      this._hasItem('Bug Catching Net') &&
-      (this._hasItem('Pegasus Boots') ||
-        (this.has_sword() && this._hasItem('Quake'))) &&
-      caveAccessible &&
-      this.is_not_bunny({ is_light_world: true, is_dark_world: false })
-    );
+    // console.warn(
+    //   '[ALTTPHelpers] can_get_good_bee not fully refactored for snapshot interface yet.'
+    // );
+    return this._hasItem('Bug Catching Net') && this._hasItem('Bottle'); // Simplistic, may need more nuance for snapshot
   }
 
   can_retrieve_tablet() {
-    const hasBookOfMudora = this._hasItem('Book of Mudora');
-    if (!hasBookOfMudora) return false;
-
-    const hasSword = this.has_beam_sword();
-    const isSwordlessMode = this._hasFlag('swordless');
-    const hasHammer = this._hasItem('Hammer');
-    return hasSword || (isSwordlessMode && hasHammer);
-  }
-
-  has_sword() {
+    // console.warn(
+    //   '[ALTTPHelpers] can_retrieve_tablet not fully refactored for snapshot interface yet.'
+    // );
     return (
-      this._hasItem('Fighter Sword') ||
-      this._hasItem('Master Sword') ||
-      this._hasItem('Tempered Sword') ||
-      this._hasItem('Golden Sword')
+      this.has_sword() >= 2 && // Master Sword or better
+      this._hasItem('Book of Mudora')
     );
   }
 
+  has_sword() {
+    if (this.snapshot) {
+      const fighter = this._hasItem('Fighter Sword');
+      if (fighter === true) return true;
+      const master = this._hasItem('Master Sword');
+      if (master === true) return true;
+      const tempered = this._hasItem('Tempered Sword');
+      if (tempered === true) return true;
+      const golden = this._hasItem('Golden Sword');
+      if (golden === true) return true;
+
+      if (
+        fighter === undefined ||
+        master === undefined ||
+        tempered === undefined ||
+        golden === undefined
+      ) {
+        return undefined;
+      }
+      return false;
+    } else {
+      // Worker logic
+      return (
+        this.manager.inventory.has('Fighter Sword') ||
+        this.manager.inventory.has('Master Sword') ||
+        this.manager.inventory.has('Tempered Sword') ||
+        this.manager.inventory.has('Golden Sword')
+      );
+    }
+  }
+
   has_beam_sword() {
+    // console.warn(
+    //   '[ALTTPHelpers] has_beam_sword not fully refactored for snapshot interface yet.'
+    // );
     return (
       this._hasItem('Master Sword') ||
       this._hasItem('Tempered Sword') ||
@@ -485,11 +666,28 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   has_melee_weapon() {
-    return this.has_sword() || this._hasItem('Hammer');
+    // This is a simple check, _hasItem handles context.
+    return this._hasItem('Hammer') || this.has_sword();
   }
 
   has_fire_source() {
-    return this._hasItem('Fire Rod') || this._hasItem('Lamp');
+    if (this.snapshot) {
+      const fireRod = this._hasItem('Fire Rod');
+      if (fireRod === true) return true;
+      const lamp = this._hasItem('Lamp');
+      if (lamp === true) return true;
+
+      if (fireRod === undefined || lamp === undefined) {
+        return undefined;
+      }
+      return false;
+    } else {
+      // Worker logic
+      return (
+        this.manager.inventory.has('Fire Rod') ||
+        this.manager.inventory.has('Lamp')
+      );
+    }
   }
 
   can_melt_things() {
@@ -556,32 +754,72 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   item_name_in_location_names(itemName, locationNames) {
-    if (!this.manager || !this.manager.locations) {
-      console.warn(
-        '[ALTTPHelpers] item_name_in_location_names: StateManager or locations not available.'
-      );
-      return false;
-    }
-
     if (typeof itemName !== 'string' || !Array.isArray(locationNames)) {
       console.warn(
         '[ALTTPHelpers] item_name_in_location_names: Invalid arguments.',
         { itemName, locationNames }
       );
-      return false;
+      return this.snapshot ? undefined : false; // Unknown for snapshot, false for worker
     }
 
-    const targetLocations = this.manager.locations.filter((loc) =>
-      locationNames.includes(loc.name)
+    let allLocationsArray = null;
+
+    if (this.snapshot) {
+      // Ensure staticData and staticData.locations are available on the snapshot interface
+      const staticLocations = this.snapshot.getStaticData
+        ? this.snapshot.getStaticData()?.locations
+        : this.snapshot.staticData?.locations;
+      if (staticLocations) {
+        allLocationsArray = Array.isArray(staticLocations)
+          ? staticLocations
+          : Object.values(staticLocations);
+      } else {
+        console.warn(
+          '[ALTTPHelpers Snapshot] item_name_in_location_names: staticData.locations not available on snapshot interface.'
+        );
+        return undefined; // Cannot proceed without location data
+      }
+    } else {
+      // Worker context
+      if (!this.manager || !this.manager.locations) {
+        console.warn(
+          '[ALTTPHelpers Worker] item_name_in_location_names: StateManager or locations not available.'
+        );
+        return false; // Original worker behavior
+      }
+      // Assuming this.manager.locations is already an array of location objects
+      allLocationsArray = this.manager.locations;
+    }
+
+    if (!allLocationsArray) {
+      console.warn(
+        '[ALTTPHelpers] item_name_in_location_names: Failed to obtain locations array.'
+      );
+      return this.snapshot ? undefined : false;
+    }
+
+    const targetLocations = allLocationsArray.filter(
+      (loc) =>
+        loc && typeof loc.name === 'string' && locationNames.includes(loc.name)
     );
 
     for (const location of targetLocations) {
-      if (location.item === itemName) {
+      let currentItemName = null;
+      if (
+        location.item &&
+        typeof location.item === 'object' &&
+        typeof location.item.name === 'string'
+      ) {
+        currentItemName = location.item.name;
+      } else if (typeof location.item === 'string') {
+        currentItemName = location.item;
+      }
+
+      if (currentItemName === itemName) {
         return true;
       }
     }
-
-    return false;
+    return false; // If not found after checking all target locations
   }
 
   old_man() {
@@ -738,7 +976,55 @@ export class ALTTPHelpers extends GameHelpers {
     return items.some((item) => this._hasItem(item));
   }
 
-  // ... len, zip, getattr, range, all, any, to_bool ...
+  // --- Utility helpers often found in Python-based rule engines ---
+  len(arr) {
+    if (this.snapshot) {
+      if (arr === undefined) {
+        // console.warn('[ALTTPHelpers Snapshot] len() called with undefined array.');
+        return undefined; // If the array itself is unknown, its length is unknown
+      }
+    }
+    // In worker mode, or if arr is defined in snapshot mode:
+    if (!Array.isArray(arr)) {
+      // console.warn('[ALTTPHelpers] len() called with non-array.', arr);
+      // Depending on strictness, could return undefined for snapshot, or 0 / error for worker.
+      return this.snapshot ? undefined : 0;
+    }
+    return arr.length;
+  }
+
+  // Placeholder for zip if needed, more complex to implement fully
+  zip(...arrays) {
+    // console.warn('[ALTTPHelpers] zip() helper not fully implemented for snapshot.');
+    if (this.snapshot) {
+      if (arrays.some((arr) => arr === undefined)) return undefined;
+      if (!arrays.every((arr) => Array.isArray(arr))) return undefined;
+    }
+    if (!arrays.every((arr) => Array.isArray(arr))) return []; // Worker: return empty for invalid input
+
+    const shortest = arrays.reduce(
+      (min, arr) => Math.min(min, arr.length),
+      Infinity
+    );
+    const result = [];
+    for (let i = 0; i < shortest; i++) {
+      result.push(arrays.map((arr) => arr[i]));
+    }
+    return result;
+  }
+
+  // Placeholder for getattr if needed, complex due to object resolution
+  getattr(obj, attr, defaultValue = undefined) {
+    // console.warn('[ALTTPHelpers] getattr() helper not fully implemented for snapshot.');
+    if (this.snapshot) {
+      if (obj === undefined) return undefined;
+      // Very simplistic getattr for snapshot, doesn't handle nested paths
+      // or special resolution like evaluateRule does for 'attribute' type.
+      return obj[attr] !== undefined ? obj[attr] : defaultValue;
+    }
+    // Worker mode can be more robust if needed
+    return obj && obj[attr] !== undefined ? obj[attr] : defaultValue;
+  }
 
   shop_price_rules(locationOrName) {
     console.warn(

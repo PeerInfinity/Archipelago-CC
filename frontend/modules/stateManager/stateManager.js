@@ -17,7 +17,7 @@ export class StateManager {
     this.inventory = new ALTTPInventory();
     this.state = new ALTTPState();
     // Pass 'this' (the manager instance) to helpers when running in worker context
-    this.helpers = new ALTTPHelpers(this);
+    this.helpers = null; // Initialize as null
 
     // Injected dependencies
     this.eventBus = null; // Legacy/optional
@@ -360,6 +360,19 @@ export class StateManager {
       }
     }
 
+    // --- Moved Helper Initialization Earlier ---
+    if (ALTTPHelpers) {
+      this.helpers = new ALTTPHelpers(this);
+      console.log(
+        '[StateManager loadFromJSON] ALTTPHelpers instantiated BEFORE enhance/compute.'
+      );
+    } else {
+      console.error(
+        '[StateManager loadFromJSON] ALTTPHelpers class not available to instantiate.'
+      );
+    }
+    // --- END HELPER INITIALIZATION MOVED ---
+
     // Process starting items after inventory is initialized
     const startingItems = jsonData.starting_items?.[selectedPlayerId] || [];
     if (startingItems && startingItems.length > 0) {
@@ -393,7 +406,6 @@ export class StateManager {
     // This will trigger the snapshot update via computeReachableRegions finishing
     this.computeReachableRegions();
 
-    // Add this line at the end of the method to enhance locations with shop data
     if (
       this.helpers &&
       typeof this.helpers.enhanceLocationsWithShopData === 'function'
@@ -1614,11 +1626,11 @@ export class StateManager {
     const anInterface = {
       _isSnapshotInterface: true,
       hasItem: (itemName) => self.inventory.has(itemName),
-      getItemCount: (itemName) => self.inventory.count(itemName),
+      countItem: (itemName) => self.inventory.count(itemName),
       hasGroup: (groupName) => self.inventory.countGroup(groupName) > 0,
       countGroup: (groupName) => self.inventory.countGroup(groupName),
       hasFlag: (flagName) =>
-        self.flags.has(flagName) || self.checkedLocations.has(flagName),
+        self.state.hasFlag(flagName) || self.checkedLocations.has(flagName),
       getSetting: (settingName) =>
         self.settings ? self.settings[settingName] : undefined,
       getAllSettings: () => self.settings,
@@ -1627,30 +1639,56 @@ export class StateManager {
       executeHelper: (name, ...args) => {
         if (!self.helpers) {
           console.error('[SelfSnapshotInterface] Helpers not initialized!');
-          return false;
+          return undefined;
         }
-        // Helpers might need the ability to evaluate rules themselves
-        // The helper instance already has access to 'this.manager' (which is 'self')
-        // Let the helper decide if it needs evaluateRuleFromEngine or direct state access
         return self.helpers.executeHelper(name, ...args);
       },
       executeStateManagerMethod: (name, ...args) => {
-        // Directly call the state manager's method execution logic
         return self.executeStateMethod(name, ...args);
       },
       getCurrentRegion: () => self.currentRegionName,
       getAllItems: () => self.itemData,
-      getAllLocations: () => [...self.locations], // Return a copy of the array
-      getAllRegions: () => self.regions, // Use the enhanced regions object
+      getAllLocations: () => [...self.locations],
+      getAllRegions: () => self.regions,
       getPlayerSlot: () => self.playerSlot,
-      helpers: self.helpers, // Provide access to game-specific helpers
+      helpers: self.helpers,
+      resolveRuleObject: (ruleObjectPath) => {
+        if (ruleObjectPath && ruleObjectPath.type === 'name') {
+          const name = ruleObjectPath.name;
+          if (name === 'helpers') return self.helpers;
+          if (name === 'state') return self;
+          if (name === 'settings') return self.settings;
+          if (name === 'inventory') return self.inventory;
+          if (name === 'player') return self.playerSlot;
+          if (
+            self.helpers &&
+            self.helpers.entities &&
+            self.helpers.entities[name]
+          ) {
+            return self.helpers.entities[name];
+          }
+          if (self[name] !== undefined) return self[name];
+        }
+        return anInterface;
+      },
+      staticData: {
+        items: self.itemData,
+        groups: self.groupData,
+        locations: self.locations,
+        regions: self.regions,
+      },
+      getStaticData: () => ({
+        items: self.itemData,
+        groups: self.groupData,
+        locations: self.locations,
+        regions: self.regions,
+      }),
     };
-    // --- ADDED: Log the created interface object --- >
-    console.log(
-      '[StateManager _createSelfSnapshotInterface] Returning interface:',
-      anInterface
-    );
-    return anInterface; // Ensure we use a consistent name if we log it
+    // console.log(
+    //   '[StateManager _createSelfSnapshotInterface] Returning interface:',
+    //   anInterface
+    // );
+    return anInterface;
   }
 
   /**
