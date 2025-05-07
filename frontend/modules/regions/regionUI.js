@@ -11,6 +11,11 @@ import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
 import { moduleDispatcher } from './index.js';
 import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
+import {
+  renderLogicTree,
+  resetUnknownEvaluationCounter,
+  logAndGetUnknownEvaluationCounter,
+} from '../commonUI/index.js';
 
 export class RegionUI {
   constructor() {
@@ -380,8 +385,16 @@ export class RegionUI {
   }
 
   renderAllRegions() {
-    // REMOVE ensureReady checks (if any)
-    // --- Log data state at function start --- >
+    if (!this.isInitialized || !stateManager.getStaticData()?.regions) {
+      console.log(
+        '[RegionUI] renderAllRegions skipped: not initialized or no static region data.'
+      );
+      this._updateSectionVisibility(); // Ensure sections are correctly shown/hidden
+      return;
+    }
+    resetUnknownEvaluationCounter(); // Reset counter
+    console.log('[RegionUI] renderAllRegions called.');
+
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
     console.log(
@@ -390,7 +403,6 @@ export class RegionUI {
       'Static Data:',
       !!staticData
     );
-    // --- End log ---
 
     // Keep data check
     if (!snapshot || !staticData || !staticData.regions) {
@@ -471,6 +483,10 @@ export class RegionUI {
     // --- End Moved Declarations ---
 
     this._updateSectionVisibility();
+    console.log(
+      `[RegionUI] Finished rendering regions. Available: ${availableCount}, Unavailable: ${unavailableCount}`
+    );
+    logAndGetUnknownEvaluationCounter('RegionPanel update complete'); // Log count
   }
 
   createRegionLink(regionName, snapshot) {

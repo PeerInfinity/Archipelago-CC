@@ -487,14 +487,47 @@ select:hover {
 }
 
 .logic-node {
-  margin-left: 1rem;
-  padding: 2px 0;
+  padding: 2px 5px;
+  margin: 2px;
+  border-radius: 3px;
+  background-color: #3a3a3a; /* Dark gray base for dark theme */
+  border: 1px solid #555555; /* Slightly lighter border for dark theme */
+  color: #e0e0e0; /* Light text for dark theme */
 }
+
 .logic-node.pass {
-  border-left: 4px solid green;
+  background-color: #2a4d2a; /* Darker green for dark theme */
+  border-color: #3c7a3c; /* Brighter green border */
+  color: #c8f7c8; /* Light green text */
 }
+
 .logic-node.fail {
-  border-left: 4px solid red;
+  background-color: #5d2a2a; /* Darker red for dark theme */
+  border-color: #8c3c3c; /* Brighter red border */
+  color: #f7c8c8; /* Light red text */
+}
+
+.logic-node-unknown {
+  background-color: #484848; /* Neutral dark gray for unknown */
+  border-color: #606060;
+  color: #cccccc; /* Lighter gray text for unknown */
+}
+
+.colorblind-symbol {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.colorblind-symbol.accessible {
+  color: #60d060; /* Brighter green for dark theme */
+}
+
+.colorblind-symbol.inaccessible {
+  color: #f06060; /* Brighter red for dark theme */
+}
+
+.colorblind-symbol.unknown {
+  color: #b0b0b0; /* Light gray/off-white for the question mark */
 }
 
 /* Buttons and Controls */

@@ -2,7 +2,13 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../stateManager/ruleEngine.js';
 import commonUI from '../commonUI/index.js';
-const { debounce, createStateSnapshotInterface } = commonUI;
+import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
+import {
+  debounce,
+  renderLogicTree,
+  resetUnknownEvaluationCounter,
+  logAndGetUnknownEvaluationCounter,
+} from '../commonUI/index.js';
 import loopStateSingleton from '../loops/loopStateSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
@@ -365,7 +371,8 @@ export class ExitUI {
 
   updateExitDisplay() {
     console.log('[ExitUI] updateExitDisplay called.');
-    // --- Log data state at function start --- >
+    resetUnknownEvaluationCounter();
+
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
     console.log(
@@ -374,9 +381,7 @@ export class ExitUI {
       'Static Data:',
       !!staticData
     );
-    // --- End log ---
 
-    // --- ADDED: Readiness Check --- >
     if (!snapshot || !staticData || !staticData.exits || !staticData.regions) {
       console.warn(
         '[ExitUI] Snapshot or static data (exits/regions) not ready. Aborting render.'
@@ -384,81 +389,62 @@ export class ExitUI {
       this.exitsGrid.innerHTML = '<p>Loading exit data...</p>';
       return;
     }
-    // --- END CHECK --- >
 
     if (!this.exitsGrid) {
       console.warn('[ExitUI] exitsGrid element not found.');
       return;
     }
 
-    // Main processing logic - USE AGGREGATED EXITS
-    const allExits = Object.values(staticData.exits); // <-- Use aggregated exits
+    const allExits = Object.values(staticData.exits);
     let displayExits = [];
 
-    // Filter and process exits
     allExits.forEach((exit) => {
       const fromRegionName = exit.parentRegion;
       const toRegionName = exit.connectedRegion;
 
-      // Check reachability based on snapshot
       const fromRegionStatus =
         snapshot.reachability?.[fromRegionName] ?? 'unknown';
       const toRegionStatus = snapshot.reachability?.[toRegionName] ?? 'unknown';
 
-      // Determine exit status (e.g., 'open', 'closed', 'mixed', 'unknown')
       let exitStatus = 'unknown';
       if (fromRegionStatus === 'reachable' && toRegionStatus === 'reachable') {
-        exitStatus = 'open'; // Both sides reachable
+        exitStatus = 'open';
       } else if (
         fromRegionStatus === 'reachable' ||
         toRegionStatus === 'reachable'
       ) {
-        exitStatus = 'partial'; // One side reachable
+        exitStatus = 'partial';
       } else if (
         fromRegionStatus !== 'unknown' &&
         toRegionStatus !== 'unknown'
       ) {
-        exitStatus = 'closed'; // Neither side reachable
+        exitStatus = 'closed';
       }
-
-      // TODO: Incorporate exit rules evaluation using createStateSnapshotInterface if needed
-      // const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
-      // const ruleResult = evaluateRule(exit.rule, snapshotInterface);
-
-      // Decide whether to display based on filters (Add filters later if needed)
-      // For now, display all processed exits
 
       displayExits.push({
         ...exit,
-        status: exitStatus, // Add calculated status
+        status: exitStatus,
       });
     });
 
     console.log(`[ExitUI] Processing ${displayExits.length} exits.`);
 
-    // Render exits
-    this.exitsGrid.innerHTML = ''; // Clear previous content
-    // --- ADD: Render the processed exits --- >
+    this.exitsGrid.innerHTML = '';
     const fragment = document.createDocumentFragment();
 
     displayExits.forEach((exit) => {
       const card = document.createElement('div');
-      card.className = `exit exit-card ${exit.status}`; // Use calculated status
+      card.className = `exit exit-card ${exit.status}`;
       card.dataset.exitName = exit.name;
       card.dataset.regionName = exit.parentRegion;
 
-      // Apply colorblind class (assuming commonUI has a suitable function or we adapt)
-      // TODO: Adapt or find appropriate commonUI function if needed
-      // commonUI.applyColorblindClass(card, exit.status, settingsManager.getSetting('colorblindMode.exits'));
-
-      // Exit Name & Regions
       const title = document.createElement('span');
       title.className = 'exit-title';
       title.textContent = exit.name;
 
       const regions = document.createElement('span');
       regions.className = 'exit-regions';
-      regions.textContent = ` (${exit.parentRegion} <=> ${exit.connectedRegion})`; // Use parentRegion/connectedRegion
+      regions.textContent = ` (${exit.parentRegion} <=> ${exit.connectedRegion})`;
 
       const header = document.createElement('div');
       header.className = 'exit-header';
@@ -466,14 +452,14 @@ export class ExitUI {
       header.appendChild(regions);
       card.appendChild(header);
 
-      // Add click listener for loop mode interaction
       card.addEventListener('click', () => this.handleExitClick(exit));
 
       fragment.appendChild(card);
     });
 
     this.exitsGrid.appendChild(fragment);
-    // --- END ADD --- >
+    console.log(`[ExitUI] Rendered ${displayExits.length} exits.`);
+    logAndGetUnknownEvaluationCounter('ExitPanel update complete');
   }
 
   getAllExits(instance) {
@@ -483,7 +469,6 @@ export class ExitUI {
     Object.values(instance.regions).forEach((region) => {
       if (region.exits) {
         region.exits.forEach((exit) => {
-          // Add region name to each exit for reference
           exits.push({
             ...exit,
             region: region.name,

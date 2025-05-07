@@ -10,7 +10,12 @@ import loopStateSingleton from '../loops/loopStateSingleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
-import { renderLogicTree, applyColorblindClass } from '../commonUI/index.js';
+import {
+  renderLogicTree,
+  applyColorblindClass,
+  resetUnknownEvaluationCounter,
+  logAndGetUnknownEvaluationCounter,
+} from '../commonUI/index.js';
 
 export class LocationUI {
   constructor(gameUI) {
@@ -403,7 +408,8 @@ export class LocationUI {
   // --- Main Rendering Logic ---
   updateLocationDisplay() {
     console.log('[LocationUI] updateLocationDisplay called.');
-    // --- Log data state at function start --- >
+    resetUnknownEvaluationCounter(); // Reset counter at the beginning of the update
+
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
     console.log(
@@ -412,18 +418,6 @@ export class LocationUI {
       'Static Data:',
       !!staticData
     );
-    // --- End log ---
-
-    // --- ADDED DEBUG LOG ---
-    // console.debug('[LocationUI] Data Check:', { // Commenting out older debug log
-    //   hasSnapshot: !!snapshot,
-    //   hasStaticData: !!staticData,
-    //   hasLocations: !!staticData?.locations,
-    //   locationCount: staticData?.locations
-    //     ? Object.keys(staticData.locations).length
-    //     : 'N/A',
-    // });
-    // --- END DEBUG LOG ---
 
     if (!staticData?.locations || !snapshot) {
       // Also ensure snapshot exists
@@ -665,6 +659,7 @@ export class LocationUI {
       this.locationsGrid.appendChild(fragment);
     }
     console.log(`[LocationUI] Rendered ${filteredLocations.length} locations.`);
+    logAndGetUnknownEvaluationCounter('LocationPanel update complete'); // Log count at the end
   }
 
   // Helper to determine status based on snapshot

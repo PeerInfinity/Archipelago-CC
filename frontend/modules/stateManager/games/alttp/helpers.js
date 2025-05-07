@@ -88,9 +88,14 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   _isRegionReachable(regionName) {
-    return this.manager
-      ? this.manager.isRegionReachable(regionName)
-      : this.snapshot.isRegionReachable(regionName);
+    if (this.manager) {
+      return this.manager.isRegionReachable(regionName);
+    }
+    if (this.snapshot) {
+      // This will now correctly return true, false, or undefined from the snapshot interface
+      return this.snapshot.isRegionReachable(regionName);
+    }
+    return undefined; // Default to unknown if no context
   }
 
   // Internal helper for location accessibility, handling both contexts
@@ -108,9 +113,10 @@ export class ALTTPHelpers extends GameHelpers {
         typeof locationOrName === 'object'
           ? locationOrName.name
           : locationOrName;
-      return this.snapshot.isLocationAccessible(locationName); // Assuming snapshot can take name
+      // This will now correctly return true, false, or undefined from the snapshot interface
+      return this.snapshot.isLocationAccessible(locationName);
     }
-    return false; // No valid context
+    return undefined; // No valid context
   }
 
   _getPlayerSlot() {
@@ -143,11 +149,20 @@ export class ALTTPHelpers extends GameHelpers {
     if (this._hasItem('Moon Pearl')) {
       return true;
     }
+    // In snapshot mode, _getRegionData might be less reliable or not present
+    // depending on what's in staticData vs. what needs live computation.
     const regionData =
       typeof region === 'string' ? this._getRegionData(region) : region;
-    if (!regionData) return true; // Default true if region data missing?
 
-    const isInverted = this._getGameMode() === 'inverted';
+    if (!regionData) {
+      if (this.snapshot) return undefined; // Cannot determine without region data
+      return true; // Worker default might differ, but snapshot needs to be cautious
+    }
+
+    const gameMode = this._getGameMode();
+    if (gameMode === undefined && this.snapshot) return undefined; // Critical info missing
+
+    const isInverted = gameMode === 'inverted';
     return isInverted ? regionData.is_dark_world : regionData.is_light_world;
   }
 
@@ -208,10 +223,25 @@ export class ALTTPHelpers extends GameHelpers {
     const hasBow = this._hasItem('Bow') || this._hasItem('Silver Bow');
     if (!hasBow) return false;
 
-    if (this._hasFlag('retro_bow') || this._getSetting('retro_bow')) {
-      return hasBow && this.can_buy('Single Arrow');
+    const retroBowFlag = this._hasFlag('retro_bow');
+    const retroBowSetting = this._getSetting('retro_bow');
+
+    if (this.snapshot) {
+      // If any critical info for retro_bow logic is missing from snapshot, return undefined
+      if (retroBowFlag === undefined && retroBowSetting === undefined)
+        return undefined;
     }
-    return hasBow && this.can_hold_arrows(count);
+
+    if (retroBowFlag || retroBowSetting) {
+      // can_buy might return undefined in snapshot mode if shop data is incomplete
+      const canBuyArrows = this.can_buy('Single Arrow');
+      if (canBuyArrows === undefined && this.snapshot) return undefined;
+      return hasBow && canBuyArrows;
+    }
+    // can_hold_arrows might also be complex
+    const canHold = this.can_hold_arrows(count);
+    if (canHold === undefined && this.snapshot) return undefined;
+    return hasBow && canHold;
   }
 
   has_triforce_pieces() {
@@ -355,15 +385,64 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   can_kill_most_things(count = 5) {
-    return (
-      this.has_melee_weapon() ||
-      this._hasItem('Cane of Somaria') ||
-      (this._hasItem('Cane of Byrna') &&
-        (count < 6 || this.can_extend_magic())) ||
-      this.can_shoot_arrows() ||
-      this._hasItem('Fire Rod') ||
-      this.can_use_bombs() // Pass count? Needs clarification how count interacts with bomb usage
-    );
+    if (this.snapshot) {
+      // Snapshot-aware logic
+      let canKill = false;
+      let potentialUnknown = false;
+
+      const hasSwordResult = this.has_sword(); // Snapshot-aware
+      if (hasSwordResult === undefined) potentialUnknown = true;
+      if (hasSwordResult === true) canKill = true;
+
+      if (!canKill && !potentialUnknown) {
+        // Only proceed if not already true and no unknowns yet
+        if (this._hasItem('Cane of Somaria')) canKill = true; // Direct item check
+      }
+
+      if (!canKill && !potentialUnknown) {
+        if (this._hasItem('Cane of Byrna')) {
+          // Direct item check
+          if (count < 6) {
+            canKill = true;
+          } else {
+            const canExtend = this.can_extend_magic(); // Snapshot-aware
+            if (canExtend === undefined) potentialUnknown = true;
+            else if (canExtend === true) canKill = true;
+          }
+        }
+      }
+
+      if (!canKill && !potentialUnknown) {
+        const canShoot = this.can_shoot_arrows(); // Snapshot-aware
+        if (canShoot === undefined) potentialUnknown = true;
+        else if (canShoot === true) canKill = true;
+      }
+
+      if (!canKill && !potentialUnknown) {
+        if (this._hasItem('Fire Rod')) canKill = true; // Direct item check
+      }
+
+      if (!canKill && !potentialUnknown) {
+        const canBombs = this.can_use_bombs(); // Snapshot-aware
+        if (canBombs === undefined) potentialUnknown = true;
+        else if (canBombs === true) canKill = true;
+      }
+
+      if (canKill) return true;
+      if (potentialUnknown) return undefined;
+      return false;
+    } else {
+      // Worker Context (original logic)
+      return (
+        this.has_melee_weapon() ||
+        this._hasItem('Cane of Somaria') ||
+        (this._hasItem('Cane of Byrna') &&
+          (count < 6 || this.can_extend_magic())) ||
+        this.can_shoot_arrows() ||
+        this._hasItem('Fire Rod') ||
+        this.can_use_bombs() // Pass count? Needs clarification how count interacts with bomb usage
+      );
+    }
   }
 
   can_get_good_bee() {
@@ -533,37 +612,27 @@ export class ALTTPHelpers extends GameHelpers {
   // ... Glitch placeholders ...
 
   can_reach(target, type = 'Region', player = 1) {
-    if (player !== this._getPlayerSlot()) {
-      return false;
-    }
-    try {
+    // This is a prime candidate for returning undefined in snapshot mode
+    // as true reachability is a complex calculation.
+    if (this.snapshot) {
+      // Use the snapshot interface's limited reachability check
       if (type === 'Region') {
-        return this._isRegionReachable(target);
-      } else if (type === 'Location') {
-        // Need location object for manager context, name for snapshot context
-        if (this.manager) {
-          const location = this.manager.locations?.find(
-            (l) => l.name === target
-          );
-          return location ? this._isLocationAccessible(location) : false;
-        } else {
-          return this._isLocationAccessible(target); // Assumes snapshot handles name
-        }
-      } else if (type === 'Entrance') {
-        console.warn(
-          '[ALTTPHelpers.can_reach] Entrance checking needs context-aware implementation.'
-        );
-        // Placeholder:
-        return false;
+        return this.snapshot.isRegionReachable(target);
       }
-    } catch (e) {
-      console.error(
-        `[ALTTPHelpers.can_reach] Error during check for ${target} (${type}):`,
-        e
-      );
-      return false;
+      if (type === 'Location') {
+        return this.snapshot.isLocationAccessible(target);
+      }
+      return undefined; // Unknown for other types or if methods don't exist
     }
-    return false;
+
+    // Worker context (original logic)
+    if (!this.manager || typeof this.manager.canReach !== 'function') {
+      console.error(
+        '[ALTTPHelpers can_reach] StateManager or canReach method not available in worker context.'
+      );
+      return false; // Or throw error
+    }
+    return this.manager.canReach(target, type, player);
   }
 
   _lttp_has_key(key, playerParam, count = 1) {
@@ -578,21 +647,80 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   GanonDefeatRule() {
-    console.warn(
-      '[ALTTPHelpers] GanonDefeatRule not fully refactored for snapshot interface.'
-    );
-    const requiredCrystals = this._getSetting('crystals_needed_for_gt') ?? 7;
-    const requiredTriforce = this._getSetting('triforce_goal_pieces') ?? 0;
+    // console.warn(
+    //   '[ALTTPHelpers] GanonDefeatRule not fully refactored for snapshot interface.'
+    // );
 
-    if (!this.has_crystals(requiredCrystals)) return false;
-    if (requiredTriforce > 0 && !this.has_triforce_pieces()) return false;
+    if (this.snapshot) {
+      // Snapshot-specific logic for GanonDefeatRule
+      const requiredCrystals = this._getSetting('crystals_needed_for_gt'); // Assuming GT crystals are Ganon's requirement
+      const requiredTriforce = this._getSetting('triforce_goal_pieces');
 
-    const vulnerableSetting = this._getSetting('ganon_vulnerable');
-    if (vulnerableSetting === 'silver') {
-      return this.can_shoot_arrows() && this._hasItem('Silver Bow');
+      // If critical settings are undefined in snapshot, we can't evaluate
+      if (requiredCrystals === undefined || requiredTriforce === undefined) {
+        console.warn(
+          '[ALTTPHelpers GanonDefeatRule Snapshot] Critical settings (crystals_needed_for_gt or triforce_goal_pieces) undefined in snapshot.'
+        );
+        return undefined;
+      }
+
+      const hasCrystalsResult = this.has_crystals(requiredCrystals);
+      if (hasCrystalsResult === undefined) return undefined; // Propagate unknown
+      if (!hasCrystalsResult) return false;
+
+      if (requiredTriforce > 0) {
+        const hasTriforceResult = this.has_triforce_pieces();
+        if (hasTriforceResult === undefined) return undefined; // Propagate unknown
+        if (!hasTriforceResult) return false;
+      }
+
+      const vulnerableSetting = this._getSetting('ganon_vulnerable');
+      if (vulnerableSetting === undefined) {
+        console.warn(
+          '[ALTTPHelpers GanonDefeatRule Snapshot] ganon_vulnerable setting undefined in snapshot.'
+        );
+        return undefined;
+      }
+
+      if (vulnerableSetting === 'silver') {
+        const canShoot = this.can_shoot_arrows();
+        if (canShoot === undefined) return undefined;
+        // Silver Bow is a direct item check, should be fine
+        return canShoot && this._hasItem('Silver Bow');
+      } else if (vulnerableSetting === 'silverless') {
+        // Assume sword or hammer. These helpers should be snapshot-aware.
+        const hasSwordResult = this.has_sword();
+        if (hasSwordResult === undefined) return undefined;
+        const hasHammerResult = this._hasItem('Hammer'); // Direct item check
+        if (hasSwordResult || hasHammerResult) return true;
+        // If neither, and they didn't return undefined, it means we don't have them.
+        // However, can_kill_most_things might be an alternative for some settings.
+        // For simplicity in snapshot, if sword/hammer fails, and vulnerableSetting isn't 'silver', return based on sword/hammer.
+        // This might need refinement based on exact game logic for other ganon_vulnerable settings.
+        return false;
+      }
+      // Other ganon_vulnerable settings might be more complex for snapshot
+      // For now, if not 'silver' or 'silverless', and we are in snapshot, consider it unknown.
+      console.warn(
+        `[ALTTPHelpers GanonDefeatRule Snapshot] Unhandled ganon_vulnerable setting '${vulnerableSetting}' in snapshot mode.`
+      );
+      return undefined;
+    } else {
+      // Worker context (original logic - can be more complex)
+      const requiredCrystals = this._getSetting('crystals_needed_for_gt') ?? 7;
+      const requiredTriforce = this._getSetting('triforce_goal_pieces') ?? 0;
+
+      if (!this.has_crystals(requiredCrystals)) return false;
+      if (requiredTriforce > 0 && !this.has_triforce_pieces()) return false;
+
+      const vulnerableSetting = this._getSetting('ganon_vulnerable');
+      if (vulnerableSetting === 'silver') {
+        return this.can_shoot_arrows() && this._hasItem('Silver Bow');
+      }
+      // TODO: Add other conditions for worker context based on full StateManager access
+      // This part might need to be more elaborate in the worker, e.g. checking can_kill_ganon() helper if it exists
+      return this.has_sword() || this._hasItem('Hammer');
     }
-    // TODO: Add other conditions
-    return this.has_sword() || this._hasItem('Hammer');
   }
 
   has_any(items, playerId) {
@@ -717,14 +845,17 @@ export class ALTTPHelpers extends GameHelpers {
   executeHelper(name, ...args) {
     if (typeof this[name] === 'function') {
       try {
-        return this[name].apply(this, args);
-      } catch (error) {
-        console.error(`Error executing helper ${name}:`, error);
-        return false;
+        // The called helper (e.g., this.can_shoot_arrows()) will internally check
+        // this.snapshot and return true/false or undefined.
+        return this[name](...args);
+      } catch (e) {
+        console.error(`Error executing helper ${name}:`, e);
+        // If a helper throws an error during snapshot evaluation, treat as unknown.
+        if (this.snapshot) return undefined;
+        throw e; // Re-throw in worker context
       }
-    } else {
-      console.warn(`[ALTTPHelpers] Unknown helper function: ${name}`);
-      return false;
     }
+    console.warn(`Helper ${name} not found in ALTTPHelpers.`);
+    return this.snapshot ? undefined : false; // Default to unknown for snapshot, false for worker
   }
 }

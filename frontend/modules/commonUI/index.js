@@ -5,6 +5,8 @@ import {
   createRegionLink,
   createLocationLink,
   applyColorblindClass,
+  resetUnknownEvaluationCounter,
+  logAndGetUnknownEvaluationCounter,
 } from './commonUI.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 
@@ -24,6 +26,8 @@ export {
   createRegionLink,
   createLocationLink,
   applyColorblindClass,
+  resetUnknownEvaluationCounter,
+  logAndGetUnknownEvaluationCounter,
 };
 
 // Provide a default export object containing all functions for convenience,
@@ -35,4 +39,6 @@ export default {
   createRegionLink,
   createLocationLink,
   applyColorblindClass,
+  resetUnknownEvaluationCounter,
+  logAndGetUnknownEvaluationCounter,
 };

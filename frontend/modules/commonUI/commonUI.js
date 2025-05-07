@@ -14,12 +14,28 @@ class CommonUI {
     // REMOVED internal state: this.colorblindMode = true;
     // Add state for colorblind mode, managed via setColorblindMode
     this._colorblindMode = false; // Default to false
+    this.unknownEvaluationCount = 0; // Counter for undefined evaluations
   }
 
   // Add a method to set colorblind mode externally
   setColorblindMode(isEnabled) {
     console.log(`[CommonUI] Setting colorblind mode: ${isEnabled}`);
     this._colorblindMode = !!isEnabled;
+  }
+
+  // Method to reset the unknown evaluation counter
+  resetUnknownEvaluationCount() {
+    this.unknownEvaluationCount = 0;
+  }
+
+  // Method to log and get the current unknown evaluation count
+  logAndGetUnknownEvaluationCount(
+    contextMessage = 'Logic tree rendering cycle'
+  ) {
+    console.log(
+      `[CommonUI] ${contextMessage}: Encountered ${this.unknownEvaluationCount} unresolved rule evaluations (undefined).`
+    );
+    return this.unknownEvaluationCount;
   }
 
   /**
@@ -36,52 +52,62 @@ class CommonUI {
 
     if (!rule) {
       root.textContent = '(no rule)';
+      root.classList.add('logic-node-unknown'); // Treat no rule as unknown
       return root;
     }
 
+    // Determine if we should use the instance's colorblind setting or the passed one
+    const useColorblind = useColorblindMode ?? this._colorblindMode;
+
     // Evaluate the rule using the provided interface
-    let result = false;
+    let evaluationResult; // Can be true, false, or undefined
+
     if (stateSnapshotInterface) {
       try {
-        result = evaluateRule(rule, stateSnapshotInterface);
+        evaluationResult = evaluateRule(rule, stateSnapshotInterface);
       } catch (e) {
         console.error('Error evaluating rule in renderLogicTree:', e, rule);
-        result = false; // Default to false on error
+        evaluationResult = undefined; // Treat error as unknown
       }
     } else {
       console.warn(
         'renderLogicTree called without stateSnapshotInterface. Rule evaluation might be inaccurate.'
       );
-      // Attempt evaluation without interface? Risky.
-      try {
-        // This call will likely fail for complex rules needing state
-        result = evaluateRule(rule, {}); // Pass dummy interface
-      } catch (e) {
-        result = false;
-      }
+      evaluationResult = undefined; // No interface means unknown
     }
 
-    root.classList.toggle('pass', !!result);
-    root.classList.toggle('fail', !result);
+    // Increment counter if evaluation is undefined
+    if (evaluationResult === undefined) {
+      this.unknownEvaluationCount++;
+    }
+
+    // Apply classes based on evaluation result
+    if (evaluationResult === true) {
+      root.classList.add('pass');
+    } else if (evaluationResult === false) {
+      root.classList.add('fail');
+    } else {
+      // evaluationResult is undefined or any other non-boolean
+      root.classList.add('logic-node-unknown');
+    }
 
     // Add colorblind symbol if enabled
-    if (useColorblindMode) {
+    if (useColorblind) {
       const symbolSpan = document.createElement('span');
       symbolSpan.classList.add('colorblind-symbol');
 
-      if (result) {
-        symbolSpan.textContent = '✓ ';
+      if (evaluationResult === true) {
+        symbolSpan.textContent = '✓ '; // Checkmark for pass
         symbolSpan.classList.add('accessible');
-      } else {
-        symbolSpan.textContent = '✗ ';
+      } else if (evaluationResult === false) {
+        symbolSpan.textContent = '✗ '; // X for fail
         symbolSpan.classList.add('inaccessible');
+      } else {
+        symbolSpan.textContent = '? '; // Question mark for unknown
+        symbolSpan.classList.add('unknown');
       }
-
       root.appendChild(symbolSpan);
     }
-
-    // Determine if we should use the instance's colorblind setting
-    const useColorblind = useColorblindMode ?? this._colorblindMode;
 
     const label = document.createElement('div');
     label.classList.add('logic-label');
@@ -784,6 +810,10 @@ export const createLocationLink =
   commonUIInstance.createLocationLink.bind(commonUIInstance);
 export const applyColorblindClass =
   commonUIInstance.applyColorblindClass.bind(commonUIInstance);
+export const resetUnknownEvaluationCounter =
+  commonUIInstance.resetUnknownEvaluationCount.bind(commonUIInstance);
+export const logAndGetUnknownEvaluationCounter =
+  commonUIInstance.logAndGetUnknownEvaluationCount.bind(commonUIInstance);
 
 // Also keep the default export of the instance for potential compatibility
 export default commonUIInstance;
