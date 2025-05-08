@@ -457,7 +457,7 @@ export class LocationUI {
     let filteredLocations = Object.values(staticData.locations).filter(
       (loc) => {
         const name = loc.name;
-        const isChecked = !!snapshot?.checkedLocations?.includes(name);
+        const isChecked = !!snapshot?.flags?.includes(name);
 
         // Determine detailed status for filtering
         const parentRegionName = loc.parent_region || loc.region; // Use parent_region, fallback to region
@@ -566,7 +566,7 @@ export class LocationUI {
     filteredLocations.sort((a, b) => {
       if (sortMethod === 'accessibility') {
         // Recalculate detailedStatus for item a
-        const isCheckedA = !!snapshot?.checkedLocations?.includes(a.name);
+        const isCheckedA = !!snapshot?.flags?.includes(a.name);
         const parentRegionNameA = a.parent_region || a.region;
         const parentRegionReachabilityStatusA =
           snapshot?.reachability?.[parentRegionNameA];
@@ -600,7 +600,7 @@ export class LocationUI {
         }
 
         // Recalculate detailedStatus for item b
-        const isCheckedB = !!snapshot?.checkedLocations?.includes(b.name);
+        const isCheckedB = !!snapshot?.flags?.includes(b.name);
         const parentRegionNameB = b.parent_region || b.region;
         const parentRegionReachabilityStatusB =
           snapshot?.reachability?.[parentRegionNameB];
@@ -645,7 +645,7 @@ export class LocationUI {
         return a.name.localeCompare(b.name);
       } else if (sortMethod === 'accessibility_original') {
         // Determine detailedStatus for item a (similar to 'accessibility' sort)
-        const isCheckedA = !!snapshot?.checkedLocations?.includes(a.name);
+        const isCheckedA = !!snapshot?.flags?.includes(a.name);
         const parentRegionNameA = a.parent_region || a.region;
         const parentRegionReachabilityStatusA =
           snapshot?.reachability?.[parentRegionNameA];
@@ -677,7 +677,7 @@ export class LocationUI {
           detailedStatusA = 'region_accessible_location_rule_fails';
 
         // Determine detailedStatus for item b (similar to 'accessibility' sort)
-        const isCheckedB = !!snapshot?.checkedLocations?.includes(b.name);
+        const isCheckedB = !!snapshot?.flags?.includes(b.name);
         const parentRegionNameB = b.parent_region || b.region;
         const parentRegionReachabilityStatusB =
           snapshot?.reachability?.[parentRegionNameB];
@@ -777,7 +777,7 @@ export class LocationUI {
         const locationCard = document.createElement('div');
         locationCard.className = 'location-card'; // Base class
         const name = location.name;
-        const isChecked = !!snapshot?.checkedLocations?.includes(name);
+        const isChecked = !!snapshot?.flags?.includes(name);
 
         // Determine detailed status for rendering
         const parentRegionName = location.parent_region || location.region;
@@ -946,7 +946,7 @@ export class LocationUI {
     }
     // Reachability is now expected to be a boolean in the snapshot
     const isReachable = snapshot.reachability[locationName] === true;
-    const isChecked = snapshot.checkedLocations?.includes(locationName);
+    const isChecked = snapshot.flags?.includes(locationName);
     //console.log(
     //  `[LocationUI getLocationStatus] Name: ${locationName}, Reachability: ${reachabilityStatus}, Checked: ${isChecked}`
     //);

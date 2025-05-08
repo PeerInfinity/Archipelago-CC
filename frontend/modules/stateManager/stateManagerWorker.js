@@ -149,23 +149,23 @@ async function processInternalQueue() {
           );
           if (typeof message.payload === 'string') {
             stateManagerInstance.checkLocation(message.payload);
-            // StateManager.checkLocation should trigger snapshot update internally
+            // StateManager.checkLocation now handles calling _sendSnapshotUpdate internally
             console.log(
               `[stateManagerWorker] checkLocation handled for ${message.payload}.`
             );
-            // --- ADDED: Send confirmation back to proxy --- >
-            self.postMessage({
-              type: 'queryResponse',
-              queryId: message.queryId,
-              result: { success: true, checked: message.payload }, // Indicate success
-            });
-            // --- END ADDED --- >
           } else {
             console.warn(
               '[stateManagerWorker] Invalid payload type for checkLocation (expected string): ',
               typeof message.payload
             );
           }
+          // --- ADDED: Send confirmation back to proxy --- >
+          self.postMessage({
+            type: 'queryResponse',
+            queryId: message.queryId,
+            result: { success: true, checked: message.payload }, // Indicate success
+          });
+          // --- END ADDED --- >
           break;
         // --- ADDED HANDLER for evaluateRuleRequest ---
         case 'evaluateRuleRequest':
