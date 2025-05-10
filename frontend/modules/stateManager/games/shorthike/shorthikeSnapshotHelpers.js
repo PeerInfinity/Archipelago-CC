@@ -1,9 +1,9 @@
 import { GameSnapshotHelpers } from '../../helpers/gameSnapshotHelpers.js';
 
-export class AShortHikeSnapshotHelpers extends GameSnapshotHelpers {
+export class ShortHikeSnapshotHelpers extends GameSnapshotHelpers {
   constructor(snapshotInterface) {
     super(snapshotInterface);
-    // console.log('[AShortHikeSnapshotHelpers] Initialized.');
+    // console.log('[ShortHikeSnapshotHelpers] Initialized.');
   }
   // A Short Hike-specific snapshot helper methods will go here (if any).
 }

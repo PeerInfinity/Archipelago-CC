@@ -290,6 +290,8 @@ export class StateManager {
     // Aggregate all locations from all regions into a flat list and build nameToId map
     this.locations = [];
     this.locationNameToId = {};
+    this.eventLocations.clear(); // Clear event locations before populating
+
     for (const regionName in this.regions) {
       const region = this.regions[regionName];
       if (region.locations && Array.isArray(region.locations)) {
@@ -315,6 +317,17 @@ export class StateManager {
           };
 
           this.locations.push(locationObjectForArray);
+
+          // Populate eventLocations
+          if (
+            locationObjectForArray.item &&
+            locationObjectForArray.item.type === 'Event'
+          ) {
+            this.eventLocations.set(
+              locationObjectForArray.name,
+              locationObjectForArray
+            );
+          }
 
           // The locationNameToId map should map the descriptive name to the index in the this.locations array
           // for quick retrieval if needed, or to its original ID if that's more useful.

@@ -1,9 +1,9 @@
 import { GameSnapshotHelpers } from '../../helpers/gameSnapshotHelpers.js';
 
-export class AHatInTimeSnapshotHelpers extends GameSnapshotHelpers {
+export class AHITSnapshotHelpers extends GameSnapshotHelpers {
   constructor(snapshotInterface) {
     super(snapshotInterface);
-    // console.log('[AHatInTimeSnapshotHelpers] Initialized.');
+    // console.log('[AHITSnapshotHelpers] Initialized.');
   }
   // A Hat in Time-specific snapshot helper methods will go here.
 }
