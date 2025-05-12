@@ -12,16 +12,56 @@ export class JsonUI {
     this.modeNameInput = null;
     this.checkboxes = {};
     this.knownModesList = null;
+    this.modesJsonList = null; // For modes from modes.json
 
     this._createBaseUI();
+    this._populateKnownModesList(); // Initial population
 
     // Listen for GoldenLayout destroy event
     this.container.on('destroy', () => {
       this._destroy();
     });
 
+    // Listen for the actual active mode determined by init.js
+    eventBus.subscribe('app:activeModeDetermined', (data) => {
+      if (data && data.activeMode) {
+        console.log(
+          `[JsonUI] Received app:activeModeDetermined, updating display to: ${data.activeMode}`
+        );
+        this.updateCurrentModeDisplay(data.activeMode);
+      } else {
+        console.warn(
+          '[JsonUI] Received app:activeModeDetermined but no activeMode in payload.',
+          data
+        );
+      }
+    });
+
+    // Listen for modes.json being loaded
+    eventBus.subscribe('app:modesJsonLoaded', (data) => {
+      if (data && data.modesConfig) {
+        console.log(
+          '[JsonUI] Received app:modesJsonLoaded event, populating modes.json list.'
+        );
+        this._populateModesJsonList(data.modesConfig);
+      } else {
+        console.warn(
+          '[JsonUI] Received app:modesJsonLoaded event but no modesConfig in payload.',
+          data
+        );
+      }
+    });
+
+    // Check if modes.json was already loaded and the event missed
+    if (window.G_modesConfig) {
+      console.log(
+        '[JsonUI] G_modesConfig already exists on window. Populating modes.json list directly.'
+      );
+      this._populateModesJsonList(window.G_modesConfig);
+    }
+
     // TODO: Populate current mode, known modes, and checkbox states
-    this.updateCurrentModeDisplay('default'); // Initial placeholder
+    // this.updateCurrentModeDisplay('default'); // Initial placeholder - REMOVED, will be set by event
   }
 
   _createBaseUI() {
@@ -48,11 +88,11 @@ export class JsonUI {
             <label for="json-chk-modules">Module Config (modules.json)</label>
           </div>
           <div class="checkbox-container">
-            <input type="checkbox" id="json-chk-layout" data-config-key="layoutConfig" checked />
+            <input type="checkbox" id="json-chk-layout" data-config-key="layoutConfig" />
             <label for="json-chk-layout">Layout Config (layout_presets.json / Current)</label>
           </div>
           <div class="checkbox-container">
-            <input type="checkbox" id="json-chk-settings" data-config-key="userSettings" checked />
+            <input type="checkbox" id="json-chk-settings" data-config-key="userSettings" />
             <label for="json-chk-settings">User Settings (settings.json)</label>
           </div>
           <!-- Placeholder for module-specific data checkboxes -->
@@ -65,6 +105,7 @@ export class JsonUI {
             <input type="file" id="json-btn-load-file" accept=".json" style="display: none;" />
           </label>
           <button id="json-btn-save-localstorage" class="button">Save to LocalStorage</button>
+          <button id="json-btn-reset-defaults" class="button button-danger">Reset All Defaults</button>
         </div>
 
         <div class="json-section">
@@ -72,6 +113,14 @@ export class JsonUI {
           <ul id="json-known-modes-list">
             <!-- Modes will be populated here by JS -->
             <li><span>No modes found in LocalStorage.</span></li>
+          </ul>
+        </div>
+
+        <div class="json-section">
+          <h4>Known Modes in modes.json:</h4>
+          <ul id="json-modes-json-list">
+            <!-- Modes from modes.json will be populated here -->
+            <li><span>Loading modes from modes.json...</span></li>
           </ul>
         </div>
       </div>
@@ -92,6 +141,9 @@ export class JsonUI {
     this.knownModesList = this.rootElement.querySelector(
       '#json-known-modes-list'
     );
+    this.modesJsonList = this.rootElement.querySelector(
+      '#json-modes-json-list'
+    ); // Get new list
 
     this.checkboxes.rulesConfig =
       this.rootElement.querySelector('#json-chk-rules');
@@ -114,6 +166,9 @@ export class JsonUI {
     const saveLocalStorageButton = contextElement.querySelector(
       '#json-btn-save-localstorage'
     );
+    const resetDefaultsButton = contextElement.querySelector(
+      '#json-btn-reset-defaults'
+    );
 
     if (saveFileButton) {
       saveFileButton.addEventListener('click', () => this._handleSaveToFile());
@@ -126,6 +181,11 @@ export class JsonUI {
     if (saveLocalStorageButton) {
       saveLocalStorageButton.addEventListener('click', () =>
         this._handleSaveToLocalStorage()
+      );
+    }
+    if (resetDefaultsButton) {
+      resetDefaultsButton.addEventListener('click', () =>
+        this._handleResetDefaults()
       );
     }
     // TODO: Add event listeners for delete mode buttons when they are generated
@@ -273,18 +333,59 @@ export class JsonUI {
         const loadedData = JSON.parse(e.target.result);
         console.log('[JsonUI] File content parsed successfully:', loadedData);
 
-        // TODO: Implement logic to apply this loadedData to the application
-        // This will involve:
-        // 1. Determining the target mode (e.g., from loadedData.modeName or this.modeNameInput.value)
-        // 2. Distributing parts of loadedData to relevant managers (StateManager, SettingsManager, LayoutManager)
-        // 3. Potentially triggering re-initialization or specific update events.
-        alert(
-          'File loaded and parsed (see console). Applying data is not yet implemented.'
-        );
+        const modeName =
+          loadedData.modeName || this.modeNameInput.value.trim() || 'default';
+        const rulesConfig = loadedData.rulesConfig;
+        const moduleConfig = loadedData.moduleConfig;
 
-        // Optionally, populate mode name input if present in file
-        if (loadedData.modeName && this.modeNameInput) {
-          this.modeNameInput.value = loadedData.modeName;
+        if (!rulesConfig || !moduleConfig) {
+          alert(
+            'Loaded file is missing required rulesConfig or moduleConfig. Cannot apply.'
+          );
+          console.error(
+            '[JsonUI] Loaded file missing rulesConfig or moduleConfig.',
+            loadedData
+          );
+          return;
+        }
+
+        if (this.modeNameInput && modeName) {
+          this.modeNameInput.value = modeName;
+          this.updateCurrentModeDisplay(modeName); // Also update the <span>
+        }
+
+        const dataToStore = {
+          modeName: modeName,
+          savedTimestamp: new Date().toISOString(),
+          rulesConfig: rulesConfig,
+          moduleConfig: moduleConfig,
+          // layoutConfig and userSettings are intentionally omitted as per user request for now
+        };
+
+        const G_LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_'; // Match init.js
+
+        try {
+          localStorage.setItem(
+            `${G_LOCAL_STORAGE_MODE_PREFIX}${modeName}`,
+            JSON.stringify(dataToStore)
+          );
+          localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
+          console.log(
+            `[JsonUI] Successfully stored mode '${modeName}' data from file to LocalStorage:`,
+            dataToStore
+          );
+          alert(
+            `Data for mode '${modeName}' (rules and modules config) loaded from file and saved to LocalStorage. Please RELOAD the page to apply the changes.`
+          );
+          this._populateKnownModesList(); // Refresh after loading and saving from file
+        } catch (storageError) {
+          console.error(
+            '[JsonUI] Error saving loaded data to LocalStorage:',
+            storageError
+          );
+          alert(
+            'Error saving loaded data to LocalStorage. Storage might be full or disabled. See console for details.'
+          );
         }
       } catch (error) {
         console.error('[JsonUI] Error parsing JSON from file:', error);
@@ -299,7 +400,8 @@ export class JsonUI {
     };
     reader.readAsText(file);
 
-    event.target.value = null; // Reset file input to allow loading the same file again
+    // Reset file input to allow loading the same file again
+    event.target.value = null;
   }
 
   _handleSaveToLocalStorage() {
@@ -318,22 +420,33 @@ export class JsonUI {
     }
 
     const combinedData = {
-      // No need to store modeName inside the object for localStorage as it's in the key
+      modeName: modeName, // Ensure modeName is stored IN the object as well
       savedTimestamp: new Date().toISOString(),
       ...dataToSave,
     };
 
+    const G_LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_'; // Match init.js
+
     try {
       localStorage.setItem(
-        `app_mode_data_${modeName}`,
+        `${G_LOCAL_STORAGE_MODE_PREFIX}${modeName}`,
         JSON.stringify(combinedData)
       );
       console.log(
         `[JsonUI] Saved to LocalStorage for mode: ${modeName}, Data:`,
         combinedData
       );
-      alert(`Configuration saved to LocalStorage for mode: ${modeName}`);
-      // TODO: Refresh known modes list by calling _populateKnownModesList()
+
+      // Update the UI to reflect the saved mode name
+      this.updateCurrentModeDisplay(modeName);
+
+      // Set this mode as the last active mode for the next page load
+      localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
+
+      alert(
+        `Configuration for mode '${modeName}' saved to LocalStorage. Please RELOAD the page to apply the changes.`
+      );
+      this._populateKnownModesList(); // Refresh after saving
     } catch (error) {
       console.error('[JsonUI] Error saving to LocalStorage:', error);
       alert(
@@ -342,12 +455,201 @@ export class JsonUI {
     }
   }
 
-  // TODO: _populateKnownModesList()
-  // TODO: _handleDeleteMode(modeName)
+  _handleResetDefaults() {
+    const confirmReset = confirm(
+      'Are you sure you want to reset all defaults? This will clear the last active mode and any saved settings for the "default" mode from LocalStorage. The application will reload using hardcoded defaults.'
+    );
+
+    if (confirmReset) {
+      try {
+        localStorage.removeItem('archipelagoToolSuite_lastActiveMode');
+        localStorage.removeItem('archipelagoToolSuite_modeData_default');
+        console.log(
+          '[JsonUI] Defaults reset: Cleared last active mode and "default" mode data from LocalStorage.'
+        );
+        alert(
+          'Defaults have been reset. Please RELOAD the page to apply hardcoded default configurations.'
+        );
+        // Optionally, update UI to reflect this reset if not reloading immediately
+        this.updateCurrentModeDisplay('default');
+        // Consider also clearing known modes list or refreshing it
+      } catch (error) {
+        console.error(
+          '[JsonUI] Error resetting defaults in LocalStorage:',
+          error
+        );
+        alert('Error resetting defaults. See console for details.');
+      }
+    }
+  }
 
   _destroy() {
     console.log('[JsonUI] Destroying JSON panel UI and listeners.');
     // Remove event listeners if any were attached directly to document or eventBus without specific handles
     // For listeners attached to elements within this.rootElement, they will be garbage collected with the element.
+  }
+
+  _populateKnownModesList() {
+    if (!this.knownModesList) return;
+
+    const knownModes = [];
+    const prefix = 'archipelagoToolSuite_modeData_'; // Must match G_LOCAL_STORAGE_MODE_PREFIX in init.js
+
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(prefix)) {
+          knownModes.push(key.substring(prefix.length));
+        }
+      }
+    } catch (e) {
+      console.error(
+        '[JsonUI] Error accessing localStorage to get known modes:',
+        e
+      );
+      // Display error in the list itself or just log
+      this.knownModesList.innerHTML =
+        '<li><span style="color: red;">Error fetching modes.</span></li>';
+      return;
+    }
+
+    // Clear existing list items
+    this.knownModesList.innerHTML = '';
+
+    if (knownModes.length === 0) {
+      this.knownModesList.innerHTML =
+        '<li><span>No modes found in LocalStorage.</span></li>';
+    } else {
+      knownModes.sort(); // Sort alphabetically for consistent display
+      knownModes.forEach((modeName) => {
+        const listItem = document.createElement('li');
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = modeName;
+        listItem.appendChild(nameSpan);
+
+        // TODO: Add Load button
+        const loadButton = document.createElement('button');
+        loadButton.textContent = 'Load';
+        loadButton.classList.add('button', 'button-small'); // Add appropriate classes
+        loadButton.style.marginLeft = '10px';
+        loadButton.onclick = () => this._handleLoadModeFromList(modeName);
+        listItem.appendChild(loadButton);
+
+        // TODO: Add Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('button', 'button-danger', 'button-small');
+        deleteButton.style.marginLeft = '5px';
+        deleteButton.onclick = () => this._handleDeleteModeFromList(modeName);
+        listItem.appendChild(deleteButton);
+
+        this.knownModesList.appendChild(listItem);
+      });
+    }
+  }
+
+  _handleLoadModeFromList(modeName) {
+    if (!modeName) return;
+
+    console.log(
+      `[JsonUI] Setting "${modeName}" as next active mode from list.`
+    );
+    this.updateCurrentModeDisplay(modeName); // Updates input and span
+
+    try {
+      localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
+      alert(
+        `Mode "${modeName}" has been set as the active mode. Please RELOAD the page to apply this mode.`
+      );
+    } catch (error) {
+      console.error(
+        '[JsonUI] Error setting last active mode from list:',
+        error
+      );
+      alert('Error setting active mode. See console for details.');
+    }
+  }
+
+  _handleDeleteModeFromList(modeName) {
+    if (!modeName) return;
+
+    const confirmDelete = confirm(
+      `Are you sure you want to delete all saved data for mode "${modeName}" from LocalStorage? This action cannot be undone.`
+    );
+
+    if (confirmDelete) {
+      const modeDataKey = `archipelagoToolSuite_modeData_${modeName}`;
+      const lastActiveModeKey = 'archipelagoToolSuite_lastActiveMode';
+      try {
+        localStorage.removeItem(modeDataKey);
+        console.log(
+          `[JsonUI] Deleted mode data for "${modeName}" from LocalStorage (Key: ${modeDataKey}).`
+        );
+
+        const currentLastActive = localStorage.getItem(lastActiveModeKey);
+        if (currentLastActive === modeName) {
+          localStorage.removeItem(lastActiveModeKey);
+          console.log(
+            `[JsonUI] Cleared last active mode because it was the deleted mode "${modeName}".`
+          );
+        }
+
+        alert(`Mode "${modeName}" has been deleted from LocalStorage.`);
+        this._populateKnownModesList(); // Refresh the list
+      } catch (error) {
+        console.error(
+          `[JsonUI] Error deleting mode "${modeName}" from LocalStorage:`,
+          error
+        );
+        alert(`Error deleting mode "${modeName}". See console for details.`);
+      }
+    }
+  }
+
+  _populateModesJsonList(modesConfig) {
+    if (!this.modesJsonList) return;
+
+    this.modesJsonList.innerHTML = ''; // Clear existing items
+
+    if (!modesConfig || Object.keys(modesConfig).length === 0) {
+      this.modesJsonList.innerHTML =
+        '<li><span>No modes defined in modes.json.</span></li>';
+      return;
+    }
+
+    const modeNames = Object.keys(modesConfig).sort();
+
+    modeNames.forEach((modeName) => {
+      const listItem = document.createElement('li');
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = modeName;
+      listItem.appendChild(nameSpan);
+
+      const loadButton = document.createElement('button');
+      loadButton.textContent = 'Load';
+      loadButton.classList.add('button', 'button-small');
+      loadButton.style.marginLeft = '10px';
+      loadButton.onclick = () => this._handleLoadModeFromModesJson(modeName);
+      listItem.appendChild(loadButton);
+
+      this.modesJsonList.appendChild(listItem);
+    });
+  }
+
+  _handleLoadModeFromModesJson(modeName) {
+    if (!modeName) return;
+    console.log(
+      `[JsonUI] Attempting to load mode "${modeName}" from modes.json by reloading with URL parameter.`
+    );
+    // Show a confirmation before reloading
+    const confirmLoad = confirm(
+      `This will reload the application to activate mode "${modeName}" using its definition in modes.json. Any unsaved changes in the current session might be lost. Continue?`
+    );
+    if (confirmLoad) {
+      const newUrl = `${window.location.pathname}?mode=${encodeURIComponent(
+        modeName
+      )}`;
+      window.location.href = newUrl;
+    }
   }
 }

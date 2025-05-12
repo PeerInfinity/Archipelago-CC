@@ -24,6 +24,7 @@ class SettingsUI {
 
     this.editor = null;
     this.isInitialized = false;
+    this.editorReadyForChanges = false; // ADDED: Flag to manage initial changes
     this.currentSchema = null; // Store schema if needed
     this.currentData = {}; // Store data
 
@@ -105,7 +106,7 @@ class SettingsUI {
       this.editor = new JSONEditor(this.editorContainer, settings);
 
       this.editor.on('change', () => {
-        if (this.editor) {
+        if (this.editor && this.editorReadyForChanges) {
           try {
             const updatedValue = this.editor.getValue();
             // Update the entire settings object in the manager
@@ -120,6 +121,12 @@ class SettingsUI {
           }
         }
       });
+
+      // Set a timeout to mark the editor as ready for changes after initial setup
+      setTimeout(() => {
+        this.editorReadyForChanges = true;
+        console.log('[SettingsUI] Editor is now ready for live changes.');
+      }, 100); // Adjust timeout as needed, 100ms is usually sufficient
 
       console.log('json-editor instance created successfully.');
     } catch (error) {

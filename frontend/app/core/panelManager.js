@@ -26,19 +26,6 @@ class PanelManager {
     this.layout = layoutInstance;
     this.gameUI = gameUIInstance;
     console.log('PanelManager initialized');
-
-    // --- REMOVED: No longer automatically register core panels ---
-    // In the modular architecture, panels are registered by their respective modules
-    // The following code is kept as a reference but commented out:
-    /*
-    // Register the new Editor Panel
-    this.registerPanelComponent('editorPanel', () => new EditorUI());
-    console.log('Registered editorPanel');
-    // Register the new Options Panel
-    this.registerPanelComponent('optionsPanel', () => new OptionsUI());
-    console.log('Registered optionsPanel');
-    */
-    // --- End removed section ---
   }
 
   /**
