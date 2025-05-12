@@ -67,6 +67,24 @@ function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('init:postInitComplete');
   // TODO: Add intents for events the proxy might need to listen for (e.g., server messages for sync)
 
+  // Register JSON Data Handler
+  registrationApi.registerJsonDataHandler(
+    'stateManagerRuntime', // Data Key
+    {
+      displayName: 'Game State (Inv/Checks)', // Checkbox Label
+      defaultChecked: false, // Checkbox default state
+      requiresReload: false, // Can this data be applied live?
+      getSaveDataFunction: async () => {
+        // Assumes stateManagerProxySingleton is the proxy instance
+        return stateManagerProxySingleton.getSavableStateData();
+      },
+      applyLoadedDataFunction: (loadedData) => {
+        // Assumes stateManagerProxySingleton is the proxy instance
+        stateManagerProxySingleton.applyRuntimeStateData(loadedData);
+      },
+    }
+  );
+
   console.log('[StateManager Module] Registration complete.');
 }
 

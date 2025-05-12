@@ -5,6 +5,7 @@ class CentralRegistry {
     this.dispatcherHandlers = new Map(); // eventName -> Array<{moduleId, handlerFunction, propagationDetails, enabled: boolean}>
     this.settingsSchemas = new Map(); // moduleId -> schemaSnippet
     this.publicFunctions = new Map(); // moduleId -> Map<functionName, functionRef>
+    this.jsonDataHandlers = new Map(); // dataKey -> { moduleId, displayName, defaultChecked, requiresReload, getSaveDataFunction, applyLoadedDataFunction }
 
     // New maps for event registration details
     this.dispatcherSenders = new Map(); // eventName -> Array<{moduleId, direction: 'top'|'bottom'|'next', target: 'first'|'last'|'next', enabled: boolean}>
@@ -209,6 +210,65 @@ class CentralRegistry {
    */
   getAllPanelComponents() {
     return this.panelComponents;
+  }
+
+  registerJsonDataHandler(moduleId, dataKey, handlerObject) {
+    if (this.jsonDataHandlers.has(dataKey)) {
+      console.warn(
+        `[Registry] JSON Data Handler for dataKey '${dataKey}' already registered (by module ${
+          this.jsonDataHandlers.get(dataKey).moduleId
+        }). Overwriting with registration from ${moduleId}.`
+      );
+    }
+    // Basic validation of handlerObject structure
+    if (handlerObject) {
+      console.log(
+        `[Registry Validation Debug] typeof displayName: ${typeof handlerObject.displayName}`
+      );
+      console.log(
+        `[Registry Validation Debug] typeof defaultChecked: ${typeof handlerObject.defaultChecked}`
+      );
+      console.log(
+        `[Registry Validation Debug] typeof requiresReload: ${typeof handlerObject.requiresReload}`
+      );
+      console.log(
+        `[Registry Validation Debug] typeof getSaveDataFunction: ${typeof handlerObject.getSaveDataFunction}`
+      );
+      console.log(
+        `[Registry Validation Debug] typeof applyLoadedDataFunction: ${typeof handlerObject.applyLoadedDataFunction}`
+      );
+    } else {
+      console.log(
+        `[Registry Validation Debug] handlerObject is null or undefined.`
+      );
+    }
+    if (
+      !handlerObject ||
+      typeof handlerObject.displayName !== 'string' ||
+      typeof handlerObject.defaultChecked !== 'boolean' ||
+      typeof handlerObject.requiresReload !== 'boolean' ||
+      typeof handlerObject.getSaveDataFunction !== 'function' ||
+      typeof handlerObject.applyLoadedDataFunction !== 'function'
+    ) {
+      console.error(
+        `[Registry] Invalid handlerObject provided by ${moduleId} for dataKey '${dataKey}'. Missing or incorrect properties.`,
+        handlerObject // Log the object separately
+      );
+      return;
+    } else {
+      console.log(
+        `[Registry] JSON Data Handler validation PASSED for dataKey '${dataKey}' from module ${moduleId}`
+      );
+    }
+
+    console.log(
+      `[Registry] Registering JSON Data Handler for dataKey '${dataKey}' from module ${moduleId}`
+    );
+    this.jsonDataHandlers.set(dataKey, { moduleId, ...handlerObject });
+  }
+
+  getAllJsonDataHandlers() {
+    return this.jsonDataHandlers;
   }
 
   // TODO: Add unregister methods? Needed for full module unloading.

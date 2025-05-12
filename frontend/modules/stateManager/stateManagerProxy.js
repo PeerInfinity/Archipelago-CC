@@ -7,7 +7,20 @@ import { ALTTPSnapshotHelpers } from './games/alttp/alttpSnapshotHelpers.js'; //
 import { evaluateRule } from './ruleEngine.js'; // Make this an active import
 // import { evaluateRule } from './ruleEngine.js'; // Already imported
 
-class StateManagerProxy {
+export class StateManagerProxy {
+  static COMMANDS = {
+    INITIALIZE: 'initialize',
+    LOAD_RULES: 'loadRules',
+    ADD_ITEM: 'addItemToInventory',
+    REMOVE_ITEM: 'removeItemFromInventory',
+    CHECK_LOCATION: 'checkLocation',
+    UNCHECK_LOCATION: 'uncheckLocation',
+    GET_SNAPSHOT: 'getSnapshot', // Request a full snapshot
+    CLEAR_CHECKED_LOCATIONS: 'clearCheckedLocations',
+    UPDATE_SETTING: 'updateSetting', // For game-specific settings like ALTTP flags
+    APPLY_RUNTIME_STATE: 'applyRuntimeState', // New command
+  };
+
   constructor(eventBus) {
     console.log('[stateManagerProxy] Initializing Proxy...');
     if (!eventBus) {
@@ -779,6 +792,62 @@ class StateManagerProxy {
   async _loadStaticDataAndEmitReady() {
     // ... existing code ...
   }
+
+  // --- New methods for JSON Module data handling ---
+  getSavableStateData() {
+    console.log('[StateManagerProxy] getSavableStateData called.');
+    if (!this.uiDataCache) {
+      console.warn(
+        '[StateManagerProxy] No uiDataCache available when getting savable state. Returning empty structure.'
+      );
+      return {
+        inventory: {},
+        checkedLocations: [],
+        // Add other minimal runtime state defaults if needed
+      };
+    }
+
+    // Assuming uiDataCache contains the full snapshot structure
+    const savableData = {
+      inventory: this.uiDataCache.inventory || {},
+      checkedLocations: this.uiDataCache.checkedLocations || [],
+      // Potentially other things if they are not part of rules or settings and can change runtime
+      // e.g., game-specific flags if they are stored in the snapshot and can be modified by user/events
+      // Example: if (this.uiDataCache.gameSpecificFlags) savableData.gameSpecificFlags = this.uiDataCache.gameSpecificFlags;
+    };
+
+    console.log(
+      '[StateManagerProxy] Extracted savable state data:',
+      savableData
+    );
+    return savableData;
+  }
+
+  applyRuntimeStateData(loadedData) {
+    console.log(
+      '[StateManagerProxy] applyRuntimeStateData called with:',
+      loadedData
+    );
+    if (!loadedData || typeof loadedData !== 'object') {
+      console.error(
+        '[StateManagerProxy] Invalid data passed to applyRuntimeStateData.',
+        loadedData
+      );
+      return;
+    }
+
+    this._sendCommand(
+      StateManagerProxy.COMMANDS.APPLY_RUNTIME_STATE,
+      loadedData
+    );
+    console.log(
+      '[StateManagerProxy] Sent APPLY_RUNTIME_STATE command to worker.'
+    );
+  }
+  // --- End new methods ---
+
+  // Method to get game-specific helper functions instance
+  // ... existing code ...
 }
 
 // --- ADDED: Function to create the main-thread snapshot interface ---

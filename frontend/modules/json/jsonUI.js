@@ -2,6 +2,7 @@ import eventBus from '../../app/core/eventBus.js';
 // Corrected import for settingsManager (default import)
 import settingsManager from '../../app/core/settingsManager.js';
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // If needed later
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 export class JsonUI {
   constructor(container, componentState) {
@@ -10,9 +11,10 @@ export class JsonUI {
     this.rootElement = null;
     this.currentModeDisplay = null;
     this.modeNameInput = null;
-    this.checkboxes = {};
+    this.checkboxes = {}; // Will now hold core AND module checkboxes
     this.knownModesList = null;
     this.modesJsonList = null; // For modes from modes.json
+    this.moduleDataList = null; // For module-specific data checkboxes
 
     this._createBaseUI();
     this._populateKnownModesList(); // Initial population
@@ -60,6 +62,9 @@ export class JsonUI {
       this._populateModesJsonList(window.G_modesConfig);
     }
 
+    // Populate module data checkboxes once we know the app is mostly ready
+    this._populateModuleDataCheckboxes();
+
     // TODO: Populate current mode, known modes, and checkbox states
     // this.updateCurrentModeDisplay('default'); // Initial placeholder - REMOVED, will be set by event
   }
@@ -96,6 +101,14 @@ export class JsonUI {
             <label for="json-chk-settings">User Settings (settings.json)</label>
           </div>
           <!-- Placeholder for module-specific data checkboxes -->
+        </div>
+
+        <div class="json-section">
+          <h4>Registered Module Data:</h4>
+          <ul id="json-module-data-list">
+            <!-- Checkboxes will be populated here by JS -->
+            <li><span>No modules registered custom data handlers.</span></li>
+          </ul>
         </div>
 
         <div class="json-section button-group">
@@ -143,6 +156,9 @@ export class JsonUI {
     );
     this.modesJsonList = this.rootElement.querySelector(
       '#json-modes-json-list'
+    ); // Get new list
+    this.moduleDataList = this.rootElement.querySelector(
+      '#json-module-data-list'
     ); // Get new list
 
     this.checkboxes.rulesConfig =
@@ -200,7 +216,7 @@ export class JsonUI {
     }
   }
 
-  getSelectedConfigKeys() {
+  getSelectedDataKeys() {
     const selectedKeys = [];
     for (const key in this.checkboxes) {
       if (this.checkboxes[key] && this.checkboxes[key].checked) {
@@ -229,12 +245,15 @@ export class JsonUI {
     }
   }
 
-  _gatherSelectedData() {
-    const selectedDataKeys = this.getSelectedConfigKeys();
+  async _gatherSelectedData() {
+    const selectedDataKeys = this.getSelectedDataKeys();
     const dataToSave = {};
+    const promises = [];
+    const keysForPromises = [];
 
     console.log('[JsonUI] Gathering data for keys:', selectedDataKeys);
 
+    // Handle Core Data Types (Direct Access)
     if (selectedDataKeys.includes('rulesConfig')) {
       dataToSave.rulesConfig = window.G_combinedModeData?.rulesConfig;
       console.log(
@@ -294,12 +313,75 @@ export class JsonUI {
       }
     }
     // TODO: Add logic for other module-specific data if checkboxes are added for them
+
+    // Handle Registered Module Data Types (Using registered functions)
+    const handlers = centralRegistry.getAllJsonDataHandlers();
+    for (const dataKey of selectedDataKeys) {
+      if (handlers.has(dataKey)) {
+        const handler = handlers.get(dataKey);
+        console.log(`[JsonUI] Gathering data for registered key: ${dataKey}`);
+        try {
+          const saveDataResult = handler.getSaveDataFunction();
+          // Check if the result is a Promise
+          if (saveDataResult instanceof Promise) {
+            promises.push(saveDataResult);
+            keysForPromises.push(dataKey);
+          } else {
+            // If not a promise, assign directly
+            dataToSave[dataKey] = saveDataResult;
+            console.log(
+              `[JsonUI] Included sync data for ${dataKey}:`,
+              dataToSave[dataKey] ? 'Exists' : 'MISSING/NULL'
+            );
+          }
+        } catch (e) {
+          console.error(
+            `[JsonUI] Error calling getSaveDataFunction for ${dataKey}:`,
+            e
+          );
+          dataToSave[dataKey] = null; // Indicate failure
+        }
+      }
+    }
+
+    // Wait for all promises to resolve
+    if (promises.length > 0) {
+      try {
+        const results = await Promise.all(promises);
+        results.forEach((result, index) => {
+          const dataKey = keysForPromises[index];
+          dataToSave[dataKey] = result;
+          console.log(
+            `[JsonUI] Included async data for ${dataKey}:`,
+            dataToSave[dataKey] ? 'Exists' : 'MISSING/NULL'
+          );
+        });
+      } catch (error) {
+        console.error(
+          '[JsonUI] Error resolving promises from getSaveDataFunction calls:',
+          error
+        );
+        // Assign null to keys whose promises failed or were part of the failing Promise.all
+        keysForPromises.forEach((key) => {
+          if (!(key in dataToSave)) {
+            // Only mark as null if not already set by sync path or successful promise
+            dataToSave[key] = null;
+            console.error(
+              `[JsonUI] Failed to get data for ${key} due to Promise.all failure.`
+            );
+          }
+        });
+      }
+    }
+
+    console.log('[JsonUI] Finished gathering data:', dataToSave);
     return dataToSave;
   }
 
-  _handleSaveToFile() {
+  async _handleSaveToFile() {
     const modeName = this.modeNameInput.value.trim() || 'default';
-    const dataToSave = this._gatherSelectedData();
+    // Use await here
+    const dataToSave = await this._gatherSelectedData();
 
     if (Object.keys(dataToSave).length === 0) {
       alert('No data types selected to save.');
@@ -328,7 +410,7 @@ export class JsonUI {
     console.log(`[JsonUI] Load from file selected: ${file.name}`);
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const loadedData = JSON.parse(e.target.result);
         console.log('[JsonUI] File content parsed successfully:', loadedData);
@@ -374,8 +456,13 @@ export class JsonUI {
             `[JsonUI] Successfully stored mode '${modeName}' data from file to LocalStorage:`,
             dataToStore
           );
+
+          // --- Apply non-reloadable data ---
+          this._applyNonReloadData(loadedData);
+
+          // Show alert (might need adjustment based on requiresReload checks)
           alert(
-            `Data for mode '${modeName}' (rules and modules config) loaded from file and saved to LocalStorage. Please RELOAD the page to apply the changes.`
+            `Data for mode '${modeName}' loaded from file. Some changes applied live. RELOAD the page if prompted or if layout/module changes were included.`
           );
           this._populateKnownModesList(); // Refresh after loading and saving from file
         } catch (storageError) {
@@ -404,7 +491,7 @@ export class JsonUI {
     event.target.value = null;
   }
 
-  _handleSaveToLocalStorage() {
+  async _handleSaveToLocalStorage() {
     const modeName = this.modeNameInput.value.trim();
     if (!modeName) {
       alert('Please enter a mode name to save data to LocalStorage.');
@@ -412,7 +499,8 @@ export class JsonUI {
       return;
     }
 
-    const dataToSave = this._gatherSelectedData();
+    // Use await here
+    const dataToSave = await this._gatherSelectedData();
 
     if (Object.keys(dataToSave).length === 0) {
       alert('No data types selected to save to LocalStorage.');
@@ -651,5 +739,109 @@ export class JsonUI {
       )}`;
       window.location.href = newUrl;
     }
+  }
+
+  _populateModuleDataCheckboxes() {
+    if (!this.moduleDataList) return;
+
+    // Use centralRegistry directly assuming it's imported/available
+    // TODO: Ensure centralRegistry is imported if not already
+    const handlers = centralRegistry.getAllJsonDataHandlers();
+
+    this.moduleDataList.innerHTML = ''; // Clear existing
+
+    if (handlers.size === 0) {
+      this.moduleDataList.innerHTML =
+        '<li><span>No modules registered custom data handlers.</span></li>';
+      return;
+    }
+
+    console.log(
+      `[JsonUI] Populating ${handlers.size} module data checkboxes...`
+    );
+
+    // Sort handlers by displayName for consistent order
+    const sortedHandlers = [...handlers.entries()].sort(([, a], [, b]) =>
+      a.displayName.localeCompare(b.displayName)
+    );
+
+    sortedHandlers.forEach(([dataKey, handler]) => {
+      const listItem = document.createElement('li');
+      const div = document.createElement('div');
+      div.classList.add('checkbox-container');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = `json-chk-module-${dataKey}`;
+      checkbox.checked = handler.defaultChecked;
+      checkbox.dataset.configKey = dataKey; // Use dataKey for identification
+
+      const label = document.createElement('label');
+      label.htmlFor = checkbox.id;
+      label.textContent = handler.displayName;
+      if (handler.requiresReload) {
+        label.textContent += ' (Requires Reload)';
+        label.title = 'Applying this data requires a page reload.';
+      }
+
+      div.appendChild(checkbox);
+      div.appendChild(label);
+      listItem.appendChild(div);
+      this.moduleDataList.appendChild(listItem);
+
+      // Store the checkbox reference using its dataKey
+      this.checkboxes[dataKey] = checkbox;
+      console.log(`[JsonUI] Added checkbox for ${dataKey}`);
+    });
+  }
+
+  _applyNonReloadData(loadedData) {
+    const handlers = centralRegistry.getAllJsonDataHandlers();
+    let requiresReloadDetected = false;
+
+    console.log(
+      '[JsonUI] Applying non-reload data from loaded data:',
+      loadedData
+    );
+
+    for (const dataKey in loadedData) {
+      // Check core types first (if we handle them this way)
+      if (dataKey === 'rulesConfig') {
+        // TODO: Implement live rules reload
+        console.log(
+          '[JsonUI] Found rulesConfig, calling apply function (placeholder)...'
+        );
+        // this.applyRulesConfig(loadedData.rulesConfig);
+      } else if (dataKey === 'userSettings') {
+        // TODO: Implement live settings application
+        console.log(
+          '[JsonUI] Found userSettings, calling apply function (placeholder)...'
+        );
+        // settingsManager.updateSettings(loadedData.userSettings);
+      }
+      // Check registered module handlers
+      else if (handlers.has(dataKey)) {
+        const handler = handlers.get(dataKey);
+        if (!handler.requiresReload) {
+          console.log(`[JsonUI] Applying non-reload data for ${dataKey}...`);
+          try {
+            handler.applyLoadedDataFunction(loadedData[dataKey]);
+          } catch (e) {
+            console.error(
+              `[JsonUI] Error calling applyLoadedDataFunction for ${dataKey}:`,
+              e
+            );
+          }
+        } else {
+          // Check if this data type was actually selected by the user implicitly (it's in the loaded file)
+          // We might not have checkbox state here, but presence implies intent
+          requiresReloadDetected = true;
+          console.log(`[JsonUI] Data type ${dataKey} requires reload.`);
+        }
+      }
+    }
+
+    // Optionally adjust the alert message based on requiresReloadDetected
+    // For now, the generic alert in _handleLoadFromFile should suffice.
   }
 }
