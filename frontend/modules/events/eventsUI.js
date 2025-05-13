@@ -161,25 +161,48 @@ class EventsUI {
     this.container.element.prepend(style);
   }
 
-  handleAppReady(initApi) {
+  handleAppReady(eventData) {
     console.log(
       '[EventsUI] Received app:readyForUiDataLoad, full initApi should be available.'
     );
     // Now attempt to get moduleManager from initApi if it was passed, otherwise fallback to window (less ideal)
     // This assumes initApi is now fully populated and passed with the event.
     // If initApi is not passed with the event, this won't work directly.
-    // For now, let's assume window.moduleManagerApi will be set by the time this event fires.
-    // A cleaner solution would be to pass initApi with the event.
-    if (window.moduleManagerApi) {
-      this._loadAndRenderData(centralRegistry, window.moduleManagerApi);
+    // For now, let's assume window.moduleManagerApi will be set by the time this event fires. // This assumption was incorrect.
+
+    // OLD way:
+    // if (window.moduleManagerApi) {
+    //   this._loadAndRenderData(centralRegistry, window.moduleManagerApi);
+    // } else {
+    //   console.error(
+    //     '[EventsUI] moduleManagerApi not found on window when app:readyForUiDataLoad was received.'
+    //   );
+    //   this.eventBusSection.textContent =
+    //     'Error: ModuleManagerAPI not available.';
+    //   this.dispatcherSection.textContent =
+    //     'Error: ModuleManagerAPI not available.';
+    // }
+
+    // NEW way: Get moduleManager from event payload
+    if (eventData && typeof eventData.getModuleManager === 'function') {
+      const moduleManager = eventData.getModuleManager();
+      if (moduleManager) {
+        this._loadAndRenderData(centralRegistry, moduleManager);
+      } else {
+        console.error('[EventsUI] getModuleManager() returned null/undefined.');
+        this.eventBusSection.textContent =
+          'Error: ModuleManagerAPI getter returned null.';
+        this.dispatcherSection.textContent =
+          'Error: ModuleManagerAPI getter returned null.';
+      }
     } else {
       console.error(
-        '[EventsUI] moduleManagerApi not found on window when app:readyForUiDataLoad was received.'
+        '[EventsUI] ModuleManager API not available from app:readyForUiDataLoad event payload.'
       );
       this.eventBusSection.textContent =
-        'Error: ModuleManagerAPI not available.';
+        'Error: ModuleManagerAPI not available from event.';
       this.dispatcherSection.textContent =
-        'Error: ModuleManagerAPI not available.';
+        'Error: ModuleManagerAPI not available from event.';
     }
   }
 

@@ -144,16 +144,17 @@ export class ModulesPanel {
     );
   }
 
-  async _requestModuleData() {
+  async _requestModuleData(moduleManager) {
     // Use the globally exposed moduleManagerApi
-    const moduleManager = window.moduleManagerApi;
+    // const moduleManager = window.moduleManagerApi; // REMOVED
 
     if (
       !moduleManager ||
-      typeof moduleManager.getAllModuleStates !== 'function'
+      typeof moduleManager.getAllModuleStates !== 'function' ||
+      typeof moduleManager.getCurrentLoadPriority !== 'function'
     ) {
       console.error(
-        'ModulesPanel: ModuleManager not available via window.moduleManagerApi or missing expected functions.'
+        'ModulesPanel: ModuleManager not available or missing expected functions.'
       );
       // Display error in the list container
       if (this.moduleListContainer)
@@ -421,16 +422,32 @@ export class ModulesPanel {
   }
 
   // MODIFIED: Renamed from _handleInitComplete to _handleAppReady
-  _handleAppReady() {
+  _handleAppReady(eventData) {
     console.log(
       'ModulesPanel: Received app:readyForUiDataLoad. Requesting module data.'
     );
-    this._requestModuleData(); // Now fetch module data
-    // No need to unsubscribe from app:ready here if we want to react to it multiple times,
-    // but for initial load, unsubscribing is fine. For now, let's assume it's for initial load.
-    if (this.appReadyListener) {
-      eventBus.unsubscribe('app:readyForUiDataLoad', this.appReadyHandler);
-      this.appReadyListener = null; // Clear the stored listener handle
+    // this._requestModuleData(); // OLD way
+
+    // NEW way: Get moduleManager from event payload
+    if (eventData && typeof eventData.getModuleManager === 'function') {
+      const moduleManager = eventData.getModuleManager();
+      if (moduleManager) {
+        this._requestModuleData(moduleManager);
+      } else {
+        console.error(
+          'ModulesPanel: getModuleManager() returned null/undefined.'
+        );
+        if (this.moduleListContainer)
+          this.moduleListContainer.textContent =
+            'Error: Module management API getter returned null.';
+      }
+    } else {
+      console.error(
+        'ModulesPanel: ModuleManager API not available from app:readyForUiDataLoad event payload.'
+      );
+      if (this.moduleListContainer)
+        this.moduleListContainer.textContent =
+          'Error: Module management API not available from event.';
     }
   }
 
