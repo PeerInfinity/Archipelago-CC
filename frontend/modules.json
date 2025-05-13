@@ -67,6 +67,10 @@
     "testPlaythroughs": {
       "path": "./modules/testPlaythroughs/index.js",
       "enabled": true
+    },
+    "tests": {
+      "path": "./modules/tests/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -86,6 +90,7 @@
     "loops",
     "presets",
     "testCases",
-    "testPlaythroughs"
+    "testPlaythroughs",
+    "tests"
   ]
 }

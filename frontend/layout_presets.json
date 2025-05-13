@@ -10,6 +10,11 @@
           "content": [
             {
               "type": "component",
+              "componentType": "testsPanel",
+              "title": "Tests"
+            },
+            {
+              "type": "component",
               "componentType": "inventoryPanel",
               "title": "Inventory"
             },
@@ -20,13 +25,13 @@
             },
             {
               "type": "component",
-              "componentType": "eventsPanel",
-              "title": "Events"
+              "componentType": "modulesPanel",
+              "title": "Modules"
             },
             {
               "type": "component",
-              "componentType": "modulesPanel",
-              "title": "Modules"
+              "componentType": "eventsPanel",
+              "title": "Events"
             }
           ]
         },
