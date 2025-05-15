@@ -31,18 +31,18 @@ export class ALTTPState extends GameState {
    */
   loadSettings(settings) {
     super.loadSettings(settings);
-    console.log(
-      '[ALTTPState AFTER super.loadSettings] this.settings:',
-      JSON.stringify(this.settings)
-    );
-    console.log(
-      `[ALTTPState AFTER super.loadSettings] this.settings.game: ${this.settings.game}, this.game (instance prop): ${this.game}`
-    );
+    //console.log(
+    //  '[ALTTPState AFTER super.loadSettings] this.settings:',
+    //  JSON.stringify(this.settings)
+    //);
+    //console.log(
+    //  `[ALTTPState AFTER super.loadSettings] this.settings.game: ${this.settings.game}, this.game (instance prop): ${this.game}`
+    //);
 
-    console.log(
-      '[ALTTPState Raw input] loadSettings called with:',
-      JSON.stringify(settings)
-    );
+    //console.log(
+    //  '[ALTTPState Raw input] loadSettings called with:',
+    //  JSON.stringify(settings)
+    //);
     if (!settings) return;
 
     // this.gameSettings = settings; // Redundant if super.loadSettings sets this.settings correctly. Rely on this.settings.
@@ -81,12 +81,12 @@ export class ALTTPState extends GameState {
     this.game = this.settings.game || this.game || 'A Link to the Past';
 
     this.log('[ALTTPState] Settings processed.');
-    console.log(
-      `[ALTTPState FINAL] this.settings: ${JSON.stringify(this.settings)}`
-    );
-    console.log(
-      `[ALTTPState FINAL] this.settings.game: ${this.settings.game}, this.game (instance prop): ${this.game}`
-    );
+    //console.log(
+    //  `[ALTTPState FINAL] this.settings: ${JSON.stringify(this.settings)}`
+    //);
+    //console.log(
+    //  `[ALTTPState FINAL] this.settings.game: ${this.settings.game}, this.game (instance prop): ${this.game}`
+    //);
   }
 
   /**

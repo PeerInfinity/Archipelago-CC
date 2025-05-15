@@ -598,9 +598,9 @@ export class RegionUI {
     }
 
     // Now log the status of all these correctly assigned (or null) variables
-    console.log(
-      `[RegionUI renderAllRegions] Start State - Snapshot: ${!!snapshot} Static Data: ${!!staticData} accessibilitySortedSectionsDiv: ${!!accessibilitySortedSectionsDiv} generalSortedListSectionDiv: ${!!generalSortedListSectionDiv} availableContentContainer: ${!!availableContentContainer} unavailableContentContainer: ${!!unavailableContentContainer} generalSortedListContent: ${!!generalSortedListContent}`
-    );
+    //console.log(
+    //  `[RegionUI renderAllRegions] Start State - Snapshot: ${!!snapshot} Static Data: ${!!staticData} accessibilitySortedSectionsDiv: ${!!accessibilitySortedSectionsDiv} generalSortedListSectionDiv: ${!!generalSortedListSectionDiv} availableContentContainer: ${!!availableContentContainer} unavailableContentContainer: ${!!unavailableContentContainer} generalSortedListContent: ${!!generalSortedListContent}`
+    //);
 
     if (!snapshot || !staticData || !staticData.regions || !staticData.items) {
       console.warn(
@@ -641,23 +641,6 @@ export class RegionUI {
     // Get references to structural elements within this.regionsContainer
     // this.regionsContainer is this.rootElement.querySelector('#region-details-container') (set in constructor)
     // availableContentContainer, unavailableContentContainer, and generalSortedListContent are now assigned above.
-
-    console.log(
-      '[RegionUI renderAllRegions] Start State - Snapshot:',
-      !!snapshot,
-      'Static Data:',
-      !!staticData,
-      'accessibilitySortedSectionsDiv:',
-      !!accessibilitySortedSectionsDiv,
-      'generalSortedListSectionDiv:',
-      !!generalSortedListSectionDiv,
-      'availableContentContainer:',
-      !!availableContentContainer,
-      'unavailableContentContainer:',
-      !!unavailableContentContainer,
-      'generalSortedListContent:',
-      !!generalSortedListContent
-    );
 
     if (!staticData?.regions || !snapshot) {
       console.warn(

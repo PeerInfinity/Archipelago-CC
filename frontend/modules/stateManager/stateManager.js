@@ -267,11 +267,11 @@ export class StateManager {
     this.invalidateCache(); // +++ ADDED: Ensure cache is cleared for new rules load +++
 
     // --- VERY EARLY DIAGNOSTIC LOG (using console.log directly) ---
-    console.log(
-      `[StateManager Worker loadFromJSON VERY EARLY DIRECT LOG] Entered method. Player ID: ${selectedPlayerId}. jsonData keys: ${
-        jsonData ? Object.keys(jsonData) : 'jsonData is null/undefined'
-      }`
-    );
+    //console.log(
+    //  `[StateManager Worker loadFromJSON VERY EARLY DIRECT LOG] Entered method. Player ID: ${selectedPlayerId}. jsonData keys: ${
+    //    jsonData ? Object.keys(jsonData) : 'jsonData is null/undefined'
+    //  }`
+    //);
     // --- END VERY EARLY DIAGNOSTIC LOG ---
 
     this._logDebug(
@@ -335,9 +335,9 @@ export class StateManager {
       jsonData.item_groups?.[String(selectedPlayerId)];
     if (Array.isArray(playerSpecificGroupData)) {
       this.groupData = playerSpecificGroupData;
-      this._logDebug(
-        `Loaded player-specific item_groups for player ${selectedPlayerId}: ${this.groupData.length} groups.`
-      );
+      //this._logDebug(
+      //  `Loaded player-specific item_groups for player ${selectedPlayerId}: ${this.groupData.length} groups.`
+      //);
     } else if (jsonData.groups && Array.isArray(jsonData.groups)) {
       this.groupData = jsonData.groups; // Fallback to global jsonData.groups
       this._logDebug(
@@ -429,9 +429,9 @@ export class StateManager {
     // --- END DIAGNOSTIC ---
 
     // this.settings.game should now be correctly set.
-    this._logDebug(
-      `[StateManager loadFromJSON] Game-specific state loaded. Effective game: ${this.settings.game}`
-    );
+    //this._logDebug(
+    //  `[StateManager loadFromJSON] Game-specific state loaded. Effective game: ${this.settings.game}`
+    //);
     // --- END Instantiate Game-Specific State ---
 
     // --- MOVED UP: Load settings into the game-specific state object (e.g., ALTTPState) ---
@@ -683,10 +683,10 @@ export class StateManager {
         jsonData.item_groups[String(selectedPlayerId)]; // Ensure playerId is a string key
       if (Array.isArray(playerSpecificGroups)) {
         this.groupData = playerSpecificGroups;
-        console.log(
-          `[StateManager loadFromJSON] Loaded player-specific item_groups for player ${selectedPlayerId}:`,
-          JSON.parse(JSON.stringify(this.groupData))
-        );
+        //console.log(
+        //  `[StateManager loadFromJSON] Loaded player-specific item_groups for player ${selectedPlayerId}:`,
+        //  JSON.parse(JSON.stringify(this.groupData))
+        //);
       } else {
         console.log(
           `[StateManager loadFromJSON] item_groups found, but no specific entry for player ${selectedPlayerId} or entry is not an array. Player entry:`,
@@ -955,16 +955,16 @@ export class StateManager {
       '[StateManager loadFromJSON] Initial reachable regions computation complete.'
     );
 
-    console.log(
-      '[StateManager loadFromJSON END] Final check before return. this.originalExitOrder type:',
-      typeof this.originalExitOrder,
-      'Is Array:',
-      Array.isArray(this.originalExitOrder),
-      'Length:',
-      this.originalExitOrder ? this.originalExitOrder.length : 'N/A',
-      'Sample:',
-      this.originalExitOrder ? this.originalExitOrder.slice(0, 5) : 'N/A'
-    );
+    //console.log(
+    //  '[StateManager loadFromJSON END] Final check before return. this.originalExitOrder type:',
+    //  typeof this.originalExitOrder,
+    //  'Is Array:',
+    //  Array.isArray(this.originalExitOrder),
+    //  'Length:',
+    //  this.originalExitOrder ? this.originalExitOrder.length : 'N/A',
+    //  'Sample:',
+    //  this.originalExitOrder ? this.originalExitOrder.slice(0, 5) : 'N/A'
+    //);
 
     // Ensure game-specific state (like events from ALTTPState) is initialized/reset if game changes
     // This should ideally happen AFTER helpers are instantiated and settings are fully loaded,
@@ -1001,30 +1001,8 @@ export class StateManager {
     // The 'Process starting items' block later in the code handles starting_items correctly
     // by calling this.addItemToInventory, which uses the already initialized 'this.inventory'.
 
-    // --- Sanity check and correction for settings.activeGame ---
     // Ensure this.settings exists before trying to access or assign to its properties
     this.settings = this.settings || {};
-
-    if (this.gameId && this.settings.activeGame !== this.gameId) {
-      console.warn(
-        `[StateManager loadFromJSON] Discrepancy! this.gameId ('${this.gameId}') vs settings.activeGame ('${this.settings.activeGame}'). Correcting settings.`
-      );
-      this.settings.activeGame = this.gameId;
-    } else if (
-      this.gameId &&
-      !Object.prototype.hasOwnProperty.call(this.settings, 'activeGame')
-    ) {
-      console.warn(
-        `[StateManager loadFromJSON] settings.activeGame missing. Setting to this.gameId ('${this.gameId}').`
-      );
-      this.settings.activeGame = this.gameId;
-    } else if (!this.gameId && this.settings.activeGame) {
-      console.warn(
-        `[StateManager loadFromJSON] this.gameId is null/undefined, but settings.activeGame is ('${this.settings.activeGame}'). Syncing gameId from settings.`
-      );
-      this.gameId = this.settings.activeGame;
-    }
-    // --- END ADDED ---
 
     // Initial computation of reachable regions based on current inventory and rules
     this._logDebug(
@@ -1265,22 +1243,6 @@ export class StateManager {
           exit.connected_region !== undefined
             ? exit.connected_region
             : exit.connectedRegion;
-
-        // +++ DETAILED LOGGING FOR EXIT PROCESSING +++
-        if (exit.name === 'GameStart' || fromRegion === 'Menu') {
-          console.log(
-            `[StateManager runBFSPass DEBUG] Processing Exit: ${exit.name} from ${fromRegion} to ${targetRegion}`
-          );
-          console.log(`  - Exit Object:`, JSON.parse(JSON.stringify(exit)));
-          console.log(
-            `  - Original snake_case connected_region: ${exit.connected_region}`
-          );
-          console.log(
-            `  - Original camelCase connectedRegion: ${exit.connectedRegion}`
-          );
-          console.log(`  - Resolved targetRegion: ${targetRegion}`);
-        }
-        // +++ END DETAILED LOGGING +++
 
         // Skip if the target region is already reachable
         if (this.knownReachableRegions.has(targetRegion)) {

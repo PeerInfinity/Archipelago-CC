@@ -123,7 +123,6 @@ self.onmessage = async function (e) {
           type: 'workerInitializedConfirmation',
           message: 'Worker has been initialized.',
           configEcho: {
-            gameId: workerConfig.gameId,
             playerId: workerConfig.playerId,
             rulesDataIsPresent: !!workerConfig.rulesData,
             settingsArePresent: !!workerConfig.settings,
@@ -154,21 +153,6 @@ self.onmessage = async function (e) {
         stateManagerInstance.loadFromJSON(rulesData, playerId);
         // computeReachableRegions is called internally by loadFromJSON
         const initialSnapshot = stateManagerInstance.getSnapshot();
-
-        console.log(
-          '[stateManagerWorker PRE-CONSTRUCT] Checking stateManagerInstance.originalExitOrder. Type:',
-          typeof stateManagerInstance.originalExitOrder,
-          'Is Array:',
-          Array.isArray(stateManagerInstance.originalExitOrder),
-          'Length:',
-          stateManagerInstance.originalExitOrder
-            ? stateManagerInstance.originalExitOrder.length
-            : 'N/A',
-          'Sample:',
-          stateManagerInstance.originalExitOrder
-            ? stateManagerInstance.originalExitOrder.slice(0, 5)
-            : 'N/A'
-        );
 
         // MODIFIED: Construct static data object directly from instance properties
         const workerStaticGameData = {
@@ -253,7 +237,7 @@ self.onmessage = async function (e) {
       case 'getStaticData':
         if (!workerInitialized || !stateManagerInstance) {
           console.error(
-            `[stateManagerWorker] Worker not initialized. Cannot process ${message.command}.`
+            `[SMW] ${message.command} received but worker not ready.`
           );
           if (message.queryId) {
             self.postMessage({
@@ -264,17 +248,27 @@ self.onmessage = async function (e) {
           }
           return;
         }
-        // For simplicity, we'll assume the old processInternalQueue can handle these if adapted
-        // or we would reimplement the logic directly here.
-        // For now, just acknowledge and log for these specific query types.
+
+        // LOG 1: Confirm command and presence of queryId
         console.log(
-          `[stateManagerWorker onmessage] Forwarding ${message.command} to internal processing (conceptual).`
+          `[SMW] Grouped command dispatch. Command: ${
+            message.command
+          }. Has queryId: ${!!message.queryId}. Payload type: ${typeof message.payload}`
         );
-        // This is a placeholder. The actual command logic (like in the old processInternalQueue)
-        // would need to be invoked here or refactored.
-        // For now, let's just post a dummy ack if it has a queryId to avoid timeouts on the proxy.
+        if (message.payload && typeof message.payload === 'object') {
+          console.log(
+            `[SMW] Payload locationName: ${message.payload.locationName}`
+          );
+        }
+
         if (message.queryId) {
+          // LOG 2: Inside if (message.queryId)
+          console.log(
+            `[SMW] Entered message.queryId block. Command: ${message.command}`
+          );
+
           if (message.command === 'getFullSnapshot') {
+            console.log(`[SMW] Matched command: getFullSnapshot`);
             const snapshot = stateManagerInstance.getSnapshot();
             self.postMessage({
               type: 'queryResponse',
@@ -282,6 +276,7 @@ self.onmessage = async function (e) {
               result: snapshot,
             });
           } else if (message.command === 'getStaticData') {
+            console.log(`[SMW] Matched command: getStaticData`);
             const staticData = stateManagerInstance.getStaticGameData();
             self.postMessage({
               type: 'queryResponse',
@@ -289,23 +284,66 @@ self.onmessage = async function (e) {
               result: staticData,
             });
           } else if (message.command === 'checkLocation') {
+            // LOG 3: Matched command checkLocation
+            console.log(
+              `[SMW] Matched command: checkLocation. Current payload:`,
+              message.payload
+                ? JSON.stringify(message.payload)
+                : 'undefined/null'
+            );
             try {
-              const locationName = message.payload;
+              // LOG 4: Start of try block for checkLocation
+              console.log(`[SMW] checkLocation: try block entered.`);
+              const locationName = message.payload.locationName;
+              console.log(
+                `[SMW] checkLocation: locationName extracted: "${locationName}" (type: ${typeof locationName})`
+              );
+
               if (typeof locationName !== 'string') {
+                console.error(
+                  `[SMW] checkLocation: locationName is not a string.`
+                );
                 throw new Error(
-                  'Invalid payload for checkLocation: expected a string locationName.'
+                  'Invalid payload for checkLocation: expected a string locationName in payload.locationName.'
                 );
               }
+
+              // LOG 5: Before calling instance.checkLocation
+              console.log(
+                `[SMW] checkLocation: About to call stateManagerInstance.checkLocation("${locationName}")`
+              );
               stateManagerInstance.checkLocation(locationName);
+              // LOG 6: After calling instance.checkLocation
+              console.log(
+                `[SMW] checkLocation: stateManagerInstance.checkLocation completed for "${locationName}".`
+              );
+
+              // Query response still sent if queryId was present
+              console.log(
+                `[SMW] checkLocation: Sending success queryResponse for queryId ${message.queryId}`
+              );
               self.postMessage({
                 type: 'queryResponse',
                 queryId: message.queryId,
-                result: { success: true, locationName: locationName },
+                result: {
+                  success: true,
+                  locationName: locationName,
+                  status: 'processed_by_state_manager',
+                },
               });
             } catch (error) {
+              // LOG 7: In catch block for checkLocation
               console.error(
-                `[stateManagerWorker] Error processing checkLocation for ${message.payload}:`,
-                error
+                `[SMW] checkLocation: CATCH block. Error for payload ${
+                  message.payload
+                    ? JSON.stringify(message.payload)
+                    : 'undefined/null'
+                }:`,
+                error.message,
+                error.stack
+              );
+              console.error(
+                `[SMW] checkLocation: Sending error queryResponse for queryId ${message.queryId}`
               );
               self.postMessage({
                 type: 'queryResponse',
@@ -314,7 +352,10 @@ self.onmessage = async function (e) {
               });
             }
           } else {
-            // For evaluateRuleRequest, we'd need more complex handling.
+            // Presumed 'evaluateRuleRequest'
+            console.log(
+              `[SMW] Command ${message.command} in queryId block, but not getFullSnapshot, getStaticData, or checkLocation.`
+            );
             // This is a simplification for now to get the init/loadRules flow working.
             console.warn(
               `[stateManagerWorker] Command ${message.command} needs full handler beyond this basic switch.`
@@ -327,6 +368,44 @@ self.onmessage = async function (e) {
                 command: message.command,
               },
             });
+          }
+        } else {
+          // queryId was NOT present
+          if (message.command === 'checkLocation') {
+            // Process checkLocation without warning, as this is an expected path.
+            try {
+              const locationName = message.payload.locationName;
+              if (typeof locationName !== 'string') {
+                console.error(
+                  `[SMW] checkLocation (no queryId): locationName is not a string.`
+                );
+                throw new Error(
+                  'Invalid payload for checkLocation (no queryId): expected a string locationName in payload.locationName.'
+                );
+              }
+              console.log(
+                `[SMW] checkLocation (no queryId): About to call stateManagerInstance.checkLocation("${locationName}")`
+              );
+              stateManagerInstance.checkLocation(locationName);
+              console.log(
+                `[SMW] checkLocation (no queryId): stateManagerInstance.checkLocation completed for "${locationName}".`
+              );
+            } catch (error) {
+              console.error(
+                `[SMW] checkLocation (no queryId): CATCH block. Error for payload ${
+                  message.payload
+                    ? JSON.stringify(message.payload)
+                    : 'undefined/null'
+                }:`,
+                error.message,
+                error.stack
+              );
+            }
+          } else {
+            // For other commands without queryId in this grouped case, issue the general warning.
+            console.warn(
+              `[SMW] Command ${message.command} in grouped case did NOT have a queryId. This is unexpected for these commands if a response is awaited.`
+            );
           }
         }
         break;

@@ -133,31 +133,9 @@ export class StateManagerProxy {
           message
         );
         if (message.newStaticData) {
-          console.log(
-            '[StateManagerProxy rulesLoadedConfirmation] Received newStaticData from worker. Keys:',
-            Object.keys(message.newStaticData)
-          );
-          console.log(
-            '[StateManagerProxy rulesLoadedConfirmation] newStaticData.originalExitOrder type:',
-            typeof message.newStaticData.originalExitOrder,
-            'Is Array:',
-            Array.isArray(message.newStaticData.originalExitOrder),
-            'Length:',
-            message.newStaticData.originalExitOrder
-              ? message.newStaticData.originalExitOrder.length
-              : 'N/A',
-            'Sample:',
-            message.newStaticData.originalExitOrder
-              ? message.newStaticData.originalExitOrder.slice(0, 5)
-              : 'N/A'
-          );
-
           const newCache = { ...message.newStaticData };
 
           if (Array.isArray(newCache.exits)) {
-            console.log(
-              '[StateManagerProxy] newStaticData.exits is an array. Converting to object keyed by exit.name.'
-            );
             const exitsObject = {};
             newCache.exits.forEach((exit) => {
               if (exit && exit.name) {
@@ -170,44 +148,13 @@ export class StateManagerProxy {
               }
             });
             newCache.exits = exitsObject;
-            console.log(
-              `[StateManagerProxy] Converted newStaticData.exits to object: ${
-                Object.keys(newCache.exits).length
-              } entries.`
-            );
           }
 
           this.staticDataCache = newCache;
-          console.log(
-            '[StateManagerProxy rulesLoadedConfirmation] Updated staticDataCache. Keys in cache:',
-            Object.keys(this.staticDataCache)
-          );
-          console.log(
-            '[StateManagerProxy rulesLoadedConfirmation] originalExitOrder type in cache:',
-            typeof this.staticDataCache.originalExitOrder,
-            'Is Array:',
-            Array.isArray(this.staticDataCache.originalExitOrder),
-            'Length:',
-            this.staticDataCache.originalExitOrder
-              ? this.staticDataCache.originalExitOrder.length
-              : 'N/A',
-            'Sample in cache:',
-            this.staticDataCache.originalExitOrder
-              ? this.staticDataCache.originalExitOrder.slice(0, 5)
-              : 'N/A'
-          );
-
-          // Add a log to specifically check the content of originalExitOrder after caching
-          if (Array.isArray(this.staticDataCache.originalExitOrder)) {
-            console.log(
-              '[StateManagerProxy rulesLoadedConfirmation] Cached originalExitOrder (first 10):',
-              this.staticDataCache.originalExitOrder.slice(0, 10)
-            );
-          } else {
-            console.log(
-              '[StateManagerProxy rulesLoadedConfirmation] Cached originalExitOrder is not an array or is null.'
-            );
-          }
+          //console.log(
+          //  '[StateManagerProxy rulesLoadedConfirmation] Updated staticDataCache. Keys in cache:',
+          //  Object.keys(this.staticDataCache)
+          //);
         } else {
           console.warn(
             '[StateManagerProxy] rulesLoadedConfirmation received, but newStaticData is missing.'
@@ -252,19 +199,6 @@ export class StateManagerProxy {
           );
           this.staticDataCache.groups = message.workerStaticGroups;
         }
-
-        // --- BEGIN ADDED LOGGING ---
-        console.log(
-          '[StateManagerProxy rulesLoadedConfirmation] BEFORE _checkAndPublishReady. staticDataCache keys:',
-          this.staticDataCache
-            ? Object.keys(this.staticDataCache).join(',')
-            : 'null',
-          'uiDataCache is set:',
-          !!this.uiCache,
-          'initialSnapshot was present on message:',
-          !!message.initialSnapshot
-        );
-        // --- END ADDED LOGGING ---
 
         this._checkAndPublishReady(); // Ensure this is the correct place relative to logic
         break;
@@ -907,7 +841,6 @@ export class StateManagerProxy {
     // Store the initial configuration for the worker
     // initialConfig might contain rulesConfig (as data), gameId, etc.
     this.initialConfig = {
-      gameId: initialConfig.gameId || 'ALTTP', // Default if not provided
       rulesData: initialConfig.rulesConfig, // Expects rulesConfig to be the actual rules JSON object
       playerId: initialConfig.playerId || '1', // ADDED: Store and use playerId from initialConfig
       rulesUrl: null, // Explicitly null if rulesData is provided; worker will prioritize rulesData
@@ -920,7 +853,6 @@ export class StateManagerProxy {
       '[StateManagerProxy] Preparing to send initialize command to worker. Config snapshot:',
       // Be cautious with logging very large objects directly
       {
-        gameId: this.initialConfig.gameId,
         playerId: this.initialConfig.playerId,
         rulesDataKeys: this.initialConfig.rulesData
           ? Object.keys(this.initialConfig.rulesData)
@@ -934,7 +866,6 @@ export class StateManagerProxy {
     const messageToSend = {
       command: 'initialize',
       config: {
-        gameId: this.initialConfig.gameId,
         rulesData: this.initialConfig.rulesData, // Pass the direct rules data
         playerId: this.initialConfig.playerId, // ADDED: Pass playerId to worker config
         rulesUrl: this.initialConfig.rulesUrl, // Pass URL (will be null if rulesData is present)

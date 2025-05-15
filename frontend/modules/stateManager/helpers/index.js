@@ -69,17 +69,6 @@ export class GameState {
   loadSettings(settings) {
     this.settings = settings || {};
     this.game = this.settings.game || this.game;
-    this.log(
-      `[GameState base] loadSettings called. Game in state set to: ${this.game}`
-    );
-    this.log(
-      `[GameState base] this.settings object after assignment: ${JSON.stringify(
-        this.settings
-      )}`
-    );
-    this.log(
-      `[GameState base] this.settings.game after assignment: ${this.settings.game}`
-    );
   }
 
   log(message) {

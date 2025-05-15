@@ -1,21 +1,51 @@
 {
-  "activeGame": "ALTTP",
   "activeLayout": "default",
   "customLayoutConfig": null,
-  "generalSettings": { "theme": "dark" },
+  "generalSettings": {
+    "theme": "dark",
+    "showDevTools": false,
+    "debugMode": false,
+    "logLevel": "info"
+  },
   "moduleSettings": {
-    "modules": {},
-    "stateManager": {},
-    "client": { "defaultServer": "ws://localhost:38281" },
-    "inventory": {},
-    "editor": {},
-    "options": {},
-    "locations": {},
-    "exits": {},
-    "pathAnalyzer": {},
-    "regions": {},
-    "discovery": {},
-    "loops": { "defaultSpeed": 10, "autoRestart": false },
-    "files": {}
-  }
+    "client": {
+      "defaultServer": "ws://localhost:38281"
+    },
+    "inventory": {
+      "showItemGroups": true,
+      "defaultSort": "original"
+    },
+    "locations": {
+      "defaultSort": "original",
+      "columns": 3,
+      "showFilters": true
+    },
+    "regions": {
+      "defaultSort": "original",
+      "showFilters": true,
+      "autoExpandCurrent": true
+    },
+    "loops": {
+      "maxActionQueueSize": 10,
+      "defaultLoopSpeed": 1,
+      "autoStartNextLoop": false,
+      "persistInventoryAcrossLoops": true,
+      "persistDiscoveriesAcrossLoops": true,
+      "manaRegenPerSecond": 1,
+      "maxMana": 100,
+      "regionBaseXP": 100,
+      "locationBaseXP": 10,
+      "exitBaseXP": 5,
+      "manaCostExplore": 10,
+      "manaCostCheck": 5,
+      "manaCostMove": 2
+    },
+    "tests": {
+      "autoStartTestsOnLoad": false
+    }
+  },
+  "//": "playerId can be a string or number. It is used by StateManager.",
+  "playerId": "1",
+  "//": "playerName is primarily for display and client hello message.",
+  "playerName": "Player1"
 }

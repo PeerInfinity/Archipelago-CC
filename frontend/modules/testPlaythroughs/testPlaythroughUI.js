@@ -118,7 +118,7 @@ export class TestPlaythroughUI {
         })
         .then((data) => {
           this.playthroughFiles = data;
-          console.log('Loaded playthrough files:', this.playthroughFiles);
+          //console.log('Loaded playthrough files:', this.playthroughFiles);
           this.renderPlaythroughList(); // Initial view
           this.initialized = true; // Set initialized after successful load
           console.log('[TestPlaythroughUI] Initialized successfully.');

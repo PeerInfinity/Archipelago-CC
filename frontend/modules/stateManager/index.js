@@ -187,7 +187,6 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
     );
     const proxyInitConfig = {
       rulesConfig: rulesConfigToUse,
-      gameId: gameId,
       playerId: playerInfo.playerId,
       settings:
         settingsToUse ||

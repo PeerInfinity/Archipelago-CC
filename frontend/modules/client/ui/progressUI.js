@@ -41,7 +41,7 @@ export class ProgressUI {
   }
 
   static async initializeWithin(rootElement, eventBusInstance) {
-    console.log('[ProgressUI] Initializing within element:', rootElement);
+    //console.log('[ProgressUI] Initializing within element:', rootElement);
     this.rootElement = rootElement;
     this.eventBus = eventBusInstance;
 

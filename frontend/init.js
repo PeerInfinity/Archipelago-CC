@@ -277,12 +277,11 @@ async function _postInitializeSingleModule(moduleId) {
       console.log(`[Init Helper] Post-initializing module: ${moduleId}`);
       // Special handling for stateManager postInitialize to pass mode-specific data
       if (moduleId === 'stateManager') {
+        const resolvedSettings = await settingsManager.getSettings();
         const smInitialConfig = {
           rulesConfig: G_combinedModeData.rulesConfig,
-          gameId: (await settingsManager.getSetting('activeGame')) || 'ALTTP',
-          playerId: '1', // Default player ID for now
-          settings: G_combinedModeData.userSettings,
-          // eventsConfig: G_combinedModeData.eventsConfig, // Uncomment if eventsConfig is used
+          playerId: G_combinedModeData.userSettings.playerId || '1',
+          settings: resolvedSettings,
         };
         console.log(
           '[Init Helper] Passing smInitialConfig to stateManager.postInitialize:',
