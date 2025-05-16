@@ -47,6 +47,8 @@ self.onerror = function (message, source, lineno, colno, error) {
 import { StateManager } from './stateManager.js';
 // Import the actual rule evaluation function
 import { evaluateRule } from './ruleEngine.js';
+// Import StateManagerProxy to access its COMMANDS enum
+import { StateManagerProxy } from './stateManagerProxy.js';
 // NOTE: ALTTPInventory, ALTTPState, ALTTPHelpers are imported
 // and instantiated *inside* StateManager.js constructor or used directly.
 
@@ -130,6 +132,32 @@ self.onmessage = async function (e) {
         });
         // Process any pre-init queue messages if we had such a mechanism
         // For now, direct initialization is assumed.
+        break;
+
+      case StateManagerProxy.COMMANDS.BEGIN_BATCH_UPDATE: // Using COMMANDS object
+        if (!workerInitialized || !stateManagerInstance) {
+          throw new Error('Worker not initialized. Cannot begin batch update.');
+        }
+        // Payload might indicate if region computation should be deferred.
+        // For now, assume the default deferral behavior in StateManager.beginBatchUpdate()
+        // If payload contains { deferRegionComputation: true/false }, pass it along:
+        // stateManagerInstance.beginBatchUpdate(message.payload?.deferRegionComputation);
+        stateManagerInstance.beginBatchUpdate(
+          message.payload?.deferRegionComputation !== undefined
+            ? message.payload.deferRegionComputation
+            : true
+        );
+        // No explicit response needed, batching is an internal state change for the worker.
+        break;
+
+      case StateManagerProxy.COMMANDS.COMMIT_BATCH_UPDATE: // Using COMMANDS object
+        if (!workerInitialized || !stateManagerInstance) {
+          throw new Error(
+            'Worker not initialized. Cannot commit batch update.'
+          );
+        }
+        stateManagerInstance.commitBatchUpdate();
+        // commitBatchUpdate internally sends a snapshot update if changes occurred.
         break;
 
       case 'applyRuntimeState':

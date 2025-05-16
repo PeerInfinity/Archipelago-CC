@@ -20,6 +20,8 @@ export class StateManagerProxy {
     CLEAR_CHECKED_LOCATIONS: 'clearCheckedLocations',
     UPDATE_SETTING: 'updateSetting', // For game-specific settings like ALTTP flags
     APPLY_RUNTIME_STATE: 'applyRuntimeState', // New command
+    BEGIN_BATCH_UPDATE: 'beginBatchUpdate', // Added command
+    COMMIT_BATCH_UPDATE: 'commitBatchUpdate', // Added command
   };
 
   constructor(eventBus) {
@@ -563,6 +565,37 @@ export class StateManagerProxy {
   getStaticData() {
     // console.log('[StateManagerProxy getStaticData] Called. Cache:', this.staticDataCache);
     return this.staticDataCache;
+  }
+
+  /**
+   * Signals the worker to begin a batch update.
+   * @param {boolean} [deferRegionComputation=true] - Whether to defer region computation in the worker until commit.
+   * @returns {Promise<void>} A promise that resolves when the command has been sent.
+   */
+  async beginBatchUpdate(deferRegionComputation = true) {
+    // Send command without expecting a direct response for this action.
+    // The worker will change its internal state.
+    this._sendCommand(
+      StateManagerProxy.COMMANDS.BEGIN_BATCH_UPDATE,
+      { deferRegionComputation },
+      false
+    );
+    return Promise.resolve(); // Command sent
+  }
+
+  /**
+   * Signals the worker to commit the current batch update.
+   * @returns {Promise<void>} A promise that resolves when the command has been sent.
+   */
+  async commitBatchUpdate() {
+    // Send command without expecting a direct response for this action.
+    // The worker will process the batch and send a snapshot update if necessary.
+    this._sendCommand(
+      StateManagerProxy.COMMANDS.COMMIT_BATCH_UPDATE,
+      null,
+      false
+    );
+    return Promise.resolve(); // Command sent
   }
 
   // --- Start of specific static data getters ---

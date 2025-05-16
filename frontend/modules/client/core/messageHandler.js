@@ -285,74 +285,106 @@ export class MessageHandler {
     const stateManager = await this._getStateManager();
     if (!stateManager) {
       console.error(
-        'Failed to process received items: stateManager not available'
+        '[MessageHandler _handleReceivedItems] Failed to process received items: stateManager not available'
       );
       return;
     }
 
     // Skip if we're already processing
     if (sharedClientState.processingBatchItems) {
-      console.log('Already processing an item batch, skipping duplicate');
+      console.log(
+        '[MessageHandler _handleReceivedItems] Already processing an item batch, skipping duplicate'
+      );
       return;
     }
 
     // Set processing flag
     sharedClientState.processingBatchItems = true;
-    console.log(`Processing ${data.items.length} items from server`);
+    this._logDebug(
+      `[MessageHandler _handleReceivedItems] Processing ${data.items.length} items from server`
+    );
+
+    const processedItemDetails = []; // Array to hold { itemName, locationNameToMark }
 
     try {
-      // Batch update for better performance
-      stateManager.beginBatchUpdate(true);
+      // NOTE: Batch update calls are now around the collection and single applyRuntimeStateData call
+      await stateManager.beginBatchUpdate(true); // deferRegionComputation = true
 
-      // Process each item from the server
+      // Process each item from the server to collect details
       for (const item of data.items) {
+        let itemName = 'unknown'; // Default for logging in case of issues
         try {
-          // Get item name
-          const itemName = getItemNameFromServerId(item.item, stateManager);
+          itemName = getItemNameFromServerId(item.item, stateManager);
           if (!itemName) {
             console.warn(
-              `Could not find matching item for server ID: ${item.item}`
+              `[MessageHandler _handleReceivedItems] Could not find matching item name for server ID: ${item.item}`
             );
-            continue;
+            continue; // Skip this item if name not found
           }
 
-          // Skip if this item was just clicked by the user
+          // Skip if this item was just clicked by the user (to prevent echo processing)
           if (
             sharedClientState.userClickedItems &&
             sharedClientState.userClickedItems.has(itemName)
           ) {
-            console.log(
-              `Skipping server item ${itemName} as it was just clicked by user`
+            this._logDebug(
+              `[MessageHandler _handleReceivedItems] Skipping server item ${itemName} as it was just clicked by user`
             );
             sharedClientState.userClickedItems.delete(itemName);
             continue;
           }
 
-          // Add the item to inventory - this is the ONLY place networked items are added
-          console.log(`Adding item from server: ${itemName}`);
-          stateManager.addItemToInventory(itemName);
+          const locationNameToMark =
+            item.location !== null && typeof item.location !== 'undefined'
+              ? getLocationNameFromServerId(item.location, stateManager)
+              : null;
 
-          // Mark location as checked if needed
-          try {
-            const locationName = getLocationNameFromServerId(
-              item.location,
-              stateManager
+          if (
+            item.location !== null &&
+            typeof item.location !== 'undefined' &&
+            !locationNameToMark
+          ) {
+            this._logDebug(
+              `[MessageHandler _handleReceivedItems] Could not map server location ID ${item.location} to a name for item ${itemName}. Item will be added without marking this specific location.`
             );
-            if (locationName && !stateManager.isLocationChecked(locationName)) {
-              stateManager.checkLocation(locationName);
-            }
-          } catch (err) {
-            console.warn(`Failed to mark location for item ${itemName}`);
           }
+
+          processedItemDetails.push({ itemName, locationNameToMark });
+          this._logDebug(
+            `[MessageHandler _handleReceivedItems] Collected for batch: Item ${itemName}, Location to mark: ${
+              locationNameToMark || 'None'
+            }`
+          );
         } catch (error) {
-          console.error(`Error processing item ${item.item}:`, error);
+          // Catch errors from processing a single item (e.g., getting itemName or locationName)
+          console.error(
+            `[MessageHandler _handleReceivedItems] Error preparing item ID ${item.item} (current item name context: ${itemName}):`,
+            error
+          );
         }
       }
 
-      // Commit updates
-      stateManager.commitBatchUpdate();
-      stateManager.notifyUI('inventoryChanged');
-      stateManager.notifyUI('locationChecked');
+      // If there are items to process, send them to StateManager
+      if (processedItemDetails.length > 0) {
+        this._logDebug(
+          `[MessageHandler _handleReceivedItems] Sending ${processedItemDetails.length} processed item details to applyRuntimeStateData.`
+        );
+        // This is a fire-and-forget call to the proxy; the batch commit will ensure processing.
+        stateManager.applyRuntimeStateData({
+          receivedItemsForProcessing: processedItemDetails,
+        });
+      }
+
+      // Commit updates (this will trigger computations and snapshot in StateManager if changes occurred)
+      await stateManager.commitBatchUpdate();
+    } catch (batchError) {
+      // Catch errors related to beginBatchUpdate, commitBatchUpdate, or the applyRuntimeStateData call itself
+      console.error(
+        '[MessageHandler _handleReceivedItems] Error during batch processing of received items:',
+        batchError
+      );
+      // It might be prudent to ensure batch processing flag is reset even if commit fails
+      // However, the finally block handles this.
     } finally {
       // Always clear the processing flag
       setTimeout(() => {
@@ -362,9 +394,20 @@ export class MessageHandler {
 
     // Publish notification
     this.eventBus?.publish('game:itemsReceived', {
-      index: data.index,
-      count: data.items.length,
+      index: data.index, // Original index from server packet
+      count: data.items.length, // Original count from server packet
+      processedCount: processedItemDetails.length, // Actual count of items prepared for StateManager
     });
+  }
+
+  _logDebug(message, ...args) {
+    // Basic debug logger, can be expanded (e.g., check a debug flag)
+    // For now, ensuring it exists if called.
+    if (console.debug) {
+      console.debug(message, ...args);
+    } else {
+      // console.log(message, ...args); // Fallback if console.debug is not available
+    }
   }
 
   async _handleRoomUpdate(data) {
