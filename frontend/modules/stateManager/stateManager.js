@@ -205,21 +205,66 @@ export class StateManager {
     // this._publishEvent('inventoryChanged'); // Snapshot update implies this
   }
 
-  clearState() {
-    const progressionMapping = this.inventory.progressionMapping || {};
-    const itemData = this.inventory.itemData || {};
-    const groupData = this.inventory.groupData || {};
-    this.inventory = new ALTTPInventory([], progressionMapping, itemData);
-    this.inventory.groupData = groupData;
-    this.itemData = itemData;
-    this.groupData = groupData;
-    this.state = new ALTTPState();
-    this.clearCheckedLocations(); // This calls _publishEvent('checkedLocationsCleared') -> maybe keep this specific event?
+  clearState(options = { recomputeAndSendUpdate: true }) {
+    const progressionMapping = this.inventory
+      ? this.inventory.progressionMapping || {}
+      : {};
+    const itemData = this.inventory ? this.inventory.itemData || {} : {};
+    const groupData = this.inventory ? this.inventory.groupData || {} : {};
+
+    // Re-initialize inventory
+    if (this.inventory && typeof this.inventory.reset === 'function') {
+      this.inventory.reset();
+      // Ensure critical data like progressionMapping, itemData, groupData are restored if reset clears them
+      // This assumes they are part of the core ruleset and should persist across a clearState.
+      if (this.inventory.progressionMapping !== progressionMapping)
+        this.inventory.progressionMapping = progressionMapping;
+      if (this.inventory.itemData !== itemData)
+        this.inventory.itemData = itemData;
+      if (this.inventory.groupData !== groupData)
+        this.inventory.groupData = groupData;
+    } else {
+      this.inventory = this._createInventoryInstance(
+        this.settings ? this.settings.game : this.gameId || 'UnknownGame'
+      );
+      // _createInventoryInstance should ideally use this.progressionMapping, this.itemData from StateManager instance itself
+      // For now, assuming _createInventoryInstance correctly initializes with these.
+    }
+
+    // Re-initialize game-specific state (e.g., ALTTPState)
+    if (this.state && typeof this.state.reset === 'function') {
+      this.state.reset();
+    } else if (this.settings) {
+      const gameSettings = this.settings;
+      const determinedGameName = gameSettings.game || this.gameId;
+      if (determinedGameName === 'Adventure') {
+        this.state = new GameState(determinedGameName);
+      } else if (determinedGameName === 'A Link to the Past') {
+        this.state = new ALTTPState();
+      } else {
+        this.state = new GameState(determinedGameName);
+      }
+      if (this.state.loadSettings) this.state.loadSettings(gameSettings);
+    } else {
+      // Fallback if no settings to determine game type
+      this.state = new ALTTPState(); // Or a generic GameState
+    }
+
+    this.clearCheckedLocations({ sendUpdate: false }); // Call quietly
+
     this.indirectConnections = new Map();
     this.invalidateCache();
-    this._logDebug('[StateManager Class] Full state cleared.');
-    this.computeReachableRegions(); // Recompute, triggers snapshot update
-    // this._publishEvent('inventoryChanged'); // Snapshot update implies this
+    this._logDebug(
+      '[StateManager Class] Internal state structures cleared by clearState.'
+    );
+
+    if (options.recomputeAndSendUpdate) {
+      this._logDebug(
+        '[StateManager Class] clearState recomputing and sending snapshot.'
+      );
+      this.computeReachableRegions();
+      this._sendSnapshotUpdate();
+    }
   }
 
   /**
@@ -1664,14 +1709,17 @@ export class StateManager {
   /**
    * Clear all checked locations
    */
-  clearCheckedLocations() {
-    if (this.checkedLocations.size > 0) {
+  clearCheckedLocations(options = { sendUpdate: true }) {
+    if (this.checkedLocations && this.checkedLocations.size > 0) {
+      // Ensure checkedLocations exists
       this.checkedLocations.clear();
       this._logDebug('[StateManager Class] Cleared checked locations.');
-      // Publish specific event for this?
-      this._publishEvent('checkedLocationsCleared'); // Maybe keep this one
-      // Send snapshot update
-      this._sendSnapshotUpdate();
+      this._publishEvent('checkedLocationsCleared');
+      if (options.sendUpdate) {
+        this._sendSnapshotUpdate();
+      }
+    } else if (!this.checkedLocations) {
+      this.checkedLocations = new Set(); // Initialize if it was null/undefined
     }
   }
 
@@ -2535,229 +2583,145 @@ export class StateManager {
       payload
     );
 
-    let madeChanges = false;
-    const newInventoryItems = new Map();
-
-    // Determine if this is a full sync based on location data presence
-    const isFullSync =
-      payload.serverCheckedLocationNames ||
-      payload.serverUncheckedLocationNames;
-
-    if (isFullSync) {
+    // 1. Reset game-specific state (e.g., ALTTPState for events, dungeon states etc.)
+    if (this.state && typeof this.state.reset === 'function') {
+      this.state.reset();
       this._logDebug(
-        '[StateManager applyRuntimeState] Full sync detected. Rebuilding inventory.'
+        '[StateManager applyRuntimeState] Game-specific state (this.state) reset.'
       );
-      // Preserve client-managed items (null ID in itemNameToId) and true client-only items (not in itemNameToId)
-      if (this.inventory && this.inventory.items instanceof Map) {
-        for (const [itemName, currentCount] of this.inventory.items.entries()) {
-          if (currentCount > 0) {
-            const isKnownToRules = Object.hasOwn(this.itemNameToId, itemName);
-            const idFromMap = isKnownToRules
-              ? this.itemNameToId[itemName]
-              : undefined;
-
-            if (!isKnownToRules || idFromMap === null) {
-              newInventoryItems.set(itemName, currentCount);
-              this._logDebug(
-                `[StateManager applyRuntimeState] Preserved item (client-only or null ID): ${itemName} (count: ${currentCount})`
-              );
-            }
-          }
-        }
+    } else if (this.settings) {
+      // Fallback: Re-create state if reset is not available but settings are
+      const gameSettings = this.settings;
+      const determinedGameName = gameSettings.game || this.gameId;
+      if (determinedGameName === 'Adventure') {
+        this.state = new GameState(determinedGameName);
+      } else if (determinedGameName === 'A Link to the Past') {
+        this.state = new ALTTPState();
       } else {
-        console.warn(
-          '[StateManager applyRuntimeState] Current inventory not available for preserving items.'
-        );
+        this.state = new GameState(determinedGameName);
       }
-      // Server-tracked items (known to rules with non-null ID) will be added/updated from receivedItemsForProcessing below.
-      // If not sent by server, they will effectively be cleared if they were not preserved above.
+      if (this.state && typeof this.state.loadSettings === 'function')
+        this.state.loadSettings(gameSettings);
+      this._logDebug(
+        '[StateManager applyRuntimeState] Game-specific state (this.state) re-initialized.'
+      );
+    } else {
+      console.warn(
+        '[StateManager applyRuntimeState] Could not reset or re-initialize game-specific state (this.state).'
+      );
     }
 
-    // --- Process receivedItemsForProcessing --- (This will now add to newInventoryItems if full sync, or current inventory if not)
-    let itemsActuallyProcessed = 0;
+    // 2. Reset inventory
+    if (this.inventory && typeof this.inventory.reset === 'function') {
+      this.inventory.reset(); // This should clear this.inventory.items while keeping itemData/progressionMapping
+      this._logDebug(
+        '[StateManager applyRuntimeState] Inventory reset via this.inventory.reset().'
+      );
+    } else {
+      // Fallback: re-create it
+      const gameNameForInventory = this.settings
+        ? this.settings.game
+        : this.gameId || 'UnknownGame';
+      this.inventory = this._createInventoryInstance(gameNameForInventory);
+      this._logDebug(
+        `[StateManager applyRuntimeState] Inventory re-initialized via _createInventoryInstance for ${gameNameForInventory}.`
+      );
+    }
+    // Ensure itemData and groupData are on the inventory if _createInventoryInstance doesn't handle it or reset clears it.
+    // This assumes this.itemData and this.groupData (on StateManager) are the canonical sources from rules.json.
+    if (
+      this.inventory &&
+      this.itemData &&
+      this.inventory.itemData !== this.itemData
+    ) {
+      this.inventory.itemData = this.itemData;
+    }
+    if (
+      this.inventory &&
+      this.groupData &&
+      this.inventory.groupData !== this.groupData
+    ) {
+      this.inventory.groupData = this.groupData;
+    }
+
+    // 3. Clear pathfinding cache and related structures
+    this.indirectConnections = new Map();
+    this.invalidateCache(); // This clears knownReachableRegions, path, blockedConnections, sets cacheValid = false
+    this._logDebug(
+      '[StateManager applyRuntimeState] Pathfinding cache and indirect connections cleared.'
+    );
+
+    // 4. Process Server Checked Locations (conditionally)
+    if (
+      payload.serverCheckedLocationNames &&
+      Array.isArray(payload.serverCheckedLocationNames)
+    ) {
+      this.clearCheckedLocations({ sendUpdate: false }); // Clear all current checked locations quietly
+      payload.serverCheckedLocationNames.forEach((name) => {
+        if (this.checkedLocations) {
+          // Should have been initialized by clearCheckedLocations
+          this.checkedLocations.add(name);
+        }
+      });
+      this._logDebug(
+        `[StateManager applyRuntimeState] Processed ${
+          payload.serverCheckedLocationNames.length
+        } server checked locations. Resulting this.checkedLocations size: ${
+          this.checkedLocations ? this.checkedLocations.size : 'undefined'
+        }`
+      );
+    } else {
+      this._logDebug(
+        '[StateManager applyRuntimeState] No serverCheckedLocationNames in payload; existing checkedLocations preserved.'
+      );
+    }
+    // serverUncheckedLocationNames from payload implies they should not be in checkedLocations,
+    // which is handled by the clearCheckedLocations() if serverCheckedLocationNames is present.
+
+    // 5. Process Received Items (add to now-reset inventory)
     if (
       payload.receivedItemsForProcessing &&
       Array.isArray(payload.receivedItemsForProcessing)
     ) {
       if (!this.inventory) {
         console.warn(
-          '[StateManager applyRuntimeState] Inventory not initialized. Attempting default init for item processing.'
+          '[StateManager applyRuntimeState] Inventory is unexpectedly null/undefined before processing received items.'
         );
-        this.inventory = new ALTTPInventory([], {}, {}); // Should be already initialized by loadFromJSON
-      }
-      if (!this.checkedLocations) {
-        this.checkedLocations = new Set();
-      }
-
-      const targetInventoryMap = isFullSync
-        ? newInventoryItems
-        : this.inventory
-        ? this.inventory.items
-        : new Map();
-
-      payload.receivedItemsForProcessing.forEach((itemDetail) => {
-        if (itemDetail && itemDetail.itemName) {
-          const currentCount = targetInventoryMap.get(itemDetail.itemName) || 0;
-          targetInventoryMap.set(itemDetail.itemName, currentCount + 1); // Assuming each item in payload is 1 instance
-          this._logDebug(
-            `[StateManager applyRuntimeState] Added/updated item in target map: ${itemDetail.itemName}`
-          );
-          itemsActuallyProcessed++;
-
-          if (itemDetail.locationNameToMark) {
-            if (!this.checkedLocations.has(itemDetail.locationNameToMark)) {
-              this.checkedLocations.add(itemDetail.locationNameToMark);
-              this._logDebug(
-                `[StateManager applyRuntimeState] Location marked due to received item: ${itemDetail.locationNameToMark}`
+      } else {
+        let itemsProcessedCount = 0;
+        payload.receivedItemsForProcessing.forEach((itemDetail) => {
+          if (itemDetail && itemDetail.itemName) {
+            if (typeof this.inventory.addItem === 'function') {
+              this.inventory.addItem(itemDetail.itemName);
+              itemsProcessedCount++;
+            } else {
+              console.warn(
+                `[StateManager applyRuntimeState] this.inventory.addItem is not a function for item: ${itemDetail.itemName}`
               );
-              madeChanges = true; // Location change always triggers this
             }
           }
-        }
-      });
-
-      if (itemsActuallyProcessed > 0) {
-        madeChanges = true; // Processing items implies a potential change to inventory state
-      }
-    }
-
-    // If it was a full sync, replace the inventory and check if it actually changed.
-    if (isFullSync) {
-      if (this.inventory) {
-        // Compare newInventoryItems with this.inventory.items before replacing to accurately set madeChanges
-        if (this.inventory.items.size !== newInventoryItems.size) {
-          madeChanges = true;
-        }
-        if (!madeChanges) {
-          // Only iterate if size is the same
-          for (const [key, value] of newInventoryItems) {
-            if (this.inventory.items.get(key) !== value) {
-              madeChanges = true;
-              break;
-            }
-          }
-          // Also check if current inventory has items not in newInventoryItems (only possible if preserve logic missed something or an item became non-client-only)
-          if (!madeChanges) {
-            for (const key of this.inventory.items.keys()) {
-              if (
-                !newInventoryItems.has(key) &&
-                (this.inventory.items.get(key) || 0) > 0
-              ) {
-                // If current has an item with count > 0 not in new, it means it was cleared.
-                madeChanges = true;
-                break;
-              }
-            }
-          }
-        }
-
-        if (typeof this.inventory.setInventory === 'function') {
-          this.inventory.setInventory(newInventoryItems);
-        } else if (this.inventory.items instanceof Map) {
-          // Fallback for inventories without setInventory but with a Map
-          this.inventory.items = newInventoryItems;
-        } else {
-          console.error(
-            '[StateManager applyRuntimeState] Cannot set new inventory: unsupported inventory structure.'
-          );
-        }
-        if (madeChanges)
+        });
+        if (itemsProcessedCount > 0) {
           this._logDebug(
-            '[StateManager applyRuntimeState] Inventory replaced after full sync.'
+            `[StateManager applyRuntimeState] Added ${itemsProcessedCount} items from payload to inventory.`
           );
-      } else {
-        console.warn(
-          '[StateManager applyRuntimeState] Inventory object missing, cannot apply new inventory items for full sync.'
-        );
+        }
       }
     }
 
-    // --- Existing logic for serverCheckedLocationNames / serverUncheckedLocationNames (location part) ---
-    if (
-      payload.serverCheckedLocationNames ||
-      payload.serverUncheckedLocationNames
-    ) {
-      const initialCheckedCount = this.checkedLocations
-        ? this.checkedLocations.size
-        : 0;
-      if (!this.checkedLocations) {
-        this.checkedLocations = new Set();
-      }
-
-      const clientOnlyCheckedLocations = new Set();
-      if (this.locations && this.checkedLocations) {
-        for (const locName of this.checkedLocations) {
-          const locationData = this.locations.find((l) => l.name === locName);
-          if (locationData && typeof locationData.id === 'undefined') {
-            clientOnlyCheckedLocations.add(locName);
-          } else if (!locationData && this.checkedLocations.has(locName)) {
-            this._logDebug(
-              `[StateManager applyRuntimeState] Checked location '${locName}' not found in current game locations. It will not be preserved as client-only.`
-            );
-          }
-        }
-      }
-
-      const newCheckedLocations = new Set();
-      if (payload.serverCheckedLocationNames) {
-        payload.serverCheckedLocationNames.forEach((name) =>
-          newCheckedLocations.add(name)
-        );
-      }
-      clientOnlyCheckedLocations.forEach((name) =>
-        newCheckedLocations.add(name)
-      );
-
-      let locations_changed = false; // Declare the variable
-      if (this.checkedLocations.size !== newCheckedLocations.size) {
-        locations_changed = true;
-      } else {
-        for (const loc of newCheckedLocations) {
-          if (!this.checkedLocations.has(loc)) {
-            locations_changed = true;
-            break;
-          }
-        }
-        if (!locations_changed) {
-          // Check if any were removed
-          for (const loc of this.checkedLocations) {
-            if (!newCheckedLocations.has(loc)) {
-              locations_changed = true;
-              break;
-            }
-          }
-        }
-      }
-      if (locations_changed) {
-        madeChanges = true;
-        this._logDebug(
-          '[StateManager applyRuntimeState] Checked locations updated by server data or client-only reconciliation.'
-        );
-      }
-      this.checkedLocations = newCheckedLocations;
-    }
-
-    if (madeChanges) {
-      this._logDebug('[StateManager applyRuntimeState] State was modified.');
-      this.isModified = true;
-    } else {
-      this._logDebug(
-        '[StateManager applyRuntimeState] No changes to state from this payload.'
-      );
-    }
-
+    // 6. Finalize state and send snapshot
     if (!this.batchUpdateActive) {
       this._logDebug(
-        '[StateManager applyRuntimeState] Not in batch mode, potentially triggering computation and snapshot.'
+        '[StateManager applyRuntimeState] Not in batch mode. Recomputing regions and sending snapshot.'
       );
-      if (this.isModified) {
-        this.computeReachableRegions();
-        this._sendSnapshotUpdate(); // Corrected method call
-      }
+      this.computeReachableRegions(); // InvalidateCache was called, so this will fully recompute
+      this._sendSnapshotUpdate();
+      this.isModified = false;
     } else {
       this._logDebug(
-        '[StateManager applyRuntimeState] In batch mode, computation and snapshot deferred.'
+        '[StateManager applyRuntimeState] In batch mode. Computation and snapshot deferred. Marking as modified.'
       );
+      this.isModified = true; // Resetting inventory/state and potentially locations implies modifications.
     }
   }
 
