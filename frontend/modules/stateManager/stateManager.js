@@ -66,6 +66,7 @@ export class StateManager {
 
     // Checked locations tracking
     this.checkedLocations = new Set();
+    // this.serverProvidedUncheckedLocations = new Set(); // Removed
 
     this._uiCallbacks = {};
 
@@ -1398,6 +1399,9 @@ export class StateManager {
    * @return {boolean} - Whether the location is accessible
    */
   isLocationAccessible(location) {
+    // The check for serverProvidedUncheckedLocations was removed from here.
+    // A location being unchecked by the server does not mean it's inaccessible by rules.
+
     const reachableRegions = this.computeReachableRegions();
     if (!reachableRegions.has(location.region)) {
       return false;
@@ -2507,10 +2511,11 @@ export class StateManager {
     const snapshot = {
       inventory: inventorySnapshot,
       settings: { ...this.settings },
-      flags: Array.from(this.checkedLocations || []),
+      flags: Array.from(this.checkedLocations || []), // Represents checked locations
       state: this.state.getState(), // Contains game-specific state like mode, dungeon states
       reachability: finalReachability,
       locationItems: locationItemsMap,
+      // serverProvidedUncheckedLocations: Array.from(this.serverProvidedUncheckedLocations || []), // Optionally expose if UI needs it directly
       player: {
         name: this.settings?.playerName || `Player ${this.playerSlot}`,
         slot: this.playerSlot,
@@ -2522,6 +2527,91 @@ export class StateManager {
       gameMode: this.mode,
     };
     return snapshot;
+  }
+
+  applyRuntimeState(payload) {
+    this._logDebug(
+      '[StateManager applyRuntimeState] Applying runtime state from server (checked and unchecked location names):',
+      payload
+    );
+    let stateChanged = false;
+
+    const serverCheckedNames = new Set(
+      payload.serverCheckedLocationNames || []
+    );
+    const serverUncheckedNames = new Set(
+      payload.serverUncheckedLocationNames || []
+    );
+
+    const newlyCalculatedCheckedLocations = new Set();
+
+    for (const loc of this.locations) {
+      const locName = loc.name;
+      // Check if the location has a server-relevant ID.
+      // Assuming loc.id is present and non-null for server-tracked locations.
+      // Locations without an ID, or with a specifically null/undefined ID are client-only.
+      const isServerTracked =
+        loc.id !== null && loc.id !== undefined && String(loc.id).trim() !== ''; // Basic check for a meaningful ID
+
+      if (isServerTracked) {
+        if (serverCheckedNames.has(locName)) {
+          newlyCalculatedCheckedLocations.add(locName);
+        } else if (serverUncheckedNames.has(locName)) {
+          // Explicitly unchecked by server, so do not add to newlyCalculatedCheckedLocations
+        } else {
+          // Server-tracked location but not in either list from server.
+          // This case implies the server doesn't know about it OR there's a data mismatch.
+          // For safety, preserve its current state if it was already checked locally due to some client-side action.
+          // However, typically, if it's server-tracked, its state should be dictated by the server lists.
+          // If it wasn't in serverCheckedNames, it means the server considers it unchecked.
+          // So, if it's server-tracked and NOT in serverCheckedNames, it should be considered unchecked.
+          // This means we don't add it to newlyCalculatedCheckedLocations unless explicitly in serverCheckedNames.
+          console.warn(
+            `[StateManager applyRuntimeState] Server-tracked location '${locName}' (ID: ${loc.id}) was not in serverCheckedNames nor serverUncheckedNames. Assuming unchecked by server.`
+          );
+        }
+      } else {
+        // Client-only location (no server ID or ID is null/undefined)
+        // Preserve its current checked status.
+        if (this.checkedLocations.has(locName)) {
+          newlyCalculatedCheckedLocations.add(locName);
+        }
+      }
+    }
+
+    // Compare the newly calculated set with the current this.checkedLocations
+    if (
+      this.checkedLocations.size !== newlyCalculatedCheckedLocations.size ||
+      !Array.from(this.checkedLocations).every((locName) =>
+        newlyCalculatedCheckedLocations.has(locName)
+      ) ||
+      !Array.from(newlyCalculatedCheckedLocations).every((locName) =>
+        this.checkedLocations.has(locName)
+      )
+    ) {
+      this._logDebug(
+        '[StateManager applyRuntimeState] this.checkedLocations WILL BE UPDATED based on server lists and client-only preservation.'
+      );
+      this._logDebug(
+        '[StateManager applyRuntimeState] Old checkedLocations:',
+        Array.from(this.checkedLocations)
+      );
+      this.checkedLocations = newlyCalculatedCheckedLocations;
+      this._logDebug(
+        '[StateManager applyRuntimeState] New checkedLocations:',
+        Array.from(this.checkedLocations)
+      );
+      stateChanged = true;
+    } else {
+      this._logDebug(
+        '[StateManager applyRuntimeState] No change to this.checkedLocations needed.'
+      );
+    }
+
+    if (stateChanged) {
+      this.invalidateCache(); // Essential if checkedLocations affect reachability
+      this._sendSnapshotUpdate(); // Send new state to UI
+    }
   }
 
   async loadRules(source) {

@@ -10,6 +10,7 @@ import {
   loadMappingsFromStorage,
 } from '../utils/idMapping.js';
 import { sharedClientState } from './sharedState.js';
+import { stateManagerProxySingleton } from '../../stateManager/index.js';
 
 export class MessageHandler {
   constructor() {
@@ -20,8 +21,8 @@ export class MessageHandler {
     this.clientTeam = null;
     this.players = [];
 
-    // Cache for stateManager instance
-    this.stateManager = null;
+    // Use the imported stateManagerProxySingleton directly
+    this.stateManager = stateManagerProxySingleton;
     this.eventBus = null; // Add property for injected eventBus
   }
 
@@ -114,22 +115,17 @@ export class MessageHandler {
     }
   }
 
-  // Get stateManager instance dynamically
+  // Get stateManager instance (now returns the proxy directly)
   async _getStateManager() {
-    if (this.stateManager) {
-      return this.stateManager;
+    if (!this.stateManager) {
+      // This case should ideally not happen if constructor assigns it.
+      console.error('[MessageHandler] stateManager (proxy) not available!');
+      // Fallback or re-attempt import if absolutely necessary, but direct import is preferred.
+      // For now, let's assume the constructor sets it.
+      // To be safe, re-assign if it's somehow null:
+      // this.stateManager = stateManagerProxySingleton;
     }
-
-    try {
-      const module = await import(
-        '../../stateManager/stateManagerSingleton.js'
-      );
-      this.stateManager = module.default;
-      return this.stateManager;
-    } catch (error) {
-      console.error('Error loading stateManager:', error);
-      return null;
-    }
+    return this.stateManager;
   }
 
   // Private message handlers
@@ -222,23 +218,40 @@ export class MessageHandler {
     this.clientSlot = data.slot;
     this.players = data.players;
 
-    // Get stateManager
-    const stateManager = await this._getStateManager();
+    const stateManager = await this._getStateManager(); // This now gets the proxy
     if (stateManager) {
-      // Initialize stateManager's server-related fields
-      stateManager.team = this.clientTeam;
-      stateManager.slot = this.clientSlot;
-
-      // Process locations
+      const serverCheckedLocationNames = [];
       if (data.checked_locations && data.checked_locations.length > 0) {
-        await this._syncLocationsFromServer(data.checked_locations);
+        for (const id of data.checked_locations) {
+          const name = getLocationNameFromServerId(id, stateManager);
+          if (name && name !== `Location ${id}`) {
+            serverCheckedLocationNames.push(name);
+          } else {
+            console.warn(
+              `[MessageHandler _handleConnected] Could not map server location ID ${id} (from checked_locations) to a known name.`
+            );
+          }
+        }
       }
 
-      // Update missing locations in stateManager
-      if (data.missing_locations) {
-        stateManager.missing_locations = new Set(data.missing_locations);
-        stateManager.invalidateCache();
+      const serverUncheckedLocationNames = [];
+      if (data.missing_locations && data.missing_locations.length > 0) {
+        for (const id of data.missing_locations) {
+          const name = getLocationNameFromServerId(id, stateManager);
+          if (name && name !== `Location ${id}`) {
+            serverUncheckedLocationNames.push(name);
+          } else {
+            console.warn(
+              `[MessageHandler _handleConnected] Could not map server location ID ${id} (from missing_locations) to a known name.`
+            );
+          }
+        }
       }
+
+      stateManager.applyRuntimeStateData({
+        serverCheckedLocationNames: serverCheckedLocationNames,
+        serverUncheckedLocationNames: serverUncheckedLocationNames,
+      });
     }
 
     // Use injected eventBus

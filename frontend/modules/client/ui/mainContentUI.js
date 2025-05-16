@@ -214,16 +214,23 @@ class MainContentUI {
       this.connectButton.addEventListener('click', () => {
         console.log('[MainContentUI] Connect button clicked');
 
-        // Use injected connection and eventBus
+        // Use injected connection
         if (this.connection.isConnected()) {
-          this.eventBus.publish('network:disconnectRequest', {});
+          // For disconnect, we can still use an event or call a direct method on connection
+          // Let's assume connection.disconnect() is the direct way for now or it handles an event.
+          this.connection.disconnect(); // Assuming a direct disconnect method exists
         } else {
           const serverAddress =
             this.serverAddressInput.value || 'ws://localhost:38281';
-          this.eventBus.publish('network:connectRequest', {
-            serverAddress,
-            password: '',
-          });
+          // Directly call a method on the connection object to request connection
+          if (typeof this.connection.requestConnect === 'function') {
+            this.connection.requestConnect(serverAddress, ''); // password hardcoded as empty
+          } else {
+            console.error(
+              '[MainContentUI] this.connection.requestConnect is not a function. Connection attempt failed.'
+            );
+            // Optionally, provide user feedback here
+          }
         }
       });
     }

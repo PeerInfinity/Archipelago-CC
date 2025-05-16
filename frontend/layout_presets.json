@@ -10,13 +10,13 @@
           "content": [
             {
               "type": "component",
-              "componentType": "testsPanel",
-              "title": "Tests"
+              "componentType": "inventoryPanel",
+              "title": "Inventory"
             },
             {
               "type": "component",
-              "componentType": "inventoryPanel",
-              "title": "Inventory"
+              "componentType": "testsPanel",
+              "title": "Tests"
             },
             {
               "type": "component",

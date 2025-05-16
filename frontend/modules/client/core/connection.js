@@ -33,6 +33,64 @@ export class Connection {
     console.log('Connection module initialized');
   }
 
+  requestConnect(address, password) {
+    console.log('[Connection] requestConnect called with:', {
+      address,
+      password,
+    });
+    let effectiveAddress = address;
+    let effectivePassword = password;
+
+    if (!effectiveAddress) {
+      console.log(
+        '[Connection] Address not provided directly, trying to load from storage...'
+      );
+      try {
+        const storedSettingsString = storage.getItem('clientSettings');
+        if (storedSettingsString) {
+          const storedSettings = JSON.parse(storedSettingsString);
+          if (storedSettings && storedSettings.connection) {
+            effectiveAddress = storedSettings.connection.serverAddress;
+            // Only use stored password if no password was provided to the function
+            if (
+              password === undefined ||
+              password === null ||
+              password === ''
+            ) {
+              effectivePassword = storedSettings.connection.password;
+            }
+            console.log('[Connection] Loaded from storage:', {
+              effectiveAddress,
+              effectivePassword,
+            });
+          }
+        }
+      } catch (e) {
+        console.error(
+          '[Connection] Error reading clientSettings from storage:',
+          e
+        );
+        this.eventBus?.publish('connection:error', {
+          message: 'Error reading connection settings from storage.',
+        });
+        return false; // Indicate failure if storage read fails and no address was given
+      }
+    }
+
+    if (!effectiveAddress) {
+      console.warn(
+        '[Connection] No address provided and could not load from storage. Connect attempt aborted.'
+      );
+      this.eventBus?.publish('connection:error', {
+        message: 'Server address not provided and not found in settings.',
+      });
+      return false; // Indicate failure
+    }
+
+    // Call the existing connect method
+    return this.connect(effectiveAddress, effectivePassword);
+  }
+
   connect(address, password = null) {
     // Close existing connection if open
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {

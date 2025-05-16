@@ -132,6 +132,22 @@ self.onmessage = async function (e) {
         // For now, direct initialization is assumed.
         break;
 
+      case 'applyRuntimeState':
+        console.log(
+          '[stateManagerWorker onmessage] Processing applyRuntimeState command...'
+        );
+        if (!workerInitialized || !stateManagerInstance) {
+          throw new Error(
+            'Worker not initialized. Cannot apply runtime state.'
+          );
+        }
+        if (!message.payload) {
+          throw new Error('Invalid payload for applyRuntimeState command.');
+        }
+        stateManagerInstance.applyRuntimeState(message.payload);
+        // applyRuntimeState in StateManager should handle sending a snapshot update if necessary
+        break;
+
       case 'loadRules':
         console.log(
           '[stateManagerWorker onmessage] Processing loadRules command...'
