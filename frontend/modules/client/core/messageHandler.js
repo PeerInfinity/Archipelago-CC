@@ -6,11 +6,13 @@ import Config from './config.js';
 import {
   getItemNameFromServerId,
   getLocationNameFromServerId,
+  getServerLocationId,
   initializeMappingsFromDataPackage,
   loadMappingsFromStorage,
 } from '../utils/idMapping.js';
 import { sharedClientState } from './sharedState.js';
 import { stateManagerProxySingleton } from '../../stateManager/index.js';
+import { getClientModuleDispatcher } from '../index.js';
 
 export class MessageHandler {
   constructor() {
@@ -24,6 +26,7 @@ export class MessageHandler {
     // Use the imported stateManagerProxySingleton directly
     this.stateManager = stateManagerProxySingleton;
     this.eventBus = null; // Add property for injected eventBus
+    this.dispatcher = null; // Added dispatcher property
   }
 
   // Add method to inject eventBus
@@ -32,6 +35,11 @@ export class MessageHandler {
     this.eventBus = busInstance;
     // Now subscribe to connection events *after* eventBus is set
     this._subscribeToConnectionEvents();
+  }
+
+  setDispatcher(dispatcherInstance) {
+    console.log('[MessageHandler] Setting Dispatcher instance.');
+    this.dispatcher = dispatcherInstance;
   }
 
   initialize() {
@@ -748,99 +756,138 @@ export class MessageHandler {
    * @returns {Promise<boolean>} - Whether successful
    */
   async checkLocation(location) {
-    const stateManager = await this._getStateManager();
-    if (!stateManager) {
-      console.error('Failed to check location: stateManager not available');
-      return false;
-    }
-
-    // Case 1: If given a location ID directly, find the location object
-    if (typeof location === 'number' || typeof location === 'string') {
-      const locationId = Number(location);
-      const locationObj = stateManager.locations.find(
-        (loc) => Number(loc.id) === locationId
-      );
-
-      if (locationObj) {
-        return this.checkLocation(locationObj); // Recursive call with the location object
-      } else {
-        console.warn(`Location with ID ${locationId} not found`);
-        return false;
-      }
-    }
-
-    // Check if location is already marked as checked to prevent duplicate processing
-    if (stateManager.isLocationChecked(location.name)) {
-      console.log(`Location ${location.name} already checked, skipping`);
-      return true;
-    }
-
-    // Case 2: Handle locations with null ID (local-only events)
-    if (location.id === null || location.id === undefined) {
-      console.log(`Processing local-only location: ${location.name}`);
-
-      // Mark location as checked locally
-      stateManager.checkLocation(location.name);
-
-      // If it's an event location with an item, add the item to inventory
-      if (location.item) {
-        console.log(
-          `Local event location contains item: ${location.item.name}`
-        );
-        stateManager.addItemToInventory(location.item.name);
-
-        // Process event in state if applicable
-        if (
-          stateManager.state &&
-          typeof stateManager.state.processEventItem === 'function'
-        ) {
-          stateManager.state.processEventItem(location.item.name);
-        }
-      }
-
-      // Update state and UI
-      stateManager.invalidateCache();
-      stateManager.notifyUI('locationChecked');
-      stateManager.notifyUI('inventoryChanged');
-
-      return true;
-    }
-
-    // Case 3: Regular location with valid ID
-    console.log(`Processing networked location: ${location.name}`);
-
-    // Mark the location as checked locally
-    stateManager.checkLocation(location.name);
-
-    // Add this location ID to a temporary tracking set to avoid duplicate processing
-    sharedClientState.pendingLocationChecks.add(location.id);
-
-    // Set a timeout to remove from pending set (in case server never responds)
-    setTimeout(() => {
-      sharedClientState.pendingLocationChecks.delete(location.id);
-    }, 10000); // 10 second timeout
-
-    // Send to server if connected
-    if (connection.isConnected()) {
-      this.sendLocationChecks([location.id]);
+    // This method seems to be an old way of checking locations,
+    // new logic uses user:locationCheck event and handleUserLocationCheckForClient.
+    // It might need to be refactored or removed if fully superseded.
+    console.warn(
+      '[MessageHandler] checkLocation method called directly. This might be outdated.'
+    );
+    const serverId = await getServerLocationId(location, this.stateManager);
+    if (serverId !== null) {
+      this.sendLocationChecks([serverId]);
     } else {
-      console.log('OFFLINE MODE: Processing networked location locally');
-      // Add the item locally when offline
-      if (location.item) {
-        console.log(`Adding item locally: ${location.item.name}`);
-        stateManager.addItemToInventory(location.item.name);
-        stateManager.notifyUI('inventoryChanged');
-      }
+      console.warn(`Could not find server ID for location: ${location}`);
+    }
+  }
+
+  // Method used by the exported handler
+  _getDispatcher() {
+    // This method is a bit of a workaround to ensure the exported function
+    // can access the dispatcher instance stored on the singleton.
+    // Alternatively, client/index.js could pass the dispatcher to the handler.
+    return this.dispatcher;
+  }
+
+  // Actual method to send location checks, used by the exported handler
+  _internalSendLocationChecks(locationIds) {
+    if (!connection.isConnected()) {
+      console.warn(
+        '[MessageHandler] Not connected, cannot send location checks.'
+      );
+      // Use injected eventBus
+      this.eventBus?.publish('error:client', {
+        type: 'ConnectionError',
+        message: 'Not connected to server.',
+      });
+      return;
     }
 
-    // Update state and UI
-    stateManager.invalidateCache();
-    stateManager.notifyUI('locationChecked');
+    if (locationIds.length === 0) return;
 
-    return true;
+    // Use clientSlot from this instance
+    const slot = this.clientSlot;
+    if (slot === undefined || slot === null) {
+      console.error(
+        '[MessageHandler] Client slot not defined, cannot send location checks'
+      );
+      return;
+    }
+
+    connection.send([
+      {
+        cmd: 'LocationChecks',
+        locations: locationIds,
+      },
+    ]);
+    console.log(
+      `[MessageHandler] Sent location check for IDs: ${locationIds.join(', ')}`
+    );
+
+    // Update shared state for UI feedback (optional)
+    sharedClientState.checksSent += locationIds.length;
+    // Use injected eventBus
+    this.eventBus?.publish('client:checksSentUpdated', {
+      count: sharedClientState.checksSent,
+    });
   }
 }
 
 // Create and export a singleton instance
-export const messageHandler = new MessageHandler();
-export default messageHandler;
+const messageHandlerSingleton = new MessageHandler();
+export default messageHandlerSingleton;
+
+// New handler for user:locationCheck event
+export async function handleUserLocationCheckForClient(
+  eventData,
+  propagationOptions
+) {
+  // Access the dispatcher from the messageHandlerSingleton, which should have been set during client module initialization.
+  // Or, preferably, get it from getClientModuleDispatcher from client/index.js to avoid relying on singleton state here.
+  const dispatcher = getClientModuleDispatcher();
+
+  if (connection.isConnected()) {
+    console.log(
+      '[ClientModule/MessageHandler] Handling user:locationCheck while connected.',
+      eventData
+    );
+    if (eventData.locationName) {
+      const serverId = await getServerLocationId(
+        eventData.locationName,
+        stateManagerProxySingleton
+      );
+      if (serverId !== null) {
+        messageHandlerSingleton._internalSendLocationChecks([serverId]); // Use the internal method
+      } else {
+        console.warn(
+          `[ClientModule/MessageHandler] Could not find server ID for location: ${eventData.locationName}`
+        );
+        // Event was processed (attempted), do not propagate by default unless specific need.
+      }
+    } else {
+      console.log(
+        '[ClientModule/MessageHandler] user:locationCheck received with no specific locationName. Propagating for local handling.'
+      );
+      if (dispatcher) {
+        // Assuming 'client' is the correct module name string for itself
+        dispatcher.publishToNextModule(
+          'Client',
+          'user:locationCheck',
+          eventData,
+          { direction: 'up' }
+        );
+      } else {
+        console.error(
+          '[ClientModule/MessageHandler] Dispatcher not available for propagation when no locationName specified.'
+        );
+      }
+    }
+    // Event considered handled (or attempted by client module).
+  } else {
+    // Not connected, propagate up for potential local handling (e.g., by StateManager).
+    console.log(
+      '[ClientModule/MessageHandler] Not connected. Propagating user:locationCheck up.'
+    );
+    if (dispatcher) {
+      dispatcher.publishToNextModule(
+        'Client',
+        'user:locationCheck',
+        eventData,
+        { direction: 'up' }
+      );
+    } else {
+      console.error(
+        '[ClientModule/MessageHandler] Dispatcher not available for propagation when not connected.'
+      );
+    }
+  }
+}

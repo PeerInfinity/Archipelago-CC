@@ -1,6 +1,7 @@
 // Core state and UI for this module
 import loopStateSingleton from './loopStateSingleton.js';
 import { LoopUI } from './loopUI.js';
+import { handleUserLocationCheckForLoops } from './loopEvents.js'; // Import new handler
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -16,7 +17,13 @@ export const moduleInfo = {
 // Store instance and API
 let loopInstance = null;
 let _moduleEventBus = null;
-let _moduleDispatcher = null;
+let moduleDispatcher = null; // To store the full dispatcher instance
+
+// Export dispatcher for use by other files in this module (e.g., loopEvents.js)
+export function getLoopsModuleDispatcher() {
+  return moduleDispatcher;
+}
+
 let loopUnsubscribeHandles = [];
 
 // --- Import the actual singletons needed for injection ---
@@ -43,15 +50,12 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
   loopInstance?.renderLoopPanel();
 
   // Propagate the event to the next module in the chain using stored dispatcher
-  if (_moduleDispatcher) {
-    // Assuming the original publish direction was 'up'
-    _moduleDispatcher.publishToNextModule(
+  if (moduleDispatcher) {
+    moduleDispatcher.publishToNextModule(
       'loops',
       'state:rulesLoaded',
       eventData,
-      {
-        direction: 'up',
-      }
+      { direction: 'up' }
     );
   } else {
     console.error(
@@ -60,56 +64,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
   }
 }
 
-// Handler for check location request
-function handleCheckLocationRequest(locationData) {
-  console.log(
-    `[Loops Module] Intercepting check request for: ${locationData.name}`
-  );
-  // Check if loop mode is active directly via singleton
-  const isLoopModeActive = loopStateSingleton?.isLoopModeActive ?? false;
-
-  if (isLoopModeActive) {
-    // Handle loop mode queuing
-    console.log(
-      `[Loops Module] Loop mode active. Queuing check for ${locationData.name}.`
-    );
-    // Get LoopUI instance if available - loopInstance is set during registration callback (but we changed registration)
-    // We need a reliable way to access LoopUI's methods or have loopState handle queuing.
-    // For now, assuming loopState handles queuing internally or we need another approach.
-    if (
-      loopStateSingleton &&
-      typeof loopStateSingleton.queueCheckLocationAction === 'function'
-    ) {
-      loopStateSingleton.queueCheckLocationAction(
-        locationData.region,
-        locationData.name
-      );
-    } else {
-      console.warn(
-        '[Loops Module] loopStateSingleton.queueCheckLocationAction not available.'
-      );
-      // Fallback or error handling?
-    }
-  } else {
-    // Pass to predecessors using stored dispatcher
-    console.log(
-      '[Loops Module] Loop mode inactive. Passing check request to predecessors.'
-    );
-    if (_moduleDispatcher) {
-      // Assuming the original publish direction was 'up' for user:checkLocation
-      _moduleDispatcher.publishToNextModule(
-        'loops',
-        'user:checkLocation',
-        locationData,
-        { direction: 'up' }
-      );
-    } else {
-      console.error(
-        '[Loops Module] Cannot pass event to predecessors: Dispatcher not available.'
-      );
-    }
-  }
-}
+// Removed old handleCheckLocationRequest as it will be replaced by handleUserLocationCheckForLoops from loopEvents.js
 
 /**
  * Registration function for the Loops module.
@@ -144,11 +99,11 @@ export function register(registrationApi) {
     },
   });
 
-  // Register primary handler for checking locations when in loop mode
+  // Register the new dispatcher receiver for user:locationCheck
   registrationApi.registerDispatcherReceiver(
-    moduleInfo.name, // Associate with this module
-    'user:checkLocation',
-    handleCheckLocationRequest,
+    moduleInfo.name,
+    'user:locationCheck',
+    handleUserLocationCheckForLoops, // Use the new imported handler
     { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 
@@ -164,12 +119,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Store API references
   _moduleEventBus = initializationApi.getEventBus();
-  const apiDispatcher = initializationApi.getDispatcher();
-  // Store the dispatcher publish methods, not the whole object maybe?
-  _moduleDispatcher = {
-    publish: apiDispatcher.publish,
-    publishToNextModule: apiDispatcher.publishToNextModule,
-  };
+  moduleDispatcher = initializationApi.getDispatcher(); // Store the full dispatcher instance
 
   const moduleSettings = await initializationApi.getModuleSettings(moduleId);
 
@@ -181,6 +131,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       loopStateSingleton.setDependencies({
         eventBus: _moduleEventBus,
         stateManager: stateManager,
+        dispatcher: moduleDispatcher, // Pass dispatcher to loopStateSingleton if needed
       });
 
       loopStateSingleton.initialize();
@@ -254,7 +205,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     loopUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     loopUnsubscribeHandles = [];
     _moduleEventBus = null; // Clear references
-    _moduleDispatcher = null;
+    moduleDispatcher = null; // Clear the dispatcher on cleanup
     // Call dispose on loopStateSingleton if it exists
     if (
       loopStateSingleton &&

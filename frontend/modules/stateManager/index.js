@@ -67,6 +67,14 @@ function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('init:postInitComplete');
   // TODO: Add intents for events the proxy might need to listen for (e.g., server messages for sync)
 
+  // Register dispatcher receiver for user:locationCheck
+  registrationApi.registerDispatcherReceiver(
+    moduleInfo.name, // 'stateManager'
+    'user:locationCheck',
+    handleUserLocationCheckForStateManager, // Use the new handler
+    null // No further propagation
+  );
+
   // Register JSON Data Handler
   registrationApi.registerJsonDataHandler(
     'stateManagerRuntime', // Data Key
@@ -245,5 +253,74 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
         '[StateManager Module] EventBus not available to publish critical error.'
       );
     }
+  }
+}
+
+async function handleUserLocationCheckForStateManager(eventData) {
+  console.log(
+    '[StateManagerModule] Handling user:locationCheck locally.',
+    eventData
+  );
+  if (eventData.locationName) {
+    await stateManagerProxySingleton.checkLocation(eventData.locationName); // Command worker
+  } else {
+    // Handle "check next available" locally.
+    // This requires StateManagerProxySingleton to expose a method that commands the worker
+    // to find and check the next available local location.
+    // e.g., await stateManagerProxySingleton.checkNextLocalLocation();
+    console.log(
+      '[StateManagerModule] Received generic check request. Logic to find and check next local location needed.'
+    );
+    // For now, you might need to add a new command to StateManager worker
+    // or replicate the logic from the old timerState._checkNextAvailableLocation here,
+    // using await stateManagerProxySingleton.getSnapshot() etc.
+    // Example of finding and checking next available (conceptual):
+    /*
+        const snapshot = await stateManagerProxySingleton.getLatestStateSnapshot();
+        const staticData = stateManagerProxySingleton.getStaticData();
+        if (snapshot && staticData && staticData.locations) {
+            const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+            const allLocations = Object.values(staticData.locations);
+            let nextLocationToCheck = null;
+
+            // Find the first accessible, unchecked location based on original order if available
+            const originalOrder = stateManagerProxySingleton.getOriginalLocationOrder();
+            if (originalOrder && originalOrder.length > 0) {
+                for (const locName of originalOrder) {
+                    const loc = staticData.locations[locName];
+                    if (loc && !snapshot.flags.includes(loc.name)) {
+                        const parentRegionName = loc.parent_region || loc.region;
+                        const parentRegionReachable = snapshot.reachability[parentRegionName] === 'reachable' || snapshot.reachability[parentRegionName] === 'checked';
+                        const ruleResult = loc.access_rule ? evaluateRule(loc.access_rule, snapshotInterface) : true;
+                        if (parentRegionReachable && ruleResult) {
+                            nextLocationToCheck = loc.name;
+                            break;
+                        }
+                    }
+                }
+            } else { // Fallback: iterate all locations if no original order
+                for (const loc of allLocations) {
+                    if (!snapshot.flags.includes(loc.name)) {
+                        const parentRegionName = loc.parent_region || loc.region;
+                        const parentRegionReachable = snapshot.reachability[parentRegionName] === 'reachable' || snapshot.reachability[parentRegionName] === 'checked';
+                        const ruleResult = loc.access_rule ? evaluateRule(loc.access_rule, snapshotInterface) : true;
+                        if (parentRegionReachable && ruleResult) {
+                            nextLocationToCheck = loc.name;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (nextLocationToCheck) {
+                console.log(`[StateManagerModule] Auto-checking next available location: ${nextLocationToCheck}`);
+                await stateManagerProxySingleton.checkLocation(nextLocationToCheck);
+            } else {
+                console.log("[StateManagerModule] No accessible, unchecked locations found to auto-check.");
+            }
+        } else {
+            console.warn("[StateManagerModule] Cannot auto-check next location: snapshot or static data not available.");
+        }
+        */
   }
 }

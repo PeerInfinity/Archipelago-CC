@@ -1,0 +1,172 @@
+// frontend/modules/timer/index.js
+import { TimerLogic } from './timerLogic.js';
+import { TimerUI } from './timerUI.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { stateManagerProxySingleton } from '../stateManager/index.js'; // For dependency injection
+import eventBus from '../../app/core/eventBus.js'; // For dependency injection
+
+export const moduleInfo = {
+  name: 'Timer',
+  description: 'Manages the location check timer and related UI elements.',
+};
+
+let timerLogicInstance = null;
+let timerUIInstance = null;
+let dispatcher = null; // Stored from initializationApi
+let moduleEventBus = null; // Stored from initializationApi
+
+/**
+ * Registration function for the Timer module.
+ * @param {object} registrationApi - API provided by the initialization script.
+ */
+export function register(registrationApi) {
+  console.log(`[Timer Module] Registering module: ${moduleInfo.name}`);
+
+  registrationApi.registerPublicFunction('getTimerUIDOMElement', () => {
+    if (!timerUIInstance) {
+      console.error(
+        `[${moduleInfo.name} Module] getTimerUIDOMElement called but timerUIInstance is not yet available.`
+      );
+      const errorDiv = document.createElement('div');
+      errorDiv.style.color = 'red';
+      errorDiv.textContent = `${moduleInfo.name} UI not ready.`;
+      return errorDiv;
+    }
+    if (typeof timerUIInstance.getDOMElement !== 'function') {
+      console.error(
+        `[${moduleInfo.name} Module] timerUIInstance.getDOMElement is not a function.`
+      );
+      const errorDiv = document.createElement('div');
+      errorDiv.style.color = 'red';
+      errorDiv.textContent = `${moduleInfo.name} UI method getDOMElement missing.`;
+      return errorDiv;
+    }
+    return timerUIInstance.getDOMElement();
+  });
+
+  // Register events this module publishes
+  registrationApi.registerEventBusPublisher(
+    moduleInfo.name,
+    'user:locationCheck'
+  );
+  registrationApi.registerEventBusPublisher(moduleInfo.name, 'timer:started');
+  registrationApi.registerEventBusPublisher(moduleInfo.name, 'timer:stopped');
+  registrationApi.registerEventBusPublisher(
+    moduleInfo.name,
+    'timer:progressUpdate'
+  );
+  registrationApi.registerEventBusPublisher(moduleInfo.name, 'ui:notification');
+
+  // Register events this module subscribes to
+  registrationApi.registerEventBusSubscriberIntent(
+    moduleInfo.name,
+    'loop:modeChanged'
+  );
+  registrationApi.registerEventBusSubscriberIntent(
+    moduleInfo.name,
+    'settings:changed'
+  );
+  registrationApi.registerEventBusSubscriberIntent(
+    moduleInfo.name,
+    'stateManager:snapshotUpdated'
+  );
+  registrationApi.registerEventBusSubscriberIntent(
+    moduleInfo.name,
+    'connection:open'
+  );
+  registrationApi.registerEventBusSubscriberIntent(
+    moduleInfo.name,
+    'connection:close'
+  );
+  registrationApi.registerEventBusSubscriberIntent(
+    moduleInfo.name,
+    'stateManager:rulesLoaded'
+  );
+
+  console.log(`[${moduleInfo.name} Module] Registration complete.`);
+}
+
+/**
+ * Initialization function for the Timer module.
+ * @param {string} moduleId - The unique ID for this module.
+ * @param {number} priorityIndex - The loading priority index.
+ * @param {object} initializationApi - API provided by the initialization script.
+ */
+export async function initialize(moduleId, priorityIndex, initializationApi) {
+  console.log(
+    `[${moduleInfo.name} Module] Initializing with priority ${priorityIndex}... (ID: ${moduleId})`
+  );
+
+  dispatcher = initializationApi.getDispatcher();
+  moduleEventBus = initializationApi.getEventBus();
+
+  if (!dispatcher || !moduleEventBus) {
+    console.error(
+      `[${moduleInfo.name} Module] Critical error: Dispatcher or EventBus not available.`
+    );
+    return () => {}; // Return an empty cleanup function
+  }
+
+  try {
+    timerLogicInstance = new TimerLogic({
+      stateManager: stateManagerProxySingleton,
+      eventBus: moduleEventBus,
+      dispatcher: dispatcher,
+      moduleName: moduleInfo.name, // Pass module name for logging
+    });
+
+    timerUIInstance = new TimerUI({
+      timerLogic: timerLogicInstance,
+      eventBus: moduleEventBus,
+      moduleName: moduleInfo.name, // Pass module name for logging
+    });
+
+    if (
+      timerLogicInstance &&
+      typeof timerLogicInstance.initialize === 'function'
+    ) {
+      timerLogicInstance.initialize();
+    } else {
+      console.error(
+        `[${moduleInfo.name} Module] timerLogicInstance or its initialize method is problematic.`
+      );
+    }
+
+    if (timerUIInstance && typeof timerUIInstance.initialize === 'function') {
+      timerUIInstance.initialize();
+    } else {
+      console.error(
+        `[${moduleInfo.name} Module] timerUIInstance or its initialize method is problematic.`
+      );
+    }
+  } catch (error) {
+    console.error(
+      `[${moduleInfo.name} Module] Error during instantiation or initialization of TimerLogic/TimerUI:`,
+      error
+    );
+    // Ensure timerUIInstance is null if its instantiation failed before getTimerUIDOMElement might be called
+    timerUIInstance = null;
+  }
+
+  console.log(`[${moduleInfo.name} Module] Initialization complete.`);
+
+  return () => {
+    console.log(`[${moduleInfo.name} Module] Cleaning up...`);
+    if (
+      timerLogicInstance &&
+      typeof timerLogicInstance.dispose === 'function'
+    ) {
+      timerLogicInstance.dispose();
+    }
+    if (timerUIInstance && typeof timerUIInstance.dispose === 'function') {
+      timerUIInstance.dispose();
+    }
+    timerLogicInstance = null;
+    timerUIInstance = null;
+    dispatcher = null;
+    moduleEventBus = null;
+  };
+}
+
+// No postInitialize needed for this module currently.
+// export async function postInitialize(initializationApi) {}

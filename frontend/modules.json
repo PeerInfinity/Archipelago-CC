@@ -20,6 +20,10 @@
       "path": "./modules/client/index.js",
       "enabled": true
     },
+    "timer": {
+      "path": "./modules/timer/index.js",
+      "enabled": true
+    },
     "inventory": {
       "path": "./modules/inventory/index.js",
       "enabled": true
@@ -79,6 +83,7 @@
     "events",
     "stateManager",
     "client",
+    "timer",
     "inventory",
     "editor",
     "settings",

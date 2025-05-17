@@ -4,9 +4,11 @@ import MainContentUI from './ui/mainContentUI.js';
 import storage from './core/storage.js';
 import connection from './core/connection.js';
 import { loadMappingsFromStorage } from './utils/idMapping.js';
-import messageHandler from './core/messageHandler.js';
+import messageHandler, {
+  handleUserLocationCheckForClient,
+} from './core/messageHandler.js';
 import LocationManager from './core/locationManager.js';
-import timerState from './core/timerState.js'; // Import timerState singleton
+// import timerState from './core/timerState.js'; // Removed
 // import {
 //   initializeTimerState,
 //   attachLoopModeListeners,
@@ -59,9 +61,10 @@ export const moduleInfo = {
 let moduleEventBus = null;
 let coreStorage = null;
 let coreConnection = null;
-let coreMessageHandler = null;
+let coreMessageHandler = messageHandler;
 let coreLocationManager = LocationManager;
-let coreTimerState = timerState; // Store timerState singleton reference
+// let coreTimerState = timerState; // Removed
+let moduleDispatcher = null; // Renamed from 'dispatcher' for clarity and consistency
 
 // --- Dispatcher Handler for Disconnect (Connect is now handled directly by connection.js) --- //
 function handleDisconnectRequest(data) {
@@ -88,6 +91,14 @@ export function register(registrationApi) {
     handleDisconnectRequest
   );
 
+  // Register dispatcher receiver for user:locationCheck
+  registrationApi.registerDispatcherReceiver(
+    moduleInfo.name,
+    'user:locationCheck',
+    handleUserLocationCheckForClient, // Use the new imported handler
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
+  );
+
   // Register EventBus publisher intentions
   registrationApi.registerEventBusPublisher(moduleInfo.name, 'error:client');
   // MainContentUI might still publish these, so keep registration for now
@@ -99,11 +110,9 @@ export function register(registrationApi) {
     moduleInfo.name,
     'network:connectRequest' // This is if MainContentUI publishes connect on EventBus (though it now calls directly)
   );
-  registrationApi.registerEventBusPublisher(moduleInfo.name, 'control:start');
-  registrationApi.registerEventBusPublisher(
-    moduleInfo.name,
-    'control:quickCheck'
-  );
+  // Removed event bus registrations for control:start and control:quickCheck as they are now internal to Timer module
+  // registrationApi.registerEventBusPublisher(moduleInfo.name, 'control:start');
+  // registrationApi.registerEventBusPublisher(moduleInfo.name, 'control:quickCheck');
 }
 
 // --- Initialization --- //
@@ -111,6 +120,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   console.log(`[Client Module] Initializing with priority ${priorityIndex}...`);
 
   moduleEventBus = initializationApi.getEventBus();
+  moduleDispatcher = initializationApi.getDispatcher(); // Store dispatcher
   const moduleSettings = await initializationApi.getModuleSettings(moduleId);
 
   coreStorage = storage;
@@ -122,10 +132,18 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   coreConnection.setEventBus(moduleEventBus); // connection.js still uses eventBus for its own outgoing events
   coreMessageHandler.initialize();
   coreMessageHandler.setEventBus(moduleEventBus);
+  // messageHandler will need dispatcher for propagation, set it if it has a method for it
+  if (typeof coreMessageHandler.setDispatcher === 'function') {
+    coreMessageHandler.setDispatcher(moduleDispatcher);
+  } else {
+    console.warn(
+      '[Client Module] coreMessageHandler does not have setDispatcher method.'
+    );
+  }
   coreLocationManager.initialize();
   coreLocationManager.setEventBus(moduleEventBus);
-  coreTimerState.initialize();
-  coreTimerState.setEventBus(moduleEventBus);
+  // coreTimerState.initialize(); // Removed
+  // coreTimerState.setEventBus(moduleEventBus); // Removed
   loadMappingsFromStorage();
 
   console.log('[Client Module] Core components initialized.');
@@ -136,13 +154,19 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     console.log('[Client Module] Cleaning up... (Placeholder)');
     coreConnection?.disconnect?.();
     coreLocationManager?.dispose?.();
-    coreTimerState?.dispose?.();
+    // coreTimerState?.dispose?.(); // Removed
     moduleEventBus = null;
     coreStorage = null;
     coreConnection = null;
     coreMessageHandler = null;
-    coreTimerState = null;
+    // coreTimerState = null; // Removed
+    moduleDispatcher = null;
   };
+}
+
+// Export dispatcher for use by other files in this module (e.g., messageHandler.js)
+export function getClientModuleDispatcher() {
+  return moduleDispatcher;
 }
 
 // --- Dispatcher Handlers --- //

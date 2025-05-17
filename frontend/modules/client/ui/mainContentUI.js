@@ -2,11 +2,10 @@
 
 import ConsoleUI from './consoleUI.js';
 import { stateManagerProxySingleton as stateManager } from '../../stateManager/index.js';
-import ProgressUI from './progressUI.js';
-import timerState from '../core/timerState.js'; // Import timerState singleton
-import messageHandler from '../core/messageHandler.js'; // Import messageHandler singleton
-import eventBus from '../../../app/core/eventBus.js'; // Import eventBus singleton
-import connection from '../core/connection.js'; // Import connection singleton
+import messageHandler from '../core/messageHandler.js';
+import eventBus from '../../../app/core/eventBus.js';
+import connection from '../core/connection.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js'; // Added for timer UI injection
 
 class MainContentUI {
   constructor(container, componentState) {
@@ -20,20 +19,12 @@ class MainContentUI {
     this.consoleHistoryElement = null;
     this.statusIndicator = null;
     this.connectButton = null;
-    this.progressBar = null;
-    this.checksSentElement = null;
-    this.controlButton = null;
-    this.quickCheckButton = null;
     this.serverAddressInput = null;
-    this.progressUICleanup = null; // Add property to store cleanup function
 
-    // Use imported singletons directly
     this.eventBus = eventBus;
     this.connection = connection;
 
-    // Store references needed by console commands
     this.stateManager = stateManager;
-    this.timerState = timerState;
     this.messageHandler = messageHandler;
 
     // Subscribe to connection events using the imported eventBus singleton
@@ -80,7 +71,7 @@ class MainContentUI {
     if (!this.rootElement) {
       console.log('[MainContentUI] Creating new root element');
       this.rootElement = document.createElement('div');
-      this.rootElement.className = 'main-content-panel'; // Restore class name
+      this.rootElement.className = 'main-content-panel';
       this.rootElement.style.width = '100%';
       this.rootElement.style.height = '100%';
       this.rootElement.style.display = 'flex';
@@ -90,12 +81,10 @@ class MainContentUI {
       this.rootElement.style.padding = '10px';
       this.rootElement.style.boxSizing = 'border-box';
 
-      // Restore the original HTML structure
-      this.rootElement.innerHTML = ` 
+      this.rootElement.innerHTML = `
         <div style="margin-bottom: 10px; border-bottom: 1px solid #666; padding-bottom: 5px;">
           <h3 style="margin: 0 0 10px 0;">Console & Status</h3>
           
-          <!-- Status Bar - Replicating the original structure but with modern styling -->
           <div id="status-bar" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
             <div style="display: flex; align-items: center; gap: 5px;">
               AP Server: <span id="server-status" class="status-indicator" style="color: yellow; font-weight: bold;">Not Connected</span>
@@ -107,21 +96,10 @@ class MainContentUI {
             </div>
           </div>
           
-          <!-- Progress Container - Replicating the original structure -->
-          <div id="progress-container" style="margin-bottom: 10px; padding: 8px; background-color: #333; border-radius: 4px;">
-            <h3 id="progress-container-header" style="margin: 0 0 5px 0; font-size: 1em;">Location Check Progress</h3>
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-              <progress id="progress-bar" value="0" max="30000" style="flex-grow: 1; height: 15px;"></progress>
-              <span id="checks-sent" style="min-width: 80px; text-align: right;">Checked: 0</span>
-            </div>
-            <div class="button-container" style="display: flex; gap: 10px;">
-              <button id="control-button" disabled="disabled" style="padding: 4px 10px;">Begin!</button>
-              <button id="quick-check-button" disabled="disabled" style="padding: 4px 10px;">Quick Check</button>
-            </div>
-          </div>
+          <!-- Timer UI Placeholder -->
+          <div id="timer-ui-placeholder" style="margin-bottom: 10px;"></div>
         </div>
         
-        <!-- Console Area - Main output area -->
         <div id="main-console" class="main-console" style="flex-grow: 1; overflow-y: auto; background-color: #222; border: 1px solid #444; padding: 10px;">
           <div id="console-output" class="console-output console-messages">
             <div class="console-message">Welcome to the console!</div>
@@ -129,7 +107,6 @@ class MainContentUI {
           </div>
         </div>
         
-        <!-- Command Input Area -->
         <div id="command-wrapper" style="margin-top: 10px; display: flex;">
           <label for="main-console-input" style="display: none;"></label>
           <input id="main-console-input" type="text" placeholder="Enter command..." style="flex-grow: 1; padding: 5px; background-color: #333; color: #eee; border: 1px solid #555;" />
@@ -148,115 +125,91 @@ class MainContentUI {
       containerElement
     );
 
-    // Get the root element - this will create it if it doesn't exist
     const root = this.getRootElement();
 
-    // Clear the container first to prevent duplicates if called multiple times (though should only be once now)
     while (containerElement.firstChild) {
       containerElement.removeChild(containerElement.firstChild);
     }
 
-    // Append the root element to the container
     containerElement.appendChild(root);
     console.log('[MainContentUI] Root element appended to container');
 
-    // Store references to important elements
     this.consoleElement = root.querySelector('#main-console');
     this.consoleInputElement = root.querySelector('#main-console-input');
     this.consoleHistoryElement = root.querySelector('#console-output');
     this.statusIndicator = root.querySelector('#server-status');
     this.connectButton = root.querySelector('.connect-button');
     this.serverAddressInput = root.querySelector('#server-address');
-    this.progressBar = root.querySelector('#progress-bar');
-    this.checksSentElement = root.querySelector('#checks-sent');
-    this.controlButton = root.querySelector('#control-button');
-    this.quickCheckButton = root.querySelector('#quick-check-button');
 
-    // Attach event listeners
     this.attachEventListeners();
-
-    // Initialize the console
     this.initializeConsole();
-
-    // Register console commands
     this.registerConsoleCommands();
-
-    // Update connection status initially using injected connection instance
     this.updateConnectionStatus(
       this.connection.isConnected() ? 'connected' : 'disconnected'
     );
 
-    // Initialize ProgressUI within this component's root element
-    try {
-      if (ProgressUI && typeof ProgressUI.initializeWithin === 'function') {
-        console.log('[MainContentUI] Initializing ProgressUI within root...');
-        // Pass the root element AND the injected eventBus
-        // Store the returned cleanup function
-        this.progressUICleanup = ProgressUI.initializeWithin(
-          this.rootElement,
-          this.eventBus
+    // Inject Timer UI
+    const timerPlaceholder = this.rootElement.querySelector(
+      '#timer-ui-placeholder'
+    );
+    if (timerPlaceholder) {
+      try {
+        const timerModuleAPI = centralRegistry.getPublicFunction(
+          'timer',
+          'getTimerUIDOMElement'
         );
-      } else {
-        console.warn(
-          '[MainContentUI] ProgressUI or initializeWithin method not found.'
-        );
+        if (timerModuleAPI) {
+          const timerDOM = timerModuleAPI();
+          if (timerDOM) {
+            timerPlaceholder.appendChild(timerDOM);
+          } else {
+            console.warn(
+              "[MainContentUI] Timer module's getTimerUIDOMElement returned null."
+            );
+            timerPlaceholder.innerHTML = '<!-- Timer UI not available -->';
+          }
+        } else {
+          console.warn(
+            '[MainContentUI] Timer module or getTimerUIDOMElement function not registered. Timer UI will not be displayed.'
+          );
+          timerPlaceholder.innerHTML = '<!-- Timer module inactive -->';
+        }
+      } catch (error) {
+        console.error('[MainContentUI] Error injecting Timer UI:', error);
+        timerPlaceholder.innerHTML =
+          '<p style="color:red;">Error loading Timer UI.</p>';
       }
-    } catch (error) {
-      console.error('[MainContentUI] Error initializing ProgressUI:', error);
     }
 
     console.log('[MainContentUI] Elements initialized and references stored');
   }
 
   attachEventListeners() {
-    // Attach connect button listener
     if (this.connectButton && this.serverAddressInput) {
       this.connectButton.addEventListener('click', () => {
         console.log('[MainContentUI] Connect button clicked');
-
-        // Use injected connection
         if (this.connection.isConnected()) {
-          // For disconnect, we can still use an event or call a direct method on connection
-          // Let's assume connection.disconnect() is the direct way for now or it handles an event.
-          this.connection.disconnect(); // Assuming a direct disconnect method exists
+          this.connection.disconnect();
         } else {
           const serverAddress =
             this.serverAddressInput.value || 'ws://localhost:38281';
-          // Directly call a method on the connection object to request connection
           if (typeof this.connection.requestConnect === 'function') {
-            this.connection.requestConnect(serverAddress, ''); // password hardcoded as empty
+            this.connection.requestConnect(serverAddress, '');
           } else {
             console.error(
               '[MainContentUI] this.connection.requestConnect is not a function. Connection attempt failed.'
             );
-            // Optionally, provide user feedback here
           }
         }
       });
     }
 
-    // Attach control button listener
-    if (this.controlButton) {
-      this.controlButton.addEventListener('click', () => {
-        console.log('[MainContentUI] Control button clicked');
-        // Use injected eventBus
-        this.eventBus.publish('control:start', {});
-      });
-    }
-
-    // Attach quick check button listener
-    if (this.quickCheckButton) {
-      this.quickCheckButton.addEventListener('click', () => {
-        console.log('[MainContentUI] Quick Check button clicked');
-        // Use injected eventBus
-        this.eventBus.publish('control:quickCheck', {});
-      });
-    }
-
-    // Attach console input listener
     if (this.consoleInputElement) {
-      this.consoleInputElement.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && this.consoleInputElement.value.trim() !== '') {
+      this.consoleInputElement.addEventListener('keypress', (event) => {
+        if (
+          event.key === 'Enter' &&
+          this.consoleInputElement.value.trim() !== ''
+        ) {
           const command = this.consoleInputElement.value.trim();
           this.consoleInputElement.value = ''; // Clear input
 
@@ -465,61 +418,25 @@ class MainContentUI {
   }
 
   updateConnectionStatus(status) {
-    if (!this.statusIndicator || !this.connectButton) return;
-
-    switch (status) {
-      case true:
-      case 'connected':
+    if (this.statusIndicator) {
+      if (status === true || status === 'connected') {
         this.statusIndicator.textContent = 'Connected';
-        this.statusIndicator.style.color = 'lime';
-        this.connectButton.textContent = 'Disconnect';
-        break;
-      case 'connecting':
+        this.statusIndicator.style.color = 'lightgreen';
+        if (this.connectButton) this.connectButton.textContent = 'Disconnect';
+      } else if (status === 'connecting') {
         this.statusIndicator.textContent = 'Connecting...';
         this.statusIndicator.style.color = 'orange';
-        this.connectButton.textContent = 'Cancel'; // Or keep as Disconnect?
-        break;
-      case false:
-      case 'disconnected':
-      default:
+        if (this.connectButton) this.connectButton.textContent = 'Cancel';
+      } else {
         this.statusIndicator.textContent = 'Not Connected';
         this.statusIndicator.style.color = 'yellow';
-        this.connectButton.textContent = 'Connect';
-        break;
+        if (this.connectButton) this.connectButton.textContent = 'Connect';
+      }
     }
   }
 
-  // Methods for progress functionality
-  updateProgressBar(value, max) {
-    if (this.progressBar) {
-      this.progressBar.value = value;
-      if (max) this.progressBar.max = max;
-    }
-  }
-
-  updateChecksSent(count) {
-    if (this.checksSentElement) {
-      this.checksSentElement.textContent = `Checked: ${count}`;
-    }
-  }
-
-  setControlButtonState(isStarted) {
-    if (this.controlButton) {
-      this.controlButton.textContent = isStarted ? 'Pause' : 'Begin!';
-    }
-  }
-
-  // Add a cleanup method to be called by PanelManager/GoldenLayout
   dispose() {
     console.log('[MainContentUI] Disposing...');
-    // Call the cleanup function returned by ProgressUI.initializeWithin
-    if (typeof this.progressUICleanup === 'function') {
-      console.log('[MainContentUI] Cleaning up ProgressUI listeners...');
-      this.progressUICleanup();
-      this.progressUICleanup = null;
-    }
-    // Add any other cleanup needed for MainContentUI itself
-    // (e.g., remove own event listeners if any were attached directly to document/window)
     console.log('[MainContentUI] Dispose complete.');
   }
 }

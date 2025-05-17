@@ -16,6 +16,7 @@ import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
 } from '../commonUI/index.js';
+import { getDispatcher } from './index.js'; // Added import for dispatcher
 
 export class LocationUI {
   constructor(container, componentState) {
@@ -29,6 +30,7 @@ export class LocationUI {
     this.colorblindSettings = {}; // Cache colorblind settings
     this.isInitialized = false; // Add flag
     this.originalLocationOrder = []; // ADDED: To store original keys
+    this.dispatcher = getDispatcher(); // Get dispatcher instance
 
     this.container.element.appendChild(this.rootElement);
 
@@ -438,57 +440,56 @@ export class LocationUI {
     }
   }
 
-  async handleLocationClick(location) {
-    if (!location || !location.name) {
-      console.error('[LocationUI] Invalid location data for click:', location);
-      return;
-    }
-    console.log(`[LocationUI] Clicked location: ${location.name}`);
-    const snapshot = stateManager.getLatestStateSnapshot();
-    if (!snapshot) {
-      console.error(
-        '[LocationUI] Cannot handle click, snapshot not available.'
+  async handleLocationClick(locationData) {
+    if (!locationData || !locationData.name) {
+      console.warn(
+        '[LocationUI] handleLocationClick called with invalid locationData:',
+        locationData
       );
       return;
     }
 
-    const status = this.getLocationStatus(location.name, snapshot);
+    console.log(
+      `[LocationUI] Clicked on location: ${locationData.name}, Region: ${locationData.region}`
+    );
 
-    // Allow checking reachable/unreachable locations
-    // Prevent checking already checked locations (allow unchecking later if needed?)
-    if (status !== 'checked') {
-      try {
-        // Check if loop mode is active and intercept if necessary
-        if (loopStateSingleton.isLoopModeActive) {
-          console.log(
-            `[LocationUI] Loop mode active, dispatching check request for ${location.name}`
-          );
-          // Dispatch message for Loop module to handle
-          eventBus.publish('user:checkLocationRequest', {
-            locationData: location,
-          });
-          // The loop module will then call the proxy if appropriate
-        } else {
-          console.log(
-            `[LocationUI] Sending checkLocation command for ${location.name}`
-          );
-          await stateManager.checkLocation(location.name);
-          // UI update will happen via snapshotUpdated event
-        }
-      } catch (error) {
-        console.error(
-          `[LocationUI] Error sending checkLocation command for ${location.name}:`,
-          error
-        );
-        // Optionally show user feedback
-      }
-    } else {
-      console.log(`[LocationUI] Location ${location.name} is already checked.`);
-      // Maybe implement unchecking later? Requires proxy command.
-      // Example: await stateManager.uncheckLocation(location.name);
-      // Or allow details view via Ctrl+Click
-      this.showLocationDetails(location);
+    // Check if we have a valid snapshot for rule evaluation (optional, based on previous logic)
+    const snapshot = await stateManager.getLatestStateSnapshot();
+    if (!snapshot) {
+      console.warn(
+        '[LocationUI] Unable to get current game state snapshot. Proceeding with click dispatch anyway.'
+      );
+      // Potentially show a message to the user or just proceed with the event publish
     }
+
+    // Removed loop mode active check and direct call to stateManager or eventBus for checkLocationRequest
+
+    const payload = {
+      locationName: locationData.name,
+      regionName: locationData.region, // Ensure regionName is correctly passed
+      originator: 'LocationCardClick',
+      originalDOMEvent: true, // Assuming this is a direct user click
+    };
+
+    if (this.dispatcher) {
+      this.dispatcher.publish('user:locationCheck', payload, {
+        direction: 'bottom',
+      });
+      console.log('[LocationUI] Dispatched user:locationCheck', payload);
+    } else {
+      console.error(
+        '[LocationUI] Dispatcher not available to handle location click.'
+      );
+    }
+
+    // The rest of the original function (showing details, logging) can remain if needed.
+    // For example, showing details panel:
+    this.showLocationDetails(locationData);
+
+    // If there was logging for which locations were clicked for analytics/debugging:
+    // console.log(
+    //   `User interaction: Location card for '${locationData.name}' clicked.`
+    // );
   }
 
   // Restore syncWithState - primarily for fetching latest state and updating display
