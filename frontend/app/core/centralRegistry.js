@@ -319,6 +319,38 @@ class CentralRegistry {
     return activeHosts;
   }
 
+  unregisterUIHost(uiComponentType, hostModuleId) {
+    const hostsForType = this.uiHostProviders.get(uiComponentType);
+    if (!hostsForType) {
+      console.warn(
+        `[CentralRegistry] No hosts registered for UI type ${uiComponentType}. Cannot unregister ${hostModuleId}.`
+      );
+      return;
+    }
+
+    const hostIndex = hostsForType.findIndex(
+      (h) => h.moduleId === hostModuleId
+    );
+
+    if (hostIndex !== -1) {
+      const removedHost = hostsForType.splice(hostIndex, 1)[0];
+      console.log(
+        `[CentralRegistry] Host ${hostModuleId} unregistered for UI type ${uiComponentType}.`
+      );
+      eventBus.publish('uiHostRegistry:hostStatusChanged', {
+        uiComponentType: uiComponentType,
+        moduleId: hostModuleId,
+        status: 'unregistered',
+        isActive: removedHost.isActive, // Report its last known active state
+        priority: removedHost.priority,
+      });
+    } else {
+      console.warn(
+        `[CentralRegistry] Host ${hostModuleId} not found for UI type ${uiComponentType}. Cannot unregister.`
+      );
+    }
+  }
+
   registerJsonDataHandler(moduleId, dataKey, handlerObject) {
     if (this.jsonDataHandlers.has(dataKey)) {
       console.warn(

@@ -69,6 +69,23 @@ export class JsonUI {
     // this.updateCurrentModeDisplay('default'); // Initial placeholder - REMOVED, will be set by event
   }
 
+  getRootElement() {
+    return this.rootElement;
+  }
+
+  onMount(container, componentState) {
+    // container is the GoldenLayout ComponentContainer
+    // componentState is the state passed by GoldenLayout
+    console.log(
+      '[JsonUI onMount] Called. Container:',
+      container,
+      'State:',
+      componentState
+    );
+    // this.container = container; // Re-assign if necessary, though constructor already has it.
+    // If initial rendering or setup needs to happen *after* DOM attachment, do it here.
+  }
+
   _createBaseUI() {
     const html = `
       <div class="json-panel-container panel-container" style="overflow-y: auto; height: 100%;">
@@ -113,7 +130,7 @@ export class JsonUI {
 
         <div class="json-section button-group">
           <button id="json-btn-save-file" class="button">Save Combined to File</button>
-          <label class="file-input-button-label">
+          <label class="button">
             Load Combined from File
             <input type="file" id="json-btn-load-file" accept=".json" style="display: none;" />
           </label>
@@ -145,7 +162,7 @@ export class JsonUI {
     this.rootElement = tempWrapper.firstChild; // Assign the actual panel element to this.rootElement
 
     // Now that this.rootElement is assigned, append it to the container
-    this.container.element.appendChild(this.rootElement);
+    // this.container.element.appendChild(this.rootElement); // REMOVED: Factory in init.js will handle this
 
     // And then get references to inner elements using this.rootElement
     this.currentModeDisplay =

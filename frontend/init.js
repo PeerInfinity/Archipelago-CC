@@ -1,7 +1,7 @@
 // init.js - Initialization script for the modular frontend
 
 // Core Singletons/Managers
-import panelManagerInstance from './app/core/panelManagerSingleton.js';
+import panelManagerInstance from './app/core/panelManager.js';
 import eventBus from './app/core/eventBus.js';
 import settingsManager from './app/core/settingsManager.js';
 import { centralRegistry } from './app/core/centralRegistry.js';
@@ -802,11 +802,58 @@ async function main() {
             try {
               // Assuming the constructor is like: new UIClass(container, componentState, componentType?)
               // The third argument (componentType) is optional, added for potential context within the component.
-              return new factoryDetails.componentClass(
+              const uiProvider = new factoryDetails.componentClass(
                 container,
                 componentState,
                 componentType
               );
+
+              if (
+                !uiProvider ||
+                typeof uiProvider.getRootElement !== 'function'
+              ) {
+                console.error(
+                  `[Init GL Factory for ${componentType}] UI provider is invalid or missing getRootElement method. Provider:`,
+                  uiProvider
+                );
+                throw new Error(
+                  'UI provider is invalid or missing getRootElement method.'
+                );
+              }
+
+              const rootElement = uiProvider.getRootElement();
+              if (!rootElement || !(rootElement instanceof HTMLElement)) {
+                console.error(
+                  `[Init GL Factory for ${componentType}] uiProvider.getRootElement() did not return a valid HTMLElement. Got:`,
+                  rootElement
+                );
+                throw new Error(
+                  'UI did not return a valid root DOM element from getRootElement().'
+                );
+              }
+
+              // Clear the container's element and append the new root element
+              container.element.innerHTML = ''; // Clear any previous content (like loading/error messages)
+              container.element.append(rootElement);
+              console.log(
+                `[Init GL Factory for ${componentType}] Appended rootElement to container.element.`
+              );
+
+              // Call onMount if it exists, now that the element is in the DOM via the container
+              if (typeof uiProvider.onMount === 'function') {
+                console.log(
+                  `[Init GL Factory for ${componentType}] Calling uiProvider.onMount...`
+                );
+                uiProvider.onMount(container, componentState); // Pass GL container and state
+              } else {
+                console.log(
+                  `[Init GL Factory for ${componentType}] uiProvider.onMount is not a function.`
+                );
+              }
+
+              // GoldenLayout V2 doesn't strictly need a return from the factory
+              // if the container.element is populated directly, which we've done.
+              // Not returning uiProvider to be consistent with PanelManager's WrapperComponent.
             } catch (e) {
               console.error(
                 `[Init GL Factory] Error instantiating component ${componentType}:`,
@@ -851,33 +898,110 @@ async function main() {
         );
         layoutToLoad =
           G_combinedModeData.layoutConfig[activeLayoutIdFromSettings];
-      } else if (G_combinedModeData.layoutConfig.root) {
-        // Check if it's a direct layout object already
-        console.log(
-          '[Init] layoutConfig appears to be a direct layout object.'
-        );
       } else if (
-        G_combinedModeData.layoutConfig.default &&
-        G_combinedModeData.layoutConfig.default.root
+        activeLayoutIdFromSettings === 'custom' &&
+        G_combinedModeData.layoutConfig.custom
       ) {
-        // Fallback to default within presets if activeId not found
-        console.warn(
-          `[Init] Layout preset '${activeLayoutIdFromSettings}' not found in layoutConfig, falling back to 'default' preset within layoutConfig.`
-        );
-        layoutToLoad = G_combinedModeData.layoutConfig.default;
-      } else {
-        console.warn(
-          '[Init] layoutConfig is not a recognized preset collection or direct layout. Attempting to load as is or falling back.'
+        console.log('[Init] Using custom layout from layoutConfig.');
+        layoutToLoad = G_combinedModeData.layoutConfig.custom;
+      }
+
+      // IMPORTANT: PanelManager must be initialized AFTER GoldenLayout has processed the layout
+      // and created all initial components. The 'initialised' event is crucial.
+      // console.log(
+      //   '[Init DEBUG] About to call goldenLayoutInstance.loadLayout. Layout to load:',
+      //   JSON.stringify(layoutToLoad)
+      // );
+      try {
+        // Keep event listeners for diagnostics - Commenting out the verbose ones
+        goldenLayoutInstance.on('started', () => {
+          // console.log(
+          //   '[Init DEBUG] GoldenLayout "started" EVENT HANDLER ENTERED (PanelManager init no longer solely relies on this)'
+          // );
+          // If this event DOES fire, PanelManager might be re-initialized if it wasn't fully ready before.
+          // This could be okay if PanelManager.initialize() is idempotent.
+          if (!panelManagerInstance.isInitialized) {
+            console.log(
+              '[Init] "started" event: PanelManager not yet initialized, calling initialize.'
+            ); // Kept as info
+            panelManagerInstance.initialize(goldenLayoutInstance, null);
+          } else {
+            // console.log(
+            //   '[Init DEBUG] "started" event: PanelManager already initialized.'
+            // );
+          }
+        });
+
+        goldenLayoutInstance.on('initialised', () => {
+          // console.log(
+          //   '[Init DEBUG] GoldenLayout "initialised" (alternative) EVENT HANDLER ENTERED (PanelManager init no longer solely relies on this)'
+          // );
+          if (!panelManagerInstance.isInitialized) {
+            console.log(
+              '[Init] "initialised" event: PanelManager not yet initialized, calling initialize.'
+            ); // Kept as info
+            panelManagerInstance.initialize(goldenLayoutInstance, null);
+          } else {
+            // console.log(
+            //   '[Init DEBUG] "initialised" event: PanelManager already initialized.'
+            // );
+          }
+        });
+        // goldenLayoutInstance.on('itemCreated', (item) => {
+        //   console.log(
+        //     '[Init DEBUG] GoldenLayout "itemCreated" event:',
+        //     item.componentType || item.type,
+        //     item.id
+        //   );
+        // });
+        // goldenLayoutInstance.on('stackCreated', (stack) => {
+        //   console.log('[Init DEBUG] GoldenLayout "stackCreated" event:', stack);
+        // });
+        // goldenLayoutInstance.on('rowCreated', (row) => {
+        //   console.log('[Init DEBUG] GoldenLayout "rowCreated" event:', row);
+        // });
+        // goldenLayoutInstance.on('columnCreated', (column) => {
+        //   console.log(
+        //     '[Init DEBUG] GoldenLayout "columnCreated" event:',
+        //     column
+        //   );
+        // });
+
+        goldenLayoutInstance.loadLayout(layoutToLoad);
+        // console.log(
+        //   '[Init DEBUG] goldenLayoutInstance.loadLayout call completed.'
+        // );
+
+        // Attempt to initialize PanelManager here, after loadLayout has been called
+        // console.log(
+        //   '[Init DEBUG] Attempting to initialize PanelManager immediately after loadLayout.'
+        // );
+        // console.log(
+        //   '[Init DEBUG] goldenLayoutInstance before PanelManager init:',
+        //   goldenLayoutInstance
+        // );
+        // if (goldenLayoutInstance && goldenLayoutInstance.root) {
+        //   console.log(
+        //     '[Init DEBUG] goldenLayoutInstance.root IS present before PanelManager init. ContentItems length:',
+        //     goldenLayoutInstance.root.contentItems?.length
+        //   );
+        // } else {
+        //   console.warn(
+        //     '[Init DEBUG] goldenLayoutInstance.root IS NOT present before PanelManager init.'
+        //   );
+        // }
+        panelManagerInstance.initialize(goldenLayoutInstance, null); // gameUIInstance is null
+      } catch (loadLayoutError) {
+        console.error(
+          '[Init] CRITICAL ERROR during goldenLayoutInstance.loadLayout call or immediate PanelManager init:', // Kept as error
+          loadLayoutError,
+          loadLayoutError.stack
         );
       }
-      goldenLayoutInstance.loadLayout(layoutToLoad);
-      console.log(
-        '[Init] Successfully loaded layout from G_combinedModeData.layoutConfig logic.'
-      );
-    } catch (e) {
+    } catch (error) {
       console.error(
         '[Init] Error loading layout from G_combinedModeData.layoutConfig. Falling back to default.',
-        e
+        error
       );
       goldenLayoutInstance.loadLayout(getDefaultLayoutConfig()); // Fallback
     }
@@ -942,17 +1066,192 @@ async function main() {
   // --- Finalize Module Manager API ---
   // Populate the moduleManagerApi with its methods now that modules are loaded and runtime states exist.
   // This assumes moduleManagerApi is an empty object initially and we add properties to it.
-  moduleManagerApi.enableModule = (moduleId) => {
+  moduleManagerApi.enableModule = async (moduleId) => {
     const state = runtimeModuleStates.get(moduleId);
-    if (state) state.enabled = true;
-    console.log(`[ModuleManagerAPI] Attempted to enable ${moduleId}`);
+    if (state && state.enabled) {
+      console.log(`[ModuleManagerAPI] Module ${moduleId} is already enabled.`);
+      // Optionally, ensure its panel is visible if it was just hidden
+      const componentType = centralRegistry.getComponentTypeForModule(moduleId);
+      if (componentType && panelManagerInstance) {
+        // This part is tricky: GL might not have a simple "ensure visible if exists"
+        // We might try to activate it, or if createPanelForComponent is idempotent, call it.
+        // For now, if already enabled, we assume it might just need its panel focused.
+        // console.log(`[ModuleManagerAPI] Attempting to activate panel for already enabled module ${moduleId}`);
+        panelManagerInstance.activatePanel(componentType);
+      }
+      return;
+    }
+
+    if (state) {
+      state.enabled = true;
+      console.log(`[ModuleManagerAPI] Enabling module: ${moduleId}`);
+
+      try {
+        // 1. Re-initialize the module
+        // We need to find its original load priority index if _initializeSingleModule requires it.
+        // Or, adapt _initializeSingleModule to not strictly need an index if it's just for logging.
+        const moduleDefinition =
+          G_combinedModeData.moduleConfig?.moduleDefinitions?.[moduleId];
+        const loadPriorityArray =
+          G_combinedModeData.moduleConfig?.loadPriority || [];
+        let originalIndex = loadPriorityArray.indexOf(moduleId);
+        if (originalIndex === -1) {
+          console.warn(
+            `[ModuleManagerAPI] Could not find original load priority index for ${moduleId}. Using -1.`
+          );
+          originalIndex = -1; // Or some default.
+        }
+
+        console.log(
+          `[ModuleManagerAPI] Calling _initializeSingleModule for ${moduleId} with index ${originalIndex}`
+        );
+        await _initializeSingleModule(moduleId, originalIndex);
+
+        // 2. Re-run postInitialize if it exists for the module
+        const moduleInstance = importedModules.get(moduleId);
+        if (
+          moduleInstance &&
+          typeof moduleInstance.postInitialize === 'function'
+        ) {
+          console.log(
+            `[ModuleManagerAPI] Calling postInitialize for ${moduleId}`
+          );
+          await _postInitializeSingleModule(moduleId); // _postInitializeSingleModule uses createInitializationApi internally
+        }
+
+        // 3. Re-add the panel to Golden Layout
+        const componentType =
+          centralRegistry.getComponentTypeForModule(moduleId);
+        const titleFromInfo =
+          moduleInstance?.moduleInfo?.name || moduleInstance?.moduleInfo?.title;
+        const panelTitle = titleFromInfo || moduleId;
+
+        if (componentType && panelManagerInstance) {
+          console.log(
+            `[ModuleManagerAPI] Re-adding panel for ${moduleId}. Type: ${componentType}, Title: ${panelTitle}`
+          );
+          // createPanelForComponent will add it if not present, or potentially show/focus if it is.
+          // The behavior depends on panelManager's implementation.
+          await panelManagerInstance.createPanelForComponent(
+            componentType,
+            panelTitle
+          );
+          console.log(
+            `[ModuleManagerAPI] Panel for ${moduleId} should have been re-added/focused.`
+          );
+        } else {
+          if (!componentType) {
+            console.warn(
+              `[ModuleManagerAPI] Cannot re-add panel for ${moduleId}: No componentType found in centralRegistry.`
+            );
+          }
+          if (!panelManagerInstance) {
+            console.warn(
+              `[ModuleManagerAPI] Cannot re-add panel for ${moduleId}: panelManagerInstance (imported) not available.`
+            );
+          }
+        }
+      } catch (error) {
+        console.error(
+          `[ModuleManagerAPI] Error during enabling or re-adding panel for ${moduleId}:`,
+          error
+        );
+        state.enabled = false; // Revert enabled state on error
+        // Optionally, publish module:stateChanged with enabled: false here
+        // eventBus.publish('module:stateChanged', { moduleId, enabled: false });
+        // return; // Stop further processing for this module
+      }
+    } else {
+      console.error(
+        `[ModuleManagerAPI] enableModule: No runtime state found for module ${moduleId}. Cannot enable.`
+      );
+    }
+
     eventBus.publish('module:stateChanged', { moduleId, enabled: true });
   };
-  moduleManagerApi.disableModule = (moduleId) => {
-    const state = runtimeModuleStates.get(moduleId);
-    if (state) state.enabled = false;
+  moduleManagerApi.disableModule = async (moduleId) => {
     console.log(`[ModuleManagerAPI] Attempted to disable ${moduleId}`);
-    eventBus.publish('module:stateChanged', { moduleId, enabled: false });
+    const moduleState = runtimeModuleStates.get(moduleId);
+    if (moduleState) {
+      moduleState.enabled = false;
+      eventBus.publish('module:stateChanged', {
+        moduleId,
+        enabled: false,
+      }); // Ensure consistent payload
+
+      // Get componentType from centralRegistry
+      const componentType = centralRegistry.getComponentTypeForModule(moduleId);
+      if (componentType) {
+        console.log(
+          `[ModuleManagerAPI] Closing panel for disabled module ${moduleId} (Component Type: ${componentType})`
+        );
+
+        // --- BEGIN DIAGNOSTIC LOGS (modified) ---
+        // console.log(
+        //   '[ModuleManagerAPI DEBUG] Inspecting panelManagerInstance before call:'
+        // );
+        // console.log(
+        //   '[ModuleManagerAPI DEBUG] typeof panelManagerInstance:',
+        //   typeof panelManagerInstance
+        // );
+        // if (panelManagerInstance) {
+        //   console.log(
+        //     '[ModuleManagerAPI DEBUG] panelManagerInstance content:',
+        //     panelManagerInstance
+        //   );
+        //   if (
+        //     typeof panelManagerInstance.destroyPanelByComponentType ===
+        //     'function'
+        //   ) {
+        //     console.log(
+        //       '[ModuleManagerAPI DEBUG] panelManagerInstance.destroyPanelByComponentType IS a function.'
+        //     );
+        //     console.log(
+        //       '[ModuleManagerAPI DEBUG] Source code of panelManagerInstance.destroyPanelByComponentType:'
+        //     );
+        //     console.log(
+        //       panelManagerInstance.destroyPanelByComponentType.toString()
+        //     );
+        //   } else {
+        //     console.error(
+        //       '[ModuleManagerAPI DEBUG] panelManagerInstance.destroyPanelByComponentType IS NOT a function. Type:',
+        //       typeof panelManagerInstance.destroyPanelByComponentType
+        //     );
+        //   }
+        // } else {
+        //   console.error(
+        //     '[ModuleManagerAPI DEBUG] panelManagerInstance (imported) IS UNDEFINED OR NULL.'
+        //   );
+        // }
+        // --- END DIAGNOSTIC LOGS ---
+
+        if (
+          panelManagerInstance &&
+          typeof panelManagerInstance.destroyPanelByComponentType === 'function'
+        ) {
+          panelManagerInstance.destroyPanelByComponentType(componentType);
+        } else {
+          console.error(
+            '[ModuleManagerAPI] CRITICAL: Cannot call destroyPanelByComponentType - panelManagerInstance (imported) or the method is invalid.'
+          );
+        }
+      } else {
+        console.warn(
+          `[ModuleManagerAPI] Module ${moduleId} has no registered panel component type. Cannot close panel.`
+        );
+      }
+
+      // TODO: Call module's uninitialize if it exists?
+      // This needs careful consideration regarding state and re-initialization.
+      // if (importedModules[moduleId] && typeof importedModules[moduleId].uninitialize === 'function') {
+      //   try {
+      //     await importedModules[moduleId].uninitialize();
+      //     console.log(`[ModuleManagerAPI] Uninitialized module: ${moduleId}`);
+      //   } catch (error) {
+      //     console.error(`[ModuleManagerAPI] Error uninitializing module ${moduleId}:`, error);
+      //   }
+      // }
+    }
   };
   moduleManagerApi.getModuleState = (moduleId) =>
     runtimeModuleStates.get(moduleId);

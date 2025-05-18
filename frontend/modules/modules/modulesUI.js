@@ -82,7 +82,7 @@ export class ModulesPanel {
     this.initApi = getInitializationApi(); // Get the API object
 
     // GoldenLayout specifics
-    this.container.setTitle('Modules');
+    // this.container.setTitle('Modules'); // Title is usually set by GL config or PanelManager
     this._initializeUI();
   }
 
@@ -90,15 +90,33 @@ export class ModulesPanel {
     return this.rootElement;
   }
 
+  onMount(container, componentState) {
+    // container is the GoldenLayout ComponentContainer
+    // componentState is the state passed by GoldenLayout
+    console.log(
+      '[ModulesPanel onMount] Called. Container:',
+      container,
+      'State:',
+      componentState
+    );
+    // this.container = container; // Re-assign if necessary, though constructor already has it.
+
+    // Ensure title is set if not already
+    if (this.container && typeof this.container.setTitle === 'function') {
+      this.container.setTitle('Modules');
+    }
+  }
+
   _initializeUI() {
     // Add basic styling
     const style = document.createElement('style');
     style.textContent = CSS;
-    this.container.getElement().appendChild(style);
+    // this.container.getElement().appendChild(style); // REMOVED: Append to rootElement instead
 
     // Create main panel container
     this.rootElement = document.createElement('div');
     this.rootElement.className = 'modules-panel';
+    this.rootElement.appendChild(style); // APPEND STYLE TO ROOT ELEMENT
 
     // Create container for buttons
     this.buttonContainer = document.createElement('div');
@@ -111,7 +129,7 @@ export class ModulesPanel {
     this.rootElement.appendChild(this.moduleListContainer);
 
     // Append the main container to Golden Layout
-    this.container.getElement().appendChild(this.rootElement);
+    // this.container.getElement().appendChild(this.rootElement); // REMOVED: Factory in init.js will handle this
 
     // Add controls like buttons to the button container
     this._addControls(); // Renamed from _addTestButton

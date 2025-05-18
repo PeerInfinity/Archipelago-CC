@@ -3,7 +3,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import loopState from './loopStateSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import commonUI from '../commonUI/index.js';
-import panelManagerInstance from '../../app/core/panelManagerSingleton.js'; // <<< Import panelManager
+import panelManagerInstance from '../../app/core/panelManager.js'; // Changed from panelManagerSingleton.js
 import discoveryStateSingleton from '../discovery/singleton.js';
 import {
   levelFromXP,
@@ -12,6 +12,8 @@ import {
   proposedLinearReduction,
 } from './xpFormulas.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+// import { logger } from '../../app/core/logger.js';
 
 export class LoopUI {
   constructor(container, componentState) {

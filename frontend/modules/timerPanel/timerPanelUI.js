@@ -4,7 +4,7 @@ import eventBus from '../../app/core/eventBus.js';
 // Import helper from its own index.js to get module context
 import {
   getTimerPanelModuleLoadPriority,
-  getTimerPanelModuleId,
+  getTimerPanelModuleId, // Fallback if componentType is not provided
   getHostedUIComponentType,
 } from './index.js';
 
@@ -12,79 +12,125 @@ const TIMER_UI_COMPONENT_TYPE = 'TimerProgressUI';
 
 export class TimerPanelUI {
   constructor(container, componentState, componentType) {
-    console.log('[TimerPanelUI] Constructor called.');
-    this.container = container; // GoldenLayout container
+    // componentType is passed by PanelManager's factory
+    this.moduleId = componentType || getTimerPanelModuleId(); // Use componentType passed by PanelManager
+    console.log(`[TimerPanelUI for ${this.moduleId}] Constructor called.`);
+    this.container = container; // GoldenLayout container object
     this.componentState = componentState;
+
     this.rootElement = document.createElement('div');
-    this.rootElement.className = 'timer-panel-ui-container panel-container'; // Basic styling
+    // this.moduleId = moduleId; // Store for context if needed, e.g., for debug messages
+    this.rootElement.className = 'timer-panel-ui-container panel-container'; // Ensure consistent class
     this.rootElement.style.width = '100%';
     this.rootElement.style.height = '100%';
-    this.rootElement.style.overflow = 'auto'; // Allow scrolling if content overflows
-    this.rootElement.style.padding = '5px'; // Some padding so hosted UI isn't edge-to-edge
+    this.rootElement.style.overflow = 'auto';
+    this.rootElement.style.padding = '5px'; // Basic padding
     this.rootElement.style.boxSizing = 'border-box';
+    // REMOVE DEBUG STYLING
+    // this.rootElement.style.border = '2px solid blue';
+    // this.rootElement.textContent = `TimerPanelUI Root (Module ID: ${this.moduleId || 'N/A'})`;
+    this.rootElement.innerHTML = ''; // Clear any debug text content
 
-    // This div is the placeholder where the Timer module's UI will be injected.
     this.timerHostPlaceholder = document.createElement('div');
-    this.timerHostPlaceholder.id = `timer-ui-host-in-${getTimerPanelModuleId()}`; // Unique ID
+    this.timerHostPlaceholder.id = `timer-ui-host-in-${
+      this.moduleId
+    }-${Date.now()}`;
     this.timerHostPlaceholder.style.width = '100%';
-    this.timerHostPlaceholder.style.height = '100%';
+    this.timerHostPlaceholder.style.height = 'calc(100% - 30px)'; // Adjust height to see text above
+    // REMOVE DEBUG STYLING FOR PLACEHOLDER
+    // this.timerHostPlaceholder.style.border = '1px dashed green;';
+    // this.timerHostPlaceholder.innerHTML = `<p style="color:green; font-weight:bold;">TimerHostPlaceholder for ${this.moduleId}</p>`;
+    this.timerHostPlaceholder.innerHTML = ''; // Clear debug text
     this.rootElement.appendChild(this.timerHostPlaceholder);
 
-    this.container.element.appendChild(this.rootElement);
+    // --- Do NOT append this.rootElement to this.container.element here. ---
+    // --- The WrapperComponent in PanelManager is responsible for that. ---
 
-    this.moduleId = componentType || 'TimerPanel'; // Use componentType as moduleId, fallback for safety
-    this.hostedComponentType = getHostedUIComponentType();
-    this.isHostActive = false; // Track current active state
+    this.hostedComponentType = getHostedUIComponentType(); // From its own index.js
+    this.isHostActive = false;
     this.moduleStateChangeHandler =
-      this._handleSelfModuleStateChange.bind(this); // For event bus
+      this._handleSelfModuleStateChange.bind(this);
 
-    // Lifecycle listeners
+    // GL container lifecycle events
     this.container.on('open', this._handlePanelOpen.bind(this));
-    this.container.on('show', this._handlePanelShow.bind(this)); // For when tab is selected
-    this.container.on('hide', this._handlePanelHide.bind(this)); // For when tab is deselected
+    this.container.on('show', this._handlePanelShow.bind(this));
+    this.container.on('hide', this._handlePanelHide.bind(this));
     this.container.on('destroy', this._handlePanelDestroy.bind(this));
 
-    // Subscribe to its own module's state change
     eventBus.subscribe('module:stateChanged', this.moduleStateChangeHandler);
     centralRegistry.registerEventBusSubscriberIntent(
       this.moduleId,
       'module:stateChanged'
     );
 
-    console.log(`[TimerPanelUI for ${this.moduleId}] Panel UI created.`);
+    console.log(
+      `[TimerPanelUI for ${this.moduleId}] Panel UI instance created. Root element ready but not yet appended by wrapper.`
+    );
   }
 
   getRootElement() {
+    console.log(
+      `[TimerPanelUI for ${this.moduleId}] getRootElement() called, returning:`,
+      this.rootElement
+    );
     return this.rootElement;
   }
 
-  _handlePanelOpen() {
-    // This is called when GoldenLayout first creates the panel component.
+  onMount(glContainer, componentState) {
+    // glContainer is the same as this.container
     console.log(
-      `[TimerPanelUI for ${this.moduleId}] Panel opened (or created). Scheduling host registration.`
+      `[TimerPanelUI for ${this.moduleId}] onMount CALLED. Panel's rootElement should now be in the DOM via wrapper.`
     );
-    // Defer registration to allow the module's initialize() to set the correct priority.
-    setTimeout(() => {
-      console.log(
-        `[TimerPanelUI for ${this.moduleId}] Executing deferred host registration from _handlePanelOpen.`
+    // Initial host registration
+    // Consider if panel is immediately visible or not.
+    if (this.container && this.container.isVisible) {
+      this._registerAsHost(true);
+    } else {
+      this._registerAsHost(false); // Will be activated by _handlePanelShow if tab becomes active
+    }
+  }
+
+  onUnmount() {
+    console.log(`[TimerPanelUI for ${this.moduleId}] onUnmount CALLED.`);
+    this._cleanupHostRegistration();
+    if (this.moduleStateChangeHandler) {
+      eventBus.unsubscribe(
+        'module:stateChanged',
+        this.moduleStateChangeHandler
       );
-      this._registerAsHost(true); // Assuming it should be active if opened.
-      // The 'show' event will also call this if the tab becomes active later.
-    }, 0);
+      this.moduleStateChangeHandler = null; // Prevent multiple unsubscribes
+    }
+    // Minimal DOM cleanup here as GL manages container.element
+    if (
+      this.timerHostPlaceholder &&
+      this.timerHostPlaceholder.parentNode === this.rootElement
+    ) {
+      this.rootElement.removeChild(this.timerHostPlaceholder);
+    }
+    this.timerHostPlaceholder = null;
+    // this.rootElement is managed by the WrapperComponent lifecycle through GL.
+  }
+
+  _handlePanelOpen() {
+    console.log(
+      `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'open' event. Panel is being shown or created.`
+    );
+    // onMount handles initial registration. If 'open' implies visibility, ensure active.
+    if (this.container && this.container.isVisible) {
+      this._registerAsHost(true);
+    }
   }
 
   _handlePanelShow() {
-    // This is called when the panel's tab becomes visible.
     console.log(
-      `[TimerPanelUI for ${this.moduleId}] Panel shown (tab selected). Ensuring host status is active.`
+      `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'show' event. Panel tab selected.`
     );
-    this._registerAsHost(true); // Re-affirm active status
+    this._registerAsHost(true); // Ensure active status
   }
 
   _handlePanelHide() {
-    // This is called when the panel's tab is no longer visible.
     console.log(
-      `[TimerPanelUI for ${this.moduleId}] Panel hidden (tab deselected). Setting host status to inactive.`
+      `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'hide' event. Panel tab deselected.`
     );
     centralRegistry.setUIHostActive(
       this.hostedComponentType,
@@ -94,40 +140,34 @@ export class TimerPanelUI {
   }
 
   _handlePanelDestroy() {
-    // This is called when GoldenLayout destroys the panel component.
     console.log(
-      `[TimerPanelUI for ${this.moduleId}] Panel destroyed. Setting host status to inactive.`
+      `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'destroy' event. Calling onUnmount.`
+    );
+    this.onUnmount();
+  }
+
+  _cleanupHostRegistration() {
+    console.log(
+      `[TimerPanelUI for ${this.moduleId}] Cleaning up host registration.`
     );
     centralRegistry.setUIHostActive(
       this.hostedComponentType,
       this.moduleId,
       false
     );
-    // Further cleanup of this.rootElement etc., is handled by GoldenLayout.
-    // Unregister as host if it was active or registered
-    centralRegistry.unregisterUIHost(TIMER_UI_COMPONENT_TYPE, this.moduleId);
-    eventBus.unsubscribe('module:stateChanged', this.moduleStateChangeHandler); // Unsubscribe
-    // Any other cleanup
-    this.timerHostPlaceholder = null;
+    centralRegistry.unregisterUIHost(this.hostedComponentType, this.moduleId);
   }
 
   _registerAsHost(isActive) {
-    if (!this.timerHostPlaceholder) {
-      console.error(
-        `[TimerPanelUI for ${this.moduleId}] Timer host placeholder not found. Cannot register as host.`
+    if (!this.rootElement || !this.timerHostPlaceholder) {
+      // Check rootElement too, as placeholder is its child
+      console.warn(
+        `[TimerPanelUI for ${this.moduleId}] UI elements not ready. Cannot register as host.`
       );
       return;
     }
 
     const loadPriority = getTimerPanelModuleLoadPriority();
-
-    if (loadPriority === -1 || typeof loadPriority === 'undefined') {
-      console.warn(
-        `[TimerPanelUI for ${this.moduleId}] Module load priority is default (-1) or undefined. Value: ${loadPriority}. Host registration might be using a non-optimal priority.`
-      );
-      // If loadPriority is indeed problematic, consider defaulting or logging an error
-      // For now, we'll let it proceed with the potentially incorrect priority to observe behavior.
-    }
 
     centralRegistry.registerUIHost(
       this.hostedComponentType,
@@ -135,16 +175,16 @@ export class TimerPanelUI {
       this.timerHostPlaceholder,
       loadPriority
     );
-    this.isHostActive = isActive; // Update tracked state
+    this.isHostActive = isActive;
     console.log(
       `[TimerPanelUI for ${this.moduleId}] Host registration attempt. Module: ${
         this.moduleId
-      }, Type: ${TIMER_UI_COMPONENT_TYPE}, Placeholder: ${
+      }, Type: ${this.hostedComponentType}, Placeholder: ${
         this.timerHostPlaceholder ? 'exists' : 'null'
       }, Priority: ${loadPriority}, Requested Active: ${isActive}`
     );
     centralRegistry.setUIHostActive(
-      TIMER_UI_COMPONENT_TYPE,
+      this.hostedComponentType,
       this.moduleId,
       isActive
     );
@@ -155,25 +195,16 @@ export class TimerPanelUI {
       console.log(
         `[TimerPanelUI for ${this.moduleId}] Received self module:stateChanged. Module: ${moduleId}, Enabled: ${enabled}`
       );
-      // If the module is being disabled, ensure its host registration is set to inactive.
-      // If it's being enabled, and the panel is currently visible (which it should be if GL hasn't hidden it),
-      // then it should re-assert its active host status.
-      // The `_handlePanelShow` or `_handlePanelOpen` would typically make it active.
-      // If the panel is hidden, `_handlePanelHide` would have made it inactive.
-      // So, if module is enabled, and panel is shown, it will become active.
-      // If module is disabled, it must become inactive regardless of panel visibility.
       if (enabled) {
-        // If module is re-enabled, it should attempt to become an active host.
-        // GoldenLayout's 'show' and 'hide' events will then manage its active status
-        // based on tab visibility.
         console.log(
-          `[TimerPanelUI for ${this.moduleId}] Module re-enabled. Setting host to active.`
+          `[TimerPanelUI for ${this.moduleId}] Module re-enabled. Panel lifecycle events (open/show after recreation) will handle host registration.`
         );
-        this._registerAsHost(true);
+        if (this.container && this.container.isVisible) {
+          this._registerAsHost(true);
+        }
       } else {
-        // Module disabled, explicitly set host to inactive.
         console.log(
-          `[TimerPanelUI for ${this.moduleId}] Module disabled. Setting host to inactive.`
+          `[TimerPanelUI for ${this.moduleId}] Module disabled. Setting host to inactive via _registerAsHost(false).`
         );
         this._registerAsHost(false);
       }

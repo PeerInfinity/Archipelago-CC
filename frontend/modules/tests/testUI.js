@@ -17,15 +17,38 @@ export class TestUI {
     this.unsubscribeHandles = [];
 
     this._buildInitialUI();
-    this.container.element.appendChild(this.rootElement);
+    // this.container.element.appendChild(this.rootElement); // REMOVED: Factory in init.js will handle this
 
     this._attachEventListeners(); // Listeners are attached once
     this._subscribeToLogicEvents();
 
-    this.renderTestList(); // Initial render
+    // Initial render might be better in onMount or triggered by an event
+    // For now, let constructor still call it, assuming rootElement is populated.
+    this.renderTestList();
 
-    this.container.on('destroy', () => this.destroy());
-    this.container.on('open', () => this.renderTestList());
+    // Container event listeners
+    if (this.container && typeof this.container.on === 'function') {
+      this.container.on('destroy', () => this.destroy());
+      this.container.on('open', () => this.renderTestList()); // Re-render when panel is opened/shown
+    }
+  }
+
+  getRootElement() {
+    return this.rootElement;
+  }
+
+  onMount(container, componentState) {
+    // container is the GoldenLayout ComponentContainer
+    // componentState is the state passed by GoldenLayout
+    console.log(
+      '[TestUI onMount] Called. Container:',
+      container,
+      'State:',
+      componentState
+    );
+    // this.container = container; // Re-assign if necessary, though constructor already has it.
+    // If initial rendering or setup needs to happen *after* DOM attachment, do it here.
+    // For TestUI, constructor and 'open' event seem to cover initial rendering.
   }
 
   _buildInitialUI() {

@@ -5,27 +5,152 @@ import { centralRegistry } from './centralRegistry.js'; // Corrected import
 
 class PanelManager {
   constructor() {
+    console.log('[PanelManager CONSTRUCTOR CALLED]', new Date().toISOString());
     this.layout = null; // Golden Layout instance
     this.gameUI = null; // GameUI instance
-    this.panelMap = new Map(); // Map<GoldenLayoutContainer, { uiInstance: object, container: GoldenLayoutContainer }>
+    this.panelMap = new Map(); // Map<GoldenLayoutContainer, { uiInstance: object, container: GoldenLayoutContainer, componentType: string }>
+    this.panelMapById = new Map(); // Map<string, { componentType: string, panelInstance: object }>
+    this.isInitialized = false; // Add initialization flag
     console.log('PanelManager instance created');
   }
 
   /**
    * Initialize the PanelManager with required instances.
-   * @param {GoldenLayout} layoutInstance - The Golden Layout instance.
+   * @param {GoldenLayout} goldenLayout - The Golden Layout instance.
    * @param {GameUI} gameUIInstance - The main GameUI instance.
    */
-  initialize(layoutInstance, gameUIInstance) {
-    if (!layoutInstance || !gameUIInstance) {
+  initialize(goldenLayout, gameUIInstance) {
+    // Log entry and the passed goldenLayout object immediately
+    // console.log(
+    //   '[PanelManager.initialize DEBUG] Method Entered. GoldenLayout object is:',
+    //   goldenLayout
+    // );
+    // Check if goldenLayout looks like a valid GoldenLayout instance
+    if (
+      !goldenLayout ||
+      typeof goldenLayout.registerComponentFactoryFunction !== 'function' ||
+      typeof goldenLayout.loadLayout !== 'function'
+    ) {
       console.error(
-        'PanelManager requires GoldenLayout and GameUI instances for initialization.'
+        '[PanelManager.initialize] CRITICAL: Passed goldenLayout object does NOT appear to be a valid GoldenLayout instance.', // Kept as error
+        goldenLayout
       );
-      return;
+      this.isInitialized = false;
+      return; // Stop if GL instance is bad
     }
-    this.layout = layoutInstance;
-    this.gameUI = gameUIInstance;
-    console.log('PanelManager initialized');
+
+    try {
+      // console.log('[PanelManager.initialize DEBUG] Inside main try block.');
+      if (this.isInitialized) {
+        console.warn(
+          '[PanelManager.initialize] Already initialized. Skipping.'
+        );
+        return;
+      }
+
+      this.goldenLayout = goldenLayout; // Use this.goldenLayout consistently
+      this.gameUI = gameUIInstance;
+      // console.log(
+      //   '[PanelManager.initialize DEBUG] this.goldenLayout has been assigned.'
+      // );
+
+      this.panelMap.clear();
+      this.panelMapById.clear();
+      // console.log(
+      //   '[PanelManager.initialize DEBUG] panelMap and panelMapById cleared.'
+      // );
+
+      // Attempt to populate panelMap from existing items
+      if (
+        this.goldenLayout &&
+        typeof this.goldenLayout.getAllContentItems === 'function'
+      ) {
+        // console.log(
+        //   '[PanelManager.initialize DEBUG] Attempting to get all content items...'
+        // );
+        const allItems = this.goldenLayout.getAllContentItems(); // Get items
+        // console.log(
+        //   `[PanelManager.initialize DEBUG] Found ${allItems.length} existing content items.`
+        // );
+        allItems.forEach((item) => {
+          if (item.isComponent && item.componentType && item.id) {
+            // For initial population, we don't have the UI instance,
+            // so the mapping might be less complete or handled differently.
+            // The current addMapping expects (container, uiInstance).
+            // For now, let's skip adding to panelMap here as it's primarily populated
+            // when components are constructed by GL via registerPanelComponent.
+            // The main goal is to get GL initialized.
+            // console.log(
+            //   `[PanelManager.initialize DEBUG] Existing component found: Type: ${item.componentType}, ID: ${item.id}`
+            // );
+          }
+        });
+      } else {
+        console.warn(
+          '[PanelManager.initialize] this.goldenLayout.getAllContentItems is not a function or goldenLayout not set.' // Kept as warn
+        );
+      }
+
+      // Attempt to attach event listener
+      if (this.goldenLayout && typeof this.goldenLayout.on === 'function') {
+        // console.log(
+        //   "[PanelManager.initialize DEBUG] Attempting to attach 'itemDestroyed' listener..."
+        // );
+        this.goldenLayout.on('itemDestroyed', (item) => {
+          // Ensure this part is also robust
+          try {
+            if (item.isComponent) {
+              const componentType = item.componentType;
+              const panelId = item.id;
+              console.log(
+                // Kept this log as it's about an event, not pure debug
+                `[PanelManager itemDestroyed Event] Component Type: ${componentType}, Panel ID: ${panelId}`
+              );
+              // Call your removeMappingByPanelId or removeMappingByComponentType
+              // For example: this.removeMappingByPanelId(panelId); // panelManagerInstance replaced with this
+              // Based on current file structure, let's try to be more specific
+              if (this.panelMapById.has(panelId)) {
+                this.removeMappingByPanelId(panelId);
+              } else if (this.panelMap.has(componentType)) {
+                // This is less direct and might remove the wrong one if multiple panels of same type exist
+                // but could be a fallback. For now, prioritize ID-based removal.
+                console.warn(
+                  `[PanelManager itemDestroyed Event] panelId ${panelId} not in panelMapById. ComponentType ${componentType} might be in panelMap, but not removing by type to avoid ambiguity.`
+                );
+              }
+            }
+          } catch (e) {
+            console.error(
+              '[PanelManager itemDestroyed Event] Error in handler:', // Kept as error
+              e
+            );
+          }
+        });
+        // console.log(
+        //   "[PanelManager.initialize DEBUG] 'itemDestroyed' listener attached."
+        // );
+      } else {
+        console.warn(
+          '[PanelManager.initialize] this.goldenLayout.on is not a function or goldenLayout not set.' // Kept as warn
+        );
+      }
+
+      this.isInitialized = true;
+      // console.log(
+      //   '[PanelManager.initialize DEBUG] Initialization COMPLETE. isInitialized set to true.'
+      // );
+    } catch (error) {
+      console.error(
+        '[PanelManager.initialize] CRITICAL ERROR during initialization:', // Kept as error
+        error,
+        error.stack
+      );
+      this.isInitialized = false; // Ensure it reflects failure
+    }
+    // console.log(
+    //   '[PanelManager.initialize DEBUG] Method Exiting. isInitialized =',
+    //   this.isInitialized
+    // );
   }
 
   /**
@@ -34,9 +159,9 @@ class PanelManager {
    * @param {Function} uiInstanceGetter - A function that returns the specific UI instance or provider object.
    */
   registerPanelComponent(componentTypeName, uiInstanceGetter) {
-    if (!this.layout) {
+    if (!this.goldenLayout) {
       console.error(
-        `Cannot register component '${componentTypeName}': PanelManager not initialized.`
+        `Cannot register component '${componentTypeName}': PanelManager not initialized (goldenLayout instance missing).`
       );
       return;
     }
@@ -51,442 +176,162 @@ class PanelManager {
       `Registering Golden Layout component constructor for: ${componentTypeName}`
     );
 
+    const self = this; // Capture the PanelManager instance ('this')
+
     // Define the Wrapper Class Constructor Golden Layout will use
     const WrapperComponent = function (container, componentState) {
       // 'this' refers to the instance of WrapperComponent created by Golden Layout
       console.log(
         `--- WrapperComponent constructor executing for: ${componentTypeName} ---`
       );
+      if (componentTypeName === 'timerPanel') {
+        console.log('[timerPanel Wrapper DEBUG] GL Container:', container);
+        console.log(
+          '[timerPanel Wrapper DEBUG] GL container.element BEFORE append:',
+          container.element.cloneNode(true)
+        ); // Clone to see its state
+      }
 
       try {
-        this.unsubscribeHandles = []; // Array to store unsubscribe functions
+        this.unsubscribeHandles = []; // For eventBus subscriptions specific to this panel instance
 
-        // 1. Get the actual UI instance/provider
-        const uiProvider = uiInstanceGetter(container, componentState);
-        if (!uiProvider) {
-          throw new Error(
-            `Could not get UI instance/provider for ${componentTypeName}`
+        const uiProvider = uiInstanceGetter(container, componentState); // Calls new TimerPanelUI(...)
+        if (!uiProvider) throw new Error('Could not get UI instance/provider');
+
+        if (componentTypeName === 'timerPanel') {
+          console.log(
+            '[timerPanel Wrapper DEBUG] uiProvider (TimerPanelUI instance):'
+            //, uiProvider // This might be too verbose or circular for console
           );
         }
-        console.log(
-          `   [${componentTypeName}] Got UI instance/provider:`,
-          uiProvider
-        );
 
-        // 2. Get the root DOM element
-        if (typeof uiProvider.getRootElement !== 'function') {
-          throw new Error(
-            `UI instance/provider for ${componentTypeName} does not have getRootElement method.`
-          );
-        }
-        const rootElement = uiProvider.getRootElement();
+        const rootElement = uiProvider.getRootElement(); // This calls TimerPanelUI's getRootElement
         if (!rootElement || !(rootElement instanceof HTMLElement)) {
-          throw new Error(
-            `UI instance/provider for ${componentTypeName} did not return a valid root DOM element.`
+          console.error(
+            `[WrapperComponent for ${componentTypeName}] uiProvider.getRootElement() invalid. Got:`,
+            rootElement
+          );
+          throw new Error('UI did not return a valid root DOM element.');
+        }
+
+        if (componentTypeName === 'timerPanel') {
+          console.log(
+            '[timerPanel Wrapper DEBUG] rootElement from uiProvider.getRootElement():',
+            rootElement.cloneNode(true)
+          );
+          console.log(
+            '[timerPanel Wrapper DEBUG] Is rootElement already in DOM?',
+            document.body.contains(rootElement)
+          );
+          if (rootElement.parentNode) {
+            console.warn(
+              '[timerPanel Wrapper DEBUG] rootElement ALREADY HAS A PARENT before append:',
+              rootElement.parentNode
+            );
+          }
+        }
+
+        // THE CRITICAL LINE:
+        container.element.append(rootElement);
+        // GoldenLayout expects `container.element` to be the direct child it manages for its layout.
+        // The UI's content should go *inside* `container.element`.
+
+        if (componentTypeName === 'timerPanel') {
+          console.log(
+            '[timerPanel Wrapper DEBUG] GL container.element AFTER append:',
+            container.element.cloneNode(true)
+          );
+          console.log(
+            '[timerPanel Wrapper DEBUG] Is rootElement now child of container.element?',
+            rootElement.parentNode === container.element
           );
         }
-        console.log(`   [${componentTypeName}] Got root element:`, rootElement);
-
-        // 3. Append the element to the Golden Layout container
-        container.element.append(rootElement);
         console.log(
-          `   [${componentTypeName}] Root element appended to container`
+          `   [${componentTypeName}] Root element appended to container.element.`
         );
 
-        // --- Call initializeElements if available (e.g., for MainContentUI) ---
-        if (typeof uiProvider.initializeElements === 'function') {
-          console.log(`   [${componentTypeName}] Calling initializeElements`);
-          // Pass the rootElement or container if needed
-          uiProvider.initializeElements(container.element);
-        }
-
-        // --- NEW: Attach internal listeners AFTER appending ---
-        if (typeof uiProvider.attachInternalListeners === 'function') {
-          console.log(
-            `   [${componentTypeName}] Calling attachInternalListeners`
-          );
-          uiProvider.attachInternalListeners();
-        }
-        // --- END NEW ---
-
-        // --- Call buildInitialStructure if available --- // Keep this for other init tasks if needed
-        if (typeof uiProvider.buildInitialStructure === 'function') {
-          console.log(
-            `   [${componentTypeName}] Calling buildInitialStructure`
-          );
-          // Pass the rootElement we got and appended
-          uiProvider.buildInitialStructure(rootElement);
-        }
-
-        // 4. Add mapping (using the singleton instance of PanelManager)
-        panelManagerInstance.addMapping(container, uiProvider);
-
-        // Subscribe to relevant events based on component type
-        if (
-          componentTypeName === 'regionsPanel' &&
-          uiProvider.navigateToRegion
-        ) {
-          console.log(
-            `[PanelManager] Setting up 'ui:navigateToRegion' listener for regionsPanel`
-          );
-          const handleRegionNav = eventBus.subscribe(
-            'ui:navigateToRegion',
-            (data) => {
-              console.log(
-                `[RegionPanel Wrapper] Event 'ui:navigateToRegion' received for: ${data.regionName}`
-              );
-
-              // --- Add detailed logging for debugging activation ---
-              console.log(
-                '[RegionPanel Wrapper] Attempting panel activation...'
-              );
-              // --- V2 Activation Logic (Attempt 4 - Using container.parent) ---
-              let componentItem = container.parent; // Use container.parent to get ComponentItem
-              let stack = componentItem?.parent; // Get the parent Stack from the ComponentItem
-
-              if (stack && stack.isStack) {
-                // Check if the parent is indeed a Stack
-                console.log(
-                  '[RegionPanel Wrapper] Found parent stack via container.parent.parent:',
-                  stack
-                );
-                console.log(
-                  '[RegionPanel Wrapper] Found component item to activate via container.parent:',
-                  componentItem
-                );
-              } else {
-                console.warn(
-                  '[RegionPanel Wrapper] Could not find parent stack via container.parent.parent. ComponentItem:',
-                  componentItem,
-                  'Parent:',
-                  stack
-                );
-                stack = null; // Invalidate stack if not found correctly
-                componentItem = null;
-              }
-              // --- End V2 Activation Logic ---
-
-              // Ensure parent stack exists and has the activation method
-              if (
-                stack &&
-                stack.isStack && // Use isStack property check for v2
-                componentItem && // Use componentItem here
-                typeof stack.setActiveComponentItem === 'function' // V2 uses setActiveComponentItem
-              ) {
-                // Check if this container is already the active one to avoid unnecessary calls
-                if (stack.getActiveComponentItem() !== componentItem) {
-                  // V2 uses getActiveComponentItem and compare with componentItem
-                  console.log(
-                    `[RegionPanel Wrapper] Activating panel tab for ${data.regionName}`
-                  );
-                  stack.setActiveComponentItem(componentItem); // Activate the specific content item's tab
-                } else {
-                  console.log(
-                    `[RegionPanel Wrapper] Panel tab for ${data.regionName} is already active.`
-                  );
-                }
-              } else {
-                console.warn(
-                  `[RegionPanel Wrapper] Cannot activate panel tab for ${data.regionName}. Parent stack or setActiveComponentItem method not found.`
-                );
-              }
-
-              // --- RE-ADD setTimeout block ---
-              // Delay slightly to allow Golden Layout to render the activated tab
-              setTimeout(() => {
-                // Double-check uiProvider and method still exist before calling
-                if (
-                  this.uiProvider && // 'this' should be correct due to arrow function
-                  typeof this.uiProvider.navigateToRegion === 'function'
-                ) {
-                  console.log(
-                    `[RegionPanel Wrapper] Calling uiProvider.navigateToRegion('${data.regionName}') after delay.`
-                  );
-                  this.uiProvider.navigateToRegion(data.regionName);
-                } else {
-                  console.warn(
-                    `[RegionPanel Wrapper] Could not call navigateToRegion for ${data.regionName}. uiProvider or method missing after delay.`,
-                    {
-                      hasProvider: !!this.uiProvider,
-                      providerType: this.uiProvider?.constructor?.name,
-                      hasMethod:
-                        typeof this.uiProvider?.navigateToRegion === 'function',
-                    }
-                  );
-                }
-              }, 100); // 100ms delay
-              // --- END RE-ADD setTimeout block ---
-            }
-          );
-          // Store the unsubscribe function for later cleanup
-          this.unsubscribeHandles.push(handleRegionNav);
-
-          // ALSO subscribe to location navigation events if the provider supports it
-          if (uiProvider.navigateToLocation) {
-            console.log(
-              `[PanelManager] Setting up 'ui:navigateToLocation' listener for regionsPanel`
-            );
-            const handleLocationNav = eventBus.subscribe(
-              'ui:navigateToLocation',
-              (data) => {
-                console.log(
-                  `[RegionPanel Wrapper] Event 'ui:navigateToLocation' received for: ${data.locationName} in ${data.regionName}`
-                );
-
-                // --- Activate the Panel's Tab (reuse logic from region nav - Apply V2 changes - Attempt 4) ---
-                try {
-                  // --- V2 Activation Logic ---
-                  let componentItem = container.parent; // Use container.parent to get ComponentItem
-                  let stack = componentItem?.parent; // Get the parent Stack from the ComponentItem
-
-                  if (stack && stack.isStack) {
-                    if (
-                      stack.getActiveComponentItem() !== componentItem &&
-                      typeof stack.setActiveComponentItem === 'function'
-                    ) {
-                      console.log(
-                        `[RegionPanel Wrapper] Activating panel tab for location ${data.locationName}`
-                      );
-                      stack.setActiveComponentItem(componentItem); // Use componentItem
-                    }
-                  } else {
-                    console.warn(
-                      '[RegionPanel Wrapper] Could not find parent stack for location nav activation via container.parent.parent. ComponentItem:',
-                      componentItem,
-                      'Parent:',
-                      stack
-                    );
-                  }
-                  // --- End V2 Activation Logic ---
-                } catch (activationError) {
-                  console.error(
-                    '[RegionPanel Wrapper] Error during panel activation for location nav:',
-                    activationError
-                  );
-                }
-                // --- End Tab Activation ---
-
-                // --- RE-ADD setTimeout block ---
-                // Call the internal navigation after delay
-                setTimeout(() => {
-                  if (
-                    this.uiProvider &&
-                    typeof this.uiProvider.navigateToLocation === 'function'
-                  ) {
-                    console.log(
-                      `[RegionPanel Wrapper] Calling uiProvider.navigateToLocation('${data.locationName}', '${data.regionName}') after delay.`
-                    );
-                    this.uiProvider.navigateToLocation(
-                      data.locationName,
-                      data.regionName
-                    );
-                  } else {
-                    console.warn(
-                      `[RegionPanel Wrapper] Could not call navigateToLocation for ${data.locationName}. uiProvider or method missing after delay.`,
-                      {
-                        hasProvider: !!this.uiProvider,
-                        providerType: this.uiProvider?.constructor?.name,
-                        hasMethod:
-                          typeof this.uiProvider?.navigateToLocation ===
-                          'function',
-                      }
-                    );
-                  }
-                }, 100); // 100ms delay
-                // --- END RE-ADD setTimeout block ---
-              }
-            );
-            this.unsubscribeHandles.push(handleLocationNav);
-          }
-        }
-
-        // Subscribe LoopUI to queue updates
-        if (componentTypeName === 'loopsPanel') {
-          console.log(
-            `[PanelManager] Setting up 'loopState:queueUpdated' listener for loopsPanel`
-          );
-          // Ensure uiProvider reference is available within the scope for the handler
-          const currentUiProvider = uiProvider; // Capture uiProvider here
-          // --- UPDATED CHECK: Use currentUiProvider ---
-          if (
-            currentUiProvider &&
-            typeof currentUiProvider.renderLoopPanel === 'function'
-          ) {
-            const handleQueueUpdate = eventBus.subscribe(
-              'loopState:queueUpdated',
-              (data) => {
-                console.log(
-                  "[LoopPanel Wrapper] Event 'loopState:queueUpdated' received."
-                );
-                // Use the captured provider instance
-                if (currentUiProvider) {
-                  currentUiProvider.renderLoopPanel();
-                } else {
-                  console.warn(
-                    '[LoopPanel Wrapper] uiProvider missing on queue update.'
-                  );
-                }
-              }
-            );
-            this.unsubscribeHandles.push(handleQueueUpdate);
-            console.log(
-              `   [${componentTypeName}] Subscribed to loopState:queueUpdated`
-            );
-          } else {
-            console.warn(
-              `[PanelManager] Could not subscribe loopsPanel to queue updates: currentUiProvider or renderLoopPanel method missing.`
-            );
-          }
-        }
-
-        // 5. Handle Golden Layout container lifecycle events
-        // Store uiProvider in the wrapper instance if needed for event handlers
         this.uiProvider = uiProvider;
+        this.glContainer = container; // Store GL container
 
-        container.on('open', () => {
-          console.log(`   [${componentTypeName}] Panel Opened`);
-          // --- REVERTED: Always call initialize() if it exists --- >
-          // Original logic for all panels
-          if (
-            this.uiProvider &&
-            typeof this.uiProvider.initialize === 'function'
-          ) {
-            console.log(
-              `   [${componentTypeName}] Calling initialize() on open`
-            );
-            this.uiProvider.initialize();
-          } else {
-            // Optional: Log if initialize doesn't exist, but maybe too noisy
-            // console.warn(`   [${componentTypeName}] initialize method not found on open`);
-          }
-          // --- END REVERTED --- >
-        });
-        container.on('resize', () => {
-          console.log(`   [${componentTypeName}] Panel Resized`);
-          if (
-            this.uiProvider &&
-            typeof this.uiProvider.onPanelResize === 'function'
-          ) {
-            this.uiProvider.onPanelResize(
-              container.element.clientWidth,
-              container.element.clientHeight
-            );
-          }
-          // Add other relevant update calls if needed
-        });
-        container.on('destroy', () => {
-          console.log(`   [${componentTypeName}] Panel Destroyed`);
-
-          // --- Disable the corresponding module --- //
-          try {
-            let moduleIdToDisable = null;
-            // Find moduleId associated with this componentType
-            for (const [
-              modId,
-              compType,
-            ] of centralRegistry.moduleIdToComponentType.entries()) {
-              if (compType === componentTypeName) {
-                moduleIdToDisable = modId;
-                break;
-              }
-            }
-
-            if (moduleIdToDisable) {
-              console.log(
-                `[PanelManager] Panel closed for ${componentTypeName}, requesting disable for module: ${moduleIdToDisable}`
-              );
-              // Access moduleManagerApi globally
-              const moduleManager = window.moduleManagerApi;
-              if (
-                moduleManager &&
-                typeof moduleManager.disableModule === 'function'
-              ) {
-                // Use await? Disable is async, but we might not need to wait here.
-                // If disableModule fails, it should log its own error.
-                moduleManager.disableModule(moduleIdToDisable).catch((err) => {
-                  console.error(
-                    `[PanelManager] Error occurred during async disableModule call for ${moduleIdToDisable}:`,
-                    err
-                  );
-                });
-              } else {
-                console.warn(
-                  `[PanelManager] Cannot disable module ${moduleIdToDisable}: moduleManagerApi or disableModule function not found.`
-                );
-              }
-            } else {
-              console.warn(
-                `[PanelManager] Could not find module ID associated with closed panel componentType: ${componentTypeName}`
-              );
-            }
-          } catch (error) {
-            console.error(
-              '[PanelManager] Error during module disable lookup/call on panel destroy:',
-              error
-            );
-          }
-          // --- End Disable Module --- //
-
-          // Original cleanup logic follows...
-          if (
-            this.uiProvider &&
-            typeof this.uiProvider.onPanelDestroy === 'function'
-          ) {
-            this.uiProvider.onPanelDestroy();
-          }
-          // Call general dispose if available
-          if (
-            this.uiProvider &&
-            typeof this.uiProvider.dispose === 'function'
-          ) {
-            console.log(
-              `   [${componentTypeName}] Calling uiProvider.dispose()`
-            );
-            this.uiProvider.dispose();
-          }
-
-          // --- Unsubscribe from events managed by the wrapper ---
+        // Call onMount on the uiProvider, now that its element is in the DOM
+        if (typeof uiProvider.onMount === 'function') {
           console.log(
-            `[${componentTypeName} Wrapper] Unsubscribing from ${
-              this.unsubscribeHandles?.length || 0
-            } event(s) on destroy.`
+            `   [${componentTypeName}] Calling uiProvider.onMount...`
           );
-          if (this.unsubscribeHandles && this.unsubscribeHandles.length > 0) {
-            this.unsubscribeHandles.forEach((unsubscribe) => {
-              try {
-                unsubscribe(); // Call the stored unsubscribe function
-              } catch (e) {
-                console.warn(
-                  `[${componentTypeName} Wrapper] Error during event unsubscription:`,
-                  e
-                );
-              }
-            });
-            this.unsubscribeHandles = []; // Clear the array
-          }
-          // --- End Unsubscribe ---
+          uiProvider.onMount(container, componentState); // Pass GL container and state
+        }
 
-          // Use the PanelManager singleton instance for cleanup
-          panelManagerInstance.removeMapping(container);
-        });
-        console.log(`   [${componentTypeName}] Lifecycle listeners set up.`);
+        // Add mapping to PanelManager for its tracking
+        if (self) {
+          // 'self' is the PanelManager instance from outer scope
+          self.addMapping(container, uiProvider);
+        }
       } catch (error) {
         console.error(
-          `!!! ERROR in WrapperComponent constructor for ${componentTypeName}:`,
+          `Error in WrapperComponent constructor for ${componentTypeName}:`,
           error
         );
-        container.element.innerHTML = `<h2>Error loading ${componentTypeName}</h2><p>Check console for details.</p><pre style="color: red; white-space: pre-wrap;">${error.stack}</pre>`;
+        container.element.innerHTML = `<div style="padding: 10px; color: red;">Error initializing panel ${componentTypeName}: ${error.message}</div>`;
       }
-      console.log(
-        `--- WrapperComponent constructor finished for: ${componentTypeName} ---`
-      );
+
+      // GoldenLayout V2 component lifecycle methods
+      // GL will call this.destroy() when the component item is destroyed
+      this.destroy = () => {
+        console.log(
+          `--- WrapperComponent.destroy executing for: ${componentTypeName} ---`
+        );
+        if (
+          this.uiProvider &&
+          typeof this.uiProvider.onUnmount === 'function'
+        ) {
+          try {
+            this.uiProvider.onUnmount();
+          } catch (unmountError) {
+            console.error(
+              `Error during ${componentTypeName}.onUnmount:`,
+              unmountError
+            );
+          }
+        }
+        this.unsubscribeHandles.forEach((unsub) => unsub()); // Clean up any eventBus subscriptions made by this wrapper
+        this.unsubscribeHandles = [];
+
+        if (self && this.glContainer) {
+          // Use stored GL container for removal
+          self.removeMapping(this.glContainer);
+        }
+        console.log(
+          `   [${componentTypeName}] WrapperComponent destroy completed.`
+        );
+      };
+
+      // Optional: handle show/hide/resize if your UI components need them
+      if (this.uiProvider && typeof this.uiProvider.onShow === 'function') {
+        container.on('show', () => this.uiProvider.onShow());
+      }
+      if (this.uiProvider && typeof this.uiProvider.onHide === 'function') {
+        container.on('hide', () => this.uiProvider.onHide());
+      }
+      if (this.uiProvider && typeof this.uiProvider.onResize === 'function') {
+        container.on('resize', () => this.uiProvider.onResize());
+      }
     };
 
-    // Register the WrapperComponent constructor with Golden Layout
-    this.layout.registerComponentConstructor(
-      componentTypeName,
-      WrapperComponent
-    );
+    // Register the component type with Golden Layout
+    try {
+      this.goldenLayout.registerComponentFactoryFunction(
+        componentTypeName,
+        WrapperComponent
+      );
+      console.log(
+        `Successfully registered component factory for ${componentTypeName} with GoldenLayout.`
+      );
+    } catch (e) {
+      console.error(
+        `Failed to register component factory for ${componentTypeName} with GoldenLayout:`,
+        e
+      );
+    }
   }
 
   /**
@@ -495,10 +340,26 @@ class PanelManager {
    * @param {object} uiInstance - The UI component instance.
    */
   addMapping(container, uiInstance) {
+    const componentType =
+      container.componentType ||
+      (uiInstance && uiInstance.constructor
+        ? uiInstance.constructor.name
+        : 'UnknownType');
+    const moduleId =
+      uiInstance && uiInstance.moduleId ? uiInstance.moduleId : 'UnknownModule';
+    console.log(
+      `[PanelManager DEBUG] addMapping: Attempting to ADD componentType '${componentType}' (Module: '${moduleId}'). Current panelMap size BEFORE add: ${this.panelMap.size}. Container componentType: ${container.componentType}`
+    );
     if (this.panelMap.has(container)) {
-      console.warn('Container already mapped. Overwriting.', container);
+      console.warn(
+        '[PanelManager DEBUG] addMapping: Container already mapped. Overwriting.',
+        container
+      );
     }
     this.panelMap.set(container, { uiInstance, container });
+    console.log(
+      `[PanelManager DEBUG] addMapping: Successfully ADDED componentType '${componentType}' (Module: '${moduleId}'). New panelMap size AFTER add: ${this.panelMap.size}.`
+    );
   }
 
   /**
@@ -508,8 +369,27 @@ class PanelManager {
   removeMapping(container) {
     if (this.panelMap.has(container)) {
       const { uiInstance } = this.panelMap.get(container);
+      // Log before deletion
+      const componentType =
+        container.componentType ||
+        (uiInstance && uiInstance.constructor
+          ? uiInstance.constructor.name
+          : 'UnknownType');
+      const moduleId =
+        uiInstance && uiInstance.moduleId
+          ? uiInstance.moduleId
+          : 'UnknownModule';
+      console.log(
+        `[PanelManager DEBUG] removeMapping: Attempting to remove componentType '${componentType}' (Module: '${moduleId}') from panelMap. Current size: ${this.panelMap.size}. Container:`,
+        container
+      );
       this.panelMap.delete(container);
+      console.log(
+        `[PanelManager DEBUG] removeMapping: Successfully removed. New panelMap size: ${this.panelMap.size}.`
+      );
+      // Original console log for non-found was empty, let's keep it that way or add a specific one if needed
     } else {
+      // console.warn('[PanelManager] Attempted to remove a container not in panelMap:', container);
     }
   }
 
@@ -540,106 +420,148 @@ class PanelManager {
    * Clears all mappings. Useful during layout reinitialization or major state changes.
    */
   clearAllMappings() {
+    console.error(
+      '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    );
+    console.error(
+      '[PanelManager CRITICAL DEBUG] clearAllMappings CALLED - THIS IS LIKELY THE CULPRIT!',
+      new Date().toISOString()
+    );
+    console.error(
+      '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    );
     this.panelMap.clear();
-    console.log('Cleared all panel mappings.');
+    console.error(
+      '[PanelManager CRITICAL DEBUG] panelMap has been cleared via clearAllMappings.',
+      new Date().toISOString()
+    );
+    console.log('Cleared all panel mappings.'); // Original log
   }
 
   /**
    * Finds and removes the first panel instance corresponding to the given component type.
    * @param {string} componentType - The component type name (e.g., 'filesPanel').
    */
-  destroyPanelByComponentType(componentType) {
-    const layoutInstance = window.goldenLayoutInstance; // Use global instance
-    if (!layoutInstance || !layoutInstance.root) {
+  async destroyPanelByComponentType(componentType) {
+    // console.log(
+    //   '[PanelManager DEBUG] destroyPanelByComponentType ENTERED. ComponentType:',
+    //   componentType
+    // );
+    // console.log('[PanelManager DEBUG] `this` context:', this); // Check `this.goldenLayout` and `this.isInitialized` here
+
+    if (!this.isInitialized || !this.goldenLayout || !this.goldenLayout.root) {
       console.error(
-        '[PanelManager] Global GoldenLayout instance or root not available, cannot destroy panel.'
-      );
-      return;
-    }
-    console.log(
-      `[PanelManager] Attempting to destroy panel for componentType: ${componentType}`
-    );
-
-    let itemToDestroy = null;
-    let foundContainer = null;
-
-    // Iterate through our known panels to find the container and its parent ComponentItem
-    for (const [container, mapping] of this.panelMap.entries()) {
-      // The componentType property should exist on the container itself in V2
-      if (container.componentType === componentType) {
-        foundContainer = container;
-        // The parent of the container is the ComponentItem we want to remove
-        if (container.parent && typeof container.parent.remove === 'function') {
-          itemToDestroy = container.parent;
-          break; // Found the first one
+        // Kept as error
+        '[PanelManager destroy] PanelManager not initialized or GoldenLayout instance/root not available. Cannot destroy panel.',
+        {
+          isInitialized: this.isInitialized,
+          hasGoldenLayout: !!this.goldenLayout,
+          hasRoot: !!this.goldenLayout?.root,
         }
-      }
-    }
-
-    if (itemToDestroy) {
-      console.log(
-        '[PanelManager] Found ComponentItem to destroy via panelMap iteration:',
-        itemToDestroy
-      );
-      try {
-        itemToDestroy.remove();
-        console.log(
-          `[PanelManager] Successfully removed panel for ${componentType}.`
-        );
-        // The component's own destroy handler (attached via container.on('destroy'))
-        // should handle removing the entry from panelMap.
-      } catch (error) {
-        console.error(
-          `[PanelManager] Error removing panel item for ${componentType}:`,
-          error
-        );
-      }
-    } else {
-      console.warn(
-        `[PanelManager] Could not find a removable panel item for componentType: ${componentType} via panelMap iteration.`
-      );
-      // It might be possible the panel exists but isn't in our map, or container.parent wasn't the expected item.
-      // As a fallback, maybe try the potentially problematic root search again?
-      // For now, just warn if not found via map.
-    }
-  }
-
-  /**
-   * Creates and adds a panel for the given component type to the first available stack.
-   * Uses layout.addComponent with LocationSelector.
-   * @param {string} componentType - The component type name (e.g., 'filesPanel').
-   * @param {string} title - The title for the new panel.
-   */
-  createPanelForComponent(componentType, title) {
-    const layoutInstance = this.layout;
-    if (!layoutInstance) {
-      console.error(
-        '[PanelManager] Cannot add panel, layout instance is not available. Has PanelManager been initialized?'
       );
       return;
     }
-
-    console.log(
-      `[PanelManager] Attempting to add panel for component type: ${componentType}`
-    );
 
     try {
-      // Use layout.addComponent without location selectors
-      layoutInstance.addComponent(
-        componentType,
-        undefined, // componentState - can be passed if needed
-        title || componentType // Use provided title or default to componentType
-        // No locationSelectors argument needed - use default placement
-      );
       console.log(
-        `[PanelManager] Successfully called layout.addComponent for ${componentType}.`
+        // Kept this log as it seems generally useful
+        `[PanelManager destroy] Attempting to destroy panel for componentType: ${componentType}`
       );
+      let itemToDestroy = null;
+
+      // Use GoldenLayout's API to find the component item(s)
+      const components = [];
+      // Iterate through all items to find matching componentTypes
+      // GoldenLayout V2 does not have a direct getItemsByComponentType on root.
+      // We need to traverse the layout.
+      function findComponents(item) {
+        if (item.isComponent && item.componentType === componentType) {
+          components.push(item);
+        } else if (item.contentItems && item.contentItems.length > 0) {
+          // For Rows, Columns, Stacks
+          item.contentItems.forEach(findComponents);
+        }
+      }
+
+      if (this.goldenLayout.root && this.goldenLayout.root.contentItems) {
+        findComponents(this.goldenLayout.root);
+      } else {
+        console.warn(
+          // Kept as warn
+          '[PanelManager destroy] GoldenLayout root or root.contentItems is not available for traversal.'
+        );
+      }
+
+      if (components.length > 0) {
+        itemToDestroy = components[0]; // Destroy the first one found, or add more sophisticated logic
+        console.log(
+          // Kept this log as it seems generally useful
+          `[PanelManager destroy] Found panel to destroy via traversal. ComponentType: ${itemToDestroy.componentType}, Title: ${itemToDestroy.title}, ID: ${itemToDestroy.id}`
+        );
+      } else {
+        console.log(
+          // Kept this log as it seems generally useful
+          `[PanelManager destroy] No panel found with componentType '${componentType}' during layout traversal.`
+        );
+      }
+
+      // Fallback or alternative: Check panelMapById if traversal fails or as a primary lookup if preferred
+      // This assumes panelMapById is correctly populated with component items or their IDs.
+      if (!itemToDestroy) {
+        console.log(
+          // Kept this log as it seems generally useful
+          `[PanelManager destroy] Traversal did not find '${componentType}'. Checking panelMapById and panelMap.`
+        );
+        // Attempt to find via panelMap (which might store component instances or GL containers)
+        const panelInfoFromMap = this.getPanelByComponentType(componentType); // Assuming this returns { panelInstance, container, ... }
+        if (
+          panelInfoFromMap &&
+          panelInfoFromMap.container &&
+          typeof panelInfoFromMap.container.remove === 'function'
+        ) {
+          // If panelInfoFromMap.container is the GL ContentItem
+          itemToDestroy = panelInfoFromMap.container;
+          console.log(
+            // Kept this log as it seems generally useful
+            `[PanelManager destroy] Found panel to destroy via panelMap/getPanelByComponentType. Type: ${itemToDestroy.componentType}, ID: ${itemToDestroy.id}`
+          );
+        } else if (
+          panelInfoFromMap &&
+          panelInfoFromMap.panelInstance &&
+          typeof panelInfoFromMap.panelInstance.remove === 'function'
+        ) {
+          // If panelInfoFromMap.panelInstance is the GL ContentItem (older mapping style)
+          itemToDestroy = panelInfoFromMap.panelInstance;
+          console.log(
+            // Kept this log as it seems generally useful
+            `[PanelManager destroy] Found panel to destroy via panelMap (panelInstance). Type: ${itemToDestroy.componentType}, ID: ${itemToDestroy.id}`
+          );
+        }
+      }
+
+      if (itemToDestroy && typeof itemToDestroy.remove === 'function') {
+        console.log(
+          // Kept this log as it seems generally useful
+          `[PanelManager destroy] Calling .remove() on item:`,
+          itemToDestroy
+        );
+        itemToDestroy.remove(); // This should trigger the 'itemDestroyed' event handled in initialize()
+        console.log(
+          // Kept this log as it seems generally useful
+          `[PanelManager destroy] Called .remove() for ${componentType}. Panel should be closing.`
+        );
+      } else {
+        console.warn(
+          // Kept as warn
+          `[PanelManager destroy] No panel found with componentType '${componentType}' or item is not removable after all checks.`
+        );
+      }
     } catch (error) {
       console.error(
-        `[PanelManager] Error calling layout.addComponent for ${componentType}:`,
-        error
+        '[PanelManager DEBUG] UNCAUGHT ERROR in destroyPanelByComponentType:', // This was important, changed to non-debug
+        error,
+        error.stack
       );
-      // Handle potential errors during addComponent, e.g., if the layout is full or misconfigured
     }
   }
 
@@ -701,11 +623,239 @@ class PanelManager {
     }
   }
   // --- END NEW METHOD --- //
+
+  removeMappingByPanelId(panelId) {
+    if (!panelId) {
+      console.warn(
+        '[PanelManager removeMappingByPanelId] Panel ID is null or undefined. Cannot remove.'
+      );
+      return;
+    }
+    const mappingDetails = this.panelMapById.get(panelId);
+    if (mappingDetails) {
+      this.panelMapById.delete(panelId);
+      // Also remove from the other map if it's consistent
+      if (this.panelMap.has(mappingDetails.componentType)) {
+        const panelInMap = this.panelMap.get(mappingDetails.componentType);
+        if (panelInMap && panelInMap.id === panelId) {
+          this.panelMap.delete(mappingDetails.componentType);
+          console.log(
+            `[PanelManager REMOVE MAPPING BY ID] Removed componentType "${mappingDetails.componentType}" from panelMap as well.`
+          );
+        }
+      }
+      console.log(
+        `[PanelManager REMOVE MAPPING BY ID] panelId: "${panelId}", componentType: "${mappingDetails.componentType}". panelMapById size: ${this.panelMapById.size}, panelMap size: ${this.panelMap.size}`
+      );
+    } else {
+      console.warn(
+        `[PanelManager REMOVE MAPPING BY ID] No mapping found for panelId: "${panelId}".`
+      );
+    }
+  }
+
+  removeMappingByComponentType(componentType) {
+    if (!componentType) {
+      console.warn(
+        '[PanelManager removeMappingByComponentType] Component type is null or undefined. Cannot remove.'
+      );
+      return;
+    }
+    const panelInstance = this.panelMap.get(componentType);
+    if (panelInstance) {
+      this.panelMap.delete(componentType);
+      // Also remove from the other map if it's consistent
+      if (panelInstance.id && this.panelMapById.has(panelInstance.id)) {
+        const mappingDetailsById = this.panelMapById.get(panelInstance.id);
+        if (mappingDetailsById.componentType === componentType) {
+          this.panelMapById.delete(panelInstance.id);
+          console.log(
+            `[PanelManager REMOVE MAPPING BY TYPE] Removed panelId "${panelInstance.id}" from panelMapById as well.`
+          );
+        }
+      }
+      console.log(
+        `[PanelManager REMOVE MAPPING BY TYPE] componentType: "${componentType}", panelId: "${
+          panelInstance.id || 'N/A'
+        }". panelMap size: ${this.panelMap.size}, panelMapById size: ${
+          this.panelMapById.size
+        }`
+      );
+    } else {
+      console.warn(
+        `[PanelManager REMOVE MAPPING BY TYPE] No mapping found for componentType: "${componentType}".`
+      );
+    }
+  }
+
+  findComponentTypeByPanelId(panelId) {
+    const mapping = this.panelMapById.get(panelId);
+    if (mapping) {
+      return mapping.componentType;
+    }
+    return null;
+  }
+
+  // Utility to find a panel (ContentItem) by its componentType
+  getPanelByComponentType(componentType) {
+    for (const [container, mapping] of this.panelMap.entries()) {
+      if (container.componentType === componentType) {
+        return container;
+      }
+    }
+    return null;
+  }
+
+  // MODIFIED createPanelForComponent (V8)
+  async createPanelForComponent(
+    componentType,
+    title = componentType,
+    location = null, // Still mostly ignored by this approach
+    additionalState = {}
+  ) {
+    console.log(
+      `[PanelManager createPanelForComponent V8] Called for type: ${componentType}, title: ${title}`
+    );
+
+    if (!this.isInitialized || !this.goldenLayout) {
+      console.error(
+        '[PanelManager V8] PanelManager not initialized or GoldenLayout instance missing.'
+      );
+      return null;
+    }
+
+    try {
+      const expectedTitleStr = title || componentType;
+      console.log(
+        `[PanelManager V8] Attempting this.goldenLayout.addComponent('${componentType}', '${expectedTitleStr}', ...)`,
+        additionalState
+      );
+
+      const addResult = this.goldenLayout.addComponent(
+        componentType,
+        expectedTitleStr,
+        additionalState || {}
+      );
+
+      console.log(
+        '[PanelManager V8] this.goldenLayout.addComponent call result:',
+        addResult
+      );
+
+      let resolvedItem = null;
+
+      if (
+        addResult &&
+        addResult.parentItem &&
+        typeof addResult.index === 'number' &&
+        addResult.parentItem.contentItems
+      ) {
+        console.log(
+          `[PanelManager V8] addResult provides parentItem & index. Accessing parentItem.contentItems[${addResult.index}]`
+        );
+        resolvedItem = addResult.parentItem.contentItems[addResult.index];
+      } else if (
+        addResult &&
+        typeof addResult.setTitle === 'function' &&
+        'id' in addResult &&
+        'title' in addResult
+      ) {
+        // If addResult itself looks like a ComponentItem (duck typing)
+        console.log(
+          '[PanelManager V8] addResult itself looks like a ComponentItem.'
+        );
+        resolvedItem = addResult;
+      } else {
+        console.warn(
+          '[PanelManager V8] addComponent did not return {parentItem, index} or a direct ComponentItem-like object. addResult:',
+          addResult
+        );
+      }
+
+      if (
+        resolvedItem &&
+        typeof resolvedItem.setTitle === 'function' &&
+        'id' in resolvedItem &&
+        'title' in resolvedItem
+      ) {
+        console.log(
+          `[PanelManager V8] Resolved ComponentItem. Current ID: '${resolvedItem.id}', Current Title: '${resolvedItem.title}', Expected Title: '${expectedTitleStr}'`
+        );
+        if (String(resolvedItem.title) !== expectedTitleStr) {
+          // Ensure string comparison
+          console.warn(
+            `[PanelManager V8] Title mismatch/needs setting. Current: '${resolvedItem.title}'. Attempting setTitle('${expectedTitleStr}').`
+          );
+          resolvedItem.setTitle(expectedTitleStr);
+          console.log(
+            `[PanelManager V8] Title after setTitle: '${resolvedItem.title}'`
+          );
+        } else {
+          console.log('[PanelManager V8] Title is already correct.');
+        }
+        return resolvedItem;
+      } else {
+        console.error(
+          '[PanelManager V8] Could not resolve a valid ComponentItem or it lacks essential properties/methods. Resolved item:',
+          resolvedItem,
+          'Original addResult:',
+          addResult
+        );
+        return resolvedItem || addResult; // Return what we have for further debugging if needed
+      }
+    } catch (error) {
+      console.error(
+        `[PanelManager V8] Error in createPanelForComponent for '${componentType}':`,
+        error,
+        error.stack
+      );
+      if (error.message && error.message.includes('Unknown component type')) {
+        console.error(
+          `[PanelManager V8] Error suggests componentType "${componentType}" might not be registered.`
+        );
+      }
+      return null;
+    }
+  }
+
+  // Helper to find the first stack or a valid row/column to add to
+  findFirstStackOrParent(item) {
+    if (!item) return null; // Guard against null item
+    if (item.isStack || item.isRow || item.isColumn) {
+      if (typeof item.addChild === 'function') {
+        // Ensure it can have children added this way
+        return item;
+      }
+    }
+    if (item.contentItems) {
+      for (const child of item.contentItems) {
+        const found = this.findFirstStackOrParent(child);
+        if (found) return found;
+      }
+    }
+    // Fallback to root if it's a suitable container (this might be redundant if initial call is root)
+    // if (this.goldenLayout.root && (this.goldenLayout.root.isRow || this.goldenLayout.root.isColumn) && typeof this.goldenLayout.root.addChild === 'function') {
+    //     if (item === this.goldenLayout.root) return this.goldenLayout.root; // Avoid re-checking if item is already root
+    // }
+    return null;
+  }
+
+  // Helper function to find an item by ID (recursive)
+  findItemByIdRecursive(item, id) {
+    if (!item) return null; // Guard against null item
+    if (item.id === id) {
+      return item;
+    }
+    if (item.contentItems) {
+      for (const child of item.contentItems) {
+        const found = this.findItemByIdRecursive(child, id);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  }
 }
 
-// --- Create Singleton Instance AFTER Class Definition --- //
-const panelManagerInstance = new PanelManager();
-
-// --- Export Singleton --- //
-// Export the singleton instance directly
-export default panelManagerInstance;
+export default new PanelManager();
