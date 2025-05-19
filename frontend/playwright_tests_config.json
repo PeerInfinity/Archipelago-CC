@@ -1,5 +1,6 @@
 {
   "autoStartTestsOnLoad": true,
+  "defaultEnabledState": false,
   "tests": [
     {
       "id": "test_1_simple_event",

@@ -450,6 +450,7 @@ async function loadCombinedModeData() {
   );
 
   let baseCombinedData = {};
+  let dataSources = {}; // Track where each section came from
 
   if (!G_skipLocalStorageLoad) {
     try {
@@ -458,6 +459,17 @@ async function loadCombinedModeData() {
       );
       if (storedData) {
         baseCombinedData = JSON.parse(storedData);
+        // Record that this data came from localStorage
+        Object.keys(baseCombinedData).forEach((key) => {
+          if (key !== 'dataSources') {
+            // Don't track the dataSources field itself
+            dataSources[key] = {
+              source: 'localStorage',
+              timestamp: new Date().toISOString(),
+              details: `Loaded from localStorage key: ${G_LOCAL_STORAGE_MODE_PREFIX}${G_currentActiveMode}`,
+            };
+          }
+        });
         console.log(
           `[Init] Successfully set baseCombinedData for mode "${G_currentActiveMode}" from localStorage.`
         );
@@ -512,6 +524,12 @@ async function loadCombinedModeData() {
             );
             if (fetchedData) {
               baseCombinedData[configKey] = fetchedData;
+              // Record that this data came from a file
+              dataSources[configKey] = {
+                source: 'file',
+                timestamp: new Date().toISOString(),
+                details: `Loaded from file: ${configEntry.path}`,
+              };
               console.log(
                 `[Init] Loaded ${configKey} for "${G_currentActiveMode}" from file: ${configEntry.path}.`
               );
@@ -522,6 +540,11 @@ async function loadCombinedModeData() {
               // Ensure the key exists with null if fetch failed, to prevent re-attempts if not desired
               if (!baseCombinedData.hasOwnProperty(configKey)) {
                 baseCombinedData[configKey] = null;
+                dataSources[configKey] = {
+                  source: 'error',
+                  timestamp: new Date().toISOString(),
+                  details: `Failed to load from file: ${configEntry.path}`,
+                };
               }
             }
           } else {
@@ -537,7 +560,6 @@ async function loadCombinedModeData() {
       `[Init] No file configurations found in modes.json for mode "${G_currentActiveMode}".`
     );
   }
-  // --- End new logic ---
 
   // Special handling for layoutConfig (as it's used by GoldenLayout setup later)
   // This ensures layoutPresets is populated even if layoutConfig comes from localStorage
@@ -559,7 +581,15 @@ async function loadCombinedModeData() {
       '[Init] No layoutConfig found in combined data. GoldenLayout might use hardcoded defaults.'
     );
     layoutPresets = { default: getDefaultLayoutConfig() }; // Fallback
+    dataSources.layoutConfig = {
+      source: 'default',
+      timestamp: new Date().toISOString(),
+      details: 'Using hardcoded default layout configuration',
+    };
   }
+
+  // Add the dataSources to the combined data
+  baseCombinedData.dataSources = dataSources;
 
   G_combinedModeData = baseCombinedData;
   console.log(

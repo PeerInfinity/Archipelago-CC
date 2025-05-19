@@ -160,7 +160,7 @@ export class TestUI {
   }
 
   renderTestList(testsToRender = null) {
-    const tests = testsToRender || testLogic.getTests(); // Get sorted list
+    const tests = testsToRender || testLogic.getTests();
     this.testListContainer.innerHTML = '';
 
     if (!tests || tests.length === 0) {
@@ -168,102 +168,236 @@ export class TestUI {
       return;
     }
 
-    const ul = document.createElement('ul');
-    ul.className = 'tests-ul'; // Consistent class name
-    ul.style.listStyle = 'none';
-    ul.style.padding = '0';
-
-    tests.forEach((test, index) => {
-      // Added index for button disabling
-      const li = document.createElement('li');
-      li.className = 'test-item';
-      li.dataset.testId = test.id;
-      // Basic styling applied in index.css
-
-      const header = document.createElement('div');
-      header.className = 'test-item-header'; // Use class for styling
-
-      const nameDescDiv = document.createElement('div');
-      nameDescDiv.className = 'test-item-name-desc'; // Class for styling
-      const nameEl = document.createElement('strong');
-      nameEl.textContent = test.name;
-      nameDescDiv.appendChild(nameEl);
-
-      if (test.description) {
-        const descEl = document.createElement('p');
-        descEl.textContent = test.description;
-        nameDescDiv.appendChild(descEl);
+    // Group tests by category
+    const testsByCategory = {};
+    tests.forEach((test) => {
+      if (!testsByCategory[test.category]) {
+        testsByCategory[test.category] = [];
       }
-      header.appendChild(nameDescDiv);
-
-      const controlsDiv = document.createElement('div');
-      controlsDiv.className = 'test-item-controls';
-
-      const enableLabel = document.createElement('label');
-      const enableCheckbox = document.createElement('input');
-      enableCheckbox.type = 'checkbox';
-      enableCheckbox.className = 'test-enable-checkbox';
-      enableCheckbox.checked = test.isEnabled;
-      enableCheckbox.title = 'Enable/Disable Test';
-      enableLabel.appendChild(enableCheckbox);
-      enableLabel.appendChild(document.createTextNode('Enabled'));
-      controlsDiv.appendChild(enableLabel);
-
-      const upButton = document.createElement('button');
-      upButton.textContent = '↑';
-      upButton.className = 'button button-small move-test-up-button';
-      upButton.title = 'Move Up';
-      upButton.disabled = index === 0; // Disable if first item
-      controlsDiv.appendChild(upButton);
-
-      const downButton = document.createElement('button');
-      downButton.textContent = '↓';
-      downButton.className = 'button button-small move-test-down-button';
-      downButton.title = 'Move Down';
-      downButton.disabled = index === tests.length - 1; // Disable if last item
-      controlsDiv.appendChild(downButton);
-
-      const runButton = document.createElement('button');
-      runButton.textContent = 'Run';
-      runButton.className = 'button button-small run-single-test-button';
-      controlsDiv.appendChild(runButton);
-
-      header.appendChild(controlsDiv);
-      li.appendChild(header);
-
-      const statusEl = document.createElement('div');
-      statusEl.className = 'test-status-display';
-      statusEl.dataset.statusFor = test.id; // For easier selection
-      this.updateTestStatusElement(
-        statusEl,
-        test.status,
-        test.currentEventWaitingFor
-      );
-      li.appendChild(statusEl);
-
-      const conditionsEl = document.createElement('ul');
-      conditionsEl.className = 'test-conditions-list';
-      conditionsEl.dataset.conditionsFor = test.id; // For easier selection
-      test.conditions.forEach((cond) => {
-        const condItem = document.createElement('li');
-        condItem.textContent = `${cond.status === 'passed' ? '✅' : '❌'} ${
-          cond.description
-        }`;
-        condItem.classList.add(
-          cond.status === 'passed' ? 'condition-passed' : 'condition-failed'
-        );
-        conditionsEl.appendChild(condItem);
-      });
-      li.appendChild(conditionsEl);
-
-      const logArea = document.createElement('div');
-      logArea.className = 'test-log-area';
-      logArea.dataset.logFor = test.id; // For easier selection
-      li.appendChild(logArea);
-
-      ul.appendChild(li);
+      testsByCategory[test.category].push(test);
     });
-    this.testListContainer.appendChild(ul);
+
+    // Create sections for each category
+    Object.keys(testsByCategory)
+      .sort()
+      .forEach((category, categoryIndex) => {
+        const categorySection = document.createElement('div');
+        categorySection.className = 'test-category-section';
+        categorySection.style.marginBottom = '20px';
+        categorySection.style.border = '1px solid #444';
+        categorySection.style.borderRadius = '4px';
+        categorySection.style.padding = '10px';
+
+        // Category header with enable/disable control
+        const categoryHeader = document.createElement('div');
+        categoryHeader.className = 'test-category-header';
+        categoryHeader.style.display = 'flex';
+        categoryHeader.style.alignItems = 'center';
+        categoryHeader.style.marginBottom = '10px';
+        categoryHeader.style.paddingBottom = '5px';
+        categoryHeader.style.borderBottom = '1px solid #444';
+
+        // Category reordering controls
+        const categoryControls = document.createElement('div');
+        categoryControls.style.display = 'flex';
+        categoryControls.style.alignItems = 'center';
+        categoryControls.style.marginRight = '10px';
+
+        const upButton = document.createElement('button');
+        upButton.textContent = '↑';
+        upButton.className = 'button button-small move-category-up-button';
+        upButton.title = 'Move Category Up';
+        upButton.disabled = categoryIndex === 0;
+        upButton.addEventListener('click', () => {
+          testLogic.updateCategoryOrder(category, 'up');
+        });
+        categoryControls.appendChild(upButton);
+
+        const downButton = document.createElement('button');
+        downButton.textContent = '↓';
+        downButton.className = 'button button-small move-category-down-button';
+        downButton.title = 'Move Category Down';
+        downButton.disabled =
+          categoryIndex === Object.keys(testsByCategory).length - 1;
+        downButton.addEventListener('click', () => {
+          testLogic.updateCategoryOrder(category, 'down');
+        });
+        categoryControls.appendChild(downButton);
+
+        categoryHeader.appendChild(categoryControls);
+
+        const categoryLabel = document.createElement('label');
+        categoryLabel.style.display = 'flex';
+        categoryLabel.style.alignItems = 'center';
+        categoryLabel.style.flex = '1';
+        categoryLabel.style.fontWeight = 'bold';
+
+        const categoryCheckbox = document.createElement('input');
+        categoryCheckbox.type = 'checkbox';
+        categoryCheckbox.className = 'test-category-checkbox';
+
+        // NEW LOGIC for category checkbox state:
+        const testsInThisCategory = testsByCategory[category];
+        const allEnabledInCategory = testsInThisCategory.every(
+          (t) => t.isEnabled
+        );
+        const anyEnabledInCategory = testsInThisCategory.some(
+          (t) => t.isEnabled
+        );
+
+        categoryCheckbox.checked = allEnabledInCategory;
+        categoryCheckbox.indeterminate =
+          !allEnabledInCategory && anyEnabledInCategory;
+
+        categoryCheckbox.style.marginRight = '8px';
+        categoryCheckbox.addEventListener('change', (event) => {
+          const isEnabled = event.target.checked;
+          testLogic.toggleCategoryEnabled(category, isEnabled);
+          // Update all test checkboxes in this category (for immediate visual feedback)
+          // This will be confirmed by the re-render triggered by 'test:listUpdated'
+          const testCheckboxes = categorySection.querySelectorAll(
+            '.test-enable-checkbox'
+          );
+          testCheckboxes.forEach((checkbox) => {
+            checkbox.checked = isEnabled;
+          });
+        });
+        categoryLabel.appendChild(categoryCheckbox);
+        categoryLabel.appendChild(document.createTextNode(category));
+        categoryHeader.appendChild(categoryLabel);
+
+        // Add category-level run button
+        const runCategoryButton = document.createElement('button');
+        runCategoryButton.textContent = 'Run Category';
+        runCategoryButton.className = 'button button-small run-category-button';
+        runCategoryButton.style.marginLeft = '10px';
+        runCategoryButton.addEventListener('click', async () => {
+          const categoryTests = testsByCategory[category];
+          for (const test of categoryTests) {
+            if (test.isEnabled) {
+              await testLogic.runTest(test.id);
+            }
+          }
+        });
+        categoryHeader.appendChild(runCategoryButton);
+
+        categorySection.appendChild(categoryHeader);
+
+        // Tests list for this category
+        const testsList = document.createElement('ul');
+        testsList.className = 'tests-ul';
+        testsList.style.listStyle = 'none';
+        testsList.style.padding = '0';
+
+        testsByCategory[category].forEach((test, index) => {
+          const li = document.createElement('li');
+          li.className = 'test-item';
+          li.dataset.testId = test.id;
+
+          const header = document.createElement('div');
+          header.className = 'test-item-header';
+
+          const nameDescDiv = document.createElement('div');
+          nameDescDiv.className = 'test-item-name-desc';
+          const nameEl = document.createElement('strong');
+          nameEl.textContent = test.name;
+          nameDescDiv.appendChild(nameEl);
+
+          if (test.description) {
+            const descEl = document.createElement('p');
+            descEl.textContent = test.description;
+            nameDescDiv.appendChild(descEl);
+          }
+          header.appendChild(nameDescDiv);
+
+          const controlsDiv = document.createElement('div');
+          controlsDiv.className = 'test-item-controls';
+
+          const enableLabel = document.createElement('label');
+          const enableCheckbox = document.createElement('input');
+          enableCheckbox.type = 'checkbox';
+          enableCheckbox.className = 'test-enable-checkbox';
+          enableCheckbox.checked = test.isEnabled;
+          enableCheckbox.title = 'Enable/Disable Test';
+          enableCheckbox.addEventListener('change', (event) => {
+            testLogic.toggleTestEnabled(test.id, event.target.checked);
+            // REMOVED: Immediate DOM update of category checkbox.
+            // The 'test:listUpdated' event from toggleTestEnabled will trigger a re-render,
+            // which will correctly set the category checkbox's state using the new logic.
+            // const allTestCheckboxes = categorySection.querySelectorAll(
+            //   '.test-enable-checkbox'
+            // );
+            // const allEnabled = Array.from(allTestCheckboxes).every(
+            //   (checkbox) => checkbox.checked
+            // );
+            // const anyEnabled = Array.from(allTestCheckboxes).some(
+            //   (checkbox) => checkbox.checked
+            // );
+            // categoryCheckbox.checked = allEnabled;
+            // categoryCheckbox.indeterminate = !allEnabled && anyEnabled;
+          });
+          enableLabel.appendChild(enableCheckbox);
+          enableLabel.appendChild(document.createTextNode('Enabled'));
+          controlsDiv.appendChild(enableLabel);
+
+          const upButton = document.createElement('button');
+          upButton.textContent = '↑';
+          upButton.className = 'button button-small move-test-up-button';
+          upButton.title = 'Move Up';
+          upButton.disabled = index === 0;
+          controlsDiv.appendChild(upButton);
+
+          const downButton = document.createElement('button');
+          downButton.textContent = '↓';
+          downButton.className = 'button button-small move-test-down-button';
+          downButton.title = 'Move Down';
+          downButton.disabled = index === testsByCategory[category].length - 1;
+          controlsDiv.appendChild(downButton);
+
+          const runButton = document.createElement('button');
+          runButton.textContent = 'Run';
+          runButton.className = 'button button-small run-single-test-button';
+          controlsDiv.appendChild(runButton);
+
+          header.appendChild(controlsDiv);
+          li.appendChild(header);
+
+          const statusEl = document.createElement('div');
+          statusEl.className = 'test-status-display';
+          statusEl.dataset.statusFor = test.id;
+          this.updateTestStatusElement(
+            statusEl,
+            test.status,
+            test.currentEventWaitingFor
+          );
+          li.appendChild(statusEl);
+
+          const conditionsEl = document.createElement('ul');
+          conditionsEl.className = 'test-conditions-list';
+          conditionsEl.dataset.conditionsFor = test.id;
+          test.conditions.forEach((cond) => {
+            const condItem = document.createElement('li');
+            condItem.textContent = `${cond.status === 'passed' ? '✅' : '❌'} ${
+              cond.description
+            }`;
+            condItem.classList.add(
+              cond.status === 'passed' ? 'condition-passed' : 'condition-failed'
+            );
+            conditionsEl.appendChild(condItem);
+          });
+          li.appendChild(conditionsEl);
+
+          const logArea = document.createElement('div');
+          logArea.className = 'test-log-area';
+          logArea.dataset.logFor = test.id;
+          li.appendChild(logArea);
+
+          testsList.appendChild(li);
+        });
+
+        categorySection.appendChild(testsList);
+        this.testListContainer.appendChild(categorySection);
+      });
   }
 
   updateTestStatusElement(element, status, eventWaitingFor = null) {

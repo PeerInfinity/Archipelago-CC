@@ -31,7 +31,7 @@ class EditorUI {
       localStorageMode: {
         text: '{\n  "message": "No LocalStorage data loaded yet."\n}',
         loaded: false,
-        name: 'Loaded Mode Data (LocalStorage)',
+        name: 'Loaded Mode Data',
       },
     };
     this.currentSourceKey = 'rules'; // Default source
@@ -322,15 +322,43 @@ class EditorUI {
   }
 
   _displayCurrentSourceContent() {
-    if (!this.textAreaElement) {
-      console.warn('[EditorUI] Textarea not available for displaying content.');
+    if (!this.textAreaElement) return;
+
+    const source = this.contentSources[this.currentSourceKey];
+    if (!source) {
+      console.warn(
+        `[EditorUI] No content source found for key: ${this.currentSourceKey}`
+      );
       return;
     }
-    if (this.contentSources[this.currentSourceKey]) {
-      this.textAreaElement.value =
-        this.contentSources[this.currentSourceKey].text;
-    } else {
-      this.textAreaElement.value = 'Error: Selected content source not found.';
+
+    if (!source.loaded) {
+      this.textAreaElement.value = 'Loading...';
+      return;
+    }
+
+    try {
+      // For mode data, add data sources information at the top
+      if (this.currentSourceKey === 'localStorageMode' && source.text) {
+        const data = JSON.parse(source.text);
+        if (data.dataSources) {
+          // Create a formatted string of data sources
+          const sourcesInfo = Object.entries(data.dataSources)
+            .map(([key, info]) => `${key}: ${info.source} (${info.details})`)
+            .join('\n');
+
+          // Add it as a comment at the top of the JSON
+          const formattedJson = JSON.stringify(data, null, 2);
+          this.textAreaElement.value = `// Data Sources:\n${sourcesInfo}\n\n${formattedJson}`;
+        } else {
+          this.textAreaElement.value = source.text;
+        }
+      } else {
+        this.textAreaElement.value = source.text;
+      }
+    } catch (e) {
+      console.error('[EditorUI] Error displaying content:', e);
+      this.textAreaElement.value = 'Error displaying content';
     }
   }
 
@@ -465,6 +493,26 @@ class EditorUI {
       };
     }
     return { text: '', source: 'unavailable' }; // Default if nothing is available
+  }
+
+  _createBaseUI() {
+    const html = `
+      <div class="editor-panel-container panel-container">
+        <div class="editor-header">
+          <h2>JSON Editor</h2>
+          <div class="editor-controls">
+            <select id="editor-source-select">
+              <option value="localStorageMode">Mode Data</option>
+              <option value="rules">Rules JSON</option>
+            </select>
+          </div>
+        </div>
+        <div class="editor-content">
+          <textarea id="editor-textarea" spellcheck="false"></textarea>
+        </div>
+      </div>
+    `;
+    this.rootElement.innerHTML = html;
   }
 }
 

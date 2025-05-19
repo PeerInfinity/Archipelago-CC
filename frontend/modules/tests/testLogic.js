@@ -15,6 +15,7 @@ const testLogicState = {
       functionName: 'simpleEventTest',
       isEnabled: false,
       order: 0,
+      category: 'Core',
       status: 'pending',
       conditions: [],
       logs: [],
@@ -27,6 +28,7 @@ const testLogicState = {
       functionName: 'configLoadAndItemCheckTest', // New function name
       isEnabled: false,
       order: 1,
+      category: 'State Management',
       status: 'pending',
       conditions: [],
       logs: [],
@@ -40,6 +42,7 @@ const testLogicState = {
       functionName: 'uiSimulationTest',
       isEnabled: false,
       order: 2,
+      category: 'UI',
       status: 'pending',
       conditions: [],
       logs: [],
@@ -52,6 +55,7 @@ const testLogicState = {
       functionName: 'superQuickTest',
       isEnabled: true,
       order: 3,
+      category: 'Core',
       status: 'pending',
       conditions: [],
       logs: [],
@@ -59,8 +63,14 @@ const testLogicState = {
     },
   ],
   autoStartTestsOnLoad: false,
+  defaultEnabledState: false,
   currentRunningTestId: null,
   activeTestPromises: {}, // Store resolve functions for individual test runs
+  categories: {
+    'Core': { isEnabled: true },
+    'State Management': { isEnabled: true },
+    'UI': { isEnabled: true },
+  },
 };
 
 // --- TestController Class ---
@@ -894,6 +904,8 @@ export const testLogic = {
   getSavableState() {
     return {
       autoStartTestsOnLoad: testLogicState.autoStartTestsOnLoad,
+      defaultEnabledState: testLogicState.defaultEnabledState,
+      categories: testLogicState.categories,
       tests: testLogicState.tests.map((t) => ({
         id: t.id,
         name: t.name,
@@ -901,6 +913,7 @@ export const testLogic = {
         functionName: t.functionName,
         isEnabled: t.isEnabled,
         order: t.order,
+        category: t.category,
       })),
     };
   },
@@ -915,6 +928,20 @@ export const testLogic = {
         autoStartChanged = true;
       }
     }
+
+    // Update defaultEnabledState if provided
+    if (data && typeof data.defaultEnabledState === 'boolean') {
+      testLogicState.defaultEnabledState = data.defaultEnabledState;
+    }
+
+    // Update categories if provided
+    if (data && data.categories) {
+      testLogicState.categories = {
+        ...testLogicState.categories,
+        ...data.categories,
+      };
+    }
+
     if (data && Array.isArray(data.tests)) {
       const newTestsMap = new Map(data.tests.map((t) => [t.id, t]));
       const currentTests = [];
@@ -931,6 +958,7 @@ export const testLogic = {
             functionName: loadedTestConfig.functionName,
             isEnabled: loadedTestConfig.isEnabled,
             order: loadedTestConfig.order,
+            category: loadedTestConfig.category || 'Uncategorized',
           });
         } else {
           // New test from loaded data
@@ -940,6 +968,7 @@ export const testLogic = {
             conditions: [],
             logs: [],
             currentEventWaitingFor: null,
+            category: loadedTestConfig.category || 'Uncategorized',
           });
         }
         if (loadedTestConfig.order > maxOrder)
@@ -947,27 +976,39 @@ export const testLogic = {
       });
 
       // Add any tests currently in logic that weren't in the loaded data
-      // (e.g., newly defined tests not yet saved)
       testLogicState.tests.forEach((currentTest) => {
         if (!newTestsMap.has(currentTest.id)) {
-          currentTest.order = ++maxOrder; // Assign new order
-          // Ensure new tests not from loaded data also have logs array
+          currentTest.order = ++maxOrder;
+          currentTest.isEnabled = testLogicState.defaultEnabledState;
           if (!currentTest.logs) currentTest.logs = [];
           if (!currentTest.conditions) currentTest.conditions = [];
           if (currentTest.status === undefined) currentTest.status = 'pending';
+          if (!currentTest.category) currentTest.category = 'Uncategorized';
           currentTests.push(currentTest);
         }
       });
 
       testLogicState.tests = currentTests.sort((a, b) => a.order - b.order);
-      // Normalize order just in case and ensure logs/conditions exist for all
+      // Normalize order and ensure all required fields exist
       testLogicState.tests.forEach((t, i) => {
         t.order = i;
         if (!t.logs) t.logs = [];
         if (!t.conditions) t.conditions = [];
         if (t.status === undefined) t.status = 'pending';
+        if (!t.category) t.category = 'Uncategorized';
+
+        // NEW: Ensure this test's category exists in testLogicState.categories
+        if (t.category && !testLogicState.categories[t.category]) {
+          console.log(
+            `[TestLogic] Auto-adding new category '${t.category}' to state.categories from test '${t.name}'. Default enabled: ${testLogicState.defaultEnabledState}`
+          );
+          testLogicState.categories[t.category] = {
+            isEnabled: testLogicState.defaultEnabledState,
+          };
+        }
       });
     }
+
     if (eventBusInstance) {
       eventBusInstance.publish('test:listUpdated', { tests: this.getTests() });
       if (autoStartChanged) {
@@ -1246,5 +1287,69 @@ export const testLogic = {
 
     if (eventBusInstance)
       eventBusInstance.publish('test:allRunsCompleted', { summary });
+  },
+
+  toggleCategoryEnabled(categoryName, isEnabled) {
+    if (testLogicState.categories[categoryName]) {
+      testLogicState.categories[categoryName].isEnabled = isEnabled;
+      // Update all tests in this category
+      testLogicState.tests.forEach((test) => {
+        if (test.category === categoryName) {
+          test.isEnabled = isEnabled;
+        }
+      });
+      if (eventBusInstance) {
+        eventBusInstance.publish('test:listUpdated', {
+          tests: this.getTests(),
+        });
+      }
+    }
+  },
+
+  updateCategoryOrder(categoryName, direction) {
+    const categories = this.getCategories();
+    const currentIndex = categories.indexOf(categoryName);
+    if (currentIndex === -1) return;
+
+    let newIndex;
+    if (direction === 'up' && currentIndex > 0) {
+      newIndex = currentIndex - 1;
+    } else if (direction === 'down' && currentIndex < categories.length - 1) {
+      newIndex = currentIndex + 1;
+    } else {
+      return;
+    }
+
+    // Swap the categories in the categories object
+    const temp = testLogicState.categories[categories[currentIndex]];
+    testLogicState.categories[categories[currentIndex]] =
+      testLogicState.categories[categories[newIndex]];
+    testLogicState.categories[categories[newIndex]] = temp;
+
+    // Update the order of tests to match the new category order
+    const allTests = [...testLogicState.tests];
+    let currentOrder = 0;
+
+    // Sort tests by their new category order
+    this.getCategories().forEach((category) => {
+      const categoryTests = allTests.filter((t) => t.category === category);
+      categoryTests.forEach((test) => {
+        test.order = currentOrder++;
+      });
+    });
+
+    testLogicState.tests = allTests.sort((a, b) => a.order - b.order);
+
+    if (eventBusInstance) {
+      eventBusInstance.publish('test:listUpdated', { tests: this.getTests() });
+    }
+  },
+
+  getCategories() {
+    return Object.keys(testLogicState.categories).sort();
+  },
+
+  isCategoryEnabled(categoryName) {
+    return testLogicState.categories[categoryName]?.isEnabled ?? false;
   },
 };
