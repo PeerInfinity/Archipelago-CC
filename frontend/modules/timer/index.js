@@ -62,10 +62,6 @@ export function register(registrationApi) {
   );
 
   // Register events this module publishes
-  registrationApi.registerEventBusPublisher(
-    moduleInfo.name,
-    'user:locationCheck'
-  );
   registrationApi.registerEventBusPublisher(moduleInfo.name, 'timer:started');
   registrationApi.registerEventBusPublisher(moduleInfo.name, 'timer:stopped');
   registrationApi.registerEventBusPublisher(
@@ -99,6 +95,11 @@ export function register(registrationApi) {
     moduleInfo.name,
     'stateManager:rulesLoaded'
   );
+
+  // ADDED: Declare that this module sends 'user:locationCheck' via the dispatcher
+  registrationApi.registerDispatcherSender('user:locationCheck', {
+    initialTarget: 'bottom',
+  });
 
   console.log(`[${moduleInfo.name} Module] Registration complete.`);
 }

@@ -120,6 +120,13 @@ details[open] > summary::before {
 details > summary::-webkit-details-marker { 
   display: none; /* Hide default marker in WebKit */
 }
+
+/* ADDED: Style for subsection dividers within an event */
+.subsection-divider {
+  border: none;
+  border-top: 1px dashed #5c6370; /* A slightly lighter dashed line than typical borders */
+  margin: 10px 0; /* Add some vertical space around the divider */
+}
 `;
 
 class EventsUI {
@@ -215,19 +222,7 @@ class EventsUI {
     style.textContent = CSS;
     this.rootElement.appendChild(style);
 
-    // 2. Create and append structural elements instead of using innerHTML on rootElement
-    const eventBusDetails = document.createElement('details');
-    eventBusDetails.open = true;
-    eventBusDetails.className = 'main-details-section';
-    eventBusDetails.innerHTML = `
-      <summary><h2>Event Bus</h2></summary>
-      <div class="event-bus-section">Loading...</div>
-    `;
-    this.rootElement.appendChild(eventBusDetails);
-
-    const hrElement = document.createElement('hr');
-    this.rootElement.appendChild(hrElement);
-
+    // 2. Create and append structural elements - Dispatcher first
     const dispatcherDetails = document.createElement('details');
     dispatcherDetails.open = true;
     dispatcherDetails.className = 'main-details-section';
@@ -237,11 +232,23 @@ class EventsUI {
     `;
     this.rootElement.appendChild(dispatcherDetails);
 
+    const hrElement = document.createElement('hr');
+    this.rootElement.appendChild(hrElement);
+
+    const eventBusDetails = document.createElement('details');
+    eventBusDetails.open = true;
+    eventBusDetails.className = 'main-details-section';
+    eventBusDetails.innerHTML = `
+      <summary><h2>Event Bus</h2></summary>
+      <div class="event-bus-section">Loading...</div>
+    `;
+    this.rootElement.appendChild(eventBusDetails);
+
     // 3. Query for the sections within the appended elements
-    this.eventBusSection = eventBusDetails.querySelector('.event-bus-section');
     this.dispatcherSection = dispatcherDetails.querySelector(
       '.dispatcher-section'
     );
+    this.eventBusSection = eventBusDetails.querySelector('.event-bus-section');
   }
 
   async _loadAndRenderData(registry, moduleManager) {
@@ -483,102 +490,190 @@ class EventsUI {
 
         // Sort events within the category
         eventsByCategory[category].sort().forEach((eventName) => {
-          const senders = sendersMap.get(eventName) || [];
-          const handlers = handlersMap.get(eventName) || [];
+          const sendersForEvent = sendersMap.get(eventName) || [];
+          const handlersForEvent = handlersMap.get(eventName) || [];
 
-          const relevantModuleIds = new Set();
-          senders.forEach((s) => relevantModuleIds.add(s.moduleId));
-          handlers.forEach((h) => relevantModuleIds.add(h.moduleId));
+          const allModuleIdsInvolved = new Set();
+          sendersForEvent.forEach((s) => allModuleIdsInvolved.add(s.moduleId));
+          handlersForEvent.forEach((h) => allModuleIdsInvolved.add(h.moduleId));
 
-          const relevantModulesInOrder = loadPriority.filter((moduleId) =>
-            relevantModuleIds.has(moduleId)
-          );
+          if (allModuleIdsInvolved.size === 0) return; // Skip if no modules actually involved
 
-          if (relevantModulesInOrder.length === 0) {
-            return; // Skip if no relevant modules
-          }
+          const topSenders = [];
+          const middleEntries = [];
+          const bottomSenders = [];
+
+          allModuleIdsInvolved.forEach((moduleId) => {
+            const senderInfo = sendersForEvent.find(
+              (s) => s.moduleId === moduleId
+            );
+            const handlerInfo = handlersForEvent.find(
+              (h) => h.moduleId === moduleId
+            );
+            const originalPriority = loadPriority.indexOf(moduleId);
+
+            const isTopSender =
+              senderInfo &&
+              senderInfo.direction &&
+              senderInfo.direction.initialTarget === 'top';
+            const isBottomSender =
+              senderInfo &&
+              senderInfo.direction &&
+              senderInfo.direction.initialTarget === 'bottom';
+            const isGenericSender =
+              senderInfo && !isTopSender && !isBottomSender;
+
+            if (isTopSender) {
+              topSenders.push({
+                moduleId,
+                isTopSender: true,
+                senderInfo,
+                originalPriority,
+                // Ensure other roles are false or undefined for this specific entry
+                isBottomSender: false,
+                isGenericSender: false,
+                isHandler: false,
+                handlerInfo: null,
+              });
+            }
+            if (isBottomSender) {
+              bottomSenders.push({
+                moduleId,
+                isBottomSender: true,
+                senderInfo,
+                originalPriority,
+                isTopSender: false,
+                isGenericSender: false,
+                isHandler: false,
+                handlerInfo: null,
+              });
+            }
+            // Add to middleEntries if it's a generic sender OR a handler
+            if (isGenericSender) {
+              middleEntries.push({
+                moduleId,
+                isGenericSender: true,
+                senderInfo,
+                isHandler: !!handlerInfo, // Can be generic sender AND handler
+                handlerInfo,
+                originalPriority,
+                isTopSender: false,
+                isBottomSender: false,
+              });
+            }
+            // If it's a handler AND NOT already added as a generic sender (to avoid double entry if it's only a handler)
+            // Or, more simply, if it's a handler and we want to ensure it has its own entry focused on its handler role
+            // if (handlerInfo && !isGenericSender) { // This condition prevents double-listing if it's both
+            if (handlerInfo) {
+              // This allows a module to be listed for its generic send role AND its handler role separately in middle
+              // If a module is ONLY a handler (not a generic sender), it will be added here.
+              // If a module IS a generic sender, it was added above. If it is ALSO a handler, this adds a second entry for the handler role.
+              // To avoid this, we might need a flag if an entry was made for the moduleID in middle already.
+              // For now, let's stick to the refined plan: one entry in middle if generic sender, one if handler.
+              // This means if module is GenericSender AND Handler, it appears twice in middle with different primary roles.
+              // This is actually desirable to show both icons/contexts clearly.
+
+              // Check if an entry for this moduleId as a generic sender already exists in middleEntries.
+              // If it is a generic sender AND a handler, we've already added it for its sender role.
+              // We should add it again FOR ITS HANDLER ROLE, so it can show handler symbols.
+              middleEntries.push({
+                moduleId,
+                isHandler: true,
+                handlerInfo,
+                isGenericSender: isGenericSender, // It might still be a generic sender
+                senderInfo: isGenericSender ? senderInfo : null,
+                originalPriority,
+                isTopSender: false,
+                isBottomSender: false,
+              });
+            }
+          });
+
+          // Sort each list by original priority
+          const sortByPriority = (a, b) => {
+            if (a.originalPriority === -1 && b.originalPriority === -1)
+              return 0;
+            if (a.originalPriority === -1) return 1;
+            if (b.originalPriority === -1) return -1;
+            return a.originalPriority - b.originalPriority;
+          };
+          topSenders.sort(sortByPriority);
+          middleEntries.sort(sortByPriority);
+          bottomSenders.sort(sortByPriority);
 
           const eventContainer = document.createElement('div');
           eventContainer.classList.add('dispatcher-event');
           eventContainer.innerHTML = `<h4>${eventName}</h4>`;
 
-          relevantModulesInOrder.forEach((moduleId, index) => {
-            const senderInfo = senders.find((s) => s.moduleId === moduleId);
-            const isSender = !!senderInfo;
-            const isSenderEnabled = isSender && senderInfo.enabled !== false;
+          let previousSectionNotEmpty = false;
 
-            const handlerInfo = handlers.find((h) => h.moduleId === moduleId);
-            const isHandler = !!handlerInfo;
-            const isHandlerEnabled = isHandler && handlerInfo.enabled !== false;
-            const isModuleGloballyEnabled =
-              moduleStates[moduleId]?.enabled !== false;
-
-            const moduleDiv = document.createElement('div');
-            moduleDiv.classList.add('module-block');
-            if (!isModuleGloballyEnabled) {
-              moduleDiv.classList.add('module-disabled');
-            }
-
-            const nameDiv = document.createElement('div');
-            nameDiv.classList.add('module-name');
-            nameDiv.textContent = moduleId;
-
-            // --- Sender Column --- //
-            const senderCol = document.createElement('div');
-            senderCol.classList.add('symbols-column', 'sender-symbol');
-            if (isSender) {
-              senderCol.textContent = '[S]'; // Placeholder symbol
-              const checkbox = this._createToggleCheckbox(
+          // Render Top Senders
+          if (topSenders.length > 0) {
+            topSenders.forEach((entry, index) => {
+              this._renderDispatcherModuleEntry(
+                eventContainer,
+                entry,
                 eventName,
-                moduleId,
-                'dispatcherSender',
-                isSenderEnabled
+                moduleStates
               );
-              senderCol.appendChild(checkbox);
-              if (!isSenderEnabled)
-                senderCol.classList.add('disabled-interaction');
-              // TODO: Adjust sender symbol based on direction/target? Still needed.
-            }
-
-            // --- Handler Column --- //
-            const handlerCol = document.createElement('div');
-            handlerCol.classList.add('symbols-column', 'handler-symbol');
-            if (isHandler) {
-              let symbolsText = '';
-              if (handlerInfo.propagationDetails) {
-                const details = handlerInfo.propagationDetails;
-                if (details.direction === 'up') symbolsText += '↑';
-                else if (details.direction === 'down') symbolsText += '↓';
-                else symbolsText += '●'; // Non-propagating handler
-                if (details.timing === 'delayed') symbolsText += '⏳';
-                if (details.condition === 'conditional') symbolsText += '❓';
-              } else {
-                symbolsText = '[H]'; // Basic handler, no details
+              // Add connector within the section
+              if (index < topSenders.length - 1) {
+                const connector = document.createElement('div');
+                connector.classList.add('connector');
+                eventContainer.appendChild(connector);
               }
-              handlerCol.textContent = symbolsText;
-              const checkbox = this._createToggleCheckbox(
+            });
+            previousSectionNotEmpty = true;
+          }
+
+          // Render Middle Entries (Generic Senders and Handlers)
+          if (middleEntries.length > 0) {
+            if (previousSectionNotEmpty) {
+              const divider = document.createElement('hr');
+              divider.className = 'subsection-divider';
+              eventContainer.appendChild(divider);
+            }
+            middleEntries.forEach((entry, index) => {
+              this._renderDispatcherModuleEntry(
+                eventContainer,
+                entry,
                 eventName,
-                moduleId,
-                'dispatcherHandler',
-                isHandlerEnabled
+                moduleStates
               );
-              handlerCol.appendChild(checkbox);
-              if (!isHandlerEnabled)
-                handlerCol.classList.add('disabled-interaction');
-            }
+              // Add connector within the section
+              if (index < middleEntries.length - 1) {
+                const connector = document.createElement('div');
+                connector.classList.add('connector');
+                eventContainer.appendChild(connector);
+              }
+            });
+            previousSectionNotEmpty = true;
+          }
 
-            moduleDiv.appendChild(nameDiv);
-            moduleDiv.appendChild(senderCol); // Add sender column
-            moduleDiv.appendChild(handlerCol); // Add handler column
-            eventContainer.appendChild(moduleDiv);
-
-            // Add connector placeholder
-            if (index < relevantModulesInOrder.length - 1) {
-              const connector = document.createElement('div');
-              connector.classList.add('connector');
-              eventContainer.appendChild(connector);
+          // Render Bottom Senders
+          if (bottomSenders.length > 0) {
+            if (previousSectionNotEmpty) {
+              const divider = document.createElement('hr');
+              divider.className = 'subsection-divider';
+              eventContainer.appendChild(divider);
             }
-          });
+            bottomSenders.forEach((entry, index) => {
+              this._renderDispatcherModuleEntry(
+                eventContainer,
+                entry,
+                eventName,
+                moduleStates
+              );
+              // Add connector within the section
+              if (index < bottomSenders.length - 1) {
+                const connector = document.createElement('div');
+                connector.classList.add('connector');
+                eventContainer.appendChild(connector);
+              }
+            });
+            // No need to set previousSectionNotEmpty = true here
+          }
+
           // Append the event container to the category's content div
           categoryContentDiv.appendChild(eventContainer);
         });
@@ -588,10 +683,9 @@ class EventsUI {
         this.dispatcherSection.appendChild(categoryDetails);
       });
 
-    // TODO: Implement detailed arrow/symbol logic for dispatcher events
-    //console.warn(
+    // console.warn(
     //  '[EventsUI] Dispatcher event rendering is basic. Needs symbol/arrow implementation.'
-    //);
+    // ); // Original warning can be removed or updated
   }
 
   // --- Helper to create toggle checkboxes --- //
@@ -656,6 +750,99 @@ class EventsUI {
       }
     });
     return checkbox;
+  }
+
+  // ADDED: Helper to render a single module entry for the dispatcher view
+  _renderDispatcherModuleEntry(eventContainer, entry, eventName, moduleStates) {
+    const {
+      moduleId,
+      isTopSender,
+      isBottomSender,
+      isGenericSender,
+      senderInfo,
+      isHandler,
+      handlerInfo,
+    } = entry;
+    const isModuleGloballyEnabled = moduleStates[moduleId]?.enabled !== false;
+
+    const moduleDiv = document.createElement('div');
+    moduleDiv.classList.add('module-block');
+    if (!isModuleGloballyEnabled) {
+      moduleDiv.classList.add('module-disabled');
+    }
+
+    const nameDiv = document.createElement('div');
+    nameDiv.classList.add('module-name');
+    nameDiv.textContent = moduleId;
+
+    // --- Sender Column --- //
+    const senderCol = document.createElement('div');
+    senderCol.classList.add('symbols-column', 'sender-symbol');
+    if (isTopSender || isBottomSender || isGenericSender) {
+      let senderSymbolText = '[S]'; // Default for genericSender
+      let title = 'Sends/Initiates event';
+      if (isTopSender) {
+        senderSymbolText = '⬇️';
+        title = 'Initiates event (targets top priority first)';
+      } else if (isBottomSender) {
+        senderSymbolText = '⬆️';
+        title = 'Initiates event (targets bottom priority first)';
+      } // Generic sender keeps default symbol and title
+      senderCol.textContent = senderSymbolText;
+      senderCol.title = title;
+
+      // Ensure senderInfo is present before accessing its 'enabled' property
+      if (senderInfo) {
+        const checkbox = this._createToggleCheckbox(
+          eventName,
+          moduleId,
+          'dispatcherSender',
+          senderInfo.enabled !== false
+        );
+        senderCol.appendChild(checkbox);
+        if (senderInfo.enabled === false)
+          senderCol.classList.add('disabled-interaction');
+      }
+    }
+
+    // --- Handler Column --- //
+    const handlerCol = document.createElement('div');
+    handlerCol.classList.add('symbols-column', 'handler-symbol');
+    if (isHandler && handlerInfo) {
+      let symbolsText = '●'; // Default for basic handler
+      let title = 'Handles event';
+      if (handlerInfo.propagationDetails) {
+        const details = handlerInfo.propagationDetails;
+        symbolsText = ''; // Reset for building up propagation symbols
+        if (details.direction === 'up') symbolsText += '↑';
+        else if (details.direction === 'down') symbolsText += '↓';
+        else symbolsText += '●'; // Explicit non-propagating or basic
+
+        if (details.timing === 'delayed') symbolsText += '⏳';
+        if (details.condition === 'conditional') symbolsText += '❓';
+
+        title += ` (Propagates: ${details.direction || 'none'}, Timing: ${
+          details.timing || 'N/A'
+        }, Condition: ${details.condition || 'N/A'})`;
+      }
+      handlerCol.textContent = symbolsText;
+      handlerCol.title = title;
+
+      const checkbox = this._createToggleCheckbox(
+        eventName,
+        moduleId,
+        'dispatcherHandler',
+        handlerInfo.enabled !== false
+      );
+      handlerCol.appendChild(checkbox);
+      if (handlerInfo.enabled === false)
+        handlerCol.classList.add('disabled-interaction');
+    }
+
+    moduleDiv.appendChild(nameDiv);
+    moduleDiv.appendChild(senderCol);
+    moduleDiv.appendChild(handlerCol);
+    eventContainer.appendChild(moduleDiv);
   }
 
   // Handler for module state changes

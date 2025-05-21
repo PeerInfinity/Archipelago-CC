@@ -20,13 +20,19 @@ export function getDispatcher() {
 
 /**
  * Registration function for the Locations module.
- * Registers the locations panel component.
+ * Registers the locations panel component and declares event sending.
+ * @param {object} registrationApi - API provided by the initialization script.
  */
 export function register(registrationApi) {
   console.log('[Locations Module] Registering...');
 
   // Register the panel component class constructor
   registrationApi.registerPanelComponent('locationsPanel', LocationUI);
+
+  // Declare that this module sends 'user:locationCheck' via the dispatcher
+  registrationApi.registerDispatcherSender('user:locationCheck', {
+    initialTarget: 'bottom',
+  });
 
   // Register settings schema if needed
   // No settings schema specific to Locations registration.
