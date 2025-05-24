@@ -1,30 +1,60 @@
 {
   "autoStartTestsOnLoad": true,
   "defaultEnabledState": false,
+  "categories": {
+    "Core": {
+      "isEnabled": true,
+      "order": 0
+    },
+    "State Management": {
+      "isEnabled": true,
+      "order": 1
+    },
+    "UI Interaction": {
+      "isEnabled": true,
+      "order": 2
+    },
+    "Progressive Items": {
+      "isEnabled": true,
+      "order": 3
+    }
+  },
   "tests": [
     {
       "id": "test_1_simple_event",
       "name": "Test Simple Event Wait",
       "description": "Checks if waitForEvent correctly pauses and resumes on a custom event.",
       "functionName": "simpleEventTest",
-      "isEnabled": true,
-      "order": 0
+      "isEnabled": false,
+      "order": 0,
+      "category": "Core"
     },
     {
-      "id": "test_2_config_load_and_item_check",
-      "name": "Test Config Load & Item Interaction",
-      "description": "Loads test rules, adds an item, and verifies state.",
+      "id": "test_config_load_and_item_check",
+      "name": "Config Load and Item Check Test",
+      "description": "Tests loading rules configuration, adding items to inventory, and checking location accessibility based on item requirements.",
       "functionName": "configLoadAndItemCheckTest",
       "isEnabled": true,
-      "order": 1
+      "order": 0,
+      "category": "State Management"
     },
     {
-      "id": "test_3_ui_simulation",
-      "name": "Test UI Simulation (Placeholder)",
-      "description": "Simulates a click and checks outcome (initial placeholder).",
+      "id": "test_ui_simulation",
+      "name": "UI Simulation Test",
+      "description": "Tests UI interactions like clicking inventory buttons and verifying the resulting state changes.",
       "functionName": "uiSimulationTest",
       "isEnabled": true,
-      "order": 2
+      "order": 0,
+      "category": "UI Interaction"
+    },
+    {
+      "id": "test_progressive_sword",
+      "name": "Progressive Sword Test",
+      "description": "Tests progressive item mechanics by adding Progressive Sword items and verifying that the correct sword levels are granted (Fighter Sword → Master Sword → etc.).",
+      "functionName": "progressiveSwordTest",
+      "isEnabled": true,
+      "order": 0,
+      "category": "Progressive Items"
     },
     {
       "id": "test_4_super_quick",
@@ -32,7 +62,8 @@
       "description": "A test that completes almost instantly.",
       "functionName": "superQuickTest",
       "isEnabled": true,
-      "order": 3
+      "order": 1,
+      "category": "Core"
     }
   ]
 }

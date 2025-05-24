@@ -13,10 +13,22 @@ import {
 let eventBusInstance = null;
 let appInitializationApiInstance = null;
 let discoveryInitialized = false;
+let loadedStateApplied = false;
+let loadedAutoStartSetting = null; // Store the loaded auto-start setting persistently
+
+// Add debugging for state changes
+function setLoadedStateApplied(value) {
+  console.log(
+    `[TestLogic] Setting loadedStateApplied from ${loadedStateApplied} to ${value}`
+  );
+  console.trace('[TestLogic] Call stack for loadedStateApplied change:');
+  loadedStateApplied = value;
+}
 
 // Initialize test discovery
 async function initializeTestDiscovery() {
   if (discoveryInitialized) {
+    console.log('[TestLogic] Test discovery already initialized, skipping.');
     return;
   }
 
@@ -33,18 +45,58 @@ async function initializeTestDiscovery() {
     !TestState.testLogicState.fromDiscovery
   ) {
     console.log('[TestLogic] Initializing from discovered tests...');
+    console.log(
+      '[TestLogic] Before init - autoStartTestsOnLoad:',
+      TestState.testLogicState.autoStartTestsOnLoad
+    );
+    console.log('[TestLogic] loadedStateApplied flag:', loadedStateApplied);
+
+    // Determine which auto-start setting to use
+    let autoStartSettingToUse = null;
+
+    if (loadedAutoStartSetting !== null) {
+      // We have a loaded setting from applyLoadedState - always use this
+      autoStartSettingToUse = loadedAutoStartSetting;
+      console.log(
+        '[TestLogic] Using loaded auto-start setting:',
+        autoStartSettingToUse
+      );
+    } else {
+      // No loaded setting yet - preserve the current default
+      autoStartSettingToUse = TestState.testLogicState.autoStartTestsOnLoad;
+      console.log(
+        '[TestLogic] No loaded setting - using current default:',
+        autoStartSettingToUse
+      );
+    }
+
     TestState.testLogicState.tests = discoveredTests;
     TestState.testLogicState.categories = discoveredCategories;
     TestState.testLogicState.fromDiscovery = true;
+
+    // Apply the determined auto-start setting
+    TestState.testLogicState.autoStartTestsOnLoad = autoStartSettingToUse;
+    console.log(
+      '[TestLogic] Set autoStartTestsOnLoad to:',
+      TestState.testLogicState.autoStartTestsOnLoad
+    );
 
     console.log(
       `[TestLogic] Initialized with ${discoveredTests.length} tests in ${
         Object.keys(discoveredCategories).length
       } categories`
     );
-  }
 
-  discoveryInitialized = true;
+    // Only mark discovery as initialized after the state has been fully set up
+    discoveryInitialized = true;
+    console.log(
+      '[TestLogic] Discovery initialization completed and flag set to true'
+    );
+  } else {
+    console.log(
+      '[TestLogic] Test discovery already completed, state already exists'
+    );
+  }
 }
 
 // --- testLogic Public API ---
@@ -72,19 +124,44 @@ export const testLogic = {
   },
 
   async applyLoadedState(data) {
+    console.log('[TestLogic applyLoadedState] Called with data:', data);
+
+    // Store the autoStartTestsOnLoad value BEFORE calling initializeTestDiscovery
+    let autoStartToApply = false;
+    if (data && typeof data.autoStartTestsOnLoad === 'boolean') {
+      autoStartToApply = data.autoStartTestsOnLoad;
+      console.log(
+        '[TestLogic applyLoadedState] autoStartToApply:',
+        autoStartToApply
+      );
+    }
+
     // Ensure discovery is complete before applying loaded state
     await initializeTestDiscovery();
 
-    // This function needs to carefully merge loaded data with discovered tests
+    // Apply the auto-start setting AFTER discovery initialization
     let autoStartChanged = false;
     const oldAutoStartValue = TestState.shouldAutoStartTests();
+    console.log(
+      '[TestLogic applyLoadedState] oldAutoStartValue after discovery:',
+      oldAutoStartValue
+    );
 
-    if (data && typeof data.autoStartTestsOnLoad === 'boolean') {
-      if (TestState.shouldAutoStartTests() !== data.autoStartTestsOnLoad) {
-        TestState.setAutoStartTests(data.autoStartTestsOnLoad);
-        autoStartChanged = true;
-      }
+    if (autoStartToApply !== oldAutoStartValue) {
+      TestState.setAutoStartTests(autoStartToApply);
+      autoStartChanged = true;
+      console.log(
+        '[TestLogic applyLoadedState] Set autoStartTests to:',
+        autoStartToApply
+      );
     }
+
+    // Store the loaded auto-start setting persistently
+    loadedAutoStartSetting = autoStartToApply;
+    console.log(
+      '[TestLogic applyLoadedState] Stored loadedAutoStartSetting:',
+      loadedAutoStartSetting
+    );
     if (data && typeof data.defaultEnabledState === 'boolean') {
       TestState.testLogicState.defaultEnabledState = data.defaultEnabledState;
     }
@@ -202,6 +279,48 @@ export const testLogic = {
           autoStartEnabled: TestState.shouldAutoStartTests(),
         });
       }
+    }
+
+    console.log(
+      '[TestLogic applyLoadedState] Final autoStartTestsOnLoad:',
+      TestState.shouldAutoStartTests()
+    );
+
+    // Mark that loaded state has been applied to prevent future initializeTestDiscovery calls from overwriting it
+    setLoadedStateApplied(true);
+    console.log(
+      '[TestLogic applyLoadedState] Set loadedStateApplied flag to true'
+    );
+
+    // Publish event to notify that loaded state is fully applied
+    if (eventBusInstance) {
+      eventBusInstance.publish('test:loadedStateApplied', {
+        autoStartEnabled: TestState.shouldAutoStartTests(),
+        testCount: currentTests.length,
+        enabledTestCount: currentTests.filter((t) => t.isEnabled).length,
+      });
+    }
+
+    // Check if we should auto-start tests now that loaded state is fully applied
+    if (TestState.shouldAutoStartTests()) {
+      console.log(
+        '[TestLogic applyLoadedState] Auto-start is enabled, triggering auto-start...'
+      );
+
+      // Use setTimeout to ensure this happens after the current call stack completes
+      setTimeout(async () => {
+        try {
+          console.log(
+            '[TestLogic applyLoadedState] Running auto-start tests...'
+          );
+          await this.runAllEnabledTests();
+        } catch (error) {
+          console.error(
+            '[TestLogic applyLoadedState] Error during auto-start:',
+            error
+          );
+        }
+      }, 100);
     }
   },
 
@@ -440,5 +559,70 @@ export const testLogic = {
           categories: TestState.getCategories(),
         });
     }
+  },
+
+  async toggleAllCategoriesEnabled(isEnabled) {
+    await initializeTestDiscovery();
+    const categories = TestState.getCategories();
+
+    // Enable/disable all categories
+    categories.forEach((category) => {
+      TestState.toggleCategoryEnabled(category, isEnabled);
+    });
+
+    if (eventBusInstance) {
+      eventBusInstance.publish('test:allCategoriesChanged', {
+        isEnabled,
+        categories,
+      });
+    }
+  },
+
+  async getAllCategoriesState() {
+    await initializeTestDiscovery();
+    const categories = TestState.getCategories();
+
+    if (categories.length === 0) {
+      return { allEnabled: false, anyEnabled: false };
+    }
+
+    const tests = TestState.getTests();
+    let allCategoriesFullyEnabled = true;
+    let anyCategoryHasEnabledTests = false;
+    let anyCategoryIndeterminate = false;
+
+    // Check each category's state
+    categories.forEach((category) => {
+      const testsInCategory = tests.filter(
+        (test) => test.category === category
+      );
+      if (testsInCategory.length === 0) return;
+
+      const enabledTestsInCategory = testsInCategory.filter(
+        (test) => test.isEnabled
+      );
+      const allEnabledInCategory =
+        enabledTestsInCategory.length === testsInCategory.length;
+      const anyEnabledInCategory = enabledTestsInCategory.length > 0;
+
+      if (!allEnabledInCategory) {
+        allCategoriesFullyEnabled = false;
+      }
+
+      if (anyEnabledInCategory) {
+        anyCategoryHasEnabledTests = true;
+      }
+
+      // Category is indeterminate if some but not all tests are enabled
+      if (anyEnabledInCategory && !allEnabledInCategory) {
+        anyCategoryIndeterminate = true;
+      }
+    });
+
+    return {
+      allEnabled: allCategoriesFullyEnabled,
+      anyEnabled: anyCategoryHasEnabledTests,
+      anyIndeterminate: anyCategoryIndeterminate,
+    };
   },
 };

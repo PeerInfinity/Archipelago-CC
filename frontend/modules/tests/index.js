@@ -28,14 +28,27 @@ export function register(registrationApi) {
       console.log('[Tests Module] getSaveDataFunction called for testsConfig');
       return testLogic.getSavableState();
     },
-    applyLoadedDataFunction: (data) => {
+    applyLoadedDataFunction: async (data) => {
       console.log(
         '[Tests Module] applyLoadedDataFunction called for testsConfig with:',
         data
       );
-      testLogic.applyLoadedState(data);
+      console.log(
+        '[Tests Module] data.autoStartTestsOnLoad:',
+        data?.autoStartTestsOnLoad
+      );
+      await testLogic.applyLoadedState(data);
+
+      // Debug: Check if auto-start was set
+      console.log(
+        '[Tests Module] After applyLoadedState (awaited), shouldAutoStartTests():',
+        testLogic.shouldAutoStartTests()
+      );
+
       // Optionally, trigger a UI refresh if the panel might already be open
-      eventBus.publish('test:listUpdated', { tests: testLogic.getTests() });
+      eventBus.publish('test:listUpdated', {
+        tests: await testLogic.getTests(),
+      });
     },
   });
 
@@ -56,28 +69,24 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   testLogic.setInitializationApi(appInitializationApi);
   testLogic.setEventBus(eventBus); // Pass eventBus to testLogic
 
-  // Listen for the app to be fully ready before considering auto-start
-  eventBus.subscribe('app:readyForUiDataLoad', async () => {
+  // Listen for the app to be fully ready for basic setup
+  eventBus.subscribe('app:readyForUiDataLoad', () => {
     console.log('[Tests Module] app:readyForUiDataLoad received.');
-    // Ensure testLogic has loaded its state (which includes autoStartTestsOnLoad)
-    // applyLoadedState should have been called by now if there was saved data.
-    if (testLogic.shouldAutoStartTests()) {
-      console.log(
-        '[Tests Module] autoStartTestsOnLoad is true. Running all enabled tests.'
-      );
-      try {
-        await testLogic.runAllEnabledTests();
-      } catch (error) {
-        console.error(
-          '[Tests Module] Error during auto-start of tests:',
-          error
-        );
-      }
-    } else {
-      console.log(
-        '[Tests Module] autoStartTestsOnLoad is false or not yet determined.'
-      );
-    }
+
+    // Debug: Check current mode
+    const currentMode =
+      window.G_currentActiveMode ||
+      localStorage.getItem('archipelagoToolSuite_lastActiveMode') ||
+      'unknown';
+    console.log('[Tests Module] Current application mode:', currentMode);
+  });
+
+  // Listen for when test loaded state is fully applied (including auto-start check)
+  eventBus.subscribe('test:loadedStateApplied', (eventData) => {
+    console.log('[Tests Module] test:loadedStateApplied received:', eventData);
+    console.log(
+      '[Tests Module] Auto-start handling is now done by testLogic.applyLoadedState()'
+    );
   });
 
   console.log('[Tests Module] Initialization complete.');

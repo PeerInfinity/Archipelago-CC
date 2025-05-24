@@ -65,6 +65,21 @@ export class TestUI {
     runAllButton.className = 'button run-all-tests-button';
     controlsContainer.appendChild(runAllButton);
 
+    // Enable All checkbox
+    const enableAllLabel = document.createElement('label');
+    enableAllLabel.style.display = 'block';
+    enableAllLabel.style.marginTop = '10px';
+    enableAllLabel.style.fontWeight = 'bold';
+    this.enableAllCheckbox = document.createElement('input');
+    this.enableAllCheckbox.type = 'checkbox';
+    this.enableAllCheckbox.id = 'enable-all-tests-checkbox';
+    this.enableAllCheckbox.style.marginRight = '5px';
+    enableAllLabel.appendChild(this.enableAllCheckbox);
+    enableAllLabel.appendChild(
+      document.createTextNode('Enable All Categories')
+    );
+    controlsContainer.appendChild(enableAllLabel);
+
     // Auto-start checkbox
     const autoStartLabel = document.createElement('label');
     autoStartLabel.style.display = 'block';
@@ -104,6 +119,13 @@ export class TestUI {
           this.overallStatusElement.style.color = 'lightcoral';
         }
       });
+
+    // Listener for the enable all checkbox
+    if (this.enableAllCheckbox) {
+      this.enableAllCheckbox.addEventListener('change', (event) => {
+        testLogic.toggleAllCategoriesEnabled(event.target.checked);
+      });
+    }
 
     // Listener for the auto-start checkbox
     if (this.autoStartCheckbox) {
@@ -163,6 +185,10 @@ export class TestUI {
         this.logTestMessage(data.testId, data.message, data.type),
       'test:autoStartConfigChanged': (data) =>
         this.updateAutoStartCheckbox(data.autoStartEnabled),
+      'test:allCategoriesChanged': (data) =>
+        this.renderTestList().catch(console.error),
+      'test:categoryChanged': (data) =>
+        this.updateEnableAllCheckbox().catch(console.error),
     };
 
     for (const [eventName, handler] of Object.entries(handlers)) {
@@ -410,6 +436,9 @@ export class TestUI {
         categorySection.appendChild(testsList);
         this.testListContainer.appendChild(categorySection);
       });
+
+    // Update the Enable All checkbox state after rendering
+    this.updateEnableAllCheckbox().catch(console.error);
   }
 
   updateTestStatusElement(element, status, eventWaitingFor = null) {
@@ -488,6 +517,19 @@ export class TestUI {
   updateAutoStartCheckbox(isEnabled) {
     if (this.autoStartCheckbox) {
       this.autoStartCheckbox.checked = isEnabled;
+    }
+  }
+
+  async updateEnableAllCheckbox() {
+    if (!this.enableAllCheckbox) return;
+
+    try {
+      const state = await testLogic.getAllCategoriesState();
+      this.enableAllCheckbox.checked = state.allEnabled;
+      this.enableAllCheckbox.indeterminate =
+        !state.allEnabled && (state.anyEnabled || state.anyIndeterminate);
+    } catch (error) {
+      console.error('Error updating Enable All checkbox:', error);
     }
   }
 
