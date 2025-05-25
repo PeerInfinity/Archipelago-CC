@@ -106,7 +106,7 @@ export async function progressiveSwordTest(testController) {
       playerId: '1',
     });
     testController.reportCondition('Progressive Sword rules loaded', true);
-    await testController.waitForEvent('stateManager:rulesLoaded', 3000);
+    // Note: LOAD_RULES_DATA action now waits for stateManager:rulesLoaded internally
 
     // Add 1st Progressive Sword
     await testController.performAction({

@@ -155,6 +155,14 @@ export function toggleTestEnabled(testId, isEnabled) {
   const test = findTestById(testId);
   if (test) {
     test.isEnabled = isEnabled;
+    // Update status based on enabled state, but preserve completed test results
+    if (
+      test.status !== 'passed' &&
+      test.status !== 'failed' &&
+      test.status !== 'running'
+    ) {
+      test.status = isEnabled ? 'pending' : 'disabled';
+    }
   }
 }
 

@@ -111,7 +111,7 @@ export async function simulateReceivedItemsTest(testController) {
       playerId: '1',
     });
     testController.reportCondition('Client test rules loaded', true);
-    await testController.waitForEvent('stateManager:rulesLoaded', 3000);
+    // Note: LOAD_RULES_DATA action now waits for stateManager:rulesLoaded internally
 
     // Simulate ReceivedItems message
     const receivedItemsCommand = {

@@ -453,7 +453,8 @@ export class TestUI {
       'test-status-running',
       'test-status-waiting_for_event',
       'test-status-passed',
-      'test-status-failed'
+      'test-status-failed',
+      'test-status-disabled'
     );
     element.classList.add(`test-status-${status || 'pending'}`);
   }

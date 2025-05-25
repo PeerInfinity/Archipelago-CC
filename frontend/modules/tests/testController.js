@@ -58,10 +58,11 @@ export class TestController {
       'info'
     );
 
+    // Ensure StateManager is ready for most actions
     if (
       actionDetails.type !== 'DISPATCH_EVENT' &&
       actionDetails.type !== 'SIMULATE_CLICK' &&
-      actionDetails.type !== 'LOAD_RULES_DATA' &&
+      // actionDetails.type !== 'LOAD_RULES_DATA' && // LOAD_RULES_DATA will use stateManager
       actionDetails.type !== 'GET_SETTING' &&
       actionDetails.type !== 'UPDATE_SETTING' &&
       actionDetails.type !== 'SIMULATE_SERVER_MESSAGE'
@@ -72,13 +73,16 @@ export class TestController {
         throw new Error(msg);
       }
       try {
-        await this.stateManager.ensureReady();
+        // ensureReady might need a slightly longer timeout for initial loads during tests
+        await this.stateManager.ensureReady(5000);
       } catch (e) {
         const msg = `StateManager (Proxy) not ready for action: ${e.message}`;
         this.log(msg, 'error');
         throw new Error(msg);
       }
     }
+
+    let result;
 
     switch (actionDetails.type) {
       case 'DISPATCH_EVENT':
@@ -105,14 +109,28 @@ export class TestController {
                 actionDetails.playerName ||
                 `TestPlayer${actionDetails.playerId || '1'}`,
             };
+
+            // Set up the event listener BEFORE calling loadRules to avoid race condition
+            const rulesLoadedPromise = this.waitForEvent(
+              'stateManager:rulesLoaded',
+              5000
+            );
+
+            // loadRules is fire-and-forget to the worker, but it triggers rulesLoadedConfirmation.
             await this.stateManager.loadRules(
               actionDetails.payload,
               playerInfo
             );
             this.log('StateManager.loadRules command sent.');
+
+            // Wait for the worker to process and confirm, which includes the first snapshot.
+            await rulesLoadedPromise; // Use the pre-established promise
+            this.log(
+              'stateManager:rulesLoaded event received after LOAD_RULES_DATA.'
+            );
           } catch (error) {
             this.log(
-              `Error calling StateManager.loadRules: ${error.message}`,
+              `Error calling StateManager.loadRules or waiting for event: ${error.message}`,
               'error'
             );
             throw error;
@@ -123,13 +141,26 @@ export class TestController {
           this.log(errMsg, 'error');
           throw new Error(errMsg);
         }
-        return;
+        return; // This action is for setup
 
       case 'ADD_ITEM_TO_INVENTORY':
         if (this.stateManager && actionDetails.itemName) {
+          // Set up the event listener BEFORE calling addItemToInventory to avoid race condition
+          const snapshotUpdatedPromise = this.waitForEvent(
+            'stateManager:snapshotUpdated',
+            3000
+          );
+
+          // stateManager.addItemToInventory sends command to worker, worker sends snapshot back
           await this.stateManager.addItemToInventory(actionDetails.itemName);
           this.log(
             `Action ADD_ITEM_TO_INVENTORY for "${actionDetails.itemName}" sent.`
+          );
+
+          // Wait for the snapshot reflecting this change
+          await snapshotUpdatedPromise; // Use the pre-established promise
+          this.log(
+            'stateManager:snapshotUpdated event received after ADD_ITEM_TO_INVENTORY.'
           );
         } else {
           throw new Error(
@@ -140,9 +171,20 @@ export class TestController {
 
       case 'CHECK_LOCATION':
         if (this.stateManager && actionDetails.locationName) {
+          // Set up the event listener BEFORE calling checkLocation to avoid race condition
+          const snapshotUpdatedPromise = this.waitForEvent(
+            'stateManager:snapshotUpdated',
+            3000
+          );
+
           await this.stateManager.checkLocation(actionDetails.locationName);
           this.log(
             `Action CHECK_LOCATION for "${actionDetails.locationName}" sent.`
+          );
+
+          await snapshotUpdatedPromise; // Use the pre-established promise
+          this.log(
+            'stateManager:snapshotUpdated event received after CHECK_LOCATION.'
           );
         } else {
           throw new Error(
@@ -152,44 +194,45 @@ export class TestController {
         return;
 
       case 'GET_INVENTORY_ITEM_COUNT': {
-        const snapshot = this.stateManager.getSnapshot();
+        // This action reads state, assumes prior sync point (like awaited snapshotUpdated) has occurred.
+        const snapshot = this.stateManager.getSnapshot(); // Reads proxy's uiCache
         if (snapshot && snapshot.inventory && actionDetails.itemName) {
-          return snapshot.inventory[actionDetails.itemName] || 0;
+          result = snapshot.inventory[actionDetails.itemName] || 0;
+        } else {
+          this.log(
+            'Warning: Could not get item count, snapshot or inventory missing.',
+            'warn'
+          );
+          result = 0;
         }
-        this.log(
-          'Warning: Could not get item count, snapshot or inventory missing.',
-          'warn'
-        );
-        return 0;
+        break;
       }
 
       case 'IS_LOCATION_ACCESSIBLE': {
+        // This action reads state, assumes prior sync point.
         const snapshot = this.stateManager.getSnapshot();
         const staticData = this.stateManager.getStaticData();
-        // const gameId = this.stateManager.getGameId(); // getGameId needs to be reliable
-
-        if (
-          snapshot &&
-          staticData &&
-          actionDetails.locationName /*&& gameId*/
-        ) {
+        if (snapshot && staticData && actionDetails.locationName) {
           const snapshotInterface = createStateSnapshotInterface(
             snapshot,
-            staticData /*, gameId*/
+            staticData
           );
           let locData = staticData.locations[actionDetails.locationName];
           if (!locData && staticData.regions) {
+            // Basic search in regions if not direct
             for (const regionKey in staticData.regions) {
               const region = staticData.regions[regionKey];
-              const foundLoc = region.locations?.find(
-                (l) => l.name === actionDetails.locationName
-              );
-              if (foundLoc) {
-                locData = {
-                  ...foundLoc,
-                  parent_region: region.name || regionKey,
-                };
-                break;
+              if (region.locations && Array.isArray(region.locations)) {
+                const foundLoc = region.locations.find(
+                  (l) => l.name === actionDetails.locationName
+                );
+                if (foundLoc) {
+                  locData = {
+                    ...foundLoc,
+                    parent_region: region.name || regionKey,
+                  };
+                  break;
+                }
               }
             }
           }
@@ -199,32 +242,37 @@ export class TestController {
               `Location data for "${actionDetails.locationName}" not found in staticData or its regions.`,
               'warn'
             );
-            return false;
+            result = false;
+          } else {
+            const regionToEvaluate = locData.parent_region || locData.region;
+            if (!regionToEvaluate) {
+              this.log(
+                `Location "${actionDetails.locationName}" has no parent_region or region defined.`,
+                'warn'
+              );
+              result = false;
+            } else {
+              const regionReachable =
+                snapshotInterface.isRegionReachable(regionToEvaluate);
+              if (!regionReachable) {
+                this.log(
+                  `Region '${regionToEvaluate}' for location '${actionDetails.locationName}' is NOT reachable.`,
+                  'warn'
+                );
+                result = false;
+              } else {
+                result = snapshotInterface.evaluateRule(locData.access_rule);
+              }
+            }
           }
-          const regionToEvaluate = locData.parent_region || locData.region;
-          if (!regionToEvaluate) {
-            this.log(
-              `Location "${actionDetails.locationName}" has no parent_region or region defined.`,
-              'warn'
-            );
-            return false;
-          }
-          const regionReachable =
-            snapshotInterface.isRegionReachable(regionToEvaluate);
-          if (!regionReachable) {
-            this.log(
-              `Region '${regionToEvaluate}' for location '${actionDetails.locationName}' is NOT reachable.`,
-              'warn'
-            );
-            return false;
-          }
-          return snapshotInterface.evaluateRule(locData.access_rule);
+        } else {
+          this.log(
+            'Warning: Could not check location accessibility, context missing.',
+            'warn'
+          );
+          result = false;
         }
-        this.log(
-          'Warning: Could not check location accessibility, context missing.',
-          'warn'
-        );
-        return false;
+        break;
       }
 
       case 'IS_REGION_REACHABLE': {
@@ -268,11 +316,18 @@ export class TestController {
       // break; // Unreachable code after throw/return
 
       case 'SIMULATE_CLICK':
+        // After simulating click, if the click is expected to change state,
+        // the test should then await 'stateManager:snapshotUpdated' if needed.
+        // Or, the specific UI handler for the click might trigger a more specific event.
+        // For now, SIMULATE_CLICK is fire-and-forget from controller's perspective.
+        // The actual state change verification would come from subsequent GET_X or IS_X actions.
         if (actionDetails.selector) {
           const element = document.querySelector(actionDetails.selector);
           if (element) {
             element.click();
             this.log(`Clicked element: ${actionDetails.selector}`);
+            // If this click is known to cause state changes processed by StateManager,
+            // the test script might need to follow this with a waitForEvent('stateManager:snapshotUpdated')
           } else {
             this.log(
               `Element not found for click: ${actionDetails.selector}`,
@@ -285,7 +340,7 @@ export class TestController {
         } else {
           throw new Error('Missing selector for SIMULATE_CLICK');
         }
-        return; // UI interaction is fire-and-forget
+        return; // Fire-and-forget
 
       case 'GET_SETTING':
         if (
@@ -310,16 +365,30 @@ export class TestController {
           typeof actionDetails.settingKey === 'string' &&
           actionDetails.value !== undefined
         ) {
-          const settingsManager = (
-            await import('../../app/core/settingsManager.js')
-          ).default;
+          const settingsManagerModule = await import(
+            '../../app/core/settingsManager.js'
+          );
+          const settingsManager = settingsManagerModule.default;
           if (!settingsManager)
             throw new Error('settingsManager not found for UPDATE_SETTING');
+
+          // Set up the event listener BEFORE calling updateSetting to avoid race condition
+          const settingsChangedPromise = this.waitForEvent(
+            'settings:changed',
+            1000
+          );
+
           await settingsManager.updateSetting(
             actionDetails.settingKey,
             actionDetails.value
           );
-          return; // Relies on event for sync
+
+          // Wait for the settings:changed event to ensure the update has propagated
+          await settingsChangedPromise; // Use the pre-established promise
+          this.log(
+            `settings:changed event received after UPDATE_SETTING for ${actionDetails.settingKey}.`
+          );
+          return;
         }
         throw new Error('Missing settingKey or value for UPDATE_SETTING');
 
@@ -343,19 +412,23 @@ export class TestController {
       case 'IS_LOCATION_CHECKED': {
         const snapshot = this.stateManager.getSnapshot();
         if (snapshot && snapshot.flags && actionDetails.locationName) {
-          return snapshot.flags.includes(actionDetails.locationName);
+          result = snapshot.flags.includes(actionDetails.locationName);
+        } else {
+          this.log(
+            'Warning: Could not determine if location is checked for IS_LOCATION_CHECKED.',
+            'warn'
+          );
+          result = false;
         }
-        this.log(
-          'Warning: Could not determine if location is checked, snapshot or flags missing for IS_LOCATION_CHECKED.',
-          'warn'
-        );
-        return false; // Or undefined
+        break;
       }
 
       default:
         this.log(`Unknown action type: ${actionDetails.type}`, 'warn');
         return Promise.resolve();
     }
+
+    return result;
   }
 
   waitForEvent(eventName, timeoutMilliseconds = 5000) {
@@ -373,20 +446,34 @@ export class TestController {
       let timeoutId;
       const handler = (data) => {
         clearTimeout(timeoutId);
-        this.eventBus.unsubscribe(eventName, handler); // Make sure to use this.eventBus
+        // Ensure eventBus and unsubscribe are still valid before calling
+        if (this.eventBus && typeof this.eventBus.unsubscribe === 'function') {
+          this.eventBus.unsubscribe(eventName, handler);
+        }
         this.log(`Event received: ${eventName}`);
         this.log(`Event data: ${JSON.stringify(data)}`, 'debug');
         this.callbacks.setTestStatus(this.testId, 'running');
         resolve(data);
       };
       timeoutId = setTimeout(() => {
-        this.eventBus.unsubscribe(eventName, handler);
+        if (this.eventBus && typeof this.eventBus.unsubscribe === 'function') {
+          this.eventBus.unsubscribe(eventName, handler);
+        }
         const msg = `Timeout waiting for event ${eventName}`;
         this.log(msg, 'error');
-        this.callbacks.setTestStatus(this.testId, 'failed'); // Update status via callback
+        this.callbacks.setTestStatus(this.testId, 'failed');
         reject(new Error(msg));
       }, timeoutMilliseconds);
-      this.eventBus.subscribe(eventName, handler);
+
+      if (this.eventBus && typeof this.eventBus.subscribe === 'function') {
+        this.eventBus.subscribe(eventName, handler);
+      } else {
+        clearTimeout(timeoutId);
+        const msg =
+          'eventBus or its subscribe method is not available for waitForEvent';
+        this.log(msg, 'error');
+        reject(new Error(msg));
+      }
     });
   }
 

@@ -48,15 +48,6 @@
       "category": "UI Interaction"
     },
     {
-      "id": "test_progressive_sword",
-      "name": "Progressive Sword Test",
-      "description": "Tests progressive item mechanics by adding Progressive Sword items and verifying that the correct sword levels are granted (Fighter Sword → Master Sword → etc.).",
-      "functionName": "progressiveSwordTest",
-      "isEnabled": true,
-      "order": 0,
-      "category": "Progressive Items"
-    },
-    {
       "id": "test_4_super_quick",
       "name": "Super Quick Test",
       "description": "A test that completes almost instantly.",

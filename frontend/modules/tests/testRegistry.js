@@ -64,7 +64,7 @@ export function registerTest(testDefinition) {
     isEnabled: enabled,
     order: finalOrder,
     // Runtime state (will be managed by TestState)
-    status: 'pending',
+    status: enabled ? 'pending' : 'disabled', // Set status based on enabled state
     conditions: [],
     logs: [],
     currentEventWaitingFor: null,

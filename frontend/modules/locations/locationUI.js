@@ -577,27 +577,31 @@ export class LocationUI {
       return;
     }
 
+    // Get sort method early to determine if original order warning is relevant
+    const sortMethod = this.rootElement.querySelector('#sort-select').value;
+
     if (
       !this.originalLocationOrder ||
       this.originalLocationOrder.length === 0
     ) {
-      console.warn(
-        '[LocationUI updateLocationDisplay] Original location order not yet available. Locations might appear unsorted or panel might wait for re-render.'
-      );
-      // Optionally, fetch it now if it should absolutely be here
-      // This can be a fallback, but ideally it's populated by stateManager:rulesLoaded
+      // Only warn if not in "Show All" mode and original order is expected for sorting.
+      if (
+        (sortMethod === 'original' ||
+          sortMethod === 'accessibility_original') &&
+        Object.keys(staticData.locations).length > 0 // Only warn if there should be locations
+      ) {
+        console.warn(
+          '[LocationUI updateLocationDisplay] Original location order is empty (and an original-order sort is selected). Locations might appear unsorted or panel might wait for re-render.'
+        );
+      }
+      // The fallback fetch logic can remain as it might still be useful in some edge cases
+      // or if staticData itself was temporarily unavailable from the proxy.
       const freshlyFetchedOrder = stateManager.getOriginalLocationOrder();
       if (freshlyFetchedOrder && freshlyFetchedOrder.length > 0) {
         this.originalLocationOrder = freshlyFetchedOrder;
         console.log(
           `[LocationUI updateLocationDisplay] Fallback fetch for originalLocationOrder succeeded: ${this.originalLocationOrder.length} items.`
         );
-      } else {
-        // If still no order, might display loading or unsorted.
-        // For now, we'll proceed, and sorting might be off or alphabetical.
-        // Consider adding a specific loading message if this.originalLocationOrder is critical for ANY display.
-        // this.locationsGrid.innerHTML = '<p>Preparing location order...</p>';
-        // return; // Or, allow to proceed with default/name sort if that's acceptable.
       }
     }
 
@@ -628,7 +632,7 @@ export class LocationUI {
     const showExplored =
       this.rootElement.querySelector('#show-explored').checked;
     const showPending = this.rootElement.querySelector('#show-pending').checked; // ADDED: Get showPending state
-    const sortMethod = this.rootElement.querySelector('#sort-select').value;
+    // sortMethod already declared above
     const searchTerm = this.rootElement
       .querySelector('#location-search')
       .value.toLowerCase();

@@ -15,7 +15,6 @@ const TEST_CASE_FILES = [
   './testCases/coreTests.js',
   './testCases/stateManagementTests.js',
   './testCases/uiInteractionTests.js',
-  './testCases/progressiveItemsTests.js',
 ];
 
 let discoveryComplete = false;

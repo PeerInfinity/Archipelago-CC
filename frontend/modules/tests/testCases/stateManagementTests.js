@@ -245,7 +245,7 @@ export async function configLoadAndItemCheckTest(testController) {
       playerName: 'TestPlayer1',
     });
     testController.reportCondition('Initial data loaded', true);
-    await testController.waitForEvent('stateManager:rulesLoaded', 3000); // Wait for rules to be processed
+    // Note: LOAD_RULES_DATA action now waits for stateManager:rulesLoaded internally
 
     await testController.performAction({
       type: 'ADD_ITEM_TO_INVENTORY',
@@ -325,6 +325,203 @@ export async function configLoadAndItemCheckTest(testController) {
   }
 }
 
+export async function testCasePanelInteractionTest(testController) {
+  let overallResult = true;
+  try {
+    testController.log('Starting testCasePanelInteractionTest...');
+    testController.reportCondition('Test started', true);
+
+    // First, we need to ensure the Test Cases panel is available and activated
+    testController.log('Attempting to activate Test Cases panel...');
+
+    // Import eventBus to publish panel activation event
+    const eventBusModule = await import('../../../app/core/eventBus.js');
+    const eventBus = eventBusModule.default;
+
+    if (!eventBus) {
+      throw new Error('Event bus not available');
+    }
+
+    // Activate the Test Cases panel using the same pattern as region links
+    eventBus.publish('ui:activatePanel', { panelId: 'testCasesPanel' });
+    testController.reportCondition(
+      'Test Cases panel activation event published',
+      true
+    );
+
+    // Wait a moment for the panel to initialize
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Look for the Test Cases panel in the DOM
+    const testCasesPanel = document.querySelector('#test-cases-panel');
+    if (!testCasesPanel) {
+      throw new Error('Test Cases panel not found in DOM');
+    }
+    testController.reportCondition('Test Cases panel found in DOM', true);
+
+    // Wait for the panel to load test sets
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Look for the vanilla folder and Light World test
+    const vanillaButtons = testCasesPanel.querySelectorAll(
+      'button[data-folder="vanilla"]'
+    );
+    let lightWorldButton = null;
+
+    for (const button of vanillaButtons) {
+      if (
+        button.dataset.testset &&
+        button.dataset.testset.toLowerCase().includes('lightworld')
+      ) {
+        lightWorldButton = button;
+        break;
+      }
+    }
+
+    if (!lightWorldButton) {
+      // Try alternative selectors
+      const allButtons = testCasesPanel.querySelectorAll('button');
+      for (const button of allButtons) {
+        if (button.textContent.toLowerCase().includes('light world')) {
+          lightWorldButton = button;
+          break;
+        }
+      }
+    }
+
+    if (!lightWorldButton) {
+      throw new Error('Light World test button not found in vanilla category');
+    }
+
+    testController.reportCondition('Light World test button found', true);
+
+    // Click the Light World test button
+    testController.log('Clicking Light World test button...');
+    lightWorldButton.click();
+
+    // Wait for the test cases to load
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Verify that test cases are now displayed
+    const testTable = testCasesPanel.querySelector('.results-table');
+    if (!testTable) {
+      throw new Error('Test cases table not found after clicking Light World');
+    }
+    testController.reportCondition('Test cases table loaded', true);
+
+    // Look for the "Run All Tests" button
+    const runAllButton = testCasesPanel.querySelector('#run-all-tests');
+    if (!runAllButton) {
+      throw new Error('Run All Tests button not found');
+    }
+    testController.reportCondition('Run All Tests button found', true);
+
+    // Verify the cancel button is present but hidden
+    const cancelButton = testCasesPanel.querySelector('#cancel-all-tests');
+    if (!cancelButton) {
+      throw new Error('Cancel Tests button not found');
+    }
+
+    const isHidden =
+      cancelButton.style.display === 'none' ||
+      getComputedStyle(cancelButton).display === 'none';
+    testController.reportCondition(
+      'Cancel Tests button found and initially hidden',
+      isHidden
+    );
+    if (!isHidden) overallResult = false;
+
+    // Click the "Run All Tests" button
+    testController.log('Clicking Run All Tests button...');
+    runAllButton.click();
+
+    // Wait a moment for the tests to start
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Verify that the cancel button is now visible
+    const isCancelVisible =
+      cancelButton.style.display === 'inline-block' ||
+      getComputedStyle(cancelButton).display !== 'none';
+    testController.reportCondition(
+      'Cancel Tests button becomes visible when tests start',
+      isCancelVisible
+    );
+    if (!isCancelVisible) overallResult = false;
+
+    // Verify that the run button is disabled
+    const isRunDisabled = runAllButton.disabled;
+    testController.reportCondition(
+      'Run All Tests button disabled during execution',
+      isRunDisabled
+    );
+    if (!isRunDisabled) overallResult = false;
+
+    // Wait a bit to let some tests run, then test the cancel functionality
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Click the cancel button
+    testController.log('Testing cancel functionality...');
+    cancelButton.click();
+
+    // Wait for cancellation to take effect
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Verify that the cancel button is hidden again
+    const isCancelHiddenAfter =
+      cancelButton.style.display === 'none' ||
+      getComputedStyle(cancelButton).display === 'none';
+    testController.reportCondition(
+      'Cancel Tests button hidden after cancellation',
+      isCancelHiddenAfter
+    );
+    if (!isCancelHiddenAfter) overallResult = false;
+
+    // Verify that the run button is re-enabled
+    const isRunEnabledAfter = !runAllButton.disabled;
+    testController.reportCondition(
+      'Run All Tests button re-enabled after cancellation',
+      isRunEnabledAfter
+    );
+    if (!isRunEnabledAfter) overallResult = false;
+
+    // Check for cancelled test status indicators
+    const cancelledTests = testCasesPanel.querySelectorAll('.test-cancelled');
+    const hasCancelledTests = cancelledTests.length > 0;
+    testController.reportCondition(
+      'Some tests marked as cancelled',
+      hasCancelledTests
+    );
+    if (!hasCancelledTests) overallResult = false;
+
+    // Check the test results summary for cancellation info
+    const summaryElement = testCasesPanel.querySelector(
+      '#test-results-summary'
+    );
+    if (summaryElement) {
+      const summaryText = summaryElement.textContent;
+      const hasCancelledInSummary = summaryText.includes('cancelled');
+      testController.reportCondition(
+        'Test summary includes cancellation info',
+        hasCancelledInSummary
+      );
+      if (!hasCancelledInSummary) overallResult = false;
+    }
+
+    testController.log(
+      `testCasePanelInteractionTest finished. Overall Result: ${overallResult}`
+    );
+  } catch (error) {
+    testController.log(
+      `Error in testCasePanelInteractionTest: ${error.message}`,
+      'error'
+    );
+    testController.reportCondition(`Test errored: ${error.message}`, false);
+    overallResult = false;
+  } finally {
+    await testController.completeTest(overallResult);
+  }
+}
+
 // Self-register tests
 registerTest({
   id: 'test_config_load_and_item_check',
@@ -335,4 +532,16 @@ registerTest({
   category: 'State Management',
   enabled: false,
   order: 0,
+});
+
+// Register the new test
+registerTest({
+  id: 'test_case_panel_interaction',
+  name: 'Test Case Panel Interaction Test',
+  description:
+    'Tests activating the Test Cases panel, selecting the vanilla Light World test, running all tests, and testing the cancel functionality.',
+  testFunction: testCasePanelInteractionTest,
+  category: 'UI Interaction',
+  enabled: false,
+  order: 1,
 });

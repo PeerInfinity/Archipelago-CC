@@ -532,6 +532,9 @@ export const testLogic = {
 
     if (eventBusInstance)
       eventBusInstance.publish('test:allRunsCompleted', { summary });
+
+    // Set Playwright completion flags for automated testing
+    this._setPlaywrightCompletionFlags(summary, finalTests);
   },
 
   async getCategories() {
@@ -624,5 +627,45 @@ export const testLogic = {
       anyEnabled: anyCategoryHasEnabledTests,
       anyIndeterminate: anyCategoryIndeterminate,
     };
+  },
+
+  // Set localStorage flags for Playwright test completion detection
+  _setPlaywrightCompletionFlags(summary, allTests) {
+    try {
+      // Prepare detailed test results for Playwright
+      const testDetails = allTests.map((test) => ({
+        id: test.id,
+        name: test.name,
+        status: test.status,
+        category: test.category,
+        conditions: test.conditions || [],
+        logs: test.logs || [],
+      }));
+
+      const playwrightResults = {
+        summary,
+        testDetails,
+        completedAt: new Date().toISOString(),
+      };
+
+      // Set the results in localStorage
+      localStorage.setItem(
+        '__playwrightTestResults__',
+        JSON.stringify(playwrightResults)
+      );
+
+      // Set the completion flag
+      localStorage.setItem('__playwrightTestsComplete__', 'true');
+
+      console.log('[TestLogic] Playwright completion flags set:', {
+        summary,
+        testCount: testDetails.length,
+      });
+    } catch (error) {
+      console.error(
+        '[TestLogic] Error setting Playwright completion flags:',
+        error
+      );
+    }
   },
 };

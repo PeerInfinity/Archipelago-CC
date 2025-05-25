@@ -22,6 +22,8 @@ export class TestCaseUI {
     this.eventBus = eventBus; // Using the imported singleton
     this.rootElement = null; // Root DOM element for this panel
     this.rulesLoadedForSet = false; // Flag: true if currentTestRules are loaded in StateManager
+    this.isRunningAllTests = false; // Flag to track if tests are currently running
+    this.shouldCancelTests = false; // Flag to signal test cancellation
 
     // Create root element and initial structure
     this.getRootElement(); // This also sets this.testCasesListContainer
@@ -293,6 +295,7 @@ export class TestCaseUI {
         <div class="test-controls">
           <!-- Removed "Reload Test Data" button, rule loading is now part of selectTestSet -->
           <button id="run-all-tests" class="button">Run All Tests for "${testSetDisplay}"</button>
+          <button id="cancel-all-tests" class="button" style="display: none;">Cancel Tests</button>
         </div>
         <div id="data-source-info" class="data-source-info">Current data source: <span id="data-source"></span></div>
         <div id="test-results-summary"></div>
@@ -413,6 +416,9 @@ export class TestCaseUI {
     this.testCasesListContainer
       .querySelector('#run-all-tests')
       .addEventListener('click', () => this.runAllTests());
+    this.testCasesListContainer
+      .querySelector('#cancel-all-tests')
+      .addEventListener('click', () => this.cancelAllTests());
 
     this.updateDataSourceIndicator(); // Update based on currently loaded rules
   }
@@ -547,7 +553,6 @@ export class TestCaseUI {
   }
 
   async runAllTests() {
-    // ... (same as your existing runAllTests, ensuring it uses the refactored loadTestCase) ...
     // Key check:
     if (!this.rulesLoadedForSet) {
       this.logToPanel(
@@ -559,7 +564,7 @@ export class TestCaseUI {
       if (runAllButton) runAllButton.disabled = false; // Re-enable button
       return;
     }
-    // ... rest of the logic
+
     if (
       !this.testCases ||
       !this.testCasesListContainer ||
@@ -569,25 +574,52 @@ export class TestCaseUI {
       return;
     }
 
+    this.isRunningAllTests = true;
+    this.shouldCancelTests = false;
+
     this.logToPanel(
       `Running all ${this.testCases.location_tests.length} tests for "${this.currentTestSet}"...`,
       'system'
     );
+
     const runAllButton =
       this.testCasesListContainer.querySelector('#run-all-tests');
+    const cancelButton =
+      this.testCasesListContainer.querySelector('#cancel-all-tests');
+
     if (runAllButton) {
       runAllButton.disabled = true;
       runAllButton.textContent = 'Running...';
     }
+    if (cancelButton) {
+      cancelButton.style.display = 'inline-block';
+    }
 
     let passedCount = 0;
     let failedCount = 0;
+    let cancelledCount = 0;
 
     try {
       for (const [
         index,
         testCaseData,
       ] of this.testCases.location_tests.entries()) {
+        if (this.shouldCancelTests) {
+          // Mark remaining tests as cancelled
+          const remainingTests = this.testCases.location_tests.slice(index);
+          for (const [remainingIndex, _] of remainingTests.entries()) {
+            const statusElement = this.testCasesListContainer.querySelector(
+              `#test-status-${index + remainingIndex}`
+            );
+            if (statusElement) {
+              statusElement.innerHTML =
+                '<div class="test-cancelled">Cancelled</div>';
+              cancelledCount++;
+            }
+          }
+          break;
+        }
+
         const statusElement = this.testCasesListContainer.querySelector(
           `#test-status-${index}`
         );
@@ -598,19 +630,25 @@ export class TestCaseUI {
         }
       }
     } finally {
-      const total = passedCount + failedCount;
+      this.isRunningAllTests = false;
+      this.shouldCancelTests = false;
+
+      const total = passedCount + failedCount + cancelledCount;
       const resultsElement = this.testCasesListContainer.querySelector(
         '#test-results-summary'
       );
       if (resultsElement) {
+        let summaryText = `Tests completed: ${total} total, <span class="passed">${passedCount} passed</span>, <span class="failed">${failedCount} failed</span>`;
+        if (cancelledCount > 0) {
+          summaryText += `, <span class="cancelled">${cancelledCount} cancelled</span>`;
+        }
         resultsElement.innerHTML = `<div class="test-summary ${
-          failedCount === 0 ? 'all-passed' : 'has-failures'
-        }">
-            Tests completed: ${total} total,
-            <span class="passed">${passedCount} passed</span>,
-            <span class="failed">${failedCount} failed</span>
-        </div>`;
+          failedCount === 0 && cancelledCount === 0
+            ? 'all-passed'
+            : 'has-failures'
+        }">${summaryText}</div>`;
       }
+
       if (runAllButton) {
         runAllButton.disabled = false;
         runAllButton.textContent = `Run All Tests for "${
@@ -624,10 +662,31 @@ export class TestCaseUI {
             : ''
         }"`;
       }
+      if (cancelButton) {
+        cancelButton.style.display = 'none';
+      }
+
+      const statusText =
+        cancelledCount > 0
+          ? 'cancelled'
+          : failedCount === 0
+          ? 'success'
+          : 'error';
       this.logToPanel(
-        `All tests for "${this.currentTestSet}" finished. Passed: ${passedCount}, Failed: ${failedCount}`,
-        failedCount === 0 ? 'success' : 'error'
+        `Tests for "${this.currentTestSet}" ${
+          cancelledCount > 0 ? 'cancelled' : 'finished'
+        }. Passed: ${passedCount}, Failed: ${failedCount}${
+          cancelledCount > 0 ? `, Cancelled: ${cancelledCount}` : ''
+        }`,
+        statusText
       );
+    }
+  }
+
+  cancelAllTests() {
+    if (this.isRunningAllTests) {
+      this.shouldCancelTests = true;
+      this.logToPanel('Cancelling remaining tests...', 'warn');
     }
   }
 
