@@ -10,6 +10,17 @@ import {
   getRegistryStats,
 } from './testRegistry.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testDiscovery', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testDiscovery] ${message}`, ...data);
+  }
+}
+
 // List of test case files to import (this is the only manual part)
 const TEST_CASE_FILES = [
   './testCases/coreTests.js',
@@ -27,25 +38,25 @@ let discoveryPromise = null;
  */
 export async function discoverTests() {
   if (discoveryComplete) {
-    console.log('[TestDiscovery] Tests already discovered');
+    log('info', '[TestDiscovery] Tests already discovered');
     return;
   }
 
   if (discoveryPromise) {
-    console.log('[TestDiscovery] Discovery already in progress, waiting...');
+    log('info', '[TestDiscovery] Discovery already in progress, waiting...');
     return discoveryPromise;
   }
 
-  console.log('[TestDiscovery] Starting test discovery...');
+  log('info', '[TestDiscovery] Starting test discovery...');
 
   discoveryPromise = (async () => {
     const importPromises = TEST_CASE_FILES.map(async (file) => {
       try {
-        console.log(`[TestDiscovery] Importing ${file}...`);
+        log('info', `[TestDiscovery] Importing ${file}...`);
         await import(file);
-        console.log(`[TestDiscovery] Successfully imported ${file}`);
+        log('info', `[TestDiscovery] Successfully imported ${file}`);
       } catch (error) {
-        console.error(`[TestDiscovery] Failed to import ${file}:`, error);
+        log('error', `[TestDiscovery] Failed to import ${file}:`, error);
       }
     });
 
@@ -54,7 +65,7 @@ export async function discoverTests() {
     discoveryComplete = true;
 
     const stats = getRegistryStats();
-    console.log('[TestDiscovery] Test discovery complete:', stats);
+    log('info', '[TestDiscovery] Test discovery complete:', stats);
 
     return stats;
   })();
@@ -68,7 +79,8 @@ export async function discoverTests() {
  */
 export function getDiscoveredTests() {
   if (!discoveryComplete) {
-    console.warn(
+    log(
+      'warn',
       '[TestDiscovery] Tests not yet discovered. Call discoverTests() first.'
     );
     return [];
@@ -83,7 +95,8 @@ export function getDiscoveredTests() {
  */
 export function getDiscoveredCategories() {
   if (!discoveryComplete) {
-    console.warn(
+    log(
+      'warn',
       '[TestDiscovery] Tests not yet discovered. Call discoverTests() first.'
     );
     return {};
@@ -98,7 +111,8 @@ export function getDiscoveredCategories() {
  */
 export function getDiscoveredTestFunctions() {
   if (!discoveryComplete) {
-    console.warn(
+    log(
+      'warn',
       '[TestDiscovery] Tests not yet discovered. Call discoverTests() first.'
     );
     return {};
@@ -121,7 +135,8 @@ export function isDiscoveryComplete() {
 export function forceRediscovery() {
   discoveryComplete = false;
   discoveryPromise = null;
-  console.log(
+  log(
+    'info',
     '[TestDiscovery] Forced rediscovery - next discoverTests() call will reimport files'
   );
 }
@@ -133,11 +148,11 @@ export function forceRediscovery() {
  */
 export async function registerTestFile(filePath) {
   try {
-    console.log(`[TestDiscovery] Manually importing ${filePath}...`);
+    log('info', `[TestDiscovery] Manually importing ${filePath}...`);
     await import(filePath);
-    console.log(`[TestDiscovery] Successfully imported ${filePath}`);
+    log('info', `[TestDiscovery] Successfully imported ${filePath}`);
   } catch (error) {
-    console.error(`[TestDiscovery] Failed to import ${filePath}:`, error);
+    log('error', `[TestDiscovery] Failed to import ${filePath}:`, error);
     throw error;
   }
 }

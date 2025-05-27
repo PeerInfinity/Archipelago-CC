@@ -10,9 +10,20 @@ import eventBus from '../../app/core/eventBus.js'; // <<< Import eventBus
 // Import the function to set the module instance
 import { setEditorInstance } from './index.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('vanillaJsonEditorUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[vanillaJsonEditorUI] ${message}`, ...data);
+  }
+}
+
 class EditorUI {
   constructor() {
-    console.log('EditorUI instance created');
+    log('info', 'EditorUI instance created');
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('editor-panel-content'); // Add a class for styling if needed
     this.rootElement.classList.add('jse-theme-dark');
@@ -42,7 +53,7 @@ class EditorUI {
   // Called when the panel is first opened or shown
   initialize() {
     if (!this.isInitialized) {
-      console.log('Initializing EditorUI...');
+      log('info', 'Initializing EditorUI...');
       this.initializeEditor();
       this.subscribeToEvents(); // Subscribe to events on first init
       this.isInitialized = true;
@@ -51,12 +62,12 @@ class EditorUI {
       /*
       const pendingData = getPendingJsonDataAndClear();
       if (pendingData) {
-        console.log('[EditorUI] Loading pending JSON data received before init...');
+        log('info', '[EditorUI] Loading pending JSON data received before init...');
         this.loadJsonData(pendingData);
       }
       */
     } else {
-      console.log('EditorUI already initialized.');
+      log('info', 'EditorUI already initialized.');
       // Potentially refresh or reload content if needed when re-opened
       if (this.editor) {
         this.editor.set(this.content);
@@ -68,23 +79,23 @@ class EditorUI {
   // Subscribe to relevant EventBus events
   subscribeToEvents() {
     if (this.unsubscribeHandle) {
-      console.warn(
+      log('warn', 
         'EditorUI already subscribed to events. Unsubscribing previous first.'
       );
       this.unsubscribeHandle();
     }
-    console.log("EditorUI subscribing to 'editor:loadJsonData'");
+    log('info', "EditorUI subscribing to 'editor:loadJsonData'");
     this.unsubscribeHandle = eventBus.subscribe(
       'editor:loadJsonData',
       (payload) => {
         if (!payload || !payload.data) {
-          console.warn(
+          log('warn', 
             "EditorUI received invalid payload for 'editor:loadJsonData'",
             payload
           );
           return;
         }
-        console.log(
+        log('info', 
           `EditorUI received JSON data from: ${payload.source || 'unknown'}`
         );
         // Wrap the data in the format expected by vanilla-jsoneditor's setContent
@@ -96,7 +107,7 @@ class EditorUI {
   // Unsubscribe from EventBus events
   unsubscribeFromEvents() {
     if (this.unsubscribeHandle) {
-      console.log('EditorUI unsubscribing from events.');
+      log('info', 'EditorUI unsubscribing from events.');
       this.unsubscribeHandle();
       this.unsubscribeHandle = null;
     }
@@ -104,10 +115,10 @@ class EditorUI {
 
   initializeEditor() {
     if (this.editor) {
-      console.log('Editor already exists. Destroying previous instance.');
+      log('info', 'Editor already exists. Destroying previous instance.');
       this.destroyEditor(); // Clean up existing editor if any
     }
-    console.log('Creating vanilla-jsoneditor instance...');
+    log('info', 'Creating vanilla-jsoneditor instance...');
     try {
       this.editor = createJSONEditor({
         target: this.rootElement,
@@ -119,7 +130,7 @@ class EditorUI {
             { contentErrors, patchResult }
           ) => {
             // Handle content changes
-            console.log('Editor content changed:', updatedContent);
+            log('info', 'Editor content changed:', updatedContent);
             this.content = updatedContent;
             // You might want to dispatch an event or update state elsewhere
           },
@@ -131,9 +142,9 @@ class EditorUI {
           mode: 'text', // Changed back to text mode
         },
       });
-      console.log('vanilla-jsoneditor instance created successfully.');
+      log('info', 'vanilla-jsoneditor instance created successfully.');
     } catch (error) {
-      console.error('Failed to initialize JSONEditor:', error);
+      log('error', 'Failed to initialize JSONEditor:', error);
       this.rootElement.textContent =
         'Error loading JSON Editor. Check console.';
     }
@@ -141,7 +152,7 @@ class EditorUI {
 
   // Called when the panel container is resized
   onPanelResize(width, height) {
-    console.log(`EditorUI resized to ${width}x${height}`);
+    log('info', `EditorUI resized to ${width}x${height}`);
     // vanilla-jsoneditor might handle resize automatically, but
     // you can add manual resize logic here if needed.
     // this.rootElement.style.width = `${width}px`;
@@ -153,7 +164,7 @@ class EditorUI {
 
   destroyEditor() {
     if (this.editor && typeof this.editor.destroy === 'function') {
-      console.log('Destroying vanilla-jsoneditor instance.');
+      log('info', 'Destroying vanilla-jsoneditor instance.');
       this.editor.destroy();
       this.editor = null;
     }
@@ -165,7 +176,7 @@ class EditorUI {
 
   // Called when the panel is about to be destroyed by Golden Layout
   onPanelDestroy() {
-    console.log('EditorUI destroyed');
+    log('info', 'EditorUI destroyed');
     this.destroyEditor();
     this.unsubscribeFromEvents(); // <<< Unsubscribe on destroy
     this.isInitialized = false;
@@ -173,7 +184,7 @@ class EditorUI {
 
   // Optional: General cleanup method
   dispose() {
-    console.log('Disposing EditorUI...');
+    log('info', 'Disposing EditorUI...');
     this.onPanelDestroy(); // Call destroy logic
     // Any other cleanup specific to EditorUI itself
   }
@@ -181,12 +192,12 @@ class EditorUI {
   // Method to load JSON data into the editor
   loadJsonData(jsonData) {
     if (!jsonData) {
-      console.warn(
+      log('warn', 
         '[EditorUI] loadJsonData called with null or undefined data.'
       );
       return;
     }
-    console.log('[EditorUI] Loading JSON data into editor...');
+    log('info', '[EditorUI] Loading JSON data into editor...');
     this.setContent({ json: jsonData });
     // Optionally expand nodes after setting content - REMOVED for text mode
     // if (this.editor) {
@@ -198,10 +209,10 @@ class EditorUI {
   setContent(newContent) {
     this.content = newContent;
     if (this.editor) {
-      console.log('Setting editor content:', newContent);
+      log('info', 'Setting editor content:', newContent);
       this.editor.set(this.content);
     } else {
-      console.log(
+      log('info', 
         'Editor not initialized yet. Content will be set on initialization.'
       );
     }

@@ -4,6 +4,17 @@ import settingsManager from '../../app/core/settingsManager.js';
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // If needed later
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('jsonUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[jsonUI] ${message}`, ...data);
+  }
+}
+
 export class JsonUI {
   constructor(container, componentState) {
     this.container = container;
@@ -27,12 +38,12 @@ export class JsonUI {
     // Listen for the actual active mode determined by init.js
     eventBus.subscribe('app:activeModeDetermined', (data) => {
       if (data && data.activeMode) {
-        console.log(
+        log('info', 
           `[JsonUI] Received app:activeModeDetermined, updating display to: ${data.activeMode}`
         );
         this.updateCurrentModeDisplay(data.activeMode);
       } else {
-        console.warn(
+        log('warn', 
           '[JsonUI] Received app:activeModeDetermined but no activeMode in payload.',
           data
         );
@@ -42,12 +53,12 @@ export class JsonUI {
     // Listen for modes.json being loaded
     eventBus.subscribe('app:modesJsonLoaded', (data) => {
       if (data && data.modesConfig) {
-        console.log(
+        log('info', 
           '[JsonUI] Received app:modesJsonLoaded event, populating modes.json list.'
         );
         this._populateModesJsonList(data.modesConfig);
       } else {
-        console.warn(
+        log('warn', 
           '[JsonUI] Received app:modesJsonLoaded event but no modesConfig in payload.',
           data
         );
@@ -56,7 +67,7 @@ export class JsonUI {
 
     // Check if modes.json was already loaded and the event missed
     if (window.G_modesConfig) {
-      console.log(
+      log('info', 
         '[JsonUI] G_modesConfig already exists on window. Populating modes.json list directly.'
       );
       this._populateModesJsonList(window.G_modesConfig);
@@ -76,7 +87,7 @@ export class JsonUI {
   onMount(container, componentState) {
     // container is the GoldenLayout ComponentContainer
     // componentState is the state passed by GoldenLayout
-    console.log(
+    log('info', 
       '[JsonUI onMount] Called. Container:',
       container,
       'State:',
@@ -255,9 +266,9 @@ export class JsonUI {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      console.log(`[JsonUI] Successfully triggered download for ${filename}`);
+      log('info', `[JsonUI] Successfully triggered download for ${filename}`);
     } catch (error) {
-      console.error('[JsonUI] Error preparing JSON for download:', error);
+      log('error', '[JsonUI] Error preparing JSON for download:', error);
       alert('Error preparing data for download. See console for details.');
     }
   }
@@ -268,19 +279,19 @@ export class JsonUI {
     const promises = [];
     const keysForPromises = [];
 
-    console.log('[JsonUI] Gathering data for keys:', selectedDataKeys);
+    log('info', '[JsonUI] Gathering data for keys:', selectedDataKeys);
 
     // Handle Core Data Types (Direct Access)
     if (selectedDataKeys.includes('rulesConfig')) {
       dataToSave.rulesConfig = window.G_combinedModeData?.rulesConfig;
-      console.log(
+      log('info', 
         '[JsonUI] Included rulesConfig:',
         dataToSave.rulesConfig ? 'Exists' : 'MISSING'
       );
     }
     if (selectedDataKeys.includes('moduleConfig')) {
       dataToSave.moduleConfig = window.G_combinedModeData?.moduleConfig;
-      console.log(
+      log('info', 
         '[JsonUI] Included moduleConfig:',
         dataToSave.moduleConfig ? 'Exists' : 'MISSING'
       );
@@ -292,7 +303,7 @@ export class JsonUI {
         typeof window.goldenLayoutInstance.toJSON === 'function'
       ) {
         dataToSave.layoutConfig = window.goldenLayoutInstance.toJSON();
-        console.log(
+        log('info', 
           '[JsonUI] Included current layoutConfig from window.goldenLayoutInstance:',
           dataToSave.layoutConfig ? 'Exists' : 'MISSING'
         );
@@ -303,14 +314,14 @@ export class JsonUI {
       ) {
         // Fallback to container.layoutManager if global is not found (less likely for current setup but good to have a check)
         dataToSave.layoutConfig = this.container.layoutManager.toJSON();
-        console.warn(
+        log('warn', 
           '[JsonUI] Used this.container.layoutManager.toJSON() as fallback for layoutConfig:',
           dataToSave.layoutConfig ? 'Exists' : 'MISSING'
         );
       } else {
         // Fallback to loaded preset if live one isn't available
         dataToSave.layoutConfig = window.G_combinedModeData?.layoutConfig;
-        console.warn(
+        log('warn', 
           '[JsonUI] Could not get live layout, falling back to preset layoutConfig from G_combinedModeData:',
           dataToSave.layoutConfig ? 'Exists' : 'MISSING'
         );
@@ -320,12 +331,12 @@ export class JsonUI {
       try {
         // Assuming settingsManager is imported and has a method to get all settings
         dataToSave.userSettings = settingsManager.getSettings(); // User to verify this method
-        console.log(
+        log('info', 
           '[JsonUI] Included userSettings:',
           dataToSave.userSettings ? 'Exists' : 'MISSING'
         );
       } catch (e) {
-        console.error('[JsonUI] Failed to get userSettings:', e);
+        log('error', '[JsonUI] Failed to get userSettings:', e);
         dataToSave.userSettings = null; // Indicate failure
       }
     }
@@ -336,7 +347,7 @@ export class JsonUI {
     for (const dataKey of selectedDataKeys) {
       if (handlers.has(dataKey)) {
         const handler = handlers.get(dataKey);
-        console.log(`[JsonUI] Gathering data for registered key: ${dataKey}`);
+        log('info', `[JsonUI] Gathering data for registered key: ${dataKey}`);
         try {
           const saveDataResult = handler.getSaveDataFunction();
           // Check if the result is a Promise
@@ -346,13 +357,13 @@ export class JsonUI {
           } else {
             // If not a promise, assign directly
             dataToSave[dataKey] = saveDataResult;
-            console.log(
+            log('info', 
               `[JsonUI] Included sync data for ${dataKey}:`,
               dataToSave[dataKey] ? 'Exists' : 'MISSING/NULL'
             );
           }
         } catch (e) {
-          console.error(
+          log('error', 
             `[JsonUI] Error calling getSaveDataFunction for ${dataKey}:`,
             e
           );
@@ -368,13 +379,13 @@ export class JsonUI {
         results.forEach((result, index) => {
           const dataKey = keysForPromises[index];
           dataToSave[dataKey] = result;
-          console.log(
+          log('info', 
             `[JsonUI] Included async data for ${dataKey}:`,
             dataToSave[dataKey] ? 'Exists' : 'MISSING/NULL'
           );
         });
       } catch (error) {
-        console.error(
+        log('error', 
           '[JsonUI] Error resolving promises from getSaveDataFunction calls:',
           error
         );
@@ -383,7 +394,7 @@ export class JsonUI {
           if (!(key in dataToSave)) {
             // Only mark as null if not already set by sync path or successful promise
             dataToSave[key] = null;
-            console.error(
+            log('error', 
               `[JsonUI] Failed to get data for ${key} due to Promise.all failure.`
             );
           }
@@ -391,7 +402,7 @@ export class JsonUI {
       }
     }
 
-    console.log('[JsonUI] Finished gathering data:', dataToSave);
+    log('info', '[JsonUI] Finished gathering data:', dataToSave);
     return dataToSave;
   }
 
@@ -411,7 +422,7 @@ export class JsonUI {
       ...dataToSave,
     };
 
-    console.log(
+    log('info', 
       `[JsonUI] Save to file. Mode: ${modeName}, Data:`,
       combinedData
     );
@@ -421,16 +432,16 @@ export class JsonUI {
   _handleLoadFromFile(event) {
     const file = event.target.files[0];
     if (!file) {
-      console.log('[JsonUI] No file selected for loading.');
+      log('info', '[JsonUI] No file selected for loading.');
       return;
     }
-    console.log(`[JsonUI] Load from file selected: ${file.name}`);
+    log('info', `[JsonUI] Load from file selected: ${file.name}`);
 
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
         const loadedData = JSON.parse(e.target.result);
-        console.log('[JsonUI] File content parsed successfully:', loadedData);
+        log('info', '[JsonUI] File content parsed successfully:', loadedData);
 
         const modeName =
           loadedData.modeName || this.modeNameInput.value.trim() || 'default';
@@ -442,7 +453,7 @@ export class JsonUI {
         //   alert(
         //     'Loaded file is missing required rulesConfig or moduleConfig. Cannot apply.'
         //   );
-        //   console.error(
+        //   log('error', 
         //     '[JsonUI] Loaded file missing rulesConfig or moduleConfig.',
         //     loadedData
         //   );
@@ -479,7 +490,7 @@ export class JsonUI {
         //     JSON.stringify(dataToStore)
         //   );
         //   localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
-        //   console.log(
+        //   log('info', 
         //     `[JsonUI] Successfully stored mode '${modeName}' data from file to LocalStorage:`,
         //     dataToStore
         //   );
@@ -493,7 +504,7 @@ export class JsonUI {
         );
         // this._populateKnownModesList(); // Refresh after loading and saving from file - No longer saving, so no need to refresh this way.
         // } catch (storageError) {
-        //   console.error(
+        //   log('error', 
         //     '[JsonUI] Error saving loaded data to LocalStorage:',
         //     storageError
         //   );
@@ -502,14 +513,14 @@ export class JsonUI {
         //   );
         // }
       } catch (error) {
-        console.error('[JsonUI] Error parsing JSON from file:', error);
+        log('error', '[JsonUI] Error parsing JSON from file:', error);
         alert(
           'Failed to parse JSON from file. Ensure it is a valid JSON configuration.'
         );
       }
     };
     reader.onerror = (e) => {
-      console.error('[JsonUI] Error reading file:', e);
+      log('error', '[JsonUI] Error reading file:', e);
       alert('Error reading file.');
     };
     reader.readAsText(file);
@@ -547,7 +558,7 @@ export class JsonUI {
         `${G_LOCAL_STORAGE_MODE_PREFIX}${modeName}`,
         JSON.stringify(combinedData)
       );
-      console.log(
+      log('info', 
         `[JsonUI] Saved to LocalStorage for mode: ${modeName}, Data:`,
         combinedData
       );
@@ -563,7 +574,7 @@ export class JsonUI {
       );
       this._populateKnownModesList(); // Refresh after saving
     } catch (error) {
-      console.error('[JsonUI] Error saving to LocalStorage:', error);
+      log('error', '[JsonUI] Error saving to LocalStorage:', error);
       alert(
         'Error saving to LocalStorage. The storage might be full or disabled.'
       );
@@ -579,14 +590,14 @@ export class JsonUI {
       try {
         localStorage.removeItem('archipelagoToolSuite_lastActiveMode');
         localStorage.removeItem('archipelagoToolSuite_modeData_default');
-        console.log(
+        log('info', 
           '[JsonUI] Defaults reset: Cleared last active mode and "default" mode data from LocalStorage.'
         );
         // Reload the page to the base URL, removing any query parameters like ?mode=
         window.location.href =
           window.location.origin + window.location.pathname;
       } catch (error) {
-        console.error(
+        log('error', 
           '[JsonUI] Error resetting defaults in LocalStorage:',
           error
         );
@@ -596,7 +607,7 @@ export class JsonUI {
   }
 
   _destroy() {
-    console.log('[JsonUI] Destroying JSON panel UI and listeners.');
+    log('info', '[JsonUI] Destroying JSON panel UI and listeners.');
     // Remove event listeners if any were attached directly to document or eventBus without specific handles
     // For listeners attached to elements within this.rootElement, they will be garbage collected with the element.
   }
@@ -615,7 +626,7 @@ export class JsonUI {
         }
       }
     } catch (e) {
-      console.error(
+      log('error', 
         '[JsonUI] Error accessing localStorage to get known modes:',
         e
       );
@@ -663,7 +674,7 @@ export class JsonUI {
   _handleLoadModeFromList(modeName) {
     if (!modeName) return;
 
-    console.log(
+    log('info', 
       `[JsonUI] Setting "${modeName}" as next active mode from list.`
     );
     this.updateCurrentModeDisplay(modeName); // Updates input and span
@@ -674,7 +685,7 @@ export class JsonUI {
         `Mode "${modeName}" has been set as the active mode. Please RELOAD the page to apply this mode.`
       );
     } catch (error) {
-      console.error(
+      log('error', 
         '[JsonUI] Error setting last active mode from list:',
         error
       );
@@ -694,14 +705,14 @@ export class JsonUI {
       const lastActiveModeKey = 'archipelagoToolSuite_lastActiveMode';
       try {
         localStorage.removeItem(modeDataKey);
-        console.log(
+        log('info', 
           `[JsonUI] Deleted mode data for "${modeName}" from LocalStorage (Key: ${modeDataKey}).`
         );
 
         const currentLastActive = localStorage.getItem(lastActiveModeKey);
         if (currentLastActive === modeName) {
           localStorage.removeItem(lastActiveModeKey);
-          console.log(
+          log('info', 
             `[JsonUI] Cleared last active mode because it was the deleted mode "${modeName}".`
           );
         }
@@ -709,7 +720,7 @@ export class JsonUI {
         alert(`Mode "${modeName}" has been deleted from LocalStorage.`);
         this._populateKnownModesList(); // Refresh the list
       } catch (error) {
-        console.error(
+        log('error', 
           `[JsonUI] Error deleting mode "${modeName}" from LocalStorage:`,
           error
         );
@@ -750,7 +761,7 @@ export class JsonUI {
 
   _handleLoadModeFromModesJson(modeName) {
     if (!modeName) return;
-    console.log(
+    log('info', 
       `[JsonUI] Attempting to load mode "${modeName}" from modes.json by reloading with URL parameter.`
     );
     // Show a confirmation before reloading
@@ -780,7 +791,7 @@ export class JsonUI {
       return;
     }
 
-    console.log(
+    log('info', 
       `[JsonUI] Populating ${handlers.size} module data checkboxes...`
     );
 
@@ -815,7 +826,7 @@ export class JsonUI {
 
       // Store the checkbox reference using its dataKey
       this.checkboxes[dataKey] = checkbox;
-      console.log(`[JsonUI] Added checkbox for ${dataKey}`);
+      log('info', `[JsonUI] Added checkbox for ${dataKey}`);
     });
   }
 
@@ -823,7 +834,7 @@ export class JsonUI {
     const handlers = centralRegistry.getAllJsonDataHandlers();
     let requiresReloadDetected = false;
 
-    console.log(
+    log('info', 
       '[JsonUI] Applying non-reload data from loaded data:',
       loadedData
     );
@@ -832,13 +843,13 @@ export class JsonUI {
       // Check core types first (if we handle them this way)
       if (dataKey === 'rulesConfig') {
         // TODO: Implement live rules reload
-        console.log(
+        log('info', 
           '[JsonUI] Found rulesConfig, calling apply function (placeholder)...'
         );
         // this.applyRulesConfig(loadedData.rulesConfig);
       } else if (dataKey === 'userSettings') {
         // TODO: Implement live settings application
-        console.log(
+        log('info', 
           '[JsonUI] Found userSettings, calling apply function (placeholder)...'
         );
         // settingsManager.updateSettings(loadedData.userSettings);
@@ -847,11 +858,11 @@ export class JsonUI {
       else if (handlers.has(dataKey)) {
         const handler = handlers.get(dataKey);
         if (!handler.requiresReload) {
-          console.log(`[JsonUI] Applying non-reload data for ${dataKey}...`);
+          log('info', `[JsonUI] Applying non-reload data for ${dataKey}...`);
           try {
             handler.applyLoadedDataFunction(loadedData[dataKey]);
           } catch (e) {
-            console.error(
+            log('error', 
               `[JsonUI] Error calling applyLoadedDataFunction for ${dataKey}:`,
               e
             );
@@ -860,7 +871,7 @@ export class JsonUI {
           // Check if this data type was actually selected by the user implicitly (it's in the loaded file)
           // We might not have checkbox state here, but presence implies intent
           requiresReloadDetected = true;
-          console.log(`[JsonUI] Data type ${dataKey} requires reload.`);
+          log('info', `[JsonUI] Data type ${dataKey} requires reload.`);
         }
       }
     }

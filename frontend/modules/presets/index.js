@@ -1,5 +1,16 @@
 import { PresetUI } from './presetUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('presetsModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[presetsModule] ${message}`, ...data);
+  }
+}
+
 // --- Module Info ---
 export const moduleInfo = {
   name: 'presets',
@@ -18,7 +29,7 @@ export const moduleInfo = {
  * @param {object} registrationApi - API provided by the initialization script.
  */
 export function register(registrationApi) {
-  console.log('[Presets Module] Registering...');
+  log('info', '[Presets Module] Registering...');
 
   // Register the panel component, providing the class constructor
   registrationApi.registerPanelComponent('presetsPanel', PresetUI);
@@ -34,7 +45,7 @@ export function register(registrationApi) {
   );
   registrationApi.registerEventBusPublisher(moduleInfo.name, 'ui:notification');
 
-  console.log('[Presets Module] Registration complete.');
+  log('info', '[Presets Module] Registration complete.');
 }
 
 /**
@@ -45,7 +56,7 @@ export function register(registrationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[Presets Module] Initializing with priority ${priorityIndex}...`
   );
 
@@ -58,7 +69,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   // 3. Or make PresetUI fetch the bus itself via a static method or singleton.
   // For now, PresetUI will likely continue importing the core eventBus directly internally.
 
-  console.log('[Presets Module] Initialization complete.');
+  log('info', '[Presets Module] Initialization complete.');
 
   // No complex cleanup needed for now, return null or empty function
   return null;

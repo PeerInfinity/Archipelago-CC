@@ -5,6 +5,17 @@ import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.
 import eventBus from '../../app/core/eventBus.js';
 import * as commonUI from '../commonUI/index.js'; // Changed path for renderLogicTree
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testCaseUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testCaseUI] ${message}`, ...data);
+  }
+}
+
 export class TestCaseUI {
   constructor(container, componentState) {
     this.container = container;
@@ -30,12 +41,12 @@ export class TestCaseUI {
     if (this.rootElement) {
       this.container.element.appendChild(this.rootElement);
     } else {
-      console.error('[TestCaseUI] Root element not created in constructor!');
+      log('error', '[TestCaseUI] Root element not created in constructor!');
     }
 
     // Defer full data loading and event subscriptions
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[TestCaseUI] Received app:readyForUiDataLoad. Initializing test cases UI.'
       );
       this.initialize(); // This will fetch test_files.json and subscribe to events
@@ -74,10 +85,10 @@ export class TestCaseUI {
 
   async initialize() {
     if (this.initialized) {
-      console.log('[TestCaseUI] Already initialized.');
+      log('info', '[TestCaseUI] Already initialized.');
       return true;
     }
-    console.log('[TestCaseUI] Initializing...');
+    log('info', '[TestCaseUI] Initializing...');
 
     // Subscribe to view changes
     if (this.eventBus && !this.viewChangeSubscription) {
@@ -86,7 +97,7 @@ export class TestCaseUI {
         (data) => {
           if (data.newView !== 'test-cases') {
             // Ensure this matches the ID used in FilesUI
-            console.log('[TestCaseUI] View changed away, clearing test data.');
+            log('info', '[TestCaseUI] View changed away, clearing test data.');
             this.clearDisplayAndState();
           }
         }
@@ -101,12 +112,12 @@ export class TestCaseUI {
       this.availableTestSets = await response.json();
       this.renderTestSetSelector(); // Display the list of available test sets
       this.initialized = true;
-      console.log(
+      log('info', 
         '[TestCaseUI] Initialization complete. Test set selector rendered.'
       );
       return true;
     } catch (error) {
-      console.error('Error loading test_files.json:', error);
+      log('error', 'Error loading test_files.json:', error);
       if (this.testCasesListContainer) {
         this.testCasesListContainer.innerHTML = `<div class="error-message">Error loading test sets: ${error.message}</div>`;
       }
@@ -248,7 +259,7 @@ export class TestCaseUI {
         `Error loading test set "${testSetName}": ${error.message}`,
         'error'
       );
-      console.error(`Failed to load test set "${testSetName}":`, error);
+      log('error', `Failed to load test set "${testSetName}":`, error);
       this.renderTestSetSelector();
     }
   }
@@ -363,7 +374,7 @@ export class TestCaseUI {
       } else {
         // Fallback: display location name as text if region couldn't be determined
         locationCell.textContent = this.escapeHtml(locationName);
-        console.warn(
+        log('warn', 
           `[TestCaseUI] Region could not be determined for location "${locationName}" using processed static data. Location Data:`,
           locationDataFromProcessed
         );
@@ -519,7 +530,7 @@ export class TestCaseUI {
       }
       passed = passed && validationPassed; // Update overall pass status
     } catch (error) {
-      console.error(
+      log('error', 
         `Error running test case for "${locationName}" (worker evaluation):`,
         error
       );
@@ -721,7 +732,7 @@ export class TestCaseUI {
 
   logToPanel(message, type = 'info') {
     // This is a simplified logger. A more robust implementation might append to a specific log area.
-    console.log(`[TestCaseUI Panel Log - ${type}]: ${message}`);
+    log('info', `[TestCaseUI Panel Log - ${type}]: ${message}`);
     // Optionally publish to a more general notification system if desired for certain types
     if (type === 'error' || type === 'success') {
       this.eventBus.publish('ui:notification', { type, message });
@@ -746,17 +757,17 @@ export class TestCaseUI {
       this.viewChangeSubscription();
       this.viewChangeSubscription = null;
     }
-    console.log('[TestCaseUI] Disposed and unsubscribed from events.');
+    log('info', '[TestCaseUI] Disposed and unsubscribed from events.');
   }
 
   async showLocationDetails(locationStaticData) {
     // Expects location object from this.currentTestRules
-    console.log(
+    log('info', 
       '[TestCaseUI] showLocationDetails called for:',
       locationStaticData.name
     );
     if (!locationStaticData || !locationStaticData.name) {
-      console.warn('[TestCaseUI] showLocationDetails: Invalid location data.');
+      log('warn', '[TestCaseUI] showLocationDetails: Invalid location data.');
       return;
     }
     // ... (rest of modal setup as before)
@@ -768,7 +779,7 @@ export class TestCaseUI {
     const modalRuleTree = this.rootElement.querySelector('#modal-rule-tree');
 
     if (!modalElement || !modalTitle || !modalDetails || !modalRuleTree) {
-      console.error('[TestCaseUI] Modal elements not found.');
+      log('error', '[TestCaseUI] Modal elements not found.');
       return;
     }
 

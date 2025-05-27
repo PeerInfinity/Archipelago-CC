@@ -1,6 +1,17 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('presetUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[presetUI] ${message}`, ...data);
+  }
+}
+
 export class PresetUI {
   constructor(container, componentState) {
     this.container = container;
@@ -17,12 +28,12 @@ export class PresetUI {
     if (this.rootElement) {
       this.container.element.appendChild(this.rootElement);
     } else {
-      console.error('[PresetUI] Root element not created in constructor!');
+      log('error', '[PresetUI] Root element not created in constructor!');
     }
 
     // Defer the rest of initialization (fetching data, rendering)
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[PresetUI] Received app:readyForUiDataLoad. Initializing presets.'
       );
       this.initialize();
@@ -54,7 +65,7 @@ export class PresetUI {
     this.getRootElement();
 
     if (!this.presetsListContainer) {
-      console.error(
+      log('error', 
         'PresetUI: Could not find #presets-list container during initialization.'
       );
       this.initialized = false;
@@ -75,10 +86,10 @@ export class PresetUI {
           this.presets = data;
           this.renderGamesList();
           this.initialized = true;
-          console.log('[PresetUI] Initialized successfully.');
+          log('info', '[PresetUI] Initialized successfully.');
         })
         .catch((error) => {
-          console.error('Error loading presets data:', error);
+          log('error', 'Error loading presets data:', error);
           if (this.presetsListContainer) {
             this.presetsListContainer.innerHTML = `
               <div class="error-message">
@@ -93,7 +104,7 @@ export class PresetUI {
 
       return true;
     } catch (error) {
-      console.error('Error setting up presets data loading:', error);
+      log('error', 'Error setting up presets data loading:', error);
       if (this.presetsListContainer) {
         this.presetsListContainer.innerHTML = `
           <div class="error-message">
@@ -108,7 +119,7 @@ export class PresetUI {
   }
 
   onPanelDestroy() {
-    console.log('[PresetUI] Panel destroyed. Cleaning up if necessary.');
+    log('info', '[PresetUI] Panel destroyed. Cleaning up if necessary.');
     this.initialized = false;
     this.presets = null;
     if (this.presetsListContainer) {
@@ -119,13 +130,13 @@ export class PresetUI {
   renderGamesList() {
     const container = this.presetsListContainer;
     if (!container) {
-      console.error('Presets list container not found for renderGamesList');
+      log('error', 'Presets list container not found for renderGamesList');
       return;
     }
 
     if (!this.presets) {
       container.innerHTML = '<p>Loading preset list...</p>';
-      console.warn('renderGamesList called before presets data was loaded.');
+      log('warn', 'renderGamesList called before presets data was loaded.');
       return;
     }
 
@@ -371,7 +382,7 @@ export class PresetUI {
               const jsonData = JSON.parse(e.target.result);
               this.displayLoadedJsonFileDetails(jsonData, file.name);
             } catch (err) {
-              console.error('Error parsing JSON file:', err);
+              log('error', 'Error parsing JSON file:', err);
               eventBus.publish('ui:notification', {
                 type: 'error',
                 message: `Error parsing ${file.name}: ${err.message}`,
@@ -379,7 +390,7 @@ export class PresetUI {
             }
           };
           reader.onerror = (err) => {
-            console.error('Error reading file:', err);
+            log('error', 'Error reading file:', err);
             eventBus.publish('ui:notification', {
               type: 'error',
               message: `Error reading ${file.name}.`,
@@ -401,7 +412,7 @@ export class PresetUI {
         const playerId = button.getAttribute('data-player'); // Will be null for standard buttons
 
         if (playerId) {
-          console.log(
+          log('info', 
             `Loading preset ${folderId} from game ${gameId} for player ${playerId}`
           );
           this.currentGame = gameId;
@@ -409,7 +420,7 @@ export class PresetUI {
           this.currentPlayer = playerId; // Store current player
           this.loadPreset(gameId, folderId, playerId);
         } else {
-          console.log(`Loading preset ${folderId} from game ${gameId}`);
+          log('info', `Loading preset ${folderId} from game ${gameId}`);
           this.currentGame = gameId;
           this.currentPreset = folderId;
           this.currentPlayer = null; // Clear current player
@@ -420,7 +431,7 @@ export class PresetUI {
   }
 
   displayLoadedJsonFileDetails(jsonData, fileName) {
-    console.log(
+    log('info', 
       `Displaying details for manually loaded JSON file: ${fileName}`,
       jsonData
     );
@@ -461,7 +472,7 @@ export class PresetUI {
       const playerId = '1'; // Default or determine from JSON if possible (e.g., if not multiworld)
       // We need a way to call the core logic of loadRulesFile without assuming a preset structure.
       // This might involve refactoring parts of loadRulesFile or creating a new shared method.
-      console.log(
+      log('info', 
         `Attempting to process ${fileName} as rules file for Player ${playerId}`
       );
       // Directly call the processing logic, adapting from loadRulesFile
@@ -470,7 +481,7 @@ export class PresetUI {
   }
 
   async processManuallyLoadedRules(rulesData, fileName, playerId = '1') {
-    console.log(
+    log('info', 
       `Processing manually loaded rules: ${fileName} for player ${playerId}`
     );
     try {
@@ -479,12 +490,12 @@ export class PresetUI {
         this.componentState.currentGameId = rulesData.game || 'unknown_game'; // Try to get game from JSON
         this.componentState.currentPlayerId = playerId;
       } else {
-        console.warn(
+        log('warn', 
           '[PresetUI] processManuallyLoadedRules: this.componentState is undefined.'
         );
       }
 
-      console.log(
+      log('info', 
         `Manually loaded rules processed for ${
           rulesData.game || 'unknown_game'
         }, player ${playerId}. Publishing files:jsonLoaded.`
@@ -514,7 +525,7 @@ export class PresetUI {
 
       eventBus.publish('rules:loaded', {});
     } catch (error) {
-      console.error('Error processing manually loaded rules file:', error);
+      log('error', 'Error processing manually loaded rules file:', error);
       const statusElement = document.getElementById('preset-status');
       if (statusElement) {
         statusElement.innerHTML = `
@@ -622,7 +633,7 @@ export class PresetUI {
             file.endsWith('_rules.json')
           );
           if (rulesFile) {
-            console.warn(
+            log('warn', 
               `Player-specific rules file not found for P${playerId}, falling back to default rules.json`
             );
           }
@@ -647,14 +658,14 @@ export class PresetUI {
           effectivePlayerId = folderData.games[0].player.toString();
         } else {
           // Log a warning if we can't find the player ID even for a standard preset
-          console.warn(
+          log('warn', 
             `Could not determine player ID for preset ${folderId}, defaulting to '1'.`
           );
         }
 
         this.loadRulesFile(gameId, folderId, rulesFile, effectivePlayerId);
       } else {
-        console.warn(
+        log('warn', 
           'No suitable rules.json file found for automatic loading.'
         );
         const statusElement = document.getElementById('preset-status');
@@ -667,7 +678,7 @@ export class PresetUI {
         }
       }
     } catch (error) {
-      console.error('Error displaying preset:', error);
+      log('error', 'Error displaying preset:', error);
       const container = this.presetsListContainer;
       if (container) {
         container.innerHTML = `
@@ -691,7 +702,7 @@ export class PresetUI {
 
   async loadRulesFile(gameId, folderId, rulesFile, playerId = '1') {
     const fullPath = `./presets/${gameId}/${folderId}/${rulesFile}`;
-    console.log(`Loading rules file: ${fullPath}`);
+    log('info', `Loading rules file: ${fullPath}`);
     try {
       const response = await fetch(fullPath);
       if (!response.ok) {
@@ -709,7 +720,7 @@ export class PresetUI {
       } else {
         // If componentState is not available, these assignments would fail.
         // Log a warning, as this might indicate an issue with panel state management.
-        console.warn(
+        log('warn', 
           '[PresetUI] loadRulesFile: this.componentState is undefined. Cannot store currentRules, currentGameId, or currentPlayerId. This might be normal if the panel was just created and no state has been saved yet, or it could indicate an issue with GoldenLayout state persistence for this component.'
         );
         // As a fallback, we can store these on the instance if needed for immediate use,
@@ -719,7 +730,7 @@ export class PresetUI {
         // this.currentPlayerId_fallback = playerId;
       }
 
-      console.log(
+      log('info', 
         `Rules loaded for ${gameId}, player ${playerId}. Publishing files:jsonLoaded.`
       );
       eventBus.publish('files:jsonLoaded', {
@@ -757,7 +768,7 @@ export class PresetUI {
       // if (playerItems && this.gameUI.inventoryUI) {
       //   this.gameUI.inventoryUI.initialize(playerItems, groups || {}); // Pass empty object if groups are null/undefined
       // } else {
-      //   console.warn(
+      //   log('warn', 
       //     '[PresetUI] Could not initialize InventoryUI - playerItems missing or this.gameUI.inventoryUI instance not found.'
       //   );
       // }
@@ -786,7 +797,7 @@ export class PresetUI {
       // Control button states should be managed by their respective modules.
       // this.gameUI._enableControlButtons();
     } catch (error) {
-      console.error('Error loading rules file:', error);
+      log('error', 'Error loading rules file:', error);
       const statusElement = document.getElementById('preset-status');
       if (statusElement) {
         statusElement.innerHTML = `

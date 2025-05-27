@@ -6,6 +6,17 @@ import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('commonUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[commonUI] ${message}`, ...data);
+  }
+}
+
 /**
  * A shared UI utility class that contains common functions for use across multiple components
  */
@@ -19,7 +30,7 @@ class CommonUI {
 
   // Add a method to set colorblind mode externally
   setColorblindMode(isEnabled) {
-    console.log(`[CommonUI] Setting colorblind mode: ${isEnabled}`);
+    log('info', `[CommonUI] Setting colorblind mode: ${isEnabled}`);
     this._colorblindMode = !!isEnabled;
   }
 
@@ -32,7 +43,7 @@ class CommonUI {
   logAndGetUnknownEvaluationCount(
     contextMessage = 'Logic tree rendering cycle'
   ) {
-    //console.log(
+    //log('info', 
     //  `[CommonUI] ${contextMessage}: Encountered ${this.unknownEvaluationCount} unresolved rule evaluations (undefined).`
     //);
     return this.unknownEvaluationCount;
@@ -66,11 +77,11 @@ class CommonUI {
       try {
         evaluationResult = evaluateRule(rule, stateSnapshotInterface);
       } catch (e) {
-        console.error('Error evaluating rule in renderLogicTree:', e, rule);
+        log('error', 'Error evaluating rule in renderLogicTree:', e, rule);
         evaluationResult = undefined; // Treat error as unknown
       }
     } else {
-      console.warn(
+      log('warn', 
         'renderLogicTree called without stateSnapshotInterface. Rule evaluation might be inaccurate.'
       );
       evaluationResult = undefined; // No interface means unknown
@@ -662,7 +673,7 @@ class CommonUI {
         root.appendChild(document.createTextNode(' [unhandled rule type] '));
         // For debugging, output the complete rule
         if (stateManager.debugMode) {
-          console.log('Unhandled rule type:', rule.type, rule);
+          log('info', 'Unhandled rule type:', rule.type, rule);
         }
     }
 
@@ -742,18 +753,18 @@ class CommonUI {
 
     // Add click handler
     link.addEventListener('click', (e) => {
-      console.log(
+      log('info', 
         `[commonUI] Click listener ON REGION LINK for "${regionName}" in commonUI.js has FIRED.`
       ); // NEW TOP-LEVEL DEBUG LOG
       e.stopPropagation(); // Prevent event from bubbling to parent elements
 
       // Publish panel activation first
       eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
-      console.log(`[commonUI] Published ui:activatePanel for regionsPanel.`);
+      log('info', `[commonUI] Published ui:activatePanel for regionsPanel.`);
 
       // Then publish navigation
       eventBus.publish('ui:navigateToRegion', { regionName: regionName });
-      console.log(
+      log('info', 
         `[commonUI] Published ui:navigateToRegion for ${regionName}.`
       ); // Changed from "SUCCESSFULLY PUBLISHED" for clarity
     });
@@ -820,7 +831,7 @@ class CommonUI {
     link.addEventListener('click', (e) => {
       e.stopPropagation();
       // Publish an event with location and region names
-      console.log(
+      log('info', 
         `[commonUI] Publishing ui:navigateToLocation for ${locationName} in ${regionName}`
       );
       eventBus.publish('ui:navigateToLocation', {

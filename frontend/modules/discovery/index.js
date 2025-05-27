@@ -4,6 +4,17 @@ import discoveryStateSingleton from './singleton.js'; // <<< IMPORT SINGLETON
 
 // Import singletons needed for injection
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('discoveryModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[discoveryModule] ${message}`, ...data);
+  }
+}
+
 // import stateManagerSingleton from '../stateManager/stateManagerSingleton.js'; // OLD
 
 // --- Module Scope Variables ---
@@ -23,7 +34,7 @@ export const moduleInfo = {
  * Registers dispatcher receivers for loop actions that trigger discovery.
  */
 export function register(registrationApi) {
-  console.log('[Discovery Module] Registering...');
+  log('info', '[Discovery Module] Registering...');
 
   // Register dispatcher receivers for loop events
   registrationApi.registerDispatcherReceiver(
@@ -58,7 +69,7 @@ export function register(registrationApi) {
  * Creates instance, injects dependencies, subscribes to reset event.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[Discovery Module] Initializing with priority ${priorityIndex}...`
   );
 
@@ -67,7 +78,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   _moduleDispatcher = initializationApi.getDispatcher(); // Store the whole API object
 
   // REMOVED: Create DiscoveryState instance
-  // console.log('[Discovery Module] Creating DiscoveryState instance...');
+  // log('info', '[Discovery Module] Creating DiscoveryState instance...');
   // _discoveryStateInstance = new DiscoveryState();
 
   // Inject dependencies into the SINGLETON instance
@@ -76,11 +87,11 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       eventBus: _moduleEventBus,
       stateManager: stateManager,
     });
-    console.log(
+    log('info', 
       '[Discovery Module] Dependencies injected into DiscoveryState Singleton.'
     );
   } else {
-    console.error(
+    log('error', 
       '[Discovery Module] Failed to inject dependencies into DiscoveryState Singleton: Missing instance or APIs.'
     );
   }
@@ -91,31 +102,31 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Subscribe to loop reset event via INJECTED event bus
   if (_moduleEventBus) {
-    console.log('[Discovery Module] Subscribing to loop:reset');
+    log('info', '[Discovery Module] Subscribing to loop:reset');
     const unsubscribe = _moduleEventBus.subscribe('loop:reset', () => {
-      console.log('[Discovery Module] Clearing discovery on loop:reset.');
+      log('info', '[Discovery Module] Clearing discovery on loop:reset.');
       if (discoveryStateSingleton) {
         // <<< Use singleton
         discoveryStateSingleton.clearDiscovery();
         // initialize() is now called by handleRulesLoaded
       } else {
-        console.error(
+        log('error', 
           '[Discovery Module] Cannot clear discovery: Singleton not available.'
         );
       }
     });
     _unsubscribeHandles.push(unsubscribe);
   } else {
-    console.error(
+    log('error', 
       '[Discovery Module] EventBus not available for loop:reset subscription.'
     );
   }
 
-  console.log('[Discovery Module] Initialization complete.');
+  log('info', '[Discovery Module] Initialization complete.');
 
   // Return cleanup function
   return () => {
-    console.log('[Discovery Module] Cleaning up... Unsubscribing & disposing.');
+    log('info', '[Discovery Module] Cleaning up... Unsubscribing & disposing.');
     _unsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     _unsubscribeHandles = [];
 
@@ -139,24 +150,24 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
 // Handler for state:rulesLoaded event - Primary Initialization Point for Discovery
 function handleRulesLoaded(eventData, propagationOptions = {}) {
-  console.log('[Discovery Module] Received state:rulesLoaded via dispatcher.');
+  log('info', '[Discovery Module] Received state:rulesLoaded via dispatcher.');
 
   if (!discoveryStateSingleton) {
     // <<< Use singleton
-    console.error(
+    log('error', 
       '[Discovery Module] Cannot initialize: DiscoveryState singleton missing.'
     );
     return; // Cannot proceed
   }
 
   // Initialize or re-initialize based on the loaded rules
-  console.log(
+  log('info', 
     '[Discovery Module] Initializing discoverables from state:rulesLoaded handler...'
   );
   try {
     discoveryStateSingleton.initialize(); // <<< Use singleton
   } catch (error) {
-    console.error(
+    log('error', 
       '[Discovery Module] Error initializing DiscoveryState from rulesLoaded:',
       error
     );
@@ -175,14 +186,14 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
       { direction: direction }
     );
   } else {
-    console.error(
+    log('error', 
       '[Discovery Module] Cannot propagate state:rulesLoaded: Dispatcher not available.'
     );
   }
 }
 
 function handleExploreCompleted(eventData) {
-  console.log('[Discovery Module] Handling loop:exploreCompleted', eventData);
+  log('info', '[Discovery Module] Handling loop:exploreCompleted', eventData);
   if (!eventData || !discoveryStateSingleton) return; // <<< Use singleton
 
   if (eventData.regionName) {
@@ -207,7 +218,7 @@ function handleExploreCompleted(eventData) {
 }
 
 function handleMoveCompleted(eventData) {
-  console.log('[Discovery Module] Handling loop:moveCompleted', eventData);
+  log('info', '[Discovery Module] Handling loop:moveCompleted', eventData);
   if (!eventData || !discoveryStateSingleton) return; // <<< Use singleton
 
   if (eventData?.destinationRegion) {
@@ -223,7 +234,7 @@ function handleMoveCompleted(eventData) {
 }
 
 function handleLocationChecked(eventData) {
-  console.log('[Discovery Module] Handling loop:locationChecked', eventData);
+  log('info', '[Discovery Module] Handling loop:locationChecked', eventData);
   if (!eventData || !discoveryStateSingleton) return; // <<< Use singleton
 
   if (eventData?.locationName) {

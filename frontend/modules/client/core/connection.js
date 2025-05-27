@@ -2,6 +2,17 @@
 import Config from './config.js';
 import storage from './storage.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('clientConnection', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[clientConnection] ${message}`, ...data);
+  }
+}
+
 export class Connection {
   constructor() {
     // Private variables
@@ -16,7 +27,7 @@ export class Connection {
   }
 
   setEventBus(busInstance) {
-    console.log('[Connection] Setting EventBus instance.');
+    log('info', '[Connection] Setting EventBus instance.');
     this.eventBus = busInstance;
   }
 
@@ -30,11 +41,11 @@ export class Connection {
       this.reconnectTimeout = null;
     }
 
-    console.log('Connection module initialized');
+    log('info', 'Connection module initialized');
   }
 
   requestConnect(address, password) {
-    console.log('[Connection] requestConnect called with:', {
+    log('info', '[Connection] requestConnect called with:', {
       address,
       password,
     });
@@ -42,7 +53,7 @@ export class Connection {
     let effectivePassword = password;
 
     if (!effectiveAddress) {
-      console.log(
+      log('info', 
         '[Connection] Address not provided directly, trying to load from storage...'
       );
       try {
@@ -59,14 +70,14 @@ export class Connection {
             ) {
               effectivePassword = storedSettings.connection.password;
             }
-            console.log('[Connection] Loaded from storage:', {
+            log('info', '[Connection] Loaded from storage:', {
               effectiveAddress,
               effectivePassword,
             });
           }
         }
       } catch (e) {
-        console.error(
+        log('error', 
           '[Connection] Error reading clientSettings from storage:',
           e
         );
@@ -78,7 +89,7 @@ export class Connection {
     }
 
     if (!effectiveAddress) {
-      console.warn(
+      log('warn', 
         '[Connection] No address provided and could not load from storage. Connect attempt aborted.'
       );
       this.eventBus?.publish('connection:error', {
@@ -131,7 +142,7 @@ export class Connection {
       this.socket.onerror = this._onError.bind(this);
       return true;
     } catch (error) {
-      console.error('Error connecting to server:', error);
+      log('error', 'Error connecting to server:', error);
       this.eventBus?.publish('connection:error', {
         message: `Failed to connect: ${error.message}`,
       });
@@ -151,7 +162,7 @@ export class Connection {
       const commands = JSON.parse(event.data);
       this.eventBus?.publish('connection:message', commands);
     } catch (error) {
-      console.error('Error parsing server message:', error);
+      log('error', 'Error parsing server message:', error);
     }
   }
 
@@ -237,7 +248,7 @@ export class Connection {
       this.socket.send(typeof data === 'string' ? data : JSON.stringify(data));
       return true;
     } catch (error) {
-      console.error('Error sending message:', error);
+      log('error', 'Error sending message:', error);
       return false;
     }
   }

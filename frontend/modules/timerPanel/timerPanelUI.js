@@ -12,12 +12,23 @@ import {
   getModuleEventBus, // ADDED
 } from './index.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('timerPanelUI', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[timerPanelUI] ${message}`, ...data);
+  }
+}
+
 // const TIMER_UI_COMPONENT_TYPE = 'TimerProgressUI'; // REMOVED - No longer needed for this class
 
 export class TimerPanelUI {
   constructor(container, componentState, componentType) {
     this.moduleId = componentType || getTimerPanelModuleId();
-    console.log(`[TimerPanelUI for ${this.moduleId}] Constructor called.`);
+    log('info', `[TimerPanelUI for ${this.moduleId}] Constructor called.`);
     setTimerPanelUIInstance(this); // ADDED - Register instance with module's index.js
     this.container = container;
     this.componentState = componentState;
@@ -57,7 +68,8 @@ export class TimerPanelUI {
     eventBus.subscribe('module:stateChanged', this.moduleStateChangeHandler);
     // centralRegistry.registerEventBusSubscriberIntent(this.moduleId, 'module:stateChanged'); // This was likely for the old system; remove if not broadly used
 
-    console.log(
+    log(
+      'info',
       `[TimerPanelUI for ${this.moduleId}] Panel UI instance created. Placeholder ready.`
     );
   }
@@ -67,7 +79,8 @@ export class TimerPanelUI {
   }
 
   onMount(glContainer, componentState) {
-    console.log(
+    log(
+      'info',
       `[TimerPanelUI for ${this.moduleId}] onMount CALLED. Panel ready.`
     );
     // OLD LOGIC REMOVED
@@ -80,7 +93,7 @@ export class TimerPanelUI {
   }
 
   onUnmount() {
-    console.log(`[TimerPanelUI for ${this.moduleId}] onUnmount CALLED.`);
+    log('info', `[TimerPanelUI for ${this.moduleId}] onUnmount CALLED.`);
     setTimerPanelUIInstance(null); // Clear instance on unmount/destroy
     // OLD LOGIC REMOVED
     // this._cleanupHostRegistration();
@@ -102,7 +115,8 @@ export class TimerPanelUI {
   }
 
   _handlePanelOpen() {
-    console.log(
+    log(
+      'info',
       `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'open' event.`
     );
     // OLD LOGIC REMOVED
@@ -113,7 +127,8 @@ export class TimerPanelUI {
   }
 
   _handlePanelShow() {
-    console.log(
+    log(
+      'info',
       `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'show' event. Panel tab selected.`
     );
     // OLD LOGIC REMOVED
@@ -124,7 +139,8 @@ export class TimerPanelUI {
   }
 
   _handlePanelHide() {
-    console.log(
+    log(
+      'info',
       `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'hide' event. Panel tab deselected.`
     );
     // OLD LOGIC REMOVED
@@ -141,7 +157,8 @@ export class TimerPanelUI {
   }
 
   _handlePanelDestroy() {
-    console.log(
+    log(
+      'info',
       `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'destroy' event. Calling onUnmount.`
     );
     this.onUnmount(); // onUnmount now includes setTimerPanelUIInstance(null)
@@ -149,12 +166,14 @@ export class TimerPanelUI {
     // ADDED: Notify that this panel was manually closed, so ModuleManager can update state
     const bus = getModuleEventBus();
     if (bus && typeof bus.publish === 'function') {
-      console.log(
+      log(
+        'info',
         `[TimerPanelUI for ${this.moduleId}] Panel destroyed, publishing ui:panelManuallyClosed.`
       );
       bus.publish('ui:panelManuallyClosed', { moduleId: this.moduleId });
     } else {
-      console.warn(
+      log(
+        'warn',
         `[TimerPanelUI for ${this.moduleId}] Could not get eventBus or publish function to send ui:panelManuallyClosed.`
       );
     }
@@ -162,7 +181,8 @@ export class TimerPanelUI {
     // Dispatch rehome event for TimerUI
     const dispatcher = getModuleDispatcher();
     if (dispatcher && typeof dispatcher.publish === 'function') {
-      console.log(
+      log(
+        'info',
         `[TimerPanelUI for ${this.moduleId}] Panel destroyed, dispatching system:rehomeTimerUI.`
       );
       // Use setTimeout to ensure this dispatch happens after current call stack (including GL destroy) unwinds
@@ -174,7 +194,8 @@ export class TimerPanelUI {
         );
       }, 0);
     } else {
-      console.warn(
+      log(
+        'warn',
         `[TimerPanelUI for ${this.moduleId}] Could not get dispatcher or publish function to rehome TimerUI on panel destroy.`
       );
     }
@@ -185,7 +206,8 @@ export class TimerPanelUI {
 
   _handleSelfModuleStateChange({ moduleId, enabled }) {
     if (moduleId === this.moduleId) {
-      console.log(
+      log(
+        'info',
         `[TimerPanelUI for ${this.moduleId}] Received self module:stateChanged. Module: ${moduleId}, Enabled: ${enabled}`
       );
       // OLD LOGIC REMOVED
@@ -211,7 +233,8 @@ export class TimerPanelUI {
     // Added dispatcher parameter
     const panelIdForLog =
       this.container?.config?.id || this.container?.id || this.moduleId;
-    console.log(
+    log(
+      'info',
       `[TimerPanelUI - ${panelIdForLog}] handleRehomeTimerUI called.`
     );
     let isViableHost = false;
@@ -228,31 +251,36 @@ export class TimerPanelUI {
         !this.container.isVisible
       ) {
         isViableHost = false;
-        console.log(
+        log(
+          'info',
           `[TimerPanelUI - ${panelIdForLog}] Panel container reports not visible.`
         );
       }
     } else {
       if (!this.container || !this.container.element)
-        console.log(
+        log(
+          'info',
           `[TimerPanelUI - ${panelIdForLog}] Container or container.element missing.`
         );
       if (!this.timerHostPlaceholder)
-        console.log(
+        log(
+          'info',
           `[TimerPanelUI - ${panelIdForLog}] Timer host placeholder not found.`
         );
       else if (
         this.timerHostPlaceholder &&
         !document.body.contains(this.timerHostPlaceholder)
       ) {
-        console.log(
+        log(
+          'info',
           `[TimerPanelUI - ${panelIdForLog}] Timer host placeholder found but not in document body.`
         );
       }
     }
 
     if (isViableHost) {
-      console.log(
+      log(
+        'info',
         `[TimerPanelUI - ${panelIdForLog}] Is a viable host. Attempting to attach TimerUI.`
       );
       if (
@@ -266,25 +294,29 @@ export class TimerPanelUI {
         if (attachFn && typeof attachFn === 'function') {
           try {
             attachFn(this.timerHostPlaceholder);
-            console.log(
+            log(
+              'info',
               `[TimerPanelUI - ${panelIdForLog}] TimerUI attach function called. Propagation stopped.`
             );
           } catch (e) {
-            console.error(
+            log(
+              'error',
               `[TimerPanelUI - ${panelIdForLog}] Error calling attachFn for TimerUI:`,
               e
             );
             isViableHost = false;
           }
         } else {
-          console.error(
+          log(
+            'error',
             `[TimerPanelUI - ${panelIdForLog}] Could not get 'attachTimerToHost' function from Timer module, or it's not a function. Function received:`,
             attachFn
           );
           isViableHost = false;
         }
       } else {
-        console.error(
+        log(
+          'error',
           `[TimerPanelUI - ${panelIdForLog}] centralRegistry or centralRegistry.getPublicFunction not available.`
         );
         isViableHost = false;
@@ -292,7 +324,8 @@ export class TimerPanelUI {
     }
 
     if (!isViableHost) {
-      console.log(
+      log(
+        'info',
         `[TimerPanelUI - ${panelIdForLog}] Not a viable host or attach failed. Attempting to propagate event.`
       );
       // Explicitly propagate if this panel isn't hosting
@@ -303,11 +336,13 @@ export class TimerPanelUI {
           eventData, // Original event data
           { direction: 'up' } // CORRECTED: 'up' to go to lower index (higher actual priority)
         );
-        console.log(
+        log(
+          'info',
           `[TimerPanelUI - ${panelIdForLog}] Called publishToNextModule for system:rehomeTimerUI (direction: up).`
         );
       } else {
-        console.warn(
+        log(
+          'warn',
           `[TimerPanelUI - ${panelIdForLog}] Could not propagate system:rehomeTimerUI: dispatcher or publishToNextModule missing.`
         );
       }

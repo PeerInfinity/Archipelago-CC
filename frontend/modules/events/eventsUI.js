@@ -2,6 +2,17 @@
 import eventBus from '../../app/core/eventBus.js'; // Import eventBus
 import { centralRegistry } from '../../app/core/centralRegistry.js'; // Corrected Import
 import commonUI from '../commonUI/index.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('eventsUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[eventsUI] ${message}`, ...data);
+  }
+}
+
 // import ModuleManagerAPI from '../managerAPI.js'; // REMOVED - Use window.moduleManagerApi indirectly via initApi
 
 // Basic CSS for the panel
@@ -165,7 +176,7 @@ class EventsUI {
   }
 
   handleAppReady(eventData) {
-    console.log(
+    log('info', 
       '[EventsUI] Received app:readyForUiDataLoad, full initApi should be available.'
     );
     // Now attempt to get moduleManager from initApi if it was passed, otherwise fallback to window (less ideal)
@@ -177,7 +188,7 @@ class EventsUI {
     // if (window.moduleManagerApi) {
     //   this._loadAndRenderData(centralRegistry, window.moduleManagerApi);
     // } else {
-    //   console.error(
+    //   log('error', 
     //     '[EventsUI] moduleManagerApi not found on window when app:readyForUiDataLoad was received.'
     //   );
     //   this.eventBusSection.textContent =
@@ -192,14 +203,14 @@ class EventsUI {
       if (moduleManager) {
         this._loadAndRenderData(centralRegistry, moduleManager);
       } else {
-        console.error('[EventsUI] getModuleManager() returned null/undefined.');
+        log('error', '[EventsUI] getModuleManager() returned null/undefined.');
         this.eventBusSection.textContent =
           'Error: ModuleManagerAPI getter returned null.';
         this.dispatcherSection.textContent =
           'Error: ModuleManagerAPI getter returned null.';
       }
     } else {
-      console.error(
+      log('error', 
         '[EventsUI] ModuleManager API not available from app:readyForUiDataLoad event payload.'
       );
       this.eventBusSection.textContent =
@@ -284,7 +295,7 @@ class EventsUI {
         moduleStates
       );
     } catch (error) {
-      console.error('[EventsUI] Error loading or rendering event data:', error);
+      log('error', '[EventsUI] Error loading or rendering event data:', error);
       this.eventBusSection.textContent = `Error loading data: ${error.message}`;
       this.dispatcherSection.textContent = `Error loading data: ${error.message}`;
     }
@@ -683,7 +694,7 @@ class EventsUI {
         this.dispatcherSection.appendChild(categoryDetails);
       });
 
-    // console.warn(
+    // log('warn', 
     //  '[EventsUI] Dispatcher event rendering is basic. Needs symbol/arrow implementation.'
     // ); // Original warning can be removed or updated
   }
@@ -729,7 +740,7 @@ class EventsUI {
             break;
         }
         if (success) {
-          console.log(
+          log('info', 
             `Successfully toggled ${type} for ${moduleId} on ${eventName} to ${newState}`
           );
           // Update visual style immediately
@@ -738,11 +749,11 @@ class EventsUI {
             .classList.toggle('disabled-interaction', !newState);
           // Potentially update parent module-block style too
         } else {
-          console.error(`Failed to toggle ${type} state in registry.`);
+          log('error', `Failed to toggle ${type} state in registry.`);
           event.target.checked = !newState; // Revert checkbox on failure
         }
       } catch (error) {
-        console.error(
+        log('error', 
           `Error calling registry toggle function for ${type}:`,
           error
         );
@@ -847,7 +858,7 @@ class EventsUI {
 
   // Handler for module state changes
   handleModuleStateChange(payload) {
-    console.log(
+    log('info', 
       `[EventsUI] Received module:stateChanged for ${payload.moduleId}. Refreshing data...`
     );
     // Simple approach: reload all data and re-render
@@ -863,7 +874,7 @@ class EventsUI {
         this.moduleStateChangeHandler
       );
       this.unsubscribeModuleState = null;
-      console.log('[EventsUI] Unsubscribed from module:stateChanged.');
+      log('info', '[EventsUI] Unsubscribed from module:stateChanged.');
     }
     // Add any other cleanup needed
   }

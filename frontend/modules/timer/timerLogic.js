@@ -2,6 +2,17 @@
 import { Config } from '../client/core/config.js'; // Assuming Config might be needed for defaults
 import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js'; // For evaluating rules
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('timerLogic', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[timerLogic] ${message}`, ...data);
+  }
+}
+
 export class TimerLogic {
   constructor(dependencies) {
     if (
@@ -17,7 +28,7 @@ export class TimerLogic {
     this.stateManager = dependencies.stateManager; // This is stateManagerProxySingleton
     this.eventBus = dependencies.eventBus;
     this.dispatcher = dependencies.dispatcher;
-    console.log(
+    log('info', 
       '[TimerLogic Constructor] Received dispatcher:',
       typeof this.dispatcher,
       this.dispatcher
@@ -31,11 +42,11 @@ export class TimerLogic {
     this.isLoopModeActive = false; // Internal state to track loop mode for pausing timer
     this.unsubscribeHandles = [];
 
-    console.log('[TimerLogic] Instance created.');
+    log('info', '[TimerLogic] Instance created.');
   }
 
   initialize() {
-    console.log('[TimerLogic] Initializing...');
+    log('info', '[TimerLogic] Initializing...');
     this.stop(); // Ensure timer is stopped initially
     // TODO: Load minCheckDelay/maxCheckDelay from settings if they become configurable
     // For now, using defaults.
@@ -44,14 +55,14 @@ export class TimerLogic {
     const loopModeHandler = (data) => {
       this.isLoopModeActive = data.active;
       if (this.isLoopModeActive && this.isRunning()) {
-        console.log('[TimerLogic] Loop mode activated, pausing timer.');
+        log('info', '[TimerLogic] Loop mode activated, pausing timer.');
         this.stop(); // Stop the timer, but don't reset its visual progress entirely (UI might keep last state)
         // Or, we can let the UI clear the progress bar via timer:stopped event.
       } else if (!this.isLoopModeActive && !this.isRunning()) {
         // Potentially auto-restart timer if it was paused due to loop mode.
         // This might need more nuanced logic (e.g., only restart if it was running before loop mode)
         // For now, loop mode exiting doesn't auto-restart the timer. User has to click "Begin!" again.
-        console.log('[TimerLogic] Loop mode deactivated.');
+        log('info', '[TimerLogic] Loop mode deactivated.');
       }
     };
     const unsubLoopMode = this.eventBus.subscribe(
@@ -69,7 +80,7 @@ export class TimerLogic {
 
   begin() {
     if (this.isLoopModeActive) {
-      console.log('[TimerLogic] Cannot start timer, Loop Mode is active.');
+      log('info', '[TimerLogic] Cannot start timer, Loop Mode is active.');
       this.eventBus.publish('ui:notification', {
         message: 'Timer disabled while Loop Mode is active.',
         type: 'warn',
@@ -136,7 +147,7 @@ export class TimerLogic {
       }
     }, Config.TIMER_INTERVAL_MS || 200); // Check more frequently for smoother bar
 
-    console.log('[TimerLogic] Timer started.');
+    log('info', '[TimerLogic] Timer started.');
   }
 
   stop() {
@@ -156,12 +167,12 @@ export class TimerLogic {
       value: 0,
       max: lastEndTime - lastStartTime || 1,
     });
-    console.log('[TimerLogic] Timer stopped.');
+    log('info', '[TimerLogic] Timer stopped.');
   }
 
   async _getSnapshotInterface() {
     if (!this.stateManager) {
-      console.error('[TimerLogic] StateManager (Proxy) not available.');
+      log('error', '[TimerLogic] StateManager (Proxy) not available.');
       return null;
     }
     try {
@@ -170,7 +181,7 @@ export class TimerLogic {
       const staticData = this.stateManager.getStaticData();
 
       if (!snapshot || !staticData) {
-        console.warn(
+        log('warn', 
           '[TimerLogic] Snapshot or static data not available for creating interface.'
         );
         return null;
@@ -180,18 +191,18 @@ export class TimerLogic {
         staticData
       );
       if (!snapshotInterface) {
-        console.error('[TimerLogic] Failed to create snapshotInterface.');
+        log('error', '[TimerLogic] Failed to create snapshotInterface.');
         return null;
       }
       return snapshotInterface;
     } catch (error) {
-      console.error('[TimerLogic] Error creating snapshot interface:', error);
+      log('error', '[TimerLogic] Error creating snapshot interface:', error);
       return null;
     }
   }
 
   async _determineAndDispatchNextLocationCheck() {
-    console.log(
+    log('info', 
       '[TimerLogic] Determining next location to check automatically...'
     );
     const snapshotInterface = await this._getSnapshotInterface();
@@ -200,7 +211,7 @@ export class TimerLogic {
     const { snapshot, staticData } = snapshotInterface; // Destructure for convenience
 
     if (!staticData || !staticData.locations) {
-      console.warn(
+      log('warn', 
         '[TimerLogic] Static location data not available for checking.'
       );
       return false;
@@ -226,7 +237,7 @@ export class TimerLogic {
     }
 
     if (locationToCheck) {
-      console.log(
+      log('info', 
         `[TimerLogic] Auto-found location to check: ${locationToCheck.name}`
       );
       this.dispatcher.publish(
@@ -241,7 +252,7 @@ export class TimerLogic {
       );
       return true;
     } else {
-      console.log(
+      log('info', 
         '[TimerLogic] No reachable and unchecked locations found for auto-check.'
       );
       this.eventBus.publish('ui:notification', {
@@ -253,7 +264,7 @@ export class TimerLogic {
   }
 
   async determineAndDispatchQuickCheck() {
-    console.log('[TimerLogic] Processing Quick Check...');
+    log('info', '[TimerLogic] Processing Quick Check...');
     const snapshotInterface = await this._getSnapshotInterface();
     if (!snapshotInterface) {
       this.eventBus.publish('ui:notification', {
@@ -266,7 +277,7 @@ export class TimerLogic {
     const { snapshot, staticData } = snapshotInterface; // Destructure
 
     if (!staticData || !staticData.locations || !staticData.regions) {
-      console.warn(
+      log('warn', 
         '[TimerLogic QuickCheck] Snapshot or static data not available.'
       );
       this.eventBus.publish('ui:notification', {
@@ -278,7 +289,7 @@ export class TimerLogic {
 
     // Example: Using getDifficultyRequirements from the snapshotInterface
     // const difficultyReqs = snapshotInterface.getDifficultyRequirements ? snapshotInterface.getDifficultyRequirements() : null;
-    // console.log('[TimerLogic QuickCheck] Difficulty Requirements (via interface):', difficultyReqs);
+    // log('info', '[TimerLogic QuickCheck] Difficulty Requirements (via interface):', difficultyReqs);
 
     // Logic for Quick Check:
     // 1. Find the "next" most logical un-checked location.
@@ -306,7 +317,7 @@ export class TimerLogic {
     }
 
     if (quickCheckTarget) {
-      console.log(
+      log('info', 
         `[TimerLogic QuickCheck] Dispatching check for: ${quickCheckTarget.name}`
       );
       this.dispatcher.publish(
@@ -326,7 +337,7 @@ export class TimerLogic {
       });
       return true;
     } else {
-      console.log(
+      log('info', 
         '[TimerLogic QuickCheck] No accessible, un-checked location found.'
       );
       this.eventBus.publish('ui:notification', {
@@ -342,17 +353,17 @@ export class TimerLogic {
     const newMax = maxSeconds !== null ? parseInt(maxSeconds, 10) : newMin; // If no max, set to min
 
     if (isNaN(newMin) || newMin <= 0) {
-      console.warn('[TimerLogic] Invalid minimum check delay provided.');
+      log('warn', '[TimerLogic] Invalid minimum check delay provided.');
       return;
     }
     if (isNaN(newMax) || newMax < newMin) {
-      console.warn('[TimerLogic] Invalid maximum check delay provided.');
+      log('warn', '[TimerLogic] Invalid maximum check delay provided.');
       return;
     }
 
     this.minCheckDelay = newMin;
     this.maxCheckDelay = newMax;
-    console.log(
+    log('info', 
       `[TimerLogic] Check delay updated: ${this.minCheckDelay}s - ${this.maxCheckDelay}s`
     );
 
@@ -370,7 +381,7 @@ export class TimerLogic {
   }
 
   dispose() {
-    console.log('[TimerLogic] Disposing...');
+    log('info', '[TimerLogic] Disposing...');
     this.stop();
     this.unsubscribeHandles.forEach((unsub) => {
       if (typeof unsub === 'function') {
@@ -378,6 +389,6 @@ export class TimerLogic {
       }
     });
     this.unsubscribeHandles = [];
-    console.log('[TimerLogic] Disposed.');
+    log('info', '[TimerLogic] Disposed.');
   }
 }

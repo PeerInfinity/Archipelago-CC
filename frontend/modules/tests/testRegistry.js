@@ -1,3 +1,14 @@
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testRegistry', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testRegistry] ${message}`, ...data);
+  }
+}
+
 /**
  * Self-registering test system
  * Tests can register themselves by calling registerTest()
@@ -33,7 +44,8 @@ export function registerTest(testDefinition) {
   }
 
   if (registeredTests.has(id)) {
-    console.warn(
+    log(
+      'warn',
       `Test with id '${id}' is already registered. Skipping duplicate.`
     );
     return;
@@ -70,7 +82,8 @@ export function registerTest(testDefinition) {
     currentEventWaitingFor: null,
   });
 
-  console.log(
+  log(
+    'info',
     `[TestRegistry] Registered test: ${id} (${name}) in category '${category}'`
   );
 }
@@ -100,7 +113,7 @@ export function registerCategory(categoryDefinition) {
     order: finalOrder,
   });
 
-  console.log(`[TestRegistry] Registered category: ${name}`);
+  log('info', `[TestRegistry] Registered category: ${name}`);
 }
 
 /**
@@ -170,7 +183,7 @@ export function isTestRegistered(testId) {
 export function clearRegistry() {
   registeredTests.clear();
   registeredCategories.clear();
-  console.log('[TestRegistry] Registry cleared');
+  log('info', '[TestRegistry] Registry cleared');
 }
 
 /**

@@ -10,6 +10,17 @@ import {
   isDiscoveryComplete,
 } from './testDiscovery.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testLogic', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testLogic] ${message}`, ...data);
+  }
+}
+
 let eventBusInstance = null;
 let appInitializationApiInstance = null;
 let discoveryInitialized = false;
@@ -18,7 +29,8 @@ let loadedAutoStartSetting = null; // Store the loaded auto-start setting persis
 
 // Add debugging for state changes
 function setLoadedStateApplied(value) {
-  console.log(
+  log(
+    'info',
     `[TestLogic] Setting loadedStateApplied from ${loadedStateApplied} to ${value}`
   );
   console.trace('[TestLogic] Call stack for loadedStateApplied change:');
@@ -28,11 +40,11 @@ function setLoadedStateApplied(value) {
 // Initialize test discovery
 async function initializeTestDiscovery() {
   if (discoveryInitialized) {
-    console.log('[TestLogic] Test discovery already initialized, skipping.');
+    log('info', '[TestLogic] Test discovery already initialized, skipping.');
     return;
   }
 
-  console.log('[TestLogic] Initializing test discovery...');
+  log('info', '[TestLogic] Initializing test discovery...');
   await discoverTests();
 
   // Replace TestState with discovered tests and categories
@@ -44,12 +56,13 @@ async function initializeTestDiscovery() {
     TestState.getTests().length === 0 ||
     !TestState.testLogicState.fromDiscovery
   ) {
-    console.log('[TestLogic] Initializing from discovered tests...');
-    console.log(
+    log('info', '[TestLogic] Initializing from discovered tests...');
+    log(
+      'info',
       '[TestLogic] Before init - autoStartTestsOnLoad:',
       TestState.testLogicState.autoStartTestsOnLoad
     );
-    console.log('[TestLogic] loadedStateApplied flag:', loadedStateApplied);
+    log('info', '[TestLogic] loadedStateApplied flag:', loadedStateApplied);
 
     // Determine which auto-start setting to use
     let autoStartSettingToUse = null;
@@ -57,14 +70,16 @@ async function initializeTestDiscovery() {
     if (loadedAutoStartSetting !== null) {
       // We have a loaded setting from applyLoadedState - always use this
       autoStartSettingToUse = loadedAutoStartSetting;
-      console.log(
+      log(
+        'info',
         '[TestLogic] Using loaded auto-start setting:',
         autoStartSettingToUse
       );
     } else {
       // No loaded setting yet - preserve the current default
       autoStartSettingToUse = TestState.testLogicState.autoStartTestsOnLoad;
-      console.log(
+      log(
+        'info',
         '[TestLogic] No loaded setting - using current default:',
         autoStartSettingToUse
       );
@@ -76,12 +91,14 @@ async function initializeTestDiscovery() {
 
     // Apply the determined auto-start setting
     TestState.testLogicState.autoStartTestsOnLoad = autoStartSettingToUse;
-    console.log(
+    log(
+      'info',
       '[TestLogic] Set autoStartTestsOnLoad to:',
       TestState.testLogicState.autoStartTestsOnLoad
     );
 
-    console.log(
+    log(
+      'info',
       `[TestLogic] Initialized with ${discoveredTests.length} tests in ${
         Object.keys(discoveredCategories).length
       } categories`
@@ -89,11 +106,13 @@ async function initializeTestDiscovery() {
 
     // Only mark discovery as initialized after the state has been fully set up
     discoveryInitialized = true;
-    console.log(
+    log(
+      'info',
       '[TestLogic] Discovery initialization completed and flag set to true'
     );
   } else {
-    console.log(
+    log(
+      'info',
       '[TestLogic] Test discovery already completed, state already exists'
     );
   }
@@ -124,13 +143,14 @@ export const testLogic = {
   },
 
   async applyLoadedState(data) {
-    console.log('[TestLogic applyLoadedState] Called with data:', data);
+    log('info', '[TestLogic applyLoadedState] Called with data:', data);
 
     // Store the autoStartTestsOnLoad value BEFORE calling initializeTestDiscovery
     let autoStartToApply = false;
     if (data && typeof data.autoStartTestsOnLoad === 'boolean') {
       autoStartToApply = data.autoStartTestsOnLoad;
-      console.log(
+      log(
+        'info',
         '[TestLogic applyLoadedState] autoStartToApply:',
         autoStartToApply
       );
@@ -142,7 +162,8 @@ export const testLogic = {
     // Apply the auto-start setting AFTER discovery initialization
     let autoStartChanged = false;
     const oldAutoStartValue = TestState.shouldAutoStartTests();
-    console.log(
+    log(
+      'info',
       '[TestLogic applyLoadedState] oldAutoStartValue after discovery:',
       oldAutoStartValue
     );
@@ -150,7 +171,8 @@ export const testLogic = {
     if (autoStartToApply !== oldAutoStartValue) {
       TestState.setAutoStartTests(autoStartToApply);
       autoStartChanged = true;
-      console.log(
+      log(
+        'info',
         '[TestLogic applyLoadedState] Set autoStartTests to:',
         autoStartToApply
       );
@@ -158,7 +180,8 @@ export const testLogic = {
 
     // Store the loaded auto-start setting persistently
     loadedAutoStartSetting = autoStartToApply;
-    console.log(
+    log(
+      'info',
       '[TestLogic applyLoadedState] Stored loadedAutoStartSetting:',
       loadedAutoStartSetting
     );
@@ -224,7 +247,8 @@ export const testLogic = {
       // Add any tests from loaded data that weren't discovered (edge case)
       data.tests.forEach((loadedTest) => {
         if (!discoveredTests.find((d) => d.id === loadedTest.id)) {
-          console.warn(
+          log(
+            'warn',
             `[TestLogic] Loaded test '${loadedTest.id}' not found in discovered tests`
           );
           currentTests.push({
@@ -281,14 +305,16 @@ export const testLogic = {
       }
     }
 
-    console.log(
+    log(
+      'info',
       '[TestLogic applyLoadedState] Final autoStartTestsOnLoad:',
       TestState.shouldAutoStartTests()
     );
 
     // Mark that loaded state has been applied to prevent future initializeTestDiscovery calls from overwriting it
     setLoadedStateApplied(true);
-    console.log(
+    log(
+      'info',
       '[TestLogic applyLoadedState] Set loadedStateApplied flag to true'
     );
 
@@ -303,19 +329,22 @@ export const testLogic = {
 
     // Check if we should auto-start tests now that loaded state is fully applied
     if (TestState.shouldAutoStartTests()) {
-      console.log(
+      log(
+        'info',
         '[TestLogic applyLoadedState] Auto-start is enabled, triggering auto-start...'
       );
 
       // Use setTimeout to ensure this happens after the current call stack completes
       setTimeout(async () => {
         try {
-          console.log(
+          log(
+            'info',
             '[TestLogic applyLoadedState] Running auto-start tests...'
           );
           await this.runAllEnabledTests();
         } catch (error) {
-          console.error(
+          log(
+            'error',
             '[TestLogic applyLoadedState] Error during auto-start:',
             error
           );
@@ -384,14 +413,16 @@ export const testLogic = {
   },
 
   _emitTestCompleted(testId, overallStatus) {
-    console.log(
+    log(
+      'info',
       `[_emitTestCompleted] CALLED with testId: ${testId}, overallStatus: ${overallStatus}`
     );
     // Finalize test status
     TestState.setTestStatus(testId, overallStatus ? 'passed' : 'failed');
     TestState.setCurrentRunningTestId(null);
 
-    console.log(
+    log(
+      'info',
       `[_emitTestCompleted] Updated test status to: ${
         overallStatus ? 'passed' : 'failed'
       }`
@@ -399,7 +430,8 @@ export const testLogic = {
 
     if (eventBusInstance) {
       const test = TestState.findTestById(testId);
-      console.log(
+      log(
+        'info',
         `[_emitTestCompleted] Publishing test:completed event for testId: ${testId}`
       );
       eventBusInstance.publish('test:completed', {
@@ -408,11 +440,13 @@ export const testLogic = {
         overallStatus: overallStatus ? 'passed' : 'failed',
         conditions: test ? test.conditions : [],
       });
-      console.log(
+      log(
+        'info',
         `[_emitTestCompleted] test:completed event published successfully`
       );
     } else {
-      console.log(
+      log(
+        'info',
         `[_emitTestCompleted] WARNING: eventBusInstance is null/undefined!`
       );
     }
@@ -423,7 +457,7 @@ export const testLogic = {
 
     const test = TestState.findTestById(testId);
     if (!test) {
-      console.error(`[TestLogic] Test with ID '${testId}' not found.`);
+      log('error', `[TestLogic] Test with ID '${testId}' not found.`);
       return;
     }
 
@@ -432,13 +466,14 @@ export const testLogic = {
     const testFunction = testFunctions[test.functionName];
 
     if (!testFunction) {
-      console.error(
+      log(
+        'error',
         `[TestLogic] Test function '${test.functionName}' not found for test '${testId}'.`
       );
       return;
     }
 
-    console.log(`[TestLogic] Running test: ${test.name} (${testId})`);
+    log('info', `[TestLogic] Running test: ${test.name} (${testId})`);
 
     TestState.setCurrentRunningTestId(testId);
     this._setTestStatus(testId, 'running');
@@ -460,7 +495,8 @@ export const testLogic = {
       // Call the test function
       await testFunction(testController);
     } catch (error) {
-      console.error(
+      log(
+        'error',
         `[TestLogic] Test '${testId}' threw an unhandled error:`,
         error
       );
@@ -479,11 +515,11 @@ export const testLogic = {
     const enabledTests = tests.filter((t) => t.isEnabled);
 
     if (enabledTests.length === 0) {
-      console.log('[TestLogic] No enabled tests to run.');
+      log('info', '[TestLogic] No enabled tests to run.');
       return;
     }
 
-    console.log(`[TestLogic] Running ${enabledTests.length} enabled tests...`);
+    log('info', `[TestLogic] Running ${enabledTests.length} enabled tests...`);
 
     if (eventBusInstance)
       eventBusInstance.publish('test:allRunsStarted', {
@@ -491,7 +527,7 @@ export const testLogic = {
       });
 
     for (const test of enabledTests) {
-      console.log(`[TestLogic] Starting test: ${test.name} (${test.id})`);
+      log('info', `[TestLogic] Starting test: ${test.name} (${test.id})`);
 
       // Set up completion listener BEFORE starting the test to avoid race condition
       const testCompletionPromise = new Promise((resolve) => {
@@ -513,7 +549,7 @@ export const testLogic = {
       // Wait for test completion
       await testCompletionPromise;
 
-      console.log(`[TestLogic] Completed test: ${test.name} (${test.id})`);
+      log('info', `[TestLogic] Completed test: ${test.name} (${test.id})`);
     }
 
     // Emit summary event
@@ -528,7 +564,7 @@ export const testLogic = {
       ).length,
     };
 
-    console.log('[TestLogic] All enabled tests completed:', summary);
+    log('info', '[TestLogic] All enabled tests completed:', summary);
 
     if (eventBusInstance)
       eventBusInstance.publish('test:allRunsCompleted', { summary });
@@ -657,12 +693,13 @@ export const testLogic = {
       // Set the completion flag
       localStorage.setItem('__playwrightTestsComplete__', 'true');
 
-      console.log('[TestLogic] Playwright completion flags set:', {
+      log('info', '[TestLogic] Playwright completion flags set:', {
         summary,
         testCount: testDetails.length,
       });
     } catch (error) {
-      console.error(
+      log(
+        'error',
         '[TestLogic] Error setting Playwright completion flags:',
         error
       );

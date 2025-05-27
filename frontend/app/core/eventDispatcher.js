@@ -1,5 +1,16 @@
 // frontend/app/core/eventDispatcher.js
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('eventDispatcher', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[eventDispatcher] ${message}`, ...data);
+  }
+}
+
 /**
  * Manages event handling based on module load priority.
  * Allows prioritized handling and explicit propagation down the priority chain.
@@ -33,7 +44,7 @@ class EventDispatcher {
     this.getLoadPriority = getLoadPriorityFunc;
     this.isModuleEnabled = isModuleEnabledFunc;
 
-    console.log('EventDispatcher instance created (dynamic data fetching).');
+    log('info', 'EventDispatcher instance created (dynamic data fetching).');
   }
 
   /**
@@ -59,7 +70,8 @@ class EventDispatcher {
     const allHandlers = this.getHandlers(); // Get current handlers
     const potentialHandlers = allHandlers.get(eventName) || [];
 
-    console.log(
+    log(
+      'info',
       `[EventDispatcher.publish] Event: ${eventName}, initialTarget: ${initialTarget}, All Handlers Map Size: ${allHandlers.size}, Potential Handlers for Event:`,
       JSON.parse(
         JSON.stringify(
@@ -72,7 +84,8 @@ class EventDispatcher {
     );
 
     if (potentialHandlers.length === 0) {
-      console.log(
+      log(
+        'info',
         `[EventDispatcher.publish] No potential handlers registered for event: ${eventName}`
       );
       return; // No handlers registered for this event
@@ -104,7 +117,8 @@ class EventDispatcher {
     // Get the first handler based on the sorted order
     const handlerEntry = eligibleHandlers[0];
 
-    console.log(
+    log(
+      'info',
       `[Dispatcher] Dispatching ${eventName} to module: ${handlerEntry.moduleId} (initialTarget: ${initialTarget})`
     );
     try {
@@ -113,12 +127,14 @@ class EventDispatcher {
       if (typeof handlerEntry.handlerFunction === 'function') {
         handlerEntry.handlerFunction(data);
       } else {
-        console.error(
+        log(
+          'error',
           `[Dispatcher] Invalid handlerFunction found for ${eventName} in module ${handlerEntry.moduleId}`
         );
       }
     } catch (error) {
-      console.error(
+      log(
+        'error',
         `[Dispatcher] Error executing handler for event "${eventName}" in module "${handlerEntry.moduleId}":`,
         error
       );
@@ -139,7 +155,8 @@ class EventDispatcher {
     const originPriority = this._getPriorityIndex(originModuleId);
 
     if (originPriority === -1) {
-      console.warn(
+      log(
+        'warn',
         `[Dispatcher] publishToNextModule called by module not in current priority list: ${originModuleId}`
       );
       return;
@@ -184,14 +201,15 @@ class EventDispatcher {
       });
 
     if (eligibleNextHandlers.length === 0) {
-      // console.log(`[Dispatcher] No further modules found for ${eventName} after ${originModuleId} in direction ${direction}.`);
+      // log('info', `[Dispatcher] No further modules found for ${eventName} after ${originModuleId} in direction ${direction}.`);
       return; // No subsequent enabled modules handle this event
     }
 
     // Get the very next handler based on the sorted order
     const handlerEntry = eligibleNextHandlers[0];
 
-    console.log(
+    log(
+      'info',
       `[Dispatcher] Dispatching ${eventName} (propagated from ${originModuleId}) to module: ${handlerEntry.moduleId} (Direction: ${direction})`
     );
     try {
@@ -204,12 +222,14 @@ class EventDispatcher {
           propagationDirection: direction,
         });
       } else {
-        console.error(
+        log(
+          'error',
           `[Dispatcher] Invalid handlerFunction found for ${eventName} in module ${handlerEntry.moduleId} during propagation.`
         );
       }
     } catch (error) {
-      console.error(
+      log(
+        'error',
         `[Dispatcher] Error executing propagated handler for event "${eventName}" in module "${handlerEntry.moduleId}":`,
         error
       );

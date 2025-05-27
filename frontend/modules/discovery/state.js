@@ -2,6 +2,17 @@
 
 // REMOVED: import stateManagerSingleton from '../stateManager/stateManagerSingleton.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('discoveryState', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[discoveryState] ${message}`, ...data);
+  }
+}
+
 /**
  * Manages the discovery state of regions, locations, and exits within the game.
  * Tracks what the player has encountered in the loop mode.
@@ -17,7 +28,7 @@ export class DiscoveryState {
     this.discoveredLocations = new Set();
     this.discoveredExits = new Map(); // regionName -> Set of exit names
 
-    console.log('[DiscoveryState] Constructed');
+    log('info', '[DiscoveryState] Constructed');
   }
 
   /**
@@ -29,12 +40,13 @@ export class DiscoveryState {
    */
   setDependencies(dependencies) {
     if (!dependencies.eventBus || !dependencies.stateManager) {
-      console.error(
+      log(
+        'error',
         '[DiscoveryState] Missing required dependencies (eventBus, stateManager).'
       );
       return;
     }
-    console.log('[DiscoveryState] Setting dependencies...');
+    log('info', '[DiscoveryState] Setting dependencies...');
     this.eventBus = dependencies.eventBus;
     this.stateManager = dependencies.stateManager;
   }
@@ -44,11 +56,9 @@ export class DiscoveryState {
    * Should be called after dependencies are set and stateManager has loaded JSON data.
    */
   initialize() {
-    console.log('[DiscoveryState] Initializing discoverable data...');
+    log('info', '[DiscoveryState] Initializing discoverable data...');
     if (!this.stateManager || !this.eventBus) {
-      console.error(
-        '[DiscoveryState] Cannot initialize: Dependencies not set.'
-      );
+      log('error', '[DiscoveryState] Cannot initialize: Dependencies not set.');
       return;
     }
 
@@ -74,14 +84,16 @@ export class DiscoveryState {
             menuExits.add(exit.name);
           }
         });
-        console.log('[DiscoveryState] Initialized Menu exits:', menuExits);
+        log('info', '[DiscoveryState] Initialized Menu exits:', menuExits);
       } else {
-        console.warn(
+        log(
+          'warn',
           '[DiscoveryState] Menu region or its exits not found during initialization.'
         );
       }
     } catch (error) {
-      console.error(
+      log(
+        'error',
         '[DiscoveryState] Error accessing stateManager during initialization:',
         error
       );
@@ -111,7 +123,7 @@ export class DiscoveryState {
     if (!this.eventBus) return false; // Need eventBus to publish
     if (!this.discoveredRegions.has(regionName)) {
       this.discoveredRegions.add(regionName);
-      console.log(`[DiscoveryState] Discovered Region: ${regionName}`);
+      log('info', `[DiscoveryState] Discovered Region: ${regionName}`);
 
       // Ensure the exit map entry exists for this newly discovered region
       if (!this.discoveredExits.has(regionName)) {
@@ -129,7 +141,7 @@ export class DiscoveryState {
     if (!this.eventBus) return false;
     if (!this.discoveredLocations.has(locationName)) {
       this.discoveredLocations.add(locationName);
-      console.log(`[DiscoveryState] Discovered Location: ${locationName}`);
+      log('info', `[DiscoveryState] Discovered Location: ${locationName}`);
       this.eventBus.publish('discovery:locationDiscovered', { locationName });
       this.eventBus.publish('discovery:changed', {});
       return true;
@@ -145,7 +157,8 @@ export class DiscoveryState {
     const exits = this.discoveredExits.get(regionName);
     if (exits && !exits.has(exitName)) {
       exits.add(exitName);
-      console.log(
+      log(
+        'info',
         `[DiscoveryState] Discovered Exit: ${regionName} -> ${exitName}`
       );
       this.eventBus.publish('discovery:exitDiscovered', {
@@ -172,7 +185,7 @@ export class DiscoveryState {
 
   loadFromSerializedState(state) {
     if (!state) return;
-    console.log('[DiscoveryState] Loading state...');
+    log('info', '[DiscoveryState] Loading state...');
     this.discoveredRegions = new Set(state.regions || ['Menu']); // Ensure Menu is always there
     this.discoveredLocations = new Set(state.locations || []);
     this.discoveredExits = new Map(
@@ -185,18 +198,19 @@ export class DiscoveryState {
     if (!this.discoveredExits.has('Menu')) {
       this.discoveredExits.set('Menu', new Set());
     }
-    console.log('[DiscoveryState] State loaded.');
+    log('info', '[DiscoveryState] State loaded.');
     if (this.eventBus) {
       this.eventBus.publish('discovery:changed', {}); // Notify UI after loading
     } else {
-      console.warn(
+      log(
+        'warn',
         '[DiscoveryState] Cannot publish discovery:changed after load, eventBus not set.'
       );
     }
   }
 
   clearDiscovery() {
-    console.log('[DiscoveryState] Clearing discovery state.');
+    log('info', '[DiscoveryState] Clearing discovery state.');
     this.discoveredRegions = new Set(['Menu']);
     this.discoveredLocations = new Set();
     this.discoveredExits = new Map();
@@ -205,7 +219,8 @@ export class DiscoveryState {
     if (this.eventBus) {
       this.eventBus.publish('discovery:changed', {});
     } else {
-      console.warn(
+      log(
+        'warn',
         '[DiscoveryState] Cannot publish discovery:changed after clear, eventBus not set.'
       );
     }
@@ -215,7 +230,7 @@ export class DiscoveryState {
    * Placeholder for cleanup logic.
    */
   dispose() {
-    console.log('[DiscoveryState] Disposing...');
+    log('info', '[DiscoveryState] Disposing...');
     // No subscriptions managed internally in this version yet.
   }
 }

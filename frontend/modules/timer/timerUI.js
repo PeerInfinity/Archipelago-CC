@@ -2,6 +2,17 @@
 import { Config } from '../client/core/config.js'; // For default timer interval
 import { stateManagerProxySingleton } from '../stateManager/index.js'; // ADDED
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('timerUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[timerUI] ${message}`, ...data);
+  }
+}
+
 export class TimerUI {
   constructor(dependencies) {
     if (!dependencies || !dependencies.timerLogic || !dependencies.eventBus) {
@@ -19,23 +30,23 @@ export class TimerUI {
     this.quickCheckButton = null;
     this.unsubscribeHandles = [];
 
-    console.log('[TimerUI] Instance created.');
-    console.log(
+    log('info', '[TimerUI] Instance created.');
+    log('info', 
       '[TimerUI Constructor] this.domElement initially:',
       this.domElement
     );
   }
 
   initialize() {
-    console.log('[TimerUI] Initializing...');
-    console.log(
+    log('info', '[TimerUI] Initializing...');
+    log('info', 
       '[TimerUI Initialize] Before createDOMElement, this.domElement:',
       this.domElement
     );
     if (!this.domElement) {
       this.createDOMElement(); // Create DOM if not already present
     }
-    console.log(
+    log('info', 
       '[TimerUI Initialize] After createDOMElement, this.domElement:',
       this.domElement
     );
@@ -51,14 +62,14 @@ export class TimerUI {
       !placeholderElement ||
       typeof placeholderElement.appendChild !== 'function'
     ) {
-      console.error(
+      log('error', 
         '[TimerUI] attachToHost: Invalid placeholderElement provided.',
         placeholderElement
       );
       return;
     }
     if (!this.domElement) {
-      console.warn(
+      log('warn', 
         '[TimerUI] attachToHost: domElement not created yet. Creating now.'
       );
       this.createDOMElement();
@@ -69,7 +80,7 @@ export class TimerUI {
       this.domElement.parentNode &&
       this.domElement.parentNode !== placeholderElement
     ) {
-      console.log(
+      log('info', 
         '[TimerUI] attachToHost: DOM element already parented to a different host. Detaching first.'
       );
       this.detachFromHost();
@@ -77,7 +88,7 @@ export class TimerUI {
 
     // Avoid re-appending if already in the correct placeholder
     if (this.domElement.parentNode === placeholderElement) {
-      console.log(
+      log('info', 
         '[TimerUI] attachToHost: DOM element already in the target placeholder. No action needed.'
       );
       return;
@@ -91,7 +102,7 @@ export class TimerUI {
     }
 
     placeholderElement.appendChild(this.domElement);
-    console.log(
+    log('info', 
       '[TimerUI] attachToHost: DOM element appended to new host.',
       placeholderElement
     );
@@ -99,31 +110,31 @@ export class TimerUI {
 
   detachFromHost() {
     if (this.domElement && this.domElement.parentNode) {
-      console.log(
+      log('info', 
         '[TimerUI] detachFromHost: Removing DOM element from parent:',
         this.domElement.parentNode
       );
       this.domElement.parentNode.removeChild(this.domElement);
     } else {
-      console.log(
+      log('info', 
         '[TimerUI] detachFromHost: DOM element not parented or does not exist. No action needed.'
       );
     }
   }
 
   getDOMElement() {
-    console.log('[TimerUI getDOMElement] Method called.');
-    console.log(
+    log('info', '[TimerUI getDOMElement] Method called.');
+    log('info', 
       '[TimerUI getDOMElement] Before check, this.domElement:',
       this.domElement
     );
     if (!this.domElement) {
-      console.log(
+      log('info', 
         '[TimerUI getDOMElement] this.domElement is null, calling createDOMElement.'
       );
       this.createDOMElement();
     }
-    console.log(
+    log('info', 
       '[TimerUI getDOMElement] Returning this.domElement:',
       this.domElement
     );
@@ -131,7 +142,7 @@ export class TimerUI {
   }
 
   createDOMElement() {
-    console.log('[TimerUI createDOMElement] Method called.');
+    log('info', '[TimerUI createDOMElement] Method called.');
     this.domElement = document.createElement('div');
     this.domElement.id = 'progress-container';
     // Styles will be from index.css as per clarification
@@ -160,7 +171,7 @@ export class TimerUI {
       '#timer-quick-check-button'
     );
 
-    console.log(
+    log('info', 
       '[TimerUI createDOMElement] After creation, this.domElement:',
       this.domElement
     );
@@ -205,7 +216,7 @@ export class TimerUI {
     subscribe('connection:open', enableControlsHandler);
     subscribe('connection:close', () => this.enableControls(false));
 
-    console.log('[TimerUI] Subscribed to timer and state events.');
+    log('info', '[TimerUI] Subscribed to timer and state events.');
   }
 
   _handleTimerStarted(data) {
@@ -333,7 +344,7 @@ export class TimerUI {
   }
 
   dispose() {
-    console.log('[TimerUI] Disposing TimerUI...');
+    log('info', '[TimerUI] Disposing TimerUI...');
     this.detachFromHost(); // Ensure DOM element is removed from any host
     this.unsubscribeHandles.forEach((unsub) => {
       if (typeof unsub === 'function') {

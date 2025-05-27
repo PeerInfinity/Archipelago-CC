@@ -2,6 +2,17 @@
 export { PathAnalyzerLogic } from './pathAnalyzerLogic.js';
 export { PathAnalyzerUI } from './pathAnalyzerUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('pathAnalyzerModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[pathAnalyzerModule] ${message}`, ...data);
+  }
+}
+
 // --- Module Info (Optional - keep if used by external tooling) ---
 // export const moduleInfo = {
 //   name: 'pathAnalyzer',
@@ -13,7 +24,7 @@ export { PathAnalyzerUI } from './pathAnalyzerUI.js';
  * Currently only registers settings schema (if defined).
  */
 export function register(registrationApi) {
-  console.log('[PathAnalyzer Module] Registering...');
+  log('info', '[PathAnalyzer Module] Registering...');
 
   // Remove public function registrations - consumers will import classes directly
 
@@ -37,7 +48,7 @@ export function register(registrationApi) {
  * Minimal setup needed as logic/UI are instantiated by consumers.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[PathAnalyzer Module] Initializing (ID: ${moduleId}, Priority: ${priorityIndex})...`
   );
   // const settings = initializationApi.getModuleSettings(); // Get module-specific settings
@@ -47,5 +58,5 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // Perform any module-level setup here that doesn't require class instances.
   // E.g., subscribe to global events if the module itself needs to react.
 
-  console.log('[PathAnalyzer Module] Initialization complete.');
+  log('info', '[PathAnalyzer Module] Initialization complete.');
 }

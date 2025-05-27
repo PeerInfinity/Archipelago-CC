@@ -1,5 +1,16 @@
 // frontend/modules/timerPanel/index.js
 import { TimerPanelUI } from './timerPanelUI.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('timerPanelModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[timerPanelModule] ${message}`, ...data);
+  }
+}
+
 // import { centralRegistry } from '../../app/core/centralRegistry.js'; // No longer needed for host registration logic here
 // import eventBus from '../../app/core/eventBus.js'; // TimerPanelUI will handle its own eventBus needs
 
@@ -23,7 +34,7 @@ let moduleEventBus = null; // ADDED: To hold the event bus instance
  * @param {object} registrationApi - API provided by the initialization script.
  */
 export function register(registrationApi) {
-  console.log(`[${moduleInfo.name} Module] Registering...`);
+  log('info', `[${moduleInfo.name} Module] Registering...`);
 
   // Register TimerPanelUI as a GoldenLayout panel component
   registrationApi.registerPanelComponent(
@@ -46,7 +57,7 @@ export function register(registrationApi) {
           moduleDispatcher
         );
       } else {
-        console.warn(
+        log('warn', 
           `[${moduleInfo.name} Module] TimerPanelUI instance not available or handleRehomeTimerUI method missing for event system:rehomeTimerUI. Attempting to propagate.`
         );
         // Explicitly propagate if this module's UI cannot handle the event
@@ -60,11 +71,11 @@ export function register(registrationApi) {
             eventData,
             { direction: 'up' } // CORRECTED: 'up' to go to lower index (higher actual priority)
           );
-          console.log(
+          log('info', 
             `[${moduleInfo.name} Module] Called publishToNextModule for system:rehomeTimerUI (direction: up) because instance was unavailable.`
           );
         } else {
-          console.error(
+          log('error', 
             `[${moduleInfo.name} Module] Could not propagate system:rehomeTimerUI: moduleDispatcher or publishToNextModule missing.`
           );
         }
@@ -75,7 +86,7 @@ export function register(registrationApi) {
   // This module itself doesn't publish new global events or need specific settings schemas.
   // It will register as a host for the Timer's UI during its own panel's lifecycle.
 
-  console.log(`[${moduleInfo.name} Module] Registration complete.`);
+  log('info', `[${moduleInfo.name} Module] Registration complete.`);
 }
 
 /**
@@ -90,18 +101,18 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   moduleDispatcher = initializationApi.getDispatcher(); // Store dispatcher instance
   moduleEventBus = initializationApi.getEventBus(); // ADDED: Store event bus instance
 
-  console.log(
+  log('info', 
     `[${thisModuleId} Module] Initializing with priority ${priorityIndex}...`
   );
 
   // No specific logic needed here for the module itself beyond panel registration.
   // The TimerPanelUI instance will handle registering itself as a host when it's created by GoldenLayout.
 
-  console.log(`[${thisModuleId} Module] Initialization complete.`);
+  log('info', `[${thisModuleId} Module] Initialization complete.`);
 
   return () => {
     // Cleanup function
-    console.log(`[${thisModuleId} Module] Cleaning up...`);
+    log('info', `[${thisModuleId} Module] Cleaning up...`);
     // If there were any module-level subscriptions or resources, clean them here.
     timerPanelUIInstance = null; // Reset instance on cleanup
     moduleDispatcher = null; // Reset dispatcher on cleanup
@@ -118,7 +129,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 // Helper function for TimerPanelUI to set its instance
 export function setTimerPanelUIInstance(instance) {
   timerPanelUIInstance = instance;
-  console.log(`[${thisModuleId} Module] TimerPanelUI instance set.`);
+  log('info', `[${thisModuleId} Module] TimerPanelUI instance set.`);
 }
 
 // Helper function to get the module ID, useful for UI registration

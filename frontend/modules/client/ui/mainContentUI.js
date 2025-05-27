@@ -12,12 +12,23 @@ import {
 } from '../index.js'; // ADDED getClientModuleDispatcher
 import { centralRegistry } from '../../../app/core/centralRegistry.js'; // RE-ADD import
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('mainContentUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[mainContentUI] ${message}`, ...data);
+  }
+}
+
 // const TIMER_UI_COMPONENT_TYPE = 'TimerProgressUI'; // May not be needed, or keep for logging
 const CLIENT_MODULE_ID = 'Client'; // This module's ID for logging or other purposes
 
 class MainContentUI {
   constructor(container, componentState) {
-    console.log('[MainContentUI] Constructor called');
+    log('info', '[MainContentUI] Constructor called');
     this.container = container;
     this.componentState = componentState;
     this.timerHostPlaceholder = null;
@@ -62,7 +73,7 @@ class MainContentUI {
 
     // Defer full element initialization and event listener setup
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[MainContentUI] Received app:readyForUiDataLoad. Initializing elements.'
       );
       // Pass the GoldenLayout container's DOM element to initializeElements
@@ -90,7 +101,7 @@ class MainContentUI {
       // This panel will respond if it's the highest priority viable host.
       // Perhaps dispatch a rehome event here? Or rely on a general rehome event.
       // For now, per plan, this panel just becomes ready. If Timer is not homed, a general rehome event is needed.
-      // console.log('[MainContentUI] Panel opened. Ready to host TimerUI if system:rehomeTimerUI is dispatched.');
+      // log('info', '[MainContentUI] Panel opened. Ready to host TimerUI if system:rehomeTimerUI is dispatched.');
     });
 
     this.container.on('hide', () => {
@@ -114,9 +125,9 @@ class MainContentUI {
   }
 
   getRootElement() {
-    console.log('[MainContentUI] Getting root element');
+    log('info', '[MainContentUI] Getting root element');
     if (!this.rootElement) {
-      console.log('[MainContentUI] Creating new root element');
+      log('info', '[MainContentUI] Creating new root element');
       this.rootElement = document.createElement('div');
       this.rootElement.className = 'main-content-panel';
       this.rootElement.style.width = '100%';
@@ -161,13 +172,13 @@ class MainContentUI {
         </div>
       `;
 
-      console.log('[MainContentUI] Added content to root element');
+      log('info', '[MainContentUI] Added content to root element');
     }
     return this.rootElement;
   }
 
   initializeElements(containerElement) {
-    console.log(
+    log('info', 
       '[MainContentUI] Initializing elements in container:',
       containerElement
     );
@@ -179,7 +190,7 @@ class MainContentUI {
     }
 
     containerElement.appendChild(root);
-    console.log('[MainContentUI] Root element appended to container');
+    log('info', '[MainContentUI] Root element appended to container');
 
     this.consoleElement = root.querySelector('#main-console');
     this.consoleInputElement = root.querySelector('#main-console-input');
@@ -201,22 +212,22 @@ class MainContentUI {
     );
     if (timerPlaceholder) {
       this.timerHostPlaceholder = timerPlaceholder; // Store reference
-      console.log(
+      log('info', 
         '[MainContentUI] Timer host placeholder identified. Ready for TimerUI via event.'
       );
     } else {
-      console.error(
+      log('error', 
         '[MainContentUI] Placeholder div for Timer UI (#timer-ui-placeholder) not found.'
       );
     }
 
-    console.log('[MainContentUI] Elements initialized and references stored');
+    log('info', '[MainContentUI] Elements initialized and references stored');
   }
 
   attachEventListeners() {
     if (this.connectButton && this.serverAddressInput) {
       this.connectButton.addEventListener('click', () => {
-        console.log('[MainContentUI] Connect button clicked');
+        log('info', '[MainContentUI] Connect button clicked');
         if (this.connection.isConnected()) {
           this.connection.disconnect();
         } else {
@@ -225,7 +236,7 @@ class MainContentUI {
           if (typeof this.connection.requestConnect === 'function') {
             this.connection.requestConnect(serverAddress, '');
           } else {
-            console.error(
+            log('error', 
               '[MainContentUI] this.connection.requestConnect is not a function. Connection attempt failed.'
             );
           }
@@ -253,7 +264,7 @@ class MainContentUI {
   }
 
   initializeConsole() {
-    console.log('[MainContentUI] Initializing console');
+    log('info', '[MainContentUI] Initializing console');
 
     this.appendConsoleMessage(
       'Console initialized. Type "help" for available commands.',
@@ -344,7 +355,7 @@ class MainContentUI {
       description,
       handler,
     };
-    console.log(`[MainContentUI] Registered console command: ${name}`);
+    log('info', `[MainContentUI] Registered console command: ${name}`);
   }
 
   showHelp() {
@@ -443,7 +454,7 @@ class MainContentUI {
       },
     });
 
-    console.log('[MainContentUI] Registered all console commands');
+    log('info', '[MainContentUI] Registered all console commands');
   }
 
   updateConnectionStatus(status) {
@@ -465,18 +476,18 @@ class MainContentUI {
   }
 
   dispose() {
-    console.log('[MainContentUI] Disposing...');
+    log('info', '[MainContentUI] Disposing...');
     setMainContentUIInstance(null); // Clear instance on dispose
 
     // ADDED: Notify that this panel was manually closed
     const bus = getClientModuleEventBus();
     if (bus && typeof bus.publish === 'function') {
-      console.log(
+      log('info', 
         '[MainContentUI] Panel disposed, publishing ui:panelManuallyClosed.'
       );
       bus.publish('ui:panelManuallyClosed', { moduleId: CLIENT_MODULE_ID });
     } else {
-      console.warn(
+      log('warn', 
         '[MainContentUI] Could not get eventBus or publish function to send ui:panelManuallyClosed.'
       );
     }
@@ -503,12 +514,12 @@ class MainContentUI {
     this.timerHostPlaceholder = null; // Clear reference
 
     // Other cleanup
-    console.log('[MainContentUI] Disposed.');
+    log('info', '[MainContentUI] Disposed.');
 
     // ADDED: Dispatch rehome event when panel is disposed (destroyed)
     const dispatcher = getClientModuleDispatcher();
     if (dispatcher && typeof dispatcher.publish === 'function') {
-      console.log(
+      log('info', 
         '[MainContentUI] Panel disposed, dispatching system:rehomeTimerUI.'
       );
       // Use setTimeout to ensure this dispatch happens after current call stack (including GL destroy) unwinds
@@ -520,7 +531,7 @@ class MainContentUI {
         );
       }, 0);
     } else {
-      console.warn(
+      log('warn', 
         '[MainContentUI] Could not get dispatcher or publish function to rehome TimerUI on panel dispose.'
       );
     }
@@ -530,7 +541,7 @@ class MainContentUI {
   handleRehomeTimerUI(eventData, propagationOptions, dispatcher) {
     const panelIdForLog =
       this.container?.config?.id || this.container?.id || CLIENT_MODULE_ID;
-    console.log(
+    log('info', 
       `[MainContentUI - ${panelIdForLog}] handleRehomeTimerUI called.`
     );
     let isViableHost = false;
@@ -550,7 +561,7 @@ class MainContentUI {
         !this.container.isVisible
       ) {
         isViableHost = false;
-        console.log(
+        log('info', 
           `[MainContentUI - ${panelIdForLog}] Panel container reports not visible.`
         );
       }
@@ -560,25 +571,25 @@ class MainContentUI {
       // Let's rely on this.container.isVisible for now.
     } else {
       if (!this.container || !this.container.element)
-        console.log(
+        log('info', 
           `[MainContentUI - ${panelIdForLog}] Container or container.element missing.`
         );
       if (!this.timerHostPlaceholder)
-        console.log(
+        log('info', 
           `[MainContentUI - ${panelIdForLog}] Timer host placeholder not found.`
         );
       else if (
         this.timerHostPlaceholder &&
         !document.body.contains(this.timerHostPlaceholder)
       ) {
-        console.log(
+        log('info', 
           `[MainContentUI - ${panelIdForLog}] Timer host placeholder found but not in document body.`
         );
       }
     }
 
     if (isViableHost) {
-      console.log(
+      log('info', 
         `[MainContentUI - ${panelIdForLog}] Is a viable host. Attempting to attach TimerUI.`
       );
       if (
@@ -593,25 +604,25 @@ class MainContentUI {
           // Ensure attachFn is a function
           try {
             attachFn(this.timerHostPlaceholder);
-            console.log(
+            log('info', 
               `[MainContentUI - ${panelIdForLog}] TimerUI attach function called. Propagation stopped.`
             );
           } catch (e) {
-            console.error(
+            log('error', 
               `[MainContentUI - ${panelIdForLog}] Error calling attachFn for TimerUI:`,
               e
             );
             isViableHost = false; // Mark as not successful if attachFn throws
           }
         } else {
-          console.error(
+          log('error', 
             `[MainContentUI - ${panelIdForLog}] Could not get 'attachTimerToHost' function from Timer module, or it's not a function. Function received:`,
             attachFn
           );
           isViableHost = false; // Mark as not successful
         }
       } else {
-        console.error(
+        log('error', 
           `[MainContentUI - ${panelIdForLog}] centralRegistry or centralRegistry.getPublicFunction not available.`
         );
         isViableHost = false; // Mark as not successful
@@ -620,7 +631,7 @@ class MainContentUI {
 
     if (!isViableHost) {
       // If not viable OR became not viable due to errors above
-      console.log(
+      log('info', 
         `[MainContentUI - ${panelIdForLog}] Not a viable host or attach failed. Attempting to propagate event.`
       );
       // Explicitly propagate if this panel isn't hosting
@@ -631,11 +642,11 @@ class MainContentUI {
           eventData, // Original event data
           { direction: 'up' } // CORRECTED: 'up' to go to lower index (higher actual priority)
         );
-        console.log(
+        log('info', 
           `[MainContentUI - ${panelIdForLog}] Called publishToNextModule for system:rehomeTimerUI (direction: up).`
         );
       } else {
-        console.warn(
+        log('warn', 
           `[MainContentUI - ${panelIdForLog}] Could not propagate system:rehomeTimerUI: dispatcher or publishToNextModule missing.`
         );
       }

@@ -5,6 +5,17 @@ import { evaluateRule } from '../stateManager/ruleEngine.js';
 import loopState from '../loops/loopStateSingleton.js';
 import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('pathAnalyzerLogic', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[pathAnalyzerLogic] ${message}`, ...data);
+  }
+}
+
 /**
  * Core logic for path analysis, separated from UI concerns
  * Handles path finding, rule evaluation, and node categorization
@@ -106,26 +117,26 @@ export class PathAnalyzerLogic {
    * @returns {Array} - Array of paths to the target region
    */
   findPathsToRegion(targetRegion, maxPaths = 100, snapshot, staticData) {
-    console.log(
+    log('info', 
       `[PathAnalyzer] ENTRY: findPathsToRegion called with targetRegion=${targetRegion}, maxPaths=${maxPaths}`
     );
     const paths = [];
 
     if (!snapshot || !staticData) {
-      console.log(`[PathAnalyzer] EARLY EXIT: Missing snapshot or staticData`);
+      log('info', `[PathAnalyzer] EARLY EXIT: Missing snapshot or staticData`);
       this._logDebug(
         'findPathsToRegion: Missing snapshot or staticData. Cannot perform pathfinding.'
       );
       return paths;
     }
 
-    console.log(`[PathAnalyzer] Creating snapshotInterface...`);
+    log('info', `[PathAnalyzer] Creating snapshotInterface...`);
     const snapshotInterface = createStateSnapshotInterface(
       snapshot,
       staticData
     );
     if (!snapshotInterface) {
-      console.log(
+      log('info', 
         `[PathAnalyzer] EARLY EXIT: Failed to create snapshotInterface`
       );
       this._logDebug(
@@ -134,10 +145,10 @@ export class PathAnalyzerLogic {
       return paths;
     }
 
-    console.log(
+    log('info', 
       `[PathAnalyzer] Starting path analysis for region: ${targetRegion}`
     );
-    console.log(
+    log('info', 
       `[PathAnalyzer] Max paths: ${maxPaths}, Max iterations: ${this.maxPathFinderIterations}`
     );
 
@@ -148,7 +159,7 @@ export class PathAnalyzerLogic {
         status === true || status === 'reachable' || status === 'checked';
     }
 
-    console.log(
+    log('info', 
       `[PathAnalyzer] Target region ${targetRegion} reachable in snapshot: ${isTargetReachableInSnapshot}`
     );
 
@@ -169,8 +180,8 @@ export class PathAnalyzerLogic {
       return paths;
     }
 
-    console.log(`[PathAnalyzer] Starting regions: ${startRegions.join(', ')}`);
-    console.log(
+    log('info', `[PathAnalyzer] Starting regions: ${startRegions.join(', ')}`);
+    log('info', 
       `[PathAnalyzer] Total regions in data: ${Object.keys(regionsData).length}`
     );
 
@@ -184,7 +195,7 @@ export class PathAnalyzerLogic {
     for (const startRegion of startRegions) {
       if (paths.length >= maxPaths) break;
       if (iterationCounter.count >= this.maxPathFinderIterations) {
-        console.log(
+        log('info', 
           `[PathAnalyzer] Maximum iterations (${this.maxPathFinderIterations}) exceeded in findPathsToRegion`
         );
         this._logDebug(
@@ -195,13 +206,13 @@ export class PathAnalyzerLogic {
 
       // Check timeout
       if (Date.now() - startTime > MAX_ANALYSIS_TIME_MS) {
-        console.log(
+        log('info', 
           `[PathAnalyzer] Analysis timeout (${MAX_ANALYSIS_TIME_MS}ms) exceeded`
         );
         break;
       }
 
-      console.log(`[PathAnalyzer] Starting DFS from region: ${startRegion}`);
+      log('info', `[PathAnalyzer] Starting DFS from region: ${startRegion}`);
       const pathsBefore = paths.length;
 
       this._findPathsDFS(
@@ -219,17 +230,17 @@ export class PathAnalyzerLogic {
       );
 
       const pathsAfter = paths.length;
-      console.log(
+      log('info', 
         `[PathAnalyzer] DFS from ${startRegion} completed. Paths found: ${
           pathsAfter - pathsBefore
         }, Total iterations: ${iterationCounter.count}`
       );
     }
 
-    console.log(
+    log('info', 
       `[PathAnalyzer] Path analysis completed. Total paths found: ${paths.length}, Total iterations: ${iterationCounter.count}`
     );
-    console.log(
+    log('info', 
       `[PathAnalyzer] RETURNING from findPathsToRegion with ${paths.length} paths`
     );
     return paths;
@@ -266,7 +277,7 @@ export class PathAnalyzerLogic {
     // Increment iteration counter and check for limit
     iterationCounter.count++;
     if (iterationCounter.count >= this.maxPathFinderIterations) {
-      console.log(
+      log('info', 
         `[PathAnalyzer DFS] Maximum iterations (${this.maxPathFinderIterations}) exceeded in _findPathsDFS`
       );
       this._logDebug(
@@ -278,7 +289,7 @@ export class PathAnalyzerLogic {
     // Check timeout every 50 iterations to avoid excessive time checking
     if (iterationCounter.count % 50 === 0) {
       if (Date.now() - startTime > MAX_ANALYSIS_TIME_MS) {
-        console.log(
+        log('info', 
           `[PathAnalyzer DFS] Analysis timeout (${MAX_ANALYSIS_TIME_MS}ms) exceeded at iteration ${iterationCounter.count}`
         );
         return;
@@ -287,14 +298,14 @@ export class PathAnalyzerLogic {
 
     // Log progress every 100 iterations for debugging
     if (iterationCounter.count % 100 === 0) {
-      console.log(
+      log('info', 
         `[PathAnalyzer DFS] Iteration ${iterationCounter.count}, current region: ${currentRegion}, path length: ${currentPath.length}, paths found: ${allPaths.length}`
       );
     }
 
     // --- CYCLE DETECTION: Check if current region is already in the current path ---
     if (currentPath.includes(currentRegion)) {
-      console.log(
+      log('info', 
         `[PathAnalyzer DFS] Cycle detected: ${currentRegion} already in path ${currentPath.join(
           ' -> '
         )}`
@@ -305,7 +316,7 @@ export class PathAnalyzerLogic {
     // --- PATH DEPTH LIMIT: Prevent excessively long paths ---
     const MAX_PATH_DEPTH = 10; // Reduced from 15 to 10 for better performance
     if (currentPath.length >= MAX_PATH_DEPTH) {
-      console.log(
+      log('info', 
         `[PathAnalyzer DFS] Maximum path depth (${MAX_PATH_DEPTH}) reached for path: ${currentPath.join(
           ' -> '
         )}`
@@ -319,13 +330,13 @@ export class PathAnalyzerLogic {
     // --- 2. Check if target reached ---
     if (currentRegion === targetRegion) {
       allPaths.push([...newPath]);
-      console.log(
+      log('info', 
         `[PathAnalyzer DFS] Found path to target! Path ${
           allPaths.length
         }: ${newPath.join(' -> ')}`
       );
       if (allPaths.length >= maxPaths) {
-        console.log(
+        log('info', 
           `[PathAnalyzer DFS] Max paths (${maxPaths}) reached, stopping this branch`
         );
         return; // Stop this branch
@@ -339,7 +350,7 @@ export class PathAnalyzerLogic {
       for (const exit of regionData.exits) {
         // Check iteration limit before processing each exit
         if (iterationCounter.count >= this.maxPathFinderIterations) {
-          console.log(
+          log('info', 
             `[PathAnalyzer DFS] Max iterations reached, breaking exit loop for ${currentRegion}`
           );
           this._logDebug(
@@ -350,7 +361,7 @@ export class PathAnalyzerLogic {
 
         // Check timeout before processing each exit
         if (Date.now() - startTime > MAX_ANALYSIS_TIME_MS) {
-          console.log(
+          log('info', 
             `[PathAnalyzer DFS] Timeout reached, breaking exit loop for ${currentRegion}`
           );
           break;
@@ -862,7 +873,7 @@ export class PathAnalyzerLogic {
    * @deprecated Should operate on rule objects directly, not DOM.
    */
   extractCategorizedNodes(treeElement) {
-    console.warn(
+    log('warn', 
       'extractCategorizedNodes (DOM based) is deprecated. Use analyzeRuleForNodes.'
     );
     // ... (existing potentially broken DOM logic) ...
@@ -879,7 +890,7 @@ export class PathAnalyzerLogic {
    * @deprecated Should operate on rule objects directly, not DOM.
    */
   extractRuleFromElement(element, nodeType) {
-    console.warn('extractRuleFromElement (DOM based) is deprecated.');
+    log('warn', 'extractRuleFromElement (DOM based) is deprecated.');
     // ... (existing potentially broken DOM logic) ...
     return null;
   }
@@ -891,7 +902,7 @@ export class PathAnalyzerLogic {
    * @deprecated Should operate on rule objects directly, not DOM.
    */
   getNodeType(element) {
-    console.warn('getNodeType (DOM based) is deprecated.');
+    log('warn', 'getNodeType (DOM based) is deprecated.');
     // ... (existing potentially broken DOM logic) ...
     return null;
   }
@@ -1068,7 +1079,7 @@ export class PathAnalyzerLogic {
           );
           identifier = `${identifier}:${argsString}`;
         } catch (e) {
-          console.warn(
+          log('warn', 
             'Failed to stringify args for deduplication:',
             node.args,
             e
@@ -1098,12 +1109,12 @@ export class PathAnalyzerLogic {
       if (data !== null) {
         try {
           const clonedData = JSON.parse(JSON.stringify(data));
-          console.log(logMsg, clonedData);
+          log('info', logMsg, clonedData);
         } catch (e) {
-          console.log(logMsg, data);
+          log('info', logMsg, data);
         }
       } else {
-        console.log(logMsg);
+        log('info', logMsg);
       }
     }
   }

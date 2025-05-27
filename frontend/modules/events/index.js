@@ -1,5 +1,16 @@
 import EventsUI from './eventsUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('eventsModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[eventsModule] ${message}`, ...data);
+  }
+}
+
 // let moduleInitApi = null; // REMOVED - Store the Initialization API
 
 // Module metadata (optional but good practice)
@@ -15,7 +26,7 @@ export const moduleInfo = {
  * @param {object} registrationApi - API provided by the initialization script.
  */
 export function register(registrationApi) {
-  console.log('[Events Module] Registering...');
+  log('info', '[Events Module] Registering...');
   // Register the panel component class constructor
   registrationApi.registerPanelComponent('eventsPanel', EventsUI);
   // Register intent to subscribe to module state changes for UI refresh
@@ -35,7 +46,7 @@ export function register(registrationApi) {
  * @param {object} initApi - API provided by the initialization script.
  */
 export async function initialize(moduleId, index, initApi) {
-  console.log(
+  log('info', 
     `[Events Module] Initializing (ID: ${moduleId}, Priority: ${index})...`
   );
   // moduleInitApi = initApi; // REMOVED assignment
@@ -47,7 +58,7 @@ export async function initialize(moduleId, index, initApi) {
 /* REMOVED getInitApi function
 export function getInitApi() {
   if (!moduleInitApi) {
-    console.warn(
+    log('warn', 
       '[Events Module] Attempted to get initApi before initialization.'
     );
   }
@@ -57,11 +68,11 @@ export function getInitApi() {
 
 // Optional: Post-initialization logic if needed
 // export async function postInitialize(initApi) {
-//   console.log('[Events Module] Post-initializing...');
+//   log('info', '[Events Module] Post-initializing...');
 // }
 
 // Optional: Uninitialization logic if the module can be disabled/unloaded
 // export async function uninitialize() {
-//   console.log('[Events Module] Uninitializing...');
+//   log('info', '[Events Module] Uninitializing...');
 //   moduleInitApi = null;
 // }

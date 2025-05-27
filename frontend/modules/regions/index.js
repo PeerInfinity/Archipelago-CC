@@ -1,6 +1,17 @@
 // UI Class for this module
 import { RegionUI } from './regionUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('regionsModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[regionsModule] ${message}`, ...data);
+  }
+}
+
 // --- Module Info (Optional) ---
 // export const moduleInfo = {
 //   name: 'Regions',
@@ -18,7 +29,7 @@ let moduleUnsubscribeHandles = [];
  * Registers the panel component and event intentions.
  */
 export function register(registrationApi) {
-  console.log(`[${moduleId} Module] Registering...`);
+  log('info', `[${moduleId} Module] Registering...`);
 
   // Register the panel component CLASS directly
   registrationApi.registerPanelComponent(
@@ -64,7 +75,7 @@ export function register(registrationApi) {
  */
 export async function initialize(mId, priorityIndex, initializationApi) {
   moduleId = mId;
-  console.log(
+  log('info', 
     `[${moduleId} Module] Initializing with priority ${priorityIndex}...`
   );
 
@@ -79,11 +90,11 @@ export async function initialize(mId, priorityIndex, initializationApi) {
   // If the module needs to perform async setup, do it here
   // await someAsyncSetup();
 
-  console.log(`[${moduleId} Module] Initialization complete.`);
+  log('info', `[${moduleId} Module] Initialization complete.`);
 
   // Return cleanup function if necessary
   return () => {
-    console.log(`[${moduleId} Module] Cleaning up...`);
+    log('info', `[${moduleId} Module] Cleaning up...`);
     moduleUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     moduleUnsubscribeHandles = [];
     // Any other cleanup specific to this module's initialize phase

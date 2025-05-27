@@ -1,6 +1,17 @@
 // client/ui/consoleUI.js - Updated to use the console manager
 import Config from '../core/config.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('consoleUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[consoleUI] ${message}`, ...data);
+  }
+}
+
 // ConsoleUI class - Now primarily contains command handlers and history logic
 export class ConsoleUI {
   // Keep static cache/cursor for internal command history logic
@@ -12,7 +23,7 @@ export class ConsoleUI {
 
   // Method to inject eventBus (if needed for subscriptions)
   static setEventBus(busInstance) {
-    console.log('[ConsoleUI] Setting EventBus instance.');
+    log('info', '[ConsoleUI] Setting EventBus instance.');
     this.eventBus = busInstance;
     // Subscribe to any events ConsoleUI *itself* needs to listen to
     // (Likely none, as MainContentUI handles most interaction)
@@ -25,12 +36,12 @@ export class ConsoleUI {
     this.unsubscribeHandles = [];
     // Example: If ConsoleUI needed to react to something directly
     // const subscribe = (name, handler) => { ... };
-    // subscribe('some:event', () => { console.log('ConsoleUI reacted!')});
-    console.log('[ConsoleUI] Subscribed to console events (if any).');
+    // subscribe('some:event', () => { log('info', 'ConsoleUI reacted!')});
+    log('info', '[ConsoleUI] Subscribed to console events (if any).');
   }
 
   static dispose() {
-    console.log('[ConsoleUI] Disposing...');
+    log('info', '[ConsoleUI] Disposing...');
     this.unsubscribeHandles.forEach((unsub) => unsub());
     this.unsubscribeHandles = [];
     this.eventBus = null;
@@ -40,7 +51,7 @@ export class ConsoleUI {
   // This method is called by MainContentUI to register commands.
   // It takes the register function from consoleManager and the necessary dependencies.
   static registerCommands(registerCommandFunc, dependencies) {
-    console.log('[ConsoleUI] Registering network/state commands...');
+    log('info', '[ConsoleUI] Registering network/state commands...');
     const register = (name, desc, handler) => {
       // Wrapper passes dependencies to the actual handler
       registerCommandFunc(name, desc, (args) => {
@@ -48,7 +59,7 @@ export class ConsoleUI {
         if (typeof handler === 'function') {
           handler(args, dependencies);
         } else {
-          console.error(
+          log('error', 
             `[ConsoleUI] Handler for command '${name}' is not a function!`
           );
         }

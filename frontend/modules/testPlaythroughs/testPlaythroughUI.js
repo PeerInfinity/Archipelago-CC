@@ -1,6 +1,17 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js'; // ADDED: Static import
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testPlaythroughUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testPlaythroughUI] ${message}`, ...data);
+  }
+}
+
 export class TestPlaythroughUI {
   constructor(container, componentState) {
     // MODIFIED: GL constructor
@@ -30,14 +41,14 @@ export class TestPlaythroughUI {
     if (this.rootElement) {
       this.container.element.appendChild(this.rootElement);
     } else {
-      console.error(
+      log('error', 
         '[TestPlaythroughUI] Root element not created in constructor!'
       );
     }
 
     // Defer the rest of initialization
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[TestPlaythroughUI] Received app:readyForUiDataLoad. Initializing playthroughs.'
       );
       this.initialize();
@@ -72,7 +83,7 @@ export class TestPlaythroughUI {
     // this.getRootElement(); // Already called in constructor
 
     if (!this.testPlaythroughsContainer) {
-      console.error(
+      log('error', 
         'Test Playthroughs panel container not found during initialization'
       );
       this.initialized = false;
@@ -93,7 +104,7 @@ export class TestPlaythroughUI {
         'ui:fileViewChanged',
         (data) => {
           if (data.newView !== 'test-playthroughs') {
-            console.log(
+            log('info', 
               '[TestPlaythroughUI] View changed away, clearing display.'
             );
             this.clearDisplay();
@@ -101,7 +112,7 @@ export class TestPlaythroughUI {
         }
       );
     } else {
-      console.error(
+      log('error', 
         '[TestPlaythroughUI] eventBus not available for subscription.'
       );
     }
@@ -118,13 +129,13 @@ export class TestPlaythroughUI {
         })
         .then((data) => {
           this.playthroughFiles = data;
-          //console.log('Loaded playthrough files:', this.playthroughFiles);
+          //log('info', 'Loaded playthrough files:', this.playthroughFiles);
           this.renderPlaythroughList(); // Initial view
           this.initialized = true; // Set initialized after successful load
-          console.log('[TestPlaythroughUI] Initialized successfully.');
+          log('info', '[TestPlaythroughUI] Initialized successfully.');
         })
         .catch((error) => {
-          console.error('Error loading playthrough files data:', error);
+          log('error', 'Error loading playthrough files data:', error);
           if (this.testPlaythroughsContainer) {
             this.testPlaythroughsContainer.innerHTML = `<div class="error-message">Failed to load playthroughs: ${error.message}</div>`;
           }
@@ -133,7 +144,7 @@ export class TestPlaythroughUI {
 
       return true; // Indicate setup started
     } catch (error) {
-      console.error('Error setting up playthrough files loading:', error);
+      log('error', 'Error setting up playthrough files loading:', error);
       if (this.testPlaythroughsContainer) {
         this.testPlaythroughsContainer.innerHTML = `<div class="error-message">Error initializing playthroughs: ${error.message}</div>`;
       }
@@ -160,7 +171,7 @@ export class TestPlaythroughUI {
     // Add null check
     if (!this.playthroughFiles) {
       html += '<p>Loading playthrough list...</p>';
-      console.warn(
+      log('warn', 
         'renderPlaythroughList called before playthroughFiles data was loaded.'
       );
     } else if (this.playthroughFiles.length === 0) {
@@ -330,7 +341,7 @@ export class TestPlaythroughUI {
         this.log('info', 'Test preparation aborted.');
       } else {
         this.log('error', `Test preparation failed: ${error.message}`);
-        console.error('Playthrough Test Prep Error:', error);
+        log('error', 'Playthrough Test Prep Error:', error);
       }
       this.clearTestState(); // Clean up on error
       return false;
@@ -380,7 +391,7 @@ export class TestPlaythroughUI {
           'error',
           `Test failed at step ${this.currentLogIndex + 1}: ${error.message}`
         );
-        console.error(
+        log('error', 
           `Playthrough Test Error at step ${this.currentLogIndex + 1}:`,
           error
         );
@@ -430,7 +441,7 @@ export class TestPlaythroughUI {
           'error',
           `Test failed at step ${this.currentLogIndex + 1}: ${error.message}`
         );
-        console.error(
+        log('error', 
           `Playthrough Test Error at step ${this.currentLogIndex + 1}:`,
           error
         );
@@ -774,8 +785,8 @@ export class TestPlaythroughUI {
         );
       }
       // Optionally provide more details, e.g., log the full sets
-      // console.log("Log Accessible Set:", logAccessibleSet);
-      // console.log("State Accessible Set (Unchecked):", stateAccessibleSet);
+      // log('info', "Log Accessible Set:", logAccessibleSet);
+      // log('info', "State Accessible Set (Unchecked):", stateAccessibleSet);
       throw new Error(`State mismatch during playthrough test at: ${context}`);
     }
   }
@@ -833,7 +844,7 @@ export class TestPlaythroughUI {
   }
 
   dispose() {
-    console.log('[TestPlaythroughUI] Disposing...');
+    log('info', '[TestPlaythroughUI] Disposing...');
     if (this.abortController) {
       this.abortController.abort();
       this.abortController = null;
@@ -842,7 +853,7 @@ export class TestPlaythroughUI {
     if (this.viewChangeSubscription) {
       this.viewChangeSubscription();
       this.viewChangeSubscription = null;
-      console.log('[TestPlaythroughUI] Unsubscribed from ui:fileViewChanged.');
+      log('info', '[TestPlaythroughUI] Unsubscribed from ui:fileViewChanged.');
     }
     this.clearTestState();
     // Clear container content?

@@ -1,5 +1,16 @@
 // client/utils/idMapping.js - Enhanced with caching and initialization
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('idMapping', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[idMapping] ${message}`, ...data);
+  }
+}
+
 /**
  * Cache for mapping between server IDs and names.
  * Populated from dataPackage for faster lookup.
@@ -27,7 +38,7 @@ const mappingCache = {
  */
 export function initializeMappingsFromDataPackage(dataPackage) {
   if (!dataPackage || !dataPackage.games) {
-    console.warn('Cannot initialize mappings: Invalid data package');
+    log('warn', 'Cannot initialize mappings: Invalid data package');
     return false;
   }
 
@@ -66,12 +77,13 @@ export function initializeMappingsFromDataPackage(dataPackage) {
       }
     }
 
-    console.log(
+    log(
+      'info',
       `Mapping cache initialized with ${mappingCache.itemMappings.size} items and ${mappingCache.locationMappings.size} locations`
     );
     return true;
   } catch (error) {
-    console.error('Error initializing mappings from data package:', error);
+    log('error', 'Error initializing mappings from data package:', error);
     return false;
   }
 }
@@ -95,7 +107,7 @@ export function loadMappingsFromStorage() {
     const success = initializeMappingsFromDataPackage(dataPackage);
     return success;
   } catch (error) {
-    console.warn('Error loading mappings from storage:', error);
+    log('warn', 'Error loading mappings from storage:', error);
     return false;
   }
 }

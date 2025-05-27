@@ -1,6 +1,17 @@
 import loopStateSingleton from './loopStateSingleton.js';
 import { getLoopsModuleDispatcher, moduleInfo } from './index.js'; // Import the dispatcher getter and moduleInfo
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('loopEvents', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[loopEvents] ${message}`, ...data);
+  }
+}
+
 /**
  * Handles the 'user:locationCheck' event for the Loops module.
  * If loop mode is active, it queues the action.
@@ -9,7 +20,7 @@ import { getLoopsModuleDispatcher, moduleInfo } from './index.js'; // Import the
  * @param {object} propagationOptions - Options related to event propagation.
  */
 export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
-  console.log(
+  log('info', 
     '[LoopsModule] handleUserLocationCheckForLoops received event:',
     JSON.parse(JSON.stringify(eventData)),
     'Propagation:',
@@ -18,7 +29,7 @@ export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
   const dispatcher = getLoopsModuleDispatcher(); // Get the dispatcher
 
   if (loopStateSingleton.isLoopModeActive) {
-    console.log(
+    log('info', 
       '[LoopsModule] Handling user:locationCheck in Loop Mode.',
       eventData
     );
@@ -41,7 +52,7 @@ export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
           eventData.locationName
         );
       } else {
-        console.error(
+        log('error', 
           '[LoopsModule] No method available on loopStateSingleton to queue location check.'
         );
       }
@@ -53,7 +64,7 @@ export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
       ) {
         loopStateSingleton.determineAndQueueNextLoopAction();
       } else {
-        console.warn(
+        log('warn', 
           "[LoopsModule] 'check next available' requested in loop mode, but no handler method (determineAndQueueNextLoopAction) found on loopStateSingleton."
         );
       }
@@ -70,12 +81,12 @@ export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
         eventData,
         { direction: 'up' }
       );
-      console.log(
+      log('info', 
         '[LoopsModule] Loop mode not active. Propagated user:locationCheck up.',
         eventData
       );
     } else {
-      console.error(
+      log('error', 
         '[LoopsModule] Dispatcher not available for propagation when loop mode is inactive.'
       );
     }

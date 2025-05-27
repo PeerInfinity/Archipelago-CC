@@ -4,7 +4,7 @@ const isWorkerContext = typeof window === 'undefined';
 if (!isWorkerContext && window.logger) {
   window.logger.info('stateManagerProxy', 'Module loaded');
 } else {
-  console.log('[stateManagerProxy] Module loaded');
+  log('info', '[stateManagerProxy] Module loaded');
 }
 
 // TODO: Import eventBus
@@ -16,11 +16,25 @@ import { evaluateRule } from './ruleEngine.js'; // Make this an active import
 import { GameSnapshotHelpers } from './helpers/gameSnapshotHelpers.js'; // Added import
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js'; // Import shared commands
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('stateManagerProxy', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[stateManagerProxy] ${message}`, ...data);
+    }
+  }
+}
+
 export class StateManagerProxy {
   static COMMANDS = STATE_MANAGER_COMMANDS;
 
   constructor(eventBus) {
-    console.log('[stateManagerProxy] Initializing Proxy...');
+    log('info', '[stateManagerProxy] Initializing Proxy...');
     if (!eventBus) {
       throw new Error('StateManagerProxy requires an eventBus instance.');
     }
@@ -40,7 +54,8 @@ export class StateManagerProxy {
 
     this._setupInitialLoadPromise();
     this.initializeWorker();
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy Constructor] this._sendCommand type:',
       typeof this._sendCommand
     );
@@ -60,12 +75,14 @@ export class StateManagerProxy {
     }
     // Fallback to staticDataCache (very unlikely to have it)
     if (this.staticDataCache && this.staticDataCache.gameId) {
-      console.warn(
+      log(
+        'warn',
         '[StateManagerProxy getGameId] Using gameId from staticDataCache as a last resort.'
       );
       return this.staticDataCache.gameId;
     }
-    console.warn(
+    log(
+      'warn',
       '[StateManagerProxy getGameId] Game ID not found. Sources checked: uiCache.game, uiCache.gameId, this.gameIdFromWorker, staticDataCache.gameId. uiCache available:',
       !!this.uiCache,
       'gameIdFromWorker:',
@@ -82,7 +99,7 @@ export class StateManagerProxy {
   }
 
   initializeWorker() {
-    console.log('[stateManagerProxy] Creating Worker...');
+    log('info', '[stateManagerProxy] Creating Worker...');
     try {
       this.worker = new Worker(
         new URL('./stateManagerWorker.js', import.meta.url),
@@ -95,7 +112,7 @@ export class StateManagerProxy {
       };
 
       this.worker.onerror = (error) => {
-        console.error('[stateManagerProxy] Worker error:', error);
+        log('error', '[stateManagerProxy] Worker error:', error);
         const errorMessage = `Worker error: ${
           error.message || 'Unknown worker error'
         }`;
@@ -117,7 +134,7 @@ export class StateManagerProxy {
         // Consider attempting to restart the worker or entering a failed state
       };
     } catch (e) {
-      console.error('[stateManagerProxy] Failed to initialize worker:', e);
+      log('error', '[stateManagerProxy] Failed to initialize worker:', e);
       this.eventBus.publish('stateManager:error', {
         message: 'Failed to initialize StateManager worker.',
         isCritical: true,
@@ -129,7 +146,8 @@ export class StateManagerProxy {
 
   handleWorkerMessage(message) {
     if (!message || !message.type) {
-      console.warn(
+      log(
+        'warn',
         '[stateManagerProxy] Received invalid message from worker:',
         message
       );
@@ -137,7 +155,7 @@ export class StateManagerProxy {
     }
 
     // ADDED: Detailed log for all incoming messages from worker
-    // console.log(
+    // log('info',
     //   '[StateManagerProxy] DETAILED << WORKER:',
     //   JSON.parse(JSON.stringify(message))
     // );
@@ -150,7 +168,8 @@ export class StateManagerProxy {
         this._handlePingResponse(message);
         break;
       case 'workerInitializedConfirmation': // ADDED: Handle worker initialization confirmation
-        console.log(
+        log(
+          'info',
           '[StateManagerProxy] Worker initialized confirmation received:',
           JSON.parse(JSON.stringify(message.configEcho || {}))
         );
@@ -158,7 +177,8 @@ export class StateManagerProxy {
         // This event could be used for finer-grained readiness if needed in the future.
         break;
       case 'rulesLoadedConfirmation': {
-        console.log(
+        log(
+          'info',
           '[StateManagerProxy] Received rulesLoadedConfirmation from worker.',
           message
         );
@@ -172,7 +192,8 @@ export class StateManagerProxy {
               if (exit && exit.name) {
                 exitsObject[exit.name] = exit;
               } else {
-                console.warn(
+                log(
+                  'warn',
                   '[StateManagerProxy] Encountered exit without a name during array to object conversion:',
                   exit
                 );
@@ -188,7 +209,8 @@ export class StateManagerProxy {
               if (location && location.name) {
                 locationsObject[location.name] = location;
               } else {
-                console.warn(
+                log(
+                  'warn',
                   '[StateManagerProxy] Encountered location without a name during array to object conversion:',
                   location
                 );
@@ -202,7 +224,8 @@ export class StateManagerProxy {
               typeof newCache.locations !== 'object' ||
               newCache.locations === null
             ) {
-              console.warn(
+              log(
+                'warn',
                 '[StateManagerProxy] newStaticData.locations is neither an array nor a valid object. Check worker data structure.',
                 newCache.locations
               );
@@ -213,7 +236,8 @@ export class StateManagerProxy {
             ) {
               // If it's an object, but not keyed by name properly (e.g. keyed by ID), this won't fix it, but we can warn.
               // This specific block might be overly cautious if the worker guarantees name-keyed objects when not sending arrays.
-              console.warn(
+              log(
+                'warn',
                 '[StateManagerProxy] newStaticData.locations is an object, but its values may not be location objects with names. Potential issue for snapshot interface.',
                 newCache.locations
               );
@@ -221,12 +245,13 @@ export class StateManagerProxy {
           }
 
           this.staticDataCache = newCache;
-          //console.log(
+          //log('info',
           //  '[StateManagerProxy rulesLoadedConfirmation] Updated staticDataCache. Keys in cache:',
           //  Object.keys(this.staticDataCache)
           //);
         } else {
-          console.warn(
+          log(
+            'warn',
             '[StateManagerProxy] rulesLoadedConfirmation received, but newStaticData is missing.'
           );
         }
@@ -238,7 +263,8 @@ export class StateManagerProxy {
             // this.uiCache // Avoid logging potentially large snapshot here
           );
         } else {
-          console.warn(
+          log(
+            'warn',
             '[stateManagerProxy] rulesLoadedConfirmation received without initial snapshot.'
           );
         }
@@ -254,7 +280,8 @@ export class StateManagerProxy {
 
         // Always publish 'stateManager:rulesLoaded' event
         // This allows tests or other modules to react to rule reloads.
-        console.log(
+        log(
+          'info',
           '[stateManagerProxy] Publishing stateManager:rulesLoaded event.'
         );
         this.eventBus.publish('stateManager:rulesLoaded', {
@@ -266,7 +293,8 @@ export class StateManagerProxy {
 
         // Update static groups cache if provided by worker
         if (message.workerStaticGroups && this.staticDataCache) {
-          console.log(
+          log(
+            'info',
             '[StateManagerProxy] Received workerStaticGroups from rulesLoadedConfirmation, updating staticDataCache.groups:',
             JSON.parse(JSON.stringify(message.workerStaticGroups))
           );
@@ -289,7 +317,8 @@ export class StateManagerProxy {
             snapshot: this.uiCache,
           });
         } else {
-          console.warn(
+          log(
+            'warn',
             '[stateManagerProxy] Received stateSnapshot message without snapshot data.'
           );
         }
@@ -302,7 +331,8 @@ export class StateManagerProxy {
         );
         break;
       case 'event': // For granular events forwarded from worker
-        console.log(
+        log(
+          'info',
           `[stateManagerProxy] Forwarding worker event: ${message.name}`
         );
         this.eventBus.publish(`stateManager:${message.name}`, message.payload);
@@ -313,7 +343,7 @@ export class StateManagerProxy {
         });
         break;
       case 'error': // Errors reported by the worker during processing
-        console.error('[stateManagerProxy] Error reported by worker:', message);
+        log('error', '[stateManagerProxy] Error reported by worker:', message);
         this.eventBus.publish('stateManager:workerError', {
           message: message.message,
           stack: message.stack,
@@ -335,7 +365,8 @@ export class StateManagerProxy {
         }
         break;
       case 'workerError': // This is the new message type from the simplified worker onmessage
-        console.error(
+        log(
+          'error',
           '[StateManagerProxy] General worker error (from new handler):',
           message
         );
@@ -360,7 +391,8 @@ export class StateManagerProxy {
         }
         break;
       default:
-        console.warn(
+        log(
+          'warn',
           '[stateManagerProxy] Unknown message type received:',
           message.type,
           message
@@ -377,7 +409,7 @@ export class StateManagerProxy {
         clearTimeout(pending.timeoutId);
       }
       if (error) {
-        console.error(`[stateManagerProxy] Query ${queryId} failed:`, error);
+        log('error', `[stateManagerProxy] Query ${queryId} failed:`, error);
         pending.reject(new Error(error));
       } else {
         // console.debug(`[stateManagerProxy] Query ${queryId} succeeded.`); // Debug level
@@ -385,7 +417,8 @@ export class StateManagerProxy {
       }
       this.pendingQueries.delete(queryId);
     } else {
-      console.warn(
+      log(
+        'warn',
         `[stateManagerProxy] Received response for unknown queryId: ${queryId}`
       );
     }
@@ -403,7 +436,8 @@ export class StateManagerProxy {
           message.queryId
         );
       } else {
-        console.warn(
+        log(
+          'warn',
           '[StateManagerProxy] Received pingResponse for unknown queryId:',
           message.queryId
         );
@@ -423,14 +457,15 @@ export class StateManagerProxy {
 
   sendCommandToWorker(message) {
     if (!this.worker) {
-      console.error('[stateManagerProxy] Worker not available.');
+      log('error', '[stateManagerProxy] Worker not available.');
       // Optionally throw an error or handle gracefully
       return;
     }
     try {
       this.worker.postMessage(message);
     } catch (error) {
-      console.error(
+      log(
+        'error',
         '[stateManagerProxy] Error sending command to worker:',
         error,
         message
@@ -456,7 +491,8 @@ export class StateManagerProxy {
       if (timeoutMs > 0) {
         timeoutId = setTimeout(() => {
           if (this.pendingQueries.has(queryId)) {
-            console.error(
+            log(
+              'error',
               `[stateManagerProxy] Query ${queryId} (${message.command}) timed out after ${timeoutMs}ms.`
             );
             this.pendingQueries.delete(queryId);
@@ -470,7 +506,8 @@ export class StateManagerProxy {
       try {
         this.worker.postMessage({ ...message, queryId });
       } catch (error) {
-        console.error(
+        log(
+          'error',
           '[stateManagerProxy] Error sending query to worker:',
           error,
           message
@@ -496,7 +533,7 @@ export class StateManagerProxy {
     if (!this.worker) {
       const errorMsg =
         '[StateManagerProxy] Worker not initialized when calling loadRules.';
-      console.error(errorMsg);
+      log('error', errorMsg);
       return Promise.reject(new Error(errorMsg)); // Reject if worker isn't up
     }
     if (
@@ -506,14 +543,15 @@ export class StateManagerProxy {
     ) {
       const errorMsg =
         '[StateManagerProxy] Invalid arguments for loadRules. rulesData and playerInfo (with playerId) are required.';
-      console.error(errorMsg, {
+      log('error', errorMsg, {
         rulesDataKeys: Object.keys(rulesData || {}),
         playerInfo,
       });
       return Promise.reject(new Error(errorMsg));
     }
 
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy loadRules] CALLED. Sending command to worker. PlayerInfo:',
       JSON.parse(JSON.stringify(playerInfo)),
       'Rules data keys:',
@@ -567,7 +605,8 @@ export class StateManagerProxy {
           return true;
         }
       } catch (error) {
-        console.error(
+        log(
+          'error',
           '[StateManagerProxy ensureReady] Error or Timeout:',
           error.message
         );
@@ -596,7 +635,8 @@ export class StateManagerProxy {
     }
 
     // If still not ready, it means something is off or it's a genuine timeout from a previous state.
-    console.warn(
+    log(
+      'warn',
       '[StateManagerProxy ensureReady] Fell through all checks, returning current (likely false) ready state.'
     );
     return false; // Or this._isReadyPublished which would be false
@@ -628,7 +668,8 @@ export class StateManagerProxy {
     originalExitOrder,
     originalRegionOrder
   ) {
-    console.warn(
+    log(
+      'warn',
       '[StateManagerProxy setStaticData] DEPRECATED: This method should generally not be used. Static data comes from worker.'
     );
 
@@ -650,7 +691,8 @@ export class StateManagerProxy {
     this.staticDataCache.originalRegionOrder = originalRegionOrder;
 
     this.staticDataIsSet = true; // Mark static data as set
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy setStaticData (DEPRECATED)] Static data cache updated on main thread proxy.'
     );
     this._checkAndPublishReady();
@@ -662,7 +704,7 @@ export class StateManagerProxy {
    * @returns {object|null} The cached static game data.
    */
   getStaticData() {
-    // console.log('[StateManagerProxy getStaticData] Called. Cache:', this.staticDataCache);
+    // log('info', '[StateManagerProxy getStaticData] Called. Cache:', this.staticDataCache);
     return this.staticDataCache;
   }
 
@@ -812,7 +854,7 @@ export class StateManagerProxy {
   // and have already waited for `ensureReady` or subscribed to snapshot updates.
   getLatestStateSnapshot() {
     if (!this.uiCache) {
-      // console.warn('[StateManagerProxy getLatestStateSnapshot] No snapshot in cache. Ensure rules/state are loaded.');
+      // log('warn', '[StateManagerProxy getLatestStateSnapshot] No snapshot in cache. Ensure rules/state are loaded.');
     }
     return this.uiCache;
   }
@@ -821,7 +863,7 @@ export class StateManagerProxy {
     if (this.worker) {
       this.worker.terminate();
       this.worker = null;
-      console.log('[StateManagerProxy] Worker terminated.');
+      log('info', '[StateManagerProxy] Worker terminated.');
     }
   }
 
@@ -836,7 +878,8 @@ export class StateManagerProxy {
     if (!isWorkerContext && window.logger) {
       window.logger.debug('stateManagerProxy', 'Status check:', status);
     } else {
-      console.log(
+      log(
+        'info',
         '[StateManagerProxy _checkAndPublishReady] Status check:',
         status
       );
@@ -855,7 +898,7 @@ export class StateManagerProxy {
           'Publishing stateManager:ready event'
         );
       } else {
-        console.log('[StateManagerProxy] Publishing stateManager:ready event.');
+        log('info', '[StateManagerProxy] Publishing stateManager:ready event.');
       }
       this.eventBus.publish('stateManager:ready', {
         // Directly use event name string
@@ -878,13 +921,15 @@ export class StateManagerProxy {
     const message = { command, payload };
     // queryId is not relevant for this version of _sendCommand, it's for sendQueryToWorker
 
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy _sendCommand] Sending to worker:',
       JSON.parse(JSON.stringify(message))
     );
 
     if (!this.worker) {
-      console.error(
+      log(
+        'error',
         '[stateManagerProxy] Worker not available for _sendCommand.'
       );
       // Optionally throw an error or handle gracefully
@@ -893,7 +938,8 @@ export class StateManagerProxy {
     try {
       this.worker.postMessage(message);
     } catch (error) {
-      console.error(
+      log(
+        'error',
         '[stateManagerProxy] Error sending command to worker:',
         error,
         message
@@ -913,13 +959,15 @@ export class StateManagerProxy {
    */
   async evaluateRuleRemote(rule) {
     if (!this.worker) {
-      console.error(
+      log(
+        'error',
         '[StateManagerProxy] Worker not initialized, cannot evaluate rule remotely.'
       );
       return false; // Or throw error
     }
     if (this._initialLoadComplete) {
-      console.log(
+      log(
+        'info',
         `[StateManagerProxy] Sending evaluateRuleRequest for rule:`,
         rule
       );
@@ -929,13 +977,15 @@ export class StateManagerProxy {
           { rule },
           true // Expect a response
         );
-        console.log(
+        log(
+          'info',
           `[StateManagerProxy] Received evaluateRuleResponse:`,
           response
         );
         // Assuming the response structure includes { result: ... } or { error: ... }
         if (response && typeof response.error !== 'undefined') {
-          console.error(
+          log(
+            'error',
             '[StateManagerProxy] Worker returned error during remote rule evaluation:',
             response.error
           );
@@ -943,14 +993,16 @@ export class StateManagerProxy {
         }
         return response?.result;
       } catch (error) {
-        console.error(
+        log(
+          'error',
           '[StateManagerProxy] Error during remote rule evaluation request:',
           error
         );
         return false; // Indicate failure
       }
     } else {
-      console.warn(
+      log(
+        'warn',
         '[StateManagerProxy] Worker not ready, cannot evaluate rule remotely yet.'
       );
       return false; // Worker isn't loaded/ready
@@ -977,7 +1029,8 @@ export class StateManagerProxy {
   // <<< END ADDED >>>
 
   initialize(initialConfig = {}) {
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy] initialize method ENTERED. Config received:',
       JSON.parse(JSON.stringify(initialConfig))
     );
@@ -992,7 +1045,8 @@ export class StateManagerProxy {
       // Add any other config that needs to be relayed from the main thread init to the worker
     };
 
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy] Preparing to send initialize command to worker. Config snapshot:',
       // Be cautious with logging very large objects directly
       {
@@ -1019,29 +1073,34 @@ export class StateManagerProxy {
     };
 
     try {
-      console.log(
+      log(
+        'info',
         '[StateManagerProxy] Attempting this.worker.postMessage with initialize command.'
       );
       this.worker.postMessage(messageToSend);
-      console.log(
+      log(
+        'info',
         '[StateManagerProxy] this.worker.postMessage for initialize command completed without immediate error.'
       );
     } catch (error) {
-      console.error(
+      log(
+        'error',
         '[StateManagerProxy] CRITICAL: Error synchronously thrown by this.worker.postMessage for initialize command:',
         error,
         messageToSend
       );
       // Log the stringified version if the direct log fails due to circular refs in error or message
       try {
-        console.error(
+        log(
+          'error',
           '[StateManagerProxy] CRITICAL (stringified): Error:',
           JSON.stringify(error),
           'Message:',
           JSON.stringify(messageToSend)
         );
       } catch (stringifyError) {
-        console.error(
+        log(
+          'error',
           '[StateManagerProxy] CRITICAL: Could not even stringify the error/message for logging.',
           stringifyError
         );
@@ -1062,9 +1121,10 @@ export class StateManagerProxy {
 
   // --- New methods for JSON Module data handling ---
   getSavableStateData() {
-    console.log('[StateManagerProxy] getSavableStateData called.');
+    log('info', '[StateManagerProxy] getSavableStateData called.');
     if (!this.uiDataCache) {
-      console.warn(
+      log(
+        'warn',
         '[StateManagerProxy] No uiDataCache available when getting savable state. Returning empty structure.'
       );
       return {
@@ -1083,7 +1143,8 @@ export class StateManagerProxy {
       // Example: if (this.uiDataCache.gameSpecificFlags) savableData.gameSpecificFlags = this.uiDataCache.gameSpecificFlags;
     };
 
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy] Extracted savable state data:',
       savableData
     );
@@ -1091,12 +1152,14 @@ export class StateManagerProxy {
   }
 
   applyRuntimeStateData(loadedData) {
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy] applyRuntimeStateData called with:',
       loadedData
     );
     if (!loadedData || typeof loadedData !== 'object') {
-      console.error(
+      log(
+        'error',
         '[StateManagerProxy] Invalid data passed to applyRuntimeStateData.',
         loadedData
       );
@@ -1107,7 +1170,8 @@ export class StateManagerProxy {
       StateManagerProxy.COMMANDS.APPLY_RUNTIME_STATE,
       loadedData
     );
-    console.log(
+    log(
+      'info',
       '[StateManagerProxy] Sent APPLY_RUNTIME_STATE command to worker.'
     );
   }
@@ -1189,12 +1253,14 @@ export class StateManagerProxy {
     excludedItems = []
   ) {
     if (!this.worker) {
-      console.error(
+      log(
+        'error',
         '[StateManagerProxy] Worker not initialized, cannot evaluate test.'
       );
       return undefined; // Or reject promise
     }
-    console.log(
+    log(
+      'info',
       `[StateManagerProxy] Sending EVALUATE_ACCESSIBILITY_FOR_TEST for "${locationName}`
     );
     try {
@@ -1211,18 +1277,21 @@ export class StateManagerProxy {
       if (response && typeof response.result === 'boolean') {
         return response.result;
       } else if (response && response.error) {
-        console.error(
+        log(
+          'error',
           `[StateManagerProxy] Worker error during EVALUATE_ACCESSIBILITY_FOR_TEST: ${response.error}`
         );
         return undefined; // Evaluation failed
       }
-      console.warn(
+      log(
+        'warn',
         '[StateManagerProxy] Invalid response from worker for EVALUATE_ACCESSIBILITY_FOR_TEST',
         response
       );
       return undefined;
     } catch (error) {
-      console.error(
+      log(
+        'error',
         '[StateManagerProxy] Error sending EVALUATE_ACCESSIBILITY_FOR_TEST command:',
         error
       );
@@ -1236,7 +1305,8 @@ export class StateManagerProxy {
     excludedItems = []
   ) {
     if (!this.worker) {
-      console.error(
+      log(
+        'error',
         '[StateManagerProxy] Worker not initialized. Cannot apply test inventory and evaluate.'
       );
       return Promise.reject(
@@ -1244,7 +1314,8 @@ export class StateManagerProxy {
       );
     }
 
-    console.log(
+    log(
+      'info',
       `[StateManagerProxy] applyTestInventoryAndEvaluate called for ${locationName}`
     );
 
@@ -1264,7 +1335,8 @@ export class StateManagerProxy {
         this.uiCache = response.newSnapshot;
         // TODO: Consider if we need a specific this.currentInventory or if uiCache.inventory is sufficient.
 
-        console.log(
+        log(
+          'info',
           `[StateManagerProxy] applyTestInventoryAndEvaluate: Snapshot and inventory updated for ${response.originalLocationName}. Publishing events.`
         );
 
@@ -1280,7 +1352,8 @@ export class StateManagerProxy {
         // The actual result of the test for the specific location
         return response.locationAccessibilityResult;
       } else {
-        console.error(
+        log(
+          'error',
           '[StateManagerProxy] Invalid response from worker for APPLY_TEST_INVENTORY_AND_EVALUATE:',
           response
         );
@@ -1289,7 +1362,8 @@ export class StateManagerProxy {
         );
       }
     } catch (error) {
-      console.error(
+      log(
+        'error',
         `[StateManagerProxy] Error in applyTestInventoryAndEvaluate for ${locationName}:`,
         error
       );
@@ -1506,7 +1580,7 @@ export function createStateSnapshotInterface(snapshot, staticData) {
         return snapshotHelpersInstance[helperName](...args);
       }
       // Optional: Log a warning if the helper is not found, or if snapshotHelpersInstance is missing.
-      // console.warn(\`[SnapshotInterface] Helper function "\${helperName}\" not found on snapshotHelpersInstance.\`);
+      // log('warn', \`[SnapshotInterface] Helper function "\${helperName}\" not found on snapshotHelpersInstance.\`);
       return undefined; // Default behavior for missing helpers
     },
     evaluateRule: function (rule, contextName = null) {

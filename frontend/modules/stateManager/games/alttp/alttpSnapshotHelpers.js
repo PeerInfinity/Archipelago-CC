@@ -1,5 +1,19 @@
 import { GameSnapshotHelpers } from '../../helpers/gameSnapshotHelpers.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('alttpSnapshotHelpers', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[alttpSnapshotHelpers] ${message}`, ...data);
+    }
+  }
+}
+
 export class ALTTPSnapshotHelpers extends GameSnapshotHelpers {
   constructor(snapshotInterface) {
     super(snapshotInterface);
@@ -44,8 +58,9 @@ export class ALTTPSnapshotHelpers extends GameSnapshotHelpers {
       typeof regionData.is_dark_world !== 'boolean' ||
       typeof regionData.is_light_world !== 'boolean'
     ) {
-      console.warn(
-        `[ALTTPSnapshotHelpers] is_not_bunny: Region data for ${
+      log(
+        'warn',
+        `is_not_bunny: Region data for ${
           regionData.name || 'region'
         } missing is_dark_world/is_light_world boolean properties. Data:`,
         regionData

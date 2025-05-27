@@ -16,6 +16,17 @@ import {
   proposedLinearFinalCost,
 } from './xpFormulas.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('loopState', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[loopState] ${message}`, ...data);
+  }
+}
+
 export class LoopState {
   constructor() {
     // Injected dependencies (will be set via setDependencies)
@@ -64,12 +75,13 @@ export class LoopState {
    */
   setDependencies(dependencies) {
     if (!dependencies.eventBus || !dependencies.stateManager) {
-      console.error(
+      log(
+        'error',
         '[LoopState] Missing required dependencies (eventBus, stateManager).'
       );
       return;
     }
-    console.log('[LoopState] Setting dependencies...');
+    log('info', '[LoopState] Setting dependencies...');
     this.eventBus = dependencies.eventBus;
     this.stateManager = dependencies.stateManager;
 
@@ -83,7 +95,8 @@ export class LoopState {
   _setupEventListeners() {
     // Ensure eventBus dependency is set
     if (!this.eventBus) {
-      console.warn(
+      log(
+        'warn',
         '[LoopState] Attempted to set up event listeners before eventBus dependency was set.'
       );
       return;
@@ -93,7 +106,8 @@ export class LoopState {
       if (eventData && eventData.snapshot) {
         this.recalculateMaxMana(eventData.snapshot); // Pass snapshot data
       } else {
-        console.warn(
+        log(
+          'warn',
           '[LoopState] Received snapshotUpdated event without snapshot data.'
         );
       }
@@ -106,7 +120,7 @@ export class LoopState {
   initialize() {
     // Ensure dependencies are set
     if (!this.stateManager || !this.eventBus) {
-      console.error('[LoopState] Cannot initialize: Dependencies not set.');
+      log('error', '[LoopState] Cannot initialize: Dependencies not set.');
       return;
     }
     // REMOVED: Calculate initial mana based on current inventory
@@ -131,7 +145,8 @@ export class LoopState {
     // Accepts snapshot as argument
     // Dependencies should already be set if this is called via event listener
     if (!this.stateManager || !this.eventBus) {
-      console.warn(
+      log(
+        'warn',
         '[LoopState] Cannot recalculate max mana: Dependencies not set (should not happen via event).'
       );
       return;
@@ -157,7 +172,8 @@ export class LoopState {
         }
       }
     } else {
-      console.warn(
+      log(
+        'warn',
         '[LoopState] Could not get inventory data from state snapshot.'
       );
     }
@@ -247,11 +263,11 @@ export class LoopState {
       this.actionQueue.push(action);
     }
 
-    //console.log('Action queued:', action);
+    //log('info', 'Action queued:', action);
     this.eventBus.publish('loopState:queueUpdated', {
       queue: this.actionQueue,
     });
-    //console.log('Published loopState:queueUpdated event');
+    //log('info', 'Published loopState:queueUpdated event');
 
     // Start processing if not already running
     if (!this.isProcessing && !this.isPaused) {
@@ -362,7 +378,7 @@ export class LoopState {
 
     // Ensure we have a valid action
     if (!this.currentAction) {
-      console.error('No valid action at index', this.currentActionIndex);
+      log('error', 'No valid action at index', this.currentActionIndex);
       this.isProcessing = false;
       return;
     }
@@ -385,7 +401,7 @@ export class LoopState {
       this._processFrame.bind(this)
     );
 
-    //console.log('Started processing action:', this.currentAction);
+    //log('info', 'Started processing action:', this.currentAction);
 
     this.eventBus.publish('loopState:processingStarted', {
       action: this.currentAction,
@@ -478,7 +494,7 @@ export class LoopState {
         !this.currentAction ||
         this.currentActionIndex >= this.actionQueue.length
       ) {
-        console.error('Invalid action state in _processFrame:', {
+        log('error', 'Invalid action state in _processFrame:', {
           currentActionIndex: this.currentActionIndex,
           queueLength: this.actionQueue.length,
           hasCurrentAction: !!this.currentAction,
@@ -533,7 +549,7 @@ export class LoopState {
 
       // Log every few frames for debugging
       //if (Math.random() < 0.05) {
-      //  console.log(
+      //  log('info',
       //    `Action progress: ${this.currentAction.progress.toFixed(
       //      2
       //    )}%, Mana: ${this.currentMana.toFixed(2)}/${this.maxMana}`
@@ -542,13 +558,13 @@ export class LoopState {
 
       // Check for action completion
       if (this.currentAction.progress >= 100) {
-        //console.log('Action completed:', this.currentAction);
+        //log('info', 'Action completed:', this.currentAction);
         this._completeCurrentAction();
       }
 
       // Check for loop reset (out of mana)
       if (this.currentMana <= 0) {
-        //console.log('Loop reset: out of mana');
+        //log('info', 'Loop reset: out of mana');
         this._resetLoop();
         this._animationFrameId = requestAnimationFrame(
           this._processFrame.bind(this)
@@ -571,7 +587,7 @@ export class LoopState {
 
       this.eventBus.publish('loopState:progressUpdated', eventData);
     } catch (error) {
-      console.error('Error in _processFrame:', error);
+      log('error', 'Error in _processFrame:', error);
       // Try to recover by stopping processing
       this.stopProcessing();
       return;
@@ -617,7 +633,7 @@ export class LoopState {
 
       // Only add a new explore action if shouldRepeat is true AND there are no more explore actions for this region
       if (shouldRepeat && !hasMoreExploreActions) {
-        //console.log(
+        //log('info',
         //  `Repeating explore action for ${regionName} (repeat state is true, no other explore actions pending)`
         //);
 
@@ -653,7 +669,7 @@ export class LoopState {
         nextAction.type === 'checkLocation' &&
         this.stateManager.instance.isLocationChecked(nextAction.locationName)
       ) {
-        //console.log(
+        //log('info',
         //  `Skipping already checked location: ${nextAction.locationName}. Removing action.`
         //);
         // Remove the action from the queue
@@ -710,7 +726,8 @@ export class LoopState {
   _applyActionEffects(action) {
     // Ensure eventBus dependency is set
     if (!this.eventBus) {
-      console.warn(
+      log(
+        'warn',
         '[LoopState] Cannot apply action effects: eventBus dependency missing.'
       );
       return;
@@ -754,7 +771,8 @@ export class LoopState {
   _handleLocationCheckCompletion(action) {
     // Ensure dependencies are set
     if (!this.stateManager) {
-      console.warn(
+      log(
+        'warn',
         '[LoopState] Cannot handle location check: stateManager dependency missing.'
       );
       return;
@@ -1025,7 +1043,8 @@ export class LoopState {
       // Ensure eventBus is available
       this.eventBus.publish('loopState:stateLoaded', {});
     } else {
-      console.warn(
+      log(
+        'warn',
         '[LoopState] EventBus not available during loadFromSerializedState to publish stateLoaded event.'
       );
     }
@@ -1042,7 +1061,7 @@ export class LoopState {
         JSON.stringify(serializedState)
       );
     } catch (error) {
-      console.error('Failed to save loop state:', error);
+      log('error', 'Failed to save loop state:', error);
     }
   }
 
@@ -1058,7 +1077,7 @@ export class LoopState {
         return true;
       }
     } catch (error) {
-      console.error('Failed to load loop state:', error);
+      log('error', 'Failed to load loop state:', error);
     }
     return false;
   }

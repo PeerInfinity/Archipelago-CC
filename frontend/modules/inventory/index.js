@@ -1,6 +1,17 @@
 // UI Class for this module
 import { InventoryUI } from './inventoryUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('inventoryModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[inventoryModule] ${message}`, ...data);
+  }
+}
+
 // --- Module Info ---
 export const moduleInfo = {
   name: 'Inventory',
@@ -21,7 +32,7 @@ export const moduleInfo = {
  * Registers the panel component and event bus subscribers.
  */
 export function register(registrationApi) {
-  console.log('[Inventory Module] Registering...');
+  log('info', '[Inventory Module] Registering...');
 
   // Register the panel component CLASS constructor
   registrationApi.registerPanelComponent('inventoryPanel', InventoryUI);
@@ -44,7 +55,7 @@ export function register(registrationApi) {
   // Register settings schema if needed
   // No settings schema specific to Inventory registration.
 
-  console.log('[Inventory Module] Registration complete.');
+  log('info', '[Inventory Module] Registration complete.');
 }
 
 /**
@@ -52,13 +63,13 @@ export function register(registrationApi) {
  * Minimal setup, UI class handles its own initialization.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[Inventory Module] Initializing with priority ${priorityIndex}...`
   );
   // Store API if needed by UI class (passed via constructor or method)
   // Currently, UI class imports singletons directly.
 
-  console.log('[Inventory Module] Basic initialization complete.');
+  log('info', '[Inventory Module] Basic initialization complete.');
 }
 
 // REMOVED: postInitialize function. Logic moved to InventoryUI class.

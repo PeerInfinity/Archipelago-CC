@@ -1,10 +1,21 @@
 import settingsManager from '../../app/core/settingsManager.js'; // <<< Import Settings Manager
 import eventBus from '../../app/core/eventBus.js'; // ADDED: Import eventBus
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('settingsUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[settingsUI] ${message}`, ...data);
+  }
+}
+
 class SettingsUI {
   constructor(container, componentState) {
     // MODIFIED: GL constructor
-    console.log('SettingsUI instance created');
+    log('info', 'SettingsUI instance created');
     this.container = container; // ADDED
     this.componentState = componentState; // ADDED
 
@@ -30,7 +41,7 @@ class SettingsUI {
 
     // Defer full initialization until app is ready
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[SettingsUI] Received app:readyForUiDataLoad. Initializing editor.'
       );
       this.initialize(); // This will create the JSONEditor instance
@@ -50,11 +61,11 @@ class SettingsUI {
 
   initialize() {
     if (!this.isInitialized) {
-      console.log('Initializing SettingsUI...');
+      log('info', 'Initializing SettingsUI...');
       this.initializeEditor();
       this.isInitialized = true;
     } else {
-      console.log('SettingsUI already initialized.');
+      log('info', 'SettingsUI already initialized.');
       // Potentially refresh if needed when re-opened
       if (this.editor) {
         this.editor.setValue(this.currentData);
@@ -64,7 +75,7 @@ class SettingsUI {
 
   initializeEditor() {
     if (typeof JSONEditor === 'undefined') {
-      console.error(
+      log('error', 
         'JSONEditor library not found. Ensure it is loaded globally.'
       );
       this.editorContainer.innerHTML =
@@ -73,13 +84,13 @@ class SettingsUI {
     }
 
     if (this.editor) {
-      console.log(
+      log('info', 
         'Settings editor already exists. Destroying previous instance.'
       );
       this.destroyEditor();
     }
 
-    console.log('Creating json-editor instance...');
+    log('info', 'Creating json-editor instance...');
     try {
       // Get current settings from manager
       this.currentData = settingsManager.getSettings();
@@ -114,7 +125,7 @@ class SettingsUI {
             // Update local copy AFTER saving to manager
             this.currentData = settingsManager.getSettings();
           } catch (e) {
-            console.error(
+            log('error', 
               'Error getting/updating value from settings editor:',
               e
             );
@@ -125,12 +136,12 @@ class SettingsUI {
       // Set a timeout to mark the editor as ready for changes after initial setup
       setTimeout(() => {
         this.editorReadyForChanges = true;
-        console.log('[SettingsUI] Editor is now ready for live changes.');
+        log('info', '[SettingsUI] Editor is now ready for live changes.');
       }, 100); // Adjust timeout as needed, 100ms is usually sufficient
 
-      console.log('json-editor instance created successfully.');
+      log('info', 'json-editor instance created successfully.');
     } catch (error) {
-      console.error('Failed to initialize JSONEditor (json-editor):', error);
+      log('error', 'Failed to initialize JSONEditor (json-editor):', error);
       this.editorContainer.innerHTML = `<p style="color: red;">Error loading Settings Editor: ${error.message}. Check console.</p>`;
       this.editor = null; // Ensure editor is null on error
     }
@@ -138,13 +149,13 @@ class SettingsUI {
 
   // Basic implementation, json-editor might resize itself
   onPanelResize(width, height) {
-    console.log(`SettingsUI resized to ${width}x${height}`);
+    log('info', `SettingsUI resized to ${width}x${height}`);
     // You might trigger a resize/refresh on the editor if needed
   }
 
   destroyEditor() {
     if (this.editor && typeof this.editor.destroy === 'function') {
-      console.log('Destroying json-editor instance.');
+      log('info', 'Destroying json-editor instance.');
       this.editor.destroy();
       this.editor = null;
     }
@@ -155,31 +166,31 @@ class SettingsUI {
   }
 
   onPanelDestroy() {
-    console.log('SettingsUI destroyed');
+    log('info', 'SettingsUI destroyed');
     this.destroyEditor();
     this.isInitialized = false;
   }
 
   dispose() {
-    console.log('Disposing SettingsUI...');
+    log('info', 'Disposing SettingsUI...');
     this.onPanelDestroy();
   }
 
   // --- Methods to interact with the editor ---
   setData(newData, newSchema = null) {
-    console.log('SettingsUI setData called.');
+    log('info', 'SettingsUI setData called.');
     // This method might become less relevant if editor always loads from settingsManager
     // Or could be used to force-reload from settingsManager if needed
     this.currentData = settingsManager.getSettings();
     if (this.editor) {
-      console.log('Reloading settings editor data from settingsManager...');
+      log('info', 'Reloading settings editor data from settingsManager...');
       try {
         this.editor.setValue(this.currentData);
       } catch (e) {
-        console.error('Error setting value in settings editor:', e);
+        log('error', 'Error setting value in settings editor:', e);
       }
     } else {
-      console.log('Settings editor not initialized yet. Will load on init.');
+      log('info', 'Settings editor not initialized yet. Will load on init.');
       if (this.isInitialized) {
         this.initializeEditor();
       }

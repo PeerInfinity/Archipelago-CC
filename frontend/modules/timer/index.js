@@ -4,6 +4,17 @@ import { TimerUI } from './timerUI.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js'; // For dependency injection
 import eventBus from '../../app/core/eventBus.js'; // For dependency injection
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('timerModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[timerModule] ${message}`, ...data);
+  }
+}
+
 export const moduleInfo = {
   name: 'Timer',
   description: 'Manages the location check timer and related UI elements.',
@@ -19,7 +30,7 @@ let moduleEventBus = null; // Stored from initializationApi
  * @param {object} registrationApi - API provided by the initialization script.
  */
 export function register(registrationApi) {
-  console.log(`[Timer Module] Registering module: ${moduleInfo.name}`);
+  log('info', `[Timer Module] Registering module: ${moduleInfo.name}`);
 
   // Register public functions for UI attachment
   registrationApi.registerPublicFunction(
@@ -30,13 +41,13 @@ export function register(registrationApi) {
         timerUIInstance &&
         typeof timerUIInstance.attachToHost === 'function'
       ) {
-        console.log(
+        log('info', 
           `[Timer Module] attachTimerToHost called with placeholder:`,
           placeholderElement
         );
         timerUIInstance.attachToHost(placeholderElement);
       } else {
-        console.error(
+        log('error', 
           '[Timer Module] attachTimerToHost called but TimerUI instance or method not ready.'
         );
       }
@@ -51,10 +62,10 @@ export function register(registrationApi) {
         timerUIInstance &&
         typeof timerUIInstance.detachFromHost === 'function'
       ) {
-        console.log(`[Timer Module] detachTimerFromHost called.`);
+        log('info', `[Timer Module] detachTimerFromHost called.`);
         timerUIInstance.detachFromHost();
       } else {
-        console.error(
+        log('error', 
           '[Timer Module] detachTimerFromHost called but TimerUI instance or method not ready.'
         );
       }
@@ -101,7 +112,7 @@ export function register(registrationApi) {
     initialTarget: 'bottom',
   });
 
-  console.log(`[${moduleInfo.name} Module] Registration complete.`);
+  log('info', `[${moduleInfo.name} Module] Registration complete.`);
 }
 
 /**
@@ -111,12 +122,12 @@ export function register(registrationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[${moduleInfo.name} Module] Initializing with priority ${priorityIndex}... (ID: ${moduleId})`
   );
 
   dispatcher = initializationApi.getDispatcher();
-  console.log(
+  log('info', 
     '[Timer Module] dispatcher type from initializationApi:',
     typeof dispatcher,
     dispatcher
@@ -124,7 +135,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   moduleEventBus = initializationApi.getEventBus();
 
   if (!dispatcher || !moduleEventBus) {
-    console.error(
+    log('error', 
       `[${moduleInfo.name} Module] Critical error: Dispatcher or EventBus not available.`
     );
     return () => {}; // Return an empty cleanup function
@@ -150,7 +161,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     ) {
       timerLogicInstance.initialize();
     } else {
-      console.error(
+      log('error', 
         `[${moduleInfo.name} Module] timerLogicInstance or its initialize method is problematic.`
       );
     }
@@ -158,12 +169,12 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     if (timerUIInstance && typeof timerUIInstance.initialize === 'function') {
       timerUIInstance.initialize(); // This should prepare the DOM element but not attach it.
     } else {
-      console.error(
+      log('error', 
         `[${moduleInfo.name} Module] timerUIInstance or its initialize method is problematic.`
       );
     }
   } catch (error) {
-    console.error(
+    log('error', 
       `[${moduleInfo.name} Module] Error during instantiation or initialization of TimerLogic/TimerUI:`,
       error
     );
@@ -171,10 +182,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     timerUIInstance = null;
   }
 
-  console.log(`[${moduleInfo.name} Module] Initialization complete.`);
+  log('info', `[${moduleInfo.name} Module] Initialization complete.`);
 
   return () => {
-    console.log(`[${moduleInfo.name} Module] Cleaning up...`);
+    log('info', `[${moduleInfo.name} Module] Cleaning up...`);
     if (
       timerUIInstance &&
       typeof timerUIInstance.detachFromHost === 'function'

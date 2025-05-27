@@ -8,6 +8,17 @@ import eventBus from '../../app/core/eventBus.js';
 import loopState from '../loops/loopStateSingleton.js';
 import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('pathAnalyzerUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[pathAnalyzerUI] ${message}`, ...data);
+  }
+}
+
 /**
  * Handles UI aspects of path analysis for regions in the game
  * Uses PathAnalyzerLogic for the core algorithmic operations
@@ -32,7 +43,7 @@ export class PathAnalyzerUI {
       'settings:changed',
       ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode')) {
-          console.log('PathAnalyzerUI reacting to settings change:', key);
+          log('info', 'PathAnalyzerUI reacting to settings change:', key);
           const pathsContainer = document.querySelector(
             '.region-details-content .path-analysis-results'
           );
@@ -521,7 +532,7 @@ export class PathAnalyzerUI {
       staticData
     );
     if (!snapshotInterface) {
-      console.error(
+      log('error', 
         '[PathAnalyzerUI] Failed to create snapshot interface for path processing'
       );
       return pathEl;
@@ -824,21 +835,21 @@ export class PathAnalyzerUI {
     container.innerHTML = '<h4>Direct Connections & Rules:</h4>';
 
     // --- MOVED AND REFINED: Detailed logging for staticData --- >
-    console.log(
+    log('info', 
       '[PathAnalyzerUI DEBUG] Entered _analyzeDirectConnections. regionName:',
       regionName
     );
-    console.log(
+    log('info', 
       '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - staticData (parameter) value:',
       staticData
     );
-    console.log(
+    log('info', 
       '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - typeof staticData (parameter):',
       typeof staticData
     );
 
     if (staticData && typeof staticData === 'object') {
-      console.log(
+      log('info', 
         '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - staticData.regions details:',
         {
           regionsPropertyExists: 'regions' in staticData,
@@ -847,7 +858,7 @@ export class PathAnalyzerUI {
         }
       );
     } else {
-      console.log(
+      log('info', 
         '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - staticData is not a valid object or is null/undefined.'
       );
     }
@@ -914,7 +925,7 @@ export class PathAnalyzerUI {
             if (nodeResults[key] && Array.isArray(nodeResults[key])) {
               allNodes[key].push(...nodeResults[key]);
             } else if (nodeResults[key] !== undefined) {
-              console.warn(
+              log('warn', 
                 `[PathUI] nodeResults[${key}] was not an array:`,
                 nodeResults[key]
               );
@@ -966,7 +977,7 @@ export class PathAnalyzerUI {
               if (nodeResults[key] && Array.isArray(nodeResults[key])) {
                 allNodes[key].push(...nodeResults[key]);
               } else if (nodeResults[key] !== undefined) {
-                console.warn(
+                log('warn', 
                   `[PathUI] nodeResults[${key}] for entrance ${entrance.name} was not an array:`,
                   nodeResults[key]
                 );
@@ -1289,7 +1300,7 @@ export class PathAnalyzerUI {
       return container;
     } catch (e) {
       // If any error occurs in formatting, return a simple text node
-      console.error('Error formatting arguments:', e);
+      log('error', 'Error formatting arguments:', e);
       const span = document.createElement('span');
       span.textContent = ` (${argsString})`;
       span.style.color = '#e0e0e0'; // Light gray color for better visibility
@@ -1674,7 +1685,7 @@ export class PathAnalyzerUI {
       JSON.stringify(updatedResults)
     );
 
-    console.log(
+    log('info', 
       `[PathAnalyzerUI] Stored analysis results for ${regionName}:`,
       analysisResults
     );

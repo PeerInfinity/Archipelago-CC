@@ -13,6 +13,17 @@ import {
 } from './xpFormulas.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('loopUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[loopUI] ${message}`, ...data);
+  }
+}
+
 // import { logger } from '../../app/core/logger.js';
 
 export class LoopUI {
@@ -56,7 +67,7 @@ export class LoopUI {
 
     // Defer full initialization until app is ready
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[LoopUI] Received app:readyForUiDataLoad. Initializing panel.'
       );
       this.initialize(); // This will call buildInitialStructure and attachInternalListeners
@@ -79,7 +90,7 @@ export class LoopUI {
       'settings:changed',
       ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.loops')) {
-          console.log('LoopUI reacting to settings change:', key);
+          log('info', 'LoopUI reacting to settings change:', key);
           this.renderLoopPanel(); // Re-render panel when setting changes
         }
       }
@@ -145,9 +156,9 @@ export class LoopUI {
    * Should be called by PanelManager after the root element is appended.
    */
   attachInternalListeners() {
-    console.log('LoopUI: Attaching internal listeners...');
+    log('info', 'LoopUI: Attaching internal listeners...');
     if (!this.rootElement) {
-      console.error('LoopUI: Cannot attach listeners, rootElement is missing.');
+      log('error', 'LoopUI: Cannot attach listeners, rootElement is missing.');
       return;
     }
 
@@ -164,7 +175,7 @@ export class LoopUI {
         newButton.addEventListener('click', handler.bind(this)); // Bind 'this' correctly
         return newButton;
       } else {
-        console.warn(
+        log('warn', 
           `LoopUI: Button with ID #${buttonId} not found in rootElement.`
         );
       }
@@ -241,7 +252,7 @@ export class LoopUI {
         newFileInput.value = '';
       });
     } else {
-      console.warn('LoopUI: Import label/button or file input not found.');
+      log('warn', 'LoopUI: Import label/button or file input not found.');
     }
 
     // Game speed slider
@@ -259,10 +270,10 @@ export class LoopUI {
         speedValueSpan.textContent = `${speed.toFixed(1)}x`;
       });
     } else {
-      console.warn('LoopUI: Speed slider or value span not found.');
+      log('warn', 'LoopUI: Speed slider or value span not found.');
     }
 
-    console.log('LoopUI: Internal listeners attached.');
+    log('info', 'LoopUI: Internal listeners attached.');
   }
 
   // --- Helper handlers for button clicks ---
@@ -300,7 +311,7 @@ export class LoopUI {
         if (pauseBtn) pauseBtn.textContent = 'Pause';
       }
     } catch (error) {
-      console.error('Error during restart:', error);
+      log('error', 'Error during restart:', error);
     }
   }
 
@@ -358,7 +369,7 @@ export class LoopUI {
       // Render the panel
       this.renderLoopPanel();
       // Use console.warn instead of window.consoleManager
-      console.warn('Game has been hard reset!');
+      log('warn', 'Game has been hard reset!');
     }
   }
 
@@ -399,7 +410,7 @@ export class LoopUI {
    * Initialize the loop UI
    */
   initialize() {
-    console.log('[LoopUI] Initializing LoopUI panel content...'); // Added log
+    log('info', '[LoopUI] Initializing LoopUI panel content...'); // Added log
     this.buildInitialStructure();
     this.attachInternalListeners(); // Attach listeners for the newly built structure
   }
@@ -409,28 +420,28 @@ export class LoopUI {
    * Should be called once by PanelManager after the root element is attached.
    */
   buildInitialStructure() {
-    console.log('LoopUI: Building initial structure (ensuring areas exist)');
+    log('info', 'LoopUI: Building initial structure (ensuring areas exist)');
     // This method might become simpler if createRootElement and attachInternalListeners
     // handle most of the setup. Ensure essential containers exist.
 
     const container = this.rootElement; // Use the root element property
     if (!container) {
-      console.error('Loop panel container (rootElement) not found or not set');
+      log('error', 'Loop panel container (rootElement) not found or not set');
       return;
     }
 
     // Ensure essential areas exist (created in createRootElement)
     if (!container.querySelector('#loop-fixed-area')) {
-      console.error('LoopUI: #loop-fixed-area missing in rootElement');
+      log('error', 'LoopUI: #loop-fixed-area missing in rootElement');
     }
     if (!container.querySelector('#loop-regions-area')) {
-      console.error('LoopUI: #loop-regions-area missing in rootElement');
+      log('error', 'LoopUI: #loop-regions-area missing in rootElement');
     }
     if (!container.querySelector('.loop-controls-area')) {
-      console.error('LoopUI: .loop-controls-area missing in rootElement');
+      log('error', 'LoopUI: .loop-controls-area missing in rootElement');
     }
     if (!container.querySelector('.loop-controls')) {
-      console.error('LoopUI: .loop-controls (top) missing in rootElement');
+      log('error', 'LoopUI: .loop-controls (top) missing in rootElement');
     }
 
     // Cache references to key elements if not already done in constructor
@@ -452,7 +463,7 @@ export class LoopUI {
   _initializeFixedArea() {
     const fixedArea = this.rootElement.querySelector('#loop-fixed-area');
     if (!fixedArea) {
-      console.error('LoopUI: #loop-fixed-area not found for initialization.');
+      log('error', 'LoopUI: #loop-fixed-area not found for initialization.');
       return;
     }
     // Only add content if it's not already there
@@ -490,7 +501,7 @@ export class LoopUI {
   subscribeToEvents() {
     // Prevent adding duplicate listeners if called multiple times (though it shouldn't be with new structure)
     if (this.eventSubscriptions && this.eventSubscriptions.length > 0) {
-      console.warn(
+      log('warn', 
         'LoopUI: subscribeToEvents called multiple times. Skipping.'
       );
       return;
@@ -502,7 +513,7 @@ export class LoopUI {
       this.eventSubscriptions.push(unsubscribe);
     };
 
-    console.log('LoopUI: Subscribing to EventBus events');
+    log('info', 'LoopUI: Subscribing to EventBus events');
 
     // Mana changes
     subscribe('loopState:manaChanged', (data) => {
@@ -640,7 +651,7 @@ export class LoopUI {
     subscribe('loopState:stateLoaded', () => {
       // When state is loaded, ONLY update the UI to reflect the loaded state.
       // DO NOT call this.initialize() here as it causes loops.
-      console.log(
+      log('info', 
         'LoopUI: Received loopState:stateLoaded event. Updating UI based on loaded state.'
       );
 
@@ -691,7 +702,7 @@ export class LoopUI {
 
     // <<< ADD SUBSCRIPTION FOR LOOP MODE REQUEST >>>
     subscribe('system:requestLoopMode', () => {
-      console.log(
+      log('info', 
         '[LoopUI] Received system:requestLoopMode, activating loop mode...'
       );
       if (!this.isLoopModeActive) {
@@ -699,13 +710,13 @@ export class LoopUI {
         // Additionally, activate the loopsPanel if panelManagerInstance is available
         if (panelManagerInstance) {
           try {
-            console.log('[LoopUI] Activating loopsPanel...');
+            log('info', '[LoopUI] Activating loopsPanel...');
             panelManagerInstance.activatePanel('loopsPanel');
           } catch (error) {
-            console.error('[LoopUI] Error activating loopsPanel:', error);
+            log('error', '[LoopUI] Error activating loopsPanel:', error);
           }
         } else {
-          console.warn(
+          log('warn', 
             '[LoopUI] panelManagerInstance not available to activate panel.'
           );
         }
@@ -718,19 +729,19 @@ export class LoopUI {
    */
   unsubscribeFromEvents() {
     if (this.eventSubscriptions && this.eventSubscriptions.length > 0) {
-      console.log(
+      log('info', 
         `LoopUI: Unsubscribing from ${this.eventSubscriptions.length} event(s).`
       );
       this.eventSubscriptions.forEach((unsubscribe) => {
         try {
           unsubscribe();
         } catch (e) {
-          console.warn('LoopUI: Error during event unsubscription:', e);
+          log('warn', 'LoopUI: Error during event unsubscription:', e);
         }
       });
       this.eventSubscriptions = []; // Clear the array
     } else {
-      console.log('LoopUI: No active event subscriptions to unsubscribe from.');
+      log('info', 'LoopUI: No active event subscriptions to unsubscribe from.');
     }
   }
 
@@ -738,7 +749,7 @@ export class LoopUI {
    * Cleanup method called when the panel is destroyed.
    */
   onPanelDestroy() {
-    console.log('LoopUI onPanelDestroy called');
+    log('info', 'LoopUI onPanelDestroy called');
     this._stopAnimationLoop();
     this.unsubscribeFromEvents();
     window.loopUIInstance = null; // Clear global reference
@@ -768,7 +779,7 @@ export class LoopUI {
       }
     }
 
-    //console.log('Updated regions in queue:', [...this.regionsInQueue]);
+    //log('info', 'Updated regions in queue:', [...this.regionsInQueue]);
   }
 
   /**
@@ -983,7 +994,7 @@ export class LoopUI {
           }
         }
       } catch (error) {
-        console.error('Error updating action progress:', error);
+        log('error', 'Error updating action progress:', error);
       }
     });
   }
@@ -1051,7 +1062,7 @@ export class LoopUI {
   _queueCheckLocationAction(regionName, locationName) {
     if (!this.isLoopModeActive) return;
 
-    //console.log(
+    //log('info', 
     //  `Queueing check location action for ${locationName} in ${regionName}`
     //);
 
@@ -1096,7 +1107,7 @@ export class LoopUI {
     );
 
     if (existingMoveAction) {
-      console.log(
+      log('info', 
         `There's already a move action from ${regionName} to ${existingMoveAction.destinationRegion}`
       );
 
@@ -1148,7 +1159,7 @@ export class LoopUI {
 
     // If there's already a move action TO the destination region, show warning
     if (existingDestinationAction) {
-      console.log(
+      log('info', 
         `There's already a move action to ${destinationRegion} from ${existingDestinationAction.regionName}`
       );
 
@@ -1203,7 +1214,7 @@ export class LoopUI {
     // Immediately collapse the source region when adding a move action
     this.expandedRegions.delete(regionName);
 
-    //console.log(
+    //log('info', 
     //  `Queueing move action from ${regionName} to ${destinationRegion} via ${exitName}`
     //);
 
@@ -1234,12 +1245,12 @@ export class LoopUI {
    * Expand all regions
    */
   expandAllRegions() {
-    console.log('LoopUI: Expanding all regions');
+    log('info', 'LoopUI: Expanding all regions');
     if (!this.isLoopModeActive) return;
     // <<< Use discoveryStateSingleton >>>
     const discoveredRegions = discoveryStateSingleton.discoveredRegions;
     if (!discoveredRegions || typeof discoveredRegions.forEach !== 'function') {
-      console.error(
+      log('error', 
         'discoveryStateSingleton.discoveredRegions is not a valid Set:',
         discoveredRegions
       );
@@ -1269,7 +1280,7 @@ export class LoopUI {
    * Collapse all regions
    */
   collapseAllRegions() {
-    console.log('LoopUI: Collapsing all regions');
+    log('info', 'LoopUI: Collapsing all regions');
     if (!this.isLoopModeActive) return;
     this.expandedRegions.clear();
 
@@ -1306,7 +1317,7 @@ export class LoopUI {
    * Render the loop panel
    */
   renderLoopPanel() {
-    console.log(`LoopUI: Rendering panel. Active: ${this.isLoopModeActive}`);
+    log('info', `LoopUI: Rendering panel. Active: ${this.isLoopModeActive}`);
 
     // <<< Get setting once for the panel >>>
     const useLoopColorblind = settingsManager.getSetting(
@@ -1317,7 +1328,7 @@ export class LoopUI {
     // Get necessary elements, preferably cached ones
     const container = this.rootElement; // Main container
     if (!container) {
-      console.error('LoopUI: Container rootElement not found');
+      log('error', 'LoopUI: Container rootElement not found');
       return;
     }
 
@@ -1372,7 +1383,7 @@ export class LoopUI {
 
     // Use the cached or queried regionsArea
     if (!regionsArea) {
-      console.error('Could not find #loop-regions-area to render regions.');
+      log('error', 'Could not find #loop-regions-area to render regions.');
       return; // Can't proceed without the regions area
     }
 
@@ -1448,7 +1459,7 @@ export class LoopUI {
         : 'Expand All';
     }
 
-    console.log('LoopUI: Panel rendered.');
+    log('info', 'LoopUI: Panel rendered.');
   }
 
   /**
@@ -1460,7 +1471,7 @@ export class LoopUI {
   _buildRegionBlock(region, expanded, useColorblind) {
     // <<< Receive setting
     if (!region) {
-      console.warn('buildRegionBlock called with invalid region data');
+      log('warn', 'buildRegionBlock called with invalid region data');
       return document.createElement('div');
     }
 
@@ -1911,7 +1922,7 @@ export class LoopUI {
               });
             }
 
-            console.log('Removing all actions in regions:', [
+            log('info', 'Removing all actions in regions:', [
               ...regionsToRemove,
             ]);
 
@@ -1957,12 +1968,12 @@ export class LoopUI {
   _queueExploreAction(regionName) {
     if (!this.isLoopModeActive) return;
 
-    console.log(`Queueing explore action for region ${regionName}`);
+    log('info', `Queueing explore action for region ${regionName}`);
 
     // Use the stored checkbox state from our map
     const shouldRepeat = this.repeatExploreStates.get(regionName) || false;
 
-    console.log(
+    log('info', 
       `Queuing explore action for ${regionName}, repeat: ${shouldRepeat}`
     );
 
@@ -2053,9 +2064,9 @@ export class LoopUI {
       // Use console.info instead of window.consoleManager
       console.info('Game state exported!');
     } catch (error) {
-      console.error('Failed to export state:', error);
+      log('error', 'Failed to export state:', error);
       // Use console.error instead of window.consoleManager
-      console.error(`Export failed: ${error.message}`);
+      log('error', `Export failed: ${error.message}`);
     }
   }
 
@@ -2076,9 +2087,9 @@ export class LoopUI {
         // Use console.info instead of window.consoleManager
         console.info('Game state imported!');
       } catch (error) {
-        console.error('Failed to import state:', error);
+        log('error', 'Failed to import state:', error);
         // Use console.error instead of window.consoleManager
-        console.error(`Import failed: ${error.message}`);
+        log('error', `Import failed: ${error.message}`);
       }
     };
 
@@ -2110,7 +2121,7 @@ export class LoopUI {
     // --- Emit event for other components ---
     eventBus.publish('loopUI:modeChanged', { active: this.isLoopModeActive });
 
-    console.log(`LoopUI: Loop mode toggled. Active: ${this.isLoopModeActive}`);
+    log('info', `LoopUI: Loop mode toggled. Active: ${this.isLoopModeActive}`);
   }
 
   clear() {

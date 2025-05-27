@@ -8,6 +8,17 @@ import messageHandler, {
   handleUserLocationCheckForClient,
 } from './core/messageHandler.js';
 import LocationManager from './core/locationManager.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('clientModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[clientModule] ${message}`, ...data);
+  }
+}
+
 // import timerState from './core/timerState.js'; // Removed
 // import {
 //   initializeTimerState,
@@ -70,9 +81,9 @@ let mainContentUIInstance = null; // Added to hold the UI instance
 
 // --- Dispatcher Handler for Disconnect (Connect is now handled directly by connection.js) --- //
 function handleDisconnectRequest(data) {
-  console.log('[Client Module] Received disconnect request via dispatcher.');
+  log('info', '[Client Module] Received disconnect request via dispatcher.');
   if (!coreConnection) {
-    console.error(
+    log('error', 
       '[Client Module] Cannot handle disconnect: Core connection not initialized.'
     );
     return;
@@ -82,7 +93,7 @@ function handleDisconnectRequest(data) {
 
 // --- Registration --- //
 export function register(registrationApi) {
-  console.log('[Client Module] Registering...');
+  log('info', '[Client Module] Registering...');
 
   registrationApi.registerPanelComponent('clientPanel', MainContentUI); // Ensure componentType matches GoldenLayout config
 
@@ -101,7 +112,7 @@ export function register(registrationApi) {
           moduleDispatcher
         );
       } else {
-        console.warn(
+        log('warn', 
           `[Client Module] MainContentUI instance not available or handleRehomeTimerUI method missing for event system:rehomeTimerUI. Attempting to propagate.`
         );
         // Explicitly propagate if this module's UI cannot handle the event
@@ -115,11 +126,11 @@ export function register(registrationApi) {
             eventData,
             { direction: 'up' } // CORRECTED: 'up' to go to lower index (higher actual priority)
           );
-          console.log(
+          log('info', 
             `[Client Module] Called publishToNextModule for system:rehomeTimerUI (direction: up) because instance was unavailable.`
           );
         } else {
-          console.error(
+          log('error', 
             `[Client Module] Could not propagate system:rehomeTimerUI: moduleDispatcher or publishToNextModule missing.`
           );
         }
@@ -160,7 +171,7 @@ export function register(registrationApi) {
 
 // --- Initialization --- //
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(`[Client Module] Initializing with priority ${priorityIndex}...`);
+  log('info', `[Client Module] Initializing with priority ${priorityIndex}...`);
   // clientModuleLoadPriority = priorityIndex; // Store it // REMOVED
 
   moduleEventBus = initializationApi.getEventBus();
@@ -180,7 +191,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   if (typeof coreMessageHandler.setDispatcher === 'function') {
     coreMessageHandler.setDispatcher(moduleDispatcher);
   } else {
-    console.warn(
+    log('warn', 
       '[Client Module] coreMessageHandler does not have setDispatcher method.'
     );
   }
@@ -190,12 +201,12 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   // coreTimerState.setEventBus(moduleEventBus); // Removed
   loadMappingsFromStorage();
 
-  console.log('[Client Module] Core components initialized.');
-  console.log('[Client Module] Settings retrieved:', moduleSettings);
-  console.log('[Client Module] Initialization complete.');
+  log('info', '[Client Module] Core components initialized.');
+  log('info', '[Client Module] Settings retrieved:', moduleSettings);
+  log('info', '[Client Module] Initialization complete.');
 
   return () => {
-    console.log('[Client Module] Cleaning up... (Placeholder)');
+    log('info', '[Client Module] Cleaning up... (Placeholder)');
     coreConnection?.disconnect?.();
     coreLocationManager?.dispose?.();
     // coreTimerState?.dispose?.(); // Removed
@@ -223,7 +234,7 @@ export function getClientModuleEventBus() {
 // Export setter for MainContentUI instance
 export function setMainContentUIInstance(instance) {
   mainContentUIInstance = instance;
-  console.log('[Client Module] MainContentUI instance set.');
+  log('info', '[Client Module] MainContentUI instance set.');
 }
 
 // Export load priority for MainContentUI

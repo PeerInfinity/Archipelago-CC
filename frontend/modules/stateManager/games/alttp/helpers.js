@@ -1,5 +1,19 @@
 import { GameHelpers } from '../../helpers/index.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('alttpHelpers', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[alttpHelpers] ${message}`, ...data);
+    }
+  }
+}
+
 export class ALTTPHelpers extends GameHelpers {
   /**
    * Constructor for ALTTP specific helpers.
@@ -15,49 +29,58 @@ export class ALTTPHelpers extends GameHelpers {
 
     // Prioritize the explicit marker for snapshot interface
     if (context && context._isSnapshotInterface === true) {
-      console.log(
+      log(
+        'info',
         '[ALTTPHelpers Snapshot Constructor] Initializing with StateSnapshotInterface (marker found).'
       );
       this.snapshot = context;
     } else if (context && typeof context.getSnapshot === 'function') {
       // Worker context
-      console.log(
+      log(
+        'info',
         '[ALTTPHelpers Worker Constructor] Initializing with StateManager instance (getSnapshot found).'
       );
       this.manager = context;
       // Log to check the state of manager.locations AT THE TIME OF CONSTRUCTOR CALL
       if (this.manager) {
-        console.log(
+        log(
+          'info',
           '[ALTTPHelpers Worker Constructor] this.manager.locations type:',
           typeof this.manager.locations
         );
-        console.log(
+        log(
+          'info',
           '[ALTTPHelpers Worker Constructor] this.manager.locations available:',
           !!this.manager.locations
         );
         if (this.manager.locations && Array.isArray(this.manager.locations)) {
-          console.log(
+          log(
+            'info',
             '[ALTTPHelpers Worker Constructor] Number of locations initially on manager:',
             this.manager.locations.length
           );
         } else if (this.manager.locations) {
-          console.log(
+          log(
+            'info',
             '[ALTTPHelpers Worker Constructor] this.manager.locations is not an array. Keys:',
             Object.keys(this.manager.locations).length
           );
         }
       } else {
-        console.error(
+        log(
+          'error',
           '[ALTTPHelpers Worker Constructor] this.manager is unexpectedly null after assignment!'
         );
       }
     } else if (context && typeof context.hasItem === 'function') {
-      console.log(
+      log(
+        'info',
         '[ALTTPHelpers] Initializing with StateSnapshotInterface (Main thread context).'
       );
       this.snapshot = context;
     } else {
-      console.error(
+      log(
+        'error',
         '[ALTTPHelpers] Invalid context provided! Expected StateManager or StateSnapshotInterface.',
         context
       );
@@ -273,7 +296,7 @@ export class ALTTPHelpers extends GameHelpers {
         if (retroBowSetting === false) {
           // Not retro bow, proceed to can_hold_arrows
         } else {
-          // console.warn('[ALTTPHelpers Snapshot] can_shoot_arrows: retro_bow status uncertain due to undefined flag/setting.');
+          // log('warn', '[ALTTPHelpers Snapshot] can_shoot_arrows: retro_bow status uncertain due to undefined flag/setting.');
           return undefined;
         }
       }
@@ -303,7 +326,7 @@ export class ALTTPHelpers extends GameHelpers {
 
     if (this.snapshot) {
       if (requiredCountSetting === undefined) {
-        // console.warn('[ALTTPHelpers Snapshot] has_triforce_pieces: triforce_goal_pieces setting is undefined.');
+        // log('warn', '[ALTTPHelpers Snapshot] has_triforce_pieces: triforce_goal_pieces setting is undefined.');
         return undefined; // Cannot determine if setting is unknown
       }
       // If goal is 0, it typically means the goal is met or it's not a triforce hunt.
@@ -313,7 +336,7 @@ export class ALTTPHelpers extends GameHelpers {
       }
       const currentCount = this._countItem('Triforce Piece');
       if (currentCount === undefined) {
-        // console.warn('[ALTTPHelpers Snapshot] has_triforce_pieces: _countItem(\\"Triforce Piece\\") returned undefined.');
+        // log('warn', '[ALTTPHelpers Snapshot] has_triforce_pieces: _countItem(\\"Triforce Piece\\") returned undefined.');
         return undefined;
       }
       return currentCount >= requiredCountSetting;
@@ -350,20 +373,20 @@ export class ALTTPHelpers extends GameHelpers {
           // For Ganon's Tower itself (which usually requires all 7), a rule might pass count=7.
           // If a rule implies Ganon entry without a count, it's ambiguous without more context.
           // For now, if 'crystals_needed_for_gt' is undefined, we can't make a firm decision.
-          // console.warn('[ALTTPHelpers Snapshot] has_crystals: crystals_needed_for_gt setting is undefined, and no explicit count provided.');
+          // log('warn', '[ALTTPHelpers Snapshot] has_crystals: crystals_needed_for_gt setting is undefined, and no explicit count provided.');
           return undefined;
         }
       }
 
       if (requiredCrystals === undefined) {
         // This case implies 'count' was not a number and primary setting lookups also yielded undefined.
-        // console.warn('[ALTTPHelpers Snapshot] has_crystals: Could not determine required crystal count.');
+        // log('warn', '[ALTTPHelpers Snapshot] has_crystals: Could not determine required crystal count.');
         return undefined;
       }
 
       const currentCrystals = this._countGroup('Crystal');
       if (currentCrystals === undefined) {
-        // console.warn('[ALTTPHelpers Snapshot] has_crystals: _countGroup(\\"Crystal\\") returned undefined.');
+        // log('warn', '[ALTTPHelpers Snapshot] has_crystals: _countGroup(\\"Crystal\\") returned undefined.');
         return undefined;
       }
       return currentCrystals >= requiredCrystals;
@@ -607,14 +630,14 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   can_get_good_bee() {
-    // console.warn(
+    // log('warn',
     //   '[ALTTPHelpers] can_get_good_bee not fully refactored for snapshot interface yet.'
     // );
     return this._hasItem('Bug Catching Net') && this._hasItem('Bottle'); // Simplistic, may need more nuance for snapshot
   }
 
   can_retrieve_tablet() {
-    // console.warn(
+    // log('warn',
     //   '[ALTTPHelpers] can_retrieve_tablet not fully refactored for snapshot interface yet.'
     // );
     return (
@@ -655,7 +678,7 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   has_beam_sword() {
-    // console.warn(
+    // log('warn',
     //   '[ALTTPHelpers] has_beam_sword not fully refactored for snapshot interface yet.'
     // );
     return (
@@ -755,7 +778,8 @@ export class ALTTPHelpers extends GameHelpers {
 
   item_name_in_location_names(itemName, locationNames) {
     if (typeof itemName !== 'string' || !Array.isArray(locationNames)) {
-      console.warn(
+      log(
+        'warn',
         '[ALTTPHelpers] item_name_in_location_names: Invalid arguments.',
         { itemName, locationNames }
       );
@@ -774,7 +798,8 @@ export class ALTTPHelpers extends GameHelpers {
           ? staticLocations
           : Object.values(staticLocations);
       } else {
-        console.warn(
+        log(
+          'warn',
           '[ALTTPHelpers Snapshot] item_name_in_location_names: staticData.locations not available on snapshot interface.'
         );
         return undefined; // Cannot proceed without location data
@@ -782,7 +807,8 @@ export class ALTTPHelpers extends GameHelpers {
     } else {
       // Worker context
       if (!this.manager || !this.manager.locations) {
-        console.warn(
+        log(
+          'warn',
           '[ALTTPHelpers Worker] item_name_in_location_names: StateManager or locations not available.'
         );
         return false; // Original worker behavior
@@ -792,7 +818,8 @@ export class ALTTPHelpers extends GameHelpers {
     }
 
     if (!allLocationsArray) {
-      console.warn(
+      log(
+        'warn',
         '[ALTTPHelpers] item_name_in_location_names: Failed to obtain locations array.'
       );
       return this.snapshot ? undefined : false;
@@ -836,7 +863,8 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   basement_key_rule() {
-    console.warn(
+    log(
+      'warn',
       '[ALTTPHelpers] basement_key_rule needs refactoring for snapshot/manager context.'
     );
     // Requires location_item_name which needs refactoring
@@ -865,7 +893,8 @@ export class ALTTPHelpers extends GameHelpers {
 
     // Worker context (original logic)
     if (!this.manager || typeof this.manager.canReach !== 'function') {
-      console.error(
+      log(
+        'error',
         '[ALTTPHelpers can_reach] StateManager or canReach method not available in worker context.'
       );
       return false; // Or throw error
@@ -885,7 +914,7 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   GanonDefeatRule() {
-    // console.warn(
+    // log('warn',
     //   '[ALTTPHelpers] GanonDefeatRule not fully refactored for snapshot interface.'
     // );
 
@@ -896,7 +925,8 @@ export class ALTTPHelpers extends GameHelpers {
 
       // If critical settings are undefined in snapshot, we can't evaluate
       if (requiredCrystals === undefined || requiredTriforce === undefined) {
-        console.warn(
+        log(
+          'warn',
           '[ALTTPHelpers GanonDefeatRule Snapshot] Critical settings (crystals_needed_for_gt or triforce_goal_pieces) undefined in snapshot.'
         );
         return undefined;
@@ -914,7 +944,8 @@ export class ALTTPHelpers extends GameHelpers {
 
       const vulnerableSetting = this._getSetting('ganon_vulnerable');
       if (vulnerableSetting === undefined) {
-        console.warn(
+        log(
+          'warn',
           '[ALTTPHelpers GanonDefeatRule Snapshot] ganon_vulnerable setting undefined in snapshot.'
         );
         return undefined;
@@ -939,7 +970,8 @@ export class ALTTPHelpers extends GameHelpers {
       }
       // Other ganon_vulnerable settings might be more complex for snapshot
       // For now, if not 'silver' or 'silverless', and we are in snapshot, consider it unknown.
-      console.warn(
+      log(
+        'warn',
         `[ALTTPHelpers GanonDefeatRule Snapshot] Unhandled ganon_vulnerable setting '${vulnerableSetting}' in snapshot mode.`
       );
       return undefined;
@@ -963,7 +995,7 @@ export class ALTTPHelpers extends GameHelpers {
 
   has_any(items, playerId) {
     if (!Array.isArray(items)) {
-      console.warn('has_any called with non-array items:', items);
+      log('warn', 'has_any called with non-array items:', items);
       return false;
     }
     if (
@@ -980,13 +1012,13 @@ export class ALTTPHelpers extends GameHelpers {
   len(arr) {
     if (this.snapshot) {
       if (arr === undefined) {
-        // console.warn('[ALTTPHelpers Snapshot] len() called with undefined array.');
+        // log('warn', '[ALTTPHelpers Snapshot] len() called with undefined array.');
         return undefined; // If the array itself is unknown, its length is unknown
       }
     }
     // In worker mode, or if arr is defined in snapshot mode:
     if (!Array.isArray(arr)) {
-      // console.warn('[ALTTPHelpers] len() called with non-array.', arr);
+      // log('warn', '[ALTTPHelpers] len() called with non-array.', arr);
       // Depending on strictness, could return undefined for snapshot, or 0 / error for worker.
       return this.snapshot ? undefined : 0;
     }
@@ -995,7 +1027,7 @@ export class ALTTPHelpers extends GameHelpers {
 
   // Placeholder for zip if needed, more complex to implement fully
   zip(...arrays) {
-    // console.warn('[ALTTPHelpers] zip() helper not fully implemented for snapshot.');
+    // log('warn', '[ALTTPHelpers] zip() helper not fully implemented for snapshot.');
     if (this.snapshot) {
       if (arrays.some((arr) => arr === undefined)) return undefined;
       if (!arrays.every((arr) => Array.isArray(arr))) return undefined;
@@ -1015,7 +1047,7 @@ export class ALTTPHelpers extends GameHelpers {
 
   // Placeholder for getattr if needed, complex due to object resolution
   getattr(obj, attr, defaultValue = undefined) {
-    // console.warn('[ALTTPHelpers] getattr() helper not fully implemented for snapshot.');
+    // log('warn', '[ALTTPHelpers] getattr() helper not fully implemented for snapshot.');
     if (this.snapshot) {
       if (obj === undefined) return undefined;
       // Very simplistic getattr for snapshot, doesn't handle nested paths
@@ -1027,7 +1059,8 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   shop_price_rules(locationOrName) {
-    console.warn(
+    log(
+      'warn',
       '[ALTTPHelpers] shop_price_rules needs context-aware implementation.'
     );
     return true; // Placeholder
@@ -1037,7 +1070,8 @@ export class ALTTPHelpers extends GameHelpers {
     if (this.manager) {
       return this.manager.locations?.find((l) => l.name === locationName);
     } else {
-      console.warn(
+      log(
+        'warn',
         '[ALTTPHelpers] _findLocationByName not available in snapshot context.'
       );
       return null;
@@ -1045,14 +1079,16 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   enhanceLocationsWithShopData() {
-    console.log(
+    log(
+      'info',
       '[ALTTPHelpers] enhanceLocationsWithShopData called (now uses context)'
     );
 
     // When running in worker, access manager directly.
     // When running in main thread (snapshot), this data isn't available in snapshot, so skip.
     if (!this.manager) {
-      console.log(
+      log(
+        'info',
         '[ALTTPHelpers] Skipping enhanceLocationsWithShopData - no direct manager access (expected in main thread).'
       );
       return;
@@ -1064,7 +1100,8 @@ export class ALTTPHelpers extends GameHelpers {
       !stateManager.state ||
       !stateManager.state.shops
     ) {
-      console.warn(
+      log(
+        'warn',
         '[ALTTPHelpers] Cannot enhance locations: missing locations or shop data on StateManager instance.'
       );
       return;
@@ -1093,7 +1130,7 @@ export class ALTTPHelpers extends GameHelpers {
   }
 
   location_item_name(locationName) {
-    // console.warn(
+    // log('warn',
     //   '[ALTTPHelpers] location_item_name needs context-aware implementation.'
     // );
     // TODO: Access location data via this.manager or this.snapshot
@@ -1108,23 +1145,26 @@ export class ALTTPHelpers extends GameHelpers {
       typeof this.manager.getAllLocations === 'function'
     ) {
       // Use getAllLocations if available on the snapshot interface
-      console.log(
+      log(
+        'info',
         '[ALTTPHelpers] location_item_name: Using snapshot.getAllLocations...'
       );
       const locations = this.manager.getAllLocations();
-      console.log(
+      log(
+        'info',
         '[ALTTPHelpers] location_item_name: getAllLocations returned:',
         locations ? locations.length + ' locations' : 'null/undefined'
       );
       const location = locations?.find((loc) => loc.name === locationName);
-      console.log(
+      log(
+        'info',
         '[ALTTPHelpers] location_item_name: Found location:',
         location?.name
       );
       return location?.item?.name ?? null;
     }
     // If we reach here, neither manager nor snapshot context provided the location data.
-    // console.warn('[ALTTPHelpers] location_item_name could not find location data in current context.');
+    // log('warn', '[ALTTPHelpers] location_item_name could not find location data in current context.');
     return null;
   }
 
@@ -1135,13 +1175,13 @@ export class ALTTPHelpers extends GameHelpers {
         // this.snapshot and return true/false or undefined.
         return this[name](...args);
       } catch (e) {
-        console.error(`Error executing helper ${name}:`, e);
+        log('error', `Error executing helper ${name}:`, e);
         // If a helper throws an error during snapshot evaluation, treat as unknown.
         if (this.snapshot) return undefined;
         throw e; // Re-throw in worker context
       }
     }
-    console.warn(`Helper ${name} not found in ALTTPHelpers.`);
+    log('warn', `Helper ${name} not found in ALTTPHelpers.`);
     return this.snapshot ? undefined : false; // Default to unknown for snapshot, false for worker
   }
 }

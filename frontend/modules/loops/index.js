@@ -28,13 +28,24 @@ let loopUnsubscribeHandles = [];
 
 // --- Import the actual singletons needed for injection ---
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('loopsModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[loopsModule] ${message}`, ...data);
+  }
+}
+
 // ----------------------------------------------------- //
 
 // --- Event Handlers --- //
 
 // Handler for rules loaded
 function handleRulesLoaded(eventData, propagationOptions = {}) {
-  console.log('[Loops Module] Received state:rulesLoaded');
+  log('info', '[Loops Module] Received state:rulesLoaded');
   // Reset loop state now that new rules are loaded
   if (
     loopStateSingleton &&
@@ -42,7 +53,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
   ) {
     loopStateSingleton._resetLoop();
   } else {
-    console.warn(
+    log('warn', 
       '[Loops Module] LoopState singleton or _resetLoop method not available when handling state:rulesLoaded.'
     );
   }
@@ -58,7 +69,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
       { direction: 'up' }
     );
   } else {
-    console.error(
+    log('error', 
       '[Loops Module] Cannot propagate state:rulesLoaded: Dispatcher not available.'
     );
   }
@@ -71,7 +82,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
  * Registers the loops panel and potentially primary event handlers.
  */
 export function register(registrationApi) {
-  console.log('[Loops Module] Registering...');
+  log('info', '[Loops Module] Registering...');
 
   // Register panel component with the CLASS CONSTRUCTOR directly
   registrationApi.registerPanelComponent(
@@ -115,7 +126,7 @@ export function register(registrationApi) {
  * Initializes loop state, loads settings, subscribes to events.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(`[Loops Module] Initializing with priority ${priorityIndex}...`);
+  log('info', `[Loops Module] Initializing with priority ${priorityIndex}...`);
 
   // Store API references
   _moduleEventBus = initializationApi.getEventBus();
@@ -124,7 +135,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   const moduleSettings = await initializationApi.getModuleSettings(moduleId);
 
   // Initialize LoopState singleton (which might load from storage)
-  console.log('[Loops Module] Initializing LoopState singleton...');
+  log('info', '[Loops Module] Initializing LoopState singleton...');
   if (loopStateSingleton) {
     try {
       // Inject dependencies BEFORE initializing loopState itself
@@ -140,18 +151,18 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       loopStateSingleton.setAutoRestartQueue(
         moduleSettings?.autoRestart ?? false
       );
-      console.log(
+      log('info', 
         '[Loops Module] LoopState singleton initialized and settings applied.'
       );
     } catch (error) {
-      console.error(
+      log('error', 
         '[Loops Module] Error initializing LoopState singleton:',
         error
       );
       // If state fails, maybe disable the module?
     }
   } else {
-    console.error(
+    log('error', 
       '[Loops Module] LoopState singleton not available during initialization.'
     );
   }
@@ -163,12 +174,12 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   // Subscribe to settings changes
   if (_moduleEventBus) {
     const subscribe = (eventName, handler) => {
-      console.log(`[Loops Module] Subscribing to ${eventName}`);
+      log('info', `[Loops Module] Subscribing to ${eventName}`);
       try {
         const unsubscribe = _moduleEventBus.subscribe(eventName, handler);
         loopUnsubscribeHandles.push(unsubscribe);
       } catch (e) {
-        console.error(`[Loops Module] Failed to subscribe to ${eventName}:`, e);
+        log('error', `[Loops Module] Failed to subscribe to ${eventName}:`, e);
       }
     };
 
@@ -177,7 +188,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       // For now, trust eventData if it looks right
       const loopSettings = eventData?.settings?.moduleSettings?.loops;
       if (loopSettings && loopStateSingleton) {
-        console.log(
+        log('info', 
           '[Loops Module] Reacting to settings:changed',
           loopSettings
         );
@@ -192,16 +203,16 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     // TODO: Add subscription for state:rulesLoaded -> handleRulesLoaded
   } else {
-    console.error(
+    log('error', 
       '[Loops Module] EventBus not available during initialization.'
     );
   }
 
-  console.log('[Loops Module] Initialization complete.');
+  log('info', '[Loops Module] Initialization complete.');
 
   // Return cleanup function
   return () => {
-    console.log('[Loops Module] Cleaning up... Unsubscribing from events.');
+    log('info', '[Loops Module] Cleaning up... Unsubscribing from events.');
     loopUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     loopUnsubscribeHandles = [];
     _moduleEventBus = null; // Clear references
@@ -211,7 +222,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       loopStateSingleton &&
       typeof loopStateSingleton.dispose === 'function'
     ) {
-      console.log('[Loops Module] Disposing LoopState singleton.');
+      log('info', '[Loops Module] Disposing LoopState singleton.');
       loopStateSingleton.dispose();
     }
   };

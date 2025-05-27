@@ -1,6 +1,17 @@
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import eventBus from '../../app/core/eventBus.js';
 import { getInitializationApi } from './index.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('modulesUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[modulesUI] ${message}`, ...data);
+  }
+}
+
 // import ModuleManagerAPI from '../managerAPI.js'; // REMOVED - Use window.moduleManagerApi instead
 
 // Basic CSS for the panel
@@ -93,7 +104,7 @@ export class ModulesPanel {
   onMount(container, componentState) {
     // container is the GoldenLayout ComponentContainer
     // componentState is the state passed by GoldenLayout
-    console.log(
+    log('info', 
       '[ModulesPanel onMount] Called. Container:',
       container,
       'State:',
@@ -171,7 +182,7 @@ export class ModulesPanel {
       typeof moduleManager.getAllModuleStates !== 'function' ||
       typeof moduleManager.getCurrentLoadPriority !== 'function'
     ) {
-      console.error(
+      log('error', 
         'ModulesPanel: ModuleManager not available or missing expected functions.'
       );
       // Display error in the list container
@@ -189,18 +200,18 @@ export class ModulesPanel {
 
       this._renderModules();
     } catch (error) {
-      console.error('ModulesPanel: Failed to fetch module data:', error);
+      log('error', 'ModulesPanel: Failed to fetch module data:', error);
       if (this.moduleListContainer)
         this.moduleListContainer.textContent = 'Error loading module data.';
     }
   }
 
   _renderModules() {
-    // console.log('ModulesPanel: _renderModules invoked.');
+    // log('info', 'ModulesPanel: _renderModules invoked.');
 
     // Target the specific container for the list
     if (!this.moduleListContainer) {
-      // console.error(
+      // log('error', 
       //   'ModulesPanel: _renderModules - this.moduleListContainer is null or undefined!'
       // );
       return;
@@ -208,7 +219,7 @@ export class ModulesPanel {
     this.moduleListContainer.innerHTML = ''; // Clear previous list content
 
     if (!this.loadPriority || this.loadPriority.length === 0) {
-      // console.warn(
+      // log('warn', 
       //   'ModulesPanel: _renderModules - this.loadPriority is empty or invalid AT THE START of _renderModules.'
       // );
       this.moduleListContainer.textContent =
@@ -218,12 +229,12 @@ export class ModulesPanel {
 
     // Render modules in the current load priority order
     this.loadPriority.forEach((moduleId, index) => {
-      // console.log(
+      // log('info', 
       //   `ModulesPanel: _renderModules - Processing moduleId: ${moduleId}, index: ${index}`
       // );
       const state = this.moduleStates[moduleId];
       if (!state || !state.definition) {
-        // console.warn(
+        // log('warn', 
         //   `ModulesPanel: _renderModules - Skipped module ${moduleId} due to missing state or definition. State:`,
         //   state,
         //   'Keys in state:', Object.keys(state || {})
@@ -294,11 +305,11 @@ export class ModulesPanel {
       entryDiv.appendChild(controlsDiv);
 
       // if (entryDiv instanceof HTMLElement) {
-      //   console.log(
+      //   log('info', 
       //     `ModulesPanel: _renderModules - Appending valid entryDiv for ${moduleId} to moduleListContainer.`
       //   );
       // } else {
-      //   console.error(
+      //   log('error', 
       //     `ModulesPanel: _renderModules - entryDiv for ${moduleId} is NOT a valid HTMLElement before append!`,
       //     entryDiv
       //   );
@@ -309,7 +320,7 @@ export class ModulesPanel {
   }
 
   async _handleEnableToggle(moduleId, shouldBeEnabled) {
-    console.log(
+    log('info', 
       `Toggling module ${moduleId} to ${
         shouldBeEnabled ? 'enabled' : 'disabled'
       }`
@@ -322,7 +333,7 @@ export class ModulesPanel {
       typeof moduleManager.enableModule !== 'function' ||
       typeof moduleManager.disableModule !== 'function'
     ) {
-      console.error('Cannot toggle module: ModuleManager not available.');
+      log('error', 'Cannot toggle module: ModuleManager not available.');
       this._updateCheckboxVisualState(moduleId, !shouldBeEnabled); // Revert visual state
       return;
     }
@@ -338,17 +349,17 @@ export class ModulesPanel {
         // Ensure state exists
         this.moduleStates[moduleId].enabled = shouldBeEnabled;
       } else {
-        console.warn(
+        log('warn', 
           `State for module ${moduleId} not found locally after toggle.`
         );
         // Request full update if state is missing?
         this._requestModuleData();
         return; // Avoid further processing as state is inconsistent
       }
-      console.log(`Module ${moduleId} state updated successfully.`);
+      log('info', `Module ${moduleId} state updated successfully.`);
       // Optional: Could trigger a full re-render if needed: this._renderModules();
     } catch (error) {
-      console.error(
+      log('error', 
         `Failed to ${
           shouldBeEnabled ? 'enable' : 'disable'
         } module ${moduleId}:`,
@@ -361,7 +372,7 @@ export class ModulesPanel {
   }
 
   // _handlePriorityChange(moduleId, direction) {
-  //     console.log(`Changing priority for ${moduleId}: ${direction}`);
+  //     log('info', `Changing priority for ${moduleId}: ${direction}`);
   //     // TODO: Implement priority change logic using moduleManager
   //     // This will likely involve calling something like moduleManager.changeModulePriority(moduleId, direction)
   //     // and then calling this._requestModuleData() to refresh the UI.
@@ -379,7 +390,7 @@ export class ModulesPanel {
 
   // Example handler for external state changes
   _handleModuleStateChange({ moduleId, enabled }) {
-    console.log(
+    log('info', 
       `ModulesPanel received external state change for ${moduleId}: ${enabled}`
     );
     // Update local state if the module exists
@@ -395,7 +406,7 @@ export class ModulesPanel {
   _handlePanelClosed(closedModuleId) {
     // If closing a panel means the module is disabled, update the checkbox.
     // This depends on how panel closing and module disabling are linked.
-    console.log(
+    log('info', 
       `ModulesPanel received panel closed event for ${closedModuleId}`
     );
     // Assuming closing a panel *implies* disable (this might not be true)
@@ -409,7 +420,7 @@ export class ModulesPanel {
 
   // Handler for when a module is successfully loaded (built-in or external)
   _handleModuleLoaded({ moduleId }) {
-    console.log(`ModulesPanel notified that module ${moduleId} has loaded.`);
+    log('info', `ModulesPanel notified that module ${moduleId} has loaded.`);
     // Refresh the entire list to ensure order and state are correct
     // This is simpler than trying to patch the DOM for now
     this._requestModuleData();
@@ -417,7 +428,7 @@ export class ModulesPanel {
 
   // Handler for when a module fails to load
   _handleModuleLoadFailed({ moduleId, path, error }) {
-    console.error(
+    log('error', 
       `ModulesPanel notified that module ${moduleId} (${path}) failed to load:`,
       error
     );
@@ -455,7 +466,7 @@ export class ModulesPanel {
   _handleAddExternalModule() {
     const modulePath = prompt("Enter path or URL to the module's index.js:");
     if (!modulePath || modulePath.trim() === '') {
-      console.log('External module load cancelled.');
+      log('info', 'External module load cancelled.');
       return;
     }
 
@@ -464,7 +475,7 @@ export class ModulesPanel {
     this.externalModuleCounter++;
     const moduleId = `external_${sanitizedPath}_${this.externalModuleCounter}`;
 
-    console.log(
+    log('info', 
       `Requesting load for external module: ${moduleId} from ${modulePath}`
     );
     eventBus.publish('module:loadExternalRequest', { moduleId, modulePath });
@@ -472,8 +483,8 @@ export class ModulesPanel {
 
   // MODIFIED: Renamed from _handleInitComplete to _handleAppReady
   _handleAppReady(eventData) {
-    // console.log('ModulesPanel: _handleAppReady invoked.');
-    // console.log(
+    // log('info', 'ModulesPanel: _handleAppReady invoked.');
+    // log('info', 
     //   'ModulesPanel: Received app:readyForUiDataLoad. Requesting module data.'
     // );
 
@@ -483,7 +494,7 @@ export class ModulesPanel {
       if (moduleManager) {
         this._requestModuleData(moduleManager);
       } else {
-        console.error(
+        log('error', 
           'ModulesPanel: getModuleManager() returned null/undefined.'
         );
         if (this.moduleListContainer)
@@ -491,7 +502,7 @@ export class ModulesPanel {
             'Error: Module management API getter returned null.';
       }
     } else {
-      console.error(
+      log('error', 
         'ModulesPanel: ModuleManager API not available from app:readyForUiDataLoad event payload.'
       );
       if (this.moduleListContainer)
@@ -502,7 +513,7 @@ export class ModulesPanel {
 
   // Called by GoldenLayout when the panel is destroyed
   destroy() {
-    console.log('Destroying ModulesPanel');
+    log('info', 'Destroying ModulesPanel');
     // Remove event listeners using the stored bound handlers
     eventBus.unsubscribe('module:stateChanged', this.moduleStateHandler);
     eventBus.unsubscribe('module:loaded', this.moduleLoadHandler);
@@ -533,7 +544,7 @@ export class ModulesPanel {
     const testButton = document.createElement('button');
     testButton.textContent = 'Test Button';
     testButton.onclick = () => {
-      console.log('Modules Panel Test Button Clicked');
+      log('info', 'Modules Panel Test Button Clicked');
       // Example: Try to get module manager again or trigger refresh
       this._requestModuleData();
     };

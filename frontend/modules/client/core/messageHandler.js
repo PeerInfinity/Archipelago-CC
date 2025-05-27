@@ -14,6 +14,17 @@ import { sharedClientState } from './sharedState.js';
 import { stateManagerProxySingleton } from '../../stateManager/index.js';
 import { getClientModuleDispatcher } from '../index.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('clientMessageHandler', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[clientMessageHandler] ${message}`, ...data);
+  }
+}
+
 export class MessageHandler {
   constructor() {
     // Minimal state - only what's needed for server connection
@@ -31,14 +42,14 @@ export class MessageHandler {
 
   // Add method to inject eventBus
   setEventBus(busInstance) {
-    console.log('[MessageHandler] Setting EventBus instance.');
+    log('info', '[MessageHandler] Setting EventBus instance.');
     this.eventBus = busInstance;
     // Now subscribe to connection events *after* eventBus is set
     this._subscribeToConnectionEvents();
   }
 
   setDispatcher(dispatcherInstance) {
-    console.log('[MessageHandler] Setting Dispatcher instance.');
+    log('info', '[MessageHandler] Setting Dispatcher instance.');
     this.dispatcher = dispatcherInstance;
   }
 
@@ -51,22 +62,22 @@ export class MessageHandler {
 
     // Try to load mappings from local storage
     if (loadMappingsFromStorage()) {
-      console.log('Successfully loaded mappings from cached data package');
+      log('info', 'Successfully loaded mappings from cached data package');
     }
 
     // Defer subscriptions until eventBus is injected via setEventBus
     // eventBus.subscribe('connection:message', ...);
 
-    console.log('MessageHandler module initialized');
+    log('info', 'MessageHandler module initialized');
   }
 
   // Separate subscription logic
   _subscribeToConnectionEvents() {
     if (!this.eventBus) {
-      console.error('[MessageHandler] Cannot subscribe: EventBus not set.');
+      log('error', '[MessageHandler] Cannot subscribe: EventBus not set.');
       return;
     }
-    console.log('[MessageHandler] Subscribing to connection events...');
+    log('info', '[MessageHandler] Subscribing to connection events...');
     this.eventBus.subscribe('connection:open', () => {
       this.players = [];
       this.clientSlot = 0;
@@ -127,7 +138,7 @@ export class MessageHandler {
   async _getStateManager() {
     if (!this.stateManager) {
       // This case should ideally not happen if constructor assigns it.
-      console.error('[MessageHandler] stateManager (proxy) not available!');
+      log('error', '[MessageHandler] stateManager (proxy) not available!');
       // Fallback or re-attempt import if absolutely necessary, but direct import is preferred.
       // For now, let's assume the constructor sets it.
       // To be safe, re-assign if it's somehow null:
@@ -143,7 +154,7 @@ export class MessageHandler {
 
     // Request data package if needed
     if (needNewDataPackage) {
-      console.log('Requesting new data package from server...');
+      log('info', 'Requesting new data package from server...');
       this._requestDataPackage();
     }
 
@@ -203,7 +214,7 @@ export class MessageHandler {
           return true;
         }
       } catch (e) {
-        console.warn('Error checking data package checksums:', e);
+        log('warn', 'Error checking data package checksums:', e);
         return true;
       }
     }
@@ -235,7 +246,7 @@ export class MessageHandler {
           if (name && name !== `Location ${id}`) {
             serverCheckedLocationNames.push(name);
           } else {
-            console.warn(
+            log('warn', 
               `[MessageHandler _handleConnected] Could not map server location ID ${id} (from checked_locations) to a known name.`
             );
           }
@@ -249,7 +260,7 @@ export class MessageHandler {
           if (name && name !== `Location ${id}`) {
             serverUncheckedLocationNames.push(name);
           } else {
-            console.warn(
+            log('warn', 
               `[MessageHandler _handleConnected] Could not map server location ID ${id} (from missing_locations) to a known name.`
             );
           }
@@ -276,7 +287,7 @@ export class MessageHandler {
     // Use injected eventBus
     this.eventBus?.publish('network:connectionRefused', data);
     const message = `Connection refused: ${data.errors.join(', ')}`;
-    console.error('[MessageHandler]', message);
+    log('error', '[MessageHandler]', message);
     // Publish event instead of directly printing
     this.eventBus?.publish('ui:printToConsole', {
       message: message,
@@ -292,7 +303,7 @@ export class MessageHandler {
     // Get stateManager
     const stateManager = await this._getStateManager();
     if (!stateManager) {
-      console.error(
+      log('error', 
         '[MessageHandler _handleReceivedItems] Failed to process received items: stateManager not available'
       );
       return;
@@ -300,7 +311,7 @@ export class MessageHandler {
 
     // Skip if we're already processing
     if (sharedClientState.processingBatchItems) {
-      console.log(
+      log('info', 
         '[MessageHandler _handleReceivedItems] Already processing an item batch, skipping duplicate'
       );
       return;
@@ -324,7 +335,7 @@ export class MessageHandler {
         try {
           itemName = getItemNameFromServerId(item.item, stateManager);
           if (!itemName) {
-            console.warn(
+            log('warn', 
               `[MessageHandler _handleReceivedItems] Could not find matching item name for server ID: ${item.item}`
             );
             continue; // Skip this item if name not found
@@ -365,7 +376,7 @@ export class MessageHandler {
           );
         } catch (error) {
           // Catch errors from processing a single item (e.g., getting itemName or locationName)
-          console.error(
+          log('error', 
             `[MessageHandler _handleReceivedItems] Error preparing item ID ${item.item} (current item name context: ${itemName}):`,
             error
           );
@@ -387,7 +398,7 @@ export class MessageHandler {
       await stateManager.commitBatchUpdate();
     } catch (batchError) {
       // Catch errors related to beginBatchUpdate, commitBatchUpdate, or the applyRuntimeStateData call itself
-      console.error(
+      log('error', 
         '[MessageHandler _handleReceivedItems] Error during batch processing of received items:',
         batchError
       );
@@ -414,7 +425,7 @@ export class MessageHandler {
     if (console.debug) {
       console.debug(message, ...args);
     } else {
-      // console.log(message, ...args); // Fallback if console.debug is not available
+      // log('info', message, ...args); // Fallback if console.debug is not available
     }
   }
 
@@ -484,7 +495,7 @@ export class MessageHandler {
   }
 
   _handleDataPackage(data) {
-    console.log('Received data package from server');
+    log('info', 'Received data package from server');
 
     // Save to storage
     if (data.data.version !== 0) {
@@ -494,12 +505,12 @@ export class MessageHandler {
       // Initialize mappings
       const initSuccess = initializeMappingsFromDataPackage(data.data);
       if (initSuccess) {
-        console.log('Successfully initialized mappings from new data package');
+        log('info', 'Successfully initialized mappings from new data package');
       } else {
-        console.warn('Failed to initialize mappings from new data package');
+        log('warn', 'Failed to initialize mappings from new data package');
       }
     } else {
-      console.warn('Received data package with version 0, not storing');
+      log('warn', 'Received data package with version 0, not storing');
     }
 
     // Use injected eventBus if needed
@@ -514,11 +525,11 @@ export class MessageHandler {
     // Get stateManager
     const stateManager = await this._getStateManager();
     if (!stateManager) {
-      console.error('Failed to sync locations: stateManager not available');
+      log('error', 'Failed to sync locations: stateManager not available');
       return;
     }
 
-    console.log(
+    log('info', 
       `Syncing ${serverLocationIds.length} checked locations from server to stateManager`
     );
 
@@ -546,7 +557,7 @@ export class MessageHandler {
       }
     }
 
-    console.log(
+    log('info', 
       `Location sync complete: ${syncCount} synced, ${failCount} failed`
     );
 
@@ -759,14 +770,14 @@ export class MessageHandler {
     // This method seems to be an old way of checking locations,
     // new logic uses user:locationCheck event and handleUserLocationCheckForClient.
     // It might need to be refactored or removed if fully superseded.
-    console.warn(
+    log('warn', 
       '[MessageHandler] checkLocation method called directly. This might be outdated.'
     );
     const serverId = await getServerLocationId(location, this.stateManager);
     if (serverId !== null) {
       this.sendLocationChecks([serverId]);
     } else {
-      console.warn(`Could not find server ID for location: ${location}`);
+      log('warn', `Could not find server ID for location: ${location}`);
     }
   }
 
@@ -781,7 +792,7 @@ export class MessageHandler {
   // Actual method to send location checks, used by the exported handler
   _internalSendLocationChecks(locationIds) {
     if (!connection.isConnected()) {
-      console.warn(
+      log('warn', 
         '[MessageHandler] Not connected, cannot send location checks.'
       );
       // Use injected eventBus
@@ -797,7 +808,7 @@ export class MessageHandler {
     // Use clientSlot from this instance
     const slot = this.clientSlot;
     if (slot === undefined || slot === null) {
-      console.error(
+      log('error', 
         '[MessageHandler] Client slot not defined, cannot send location checks'
       );
       return;
@@ -809,7 +820,7 @@ export class MessageHandler {
         locations: locationIds,
       },
     ]);
-    console.log(
+    log('info', 
       `[MessageHandler] Sent location check for IDs: ${locationIds.join(', ')}`
     );
 
@@ -831,7 +842,7 @@ export async function handleUserLocationCheckForClient(
   eventData,
   propagationOptions
 ) {
-  console.log(
+  log('info', 
     '[MessageHandler] handleUserLocationCheckForClient received event:',
     JSON.parse(JSON.stringify(eventData)),
     'Propagation:',
@@ -841,7 +852,7 @@ export async function handleUserLocationCheckForClient(
   const dispatcher = messageHandlerSingleton._getDispatcher(); // Use the internal getter for now
 
   if (connection.isConnected()) {
-    console.log(
+    log('info', 
       '[ClientModule/MessageHandler] Handling user:locationCheck while connected.',
       eventData
     );
@@ -853,13 +864,13 @@ export async function handleUserLocationCheckForClient(
       if (serverId !== null) {
         messageHandlerSingleton._internalSendLocationChecks([serverId]); // Use the internal method
       } else {
-        console.warn(
+        log('warn', 
           `[ClientModule/MessageHandler] Could not find server ID for location: ${eventData.locationName}`
         );
         // Event was processed (attempted), do not propagate by default unless specific need.
       }
     } else {
-      console.log(
+      log('info', 
         '[ClientModule/MessageHandler] user:locationCheck received with no specific locationName. Propagating for local handling.'
       );
       if (dispatcher) {
@@ -871,7 +882,7 @@ export async function handleUserLocationCheckForClient(
           { direction: 'up' }
         );
       } else {
-        console.error(
+        log('error', 
           '[ClientModule/MessageHandler] Dispatcher not available for propagation when no locationName specified.'
         );
       }
@@ -879,7 +890,7 @@ export async function handleUserLocationCheckForClient(
     // Event considered handled (or attempted by client module).
   } else {
     // Not connected, propagate up for potential local handling (e.g., by StateManager).
-    console.log(
+    log('info', 
       '[ClientModule/MessageHandler] Not connected. Propagating user:locationCheck up.'
     );
     if (dispatcher) {
@@ -890,7 +901,7 @@ export async function handleUserLocationCheckForClient(
         { direction: 'up' }
       );
     } else {
-      console.error(
+      log('error', 
         '[ClientModule/MessageHandler] Dispatcher not available for propagation when not connected.'
       );
     }

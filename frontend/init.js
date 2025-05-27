@@ -1,14 +1,42 @@
 // init.js - Initialization script for the modular frontend
 
-// Core Singletons/Managers
+// Import logger first and make it globally available before other imports
+import logger from './app/core/loggerService.js';
+
+// Configure logger with basic settings early to reduce noise during module imports
+logger.configure({
+  defaultLevel: 'WARN',
+  moduleLevels: {
+    init: 'WARN',
+    stateManagerProxy: 'WARN',
+    centralRegistry: 'WARN',
+    panelManager: 'WARN',
+  },
+});
+
+// Make logger globally available for modules that import during this phase
+window.logger = logger;
+
+// Core Singletons/Managers (imported after logger is available)
 import panelManagerInstance from './app/core/panelManager.js';
 import eventBus from './app/core/eventBus.js';
 import settingsManager from './app/core/settingsManager.js';
-import logger from './app/core/loggerService.js';
 import { centralRegistry } from './app/core/centralRegistry.js';
 import EventDispatcher from './app/core/eventDispatcher.js';
 import { GoldenLayout } from './libs/golden-layout/js/esm/golden-layout.js';
-import { stateManagerProxySingleton } from './modules/stateManager/index.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('init', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[init] ${message}`, ...data);
+  }
+}
+
+// Note: stateManagerProxySingleton will be imported dynamically later to avoid early logging
 
 // --- Mode Management Globals ---
 let G_currentActiveMode = 'default';
@@ -688,15 +716,17 @@ async function main() {
   }
   // ensureLoaded might use the settings provided above, or load its defaults if none were provided/applicable.
   await settingsManager.ensureLoaded();
-  logger.info('init', 'settingsManager initialization process completed.');
 
-  // Configure logger with loaded settings
+  // Reconfigure logger with full settings from settingsManager
   try {
     const allSettings = await settingsManager.getSettings();
     logger.configure(allSettings);
-    logger.info('init', 'Logger configured and ready');
+    logger.info('init', 'Logger reconfigured with full settings');
+    logger.info('init', 'settingsManager initialization process completed.');
   } catch (error) {
-    logger.error('init', 'Error configuring logger:', error);
+    // Use console.error here since logger might not be configured yet
+    log('error', '[Init] Error reconfiguring logger:', error);
+    logger.info('init', 'settingsManager initialization process completed.');
     // Continue initialization even if logger configuration fails
   }
 
@@ -912,7 +942,8 @@ async function main() {
               // if the container.element is populated directly, which we've done.
               // Not returning uiProvider to be consistent with PanelManager's WrapperComponent.
             } catch (e) {
-              console.error(
+              log(
+                'error',
                 `[Init GL Factory] Error instantiating component ${componentType}:`,
                 e
               );
@@ -969,14 +1000,14 @@ async function main() {
 
       // IMPORTANT: PanelManager must be initialized AFTER GoldenLayout has processed the layout
       // and created all initial components. The 'initialised' event is crucial.
-      // console.log(
+      // log('info',
       //   '[Init DEBUG] About to call goldenLayoutInstance.loadLayout. Layout to load:',
       //   JSON.stringify(layoutToLoad)
       // );
       try {
         // Keep event listeners for diagnostics - Commenting out the verbose ones
         goldenLayoutInstance.on('started', () => {
-          // console.log(
+          // log('info',
           //   '[Init DEBUG] GoldenLayout "started" EVENT HANDLER ENTERED (PanelManager init no longer solely relies on this)'
           // );
           // If this event DOES fire, PanelManager might be re-initialized if it wasn't fully ready before.
@@ -995,7 +1026,7 @@ async function main() {
         });
 
         goldenLayoutInstance.on('initialised', () => {
-          // console.log(
+          // log('info',
           //   '[Init DEBUG] GoldenLayout "initialised" (alternative) EVENT HANDLER ENTERED (PanelManager init no longer solely relies on this)'
           // );
           if (!panelManagerInstance.isInitialized) {
@@ -1011,45 +1042,45 @@ async function main() {
           }
         });
         // goldenLayoutInstance.on('itemCreated', (item) => {
-        //   console.log(
+        //   log('info',
         //     '[Init DEBUG] GoldenLayout "itemCreated" event:',
         //     item.componentType || item.type,
         //     item.id
         //   );
         // });
         // goldenLayoutInstance.on('stackCreated', (stack) => {
-        //   console.log('[Init DEBUG] GoldenLayout "stackCreated" event:', stack);
+        //   log('info', '[Init DEBUG] GoldenLayout "stackCreated" event:', stack);
         // });
         // goldenLayoutInstance.on('rowCreated', (row) => {
-        //   console.log('[Init DEBUG] GoldenLayout "rowCreated" event:', row);
+        //   log('info', '[Init DEBUG] GoldenLayout "rowCreated" event:', row);
         // });
         // goldenLayoutInstance.on('columnCreated', (column) => {
-        //   console.log(
+        //   log('info',
         //     '[Init DEBUG] GoldenLayout "columnCreated" event:',
         //     column
         //   );
         // });
 
         goldenLayoutInstance.loadLayout(layoutToLoad);
-        // console.log(
+        // log('info',
         //   '[Init DEBUG] goldenLayoutInstance.loadLayout call completed.'
         // );
 
         // Attempt to initialize PanelManager here, after loadLayout has been called
-        // console.log(
+        // log('info',
         //   '[Init DEBUG] Attempting to initialize PanelManager immediately after loadLayout.'
         // );
-        // console.log(
+        // log('info',
         //   '[Init DEBUG] goldenLayoutInstance before PanelManager init:',
         //   goldenLayoutInstance
         // );
         // if (goldenLayoutInstance && goldenLayoutInstance.root) {
-        //   console.log(
+        //   log('info',
         //     '[Init DEBUG] goldenLayoutInstance.root IS present before PanelManager init. ContentItems length:',
         //     goldenLayoutInstance.root.contentItems?.length
         //   );
         // } else {
-        //   console.warn(
+        //   log('warn',
         //     '[Init DEBUG] goldenLayoutInstance.root IS NOT present before PanelManager init.'
         //   );
         // }
@@ -1277,15 +1308,15 @@ async function main() {
         );
 
         // --- BEGIN DIAGNOSTIC LOGS (modified) ---
-        // console.log(
+        // log('info',
         //   '[ModuleManagerAPI DEBUG] Inspecting panelManagerInstance before call:'
         // );
-        // console.log(
+        // log('info',
         //   '[ModuleManagerAPI DEBUG] typeof panelManagerInstance:',
         //   typeof panelManagerInstance
         // );
         // if (panelManagerInstance) {
-        //   console.log(
+        //   log('info',
         //     '[ModuleManagerAPI DEBUG] panelManagerInstance content:',
         //     panelManagerInstance
         //   );
@@ -1293,23 +1324,23 @@ async function main() {
         //     typeof panelManagerInstance.destroyPanelByComponentType ===
         //     'function'
         //   ) {
-        //     console.log(
+        //     log('info',
         //       '[ModuleManagerAPI DEBUG] panelManagerInstance.destroyPanelByComponentType IS a function.'
         //     );
-        //     console.log(
+        //     log('info',
         //       '[ModuleManagerAPI DEBUG] Source code of panelManagerInstance.destroyPanelByComponentType:'
         //     );
-        //     console.log(
+        //     log('info',
         //       panelManagerInstance.destroyPanelByComponentType.toString()
         //     );
         //   } else {
-        //     console.error(
+        //     log('error',
         //       '[ModuleManagerAPI DEBUG] panelManagerInstance.destroyPanelByComponentType IS NOT a function. Type:',
         //       typeof panelManagerInstance.destroyPanelByComponentType
         //     );
         //   }
         // } else {
-        //   console.error(
+        //   log('error',
         //     '[ModuleManagerAPI DEBUG] panelManagerInstance (imported) IS UNDEFINED OR NULL.'
         //   );
         // }
@@ -1357,9 +1388,9 @@ async function main() {
       // if (importedModules[moduleId] && typeof importedModules[moduleId].uninitialize === 'function') {
       //   try {
       //     await importedModules[moduleId].uninitialize();
-      //     console.log(`[ModuleManagerAPI] Uninitialized module: ${moduleId}`);
+      //     log('info', `[ModuleManagerAPI] Uninitialized module: ${moduleId}`);
       //   } catch (error) {
-      //     console.error(`[ModuleManagerAPI] Error uninitializing module ${moduleId}:`, error);
+      //     log('error', `[ModuleManagerAPI] Error uninitializing module ${moduleId}:`, error);
       //   }
       // }
     }
@@ -1526,6 +1557,10 @@ async function main() {
           playerName: `Player${eventData.selectedPlayerId}`,
         };
 
+        // Dynamic import to avoid early logging during module import
+        const { stateManagerProxySingleton } = await import(
+          './modules/stateManager/index.js'
+        );
         await stateManagerProxySingleton.loadRules(eventData.jsonData, {
           playerId: String(eventData.selectedPlayerId),
           playerName: playerInfo.playerName,

@@ -1,6 +1,17 @@
 import { ModulesPanel } from './modulesUI.js';
 import eventBus from '../../app/core/eventBus.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('modulesModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[modulesModule] ${message}`, ...data);
+  }
+}
+
 // Store module ID and API references
 let moduleId;
 let initializationApi = null;
@@ -17,7 +28,7 @@ export const moduleInfo = {
  * @param {object} registrationApi - API for registration phase.
  */
 export function register(registrationApi) {
-  console.log('Registering Modules module...');
+  log('info', 'Registering Modules module...');
 
   // Pass the class constructor directly
   // ModulesPanel constructor no longer takes the initApi directly.
@@ -44,7 +55,7 @@ export function register(registrationApi) {
  * @param {object} initApi - API for initialization phase.
  */
 export async function initialize(id, index, initApi) {
-  console.log(`Initializing Modules module (ID: ${id}, Priority: ${index})`);
+  log('info', `Initializing Modules module (ID: ${id}, Priority: ${index})`);
   moduleId = id;
   initializationApi = initApi;
 
@@ -59,7 +70,7 @@ export async function initialize(id, index, initApi) {
 
 // Potentially add an uninitialize function if needed for cleanup
 export function uninitialize() {
-  console.log('Uninitializing Modules module...');
+  log('info', 'Uninitializing Modules module...');
   // eventBus.unsubscribe('panel:closed', handlePanelClosed);
   if (
     modulesPanelInstance &&

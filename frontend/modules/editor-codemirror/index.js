@@ -1,6 +1,17 @@
 // UI Class for this module
 import EditorUI from './editorUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('codeMirrorEditorModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[codeMirrorEditorModule] ${message}`, ...data);
+  }
+}
+
 // --- Module Info ---
 export const moduleInfo = {
   name: 'CodeMirror Editor',
@@ -21,10 +32,10 @@ let pendingJsonData = null; // Store data received before UI instance is ready
  * @param {EditorUI} instance The EditorUI instance.
  */
 export function setEditorInstance(instance) {
-  console.log('[Editor Module Logic] setEditorInstance called.');
+  log('info', '[Editor Module Logic] setEditorInstance called.');
   editorInstance = instance;
   if (pendingJsonData) {
-    console.log(
+    log('info', 
       '[Editor Module Logic] Loading pending data into newly set instance.'
     );
     editorInstance.loadJsonData(pendingJsonData);
@@ -34,24 +45,24 @@ export function setEditorInstance(instance) {
 
 // Handler for rules loaded event
 function handleRulesLoaded(eventData, propagationOptions = {}) {
-  console.log('[Editor Module Handler] Received state:rulesLoaded');
+  log('info', '[Editor Module Handler] Received state:rulesLoaded');
   if (eventData.jsonData) {
     if (editorInstance) {
       // Instance already exists (set via setEditorInstance), load data directly
-      console.log(
+      log('info', 
         '[Editor Module Handler] Editor instance exists, loading data immediately.'
       );
       editorInstance.loadJsonData(eventData.jsonData);
       pendingJsonData = null; // Ensure pending is clear
     } else {
       // Instance doesn't exist yet, store data for when setEditorInstance is called
-      console.log(
+      log('info', 
         '[Editor Module Handler] Editor instance not yet available, storing pending data.'
       );
       pendingJsonData = eventData.jsonData;
     }
   } else {
-    console.warn(
+    log('warn', 
       '[Editor Module Handler] No jsonData received in state:rulesLoaded event.'
     );
   }
@@ -64,7 +75,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
       direction: direction,
     });
   } else {
-    console.error(
+    log('error', 
       '[Editor Module Handler] Cannot propagate state:rulesLoaded: Dispatcher not available (initApi missing?).'
     );
   }
@@ -75,7 +86,7 @@ function handleRulesLoaded(eventData, propagationOptions = {}) {
  * Registers the editor panel component and event handler.
  */
 export function register(registrationApi) {
-  console.log('[Editor Module] Registering...');
+  log('info', '[Editor Module] Registering...');
 
   // Register the panel component class constructor directly
   registrationApi.registerPanelComponent('codeMirrorPanel', EditorUI);
@@ -89,7 +100,7 @@ export function register(registrationApi) {
  * Currently minimal, as EditorUI handles its own init logic and event subscriptions.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(`[Editor Module] Initializing with priority ${priorityIndex}...`);
+  log('info', `[Editor Module] Initializing with priority ${priorityIndex}...`);
   // Store the full API
   initApi = initializationApi;
   // moduleEventBus = initializationApi.getEventBus(); // We have the full API now
@@ -100,7 +111,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // if state:rulesLoaded is the primary way data gets loaded initially.
   // Consider reviewing EditorUI's subscriptions.
 
-  console.log('[Editor Module] Initialization complete.');
+  log('info', '[Editor Module] Initialization complete.');
 }
 
 // Export the instance if direct access is needed (generally avoid)

@@ -1,5 +1,16 @@
 import { TestCaseUI } from './testCaseUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testCasesModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testCasesModule] ${message}`, ...data);
+  }
+}
+
 // --- Module Info ---
 export const moduleInfo = {
   name: 'testCases',
@@ -17,7 +28,7 @@ export const moduleInfo = {
  * @param {object} registrationApi - API provided by the initialization script.
  */
 export function register(registrationApi) {
-  console.log('[TestCases Module] Registering...');
+  log('info', '[TestCases Module] Registering...');
 
   // Register the panel component
   registrationApi.registerPanelComponent('testCasesPanel', TestCaseUI);
@@ -33,7 +44,7 @@ export function register(registrationApi) {
     'ui:fileViewChanged'
   );
 
-  console.log('[TestCases Module] Registration complete.');
+  log('info', '[TestCases Module] Registration complete.');
 }
 
 /**
@@ -44,14 +55,14 @@ export function register(registrationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[TestCases Module] Initializing with priority ${priorityIndex}...`
   );
 
   // moduleEventBus = initializationApi.getEventBus();
   // No dependency injection into TestCaseUI needed via this function for now.
 
-  console.log('[TestCases Module] Initialization complete.');
+  log('info', '[TestCases Module] Initialization complete.');
 
   return null; // No cleanup needed
 }

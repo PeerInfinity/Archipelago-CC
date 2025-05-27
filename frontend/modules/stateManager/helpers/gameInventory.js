@@ -1,3 +1,17 @@
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('gameInventory', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[gameInventory] ${message}`, ...data);
+    }
+  }
+}
+
 export class GameInventory {
   constructor(playerSlot, settings, logger) {
     this.playerSlot = playerSlot;
@@ -5,13 +19,14 @@ export class GameInventory {
     this.items = new Map(); // itemName -> count
     this.logger =
       logger ||
-      ((msg, context) => console.log(`[${context || 'GameInventory'}] ${msg}`));
+      ((msg, context) => log('info', `[${context || 'GameInventory'}] ${msg}`));
 
     if (this.logger && typeof this.logger === 'function') {
       this.logger('Instance created for player: ' + this.playerSlot);
     } else {
       // Fallback if logger is not a function for some reason
-      console.log(
+      log(
+        'info',
         `[GameInventory Fallback] Instance created for player: ${this.playerSlot}`
       );
     }

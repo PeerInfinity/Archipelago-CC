@@ -3,6 +3,17 @@ import { TestUI } from './testUI.js';
 import { testLogic } from './testLogic.js';
 import eventBus from '../../app/core/eventBus.js'; // Assuming global eventBus
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testsModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testsModule] ${message}`, ...data);
+  }
+}
+
 export const moduleInfo = {
   name: 'tests',
   title: 'Tests', // Title for the panel in GoldenLayout
@@ -16,7 +27,7 @@ let appInitializationApi = null;
  * @param {object} registrationApi - API provided by the initialization script.
  */
 export function register(registrationApi) {
-  console.log('[Tests Module] Registering...');
+  log('info', '[Tests Module] Registering...');
 
   registrationApi.registerPanelComponent('testsPanel', TestUI);
 
@@ -25,22 +36,22 @@ export function register(registrationApi) {
     defaultChecked: true,
     requiresReload: false, // Test list, enabled states can be updated live. Auto-start applies on next load.
     getSaveDataFunction: async () => {
-      console.log('[Tests Module] getSaveDataFunction called for testsConfig');
+      log('info', '[Tests Module] getSaveDataFunction called for testsConfig');
       return testLogic.getSavableState();
     },
     applyLoadedDataFunction: async (data) => {
-      console.log(
+      log('info', 
         '[Tests Module] applyLoadedDataFunction called for testsConfig with:',
         data
       );
-      console.log(
+      log('info', 
         '[Tests Module] data.autoStartTestsOnLoad:',
         data?.autoStartTestsOnLoad
       );
       await testLogic.applyLoadedState(data);
 
       // Debug: Check if auto-start was set
-      console.log(
+      log('info', 
         '[Tests Module] After applyLoadedState (awaited), shouldAutoStartTests():',
         testLogic.shouldAutoStartTests()
       );
@@ -52,7 +63,7 @@ export function register(registrationApi) {
     },
   });
 
-  console.log('[Tests Module] Registration complete.');
+  log('info', '[Tests Module] Registration complete.');
 }
 
 /**
@@ -62,7 +73,7 @@ export function register(registrationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(`[Tests Module] Initializing with priority ${priorityIndex}...`);
+  log('info', `[Tests Module] Initializing with priority ${priorityIndex}...`);
   appInitializationApi = initializationApi;
 
   // Pass the initializationApi to testLogic so it can use moduleManager etc.
@@ -71,25 +82,25 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Listen for the app to be fully ready for basic setup
   eventBus.subscribe('app:readyForUiDataLoad', () => {
-    console.log('[Tests Module] app:readyForUiDataLoad received.');
+    log('info', '[Tests Module] app:readyForUiDataLoad received.');
 
     // Debug: Check current mode
     const currentMode =
       window.G_currentActiveMode ||
       localStorage.getItem('archipelagoToolSuite_lastActiveMode') ||
       'unknown';
-    console.log('[Tests Module] Current application mode:', currentMode);
+    log('info', '[Tests Module] Current application mode:', currentMode);
   });
 
   // Listen for when test loaded state is fully applied (including auto-start check)
   eventBus.subscribe('test:loadedStateApplied', (eventData) => {
-    console.log('[Tests Module] test:loadedStateApplied received:', eventData);
-    console.log(
+    log('info', '[Tests Module] test:loadedStateApplied received:', eventData);
+    log('info', 
       '[Tests Module] Auto-start handling is now done by testLogic.applyLoadedState()'
     );
   });
 
-  console.log('[Tests Module] Initialization complete.');
+  log('info', '[Tests Module] Initialization complete.');
 }
 
 // Function to allow testLogic.js to get the main initialization API if needed later

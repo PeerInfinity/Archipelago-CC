@@ -2,6 +2,17 @@
 import { testLogic } from './testLogic.js';
 import eventBus from '../../app/core/eventBus.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testUI] ${message}`, ...data);
+  }
+}
+
 export class TestUI {
   constructor(container, componentState) {
     this.container = container;
@@ -44,7 +55,7 @@ export class TestUI {
   onMount(container, componentState) {
     // container is the GoldenLayout ComponentContainer
     // componentState is the state passed by GoldenLayout
-    console.log(
+    log('info', 
       '[TestUI onMount] Called. Container:',
       container,
       'State:',
@@ -114,7 +125,7 @@ export class TestUI {
           await testLogic.runAllEnabledTests();
           // Summary is handled by 'test:allRunsCompleted' event
         } catch (error) {
-          console.error('Error running all tests:', error);
+          log('error', 'Error running all tests:', error);
           this.overallStatusElement.textContent = `Error: ${error.message}`;
           this.overallStatusElement.style.color = 'lightcoral';
         }
@@ -171,7 +182,7 @@ export class TestUI {
           status: data.status,
         }),
       'test:completed': (data) => {
-        console.log(
+        log('info', 
           `[TestUI] Received test:completed event for ${data.testId}: ${data.overallStatus}`
         );
         this.updateTestStatus(data.testId, data.overallStatus);
@@ -530,12 +541,12 @@ export class TestUI {
       this.enableAllCheckbox.indeterminate =
         !state.allEnabled && (state.anyEnabled || state.anyIndeterminate);
     } catch (error) {
-      console.error('Error updating Enable All checkbox:', error);
+      log('error', 'Error updating Enable All checkbox:', error);
     }
   }
 
   destroy() {
-    console.log(
+    log('info', 
       '[TestUI] Destroying TestUI panel and unsubscribing from events.'
     );
     this.unsubscribeHandles.forEach((unsub) => unsub());

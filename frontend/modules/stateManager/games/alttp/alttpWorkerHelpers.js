@@ -1,5 +1,19 @@
 import { GameWorkerHelpers } from '../../helpers/gameWorkerHelpers.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('alttpWorkerHelpers', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[alttpWorkerHelpers] ${message}`, ...data);
+    }
+  }
+}
+
 export class ALTTPWorkerHelpers extends GameWorkerHelpers {
   constructor(manager) {
     super(manager);
@@ -25,10 +39,7 @@ export class ALTTPWorkerHelpers extends GameWorkerHelpers {
       // or the rule is malformed for this context. Defaulting to true might be too lenient.
       // Consider if this case should be an error or a specific false if region is mandatory.
       // For now, matching old ALTTPHelpers general tendency to be permissive in worker if data missing.
-      console.warn(
-        `[ALTTPWorkerHelpers] is_not_bunny: Region data not found for region:`,
-        region
-      );
+      log('warn', `is_not_bunny: Region data not found for region:`, region);
       return true;
     }
     const gameMode = this._getGameMode();
@@ -38,8 +49,9 @@ export class ALTTPWorkerHelpers extends GameWorkerHelpers {
       typeof regionData.is_dark_world !== 'boolean' ||
       typeof regionData.is_light_world !== 'boolean'
     ) {
-      console.warn(
-        `[ALTTPWorkerHelpers] is_not_bunny: Region data for ${
+      log(
+        'warn',
+        `is_not_bunny: Region data for ${
           regionData.name || region
         } missing is_dark_world/is_light_world properties.`
       );
@@ -490,16 +502,18 @@ export class ALTTPWorkerHelpers extends GameWorkerHelpers {
     }
 
     if (typeof item !== 'string' || !item) {
-      console.warn(
-        '[ALTTPWorkerHelpers item_name_in_location_names] Invalid item name provided.',
+      log(
+        'warn',
+        'item_name_in_location_names: Invalid item name provided.',
         item
       );
       return false;
     }
 
     if (!Array.isArray(location_name_player_pairs)) {
-      console.warn(
-        '[ALTTPWorkerHelpers item_name_in_location_names] location_name_player_pairs is not an array.',
+      log(
+        'warn',
+        'item_name_in_location_names: location_name_player_pairs is not an array.',
         location_name_player_pairs
       );
       return false;

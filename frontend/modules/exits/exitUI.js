@@ -13,6 +13,17 @@ import loopStateSingleton from '../loops/loopStateSingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('exitUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[exitUI] ${message}`, ...data);
+  }
+}
+
 export class ExitUI {
   constructor(container, componentState) {
     this.container = container;
@@ -31,7 +42,7 @@ export class ExitUI {
 
     // Defer full data-dependent initialization
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[ExitUI] Received app:readyForUiDataLoad. Initializing base panel structure and event listeners.'
       );
       this.initialize(); // This will set up stateManager event listeners
@@ -41,7 +52,7 @@ export class ExitUI {
       // Full render will occur on 'stateManager:ready'.
 
       this.isInitialized = true; // Mark that basic panel setup is done.
-      console.log(
+      log('info', 
         '[ExitUI] Basic panel setup complete after app:readyForUiDataLoad. Awaiting StateManager readiness.'
       );
 
@@ -63,7 +74,7 @@ export class ExitUI {
       'settings:changed',
       ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.exits')) {
-          console.log('ExitUI reacting to settings change:', key);
+          log('info', 'ExitUI reacting to settings change:', key);
           this.updateExitDisplay();
         }
       }
@@ -84,49 +95,49 @@ export class ExitUI {
 
   subscribeToStateEvents() {
     this.unsubscribeFromStateEvents();
-    console.log('[ExitUI] Subscribing to state and loop events...');
+    log('info', '[ExitUI] Subscribing to state and loop events...');
 
     if (!eventBus) {
-      console.error('[ExitUI] EventBus not available!');
+      log('error', '[ExitUI] EventBus not available!');
       return;
     }
 
     const subscribe = (eventName, handler) => {
-      console.log(`[ExitUI] Subscribing to ${eventName}`);
+      log('info', `[ExitUI] Subscribing to ${eventName}`);
       const unsubscribe = eventBus.subscribe(eventName, handler);
       this.stateUnsubscribeHandles.push(unsubscribe);
     };
 
     const handleReady = () => {
-      console.log('[ExitUI] Received stateManager:ready event.');
+      log('info', '[ExitUI] Received stateManager:ready event.');
       // This event confirms StateManager is fully ready (static data and initial snapshot).
       // originalExitOrder should have been populated by the 'stateManager:rulesLoaded' handler.
 
       if (!this.isInitialized) {
-        console.warn(
+        log('warn', 
           '[ExitUI stateManager:ready] Panel base not yet initialized by app:readyForUiDataLoad. This is unexpected. Proceeding with render attempt.'
         );
       }
 
       // Ensure originalExitOrder is available (it should be from rulesLoaded handler)
       if (!this.originalExitOrder || this.originalExitOrder.length === 0) {
-        console.warn(
+        log('warn', 
           '[ExitUI stateManager:ready] Original exit order not available. Attempting to fetch now.'
         );
         const currentStaticData = stateManager.getStaticData();
         if (currentStaticData && currentStaticData.exits) {
           this.originalExitOrder = stateManager.getOriginalExitOrder();
-          console.log(
+          log('info', 
             `[ExitUI stateManager:ready] Fetched ${this.originalExitOrder.length} exit keys for original order.`
           );
         } else {
-          console.error(
+          log('error', 
             '[ExitUI stateManager:ready] Failed to fetch static data/exits for original order. Exit panel may not display correctly.'
           );
         }
       }
 
-      console.log(
+      log('info', 
         '[ExitUI stateManager:ready] Triggering initial full display update.'
       );
       this.updateExitDisplay(); // This is now the primary trigger for the first full render.
@@ -160,14 +171,14 @@ export class ExitUI {
 
     // --- BEGIN ADDED: Handler for stateManager:rulesLoaded ---
     subscribe('stateManager:rulesLoaded', (event) => {
-      console.log(
+      log('info', 
         '[ExitUI] Received stateManager:rulesLoaded event. Full refresh triggered.'
       );
 
       // Access snapshot from event (this is the new initial snapshot for the loaded rules)
       const newSnapshot = event.snapshot;
       if (!newSnapshot) {
-        console.warn(
+        log('warn', 
           '[ExitUI rulesLoaded] Snapshot missing from event payload. Aborting refresh.'
         );
         return;
@@ -177,13 +188,13 @@ export class ExitUI {
       const currentStaticData = stateManager.getStaticData();
       if (currentStaticData && currentStaticData.exits) {
         this.originalExitOrder = stateManager.getOriginalExitOrder();
-        console.log(
+        log('info', 
           `[ExitUI rulesLoaded] Stored ${
             this.originalExitOrder ? this.originalExitOrder.length : 0
           } exit keys for original order.`
         );
       } else {
-        console.warn(
+        log('warn', 
           '[ExitUI rulesLoaded] Static data or exits not available from proxy when trying to refresh order. Panel may not sort correctly.'
         );
         this.originalExitOrder = []; // Reset if not available
@@ -191,7 +202,7 @@ export class ExitUI {
 
       // Now that new static data (including order) and the new snapshot are available,
       // trigger a full display update.
-      console.log('[ExitUI rulesLoaded] Triggering full display update.');
+      log('info', '[ExitUI rulesLoaded] Triggering full display update.');
       this.updateExitDisplay();
     });
     // --- END ADDED ---
@@ -199,7 +210,7 @@ export class ExitUI {
 
   unsubscribeFromStateEvents() {
     if (this.stateUnsubscribeHandles.length > 0) {
-      console.log('[ExitUI] Unsubscribing from state and loop events...');
+      log('info', '[ExitUI] Unsubscribing from state and loop events...');
       this.stateUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
       this.stateUnsubscribeHandles = [];
     }
@@ -370,7 +381,7 @@ export class ExitUI {
 
             loopStateSingleton.actionQueue.push(moveAction);
           } else {
-            console.warn(
+            log('warn', 
               `Could not find a discovered exit from ${fromRegion} to ${toRegion} while building path.`
             );
             // Optional: Handle this case more robustly, maybe stop queueing?
@@ -423,7 +434,7 @@ export class ExitUI {
       } else {
         // Path not found - display error message
         const errorMessage = `Cannot find a path to ${exit.region} in loop mode.`;
-        console.error(errorMessage);
+        log('error', errorMessage);
 
         // Show error in console or alert
         if (window.consoleManager) {
@@ -437,7 +448,7 @@ export class ExitUI {
 
   // Called when the panel is initialized by PanelManager
   initialize() {
-    console.log('[ExitUI] Initializing panel (subscribing to state events)...');
+    log('info', '[ExitUI] Initializing panel (subscribing to state events)...');
     // Initialization now relies solely on the stateManager:ready event handler.
     this.subscribeToStateEvents(); // Ensure subscriptions are set up
   }
@@ -499,7 +510,7 @@ export class ExitUI {
         !currentTarget.classList.contains('exit-card')
       ) {
         if (currentTarget.classList.contains('region-link')) {
-          console.log(
+          log('info', 
             '[ExitUI] Click originated from a region-link, ignoring for exit card action.'
           );
           return; // Ignore clicks on region links
@@ -516,7 +527,7 @@ export class ExitUI {
             if (exitData) {
               if (event.ctrlKey || event.metaKey) {
                 // this.showExitDetails(exitData); // Implement this later
-                console.log(
+                log('info', 
                   '[ExitUI] Ctrl+Click on exit, show details (not implemented yet)',
                   exitData
                 );
@@ -525,7 +536,7 @@ export class ExitUI {
               }
             }
           } catch (e) {
-            console.error(
+            log('error', 
               '[ExitUI] Error parsing exit data from dataset:',
               e,
               exitString
@@ -551,11 +562,11 @@ export class ExitUI {
   }
 
   updateExitDisplay() {
-    console.log('[ExitUI] updateExitDisplay called.');
+    log('info', '[ExitUI] updateExitDisplay called.');
 
     // Ensure the panel's basic initialization (DOM structure, non-data listeners) is done.
     if (!this.isInitialized) {
-      console.warn(
+      log('warn', 
         '[ExitUI updateExitDisplay] Panel not yet initialized by app:readyForUiDataLoad. Aborting display update.'
       );
       return;
@@ -564,7 +575,7 @@ export class ExitUI {
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
 
-    console.log(
+    log('info', 
       `[ExitUI updateExitDisplay] Start State - Snapshot: ${!!snapshot} Static Data: ${!!staticData}`
     );
 
@@ -575,7 +586,7 @@ export class ExitUI {
       !staticData.items ||
       !staticData.regions
     ) {
-      console.warn(
+      log('warn', 
         '[ExitUI] Static exit/item/region data or snapshot not ready. Displaying loading message or clearing grid.'
       );
       this.exitsGrid.innerHTML = '<p>Loading exit data...</p>';
@@ -583,13 +594,13 @@ export class ExitUI {
     }
 
     if (!this.originalExitOrder || this.originalExitOrder.length === 0) {
-      console.warn(
+      log('warn', 
         '[ExitUI updateExitDisplay] Original exit order not yet available. Exits might appear unsorted or panel might wait for re-render.'
       );
       const freshlyFetchedOrder = stateManager.getOriginalExitOrder();
       if (freshlyFetchedOrder && freshlyFetchedOrder.length > 0) {
         this.originalExitOrder = freshlyFetchedOrder;
-        console.log(
+        log('info', 
           `[ExitUI updateExitDisplay] Fallback fetch for originalExitOrder succeeded: ${this.originalExitOrder.length} items.`
         );
       } else {
@@ -605,7 +616,7 @@ export class ExitUI {
       staticData
     );
     if (!snapshotInterface) {
-      console.error(
+      log('error', 
         '[ExitUI] Failed to create snapshot interface. Aborting render.'
       );
       if (this.exitsGrid) {
@@ -663,7 +674,7 @@ export class ExitUI {
       // ADDED LOGGING HERE
       if (connectedRegionName) {
         // Only log if there's a connected region
-        //console.log(
+        //log('info', 
         //  `[ExitUI Check] Exit: ${exit.name} (from ${
         //    parentRegionName || 'N/A'
         //  }) -> ${connectedRegionName}. Reachability[${connectedRegionName}]:`,
@@ -682,7 +693,7 @@ export class ExitUI {
         try {
           rulePasses = evaluateRule(exit.access_rule, snapshotInterface);
         } catch (e) {
-          console.error(
+          log('error', 
             `[ExitUI] Error evaluating rule for exit ${exit.name}:`,
             e,
             exit.access_rule
@@ -879,7 +890,7 @@ export class ExitUI {
 
           return indexA - indexB;
         } else {
-          console.warn(
+          log('warn', 
             '[ExitUI] Original exit order not available, falling back to name sort.'
           );
           return a.name.localeCompare(b.name);
@@ -887,7 +898,7 @@ export class ExitUI {
       }
     });
 
-    console.log(
+    log('info', 
       `[ExitUI] Processing ${filteredExits.length} exits after filtering and sorting.`
     );
 
@@ -992,7 +1003,7 @@ export class ExitUI {
         try {
           card.dataset.exit = encodeURIComponent(JSON.stringify(exit));
         } catch (e) {
-          console.error(
+          log('error', 
             '[ExitUI] Error stringifying exit data for card dataset:',
             exit,
             e
@@ -1081,7 +1092,7 @@ export class ExitUI {
       this.exitsGrid.appendChild(fragment);
     }
 
-    console.log(`[ExitUI] Rendered ${filteredExits.length} exits.`);
+    log('info', `[ExitUI] Rendered ${filteredExits.length} exits.`);
     logAndGetUnknownEvaluationCounter('ExitPanel update complete');
   }
 }

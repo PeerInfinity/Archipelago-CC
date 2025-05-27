@@ -2,13 +2,24 @@
 
 import { registerTest } from '../testRegistry.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('coreTests', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[coreTests] ${message}`, ...data);
+  }
+}
+
 export async function simpleEventTest(testController) {
   try {
     testController.log('Starting simpleEventTest...');
     testController.reportCondition('Test started', true);
 
     setTimeout(() => {
-      console.log(
+      log('info', 
         '[Test Case - simpleEventTest] Publishing custom:testEventAfterDelay'
       );
       // Assuming testController.eventBus is the correct eventBus instance
@@ -37,32 +48,32 @@ export async function simpleEventTest(testController) {
 }
 
 export async function superQuickTest(testController) {
-  console.log('[superQuickTest] STARTED - function entry point');
+  log('info', '[superQuickTest] STARTED - function entry point');
   try {
-    console.log('[superQuickTest] About to call testController.log...');
+    log('info', '[superQuickTest] About to call testController.log...');
     testController.log('Starting superQuickTest...');
-    console.log('[superQuickTest] About to call reportCondition...');
+    log('info', '[superQuickTest] About to call reportCondition...');
     testController.reportCondition('Super quick test started', true);
-    console.log('[superQuickTest] About to do math...');
+    log('info', '[superQuickTest] About to do math...');
     // Simulate some quick synchronous operations
     let x = 1 + 1;
     if (x !== 2) {
-      console.log('[superQuickTest] Math failed!');
+      log('info', '[superQuickTest] Math failed!');
       testController.reportCondition('Basic math failed (1+1!=2)', false);
       await testController.completeTest(false);
       return;
     }
-    console.log('[superQuickTest] Math passed, reporting...');
+    log('info', '[superQuickTest] Math passed, reporting...');
     testController.reportCondition('Basic math passed (1+1=2)', true);
     testController.reportCondition(
       'Super quick test finished successfully',
       true
     );
-    console.log('[superQuickTest] About to call completeTest(true)...');
+    log('info', '[superQuickTest] About to call completeTest(true)...');
     await testController.completeTest(true);
-    console.log('[superQuickTest] COMPLETED successfully');
+    log('info', '[superQuickTest] COMPLETED successfully');
   } catch (error) {
-    console.log('[superQuickTest] CAUGHT ERROR:', error);
+    log('info', '[superQuickTest] CAUGHT ERROR:', error);
     testController.log(`Error in superQuickTest: ${error.message}`, 'error');
     testController.reportCondition(`Test errored: ${error.message}`, false);
     await testController.completeTest(false);

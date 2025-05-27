@@ -58,11 +58,14 @@ class LoggerService {
     this.initialized = true;
 
     // Use console.log directly for logger initialization to avoid recursion
-    console.log('[LoggerService] Configured with settings:', {
-      defaultLevel: this.config.defaultLevel,
-      moduleCount: Object.keys(this.config.moduleLevels).length,
-      enabled: this.config.enabled,
-    });
+    // Only show configuration messages if explicitly enabled for debugging
+    if (this.config.showConfigMessages) {
+      console.log('[LoggerService] Configured with settings:', {
+        defaultLevel: this.config.defaultLevel,
+        moduleCount: Object.keys(this.config.moduleLevels).length,
+        enabled: this.config.enabled,
+      });
+    }
   }
 
   /**

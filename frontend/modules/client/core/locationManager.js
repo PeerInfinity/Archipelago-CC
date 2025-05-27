@@ -4,6 +4,17 @@ import connection from './connection.js';
 import messageHandler from './messageHandler.js';
 import { getServerLocationId } from '../utils/idMapping.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('locationManager', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[locationManager] ${message}`, ...data);
+  }
+}
+
 export class LocationManager {
   static stateManager = null;
   static eventBus = null; // Add property for injected eventBus
@@ -25,34 +36,34 @@ export class LocationManager {
       this.stateManager = module.default;
       return this.stateManager;
     } catch (error) {
-      console.error('Error loading stateManager:', error);
+      log('error', 'Error loading stateManager:', error);
       return null;
     }
   }
 
   // Method to inject eventBus
   static setEventBus(busInstance) {
-    console.log('[LocationManager] Setting EventBus instance.');
+    log('info', '[LocationManager] Setting EventBus instance.');
     this.eventBus = busInstance;
     this._subscribeToEvents(); // Subscribe after bus is set
   }
 
   static initialize() {
-    console.log('LocationManager module initialized');
+    log('info', 'LocationManager module initialized');
     // Defer subscriptions until eventBus is injected
   }
 
   // Separate subscription logic
   static _subscribeToEvents() {
     if (!this.eventBus) {
-      console.error('[LocationManager] Cannot subscribe: EventBus not set.');
+      log('error', '[LocationManager] Cannot subscribe: EventBus not set.');
       return;
     }
     // Clear existing handles
     this.unsubscribeHandles.forEach((unsub) => unsub());
     this.unsubscribeHandles = [];
 
-    console.log('[LocationManager] Subscribing to events...');
+    log('info', '[LocationManager] Subscribing to events...');
     const subscribe = (eventName, handler) => {
       const unsub = this.eventBus.subscribe(eventName, handler);
       this.unsubscribeHandles.push(unsub);
@@ -67,7 +78,7 @@ export class LocationManager {
 
   // Add a cleanup method
   static dispose() {
-    console.log('[LocationManager] Disposing...');
+    log('info', '[LocationManager] Disposing...');
     this.unsubscribeHandles.forEach((unsub) => unsub());
     this.unsubscribeHandles = [];
     this.eventBus = null; // Clear reference
@@ -111,7 +122,7 @@ export class LocationManager {
   static async markLocationChecked(locationId) {
     const stateManager = await this._getStateManager();
     if (!stateManager) {
-      console.error('Cannot mark location checked: stateManager not available');
+      log('error', 'Cannot mark location checked: stateManager not available');
       return false;
     }
 
@@ -126,33 +137,33 @@ export class LocationManager {
       return true;
     }
 
-    console.warn(`Location with ID ${locationId} not found`);
+    log('warn', `Location with ID ${locationId} not found`);
     return false;
   }
 
   static async checkLocation(location) {
     const stateManager = await this._getStateManager();
     if (!stateManager) {
-      console.error('Failed to check location: stateManager not available');
+      log('error', 'Failed to check location: stateManager not available');
       return false;
     }
 
     // Check if location is already marked as checked
     if (stateManager.isLocationChecked(location.name)) {
-      console.log(`Location ${location.name} already checked, skipping`);
+      log('info', `Location ${location.name} already checked, skipping`);
       return true;
     }
 
     // CASE 1: Handle local-only locations (null ID)
     if (location.id === null || location.id === undefined) {
-      console.log(`Processing local-only location: ${location.name}`);
+      log('info', `Processing local-only location: ${location.name}`);
 
       // Mark location as checked
       stateManager.checkLocation(location.name);
 
       // If it has an item, add it to inventory
       if (location.item) {
-        console.log(
+        log('info', 
           `Local event location contains item: ${location.item.name}`
         );
         stateManager.addItemToInventory(location.item.name);
@@ -175,17 +186,17 @@ export class LocationManager {
     }
 
     // CASE 2: Networked locations - ONLY mark checked, don't add items
-    console.log(`Processing networked location: ${location.name}`);
+    log('info', `Processing networked location: ${location.name}`);
 
     // Mark the location as checked locally
     stateManager.checkLocation(location.name);
 
     // Send to server if connected - server will send back the item
     if (connection.isConnected()) {
-      console.log(`Sending location check to server: ${location.id}`);
+      log('info', `Sending location check to server: ${location.id}`);
       messageHandler.sendLocationChecks([location.id]);
     } else {
-      console.log('Not connected to server');
+      log('info', 'Not connected to server');
       // In offline mode, we would handle the item locally here
     }
 
@@ -205,7 +216,7 @@ export class LocationManager {
         return gameState.checkQuickLocation();
       }
     } catch (error) {
-      console.error('Error calling checkQuickLocation:', error);
+      log('error', 'Error calling checkQuickLocation:', error);
     }
 
     return false;

@@ -7,6 +7,21 @@
 // }
 
 // Evaluation trace object for capturing debug info
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('ruleEngine', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[ruleEngine] ${message}`, ...data);
+    }
+  }
+}
+
 class RuleTrace {
   constructor(rule, depth) {
     this.type = rule?.type || 'unknown';
@@ -87,7 +102,7 @@ function safeLog(message, level = 'debug') {
   ) {
     window.consoleManager[level](message);
   } else {
-    console[level] ? console[level](message) : console.log(message);
+    console[level] ? console[level](message) : log('info', message);
   }
 }
 
@@ -151,7 +166,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
   // Check if context is provided and is a valid snapshot interface
   const isValidContext = context && context._isSnapshotInterface === true;
   if (!isValidContext) {
-    console.warn(
+    log(
+      'warn',
       '[evaluateRule] Missing or invalid context (snapshotInterface). Evaluation may fail or be inaccurate.',
       { rule: rule, contextProvided: !!context }
     );
@@ -173,7 +189,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
           } else {
-            console.warn(
+            log(
+              'warn',
               `[evaluateRule SnapshotIF] context.executeHelper is not a function for helper \'${rule.name}\'. Assuming undefined.`
             );
             result = undefined;
@@ -193,7 +210,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (typeof context.executeStateManagerMethod === 'function') {
             result = context.executeStateManagerMethod(rule.method, ...args);
           } else {
-            console.warn(
+            log(
+              'warn',
               `[evaluateRule SnapshotIF] context.executeStateManagerMethod not a function for \'${rule.method}\'. Assuming undefined.`
             );
             result = undefined;
@@ -262,7 +280,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         if (objectResult === undefined) {
           result = undefined; // Cannot access attribute of undefined
         } else if (objectResult === null) {
-          console.warn(
+          log(
+            'warn',
             `[evaluateRule] Attribute \'${rule.attr}\' accessed on null object. Rule:`,
             rule.object
           );
@@ -279,14 +298,14 @@ export const evaluateRule = (rule, context, depth = 0) => {
               const settingsFromContext = context.resolveName('settings');
               if (objectResult === settingsFromContext) {
                 result = context.getSetting(rule.attr);
-                // console.log(`[evaluateRule Attribute] Used getSetting for ${rule.attr}:`, result);
+                // log('info', `[evaluateRule Attribute] Used getSetting for ${rule.attr}:`, result);
               } else {
-                // console.warn(`[evaluateRule Attribute] objectResult has getSetting but doesn't match context.settings`);
+                // log('warn', `[evaluateRule Attribute] objectResult has getSetting but doesn't match context.settings`);
                 result = undefined;
               }
             } else {
               // Attribute not found directly, and not a settings lookup context
-              // console.warn(`[evaluateRule Attribute] Attribute '${rule.attr}' not found on object:`, objectResult);
+              // log('warn', `[evaluateRule Attribute] Attribute '${rule.attr}' not found on object:`, objectResult);
               result = undefined; // Attribute doesn't exist
             }
           }
@@ -329,7 +348,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
             // Handle cases where thisContext might still be null/undefined after evaluation
             if (thisContext === null || typeof thisContext === 'undefined') {
-              console.warn(
+              log(
+                'warn',
                 "[evaluateRule FunctionCall] Resolved 'this' context is null/undefined. Using main context.",
                 rule.function
               );
@@ -339,7 +359,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
             result = func.apply(thisContext, args);
             // Check if the function itself returned undefined
             if (result === undefined) {
-              // console.warn(`[evaluateRule FunctionCall] Function ${rule.function?.attr || rule.function?.name || '?'} returned undefined.`);
+              // log('warn', `[evaluateRule FunctionCall] Function ${rule.function?.attr || rule.function?.name || '?'} returned undefined.`);
             }
           } catch (e) {
             let funcName = 'unknown';
@@ -350,7 +370,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
             } else if (rule.function?.type === 'name') {
               funcName = rule.function.name;
             }
-            console.error(
+            log(
+              'error',
               `[evaluateRule] Error executing function call '${funcName}':`,
               e,
               {
@@ -361,10 +382,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
             result = undefined; // Error during execution means undefined outcome
           }
         } else {
-          console.warn(
-            `[evaluateRule] Resolved identifier is not a function:`,
-            { identifier: rule.function, resolvedValue: func }
-          );
+          log('warn', `[evaluateRule] Resolved identifier is not a function:`, {
+            identifier: rule.function,
+            resolvedValue: func,
+          });
           result = undefined; // Not a function, result undefined
         }
         break;
@@ -380,7 +401,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
           result = value[index]; // Access property/index
           // If value[index] itself is undefined (property doesn't exist), result remains undefined.
         } else {
-          console.warn(
+          log(
+            'warn',
             '[evaluateRule] Subscript applied to non-object/non-map or null value.',
             { rule, value }
           );
@@ -426,7 +448,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
               // Handle Set
               result = right.has(left);
             } else {
-              console.warn(
+              log(
+                'warn',
                 '[evaluateRule] "in" operator used with invalid right side type:',
                 { left, right }
               );
@@ -434,7 +457,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
             }
             break;
           default:
-            console.warn(
+            log(
+              'warn',
               `[evaluateRule] Unsupported comparison operator: ${op}`
             );
             result = undefined; // Operator unknown -> result unknown
@@ -449,7 +473,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         } else if (typeof context.hasItem === 'function') {
           result = context.hasItem(itemName); // hasItem should return true/false/undefined
         } else {
-          console.warn(
+          log(
+            'warn',
             '[evaluateRule SnapshotIF] context.hasItem is not a function for item_check.'
           );
           result = undefined;
@@ -475,7 +500,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
               ? undefined
               : (currentCount || 0) >= requiredCount;
         } else {
-          console.warn(
+          log(
+            'warn',
             '[evaluateRule SnapshotIF] context.countItem is not a function for count_check.'
           );
           result = undefined;
@@ -501,7 +527,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
               ? undefined
               : (currentCount || 0) >= requiredCount;
         } else {
-          console.warn(
+          log(
+            'warn',
             '[evaluateRule SnapshotIF] context.countGroup is not a function for group_check.'
           );
           result = undefined;
@@ -523,10 +550,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
               ? undefined
               : actualValue === expectedValue;
         } else {
-          console.warn(
-            '[evaluateRule] Invalid setting name for setting_check',
-            { rule, settingName }
-          );
+          log('warn', '[evaluateRule] Invalid setting name for setting_check', {
+            rule,
+            settingName,
+          });
           result = undefined;
         }
         break;
@@ -537,7 +564,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         if (context && typeof context.resolveName === 'function') {
           result = context.resolveName(rule.name);
         } else {
-          console.warn(
+          log(
+            'warn',
             `[evaluateRule] Context cannot resolve name: ${rule.name}`
           );
           result = undefined;
@@ -547,7 +575,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
       case 'conditional': {
         if (!rule.test || !rule.if_true || !rule.if_false) {
-          console.warn(
+          log(
+            'warn',
             '[evaluateRule Conditional] Malformed conditional rule:',
             rule
           );
@@ -615,7 +644,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
             result = left || right;
             break;
           default:
-            console.warn(`[evaluateRule] Unknown binary_op operator: ${op}`, {
+            log('warn', `[evaluateRule] Unknown binary_op operator: ${op}`, {
               rule,
             });
             result = undefined;
@@ -625,7 +654,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
       case 'list': {
         if (!Array.isArray(rule.value)) {
-          console.warn(
+          log(
+            'warn',
             '[evaluateRule] List rule does not have an array value:',
             rule
           );
@@ -644,13 +674,13 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       default: {
-        console.warn(`[evaluateRule] Unknown rule type: ${ruleType}`, { rule });
+        log('warn', `[evaluateRule] Unknown rule type: ${ruleType}`, { rule });
         result = undefined;
         break;
       }
     }
   } catch (error) {
-    console.error('[evaluateRule] Error during evaluation:', {
+    log('error', '[evaluateRule] Error during evaluation:', {
       ruleType,
       rule,
       error,
@@ -668,91 +698,91 @@ export function debugRule(rule, indent = 0) {
   const prefix = ' '.repeat(indent);
 
   if (!rule) {
-    console.log(`${prefix}null or undefined rule`);
+    log('info', `${prefix}null or undefined rule`);
     return;
   }
 
-  console.log(`${prefix}Type: ${rule.type}`);
+  log('info', `${prefix}Type: ${rule.type}`);
 
   switch (rule.type) {
     case 'constant':
-      console.log(`${prefix}Value: ${rule.value}`);
+      log('info', `${prefix}Value: ${rule.value}`);
       break;
 
     case 'name':
-      console.log(`${prefix}Name: ${rule.name}`);
+      log('info', `${prefix}Name: ${rule.name}`);
       break;
 
     case 'attribute':
-      console.log(`${prefix}Attribute: ${rule.attr}`);
-      console.log(`${prefix}Object:`);
+      log('info', `${prefix}Attribute: ${rule.attr}`);
+      log('info', `${prefix}Object:`);
       debugRule(rule.object, indent + 2);
       break;
 
     case 'subscript':
-      console.log(`${prefix}Subscript:`);
-      console.log(`${prefix}  Value:`);
+      log('info', `${prefix}Subscript:`);
+      log('info', `${prefix}  Value:`);
       debugRule(rule.value, indent + 4);
-      console.log(`${prefix}  Index:`);
+      log('info', `${prefix}  Index:`);
       debugRule(rule.index, indent + 4);
       break;
 
     case 'function_call':
-      console.log(`${prefix}Function Call:`);
-      console.log(`${prefix}  Function:`);
+      log('info', `${prefix}Function Call:`);
+      log('info', `${prefix}  Function:`);
       debugRule(rule.function, indent + 4);
-      console.log(`${prefix}  Args:`);
+      log('info', `${prefix}  Args:`);
       (rule.args || []).forEach((arg, i) => {
-        console.log(`${prefix}    Arg ${i + 1}:`);
+        log('info', `${prefix}    Arg ${i + 1}:`);
         debugRule(arg, indent + 6);
       });
       break;
 
     case 'item_check':
       if (typeof rule.item === 'string') {
-        console.log(`${prefix}Item: ${rule.item}`);
+        log('info', `${prefix}Item: ${rule.item}`);
       } else {
-        console.log(`${prefix}Item (complex):`);
+        log('info', `${prefix}Item (complex):`);
         debugRule(rule.item, indent + 2);
       }
       break;
 
     case 'count_check':
       if (typeof rule.item === 'string') {
-        console.log(`${prefix}Item: ${rule.item}`);
+        log('info', `${prefix}Item: ${rule.item}`);
       } else {
-        console.log(`${prefix}Item (complex):`);
+        log('info', `${prefix}Item (complex):`);
         debugRule(rule.item, indent + 2);
       }
 
       if (typeof rule.count === 'number') {
-        console.log(`${prefix}Count: ${rule.count}`);
+        log('info', `${prefix}Count: ${rule.count}`);
       } else if (rule.count) {
-        console.log(`${prefix}Count (complex):`);
+        log('info', `${prefix}Count (complex):`);
         debugRule(rule.count, indent + 2);
       }
       break;
 
     case 'group_check':
       if (typeof rule.group === 'string') {
-        console.log(`${prefix}Group: ${rule.group}`);
+        log('info', `${prefix}Group: ${rule.group}`);
       } else {
-        console.log(`${prefix}Group (complex):`);
+        log('info', `${prefix}Group (complex):`);
         debugRule(rule.group, indent + 2);
       }
 
-      console.log(`${prefix}Count: ${rule.count || 1}`);
+      log('info', `${prefix}Count: ${rule.count || 1}`);
       break;
 
     case 'helper':
-      console.log(`${prefix}Helper: ${rule.name}`);
+      log('info', `${prefix}Helper: ${rule.name}`);
       if (rule.args && rule.args.length > 0) {
-        console.log(`${prefix}Args:`);
+        log('info', `${prefix}Args:`);
         rule.args.forEach((arg, i) => {
           if (typeof arg === 'string' || typeof arg === 'number') {
-            console.log(`${prefix}  Arg ${i + 1}: ${arg}`);
+            log('info', `${prefix}  Arg ${i + 1}: ${arg}`);
           } else {
-            console.log(`${prefix}  Arg ${i + 1} (complex):`);
+            log('info', `${prefix}  Arg ${i + 1} (complex):`);
             debugRule(arg, indent + 4);
           }
         });
@@ -761,26 +791,27 @@ export function debugRule(rule, indent = 0) {
 
     case 'and':
     case 'or':
-      console.log(
+      log(
+        'info',
         `${prefix}${rule.type.toUpperCase()} with ${
           rule.conditions.length
         } conditions:`
       );
       rule.conditions.forEach((cond, i) => {
-        console.log(`${prefix}  Condition ${i + 1}:`);
+        log('info', `${prefix}  Condition ${i + 1}:`);
         debugRule(cond, indent + 4);
       });
       break;
 
     case 'state_method':
-      console.log(`${prefix}Method: ${rule.method}`);
+      log('info', `${prefix}Method: ${rule.method}`);
       if (rule.args && rule.args.length > 0) {
-        console.log(`${prefix}Args:`);
+        log('info', `${prefix}Args:`);
         rule.args.forEach((arg, i) => {
           if (typeof arg === 'string' || typeof arg === 'number') {
-            console.log(`${prefix}  Arg ${i + 1}: ${arg}`);
+            log('info', `${prefix}  Arg ${i + 1}: ${arg}`);
           } else {
-            console.log(`${prefix}  Arg ${i + 1} (complex):`);
+            log('info', `${prefix}  Arg ${i + 1} (complex):`);
             debugRule(arg, indent + 4);
           }
         });
@@ -788,24 +819,24 @@ export function debugRule(rule, indent = 0) {
       break;
 
     case 'comparison':
-      console.log(`${prefix}Comparison: ${rule.op}`);
-      console.log(`${prefix}Left:`);
+      log('info', `${prefix}Comparison: ${rule.op}`);
+      log('info', `${prefix}Left:`);
       if (typeof rule.left === 'object' && rule.left.type) {
         debugRule(rule.left, indent + 2);
       } else {
-        console.log(`${prefix}  ${rule.left}`);
+        log('info', `${prefix}  ${rule.left}`);
       }
 
-      console.log(`${prefix}Right:`);
+      log('info', `${prefix}Right:`);
       if (typeof rule.right === 'object' && rule.right.type) {
         debugRule(rule.right, indent + 2);
       } else {
-        console.log(`${prefix}  ${rule.right}`);
+        log('info', `${prefix}  ${rule.right}`);
       }
       break;
 
     default:
-      console.log(`${prefix}${JSON.stringify(rule, null, 2)}`);
+      log('info', `${prefix}${JSON.stringify(rule, null, 2)}`);
   }
 }
 
@@ -839,7 +870,7 @@ export function extractFunctionPath(funcNode) {
  */
 export function debugPythonAST(rule) {
   if (!rule) {
-    console.log('null or undefined rule');
+    log('info', 'null or undefined rule');
     return;
   }
 
@@ -847,8 +878,8 @@ export function debugPythonAST(rule) {
 
   switch (rule.type) {
     case 'function_call':
-      console.log(`Function: ${extractFunctionPath(rule.function)}`);
-      console.log('Arguments:');
+      log('info', `Function: ${extractFunctionPath(rule.function)}`);
+      log('info', 'Arguments:');
       (rule.args || []).forEach((arg, i) => {
         console.group(`Arg ${i + 1}:`);
         debugPythonAST(arg);
@@ -857,28 +888,28 @@ export function debugPythonAST(rule) {
       break;
 
     case 'attribute':
-      console.log(`Attribute: ${rule.attr}`);
-      console.log('Object:');
+      log('info', `Attribute: ${rule.attr}`);
+      log('info', 'Object:');
       debugPythonAST(rule.object);
       break;
 
     case 'subscript':
-      console.log('Value:');
+      log('info', 'Value:');
       debugPythonAST(rule.value);
-      console.log('Index:');
+      log('info', 'Index:');
       debugPythonAST(rule.index);
       break;
 
     case 'name':
-      console.log(`Name: ${rule.name}`);
+      log('info', `Name: ${rule.name}`);
       break;
 
     case 'constant':
-      console.log(`Constant: ${rule.value}`);
+      log('info', `Constant: ${rule.value}`);
       break;
 
     default:
-      console.log(`${JSON.stringify(rule, null, 2)}`);
+      log('info', `${JSON.stringify(rule, null, 2)}`);
   }
 
   console.groupEnd();

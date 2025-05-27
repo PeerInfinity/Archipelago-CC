@@ -5,6 +5,20 @@ import { GameInventory } from './helpers/gameInventory.js'; // Ensure GameInvent
 import { GameState } from './helpers/index.js'; // Added import for GameState
 import { GameWorkerHelpers } from './helpers/gameWorkerHelpers.js'; // Added import for GameWorkerHelpers
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('stateManager', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[stateManager] ${message}`, ...data);
+    }
+  }
+}
+
 /**
  * Manages game state including inventory and reachable regions/locations.
  * Handles automatic collection of event items when their locations become accessible.
@@ -29,7 +43,8 @@ export class StateManager {
 
     // --- ADDED Check for missing evaluator --- >
     if (!this.evaluateRuleFromEngine) {
-      console.warn(
+      log(
+        'warn',
         '[StateManager Constructor] evaluateRuleFunction was not provided. Rule evaluation within the worker might fail if called directly.'
       );
     }
@@ -87,7 +102,7 @@ export class StateManager {
     this.originalRegionOrder = [];
     this.originalExitOrder = [];
 
-    console.log('[StateManager Class] Instance created.');
+    log('info', '[StateManager Class] Instance created.');
   }
 
   /**
@@ -108,7 +123,8 @@ export class StateManager {
         payload: data.payload, // The actual echoed payload at the top level
       });
     } else {
-      console.warn(
+      log(
+        'warn',
         '[StateManager] Ping received but no postMessageCallback set.'
       );
     }
@@ -120,7 +136,7 @@ export class StateManager {
    */
   applySettings(settingsObject) {
     this.settings = settingsObject;
-    console.log('[StateManager Class] Settings applied:', this.settings);
+    log('info', '[StateManager Class] Settings applied:', this.settings);
     // Potentially call other methods if settings need immediate effect
     // For example, this.state.loadSettings(this.settings) if that wasn't done elsewhere
     // or if settings affect helper instantiation or other core components.
@@ -132,7 +148,7 @@ export class StateManager {
    * @param {object} eventBusInstance - The application's event bus.
    */
   setEventBus(eventBusInstance) {
-    console.log('[StateManager Class] Setting EventBus instance (legacy)...');
+    log('info', '[StateManager Class] Setting EventBus instance (legacy)...');
     this.eventBus = eventBusInstance;
   }
 
@@ -141,11 +157,12 @@ export class StateManager {
    * @param {function} callback - The function to call (e.g., self.postMessage).
    */
   setCommunicationChannel(callback) {
-    console.log('[StateManager Class] Setting communication channel...');
+    log('info', '[StateManager Class] Setting communication channel...');
     if (typeof callback === 'function') {
       this.postMessageCallback = callback;
     } else {
-      console.error(
+      log(
+        'error',
         '[StateManager Class] Invalid communication channel provided.'
       );
       this.postMessageCallback = null;
@@ -167,13 +184,15 @@ export class StateManager {
       // TODO: Create AdventureInventory if it needs specific logic beyond ALTTPInventory.
       // For now, Adventure will use ALTTPInventory structure.
       this.inventory = new ALTTPInventory(items, progressionMapping, itemData);
-      console.log(
+      log(
+        'info',
         '[StateManager initializeInventory] Instantiated ALTTPInventory for Adventure game.'
       );
     } else {
       // Default to A Link to the Past or other games using ALTTPInventory
       this.inventory = new ALTTPInventory(items, progressionMapping, itemData);
-      console.log(
+      log(
+        'info',
         '[StateManager initializeInventory] Instantiated ALTTPInventory for game:',
         gameName
       );
@@ -189,7 +208,8 @@ export class StateManager {
         '[StateManager initializeInventory] Assigned groupData to inventory.'
       );
     } else {
-      console.warn(
+      log(
+        'warn',
         '[StateManager initializeInventory] Inventory or groupData not available for assignment to inventory.groupData.'
       );
     }
@@ -211,7 +231,7 @@ export class StateManager {
         this.eventBus.publish(`stateManager:${eventType}`, {});
       }
     } catch (e) {
-      console.warn('Could not publish to eventBus:', e);
+      log('warn', 'Could not publish to eventBus:', e);
     }
   }
 
@@ -397,7 +417,7 @@ export class StateManager {
     this.invalidateCache(); // +++ ADDED: Ensure cache is cleared for new rules load +++
 
     // --- VERY EARLY DIAGNOSTIC LOG (using console.log directly) ---
-    //console.log(
+    //log('info',
     //  `[StateManager Worker loadFromJSON VERY EARLY DIRECT LOG] Entered method. Player ID: ${selectedPlayerId}. jsonData keys: ${
     //    jsonData ? Object.keys(jsonData) : 'jsonData is null/undefined'
     //  }`
@@ -414,13 +434,15 @@ export class StateManager {
     this.originalExitOrder = [];
 
     if (!jsonData) {
-      console.error(
+      log(
+        'error',
         '[StateManager loadFromJSON] jsonData is null or undefined. Aborting.'
       );
       throw new Error('Invalid JSON data provided to loadFromJSON');
     }
     if (!selectedPlayerId) {
-      console.error(
+      log(
+        'error',
         '[StateManager loadFromJSON] selectedPlayerId is not provided. Aborting.'
       );
       throw new Error('loadFromJSON called without selectedPlayerId');
@@ -428,7 +450,8 @@ export class StateManager {
     if (!jsonData.schema_version || jsonData.schema_version !== 3) {
       // It's often better to log an error and continue with a defined (but perhaps empty) state
       // rather than throwing an error that might crash the worker, unless schema version is absolutely critical.
-      console.error(
+      log(
+        'error',
         `[StateManager loadFromJSON] Invalid JSON schema version: ${jsonData.schema_version}. Expected 3. Proceeding with caution.`
       );
       // Depending on strictness, you might still want to throw:
@@ -437,7 +460,7 @@ export class StateManager {
 
     // Set the player slot based on selection
     this.playerSlot = parseInt(selectedPlayerId, 10);
-    console.log(`StateManager playerSlot set to: ${this.playerSlot}`);
+    log('info', `StateManager playerSlot set to: ${this.playerSlot}`);
 
     // Determine gameId - THIS IS THE MODIFIED SECTION
     let determinedGameId = jsonData.game_name || 'UnknownGame'; // Start with game_name
@@ -475,7 +498,8 @@ export class StateManager {
         // }
         else {
           // Fallback if world_class is present but not specifically mapped
-          console.warn(
+          log(
+            'warn',
             `[StateManager loadFromJSON] Unmapped world_class "${playerWorldClass}". Using it directly as gameId if it's not a generic name.`
           );
           // Avoid setting determinedGameId to something like "World" if that's not descriptive
@@ -536,7 +560,8 @@ export class StateManager {
       );
     } else {
       this.groupData = []; // Default to empty array if no suitable group data is found
-      console.warn(
+      log(
+        'warn',
         `[StateManager loadFromJSON] No valid group data found for player ${selectedPlayerId}. Defaulting to empty array.`
       );
     }
@@ -563,17 +588,20 @@ export class StateManager {
 
     if (gameNameForStateAndHelpers === 'Adventure') {
       this.state = new GameState(gameNameForStateAndHelpers);
-      console.log(
+      log(
+        'info',
         '[StateManager loadFromJSON] GameState instantiated for Adventure.'
       );
     } else if (gameNameForStateAndHelpers === 'A Link to the Past') {
       this.state = new ALTTPState();
-      console.log(
+      log(
+        'info',
         '[StateManager loadFromJSON] ALTTPState instantiated for A Link to the Past.'
       );
     } else {
       this.state = new GameState(gameNameForStateAndHelpers);
-      console.warn(
+      log(
+        'warn',
         `[StateManager loadFromJSON] Unknown game '${gameNameForStateAndHelpers}'. Using base GameState.`
       );
     }
@@ -598,7 +626,8 @@ export class StateManager {
         this.settings.game = gameNameForStateAndHelpers;
       }
     } else {
-      console.error(
+      log(
+        'error',
         '[StateManager loadFromJSON] this.settings is not an object after state.loadSettings. Re-initializing as empty object.'
       );
       this.settings = { game: gameNameForStateAndHelpers }; // Fallback
@@ -609,15 +638,18 @@ export class StateManager {
 
     // --- ADDED DIAGNOSTIC ---
     if (this.settings === undefined) {
-      console.error(
+      log(
+        'error',
         "[StateManager CRITICAL] this.settings is UNDEFINED after 'this.settings = this.state.settings;'"
       );
-      console.log(
+      log(
+        'info',
         '[StateManager DETAIL] this.state is:',
         this.state ? this.state.constructor.name : 'null/undefined'
       );
       if (this.state) {
-        console.log(
+        log(
+          'info',
           '[StateManager DETAIL] this.state.settings is:',
           this.state.settings === undefined
             ? 'undefined'
@@ -625,15 +657,18 @@ export class StateManager {
         );
       }
     } else if (this.settings === null) {
-      console.warn(
+      log(
+        'warn',
         "[StateManager WARNING] this.settings is NULL after 'this.settings = this.state.settings;'"
       );
-      console.log(
+      log(
+        'info',
         '[StateManager DETAIL] this.state is:',
         this.state ? this.state.constructor.name : 'null/undefined'
       );
       if (this.state) {
-        console.log(
+        log(
+          'info',
           '[StateManager DETAIL] this.state.settings is:',
           this.state.settings === null
             ? 'null'
@@ -665,7 +700,7 @@ export class StateManager {
     //     '[StateManager loadFromJSON] Called this.state.loadSettings() with raw settings.'
     //   );
     // } else {
-    //   console.warn(
+    //   log('warn',
     //     '[StateManager loadFromJSON] this.state.loadSettings is not a function. Game-specific settings might not be fully processed.'
     //   );
     // }
@@ -700,7 +735,7 @@ export class StateManager {
     //   );
     // }
 
-    // console.log(`Loaded ${Object.keys(this.itemNameToId).length} item IDs`); // Covered by _logDebug
+    // log('info', `Loaded ${Object.keys(this.itemNameToId).length} item IDs`); // Covered by _logDebug
 
     // Aggregate all locations from all regions into a flat list and build nameToId map
     this.locations = [];
@@ -711,7 +746,8 @@ export class StateManager {
     for (const regionName of this.originalRegionOrder) {
       const region = this.regions[regionName]; // Get region data using the name
       if (!region) {
-        console.warn(
+        log(
+          'warn',
           `[StateManager loadFromJSON] Region data for '${regionName}' not found in this.regions. Skipping.`
         );
         continue;
@@ -722,7 +758,8 @@ export class StateManager {
           const descriptiveName = locationDataItem.name;
 
           if (!descriptiveName) {
-            console.warn(
+            log(
+              'warn',
               `[StateManager loadFromJSON] Location data in region '${regionName}' is missing a 'name' property:`,
               locationDataItem
             );
@@ -750,7 +787,8 @@ export class StateManager {
           this.locationNameToId[descriptiveName] = this.locations.length - 1;
         });
       } else if (region.locations) {
-        console.warn(
+        log(
+          'warn',
           `[StateManager loadFromJSON] region.locations for region '${regionName}' is not an array:`,
           region.locations
         );
@@ -772,7 +810,8 @@ export class StateManager {
       if (!regionObject) {
         // This case should ideally not happen if originalRegionOrder is derived from Object.keys(this.regions)
         // but as a safeguard:
-        console.warn(
+        log(
+          'warn',
           `[StateManager loadFromJSON] Region data for '${regionName}' not found in this.regions during exit processing. Skipping.`
         );
         continue;
@@ -838,16 +877,19 @@ export class StateManager {
     this.helpers = null; // Ensure helpers are reset
     if (this.settings && this.settings.game === 'A Link to the Past') {
       this.helpers = new ALTTPWorkerHelpers(this);
-      console.log(
+      log(
+        'info',
         '[StateManager loadFromJSON] ALTTPWorkerHelpers instantiated.'
       );
     } else if (this.settings && this.settings.game === 'Adventure') {
       this.helpers = new GameWorkerHelpers(this); // Use GameWorkerHelpers for Adventure
-      console.log(
+      log(
+        'info',
         '[StateManager loadFromJSON] GameWorkerHelpers instantiated for Adventure.'
       );
     } else {
-      console.warn(
+      log(
+        'warn',
         '[StateManager loadFromJSON] No specific helpers for game:',
         this.settings ? this.settings.game : 'undefined',
         '. Using base GameWorkerHelpers as a fallback.'
@@ -860,7 +902,8 @@ export class StateManager {
     this.inventory = this._createInventoryInstance(this.settings.game);
     if (!this.inventory) {
       // This case should ideally not be reached if _createInventoryInstance always returns an instance
-      console.error(
+      log(
+        'error',
         '[StateManager loadFromJSON CRITICAL] Failed to create inventory instance! this.inventory is null/undefined.'
       );
       // Depending on how critical inventory is, you might want to throw an error here
@@ -883,12 +926,13 @@ export class StateManager {
       if (jsonData.shops && jsonData.shops[selectedPlayerId]) {
         this.state.loadShops(jsonData.shops[selectedPlayerId]);
       } else {
-        // console.warn('No shop data found for player in JSON.');
+        // log('warn', 'No shop data found for player in JSON.');
       }
     }
 
     // --- Start of new group processing logic ---
-    console.log(
+    log(
+      'info',
       `[StateManager loadFromJSON] Processing group data. Player ID: ${selectedPlayerId}. Raw jsonData.item_groups:`,
       jsonData.item_groups
         ? JSON.parse(JSON.stringify(jsonData.item_groups))
@@ -904,12 +948,13 @@ export class StateManager {
         jsonData.item_groups[String(selectedPlayerId)]; // Ensure playerId is a string key
       if (Array.isArray(playerSpecificGroups)) {
         this.groupData = playerSpecificGroups;
-        //console.log(
+        //log('info',
         //  `[StateManager loadFromJSON] Loaded player-specific item_groups for player ${selectedPlayerId}:`,
         //  JSON.parse(JSON.stringify(this.groupData))
         //);
       } else {
-        console.log(
+        log(
+          'info',
           `[StateManager loadFromJSON] item_groups found, but no specific entry for player ${selectedPlayerId} or entry is not an array. Player entry:`,
           playerSpecificGroups
         );
@@ -917,17 +962,20 @@ export class StateManager {
       }
     } else if (jsonData.groups && Array.isArray(jsonData.groups)) {
       // Fallback for old global 'groups' array format if item_groups is not present
-      console.log(
+      log(
+        'info',
         `[StateManager loadFromJSON] No player-specific item_groups found or item_groups is not an object. Falling back to global jsonData.groups (if array).`
       );
       this.groupData = jsonData.groups;
     } else {
-      console.log(
+      log(
+        'info',
         `[StateManager loadFromJSON] No player-specific item_groups or suitable global fallback found. Setting groupData to [].`
       );
       this.groupData = [];
     }
-    console.log(
+    log(
+      'info',
       `[StateManager loadFromJSON] Final this.groupData for player ${selectedPlayerId}:`,
       JSON.parse(JSON.stringify(this.groupData)),
       'Is Array:',
@@ -938,7 +986,8 @@ export class StateManager {
     // Process starting items
     const startingItems = jsonData.starting_items?.[selectedPlayerId] || [];
     if (startingItems && startingItems.length > 0) {
-      console.log(
+      log(
+        'info',
         `[StateManager loadFromJSON] Adding ${startingItems.length} starting items for player ${selectedPlayerId}:`,
         startingItems
       );
@@ -948,17 +997,19 @@ export class StateManager {
         if (this.itemData && this.itemData[itemName]) {
           this.addItemToInventory(itemName); // This will add to _batchedUpdates
         } else {
-          console.warn(
+          log(
+            'warn',
             `[StateManager loadFromJSON] Starting item '${itemName}' not found in itemData, skipping.`
           );
         }
       });
       this.commitBatchUpdate(); // This will apply batched items and trigger computation if needed
-      console.log(
+      log(
+        'info',
         '[StateManager loadFromJSON] Starting items processed and batch committed.'
       );
     } else {
-      console.log('[StateManager loadFromJSON] No starting items to process.');
+      log('info', '[StateManager loadFromJSON] No starting items to process.');
       // If batch mode was somehow active and we didn't add items, ensure it's reset.
       // And if no starting items, we still need an initial computation if cache is still invalid.
       if (this._batchMode) {
@@ -967,7 +1018,8 @@ export class StateManager {
       } else if (!this.cacheValid) {
         // If no starting items and cache is invalid (e.g. fresh load), trigger computation
         // This computeReachableRegions will update the cache. The snapshot is sent later.
-        console.log(
+        log(
+          'info',
           '[StateManager loadFromJSON] No starting items, ensuring initial computation.'
         );
         this.computeReachableRegions();
@@ -1017,10 +1069,10 @@ export class StateManager {
     );
 
     // --- BEGIN DIAGNOSTIC LOGGING (using console.log directly for first few) ---
-    //console.log(
+    //log('info',
     //  '[StateManager Worker loadFromJSON] DIAGNOSTIC (direct log): Listing all incoming exit names from jsonData.regions...'
     //);
-    //console.log(
+    //log('info',
     //  `[StateManager Worker loadFromJSON] DIAGNOSTIC (direct log): Content of jsonData.regions[${selectedPlayerId}]:`,
     //  jsonData.regions
     //    ? jsonData.regions[selectedPlayerId]
@@ -1034,7 +1086,7 @@ export class StateManager {
           regionData.exits.forEach((exit, index) => {
             if (exit && typeof exit === 'object') {
               // Using console.log for this initial raw dump as well
-              //console.log(
+              //log('info',
               //  `  DIAGNOSTIC (direct log): Region '${regionKey}', Exit Index ${index}, Name: '${exit.name}', Connected Region (snake): '${exit.connected_region}', Connected Region (camel): '${exit.connectedRegion}'`
               //);
             }
@@ -1042,11 +1094,11 @@ export class StateManager {
         }
       }
     } else {
-      //console.log(
+      //log('info',
       //  '[StateManager Worker loadFromJSON] DIAGNOSTIC (direct log): jsonData.regions or player-specific region data for diagnostic loop not found.'
       //);
     }
-    //console.log(
+    //log('info',
     //  '[StateManager Worker loadFromJSON] DIAGNOSTIC (direct log): End of incoming exit name listing.'
     //);
     // --- END DIAGNOSTIC LOGGING ---
@@ -1081,35 +1133,42 @@ export class StateManager {
             // Debugging for the specific problematic exit - MORE GENERAL CHECK (ANY REGION)
             // This will use _logDebug and depends on debugMode being true by this point
             if (originalExitObject.name === 'Links House S&Q') {
-              console.log(
+              log(
+                'info',
                 `[StateManager Worker loadFromJSON] Processing "Links House S&Q" (Region: ${regionKey}):`
               );
-              console.log(
+              log(
+                'info',
                 `  Original Exit Object (raw): ${JSON.stringify(
                   originalExitObject
                 )}`
               );
-              console.log(
+              log(
+                'info',
                 `  Attempted snake_case originalExitObject.connected_region: ${originalExitObject.connected_region}`
               );
-              console.log(
+              log(
+                'info',
                 `  Attempted camelCase originalExitObject.connectedRegion: ${originalExitObject.connectedRegion}`
               );
-              console.log(
+              log(
+                'info',
                 `  Resolved connectedRegionValue for processedExit: ${connectedRegionValue}`
               );
-              console.log(
+              log(
+                'info',
                 `  Processed Exit Object (to be pushed): ${JSON.stringify(
                   processedExit
                 )}`
               );
-              console.log(
+              log(
+                'info',
                 `  Value of connected_region being pushed: ${processedExit.connected_region}`
               );
             }
 
             if (!processedExit.name) {
-              //console.warn(
+              //log('warn',
               //  `[StateManager Worker loadFromJSON] Exit in region '${regionKey}' is missing a 'name'. Original object:`,
               //  JSON.stringify(originalExitObject)
               //);
@@ -1125,7 +1184,7 @@ export class StateManager {
 
             if (!isConnectedRegionValid) {
               // This warning will use console.warn directly
-              //console.warn(
+              //log('warn',
               //  `[StateManager Worker loadFromJSON] Exit "${
               //    processedExit.name || 'Unnamed'
               //  }" in region '${regionKey}' has a problematic 'connected_region'. ` +
@@ -1143,7 +1202,8 @@ export class StateManager {
 
             this.exits.push(processedExit);
           } else {
-            console.warn(
+            log(
+              'warn',
               `[StateManager Worker loadFromJSON] Encountered invalid exit data in region '${regionKey}':`,
               originalExitObject
             );
@@ -1151,7 +1211,8 @@ export class StateManager {
         });
       } else if (regionObject.exits) {
         // Log if regionObject.exits is defined but not an array (unexpected structure)
-        console.warn(
+        log(
+          'warn',
           `[StateManager Worker loadFromJSON] region.exits for region '${regionKey}' is not an array:`,
           regionObject.exits
         );
@@ -1176,7 +1237,7 @@ export class StateManager {
       '[StateManager loadFromJSON] Initial reachable regions computation complete.'
     );
 
-    //console.log(
+    //log('info',
     //  '[StateManager loadFromJSON END] Final check before return. this.originalExitOrder type:',
     //  typeof this.originalExitOrder,
     //  'Is Array:',
@@ -1489,14 +1550,14 @@ export class StateManager {
 
         // +++ DETAILED LOGGING FOR RULE EVALUATION +++
         //if (exit.name === 'GameStart' || fromRegion === 'Menu') {
-        //  console.log(
+        //  log('info',
         //    `  - Exit Access Rule:`,
         //    exit.access_rule
         //      ? JSON.parse(JSON.stringify(exit.access_rule))
         //      : 'None (implicitly true)'
         //  );
-        //  console.log(`  - Rule Evaluation Result: ${ruleEvaluationResult}`);
-        //  console.log(`  - CanTraverse: ${canTraverse}`);
+        //  log('info', `  - Rule Evaluation Result: ${ruleEvaluationResult}`);
+        //  log('info', `  - CanTraverse: ${canTraverse}`);
         //}
         // +++ END DETAILED LOGGING +++
 
@@ -1636,7 +1697,8 @@ export class StateManager {
         snapshotInterface
       );
     } catch (e) {
-      console.error(
+      log(
+        'error',
         `Error evaluating internal rule for location ${location.name}:`,
         e,
         location.access_rule
@@ -1736,7 +1798,7 @@ export class StateManager {
     if (excludedItems?.length > 0) {
       // Check if we have itempool_counts data directly on the stateManager
       if (this.itempoolCounts) {
-        //console.log(
+        //log('info',
         //  'Using itempool_counts data for test inventory:',
         //  this.itempoolCounts
         //);
@@ -1784,7 +1846,8 @@ export class StateManager {
           }
         });
       } else {
-        console.warn(
+        log(
+          'warn',
           'No itempool_counts data available, falling back to default behavior'
         );
         // Fallback to original behavior if itempool_counts not available
@@ -1931,7 +1994,7 @@ export class StateManager {
         }
         inventoryChanged = true;
       } else if (diff < 0) {
-        console.warn(`Batch commit needs inventory.removeItem for ${itemName}`);
+        log('warn', `Batch commit needs inventory.removeItem for ${itemName}`);
       }
     }
 
@@ -2006,14 +2069,16 @@ export class StateManager {
           `[StateManager Class] Published ${eventType} event via EventBus.`
         );
       } catch (error) {
-        console.error(
+        log(
+          'error',
           `[StateManager Class] Error publishing ${eventType} event via EventBus:`,
           error
         );
       }
     } else if (!this.postMessageCallback) {
       // Only warn if not in worker mode and eventBus is missing
-      console.warn(
+      log(
+        'warn',
         `[StateManager Class] Event bus not available to publish ${eventType}.`
       );
     }
@@ -2070,7 +2135,7 @@ export class StateManager {
 
     // Log failure in debug mode
     if (this.debugMode) {
-      console.log(`Unknown state method: ${method}`, {
+      log('info', `Unknown state method: ${method}`, {
         args: args,
         stateManagerHas: typeof this[method] === 'function',
         helpersHas: this.helpers
@@ -2147,35 +2212,36 @@ export class StateManager {
       'Inverted Big Bomb Shop',
     ];
 
-    console.log('============ CRITICAL REGIONS DEBUG ============');
+    log('info', '============ CRITICAL REGIONS DEBUG ============');
 
     // Log the current inventory state
-    console.log('Current inventory:');
+    log('info', 'Current inventory:');
     const inventoryItems = [];
     this.inventory.items.forEach((count, item) => {
       if (count > 0) {
         inventoryItems.push(`${item} (${count})`);
       }
     });
-    console.log(inventoryItems.join(', '));
+    log('info', inventoryItems.join(', '));
 
     // Check each critical region
     criticalRegions.forEach((regionName) => {
       const region = this.regions[regionName];
       if (!region) {
-        console.log(`Region "${regionName}" not found in loaded regions`);
+        log('info', `Region "${regionName}" not found in loaded regions`);
         return;
       }
 
-      console.log(`\nAnalyzing "${regionName}":`);
-      console.log(
+      log('info', `\nAnalyzing "${regionName}":`);
+      log(
+        'info',
         `- Reachable according to stateManager: ${this.isRegionReachable(
           regionName
         )}`
       );
 
       // Check incoming paths
-      console.log(`\nIncoming connections to ${regionName}:`);
+      log('info', `\nIncoming connections to ${regionName}:`);
       let hasIncomingPaths = false;
 
       Object.keys(this.regions).forEach((sourceRegionName) => {
@@ -2189,7 +2255,8 @@ export class StateManager {
         if (connectingExits.length > 0) {
           hasIncomingPaths = true;
           const sourceReachable = this.isRegionReachable(sourceRegionName);
-          console.log(
+          log(
+            'info',
             `- From ${sourceRegionName} (${
               sourceReachable ? 'REACHABLE' : 'UNREACHABLE'
             }):`
@@ -2199,14 +2266,16 @@ export class StateManager {
             const exitAccessible = this.evaluateRuleFromEngine(
               exit.access_rule
             );
-            console.log(
+            log(
+              'info',
               `  - Exit: ${exit.name} (${
                 exitAccessible ? 'ACCESSIBLE' : 'BLOCKED'
               })`
             );
 
             if (exit.access_rule) {
-              console.log(
+              log(
+                'info',
                 '    Rule:',
                 JSON.stringify(exit.access_rule, null, 2)
               );
@@ -2217,17 +2286,18 @@ export class StateManager {
       });
 
       if (!hasIncomingPaths) {
-        console.log('  No incoming paths found.');
+        log('info', '  No incoming paths found.');
       }
 
       // Check region's own rules if any
       if (region.region_rules && region.region_rules.length > 0) {
-        console.log(
+        log(
+          'info',
           `\n${regionName} has ${region.region_rules.length} region rules:`
         );
         region.region_rules.forEach((rule, i) => {
           const ruleResult = this.evaluateRuleFromEngine(rule);
-          console.log(`- Rule #${i + 1}: ${ruleResult ? 'PASSES' : 'FAILS'}`);
+          log('info', `- Rule #${i + 1}: ${ruleResult ? 'PASSES' : 'FAILS'}`);
           this.debugRuleEvaluation(rule);
         });
       }
@@ -2235,18 +2305,19 @@ export class StateManager {
       // Check path from stateManager
       const path = this.getPathToRegion(regionName);
       if (path && path.length > 0) {
-        console.log(`\nPath found to ${regionName}:`);
+        log('info', `\nPath found to ${regionName}:`);
         path.forEach((segment) => {
-          console.log(
+          log(
+            'info',
             `- ${segment.from} → ${segment.entrance} → ${segment.to}`
           );
         });
       } else {
-        console.log(`\nNo path found to ${regionName}`);
+        log('info', `\nNo path found to ${regionName}`);
       }
     });
 
-    console.log('===============================================');
+    log('info', '===============================================');
   }
 
   /**
@@ -2267,7 +2338,8 @@ export class StateManager {
     switch (rule.type) {
       case 'and':
       case 'or':
-        console.log(
+        log(
+          'info',
           `${indent}${rule.type.toUpperCase()} rule with ${
             rule.conditions.length
           } conditions`
@@ -2280,20 +2352,23 @@ export class StateManager {
             snapshotInterfaceInner
           );
           allResults.push(result);
-          console.log(
+          log(
+            'info',
             `${indent}- Condition #${i + 1}: ${result ? 'PASS' : 'FAIL'}`
           );
           this.debugRuleEvaluation(condition, depth + 1);
         });
 
         if (rule.type === 'and') {
-          console.log(
+          log(
+            'info',
             `${indent}AND result: ${
               allResults.every((r) => r) ? 'PASS' : 'FAIL'
             }`
           );
         } else {
-          console.log(
+          log(
+            'info',
             `${indent}OR result: ${allResults.some((r) => r) ? 'PASS' : 'FAIL'}`
           );
         }
@@ -2301,14 +2376,16 @@ export class StateManager {
 
       case 'item_check':
         const hasItem = this.inventory.has(rule.item);
-        console.log(
+        log(
+          'info',
           `${indent}ITEM CHECK: ${rule.item} - ${hasItem ? 'HAVE' : 'MISSING'}`
         );
         break;
 
       case 'count_check':
         const count = this.inventory.count(rule.item);
-        console.log(
+        log(
+          'info',
           `${indent}COUNT CHECK: ${rule.item} (${count}) >= ${rule.count} - ${
             count >= rule.count ? 'PASS' : 'FAIL'
           }`
@@ -2320,7 +2397,8 @@ export class StateManager {
           rule.name,
           ...(rule.args || [])
         );
-        console.log(
+        log(
+          'info',
           `${indent}HELPER: ${rule.name}(${JSON.stringify(rule.args)}) - ${
             helperResult ? 'PASS' : 'FAIL'
           }`
@@ -2332,7 +2410,8 @@ export class StateManager {
           rule.method,
           ...(rule.args || [])
         );
-        console.log(
+        log(
+          'info',
           `${indent}STATE METHOD: ${rule.method}(${JSON.stringify(
             rule.args
           )}) - ${methodResult ? 'PASS' : 'FAIL'}`
@@ -2344,7 +2423,8 @@ export class StateManager {
           const targetType = rule.args[1] || 'Region';
 
           if (targetType === 'Region') {
-            console.log(
+            log(
+              'info',
               `${indent}  -> Checking can_reach for region "${targetRegion}": ${
                 this.isRegionReachable(targetRegion)
                   ? 'REACHABLE'
@@ -2385,7 +2465,8 @@ export class StateManager {
             } else if (right instanceof Set) {
               return right.has(left);
             }
-            console.warn(
+            log(
+              'warn',
               `[StateManager._internalEvaluateRule] 'in' operator requires iterable right-hand side (Array, String, Set). Got:`,
               right
             );
@@ -2396,13 +2477,15 @@ export class StateManager {
             } else if (right instanceof Set) {
               return !right.has(left);
             }
-            console.warn(
+            log(
+              'warn',
               `[StateManager._internalEvaluateRule] 'not in' operator requires iterable right-hand side (Array, String, Set). Got:`,
               right
             );
             return true;
           default:
-            console.warn(
+            log(
+              'warn',
               `[StateManager._internalEvaluateRule] Unsupported comparison operator: ${rule.op}`
             );
             return false;
@@ -2421,7 +2504,8 @@ export class StateManager {
           case '/':
             return rightOp !== 0 ? leftOp / rightOp : Infinity;
           default:
-            console.warn(
+            log(
+              'warn',
               `[StateManager._internalEvaluateRule] Unsupported binary operator: ${rule.op}`
             );
             return undefined;
@@ -2442,7 +2526,8 @@ export class StateManager {
       case 'function_call':
         const func = this.evaluateRuleFromEngine(rule.function);
         if (typeof func !== 'function') {
-          console.error(
+          log(
+            'error',
             '[StateManager._internalEvaluateRule] Attempted to call non-function:',
             func,
             { rule }
@@ -2456,7 +2541,8 @@ export class StateManager {
         try {
           return func.apply(thisContext, args);
         } catch (callError) {
-          console.error(
+          log(
+            'error',
             '[StateManager._internalEvaluateRule] Error executing function call:',
             callError,
             { rule, funcName: rule.function?.attr || rule.function?.id }
@@ -2490,7 +2576,8 @@ export class StateManager {
         if (typeof this[rule.id] === 'function') {
           return this[rule.id].bind(this);
         }
-        console.warn(
+        log(
+          'warn',
           `[StateManager._internalEvaluateRule] Unresolved name: ${rule.id}`
         );
         return undefined;
@@ -2504,7 +2591,8 @@ export class StateManager {
         ) {
           return rule;
         }
-        console.warn(
+        log(
+          'warn',
           `[StateManager._internalEvaluateRule] Unsupported rule type or invalid rule: ${rule.type}`,
           rule
         );
@@ -2535,7 +2623,7 @@ export class StateManager {
       isLocationChecked: (locName) => self.isLocationChecked(locName),
       executeHelper: (name, ...args) => {
         if (!self.helpers) {
-          console.error('[SelfSnapshotInterface] Helpers not initialized!');
+          log('error', '[SelfSnapshotInterface] Helpers not initialized!');
           return undefined;
         }
         return self.helpers.executeHelper(name, ...args);
@@ -2608,7 +2696,7 @@ export class StateManager {
           return self.settings[name];
         }
 
-        // console.warn(`[StateManager SelfSnapshotInterface resolveName] Unhandled name: ${name}`);
+        // log('warn', `[StateManager SelfSnapshotInterface resolveName] Unhandled name: ${name}`);
         return undefined; // Crucial: return undefined for unhandled names
       },
       // Static data accessors (mirroring proxy's snapshot interface)
@@ -2625,7 +2713,7 @@ export class StateManager {
         regions: self.regions,
       }),
     };
-    // console.log(
+    // log('info',
     //   '[StateManager _createSelfSnapshotInterface] Returning interface:',
     //   anInterface
     // );
@@ -2647,12 +2735,14 @@ export class StateManager {
           });
           this._logDebug('[StateManager Class] Sent stateSnapshot update.');
         } else {
-          console.warn(
+          log(
+            'warn',
             '[StateManager Class] Failed to generate snapshot for update.'
           );
         }
       } catch (error) {
-        console.error(
+        log(
+          'error',
           '[StateManager Class] Error sending state snapshot update:',
           error
         );
@@ -2684,7 +2774,8 @@ export class StateManager {
         }
       }
     } else {
-      console.warn(
+      log(
+        'warn',
         `[StateManager getSnapshot] Inventory or itemData is not available. Snapshot inventory may be empty.`
       );
     }
@@ -2786,7 +2877,8 @@ export class StateManager {
         '[StateManager applyRuntimeState] Game-specific state (this.state) re-initialized.'
       );
     } else {
-      console.warn(
+      log(
+        'warn',
         '[StateManager applyRuntimeState] Could not reset or re-initialize game-specific state (this.state).'
       );
     }
@@ -2864,7 +2956,8 @@ export class StateManager {
       Array.isArray(payload.receivedItemsForProcessing)
     ) {
       if (!this.inventory) {
-        console.warn(
+        log(
+          'warn',
           '[StateManager applyRuntimeState] Inventory is unexpectedly null/undefined before processing received items.'
         );
       } else {
@@ -2875,7 +2968,8 @@ export class StateManager {
               this.inventory.addItem(itemDetail.itemName);
               itemsProcessedCount++;
             } else {
-              console.warn(
+              log(
+                'warn',
                 `[StateManager applyRuntimeState] this.inventory.addItem is not a function for item: ${itemDetail.itemName}`
               );
             }
@@ -2907,7 +3001,7 @@ export class StateManager {
 
   async loadRules(source) {
     this.eventBus.publish('stateManager:loadingRules', { source });
-    console.log(`[StateManager] Attempting to load rules from source:`, source);
+    log('info', `[StateManager] Attempting to load rules from source:`, source);
 
     if (
       this.gameSpecificState &&
@@ -2918,7 +3012,7 @@ export class StateManager {
 
     if (typeof source === 'string') {
       // Source is a URL
-      console.log(`[StateManager] Loading rules from URL: ${source}`);
+      log('info', `[StateManager] Loading rules from URL: ${source}`);
       try {
         const response = await fetch(source);
         if (!response.ok) {
@@ -2926,11 +3020,12 @@ export class StateManager {
         }
         const parsedRules = await response.json();
         this.rules = parsedRules;
-        console.log(
+        log(
+          'info',
           '[StateManager] Successfully fetched and parsed rules from URL.'
         );
       } catch (error) {
-        console.error('[StateManager] Error loading rules from URL:', error);
+        log('error', '[StateManager] Error loading rules from URL:', error);
         this.eventBus.publish('stateManager:rulesLoadFailed', {
           source,
           error,
@@ -2940,12 +3035,13 @@ export class StateManager {
       }
     } else if (typeof source === 'object' && source !== null) {
       // Source is direct data
-      console.log('[StateManager] Loading rules from provided object data.');
+      log('info', '[StateManager] Loading rules from provided object data.');
       this.rules = source; // Assign the object directly
       // Perform a basic validation
       if (!this.rules || typeof this.rules.regions === 'undefined') {
         // Example check
-        console.error(
+        log(
+          'error',
           '[StateManager] Provided rules data is malformed or missing essential parts (e.g., regions). Data:',
           this.rules
         );
@@ -2956,11 +3052,13 @@ export class StateManager {
         this.rules = null; // Ensure rules are null on failure
         return; // Exit early
       }
-      console.log(
+      log(
+        'info',
         '[StateManager] Successfully loaded rules from direct object data.'
       );
     } else {
-      console.warn(
+      log(
+        'warn',
         '[StateManager] loadRules called with invalid source type:',
         source
       );
@@ -2973,7 +3071,8 @@ export class StateManager {
     }
 
     if (!this.rules) {
-      console.error(
+      log(
+        'error',
         '[StateManager] Rules are null after loading attempt. Cannot proceed.'
       );
       // No rulesLoadFailed event here as it should have been published by the failing block
@@ -3006,7 +3105,8 @@ export class StateManager {
       );
     }
     // Default or error
-    console.warn(
+    log(
+      'warn',
       `[StateManager _createInventoryInstance] Unknown game for inventory: '${gameName}'. Defaulting to ALTTPInventory as a fallback.`
     );
     return new ALTTPInventory( // Explicitly return fallback
@@ -3051,7 +3151,8 @@ export class StateManager {
     );
 
     if (!this.inventory || !this.locations || !this.itemData) {
-      console.error(
+      log(
+        'error',
         '[StateManager evaluateAccessibilityForTest] Core data (inventory, locations, itemData) not initialized.'
       );
       return false;
@@ -3137,7 +3238,8 @@ export class StateManager {
         (loc) => loc.name === locationName
       );
       if (!locationObject) {
-        console.warn(
+        log(
+          'warn',
           `[StateManager evaluateAccessibilityForTest] Location object not found: ${locationName}`
         );
         return false; // Location itself doesn't exist in current rules
@@ -3149,7 +3251,8 @@ export class StateManager {
         `[StateManager evaluateAccessibilityForTest] Evaluation for "${locationName}" result: ${accessibilityResult}`
       );
     } catch (error) {
-      console.error(
+      log(
+        'error',
         `[StateManager evaluateAccessibilityForTest] Error during evaluation for "${locationName}":`,
         error
       );

@@ -1,3 +1,17 @@
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('stateManagerHelpers', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[stateManagerHelpers] ${message}`, ...data);
+    }
+  }
+}
+
 /**
  * Base class for game-specific helpers
  * Provides shared functionality and structure for helper implementations
@@ -9,28 +23,28 @@ export class GameHelpers {
 
   log(message) {
     // Simplified logging that doesn't rely on instance properties
-    console.log(message);
+    log('info', message);
   }
 
   // Helper method to execute a helper function by name
   executeHelper(name, ...args) {
     if (typeof this[name] !== 'function') {
-      console.log(`Unknown helper function: ${name}`);
+      log('info', `Unknown helper function: ${name}`);
       return false;
     }
     const result = this[name](...args);
-    //console.log(`Helper ${name}(${args.join(', ')}) returned ${result}`);
+    //log('info', `Helper ${name}(${args.join(', ')}) returned ${result}`);
     return result;
   }
 
   // Helper method to execute a state method by name
   executeStateMethod(method, ...args) {
     if (typeof this[method] !== 'function') {
-      console.log(`Unknown state method: ${method}`);
+      log('info', `Unknown state method: ${method}`);
       return false;
     }
     const result = this[method](...args);
-    //console.log(`Helper ${method}(${args.join(', ')}) returned ${result}`);
+    //log('info', `Helper ${method}(${args.join(', ')}) returned ${result}`);
     return result;
   }
 }
@@ -57,9 +71,9 @@ export class GameState {
           log: (msg) => {
             if (console) {
               if (typeof msg === 'object') {
-                console.log(JSON.stringify(msg));
+                log('info', JSON.stringify(msg));
               } else {
-                console.log(msg);
+                log('info', msg);
               }
             }
           },

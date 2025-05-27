@@ -9,6 +9,20 @@ import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('stateManagerModule', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[stateManagerModule] ${message}`, ...data);
+    }
+  }
+}
+
 // Keep track of when initialization is complete
 // let isInitialized = false; // No longer needed directly here
 // let initializationPromise = null; // Handled by the proxy internally
@@ -34,7 +48,7 @@ export { stateManagerProxySingleton };
  * @param {object} registrationApi - API provided by the initialization script.
  */
 function register(registrationApi) {
-  console.log('[StateManager Module] Registering...');
+  log('info', '[StateManager Module] Registering...');
 
   // Register events published by the StateManagerProxy on the EventBus
   registrationApi.registerEventBusPublisher(
@@ -93,7 +107,7 @@ function register(registrationApi) {
     }
   );
 
-  console.log('[StateManager Module] Registration complete.');
+  log('info', '[StateManager Module] Registration complete.');
 }
 
 /**
@@ -104,7 +118,8 @@ function register(registrationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log(
+    'info',
     `[StateManager Module] Initializing with priority ${priorityIndex}...`
   );
   // Store the full API for use in postInitialize
@@ -113,7 +128,8 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
   // The proxy singleton instance is created automatically when this module is imported.
   // No explicit instance creation needed here.
 
-  console.log(
+  log(
+    'info',
     '[StateManager Module] Basic initialization complete (proxy singleton exists).'
   );
 }
@@ -125,13 +141,15 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
-  console.log(
+  log(
+    'info',
     '[StateManager Module] Post-initializing... triggering initial proxy setup and rule load...'
   );
   const eventBus = initApi?.getEventBus(); // eventBus might still be needed for publishing
   if (!initApi) {
     // Removed eventBus from critical check if only used for publishing optional events
-    console.error(
+    log(
+      'error',
       '[StateManager Module] Initialization API not available in postInitialize. Cannot load rules.'
     );
     return;
@@ -147,7 +165,8 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
     let settingsToUse = moduleSpecificConfig.settings;
 
     if (!rulesConfigToUse) {
-      console.log(
+      log(
+        'info',
         '[StateManager Module] rulesConfig not in moduleSpecificConfig, fetching default_rules.json...'
       );
       const response = await fetch('./default_rules.json');
@@ -158,7 +177,8 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
       }
       jsonData = await response.json();
       rulesConfigToUse = jsonData;
-      console.log(
+      log(
+        'info',
         '[StateManager Module] Successfully fetched and parsed default_rules.json'
       );
     }
@@ -168,13 +188,15 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
 
     if (!playerIdToUse) {
       if (playerIds.length === 0) {
-        console.warn(
+        log(
+          'warn',
           '[StateManager Module] No players found in rules data. Defaulting to player 1.'
         );
         playerIdToUse = '1';
       } else {
         playerIdToUse = playerIds[0];
-        console.log(
+        log(
+          'info',
           `[StateManager Module] Auto-selected player ID from rules: ${playerIdToUse}`
         );
       }
@@ -183,14 +205,15 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
       playerId: playerIdToUse,
       playerName: playerNames[playerIdToUse] || `Player ${playerIdToUse}`,
     };
-    console.log(`[StateManager Module] Effective player info:`, playerInfo);
+    log('info', `[StateManager Module] Effective player info:`, playerInfo);
 
     if (rulesConfigToUse.game && !moduleSpecificConfig.gameId) {
       gameId = rulesConfigToUse.game;
-      console.log(`[StateManager Module] Game ID from rules: ${gameId}`);
+      log('info', `[StateManager Module] Game ID from rules: ${gameId}`);
     }
 
-    console.log(
+    log(
+      'info',
       '[StateManager Module] Initializing StateManagerProxy with derived config...'
     );
     const proxyInitConfig = {
@@ -203,21 +226,25 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
           : {}),
     };
     await stateManagerProxySingleton.initialize(proxyInitConfig);
-    console.log(
+    log(
+      'info',
       '[StateManager Module] StateManagerProxy.initialize() call completed.'
     );
 
     // The worker will now process the raw rulesConfig and send back the processed static data.
     // The proxy will cache this data upon receiving 'rulesLoadedConfirmation' from the worker.
-    console.log(
+    log(
+      'info',
       '[StateManager Module] Raw rulesConfig sent to worker via initialize(). Worker will process and return static data.'
     );
 
-    console.log(
+    log(
+      'info',
       '[StateManager Module] Calling StateManagerProxy.loadRules()...'
     );
     await stateManagerProxySingleton.loadRules(rulesConfigToUse, playerInfo);
-    console.log(
+    log(
+      'info',
       '[StateManager Module] StateManagerProxy.loadRules() call completed.'
     );
 
@@ -230,16 +257,19 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
         rawJsonData: rulesConfigToUse,
         selectedPlayerInfo: playerInfo,
       });
-      console.log(
+      log(
+        'info',
         '[StateManager Module] Published stateManager:rawJsonDataLoaded.'
       );
     } else {
-      console.warn(
+      log(
+        'warn',
         '[StateManager Module] EventBus not available for rawJsonDataLoaded event.'
       );
     }
   } catch (error) {
-    console.error(
+    log(
+      'error',
       `[StateManager Module] CRITICAL ERROR during initial proxy/rule setup: ${error.message}`,
       error
     );
@@ -249,7 +279,8 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
         isCritical: true,
       });
     } else {
-      console.error(
+      log(
+        'error',
         '[StateManager Module] EventBus not available to publish critical error.'
       );
     }
@@ -257,11 +288,13 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
 }
 
 async function handleUserLocationCheckForStateManager(eventData) {
-  console.log(
+  log(
+    'info',
     '[StateManagerModule] handleUserLocationCheckForStateManager received event:',
     JSON.parse(JSON.stringify(eventData))
   );
-  console.log(
+  log(
+    'info',
     '[StateManagerModule] Handling user:locationCheck locally.',
     eventData
   );
@@ -272,7 +305,8 @@ async function handleUserLocationCheckForStateManager(eventData) {
     // This requires StateManagerProxySingleton to expose a method that commands the worker
     // to find and check the next available local location.
     // e.g., await stateManagerProxySingleton.checkNextLocalLocation();
-    console.log(
+    log(
+      'info',
       '[StateManagerModule] Received generic check request. Logic to find and check next local location needed.'
     );
     // For now, you might need to add a new command to StateManager worker
@@ -317,13 +351,13 @@ async function handleUserLocationCheckForStateManager(eventData) {
             }
 
             if (nextLocationToCheck) {
-                console.log(`[StateManagerModule] Auto-checking next available location: ${nextLocationToCheck}`);
+                log('info', `[StateManagerModule] Auto-checking next available location: ${nextLocationToCheck}`);
                 await stateManagerProxySingleton.checkLocation(nextLocationToCheck);
             } else {
-                console.log("[StateManagerModule] No accessible, unchecked locations found to auto-check.");
+                log('info', "[StateManagerModule] No accessible, unchecked locations found to auto-check.");
             }
         } else {
-            console.warn("[StateManagerModule] Cannot auto-check next location: snapshot or static data not available.");
+            log('warn', "[StateManagerModule] Cannot auto-check next location: snapshot or static data not available.");
         }
         */
   }

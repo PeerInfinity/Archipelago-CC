@@ -1,5 +1,16 @@
 import eventBus from './eventBus.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('settingsManager', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[settingsManager] ${message}`, ...data);
+  }
+}
+
 // const SETTINGS_STORAGE_KEY = 'appSettings'; // No longer using localStorage directly
 
 class SettingsManager {
@@ -7,12 +18,12 @@ class SettingsManager {
     this.settings = null;
     this.isLoading = true; // Will be set to false once settings are loaded or provided
     this.loadPromise = null; // Initialize to null, created by ensureLoaded if needed
-    // console.log('SettingsManager initializing...');
+    // log('info', 'SettingsManager initializing...');
   }
 
   setInitialSettings(initialSettings) {
     if (initialSettings && typeof initialSettings === 'object') {
-      console.log(
+      log('info', 
         '[SettingsManager] Setting initial settings directly:',
         initialSettings
       );
@@ -22,7 +33,7 @@ class SettingsManager {
       // For simplicity, ensureLoaded will check isLoading and this.settings.
       eventBus.publish('settings:loaded', this.settings);
     } else {
-      console.warn(
+      log('warn', 
         '[SettingsManager] setInitialSettings called with invalid settings object.',
         initialSettings
       );
@@ -37,19 +48,19 @@ class SettingsManager {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       this.settings = await response.json();
-      console.log(
+      log('info', 
         'Settings loaded successfully from /frontend/settings.json:',
         this.settings
       );
       // Add validation against schema maybe?
     } catch (error) {
-      console.error(
+      log('error', 
         'Error loading settings from /frontend/settings.json:',
         error
       );
       // Fallback to some default or handle error state
       this.settings = this._getDefaultFallbackSettings(); // Use a fallback
-      console.warn('Using default fallback settings.');
+      log('warn', 'Using default fallback settings.');
     } finally {
       this.isLoading = false;
       eventBus.publish('settings:loaded', this.settings); // Notify when loaded/failed
@@ -81,7 +92,7 @@ class SettingsManager {
       // This case means setInitialSettings was called, but isLoading wasn't set to false properly, or an edge case.
       // For safety, mark as not loading if settings are present.
       this.isLoading = false;
-      console.log(
+      log('info', 
         '[SettingsManager] ensureLoaded: Settings already provided, marking as not loading.'
       );
     }
@@ -95,10 +106,10 @@ class SettingsManager {
   // For now, it's a placeholder. Actual saving logic TBD.
   async saveSettings() {
     if (this.isLoading) {
-      console.warn('Settings not loaded yet, cannot save.');
+      log('warn', 'Settings not loaded yet, cannot save.');
       return;
     }
-    console.log('Attempting to save settings (placeholder)...', this.settings);
+    log('info', 'Attempting to save settings (placeholder)...', this.settings);
     // TODO: Implement actual saving mechanism (e.g., POST to backend)
     // try {
     //   const response = await fetch('/api/settings', { // Example endpoint
@@ -107,9 +118,9 @@ class SettingsManager {
     //     body: JSON.stringify(this.settings),
     //   });
     //   if (!response.ok) throw new Error('Failed to save settings');
-    //   console.log('Settings saved successfully.');
+    //   log('info', 'Settings saved successfully.');
     // } catch (error) {
-    //   console.error('Error saving settings:', error);
+    //   log('error', 'Error saving settings:', error);
     // }
   }
 
@@ -119,7 +130,7 @@ class SettingsManager {
    */
   async getSettings() {
     await this.ensureLoaded();
-    console.log(
+    log('info', 
       '[SettingsManager getSettings] this.settings BEFORE stringify/parse:',
       this.settings
         ? JSON.parse(JSON.stringify(this.settings))
@@ -166,7 +177,7 @@ class SettingsManager {
       if (!current[k] || typeof current[k] !== 'object') {
         // Avoid creating nested objects if the path doesn't exist in the loaded structure.
         // This might be debatable, but safer than auto-creating paths.
-        console.warn(
+        log('warn', 
           `Cannot update setting. Path '${keys
             .slice(0, i + 1)
             .join('.')}' does not exist or is not an object.`
@@ -181,7 +192,7 @@ class SettingsManager {
     if (typeof current === 'object' && current !== null) {
       if (current[finalKey] !== value) {
         current[finalKey] = value;
-        console.log(`Setting updated: ${key} =`, value);
+        log('info', `Setting updated: ${key} =`, value);
         eventBus.publish('settings:changed', {
           key,
           value,
@@ -191,7 +202,7 @@ class SettingsManager {
         return true;
       }
     } else {
-      console.warn(
+      log('warn', 
         `Cannot update setting. Parent object for key '${key}' is not an object.`
       );
       return false;
@@ -204,11 +215,11 @@ class SettingsManager {
   async updateSettings(newSettings) {
     await this.ensureLoaded();
     if (typeof newSettings !== 'object' || newSettings === null) {
-      console.error('updateSettings received invalid input:', newSettings);
+      log('error', 'updateSettings received invalid input:', newSettings);
       return;
     }
     this.settings = JSON.parse(JSON.stringify(newSettings)); // Deep copy/overwrite
-    console.log('Settings object updated:', this.settings);
+    log('info', 'Settings object updated:', this.settings);
     eventBus.publish('settings:changed', {
       key: '*', // Indicate general change
       value: this.settings,
@@ -249,7 +260,7 @@ class SettingsManager {
     const moduleSettings = this.settings.moduleSettings[moduleId];
     if (moduleSettings[key] !== value) {
       moduleSettings[key] = value;
-      console.log(`Module setting updated: ${moduleId}.${key} =`, value);
+      log('info', `Module setting updated: ${moduleId}.${key} =`, value);
       eventBus.publish('settings:changed', {
         key: `moduleSettings.${moduleId}.${key}`, // More specific key
         value,

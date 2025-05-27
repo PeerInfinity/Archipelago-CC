@@ -1,8 +1,19 @@
 // frontend/modules/testModule/testPanelUI.js
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testPanelUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testPanelUI] ${message}`, ...data);
+  }
+}
+
 export class TestPanelUI {
   constructor(container, componentState) {
-    console.log('[TestPanelUI] Constructor called.');
+    log('info', '[TestPanelUI] Constructor called.');
     this.container = container; // Golden Layout container
     this.rootElement = document.createElement('div');
     this.rootElement.style.padding = '15px';
@@ -23,26 +34,26 @@ export class TestPanelUI {
 
   // Method required by PanelManager to get the root DOM element
   getRootElement() {
-    console.log('[TestPanelUI] getRootElement called.');
+    log('info', '[TestPanelUI] getRootElement called.');
     return this.rootElement;
   }
 
   // Optional: Method called when panel is opened/shown
   initialize() {
-    console.log('[TestPanelUI] initialize (panel opened/shown).');
+    log('info', '[TestPanelUI] initialize (panel opened/shown).');
   }
 
   // Optional: Method called when panel is destroyed
   destroy() {
-    console.log('[TestPanelUI] destroy called.');
+    log('info', '[TestPanelUI] destroy called.');
     // Cleanup logic here (e.g., remove event listeners)
   }
 
   _setupLifecycleListeners() {
     this.container.on('open', () => this.initialize());
     this.container.on('destroy', () => this.destroy());
-    console.log('[TestPanelUI] Lifecycle listeners set up.');
+    log('info', '[TestPanelUI] Lifecycle listeners set up.');
   }
 }
 
-console.log('[TestPanelUI] testPanelUI.js loaded');
+log('info', '[TestPanelUI] testPanelUI.js loaded');

@@ -1,5 +1,19 @@
 import { ALTTPState } from './alttpState.js';
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('alttpInventory', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[alttpInventory] ${message}`, ...data);
+    }
+  }
+}
+
 // frontend/app/games/alttp/inventory.js
 
 export class ALTTPInventory {
@@ -36,8 +50,9 @@ export class ALTTPInventory {
       } else {
         // This is expected behavior during test setup when populating base inventory
         // Only log as debug info, not a warning
-        console.debug(
-          `[ALTTPInventory] Max count (${maxCount}) for progressive item ${itemName} reached. Current count: ${currentCount}`
+        log(
+          'debug',
+          `Max count (${maxCount}) for progressive item ${itemName} reached. Current count: ${currentCount}`
         );
       }
     } else {

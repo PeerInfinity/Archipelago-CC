@@ -1,11 +1,22 @@
 // client/core/storage.js
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('clientStorage', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[clientStorage] ${message}`, ...data);
+  }
+}
+
 export class Storage {
   constructor() {
     this._memoryStorage = new Map();
   }
 
   initialize() {
-    console.log('Storage module initialized');
+    log('info', 'Storage module initialized');
   }
 
   getItem(key) {
@@ -13,7 +24,7 @@ export class Storage {
       const item = window.localStorage.getItem(key);
       return item;
     } catch (e) {
-      console.warn('localStorage not available, using memory storage');
+      log('warn', 'localStorage not available, using memory storage');
       return this._memoryStorage.get(key) || null;
     }
   }
@@ -22,7 +33,7 @@ export class Storage {
     try {
       window.localStorage.setItem(key, value);
     } catch (e) {
-      console.warn('localStorage not available, using memory storage');
+      log('warn', 'localStorage not available, using memory storage');
       this._memoryStorage.set(key, value);
     }
   }
@@ -31,7 +42,7 @@ export class Storage {
     try {
       window.localStorage.removeItem(key);
     } catch (e) {
-      console.warn('localStorage not available, using memory storage');
+      log('warn', 'localStorage not available, using memory storage');
       this._memoryStorage.delete(key);
     }
   }

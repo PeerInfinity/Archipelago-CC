@@ -1,6 +1,17 @@
 // UI Class for this module
 import SettingsUI from './settingsUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('settingsModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[settingsModule] ${message}`, ...data);
+  }
+}
+
 // --- Module Info ---
 export const moduleInfo = {
   name: 'Settings',
@@ -15,7 +26,7 @@ let settingsInstance = null;
  * Registers the settings panel component.
  */
 export function register(registrationApi) {
-  console.log('[Settings Module] Registering...');
+  log('info', '[Settings Module] Registering...');
 
   // Register the panel component class constructor
   registrationApi.registerPanelComponent('settingsPanel', SettingsUI);
@@ -33,7 +44,7 @@ export function register(registrationApi) {
  * Currently minimal.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[Settings Module] Initializing with priority ${priorityIndex}...`
   );
   // const eventBus = initializationApi.getEventBus();
@@ -43,5 +54,5 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // SettingsUI fetches/updates settings via the imported settingsManager singleton directly.
   // No specific initialization steps required here based on current plan.
 
-  console.log('[Settings Module] Initialization complete.');
+  log('info', '[Settings Module] Initialization complete.');
 }

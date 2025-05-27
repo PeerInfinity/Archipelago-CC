@@ -17,9 +17,20 @@ import eventBus from '../../app/core/eventBus.js'; // <<< Import eventBus
 // Import the function to set the module instance
 import { setEditorInstance } from './index.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('codeMirrorEditorUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[codeMirrorEditorUI] ${message}`, ...data);
+  }
+}
+
 class EditorUI {
   constructor() {
-    console.log('EditorUI instance created');
+    log('info', 'EditorUI instance created');
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('editor-panel-content'); // Add a class for styling if needed
     // Ensure container has explicit height, crucial for CodeMirror's 100% height
@@ -49,22 +60,22 @@ class EditorUI {
   // Called when the panel is first opened or shown
   initialize() {
     if (!this.isInitialized) {
-      console.log('Initializing EditorUI with CodeMirror...');
+      log('info', 'Initializing EditorUI with CodeMirror...');
       this.initializeEditor(); // Creates this.editor
       this.subscribeToEvents(); // Subscribe to events on first init
       this.isInitialized = true;
       // Explicitly refresh *after* initialization, assuming the container might be sized now
       if (this.editor) {
         // Delay slightly to ensure DOM is ready after initialization sequence
-        console.log(
+        log('info', 
           '[EditorUI Initialize] CodeMirror instance created, will refresh on show.'
         );
       }
     } else {
-      console.log('EditorUI already initialized (panel reshown).');
+      log('info', 'EditorUI already initialized (panel reshown).');
       // Refresh CodeMirror instance if it exists when panel is reshown
       if (this.editor) {
-        console.log(
+        log('info', 
           '[EditorUI Initialize] Refreshing CodeMirror on panel reshow.'
         );
         // Ensure content is up-to-date first. setContent calls refresh.
@@ -76,23 +87,23 @@ class EditorUI {
   // Subscribe to relevant EventBus events
   subscribeToEvents() {
     if (this.unsubscribeHandle) {
-      console.warn(
+      log('warn', 
         'EditorUI already subscribed to events. Unsubscribing previous first.'
       );
       this.unsubscribeHandle();
     }
-    console.log("EditorUI subscribing to 'editor:loadJsonData'");
+    log('info', "EditorUI subscribing to 'editor:loadJsonData'");
     this.unsubscribeHandle = eventBus.subscribe(
       'editor:loadJsonData',
       (payload) => {
         if (!payload || !payload.data) {
-          console.warn(
+          log('warn', 
             "EditorUI received invalid payload for 'editor:loadJsonData'",
             payload
           );
           return;
         }
-        console.log(
+        log('info', 
           `EditorUI received data from: ${payload.source || 'unknown'}`
         );
         // Data is expected to be JSON, stringify it for CodeMirror
@@ -100,7 +111,7 @@ class EditorUI {
           const textData = JSON.stringify(payload.data, null, 2); // Pretty print JSON
           this.setContent({ text: textData });
         } catch (error) {
-          console.error(
+          log('error', 
             'Error stringifying received JSON data:',
             error,
             payload.data
@@ -115,7 +126,7 @@ class EditorUI {
   // Unsubscribe from EventBus events
   unsubscribeFromEvents() {
     if (this.unsubscribeHandle) {
-      console.log('EditorUI unsubscribing from events.');
+      log('info', 'EditorUI unsubscribing from events.');
       this.unsubscribeHandle();
       this.unsubscribeHandle = null;
     }
@@ -123,12 +134,12 @@ class EditorUI {
 
   initializeEditor() {
     if (this.editor) {
-      console.log(
+      log('info', 
         'CodeMirror editor already exists. Destroying previous instance.'
       );
       this.destroyEditor(); // Clean up existing editor if any
     }
-    console.log('Creating CodeMirror instance...');
+    log('info', 'Creating CodeMirror instance...');
     try {
       // Ensure the target element is empty before initializing
       while (this.rootElement.firstChild) {
@@ -137,7 +148,7 @@ class EditorUI {
 
       // Ensure CodeMirror library is loaded globally (check console if errors occur)
       if (typeof CodeMirror === 'undefined') {
-        console.error(
+        log('error', 
           'CodeMirror global object not found. Ensure codemirror.min.js is loaded.'
         );
         this.rootElement.textContent = 'Error: CodeMirror library not loaded.';
@@ -156,13 +167,13 @@ class EditorUI {
       // Listen for changes in CodeMirror and update internal state
       this.editor.on('change', (instance) => {
         this.content = { text: instance.getValue() };
-        // console.log('Editor content changed:', this.content.text); // Can be noisy
+        // log('info', 'Editor content changed:', this.content.text); // Can be noisy
         // You might want to dispatch an event or update state elsewhere
       });
 
-      console.log('CodeMirror instance created successfully.');
+      log('info', 'CodeMirror instance created successfully.');
     } catch (error) {
-      console.error('Failed to initialize CodeMirror:', error);
+      log('error', 'Failed to initialize CodeMirror:', error);
       // Display error in the panel
       this.rootElement.textContent =
         'Error loading CodeMirror Editor. Check console. Is CodeMirror library loaded?';
@@ -173,7 +184,7 @@ class EditorUI {
 
   // Called when the panel container is resized
   onPanelResize(width, height) {
-    console.log(
+    log('info', 
       `EditorUI resized to ${width}x${height}. Refreshing CodeMirror.`
     );
     // Remove direct style manipulation, let GoldenLayout/CSS handle the container size.
@@ -190,7 +201,7 @@ class EditorUI {
     // CodeMirror doesn't have a dedicated destroy method.
     // We need to remove its DOM element and clear the reference.
     if (this.editor) {
-      console.log('Destroying CodeMirror instance.');
+      log('info', 'Destroying CodeMirror instance.');
       const editorWrapper = this.editor.getWrapperElement();
       if (editorWrapper && editorWrapper.parentNode) {
         editorWrapper.parentNode.removeChild(editorWrapper);
@@ -205,7 +216,7 @@ class EditorUI {
 
   // Called when the panel is about to be destroyed by Golden Layout
   onPanelDestroy() {
-    console.log('EditorUI destroyed');
+    log('info', 'EditorUI destroyed');
     this.destroyEditor();
     this.unsubscribeFromEvents(); // <<< Unsubscribe on destroy
     this.isInitialized = false;
@@ -213,7 +224,7 @@ class EditorUI {
 
   // Optional: General cleanup method
   dispose() {
-    console.log('Disposing EditorUI...');
+    log('info', 'Disposing EditorUI...');
     this.onPanelDestroy(); // Call destroy logic
     // Any other cleanup specific to EditorUI itself
   }
@@ -221,20 +232,20 @@ class EditorUI {
   // Method to load JSON data into the editor
   loadJsonData(jsonData) {
     if (jsonData === null || typeof jsonData === 'undefined') {
-      console.warn(
+      log('warn', 
         '[EditorUI] loadJsonData called with null or undefined data.'
       );
       // Optionally set empty content or keep existing
       // this.setContent({ text: '' });
       return;
     }
-    console.log('[EditorUI] Loading JSON data into editor...');
+    log('info', '[EditorUI] Loading JSON data into editor...');
     try {
       // Stringify the JSON data with pretty printing (2 spaces)
       const textData = JSON.stringify(jsonData, null, 2);
       this.setContent({ text: textData });
     } catch (error) {
-      console.error(
+      log('error', 
         'Error stringifying JSON data for editor:',
         error,
         jsonData
@@ -248,7 +259,7 @@ class EditorUI {
   setContent(newContent) {
     // Expect newContent to be in { text: "..." } format
     if (!newContent || typeof newContent.text === 'undefined') {
-      console.warn(
+      log('warn', 
         '[EditorUI] setContent called with invalid format:',
         newContent
       );
@@ -261,7 +272,7 @@ class EditorUI {
 
     if (this.editor) {
       const oldScrollInfo = this.editor.getScrollInfo(); // Preserve scroll position
-      console.log('Setting CodeMirror editor content.');
+      log('info', 'Setting CodeMirror editor content.');
       // CodeMirror expects a string value
       this.editor.setValue(this.content.text);
       // Moving cursor might not be desired on every setContent
@@ -269,7 +280,7 @@ class EditorUI {
       this.editor.refresh(); // Refresh to ensure rendering updates
       this.editor.scrollTo(oldScrollInfo.left, oldScrollInfo.top); // Restore scroll position
     } else {
-      console.log(
+      log('info', 
         'CodeMirror editor not initialized yet. Content will be set on initialization.'
       );
     }
@@ -286,9 +297,9 @@ class EditorUI {
 
   // --- ADDED: Called when the panel becomes visible ---
   onPanelShow() {
-    console.log('[EditorUI] Panel shown.');
+    log('info', '[EditorUI] Panel shown.');
     if (this.editor && !this.hasRefreshedOnce) {
-      console.log(
+      log('info', 
         '[EditorUI] Performing initial CodeMirror refresh on first show.'
       );
       // Use a minimal timeout JUST IN CASE the 'show' event fires slightly too early
@@ -300,7 +311,7 @@ class EditorUI {
         }
       }, 0);
     } else if (this.editor) {
-      console.log(
+      log('info', 
         '[EditorUI] Panel shown again, ensuring editor is refreshed.'
       );
       // Refresh again on subsequent shows if needed, e.g., if content changed while hidden

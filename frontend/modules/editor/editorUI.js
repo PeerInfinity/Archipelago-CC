@@ -1,10 +1,21 @@
 import eventBus from '../../app/core/eventBus.js'; // <<< Import eventBus
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('editorUI', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[editorUI] ${message}`, ...data);
+  }
+}
+
 // REMOVED: Unnecessary import
 // import { setEditorInstance } from './index.js';
 
 class EditorUI {
   constructor(container, componentState) {
-    console.log('EditorUI instance created with Textarea');
+    log('info', 'EditorUI instance created with Textarea');
     this.container = container;
     this.componentState = componentState;
 
@@ -46,7 +57,7 @@ class EditorUI {
 
     // Defer full initialization until app is ready
     const readyHandler = (eventPayload) => {
-      console.log(
+      log('info', 
         '[EditorUI] Received app:readyForUiDataLoad. Initializing editor.'
       );
       this.initialize(); // This will create the textarea and subscribe to data events
@@ -66,14 +77,14 @@ class EditorUI {
   // Called when the panel is first opened or shown
   initialize() {
     if (!this.isInitialized) {
-      console.log(
+      log('info', 
         'Initializing EditorUI (Textarea)...attempting to populate from global data.'
       );
       this.initializeEditor(); // Creates dropdown and textarea
 
       // Attempt to populate from global G_combinedModeData if available
       if (window.G_combinedModeData) {
-        console.log('[EditorUI] Found window.G_combinedModeData during init.');
+        log('info', '[EditorUI] Found window.G_combinedModeData during init.');
         // Populate LocalStorage Mode view
         if (window.G_combinedModeData) {
           // Check again for safety, though outer check exists
@@ -84,11 +95,11 @@ class EditorUI {
               2
             );
             this.contentSources.localStorageMode.loaded = true;
-            console.log(
+            log('info', 
               '[EditorUI] Populated localStorageMode from window.G_combinedModeData.'
             );
           } catch (e) {
-            console.error(
+            log('error', 
               '[EditorUI] Error stringifying G_combinedModeData for localStorageMode view:',
               e
             );
@@ -106,11 +117,11 @@ class EditorUI {
               2
             );
             this.contentSources.rules.loaded = true;
-            console.log(
+            log('info', 
               '[EditorUI] Populated rules from window.G_combinedModeData.rulesConfig.'
             );
           } catch (e) {
-            console.error(
+            log('error', 
               '[EditorUI] Error stringifying G_combinedModeData.rulesConfig for rules view:',
               e
             );
@@ -118,14 +129,14 @@ class EditorUI {
               'Error: Could not display rules JSON.';
           }
         } else {
-          console.warn(
+          log('warn', 
             '[EditorUI] window.G_combinedModeData.rulesConfig not found during init.'
           );
         }
 
         this._displayCurrentSourceContent(); // Refresh editor view
       } else {
-        console.warn(
+        log('warn', 
           '[EditorUI] window.G_combinedModeData NOT found during init. Content will rely on events.'
         );
       }
@@ -133,7 +144,7 @@ class EditorUI {
       this.subscribeToEvents(); // Subscribe to events for future updates
       this.isInitialized = true;
     } else {
-      console.log('EditorUI (Textarea) already initialized.');
+      log('info', 'EditorUI (Textarea) already initialized.');
       if (this.textAreaElement) {
         // If re-opened, ensure current source content is displayed
         this._displayCurrentSourceContent();
@@ -144,18 +155,18 @@ class EditorUI {
   // Subscribe to relevant EventBus events
   subscribeToEvents() {
     if (this.unsubscribeHandles['rulesData']) {
-      console.warn(
+      log('warn', 
         'EditorUI already subscribed to rulesData. Unsubscribing previous first.'
       );
       this.unsubscribeHandles['rulesData']();
     }
 
-    console.log("EditorUI subscribing to 'stateManager:rawJsonDataLoaded'");
+    log('info', "EditorUI subscribing to 'stateManager:rawJsonDataLoaded'");
     this.unsubscribeHandles['rulesData'] = eventBus.subscribe(
       'stateManager:rawJsonDataLoaded',
       (eventData) => {
         if (!eventData || !eventData.rawJsonData) {
-          console.warn(
+          log('warn', 
             "EditorUI received invalid payload for 'stateManager:rawJsonDataLoaded'",
             eventData
           );
@@ -163,7 +174,7 @@ class EditorUI {
             'Error: Invalid data received for rules.';
           this.contentSources.rules.loaded = true;
         } else {
-          console.log(
+          log('info', 
             `EditorUI received raw rules data from: ${
               eventData.source || 'unknown'
             }`
@@ -175,7 +186,7 @@ class EditorUI {
               2
             );
           } catch (e) {
-            console.error('Error stringifying rules JSON:', e);
+            log('error', 'Error stringifying rules JSON:', e);
             this.contentSources.rules.text =
               'Error: Could not display rules JSON.';
           }
@@ -188,19 +199,19 @@ class EditorUI {
     );
 
     if (this.unsubscribeHandles['localStorageData']) {
-      console.warn(
+      log('warn', 
         'EditorUI already subscribed to localStorageData. Unsubscribing previous first.'
       );
       this.unsubscribeHandles['localStorageData']();
     }
     // Placeholder for subscription to full mode data from LocalStorage
     // Your main app init should publish this event after loading from LocalStorage
-    console.log("EditorUI subscribing to 'app:fullModeDataLoadedFromStorage'");
+    log('info', "EditorUI subscribing to 'app:fullModeDataLoadedFromStorage'");
     this.unsubscribeHandles['localStorageData'] = eventBus.subscribe(
       'app:fullModeDataLoadedFromStorage', // Event name to be defined and used by app init
       (eventPayload) => {
         if (eventPayload && eventPayload.modeData) {
-          console.log(
+          log('info', 
             '[EditorUI] Received full mode data from LocalStorage:',
             eventPayload.modeData
           );
@@ -211,13 +222,13 @@ class EditorUI {
               2
             );
           } catch (e) {
-            console.error('Error stringifying localStorage mode JSON:', e);
+            log('error', 'Error stringifying localStorage mode JSON:', e);
             this.contentSources.localStorageMode.text =
               'Error: Could not display LocalStorage mode data.';
           }
           this.contentSources.localStorageMode.loaded = true;
         } else {
-          console.warn(
+          log('warn', 
             '[EditorUI] Invalid or empty payload for app:fullModeDataLoadedFromStorage'
           );
           this.contentSources.localStorageMode.text =
@@ -239,7 +250,7 @@ class EditorUI {
       }
     }
     this.unsubscribeHandles = {};
-    console.log('EditorUI unsubscribed from all events.');
+    log('info', 'EditorUI unsubscribed from all events.');
   }
 
   // Bound method to handle textarea input events
@@ -254,12 +265,12 @@ class EditorUI {
 
   initializeEditor() {
     if (this.textAreaElement) {
-      console.log(
+      log('info', 
         'Editor already initialized. Destroying previous instance components.'
       );
       this.destroyEditor(); // Clean up existing editor chrome and textarea
     }
-    console.log('Creating editor chrome and <textarea> element...');
+    log('info', 'Creating editor chrome and <textarea> element...');
 
     // Create controls container
     const controlsDiv = document.createElement('div');
@@ -300,9 +311,9 @@ class EditorUI {
 
       this._displayCurrentSourceContent(); // Display content for the default source
 
-      console.log('Editor components created and attached successfully.');
+      log('info', 'Editor components created and attached successfully.');
     } catch (error) {
-      console.error('Failed to initialize Textarea:', error);
+      log('error', 'Failed to initialize Textarea:', error);
       this.rootElement.textContent = 'Error loading Textarea.';
       this.textAreaElement = null;
     }
@@ -312,10 +323,10 @@ class EditorUI {
     const newSourceKey = this.editorDropdown.value;
     if (this.contentSources[newSourceKey]) {
       this.currentSourceKey = newSourceKey;
-      console.log(`[EditorUI] Switched to source: ${this.currentSourceKey}`);
+      log('info', `[EditorUI] Switched to source: ${this.currentSourceKey}`);
       this._displayCurrentSourceContent();
     } else {
-      console.warn(
+      log('warn', 
         `[EditorUI] Attempted to switch to unknown source key: ${newSourceKey}`
       );
     }
@@ -326,7 +337,7 @@ class EditorUI {
 
     const source = this.contentSources[this.currentSourceKey];
     if (!source) {
-      console.warn(
+      log('warn', 
         `[EditorUI] No content source found for key: ${this.currentSourceKey}`
       );
       return;
@@ -357,21 +368,21 @@ class EditorUI {
         this.textAreaElement.value = source.text;
       }
     } catch (e) {
-      console.error('[EditorUI] Error displaying content:', e);
+      log('error', '[EditorUI] Error displaying content:', e);
       this.textAreaElement.value = 'Error displaying content';
     }
   }
 
   // Called when the panel container is resized
   onPanelResize(width, height) {
-    console.log(`EditorUI (Textarea) resized to ${width}x${height}`);
+    log('info', `EditorUI (Textarea) resized to ${width}x${height}`);
     // Textarea with 100% width/height and flex layout should resize automatically.
     // No specific action needed here unless manual adjustments are required.
   }
 
   destroyEditor() {
     if (this.textAreaElement) {
-      console.log('Destroying <textarea> instance.');
+      log('info', 'Destroying <textarea> instance.');
       this.textAreaElement.removeEventListener(
         'input',
         this._handleTextAreaInput
@@ -399,7 +410,7 @@ class EditorUI {
 
   // Called when the panel is about to be destroyed by Golden Layout
   onPanelDestroy() {
-    console.log('EditorUI (Textarea) destroyed');
+    log('info', 'EditorUI (Textarea) destroyed');
     this.destroyEditor();
     this.unsubscribeFromEvents(); // <<< Unsubscribe on destroy
     this.isInitialized = false;
@@ -407,7 +418,7 @@ class EditorUI {
 
   // Optional: General cleanup method
   dispose() {
-    console.log('Disposing EditorUI (Textarea)...');
+    log('info', 'Disposing EditorUI (Textarea)...');
     this.onPanelDestroy(); // Call destroy logic
     // Any other cleanup specific to EditorUI itself
   }
@@ -418,7 +429,7 @@ class EditorUI {
     // This method is effectively replaced by the event handler for 'stateManager:rawJsonDataLoaded'
     // which directly updates this.contentSources.rules.text and calls _displayCurrentSourceContent.
     // Keeping it for now in case of direct calls, but should be deprecated.
-    console.warn(
+    log('warn', 
       '[EditorUI] loadJsonData is being called. Consider direct update via event if appropriate.'
     );
     if (jsonData === null || typeof jsonData === 'undefined') {
@@ -462,7 +473,7 @@ class EditorUI {
         this._displayCurrentSourceContent();
       }
     } else {
-      console.warn(
+      log('warn', 
         '[EditorUI] setContent called, but currentSourceKey is invalid or contentSources not ready.'
       );
       // Fallback to updating the old this.content if necessary for backward compatibility

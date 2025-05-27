@@ -1,5 +1,16 @@
 import eventBus from './eventBus.js'; // Added import
 
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('centralRegistry', message, ...data);
+  } else {
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[centralRegistry] ${message}`, ...data);
+  }
+}
+
 class CentralRegistry {
   constructor() {
     this.panelComponents = new Map(); // componentType -> { moduleId: string, componentClass: Function }
@@ -16,33 +27,37 @@ class CentralRegistry {
 
     this.uiHostProviders = new Map(); // Key: uiComponentType (string), Value: Array of host objects
 
-    console.log('CentralRegistry initialized');
+    log('info', 'CentralRegistry initialized');
   }
 
   registerPanelComponent(moduleId, componentType, componentClass) {
     if (typeof componentClass !== 'function') {
-      console.error(
-        `[Registry] Attempted to register non-function as component class for ${componentType} from ${moduleId}`
+      log(
+        'error',
+        `Attempted to register non-function as component class for ${componentType} from ${moduleId}`
       );
       return;
     }
     if (this.panelComponents.has(componentType)) {
-      console.warn(
-        `[Registry] Panel component type '${componentType}' registered by ${moduleId} is already registered. Overwriting.`
+      log(
+        'warn',
+        `Panel component type '${componentType}' registered by ${moduleId} is already registered. Overwriting.`
       );
       // If overwriting, potentially remove old moduleId mapping?
       // this.moduleIdToComponentType.forEach((type, mId) => { if (type === componentType) this.moduleIdToComponentType.delete(mId); });
     }
     if (this.moduleIdToComponentType.has(moduleId)) {
-      console.warn(
-        `[Registry] Module ${moduleId} is attempting to register a second panel component (${componentType}). Only one is supported.`
+      log(
+        'warn',
+        `Module ${moduleId} is attempting to register a second panel component (${componentType}). Only one is supported.`
       );
       // Do not overwrite the mapping, just warn.
     } else {
       this.moduleIdToComponentType.set(moduleId, componentType);
     }
-    console.log(
-      `[Registry] Registering panel component class '${componentType}' from ${moduleId}`
+    log(
+      'info',
+      `Registering panel component class '${componentType}' from ${moduleId}`
     );
     this.panelComponents.set(componentType, { moduleId, componentClass }); // Store class constructor and moduleId
   }
@@ -81,8 +96,9 @@ class CentralRegistry {
       propagationDetails, // Store the provided details
       enabled: true, // Default enabled state
     });
-    console.log(
-      `[Registry] Dispatcher receiver registered for MODULE '${moduleId}' on EVENT '${eventName}'. Handler: ${
+    log(
+      'info',
+      `Dispatcher receiver registered for MODULE '${moduleId}' on EVENT '${eventName}'. Handler: ${
         handlerFunction.name || 'anonymous'
       }. Total distinct event names in map: ${this.dispatcherHandlers.size}`
     );
@@ -93,8 +109,9 @@ class CentralRegistry {
       this.dispatcherSenders.set(eventName, []);
     }
     // TODO: Add validation for direction/target values?
-    console.log(
-      `[Registry] Registering dispatcher sender for '${eventName}' from ${moduleId} (Direction: ${direction}, Target: ${target})`
+    log(
+      'info',
+      `Registering dispatcher sender for '${eventName}' from ${moduleId} (Direction: ${direction}, Target: ${target})`
     );
     this.dispatcherSenders
       .get(eventName)
@@ -105,8 +122,9 @@ class CentralRegistry {
     if (!this.eventBusPublishers.has(eventName)) {
       this.eventBusPublishers.set(eventName, new Map());
     }
-    console.log(
-      `[Registry] Registering event bus publisher for '${eventName}' from ${moduleId}`
+    log(
+      'info',
+      `Registering event bus publisher for '${eventName}' from ${moduleId}`
     );
     // Store publisher with enabled state
     this.eventBusPublishers.get(eventName).set(moduleId, { enabled: true });
@@ -126,25 +144,28 @@ class CentralRegistry {
     }
     const subscribersForEvent = this.eventBusSubscribers.get(eventName);
     if (!subscribersForEvent.some((sub) => sub.moduleId === moduleId)) {
-      console.log(
-        `[Registry] Registering event bus subscriber intent for '${eventName}' from ${moduleId}`
+      log(
+        'info',
+        `Registering event bus subscriber intent for '${eventName}' from ${moduleId}`
       );
       subscribersForEvent.push({ moduleId, enabled: true });
     } else {
-      console.log(
-        `[Registry] Module ${moduleId} already registered subscriber intent for ${eventName}.`
+      log(
+        'info',
+        `Module ${moduleId} already registered subscriber intent for ${eventName}.`
       );
     }
   }
 
   registerSettingsSchema(moduleId, schemaSnippet) {
     if (this.settingsSchemas.has(moduleId)) {
-      console.warn(
-        `[Registry] Settings schema for module '${moduleId}' is already registered. Overwriting.`
+      log(
+        'warn',
+        `Settings schema for module '${moduleId}' is already registered. Overwriting.`
       );
     }
     // TODO: Consider merging schema snippets if multiple parts of a module register?
-    console.log(`[Registry] Registering settings schema for ${moduleId}`);
+    log('info', `Registering settings schema for ${moduleId}`);
     this.settingsSchemas.set(moduleId, schemaSnippet);
     // We might want to merge this into a single master schema for validation or UI generation later
   }
@@ -155,12 +176,14 @@ class CentralRegistry {
     }
     const moduleFunctions = this.publicFunctions.get(moduleId);
     if (moduleFunctions.has(functionName)) {
-      console.warn(
-        `[Registry] Public function '${functionName}' for module '${moduleId}' is already registered. Overwriting.`
+      log(
+        'warn',
+        `Public function '${functionName}' for module '${moduleId}' is already registered. Overwriting.`
       );
     }
-    console.log(
-      `[Registry] Registering public function '${functionName}' for ${moduleId}`
+    log(
+      'info',
+      `Registering public function '${functionName}' for ${moduleId}`
     );
     moduleFunctions.set(functionName, functionRef);
   }
@@ -168,8 +191,9 @@ class CentralRegistry {
   getPublicFunction(moduleId, functionName) {
     const moduleFunctions = this.publicFunctions.get(moduleId);
     if (!moduleFunctions || !moduleFunctions.has(functionName)) {
-      console.error(
-        `[Registry] Public function '${functionName}' not found for module '${moduleId}'`
+      log(
+        'error',
+        `Public function '${functionName}' not found for module '${moduleId}'`
       );
       return null; // Or throw error
     }
@@ -251,13 +275,15 @@ class CentralRegistry {
 
     if (wasAlreadyRegistered) {
       hostsForType[existingIndex] = newHostData;
-      console.log(
+      log(
+        'info',
         `[CentralRegistry] Host ${hostModuleId} for UI type ${uiComponentType} re-registered/updated. New priority: ${hostPriority}. Placeholder:`,
         placeholderElement
       );
     } else {
       hostsForType.push(newHostData);
-      console.log(
+      log(
+        'info',
         `[CentralRegistry] Host ${hostModuleId} (priority ${hostPriority}) newly registered for UI type: ${uiComponentType}. Placeholder:`,
         placeholderElement
       );
@@ -274,14 +300,15 @@ class CentralRegistry {
         isActive: newHostData.isActive,
         priority: newHostData.priority,
       });
-      // console.log(`[CentralRegistry] Fired uiHostRegistry:hostStatusChanged for ${hostModuleId} (type ${uiComponentType}) due to registration/priority update. New Prio: ${newHostData.priority}, Active: ${newHostData.isActive}`);
+      // log('info',`[CentralRegistry] Fired uiHostRegistry:hostStatusChanged for ${hostModuleId} (type ${uiComponentType}) due to registration/priority update. New Prio: ${newHostData.priority}, Active: ${newHostData.isActive}`);
     }
   }
 
   setUIHostActive(uiComponentType, hostModuleId, isActive) {
     const hostsForType = this.uiHostProviders.get(uiComponentType);
     if (!hostsForType) {
-      console.log(
+      log(
+        'info',
         `[CentralRegistry] No hosts registered for UI type ${uiComponentType}. Cannot set active status for ${hostModuleId}.`
       );
       return;
@@ -290,7 +317,8 @@ class CentralRegistry {
     if (host) {
       if (host.isActive !== isActive) {
         host.isActive = isActive;
-        console.log(
+        log(
+          'info',
           `[CentralRegistry] Host ${hostModuleId} for ${uiComponentType} set to active: ${isActive}.`
         );
         eventBus.publish('uiHostRegistry:hostStatusChanged', {
@@ -302,10 +330,11 @@ class CentralRegistry {
         });
       } else {
         // Optionally log if no change, or just be silent
-        // console.log(`[CentralRegistry] Host ${hostModuleId} for ${uiComponentType} active status already ${isActive}. No change necessary.`);
+        // log('info',`[CentralRegistry] Host ${hostModuleId} for ${uiComponentType} active status already ${isActive}. No change necessary.`);
       }
     } else {
-      console.warn(
+      log(
+        'warn',
         `[CentralRegistry] Host ${hostModuleId} not found for UI type ${uiComponentType}. Cannot set active status.`
       );
     }
@@ -322,7 +351,8 @@ class CentralRegistry {
   unregisterUIHost(uiComponentType, hostModuleId) {
     const hostsForType = this.uiHostProviders.get(uiComponentType);
     if (!hostsForType) {
-      console.warn(
+      log(
+        'warn',
         `[CentralRegistry] No hosts registered for UI type ${uiComponentType}. Cannot unregister ${hostModuleId}.`
       );
       return;
@@ -334,7 +364,8 @@ class CentralRegistry {
 
     if (hostIndex !== -1) {
       const removedHost = hostsForType.splice(hostIndex, 1)[0];
-      console.log(
+      log(
+        'info',
         `[CentralRegistry] Host ${hostModuleId} unregistered for UI type ${uiComponentType}.`
       );
       eventBus.publish('uiHostRegistry:hostStatusChanged', {
@@ -345,7 +376,8 @@ class CentralRegistry {
         priority: removedHost.priority,
       });
     } else {
-      console.warn(
+      log(
+        'warn',
         `[CentralRegistry] Host ${hostModuleId} not found for UI type ${uiComponentType}. Cannot unregister.`
       );
     }
@@ -353,31 +385,38 @@ class CentralRegistry {
 
   registerJsonDataHandler(moduleId, dataKey, handlerObject) {
     if (this.jsonDataHandlers.has(dataKey)) {
-      console.warn(
-        `[Registry] JSON Data Handler for dataKey '${dataKey}' already registered (by module ${
+      log(
+        'warn',
+        `JSON Data Handler for dataKey '${dataKey}' already registered (by module ${
           this.jsonDataHandlers.get(dataKey).moduleId
         }). Overwriting with registration from ${moduleId}.`
       );
     }
     // Basic validation of handlerObject structure
     if (handlerObject) {
-      console.log(
+      log(
+        'info',
         `[Registry Validation Debug] typeof displayName: ${typeof handlerObject.displayName}`
       );
-      console.log(
+      log(
+        'info',
         `[Registry Validation Debug] typeof defaultChecked: ${typeof handlerObject.defaultChecked}`
       );
-      console.log(
+      log(
+        'info',
         `[Registry Validation Debug] typeof requiresReload: ${typeof handlerObject.requiresReload}`
       );
-      console.log(
+      log(
+        'info',
         `[Registry Validation Debug] typeof getSaveDataFunction: ${typeof handlerObject.getSaveDataFunction}`
       );
-      console.log(
+      log(
+        'info',
         `[Registry Validation Debug] typeof applyLoadedDataFunction: ${typeof handlerObject.applyLoadedDataFunction}`
       );
     } else {
-      console.log(
+      log(
+        'info',
         `[Registry Validation Debug] handlerObject is null or undefined.`
       );
     }
@@ -389,19 +428,22 @@ class CentralRegistry {
       typeof handlerObject.getSaveDataFunction !== 'function' ||
       typeof handlerObject.applyLoadedDataFunction !== 'function'
     ) {
-      console.error(
-        `[Registry] Invalid handlerObject provided by ${moduleId} for dataKey '${dataKey}'. Missing or incorrect properties.`,
+      log(
+        'error',
+        `Invalid handlerObject provided by ${moduleId} for dataKey '${dataKey}'. Missing or incorrect properties.`,
         handlerObject // Log the object separately
       );
       return;
     } else {
-      console.log(
-        `[Registry] JSON Data Handler validation PASSED for dataKey '${dataKey}' from module ${moduleId}`
+      log(
+        'info',
+        `JSON Data Handler validation PASSED for dataKey '${dataKey}' from module ${moduleId}`
       );
     }
 
-    console.log(
-      `[Registry] Registering JSON Data Handler for dataKey '${dataKey}' from module ${moduleId}`
+    log(
+      'info',
+      `Registering JSON Data Handler for dataKey '${dataKey}' from module ${moduleId}`
     );
     this.jsonDataHandlers.set(dataKey, { moduleId, ...handlerObject });
   }
@@ -416,7 +458,7 @@ class CentralRegistry {
 
   _setEnabledState(map, eventName, moduleId, isEnabled, findCallback = null) {
     if (!map.has(eventName)) {
-      console.warn(`[Registry Toggle] Event '${eventName}' not found in map.`);
+      log('warn', `[Registry Toggle] Event '${eventName}' not found in map.`);
       return false;
     }
 
@@ -440,11 +482,13 @@ class CentralRegistry {
     }
 
     if (found) {
-      console.log(
+      log(
+        'info',
         `[Registry Toggle] Set '${eventName}' for module '${moduleId}' to enabled=${isEnabled}`
       );
     } else {
-      console.warn(
+      log(
+        'warn',
         `[Registry Toggle] Could not find entry for '${eventName}' and module '${moduleId}'.`
       );
     }
@@ -472,20 +516,23 @@ class CentralRegistry {
   setEventBusPublisherEnabled(eventName, moduleId, isEnabled) {
     // Special handling because the value is an object { enabled: ...}
     if (!this.eventBusPublishers.has(eventName)) {
-      console.warn(
+      log(
+        'warn',
         `[Registry Toggle] Event '${eventName}' not found for EventBus publishers.`
       );
       return false;
     }
     const moduleMap = this.eventBusPublishers.get(eventName);
     if (!moduleMap.has(moduleId)) {
-      console.warn(
+      log(
+        'warn',
         `[Registry Toggle] Module '${moduleId}' not found for EventBus event '${eventName}'.`
       );
       return false;
     }
     moduleMap.get(moduleId).enabled = isEnabled;
-    console.log(
+    log(
+      'info',
       `[Registry Toggle] Set publisher '${eventName}' for module '${moduleId}' to enabled=${isEnabled}`
     );
     return true;

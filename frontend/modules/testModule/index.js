@@ -1,5 +1,16 @@
 import { TestPanelUI } from './testPanelUI.js';
 
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('testModule', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[testModule] ${message}`, ...data);
+  }
+}
+
 export const moduleInfo = {
   name: 'Test Module',
   description: 'A simple panel loaded dynamically.',
@@ -9,7 +20,7 @@ export const moduleInfo = {
  * Registration function for the TestModule.
  */
 export function register(registrationApi) {
-  console.log('[TestModule] Registering...');
+  log('info', '[TestModule] Registering...');
   registrationApi.registerPanelComponent('testPanel', TestPanelUI);
 }
 
@@ -17,7 +28,7 @@ export function register(registrationApi) {
  * Initialization function for the TestModule.
  */
 export async function initialize(moduleId, priorityIndex, initializationApi) {
-  console.log(
+  log('info', 
     `[TestModule] Initializing module: ${moduleId} (Priority ${priorityIndex})`
   );
   // No complex initialization needed for this test module
@@ -27,8 +38,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
  * Post-initialization function for the TestModule.
  */
 export async function postInitialize(initializationApi) {
-  console.log('[TestModule] Post-initializing...');
+  log('info', '[TestModule] Post-initializing...');
   // No complex post-initialization needed
 }
 
-console.log('[TestModule] index.js loaded'); // Log to confirm script execution
+log('info', '[TestModule] index.js loaded'); // Log to confirm script execution

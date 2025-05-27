@@ -2,12 +2,12 @@
 if (self.logger) {
   self.logger.info('stateManagerWorker', 'Worker starting...');
 } else {
-  console.log('[stateManagerWorker] Worker starting...');
+  log('info', '[stateManagerWorker] Worker starting...');
 }
 
 // ADDED: Top-level error handler for the worker
 self.onerror = function (message, source, lineno, colno, error) {
-  console.error('[stateManagerWorker] Uncaught Worker Error:', {
+  log('error', '[stateManagerWorker] Uncaught Worker Error:', {
     message,
     source,
     lineno,
@@ -27,7 +27,8 @@ self.onerror = function (message, source, lineno, colno, error) {
       },
     });
   } catch (e) {
-    console.error(
+    log(
+      'error',
       '[stateManagerWorker] FATAL: Could not even postMessage from self.onerror',
       e
     );
@@ -42,7 +43,7 @@ self.onerror = function (message, source, lineno, colno, error) {
 //     message: 'Worker script started and postMessage functional.',
 //   });
 // } catch (e) {
-//   console.error(
+//   log('error',
 //     '[stateManagerWorker] FATAL: Could not send initial debug ping:',
 //     e
 //   );
@@ -54,6 +55,21 @@ import { StateManager } from './stateManager.js';
 import { evaluateRule } from './ruleEngine.js';
 // Import shared commands instead of StateManagerProxy to avoid window references
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('stateManagerWorker', message, ...data);
+  } else {
+    // In worker context, only log ERROR and WARN levels to keep console clean
+    if (level === 'error' || level === 'warn') {
+      const consoleMethod =
+        console[level === 'info' ? 'log' : level] || console.log;
+      consoleMethod(`[stateManagerWorker] ${message}`, ...data);
+    }
+  }
+}
+
 // NOTE: ALTTPInventory, ALTTPState, ALTTPHelpers are imported
 // and instantiated *inside* StateManager.js constructor or used directly.
 
@@ -64,7 +80,8 @@ if (self.logger) {
     'Dependencies loaded (StateManager, evaluateRule)'
   );
 } else {
-  console.log(
+  log(
+    'info',
     '[stateManagerWorker] Dependencies loaded (StateManager, evaluateRule).'
   );
 }
@@ -80,7 +97,8 @@ function setupCommunicationChannel(instance) {
     try {
       self.postMessage(message);
     } catch (error) {
-      console.error(
+      log(
+        'error',
         '[stateManagerWorker] Error posting message back to main thread:',
         error,
         message
@@ -91,7 +109,8 @@ function setupCommunicationChannel(instance) {
           message: `Worker failed to post original message: ${error.message}`,
         });
       } catch (finalError) {
-        console.error(
+        log(
+          'error',
           '[stateManagerWorker] Failed to post even the error message back:',
           finalError
         );
@@ -103,10 +122,11 @@ function setupCommunicationChannel(instance) {
 // --- Restored and Simplified onmessage Handler ---
 self.onmessage = async function (e) {
   const message = e.data;
-  console.log('[stateManagerWorker onmessage] Received message:', message);
+  log('info', '[stateManagerWorker onmessage] Received message:', message);
 
   if (!message || !message.command) {
-    console.warn(
+    log(
+      'warn',
       '[stateManagerWorker onmessage] Received invalid message structure:',
       message
     );
@@ -116,7 +136,8 @@ self.onmessage = async function (e) {
   try {
     switch (message.command) {
       case 'initialize':
-        console.log(
+        log(
+          'info',
           '[stateManagerWorker onmessage] Processing initialize command...'
         );
         workerConfig = message.config;
@@ -130,7 +151,8 @@ self.onmessage = async function (e) {
           stateManagerInstance.applySettings(workerConfig.settings);
         }
         workerInitialized = true; // Mark as initialized
-        console.log(
+        log(
+          'info',
           '[stateManagerWorker onmessage] Worker initialized successfully. Config:',
           workerConfig
         );
@@ -174,7 +196,8 @@ self.onmessage = async function (e) {
         break;
 
       case 'applyRuntimeState':
-        console.log(
+        log(
+          'info',
           '[stateManagerWorker onmessage] Processing applyRuntimeState command...'
         );
         if (!workerInitialized || !stateManagerInstance) {
@@ -190,7 +213,8 @@ self.onmessage = async function (e) {
         break;
 
       case 'loadRules':
-        console.log(
+        log(
+          'info',
           '[stateManagerWorker onmessage] Processing loadRules command...'
         );
         if (!workerInitialized || !stateManagerInstance) {
@@ -223,14 +247,17 @@ self.onmessage = async function (e) {
           // Add other static data pieces if needed by the proxy or UI later
         };
 
-        console.log(
+        log(
+          'info',
           '[stateManagerWorker onmessage] Rules loaded. About to postMessage. WorkerStaticGameData details:'
         );
-        console.log(
+        log(
+          'info',
           '  workerStaticGameData keys:',
           Object.keys(workerStaticGameData)
         );
-        console.log(
+        log(
+          'info',
           '  workerStaticGameData.originalExitOrder type:',
           typeof workerStaticGameData.originalExitOrder,
           'Is Array:',
@@ -240,14 +267,16 @@ self.onmessage = async function (e) {
             ? workerStaticGameData.originalExitOrder.length
             : 'N/A'
         );
-        console.log(
+        log(
+          'info',
           '  Sample originalExitOrder from workerStaticGameData:',
           workerStaticGameData.originalExitOrder
             ? workerStaticGameData.originalExitOrder.slice(0, 5)
             : 'N/A'
         );
 
-        console.log(
+        log(
+          'info',
           '[stateManagerWorker onmessage] Rules loaded. Posting confirmation with snapshot and full newStaticData.'
         );
         self.postMessage({
@@ -273,7 +302,8 @@ self.onmessage = async function (e) {
 
       case 'addItemToInventory':
         if (!stateManagerInstance) {
-          console.error(
+          log(
+            'error',
             '[stateManagerWorker] StateManager not initialized for addItemToInventory'
           );
           break;
@@ -284,13 +314,15 @@ self.onmessage = async function (e) {
             stateManagerInstance.addItemToInventory(item, quantity || 1);
             // stateManagerInstance.addItemToInventory already sends a snapshot update
           } else {
-            console.error(
+            log(
+              'error',
               '[stateManagerWorker] Invalid payload for addItemToInventory: item name missing or not a string.',
               message.payload
             );
           }
         } catch (e) {
-          console.error(
+          log(
+            'error',
             '[stateManagerWorker] Error processing addItemToInventory:',
             e
           );
@@ -304,7 +336,8 @@ self.onmessage = async function (e) {
       case 'evaluateRuleRequest':
       case 'getStaticData':
         if (!workerInitialized || !stateManagerInstance) {
-          console.error(
+          log(
+            'error',
             `[SMW] ${message.command} received but worker not ready.`
           );
           if (message.queryId) {
@@ -318,25 +351,28 @@ self.onmessage = async function (e) {
         }
 
         // LOG 1: Confirm command and presence of queryId
-        console.log(
+        log(
+          'info',
           `[SMW] Grouped command dispatch. Command: ${
             message.command
           }. Has queryId: ${!!message.queryId}. Payload type: ${typeof message.payload}`
         );
         if (message.payload && typeof message.payload === 'object') {
-          console.log(
+          log(
+            'info',
             `[SMW] Payload locationName: ${message.payload.locationName}`
           );
         }
 
         if (message.queryId) {
           // LOG 2: Inside if (message.queryId)
-          console.log(
+          log(
+            'info',
             `[SMW] Entered message.queryId block. Command: ${message.command}`
           );
 
           if (message.command === 'getFullSnapshot') {
-            console.log(`[SMW] Matched command: getFullSnapshot`);
+            log('info', `[SMW] Matched command: getFullSnapshot`);
             const snapshot = stateManagerInstance.getSnapshot();
             self.postMessage({
               type: 'queryResponse',
@@ -344,7 +380,7 @@ self.onmessage = async function (e) {
               result: snapshot,
             });
           } else if (message.command === 'getStaticData') {
-            console.log(`[SMW] Matched command: getStaticData`);
+            log('info', `[SMW] Matched command: getStaticData`);
             const staticData = stateManagerInstance.getStaticGameData();
             self.postMessage({
               type: 'queryResponse',
@@ -353,7 +389,8 @@ self.onmessage = async function (e) {
             });
           } else if (message.command === 'checkLocation') {
             // LOG 3: Matched command checkLocation
-            console.log(
+            log(
+              'info',
               `[SMW] Matched command: checkLocation. Current payload:`,
               message.payload
                 ? JSON.stringify(message.payload)
@@ -361,14 +398,16 @@ self.onmessage = async function (e) {
             );
             try {
               // LOG 4: Start of try block for checkLocation
-              console.log(`[SMW] checkLocation: try block entered.`);
+              log('info', `[SMW] checkLocation: try block entered.`);
               const locationName = message.payload.locationName;
-              console.log(
+              log(
+                'info',
                 `[SMW] checkLocation: locationName extracted: "${locationName}" (type: ${typeof locationName})`
               );
 
               if (typeof locationName !== 'string') {
-                console.error(
+                log(
+                  'error',
                   `[SMW] checkLocation: locationName is not a string.`
                 );
                 throw new Error(
@@ -377,17 +416,20 @@ self.onmessage = async function (e) {
               }
 
               // LOG 5: Before calling instance.checkLocation
-              console.log(
+              log(
+                'info',
                 `[SMW] checkLocation: About to call stateManagerInstance.checkLocation("${locationName}")`
               );
               stateManagerInstance.checkLocation(locationName);
               // LOG 6: After calling instance.checkLocation
-              console.log(
+              log(
+                'info',
                 `[SMW] checkLocation: stateManagerInstance.checkLocation completed for "${locationName}".`
               );
 
               // Query response still sent if queryId was present
-              console.log(
+              log(
+                'info',
                 `[SMW] checkLocation: Sending success queryResponse for queryId ${message.queryId}`
               );
               self.postMessage({
@@ -401,7 +443,8 @@ self.onmessage = async function (e) {
               });
             } catch (error) {
               // LOG 7: In catch block for checkLocation
-              console.error(
+              log(
+                'error',
                 `[SMW] checkLocation: CATCH block. Error for payload ${
                   message.payload
                     ? JSON.stringify(message.payload)
@@ -410,7 +453,8 @@ self.onmessage = async function (e) {
                 error.message,
                 error.stack
               );
-              console.error(
+              log(
+                'error',
                 `[SMW] checkLocation: Sending error queryResponse for queryId ${message.queryId}`
               );
               self.postMessage({
@@ -421,11 +465,13 @@ self.onmessage = async function (e) {
             }
           } else {
             // Presumed 'evaluateRuleRequest'
-            console.log(
+            log(
+              'info',
               `[SMW] Command ${message.command} in queryId block, but not getFullSnapshot, getStaticData, or checkLocation.`
             );
             // This is a simplification for now to get the init/loadRules flow working.
-            console.warn(
+            log(
+              'warn',
               `[stateManagerWorker] Command ${message.command} needs full handler beyond this basic switch.`
             );
             self.postMessage({
@@ -444,22 +490,26 @@ self.onmessage = async function (e) {
             try {
               const locationName = message.payload.locationName;
               if (typeof locationName !== 'string') {
-                console.error(
+                log(
+                  'error',
                   `[SMW] checkLocation (no queryId): locationName is not a string.`
                 );
                 throw new Error(
                   'Invalid payload for checkLocation (no queryId): expected a string locationName in payload.locationName.'
                 );
               }
-              console.log(
+              log(
+                'info',
                 `[SMW] checkLocation (no queryId): About to call stateManagerInstance.checkLocation("${locationName}")`
               );
               stateManagerInstance.checkLocation(locationName);
-              console.log(
+              log(
+                'info',
                 `[SMW] checkLocation (no queryId): stateManagerInstance.checkLocation completed for "${locationName}".`
               );
             } catch (error) {
-              console.error(
+              log(
+                'error',
                 `[SMW] checkLocation (no queryId): CATCH block. Error for payload ${
                   message.payload
                     ? JSON.stringify(message.payload)
@@ -471,7 +521,8 @@ self.onmessage = async function (e) {
             }
           } else {
             // For other commands without queryId in this grouped case, issue the general warning.
-            console.warn(
+            log(
+              'warn',
               `[SMW] Command ${message.command} in grouped case did NOT have a queryId. This is unexpected for these commands if a response is awaited.`
             );
           }
@@ -502,7 +553,8 @@ self.onmessage = async function (e) {
             result: snapshot,
           });
         } catch (e) {
-          console.error(
+          log(
+            'error',
             '[StateManagerWorker] Error during SETUP_TEST_INVENTORY_AND_GET_SNAPSHOT:',
             e
           );
@@ -544,7 +596,8 @@ self.onmessage = async function (e) {
             result: { result: isAccessible },
           });
         } catch (evalError) {
-          console.error(
+          log(
+            'error',
             '[StateManagerWorker] Error during EVALUATE_ACCESSIBILITY_FOR_TEST:',
             evalError
           );
@@ -557,7 +610,8 @@ self.onmessage = async function (e) {
         break;
 
       case STATE_MANAGER_COMMANDS.APPLY_TEST_INVENTORY_AND_EVALUATE:
-        console.log(
+        log(
+          'info',
           '[stateManagerWorker onmessage] Processing APPLY_TEST_INVENTORY_AND_EVALUATE command...'
         );
         if (!workerInitialized || !stateManagerInstance) {
@@ -594,11 +648,13 @@ self.onmessage = async function (e) {
           const itemPool = stateManagerInstance.getItemPoolCounts(); // Assumes getter for itempool_counts
           const allItemData = stateManagerInstance.getAllItemData(); // Assumes getter for all item data
 
-          console.log(
+          log(
+            'info',
             '[SMW APPLY_TEST] Item Pool for test:',
             JSON.stringify(itemPool)
           );
-          console.log(
+          log(
+            'info',
             '[SMW APPLY_TEST] Excluded items for test:',
             JSON.stringify(excludedItems)
           );
@@ -620,7 +676,8 @@ self.onmessage = async function (e) {
             });
 
             if (itemPool && Object.keys(itemPool).length > 0) {
-              console.log(
+              log(
+                'info',
                 '[SMW APPLY_TEST] Using itempool_counts for base inventory (respecting exclusions and required items).'
               );
               Object.entries(itemPool).forEach(([itemName, count]) => {
@@ -641,7 +698,8 @@ self.onmessage = async function (e) {
                 }
               });
             } else if (allItemData) {
-              console.log(
+              log(
+                'info',
                 '[SMW APPLY_TEST] No itempool_counts available. Using all non-event items for base inventory (respecting exclusions and required items).'
               );
               Object.keys(allItemData).forEach((itemName) => {
@@ -658,12 +716,14 @@ self.onmessage = async function (e) {
                 stateManagerInstance.addItemToInventory(itemName); // Now respects batch mode
               });
             } else {
-              console.warn(
+              log(
+                'warn',
                 '[SMW APPLY_TEST] No itemPool or allItemData available to derive base inventory.'
               );
             }
           } else {
-            console.log(
+            log(
+              'info',
               '[SMW APPLY_TEST] Both requiredItems and excludedItems are empty. Starting with empty inventory.'
             );
           }
@@ -734,13 +794,15 @@ self.onmessage = async function (e) {
                 locationAccessibilityResult =
                   stateManagerInstance.isLocationAccessible(locationObject);
               } else {
-                console.warn(
+                log(
+                  'warn',
                   `[stateManagerWorker] Location object not found: ${locationName}`
                 );
                 locationAccessibilityResult = false;
               }
             } catch (locEvalError) {
-              console.error(
+              log(
+                'error',
                 `[SMW] Error explicitly evaluating ${locationName} after inventory set:`,
                 locEvalError
               );
@@ -748,7 +810,8 @@ self.onmessage = async function (e) {
             }
           }
 
-          console.log(
+          log(
+            'info',
             `[stateManagerWorker] APPLY_TEST_INVENTORY_AND_EVALUATE for "${locationName}" - Evaluated Accessibility: ${locationAccessibilityResult}`
           );
 
@@ -764,7 +827,8 @@ self.onmessage = async function (e) {
             },
           });
         } catch (testEvalError) {
-          console.error(
+          log(
+            'error',
             '[StateManagerWorker] Error during APPLY_TEST_INVENTORY_AND_EVALUATE logic:',
             testEvalError
           );
@@ -774,7 +838,8 @@ self.onmessage = async function (e) {
             try {
               stateManagerInstance.commitBatchUpdate();
             } catch (batchError) {
-              console.error(
+              log(
+                'error',
                 '[StateManagerWorker] Error cleaning up batch mode after test error:',
                 batchError
               );
@@ -790,7 +855,8 @@ self.onmessage = async function (e) {
         break;
 
       default:
-        console.warn(
+        log(
+          'warn',
           '[stateManagerWorker onmessage] Received unhandled command:',
           message.command,
           message
@@ -804,7 +870,8 @@ self.onmessage = async function (e) {
         }
     }
   } catch (error) {
-    console.error(
+    log(
+      'error',
       '[stateManagerWorker onmessage] Error processing command:',
       message.command,
       error
@@ -820,6 +887,7 @@ self.onmessage = async function (e) {
 };
 // --- END: Restored and Simplified onmessage Handler ---
 
-console.log(
+log(
+  'info',
   '[stateManagerWorker] Worker is ready to receive messages via new onmessage handler.'
 );
