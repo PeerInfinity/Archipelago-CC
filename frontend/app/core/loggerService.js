@@ -21,6 +21,11 @@ class LoggerService {
       showTimestamp: true,
       showCategoryName: true,
       enabled: true,
+      // Temporary override settings
+      temporaryOverride: {
+        enabled: false,
+        level: 'DEBUG',
+      },
     };
 
     // Log levels in order of verbosity (lower number = higher priority)
@@ -74,6 +79,16 @@ class LoggerService {
 
     const messageLevel =
       this.logLevels[level.toUpperCase()] || this.logLevels.INFO;
+
+    // Check for temporary override first
+    if (this.config.temporaryOverride.enabled) {
+      const overrideThreshold =
+        this.logLevels[this.config.temporaryOverride.level.toUpperCase()] ||
+        this.logLevels.DEBUG;
+      return messageLevel <= overrideThreshold;
+    }
+
+    // Normal category-specific level checking
     const categoryConfigLevelStr =
       this.config.categoryLevels[categoryName] || this.config.defaultLevel;
     const categoryThreshold =
@@ -301,6 +316,64 @@ class LoggerService {
   }
 
   /**
+   * Enable temporary override to force all categories to a specific level
+   * @param {string} level - Log level to force all categories to
+   */
+  enableTemporaryOverride(level) {
+    const upperLevel = level.toUpperCase();
+    if (this.logLevels[upperLevel] !== undefined) {
+      this.config.temporaryOverride.enabled = true;
+      this.config.temporaryOverride.level = upperLevel;
+      this.info(
+        'LoggerService',
+        `Temporary override enabled: All categories forced to ${upperLevel}`
+      );
+    } else {
+      this.warn(
+        'LoggerService',
+        `Invalid temporary override level: ${level}. Valid levels: ${Object.keys(
+          this.logLevels
+        ).join(', ')}`
+      );
+    }
+  }
+
+  /**
+   * Disable temporary override and return to normal category-specific levels
+   */
+  disableTemporaryOverride() {
+    this.config.temporaryOverride.enabled = false;
+    this.info(
+      'LoggerService',
+      'Temporary override disabled: Returning to category-specific levels'
+    );
+  }
+
+  /**
+   * Set the temporary override level without enabling it
+   * @param {string} level - Log level for temporary override
+   */
+  setTemporaryOverrideLevel(level) {
+    const upperLevel = level.toUpperCase();
+    if (this.logLevels[upperLevel] !== undefined) {
+      this.config.temporaryOverride.level = upperLevel;
+      this.info(
+        'LoggerService',
+        `Temporary override level set to: ${upperLevel} (${
+          this.config.temporaryOverride.enabled ? 'active' : 'inactive'
+        })`
+      );
+    } else {
+      this.warn(
+        'LoggerService',
+        `Invalid temporary override level: ${level}. Valid levels: ${Object.keys(
+          this.logLevels
+        ).join(', ')}`
+      );
+    }
+  }
+
+  /**
    * Get current configuration for debugging or settings UI
    * @returns {object} Current configuration
    */
@@ -326,6 +399,7 @@ class LoggerService {
       categoryCount: Object.keys(this.config.categoryLevels).length,
       categoryLevels: { ...this.config.categoryLevels },
       filters: { ...this.config.filters },
+      temporaryOverride: { ...this.config.temporaryOverride },
     };
 
     console.log('[LoggerService] Current Status:', status);

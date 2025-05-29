@@ -119,6 +119,18 @@ export class ConsoleUI {
       'Enable/disable logging: log_enable <true|false>',
       this.handleLogEnableCommand
     );
+
+    // Temporary override commands
+    register(
+      'log_override',
+      'Enable temporary override: log_override <level>',
+      this.handleLogOverrideCommand
+    );
+    register(
+      'log_override_off',
+      'Disable temporary override',
+      this.handleLogOverrideOffCommand
+    );
   }
 
   // --- Command Handlers (Accept dependencies object) ---
@@ -316,13 +328,37 @@ export class ConsoleUI {
     consoleManager.print('=== Logger Status ===', 'info');
     consoleManager.print(`Enabled: ${status.enabled}`, 'info');
     consoleManager.print(`Default Level: ${status.defaultLevel}`, 'info');
+
+    // Show temporary override status
+    if (status.temporaryOverride.enabled) {
+      consoleManager.print(
+        `🔄 TEMPORARY OVERRIDE ACTIVE: ${status.temporaryOverride.level}`,
+        'info'
+      );
+      consoleManager.print(
+        '   (All categories are forced to this level)',
+        'info'
+      );
+    } else {
+      consoleManager.print(
+        `Temporary Override: Disabled (level: ${status.temporaryOverride.level})`,
+        'info'
+      );
+    }
+
     consoleManager.print(
       `Category-specific levels (${status.categoryCount}):`,
       'info'
     );
 
     for (const [category, level] of Object.entries(status.categoryLevels)) {
-      consoleManager.print(`  ${category}: ${level}`, 'info');
+      const effectiveLevel = status.temporaryOverride.enabled
+        ? status.temporaryOverride.level
+        : level;
+      const displayText = status.temporaryOverride.enabled
+        ? `  ${category}: ${level} → ${effectiveLevel}`
+        : `  ${category}: ${level}`;
+      consoleManager.print(displayText, 'info');
     }
 
     if (status.filters.includeKeywords.length > 0) {
@@ -407,6 +443,42 @@ export class ConsoleUI {
         'error'
       );
     }
+  }
+
+  // Temporary override commands
+  static handleLogOverrideCommand(argsString, { consoleManager }) {
+    const logger = window.logger;
+    if (!logger) {
+      consoleManager.print('Logger service not available.', 'error');
+      return;
+    }
+
+    const level = argsString.trim();
+    if (!level) {
+      consoleManager.print('Usage: log_override <level>', 'error');
+      consoleManager.print(
+        `Available levels: ${logger.getAvailableLevels().join(', ')}`,
+        'info'
+      );
+      return;
+    }
+
+    logger.enableTemporaryOverride(level);
+    consoleManager.print(
+      `Temporary override enabled: All categories forced to ${level.toUpperCase()}`,
+      'system'
+    );
+  }
+
+  static handleLogOverrideOffCommand(argsString, { consoleManager }) {
+    const logger = window.logger;
+    if (!logger) {
+      consoleManager.print('Logger service not available.', 'error');
+      return;
+    }
+
+    logger.disableTemporaryOverride();
+    consoleManager.print('Temporary override disabled.', 'system');
   }
 
   // --- Internal command history logic (uses static properties) ---

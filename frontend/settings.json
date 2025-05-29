@@ -100,7 +100,11 @@
     },
     "showTimestamp": true,
     "showCategoryName": true,
-    "enabled": true
+    "enabled": true,
+    "temporaryOverride": {
+      "enabled": false,
+      "level": "DEBUG"
+    }
   },
   "moduleSettings": {
     "client": {
