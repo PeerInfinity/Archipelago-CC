@@ -522,7 +522,7 @@ export async function debugPathAnalyzerTest(testController) {
     // Step 4: Import PathAnalyzerLogic directly
     testController.log('Step 4: About to import PathAnalyzerLogic...');
     const { PathAnalyzerLogic } = await import(
-      '../pathAnalyzer/pathAnalyzerLogic.js'
+      '../../pathAnalyzer/pathAnalyzerLogic.js'
     );
     testController.log('Step 4a: PathAnalyzerLogic imported successfully');
 

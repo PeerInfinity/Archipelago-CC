@@ -8,13 +8,13 @@ import eventBus from '../../app/core/eventBus.js';
 import loopState from '../loops/loopStateSingleton.js';
 import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('pathAnalyzerUI', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[pathAnalyzerUI] ${message}`, ...data);
   }
 }
@@ -24,15 +24,297 @@ function log(level, message, ...data) {
  * Uses PathAnalyzerLogic for the core algorithmic operations
  */
 export class PathAnalyzerUI {
-  constructor(regionUI) {
+  constructor(regionUI, pathAnalyzerSettings = null) {
     this.regionUI = regionUI;
 
-    // Create the logic component
-    this.logic = new PathAnalyzerLogic();
+    // If specific settings provided, use them; otherwise use defaults from settingsManager
+    this.settings = pathAnalyzerSettings || this._getDefaultSettings();
+
+    // Create the logic component with settings
+    this.logic = new PathAnalyzerLogic(this.settings);
+
+    // Track current analysis state
+    this.currentRegionName = null;
+    this.isAnalysisActive = false;
+    this.currentAnalysisContainer = null;
+    this.currentAnalysisButton = null;
+    this.currentPathsCountSpan = null;
 
     // UI configuration options
     this.settingsUnsubscribe = null;
     this.subscribeToSettings();
+  }
+
+  /**
+   * Get default path analyzer settings from settings manager
+   * @returns {object} Settings object
+   * @private
+   */
+  _getDefaultSettings() {
+    try {
+      const moduleSettings = settingsManager.getModuleSettings('pathAnalyzer');
+      return {
+        maxPaths: moduleSettings?.maxPaths || 100,
+        maxPathFinderIterations:
+          moduleSettings?.maxPathFinderIterations || 1000,
+        maxAnalysisTimeMs: moduleSettings?.maxAnalysisTimeMs || 5000,
+      };
+    } catch (error) {
+      log(
+        'warn',
+        'Failed to load pathAnalyzer settings, using defaults:',
+        error
+      );
+      return {
+        maxPaths: 100,
+        maxPathFinderIterations: 1000,
+        maxAnalysisTimeMs: 5000,
+      };
+    }
+  }
+
+  /**
+   * Update settings for this instance only
+   * @param {object} newSettings - New settings to apply
+   */
+  updateSettings(newSettings) {
+    this.settings = { ...this.settings, ...newSettings };
+    this.logic = new PathAnalyzerLogic(this.settings);
+    log('info', 'PathAnalyzerUI settings updated:', this.settings);
+  }
+
+  /**
+   * Save current settings as new defaults
+   */
+  saveSettingsAsDefaults() {
+    try {
+      // Update the settings in settingsManager
+      const currentSettings =
+        settingsManager.getModuleSettings('pathAnalyzer') || {};
+      const newSettings = { ...currentSettings, ...this.settings };
+      settingsManager.updateModuleSettings('pathAnalyzer', newSettings);
+      log('info', 'PathAnalyzer settings saved as defaults:', newSettings);
+    } catch (error) {
+      log('error', 'Failed to save PathAnalyzer settings as defaults:', error);
+    }
+  }
+
+  /**
+   * Get current settings
+   * @returns {object} Current settings
+   */
+  getSettings() {
+    return { ...this.settings };
+  }
+
+  /**
+   * Create settings UI controls
+   * @param {HTMLElement} container - Container to add settings controls to
+   * @param {string} regionName - The region being analyzed (optional)
+   * @param {boolean} regionReadOnly - Whether the region field should be read-only
+   * @returns {HTMLElement} Settings container element
+   */
+  createSettingsUI(container, regionName = null, regionReadOnly = false) {
+    const settingsContainer = document.createElement('div');
+    settingsContainer.className = 'path-analyzer-settings';
+    settingsContainer.style.cssText = `
+      background: #2a2a2a;
+      border: 1px solid #555;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+    `;
+
+    const title = document.createElement('h4');
+    title.textContent = 'Path Analysis Settings:';
+    title.style.cssText = 'margin: 0; width: 100%; color: #e0e0e0;';
+    settingsContainer.appendChild(title);
+
+    // Region name setting (if provided)
+    if (regionName) {
+      const regionContainer = document.createElement('div');
+      regionContainer.style.cssText =
+        'display: flex; align-items: center; gap: 5px; width: 100%;';
+
+      const regionLabel = document.createElement('label');
+      regionLabel.textContent = 'Target Region:';
+      regionLabel.style.cssText =
+        'font-weight: bold; color: #e0e0e0; min-width: 100px;';
+
+      const regionInput = document.createElement('input');
+      regionInput.type = 'text';
+      regionInput.value = regionName;
+      regionInput.readOnly = regionReadOnly;
+      regionInput.style.cssText = `
+        flex: 1; 
+        padding: 5px 10px; 
+        border: 1px solid #555; 
+        border-radius: 2px;
+        background: ${regionReadOnly ? '#404040' : '#333'};
+        color: ${regionReadOnly ? '#999' : '#e0e0e0'};
+      `;
+      regionInput.dataset.settingKey = 'regionName';
+
+      regionContainer.appendChild(regionLabel);
+      regionContainer.appendChild(regionInput);
+      settingsContainer.appendChild(regionContainer);
+    }
+
+    // Create input fields for each numeric setting
+    const settings = [
+      {
+        key: 'maxPaths',
+        label: 'Max Paths:',
+        min: 1,
+        max: 1000,
+        step: 1,
+      },
+      {
+        key: 'maxPathFinderIterations',
+        label: 'Max Iterations:',
+        min: 10,
+        max: 10000,
+        step: 10,
+      },
+      {
+        key: 'maxAnalysisTimeMs',
+        label: 'Timeout (ms):',
+        min: 1000,
+        max: 30000,
+        step: 100,
+      },
+    ];
+
+    settings.forEach((setting) => {
+      const fieldContainer = document.createElement('div');
+      fieldContainer.style.cssText =
+        'display: flex; align-items: center; gap: 5px;';
+
+      const label = document.createElement('label');
+      label.textContent = setting.label;
+      label.style.cssText =
+        'font-weight: bold; color: #e0e0e0; min-width: 80px;';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = setting.min;
+      input.max = setting.max;
+      input.step = setting.step;
+      input.value = this.settings[setting.key];
+      input.style.cssText =
+        'width: 80px; padding: 2px 5px; border: 1px solid #555; border-radius: 2px; background: #333; color: #e0e0e0;';
+      input.dataset.settingKey = setting.key;
+
+      // Add change event listener
+      input.addEventListener('change', () => {
+        const newValue = parseInt(input.value, 10);
+        if (
+          !isNaN(newValue) &&
+          newValue >= setting.min &&
+          newValue <= setting.max
+        ) {
+          this.updateSettings({ [setting.key]: newValue });
+        } else {
+          // Reset to current value if invalid
+          input.value = this.settings[setting.key];
+        }
+      });
+
+      fieldContainer.appendChild(label);
+      fieldContainer.appendChild(input);
+      settingsContainer.appendChild(fieldContainer);
+    });
+
+    // Add buttons container
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.cssText =
+      'width: 100%; margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;';
+
+    // Apply button (only show if we have active analysis)
+    if (this.isAnalysisActive && this.currentRegionName) {
+      const applyButton = document.createElement('button');
+      applyButton.textContent = 'Apply Settings';
+      applyButton.className = 'button';
+      applyButton.style.cssText =
+        'padding: 5px 10px; font-size: 12px; background-color: #2196f3; color: white; border: 1px solid #2196f3; border-radius: 2px; cursor: pointer;';
+      applyButton.addEventListener('click', () => {
+        // Get the current region name from input if available
+        const regionInput = settingsContainer.querySelector(
+          'input[data-setting-key="regionName"]'
+        );
+        const targetRegion = regionInput
+          ? regionInput.value.trim()
+          : this.currentRegionName;
+
+        if (targetRegion && this.currentAnalysisContainer) {
+          log(
+            'info',
+            `[PathAnalyzerUI] Applying settings and re-analyzing region: ${targetRegion}`
+          );
+          this.currentRegionName = targetRegion;
+          this.performPathAnalysis(
+            targetRegion,
+            this.currentAnalysisContainer,
+            this.currentPathsCountSpan,
+            this.currentAnalysisButton
+          );
+        }
+      });
+      buttonContainer.appendChild(applyButton);
+    }
+
+    // Save defaults button
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Save as Defaults';
+    saveButton.className = 'button';
+    saveButton.style.cssText =
+      'padding: 5px 10px; font-size: 12px; background-color: #444; color: #e0e0e0; border: 1px solid #666; border-radius: 2px; cursor: pointer;';
+    saveButton.addEventListener('click', () => {
+      this.saveSettingsAsDefaults();
+      // Visual feedback
+      const originalText = saveButton.textContent;
+      const originalStyle = saveButton.style.backgroundColor;
+      saveButton.textContent = 'Saved!';
+      saveButton.style.backgroundColor = '#4caf50';
+      setTimeout(() => {
+        saveButton.textContent = originalText;
+        saveButton.style.backgroundColor = originalStyle;
+      }, 1500);
+    });
+
+    const resetButton = document.createElement('button');
+    resetButton.textContent = 'Reset to Defaults';
+    resetButton.className = 'button';
+    resetButton.style.cssText =
+      'padding: 5px 10px; font-size: 12px; background-color: #444; color: #e0e0e0; border: 1px solid #666; border-radius: 2px; cursor: pointer;';
+    resetButton.addEventListener('click', () => {
+      const defaultSettings = this._getDefaultSettings();
+      this.updateSettings(defaultSettings);
+
+      // Update all input fields
+      settingsContainer
+        .querySelectorAll('input[data-setting-key]')
+        .forEach((input) => {
+          const key = input.dataset.settingKey;
+          if (key !== 'regionName' && defaultSettings[key] !== undefined) {
+            input.value = defaultSettings[key];
+          }
+        });
+    });
+
+    buttonContainer.appendChild(saveButton);
+    buttonContainer.appendChild(resetButton);
+    settingsContainer.appendChild(buttonContainer);
+
+    if (container) {
+      container.appendChild(settingsContainer);
+    }
+
+    return settingsContainer;
   }
 
   subscribeToSettings() {
@@ -90,6 +372,13 @@ export class PathAnalyzerUI {
         pathsContainer.innerHTML = '';
         pathsCountSpan.style.display = 'none';
         analyzePathsBtn.textContent = 'Analyze Paths';
+
+        // Reset analysis state
+        this.isAnalysisActive = false;
+        this.currentRegionName = null;
+        this.currentAnalysisContainer = null;
+        this.currentAnalysisButton = null;
+        this.currentPathsCountSpan = null;
 
         const toggleContainer = document.querySelector('.path-toggle-controls');
         if (toggleContainer) toggleContainer.remove();
@@ -152,9 +441,8 @@ export class PathAnalyzerUI {
         regionName,
         pathsContainer,
         pathsCountSpan,
-        analyzePathsBtn,
-        100
-      ); // Normal max paths
+        analyzePathsBtn
+      );
 
       this._createPathToggleControls(pathsContainer);
     });
@@ -166,16 +454,25 @@ export class PathAnalyzerUI {
    * @param {HTMLElement} pathsContainer - Container to display paths in
    * @param {HTMLElement} pathsCountSpan - Element to display path counts
    * @param {HTMLElement} analyzePathsBtn - The button that triggered the analysis
-   * @param {number} maxPaths - Maximum number of paths to find
    */
   performPathAnalysis(
     regionName,
     pathsContainer,
     pathsCountSpan,
-    analyzePathsBtn,
-    maxPaths
+    analyzePathsBtn
   ) {
+    // Track current analysis state
+    this.currentRegionName = regionName;
+    this.isAnalysisActive = true;
+    this.currentAnalysisContainer = pathsContainer;
+    this.currentAnalysisButton = analyzePathsBtn;
+    this.currentPathsCountSpan = pathsCountSpan;
+
     pathsContainer.innerHTML = '';
+
+    // PHASE 0: Add settings UI at the top with region name and readonly status
+    const isFromRegionsPanel = this.regionUI !== null;
+    this.createSettingsUI(pathsContainer, regionName, isFromRegionsPanel);
 
     // PHASE 1: Get current snapshot and static data
     const snapshot = stateManager.getLatestStateSnapshot();
@@ -226,10 +523,10 @@ export class PathAnalyzerUI {
       return;
     }
 
-    // PHASE 2: Perform traditional path analysis using the logic component with proper parameters
+    // PHASE 2: Perform traditional path analysis using the logic component with settings
     const allPaths = this.logic.findPathsToRegion(
       regionName,
-      maxPaths,
+      null, // Use default from settings
       snapshot,
       staticData
     );
@@ -532,7 +829,8 @@ export class PathAnalyzerUI {
       staticData
     );
     if (!snapshotInterface) {
-      log('error', 
+      log(
+        'error',
         '[PathAnalyzerUI] Failed to create snapshot interface for path processing'
       );
       return pathEl;
@@ -835,21 +1133,25 @@ export class PathAnalyzerUI {
     container.innerHTML = '<h4>Direct Connections & Rules:</h4>';
 
     // --- MOVED AND REFINED: Detailed logging for staticData --- >
-    log('info', 
+    log(
+      'info',
       '[PathAnalyzerUI DEBUG] Entered _analyzeDirectConnections. regionName:',
       regionName
     );
-    log('info', 
+    log(
+      'info',
       '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - staticData (parameter) value:',
       staticData
     );
-    log('info', 
+    log(
+      'info',
       '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - typeof staticData (parameter):',
       typeof staticData
     );
 
     if (staticData && typeof staticData === 'object') {
-      log('info', 
+      log(
+        'info',
         '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - staticData.regions details:',
         {
           regionsPropertyExists: 'regions' in staticData,
@@ -858,7 +1160,8 @@ export class PathAnalyzerUI {
         }
       );
     } else {
-      log('info', 
+      log(
+        'info',
         '[PathAnalyzerUI DEBUG] _analyzeDirectConnections - staticData is not a valid object or is null/undefined.'
       );
     }
@@ -925,7 +1228,8 @@ export class PathAnalyzerUI {
             if (nodeResults[key] && Array.isArray(nodeResults[key])) {
               allNodes[key].push(...nodeResults[key]);
             } else if (nodeResults[key] !== undefined) {
-              log('warn', 
+              log(
+                'warn',
                 `[PathUI] nodeResults[${key}] was not an array:`,
                 nodeResults[key]
               );
@@ -977,7 +1281,8 @@ export class PathAnalyzerUI {
               if (nodeResults[key] && Array.isArray(nodeResults[key])) {
                 allNodes[key].push(...nodeResults[key]);
               } else if (nodeResults[key] !== undefined) {
-                log('warn', 
+                log(
+                  'warn',
                   `[PathUI] nodeResults[${key}] for entrance ${entrance.name} was not an array:`,
                   nodeResults[key]
                 );
@@ -1685,7 +1990,8 @@ export class PathAnalyzerUI {
       JSON.stringify(updatedResults)
     );
 
-    log('info', 
+    log(
+      'info',
       `[PathAnalyzerUI] Stored analysis results for ${regionName}:`,
       analysisResults
     );

@@ -52,6 +52,10 @@
       "path": "./modules/pathAnalyzer/index.js",
       "enabled": true
     },
+    "pathAnalyzerPanel": {
+      "path": "./modules/pathAnalyzerPanel/index.js",
+      "enabled": true
+    },
     "regions": {
       "path": "./modules/regions/index.js",
       "enabled": true
@@ -95,6 +99,7 @@
     "locations",
     "exits",
     "pathAnalyzer",
+    "pathAnalyzerPanel",
     "regions",
     "discovery",
     "loops",

@@ -51,6 +51,11 @@
             },
             {
               "type": "component",
+              "componentType": "pathAnalyzerPanel",
+              "title": "Path Analyzer"
+            },
+            {
+              "type": "component",
               "componentType": "presetsPanel",
               "title": "Presets"
             },

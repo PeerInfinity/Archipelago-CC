@@ -5,13 +5,13 @@ import { evaluateRule } from '../stateManager/ruleEngine.js';
 import loopState from '../loops/loopStateSingleton.js';
 import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('pathAnalyzerLogic', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[pathAnalyzerLogic] ${message}`, ...data);
   }
 }
@@ -21,9 +21,12 @@ function log(level, message, ...data) {
  * Handles path finding, rule evaluation, and node categorization
  */
 export class PathAnalyzerLogic {
-  constructor() {
+  constructor(settings = {}) {
     this.debugMode = false;
-    this.maxPathFinderIterations = 1000; // Increased from 100 to 1000 now that cycles are handled
+    // Use settings or defaults
+    this.maxPathFinderIterations = settings.maxPathFinderIterations || 1000;
+    this.maxPaths = settings.maxPaths || 100;
+    this.maxAnalysisTimeMs = settings.maxAnalysisTimeMs || 5000;
   }
 
   /**
@@ -111,14 +114,18 @@ export class PathAnalyzerLogic {
   /**
    * Finds paths to a region using DFS (not BFS as previously commented)
    * @param {string} targetRegion - The region to find paths to
-   * @param {number} maxPaths - Maximum number of paths to find
+   * @param {number} maxPaths - Maximum number of paths to find (optional, defaults to instance setting)
    * @param {object} snapshot - The current state snapshot.
    * @param {object} staticData - The cached static game data.
    * @returns {Array} - Array of paths to the target region
    */
-  findPathsToRegion(targetRegion, maxPaths = 100, snapshot, staticData) {
-    log('info', 
-      `[PathAnalyzer] ENTRY: findPathsToRegion called with targetRegion=${targetRegion}, maxPaths=${maxPaths}`
+  findPathsToRegion(targetRegion, maxPaths = null, snapshot, staticData) {
+    // Use provided maxPaths or fall back to instance setting
+    const effectiveMaxPaths = maxPaths !== null ? maxPaths : this.maxPaths;
+
+    log(
+      'info',
+      `[PathAnalyzer] ENTRY: findPathsToRegion called with targetRegion=${targetRegion}, maxPaths=${effectiveMaxPaths}`
     );
     const paths = [];
 
@@ -136,7 +143,8 @@ export class PathAnalyzerLogic {
       staticData
     );
     if (!snapshotInterface) {
-      log('info', 
+      log(
+        'info',
         `[PathAnalyzer] EARLY EXIT: Failed to create snapshotInterface`
       );
       this._logDebug(
@@ -145,11 +153,13 @@ export class PathAnalyzerLogic {
       return paths;
     }
 
-    log('info', 
+    log(
+      'info',
       `[PathAnalyzer] Starting path analysis for region: ${targetRegion}`
     );
-    log('info', 
-      `[PathAnalyzer] Max paths: ${maxPaths}, Max iterations: ${this.maxPathFinderIterations}`
+    log(
+      'info',
+      `[PathAnalyzer] Max paths: ${effectiveMaxPaths}, Max iterations: ${this.maxPathFinderIterations}`
     );
 
     let isTargetReachableInSnapshot = false;
@@ -159,7 +169,8 @@ export class PathAnalyzerLogic {
         status === true || status === 'reachable' || status === 'checked';
     }
 
-    log('info', 
+    log(
+      'info',
       `[PathAnalyzer] Target region ${targetRegion} reachable in snapshot: ${isTargetReachableInSnapshot}`
     );
 
@@ -181,7 +192,8 @@ export class PathAnalyzerLogic {
     }
 
     log('info', `[PathAnalyzer] Starting regions: ${startRegions.join(', ')}`);
-    log('info', 
+    log(
+      'info',
       `[PathAnalyzer] Total regions in data: ${Object.keys(regionsData).length}`
     );
 
@@ -190,12 +202,12 @@ export class PathAnalyzerLogic {
 
     // Add a global timeout to prevent hanging
     const startTime = Date.now();
-    const MAX_ANALYSIS_TIME_MS = 5000; // 5 second timeout
 
     for (const startRegion of startRegions) {
-      if (paths.length >= maxPaths) break;
+      if (paths.length >= effectiveMaxPaths) break;
       if (iterationCounter.count >= this.maxPathFinderIterations) {
-        log('info', 
+        log(
+          'info',
           `[PathAnalyzer] Maximum iterations (${this.maxPathFinderIterations}) exceeded in findPathsToRegion`
         );
         this._logDebug(
@@ -205,9 +217,10 @@ export class PathAnalyzerLogic {
       }
 
       // Check timeout
-      if (Date.now() - startTime > MAX_ANALYSIS_TIME_MS) {
-        log('info', 
-          `[PathAnalyzer] Analysis timeout (${MAX_ANALYSIS_TIME_MS}ms) exceeded`
+      if (Date.now() - startTime > this.maxAnalysisTimeMs) {
+        log(
+          'info',
+          `[PathAnalyzer] Analysis timeout (${this.maxAnalysisTimeMs}ms) exceeded`
         );
         break;
       }
@@ -221,26 +234,28 @@ export class PathAnalyzerLogic {
         [], // empty path to start
         null, // visited set no longer used
         paths,
-        maxPaths,
+        effectiveMaxPaths,
         regionsData,
         snapshotInterface,
         iterationCounter,
-        startTime,
-        MAX_ANALYSIS_TIME_MS
+        startTime
       );
 
       const pathsAfter = paths.length;
-      log('info', 
+      log(
+        'info',
         `[PathAnalyzer] DFS from ${startRegion} completed. Paths found: ${
           pathsAfter - pathsBefore
         }, Total iterations: ${iterationCounter.count}`
       );
     }
 
-    log('info', 
+    log(
+      'info',
       `[PathAnalyzer] Path analysis completed. Total paths found: ${paths.length}, Total iterations: ${iterationCounter.count}`
     );
-    log('info', 
+    log(
+      'info',
       `[PathAnalyzer] RETURNING from findPathsToRegion with ${paths.length} paths`
     );
     return paths;
@@ -258,7 +273,6 @@ export class PathAnalyzerLogic {
    * @param {object} snapshotInterface - The interface for rule evaluation.
    * @param {object} iterationCounter - Counter to prevent infinite loops
    * @param {number} startTime - Start time for timeout checking
-   * @param {number} MAX_ANALYSIS_TIME_MS - Maximum analysis time
    * @private
    */
   _findPathsDFS(
@@ -271,13 +285,13 @@ export class PathAnalyzerLogic {
     regionsData,
     snapshotInterface,
     iterationCounter,
-    startTime,
-    MAX_ANALYSIS_TIME_MS
+    startTime
   ) {
     // Increment iteration counter and check for limit
     iterationCounter.count++;
     if (iterationCounter.count >= this.maxPathFinderIterations) {
-      log('info', 
+      log(
+        'info',
         `[PathAnalyzer DFS] Maximum iterations (${this.maxPathFinderIterations}) exceeded in _findPathsDFS`
       );
       this._logDebug(
@@ -288,9 +302,10 @@ export class PathAnalyzerLogic {
 
     // Check timeout every 50 iterations to avoid excessive time checking
     if (iterationCounter.count % 50 === 0) {
-      if (Date.now() - startTime > MAX_ANALYSIS_TIME_MS) {
-        log('info', 
-          `[PathAnalyzer DFS] Analysis timeout (${MAX_ANALYSIS_TIME_MS}ms) exceeded at iteration ${iterationCounter.count}`
+      if (Date.now() - startTime > this.maxAnalysisTimeMs) {
+        log(
+          'info',
+          `[PathAnalyzer DFS] Analysis timeout (${this.maxAnalysisTimeMs}ms) exceeded at iteration ${iterationCounter.count}`
         );
         return;
       }
@@ -298,14 +313,16 @@ export class PathAnalyzerLogic {
 
     // Log progress every 100 iterations for debugging
     if (iterationCounter.count % 100 === 0) {
-      log('info', 
+      log(
+        'info',
         `[PathAnalyzer DFS] Iteration ${iterationCounter.count}, current region: ${currentRegion}, path length: ${currentPath.length}, paths found: ${allPaths.length}`
       );
     }
 
     // --- CYCLE DETECTION: Check if current region is already in the current path ---
     if (currentPath.includes(currentRegion)) {
-      log('info', 
+      log(
+        'info',
         `[PathAnalyzer DFS] Cycle detected: ${currentRegion} already in path ${currentPath.join(
           ' -> '
         )}`
@@ -316,7 +333,8 @@ export class PathAnalyzerLogic {
     // --- PATH DEPTH LIMIT: Prevent excessively long paths ---
     const MAX_PATH_DEPTH = 10; // Reduced from 15 to 10 for better performance
     if (currentPath.length >= MAX_PATH_DEPTH) {
-      log('info', 
+      log(
+        'info',
         `[PathAnalyzer DFS] Maximum path depth (${MAX_PATH_DEPTH}) reached for path: ${currentPath.join(
           ' -> '
         )}`
@@ -330,13 +348,15 @@ export class PathAnalyzerLogic {
     // --- 2. Check if target reached ---
     if (currentRegion === targetRegion) {
       allPaths.push([...newPath]);
-      log('info', 
+      log(
+        'info',
         `[PathAnalyzer DFS] Found path to target! Path ${
           allPaths.length
         }: ${newPath.join(' -> ')}`
       );
       if (allPaths.length >= maxPaths) {
-        log('info', 
+        log(
+          'info',
           `[PathAnalyzer DFS] Max paths (${maxPaths}) reached, stopping this branch`
         );
         return; // Stop this branch
@@ -350,7 +370,8 @@ export class PathAnalyzerLogic {
       for (const exit of regionData.exits) {
         // Check iteration limit before processing each exit
         if (iterationCounter.count >= this.maxPathFinderIterations) {
-          log('info', 
+          log(
+            'info',
             `[PathAnalyzer DFS] Max iterations reached, breaking exit loop for ${currentRegion}`
           );
           this._logDebug(
@@ -360,8 +381,9 @@ export class PathAnalyzerLogic {
         }
 
         // Check timeout before processing each exit
-        if (Date.now() - startTime > MAX_ANALYSIS_TIME_MS) {
-          log('info', 
+        if (Date.now() - startTime > this.maxAnalysisTimeMs) {
+          log(
+            'info',
             `[PathAnalyzer DFS] Timeout reached, breaking exit loop for ${currentRegion}`
           );
           break;
@@ -406,8 +428,7 @@ export class PathAnalyzerLogic {
               regionsData,
               snapshotInterface,
               iterationCounter,
-              startTime,
-              MAX_ANALYSIS_TIME_MS
+              startTime
             );
             if (allPaths.length >= maxPaths) {
               break;
@@ -873,7 +894,8 @@ export class PathAnalyzerLogic {
    * @deprecated Should operate on rule objects directly, not DOM.
    */
   extractCategorizedNodes(treeElement) {
-    log('warn', 
+    log(
+      'warn',
       'extractCategorizedNodes (DOM based) is deprecated. Use analyzeRuleForNodes.'
     );
     // ... (existing potentially broken DOM logic) ...
@@ -1079,7 +1101,8 @@ export class PathAnalyzerLogic {
           );
           identifier = `${identifier}:${argsString}`;
         } catch (e) {
-          log('warn', 
+          log(
+            'warn',
             'Failed to stringify args for deduplication:',
             node.args,
             e

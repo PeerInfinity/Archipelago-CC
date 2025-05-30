@@ -58,6 +58,10 @@
       "testsModule": "WARN",
       "presetsModule": "WARN",
       "pathAnalyzerModule": "WARN",
+      "pathAnalyzerLogic": "WARN",
+      "pathAnalyzerUI": "WARN",
+      "pathAnalyzerPanelModule": "WARN",
+      "pathAnalyzerPanelUI": "WARN",
       "stateManagerModule": "WARN",
       "stateManagerHelpers": "WARN",
       "loopsModule": "WARN",
@@ -68,8 +72,6 @@
       "coreTests": "WARN",
       "testModule": "WARN",
       "testPanelUI": "WARN",
-      "pathAnalyzerLogic": "WARN",
-      "pathAnalyzerUI": "WARN",
       "testLogger": "WARN",
       "locationTester": "WARN",
       "modulesUI": "WARN",
@@ -123,6 +125,11 @@
       "defaultSort": "original",
       "showFilters": true,
       "autoExpandCurrent": true
+    },
+    "pathAnalyzer": {
+      "maxPaths": 100,
+      "maxPathFinderIterations": 1000,
+      "maxAnalysisTimeMs": 5000
     },
     "loops": {
       "maxActionQueueSize": 10,
