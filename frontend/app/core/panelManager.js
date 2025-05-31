@@ -3,13 +3,13 @@ import eventBus from './eventBus.js';
 import { GoldenLayout } from '../../libs/golden-layout/js/esm/golden-layout.js';
 import { centralRegistry } from './centralRegistry.js'; // Corrected import
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('panelManager', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[panelManager] ${message}`, ...data);
   }
 }
@@ -32,7 +32,7 @@ class PanelManager {
    */
   initialize(goldenLayout, gameUIInstance) {
     // Log entry and the passed goldenLayout object immediately
-    // log('info', 
+    // log('info',
     //   '[PanelManager.initialize DEBUG] Method Entered. GoldenLayout object is:',
     //   goldenLayout
     // );
@@ -42,7 +42,8 @@ class PanelManager {
       typeof goldenLayout.registerComponentFactoryFunction !== 'function' ||
       typeof goldenLayout.loadLayout !== 'function'
     ) {
-      log('error', 
+      log(
+        'error',
         '[PanelManager.initialize] CRITICAL: Passed goldenLayout object does NOT appear to be a valid GoldenLayout instance.', // Kept as error
         goldenLayout
       );
@@ -53,28 +54,27 @@ class PanelManager {
     try {
       // log('info', '[PanelManager.initialize DEBUG] Inside main try block.');
       if (this.isInitialized) {
-        log('warn', 
-          '[PanelManager.initialize] Already initialized. Skipping.'
-        );
+        log('warn', '[PanelManager.initialize] Already initialized. Skipping.');
         return;
       }
 
       this.goldenLayout = goldenLayout; // Use this.goldenLayout consistently
       this.gameUI = gameUIInstance;
-      // log('info', 
+      // log('info',
       //   '[PanelManager.initialize DEBUG] this.goldenLayout has been assigned.'
       // );
 
       this.panelMap.clear();
       this.panelMapById.clear();
-      // log('info', 
+      // log('info',
       //   '[PanelManager.initialize DEBUG] panelMap and panelMapById cleared.'
       // );
 
       // Subscribe to ui:activatePanel event
       eventBus.subscribe('ui:activatePanel', (payload) => {
         if (payload && payload.panelId) {
-          log('info', 
+          log(
+            'info',
             `[PanelManager] Received ui:activatePanel for ${payload.panelId}.`
           );
           this.activatePanel(payload.panelId);
@@ -86,11 +86,11 @@ class PanelManager {
         this.goldenLayout &&
         typeof this.goldenLayout.getAllContentItems === 'function'
       ) {
-        // log('info', 
+        // log('info',
         //   '[PanelManager.initialize DEBUG] Attempting to get all content items...'
         // );
         const allItems = this.goldenLayout.getAllContentItems(); // Get items
-        // log('info', 
+        // log('info',
         //   `[PanelManager.initialize DEBUG] Found ${allItems.length} existing content items.`
         // );
         allItems.forEach((item) => {
@@ -101,20 +101,21 @@ class PanelManager {
             // For now, let's skip adding to panelMap here as it's primarily populated
             // when components are constructed by GL via registerPanelComponent.
             // The main goal is to get GL initialized.
-            // log('info', 
+            // log('info',
             //   `[PanelManager.initialize DEBUG] Existing component found: Type: ${item.componentType}, ID: ${item.id}`
             // );
           }
         });
       } else {
-        log('warn', 
+        log(
+          'warn',
           '[PanelManager.initialize] this.goldenLayout.getAllContentItems is not a function or goldenLayout not set.' // Kept as warn
         );
       }
 
       // Attempt to attach event listener
       if (this.goldenLayout && typeof this.goldenLayout.on === 'function') {
-        // log('info', 
+        // log('info',
         //   "[PanelManager.initialize DEBUG] Attempting to attach 'itemDestroyed' listener..."
         // );
         this.goldenLayout.on('itemDestroyed', (item) => {
@@ -123,7 +124,8 @@ class PanelManager {
             if (item.isComponent) {
               const componentType = item.componentType;
               const panelId = item.id;
-              log('info', 
+              log(
+                'info',
                 // Kept this log as it's about an event, not pure debug
                 `[PanelManager itemDestroyed Event] Component Type: ${componentType}, Panel ID: ${panelId}`
               );
@@ -135,40 +137,44 @@ class PanelManager {
               } else if (this.panelMap.has(componentType)) {
                 // This is less direct and might remove the wrong one if multiple panels of same type exist
                 // but could be a fallback. For now, prioritize ID-based removal.
-                log('warn', 
+                log(
+                  'warn',
                   `[PanelManager itemDestroyed Event] panelId ${panelId} not in panelMapById. ComponentType ${componentType} might be in panelMap, but not removing by type to avoid ambiguity.`
                 );
               }
             }
           } catch (e) {
-            log('error', 
+            log(
+              'error',
               '[PanelManager itemDestroyed Event] Error in handler:', // Kept as error
               e
             );
           }
         });
-        // log('info', 
+        // log('info',
         //   "[PanelManager.initialize DEBUG] 'itemDestroyed' listener attached."
         // );
       } else {
-        log('warn', 
+        log(
+          'warn',
           '[PanelManager.initialize] this.goldenLayout.on is not a function or goldenLayout not set.' // Kept as warn
         );
       }
 
       this.isInitialized = true;
-      // log('info', 
+      // log('info',
       //   '[PanelManager.initialize DEBUG] Initialization COMPLETE. isInitialized set to true.'
       // );
     } catch (error) {
-      log('error', 
+      log(
+        'error',
         '[PanelManager.initialize] CRITICAL ERROR during initialization:', // Kept as error
         error,
         error.stack
       );
       this.isInitialized = false; // Ensure it reflects failure
     }
-    // log('info', 
+    // log('info',
     //   '[PanelManager.initialize DEBUG] Method Exiting. isInitialized =',
     //   this.isInitialized
     // );
@@ -181,19 +187,22 @@ class PanelManager {
    */
   registerPanelComponent(componentTypeName, uiInstanceGetter) {
     if (!this.goldenLayout) {
-      log('error', 
+      log(
+        'error',
         `Cannot register component '${componentTypeName}': PanelManager not initialized (goldenLayout instance missing).`
       );
       return;
     }
     if (typeof uiInstanceGetter !== 'function') {
-      log('error', 
+      log(
+        'error',
         `Cannot register component '${componentTypeName}': uiInstanceGetter must be a function.`
       );
       return;
     }
 
-    log('info', 
+    log(
+      'info',
       `Registering Golden Layout component constructor for: ${componentTypeName}`
     );
 
@@ -202,12 +211,14 @@ class PanelManager {
     // Define the Wrapper Class Constructor Golden Layout will use
     const WrapperComponent = function (container, componentState) {
       // 'this' refers to the instance of WrapperComponent created by Golden Layout
-      log('info', 
+      log(
+        'info',
         `--- WrapperComponent constructor executing for: ${componentTypeName} ---`
       );
       if (componentTypeName === 'timerPanel') {
         log('info', '[timerPanel Wrapper DEBUG] GL Container:', container);
-        log('info', 
+        log(
+          'info',
           '[timerPanel Wrapper DEBUG] GL container.element BEFORE append:',
           container.element.cloneNode(true)
         ); // Clone to see its state
@@ -220,7 +231,8 @@ class PanelManager {
         if (!uiProvider) throw new Error('Could not get UI instance/provider');
 
         if (componentTypeName === 'timerPanel') {
-          log('info', 
+          log(
+            'info',
             '[timerPanel Wrapper DEBUG] uiProvider (TimerPanelUI instance):'
             //, uiProvider // This might be too verbose or circular for console
           );
@@ -228,7 +240,8 @@ class PanelManager {
 
         const rootElement = uiProvider.getRootElement(); // This calls TimerPanelUI's getRootElement
         if (!rootElement || !(rootElement instanceof HTMLElement)) {
-          log('error', 
+          log(
+            'error',
             `[WrapperComponent for ${componentTypeName}] uiProvider.getRootElement() invalid. Got:`,
             rootElement
           );
@@ -236,16 +249,19 @@ class PanelManager {
         }
 
         if (componentTypeName === 'timerPanel') {
-          log('info', 
+          log(
+            'info',
             '[timerPanel Wrapper DEBUG] rootElement from uiProvider.getRootElement():',
             rootElement.cloneNode(true)
           );
-          log('info', 
+          log(
+            'info',
             '[timerPanel Wrapper DEBUG] Is rootElement already in DOM?',
             document.body.contains(rootElement)
           );
           if (rootElement.parentNode) {
-            log('warn', 
+            log(
+              'warn',
               '[timerPanel Wrapper DEBUG] rootElement ALREADY HAS A PARENT before append:',
               rootElement.parentNode
             );
@@ -258,16 +274,19 @@ class PanelManager {
         // The UI's content should go *inside* `container.element`.
 
         if (componentTypeName === 'timerPanel') {
-          log('info', 
+          log(
+            'info',
             '[timerPanel Wrapper DEBUG] GL container.element AFTER append:',
             container.element.cloneNode(true)
           );
-          log('info', 
+          log(
+            'info',
             '[timerPanel Wrapper DEBUG] Is rootElement now child of container.element?',
             rootElement.parentNode === container.element
           );
         }
-        log('info', 
+        log(
+          'info',
           `   [${componentTypeName}] Root element appended to container.element.`
         );
 
@@ -276,7 +295,8 @@ class PanelManager {
 
         // Call onMount on the uiProvider, now that its element is in the DOM
         if (typeof uiProvider.onMount === 'function') {
-          log('info', 
+          log(
+            'info',
             `   [${componentTypeName}] Calling uiProvider.onMount...`
           );
           uiProvider.onMount(container, componentState); // Pass GL container and state
@@ -288,7 +308,8 @@ class PanelManager {
           self.addMapping(container, uiProvider);
         }
       } catch (error) {
-        log('error', 
+        log(
+          'error',
           `Error in WrapperComponent constructor for ${componentTypeName}:`,
           error
         );
@@ -298,7 +319,8 @@ class PanelManager {
       // GoldenLayout V2 component lifecycle methods
       // GL will call this.destroy() when the component item is destroyed
       this.destroy = () => {
-        log('info', 
+        log(
+          'info',
           `--- WrapperComponent.destroy executing for: ${componentTypeName} ---`
         );
         if (
@@ -308,7 +330,8 @@ class PanelManager {
           try {
             this.uiProvider.onUnmount();
           } catch (unmountError) {
-            log('error', 
+            log(
+              'error',
               `Error during ${componentTypeName}.onUnmount:`,
               unmountError
             );
@@ -321,7 +344,8 @@ class PanelManager {
           // Use stored GL container for removal
           self.removeMapping(this.glContainer);
         }
-        log('info', 
+        log(
+          'info',
           `   [${componentTypeName}] WrapperComponent destroy completed.`
         );
       };
@@ -344,11 +368,13 @@ class PanelManager {
         componentTypeName,
         WrapperComponent
       );
-      log('info', 
+      log(
+        'info',
         `Successfully registered component factory for ${componentTypeName} with GoldenLayout.`
       );
     } catch (e) {
-      log('error', 
+      log(
+        'error',
         `Failed to register component factory for ${componentTypeName} with GoldenLayout:`,
         e
       );
@@ -368,17 +394,20 @@ class PanelManager {
         : 'UnknownType');
     const moduleId =
       uiInstance && uiInstance.moduleId ? uiInstance.moduleId : 'UnknownModule';
-    log('info', 
+    log(
+      'info',
       `[PanelManager DEBUG] addMapping: Attempting to ADD componentType '${componentType}' (Module: '${moduleId}'). Current panelMap size BEFORE add: ${this.panelMap.size}. Container componentType: ${container.componentType}`
     );
     if (this.panelMap.has(container)) {
-      log('warn', 
+      log(
+        'warn',
         '[PanelManager DEBUG] addMapping: Container already mapped. Overwriting.',
         container
       );
     }
     this.panelMap.set(container, { uiInstance, container });
-    log('info', 
+    log(
+      'info',
       `[PanelManager DEBUG] addMapping: Successfully ADDED componentType '${componentType}' (Module: '${moduleId}'). New panelMap size AFTER add: ${this.panelMap.size}.`
     );
   }
@@ -400,12 +429,14 @@ class PanelManager {
         uiInstance && uiInstance.moduleId
           ? uiInstance.moduleId
           : 'UnknownModule';
-      log('info', 
+      log(
+        'info',
         `[PanelManager DEBUG] removeMapping: Attempting to remove componentType '${componentType}' (Module: '${moduleId}') from panelMap. Current size: ${this.panelMap.size}. Container:`,
         container
       );
       this.panelMap.delete(container);
-      log('info', 
+      log(
+        'info',
         `[PanelManager DEBUG] removeMapping: Successfully removed. New panelMap size: ${this.panelMap.size}.`
       );
       // Original console log for non-found was empty, let's keep it that way or add a specific one if needed
@@ -441,18 +472,22 @@ class PanelManager {
    * Clears all mappings. Useful during layout reinitialization or major state changes.
    */
   clearAllMappings() {
-    log('error', 
+    log(
+      'error',
       '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
     );
-    log('error', 
+    log(
+      'error',
       '[PanelManager CRITICAL DEBUG] clearAllMappings CALLED - THIS IS LIKELY THE CULPRIT!',
       new Date().toISOString()
     );
-    log('error', 
+    log(
+      'error',
       '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
     );
     this.panelMap.clear();
-    log('error', 
+    log(
+      'error',
       '[PanelManager CRITICAL DEBUG] panelMap has been cleared via clearAllMappings.',
       new Date().toISOString()
     );
@@ -464,14 +499,15 @@ class PanelManager {
    * @param {string} componentType - The component type name (e.g., 'filesPanel').
    */
   async destroyPanelByComponentType(componentType) {
-    // log('info', 
+    // log('info',
     //   '[PanelManager DEBUG] destroyPanelByComponentType ENTERED. ComponentType:',
     //   componentType
     // );
     // log('info', '[PanelManager DEBUG] `this` context:', this); // Check `this.goldenLayout` and `this.isInitialized` here
 
     if (!this.isInitialized || !this.goldenLayout || !this.goldenLayout.root) {
-      log('error', 
+      log(
+        'error',
         // Kept as error
         '[PanelManager destroy] PanelManager not initialized or GoldenLayout instance/root not available. Cannot destroy panel.',
         {
@@ -484,7 +520,8 @@ class PanelManager {
     }
 
     try {
-      log('info', 
+      log(
+        'info',
         // Kept this log as it seems generally useful
         `[PanelManager destroy] Attempting to destroy panel for componentType: ${componentType}`
       );
@@ -507,7 +544,8 @@ class PanelManager {
       if (this.goldenLayout.root && this.goldenLayout.root.contentItems) {
         findComponents(this.goldenLayout.root);
       } else {
-        log('warn', 
+        log(
+          'warn',
           // Kept as warn
           '[PanelManager destroy] GoldenLayout root or root.contentItems is not available for traversal.'
         );
@@ -515,12 +553,14 @@ class PanelManager {
 
       if (components.length > 0) {
         itemToDestroy = components[0]; // Destroy the first one found, or add more sophisticated logic
-        log('info', 
+        log(
+          'info',
           // Kept this log as it seems generally useful
           `[PanelManager destroy] Found panel to destroy via traversal. ComponentType: ${itemToDestroy.componentType}, Title: ${itemToDestroy.title}, ID: ${itemToDestroy.id}`
         );
       } else {
-        log('info', 
+        log(
+          'info',
           // Kept this log as it seems generally useful
           `[PanelManager destroy] No panel found with componentType '${componentType}' during layout traversal.`
         );
@@ -529,7 +569,8 @@ class PanelManager {
       // Fallback or alternative: Check panelMapById if traversal fails or as a primary lookup if preferred
       // This assumes panelMapById is correctly populated with component items or their IDs.
       if (!itemToDestroy) {
-        log('info', 
+        log(
+          'info',
           // Kept this log as it seems generally useful
           `[PanelManager destroy] Traversal did not find '${componentType}'. Checking panelMapById and panelMap.`
         );
@@ -542,7 +583,8 @@ class PanelManager {
         ) {
           // If panelInfoFromMap.container is the GL ContentItem
           itemToDestroy = panelInfoFromMap.container;
-          log('info', 
+          log(
+            'info',
             // Kept this log as it seems generally useful
             `[PanelManager destroy] Found panel to destroy via panelMap/getPanelByComponentType. Type: ${itemToDestroy.componentType}, ID: ${itemToDestroy.id}`
           );
@@ -553,7 +595,8 @@ class PanelManager {
         ) {
           // If panelInfoFromMap.panelInstance is the GL ContentItem (older mapping style)
           itemToDestroy = panelInfoFromMap.panelInstance;
-          log('info', 
+          log(
+            'info',
             // Kept this log as it seems generally useful
             `[PanelManager destroy] Found panel to destroy via panelMap (panelInstance). Type: ${itemToDestroy.componentType}, ID: ${itemToDestroy.id}`
           );
@@ -561,24 +604,28 @@ class PanelManager {
       }
 
       if (itemToDestroy && typeof itemToDestroy.remove === 'function') {
-        log('info', 
+        log(
+          'info',
           // Kept this log as it seems generally useful
           `[PanelManager destroy] Calling .remove() on item:`,
           itemToDestroy
         );
         itemToDestroy.remove(); // This should trigger the 'itemDestroyed' event handled in initialize()
-        log('info', 
+        log(
+          'info',
           // Kept this log as it seems generally useful
           `[PanelManager destroy] Called .remove() for ${componentType}. Panel should be closing.`
         );
       } else {
-        log('warn', 
+        log(
+          'warn',
           // Kept as warn
           `[PanelManager destroy] No panel found with componentType '${componentType}' or item is not removable after all checks.`
         );
       }
     } catch (error) {
-      log('error', 
+      log(
+        'error',
         '[PanelManager DEBUG] UNCAUGHT ERROR in destroyPanelByComponentType:', // This was important, changed to non-debug
         error,
         error.stack
@@ -592,7 +639,8 @@ class PanelManager {
    * @param {string} componentType - The component type name (e.g., 'loopsPanel').
    */
   activatePanel(componentType) {
-    log('info', 
+    log(
+      'info',
       `[PanelManager] Attempting to activate panel: ${componentType}`
     );
     if (
@@ -600,7 +648,8 @@ class PanelManager {
       !this.goldenLayout.isInitialised ||
       !this.goldenLayout.root
     ) {
-      log('warn', 
+      log(
+        'warn',
         `[PanelManager] Cannot activate panel. GoldenLayout available: ${!!this
           .goldenLayout}, Initialised: ${
           this.goldenLayout ? this.goldenLayout.isInitialised : 'N/A'
@@ -618,17 +667,20 @@ class PanelManager {
     let foundComponent = false;
 
     // --- BEGIN CORRECTED LOGIC & DEBUG LOGS ---
-    log('info', 
+    log(
+      'info',
       '[PanelManager Debug] Trying this.goldenLayout.getAllContentItems()...'
     );
     const allItems = this.goldenLayout.getAllContentItems
       ? this.goldenLayout.getAllContentItems()
       : [];
-    log('info', 
+    log(
+      'info',
       `[PanelManager Debug] Found ${allItems.length} items via getAllContentItems.`
     );
     if (allItems.length === 0 && this.goldenLayout.rootItem) {
-      log('info', 
+      log(
+        'info',
         '[PanelManager Debug] getAllContentItems returned 0, trying recursive search from rootItem as fallback.'
       );
       // Basic recursive search as a fallback - can be expanded
@@ -647,7 +699,8 @@ class PanelManager {
       const componentsFromRootItem = collectComponents(
         this.goldenLayout.rootItem
       );
-      log('info', 
+      log(
+        'info',
         `[PanelManager Debug] Found ${componentsFromRootItem.length} components via recursive search from rootItem.`
       );
       // This logic path would need to be integrated into the loop below if used
@@ -662,27 +715,31 @@ class PanelManager {
 
     if (componentsToSearch.length > 0) {
       // Ensure we have components to search
-      log('info', 
+      log(
+        'info',
         `[PanelManager] Filtered to ${componentsToSearch.length} actual component items for search.`
       );
       for (const componentItem of componentsToSearch) {
         // componentItem is already the item, not container
         const container = componentItem.container; // The container associated with the component item
         if (!container) {
-          log('warn', 
+          log(
+            'warn',
             '[PanelManager] ComponentItem found without a container:',
             componentItem
           );
           continue;
         }
-        log('info', 
+        log(
+          'info',
           `[PanelManager] Checking component: Type: "${container.componentType}", ID: "${container.id}", Title: "${container.title}"`
         );
         if (container.componentType === componentType) {
           targetItem = componentItem; // This is the ComponentItem (the tab itself)
           stack = targetItem.parent; // Stack should be the parent of the ComponentItem
           foundComponent = true;
-          log('info', 
+          log(
+            'info',
             `[PanelManager] MATCH FOUND for "${componentType}". ComponentItem ID: ${targetItem.id}. Stack:`,
             stack
           );
@@ -690,12 +747,14 @@ class PanelManager {
         }
       }
       if (!foundComponent) {
-        log('warn', 
+        log(
+          'warn',
           `[PanelManager] Component type "${componentType}" NOT FOUND in layout after checking all components from getAllContentItems.`
         );
       }
     } else {
-      log('warn', 
+      log(
+        'warn',
         '[PanelManager] No components found via getAllContentItems or searchRoot.getItemsByFilter. Cannot activate panel.'
       );
       return;
@@ -711,28 +770,34 @@ class PanelManager {
         log('info', `[PanelManager] Activating panel tab for ${componentType}`);
         stack.setActiveComponentItem(targetItem);
       } else {
-        log('info', 
+        log(
+          'info',
           `[PanelManager] Panel tab for ${componentType} is already active.`
         );
       }
     } else {
-      log('warn', 
+      log(
+        'warn',
         `[PanelManager] Could not activate panel for ${componentType}. Stack or ComponentItem not found, or stack invalid.`
       );
       // Enhanced debug logging for this specific failure case
-      log('info', 
+      log(
+        'info',
         `[PanelManager Debug for ${componentType}] Found Component: ${foundComponent}`
       );
-      log('info', 
+      log(
+        'info',
         `[PanelManager Debug for ${componentType}] TargetItem:`,
         targetItem
       );
       log('info', `[PanelManager Debug for ${componentType}] Stack:`, stack);
       if (stack) {
-        log('info', 
+        log(
+          'info',
           `[PanelManager Debug for ${componentType}] Stack.isStack: ${stack.isStack}`
         );
-        log('info', 
+        log(
+          'info',
           `[PanelManager Debug for ${componentType}] typeof Stack.setActiveComponentItem: ${typeof stack.setActiveComponentItem}`
         );
       }
@@ -742,7 +807,8 @@ class PanelManager {
 
   removeMappingByPanelId(panelId) {
     if (!panelId) {
-      log('warn', 
+      log(
+        'warn',
         '[PanelManager removeMappingByPanelId] Panel ID is null or undefined. Cannot remove.'
       );
       return;
@@ -755,16 +821,19 @@ class PanelManager {
         const panelInMap = this.panelMap.get(mappingDetails.componentType);
         if (panelInMap && panelInMap.id === panelId) {
           this.panelMap.delete(mappingDetails.componentType);
-          log('info', 
+          log(
+            'info',
             `[PanelManager REMOVE MAPPING BY ID] Removed componentType "${mappingDetails.componentType}" from panelMap as well.`
           );
         }
       }
-      log('info', 
+      log(
+        'info',
         `[PanelManager REMOVE MAPPING BY ID] panelId: "${panelId}", componentType: "${mappingDetails.componentType}". panelMapById size: ${this.panelMapById.size}, panelMap size: ${this.panelMap.size}`
       );
     } else {
-      log('warn', 
+      log(
+        'warn',
         `[PanelManager REMOVE MAPPING BY ID] No mapping found for panelId: "${panelId}".`
       );
     }
@@ -772,7 +841,8 @@ class PanelManager {
 
   removeMappingByComponentType(componentType) {
     if (!componentType) {
-      log('warn', 
+      log(
+        'warn',
         '[PanelManager removeMappingByComponentType] Component type is null or undefined. Cannot remove.'
       );
       return;
@@ -785,12 +855,14 @@ class PanelManager {
         const mappingDetailsById = this.panelMapById.get(panelInstance.id);
         if (mappingDetailsById.componentType === componentType) {
           this.panelMapById.delete(panelInstance.id);
-          log('info', 
+          log(
+            'info',
             `[PanelManager REMOVE MAPPING BY TYPE] Removed panelId "${panelInstance.id}" from panelMapById as well.`
           );
         }
       }
-      log('info', 
+      log(
+        'info',
         `[PanelManager REMOVE MAPPING BY TYPE] componentType: "${componentType}", panelId: "${
           panelInstance.id || 'N/A'
         }". panelMap size: ${this.panelMap.size}, panelMapById size: ${
@@ -798,7 +870,8 @@ class PanelManager {
         }`
       );
     } else {
-      log('warn', 
+      log(
+        'warn',
         `[PanelManager REMOVE MAPPING BY TYPE] No mapping found for componentType: "${componentType}".`
       );
     }
@@ -829,12 +902,14 @@ class PanelManager {
     location = null, // Still mostly ignored by this approach
     additionalState = {}
   ) {
-    log('info', 
+    log(
+      'info',
       `[PanelManager createPanelForComponent V8] Called for type: ${componentType}, title: ${title}`
     );
 
     if (!this.isInitialized || !this.goldenLayout) {
-      log('error', 
+      log(
+        'error',
         '[PanelManager V8] PanelManager not initialized or GoldenLayout instance missing.'
       );
       return null;
@@ -842,7 +917,8 @@ class PanelManager {
 
     try {
       const expectedTitleStr = title || componentType;
-      log('info', 
+      log(
+        'info',
         `[PanelManager V8] Attempting this.goldenLayout.addComponent('${componentType}', '${expectedTitleStr}', ...)`,
         additionalState
       );
@@ -853,7 +929,8 @@ class PanelManager {
         additionalState || {}
       );
 
-      log('info', 
+      log(
+        'info',
         '[PanelManager V8] this.goldenLayout.addComponent call result:',
         addResult
       );
@@ -866,7 +943,8 @@ class PanelManager {
         typeof addResult.index === 'number' &&
         addResult.parentItem.contentItems
       ) {
-        log('info', 
+        log(
+          'info',
           `[PanelManager V8] addResult provides parentItem & index. Accessing parentItem.contentItems[${addResult.index}]`
         );
         resolvedItem = addResult.parentItem.contentItems[addResult.index];
@@ -877,12 +955,14 @@ class PanelManager {
         'title' in addResult
       ) {
         // If addResult itself looks like a ComponentItem (duck typing)
-        log('info', 
+        log(
+          'info',
           '[PanelManager V8] addResult itself looks like a ComponentItem.'
         );
         resolvedItem = addResult;
       } else {
-        log('warn', 
+        log(
+          'warn',
           '[PanelManager V8] addComponent did not return {parentItem, index} or a direct ComponentItem-like object. addResult:',
           addResult
         );
@@ -894,16 +974,19 @@ class PanelManager {
         'id' in resolvedItem &&
         'title' in resolvedItem
       ) {
-        log('info', 
+        log(
+          'info',
           `[PanelManager V8] Resolved ComponentItem. Current ID: '${resolvedItem.id}', Current Title: '${resolvedItem.title}', Expected Title: '${expectedTitleStr}'`
         );
         if (String(resolvedItem.title) !== expectedTitleStr) {
           // Ensure string comparison
-          log('warn', 
+          log(
+            'warn',
             `[PanelManager V8] Title mismatch/needs setting. Current: '${resolvedItem.title}'. Attempting setTitle('${expectedTitleStr}').`
           );
           resolvedItem.setTitle(expectedTitleStr);
-          log('info', 
+          log(
+            'info',
             `[PanelManager V8] Title after setTitle: '${resolvedItem.title}'`
           );
         } else {
@@ -911,7 +994,8 @@ class PanelManager {
         }
         return resolvedItem;
       } else {
-        log('error', 
+        log(
+          'error',
           '[PanelManager V8] Could not resolve a valid ComponentItem or it lacks essential properties/methods. Resolved item:',
           resolvedItem,
           'Original addResult:',
@@ -920,13 +1004,15 @@ class PanelManager {
         return resolvedItem || addResult; // Return what we have for further debugging if needed
       }
     } catch (error) {
-      log('error', 
+      log(
+        'error',
         `[PanelManager V8] Error in createPanelForComponent for '${componentType}':`,
         error,
         error.stack
       );
       if (error.message && error.message.includes('Unknown component type')) {
-        log('error', 
+        log(
+          'error',
           `[PanelManager V8] Error suggests componentType "${componentType}" might not be registered.`
         );
       }

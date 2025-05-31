@@ -129,6 +129,44 @@ export const testLogic = {
     eventBusInstance = bus;
     // Ensure discovery is complete when event bus is set
     await initializeTestDiscovery();
+
+    // Check if auto-start is enabled and start tests if so
+    log('info', '[TestLogic] EventBus set, checking auto-start...');
+    // Only auto-start from here if loaded state has already been applied.
+    // Otherwise, applyLoadedState will handle the auto-start.
+    if (loadedStateApplied) {
+      const shouldAutoStart = TestState.shouldAutoStartTests();
+      log(
+        'info',
+        `[TestLogic] Auto-start enabled: ${shouldAutoStart} (loadedStateApplied: true)`
+      );
+
+      if (shouldAutoStart) {
+        log(
+          'info',
+          '[TestLogic] Auto-starting tests (from setEventBus after loaded state applied)...'
+        );
+        setTimeout(() => {
+          this.runAllEnabledTests().catch((error) => {
+            log(
+              'error',
+              '[TestLogic] Error during auto-start (from setEventBus):',
+              error
+            );
+          });
+        }, 1000); // Give some time for full initialization
+      } else {
+        log(
+          'info',
+          '[TestLogic] Auto-start not enabled (from setEventBus after loaded state applied), not starting tests automatically'
+        );
+      }
+    } else {
+      log(
+        'info',
+        '[TestLogic] Deferring auto-start check to applyLoadedState as loadedStateApplied is false.'
+      );
+    }
   },
 
   async getTests() {
@@ -450,6 +488,44 @@ export const testLogic = {
         `[_emitTestCompleted] WARNING: eventBusInstance is null/undefined!`
       );
     }
+
+    // Check if this might be the final test completion for Playwright
+    // If no other tests are running and we're in test mode, set completion flags
+    setTimeout(() => {
+      const currentRunningTestId = TestState.getCurrentRunningTestId();
+      if (!currentRunningTestId) {
+        // No test is currently running, this might be the final completion
+        log(
+          'info',
+          '[_emitTestCompleted] No tests running, checking if we should set Playwright flags...'
+        );
+
+        // Check if we're in test mode (URL contains mode=test or autostart is enabled)
+        const urlParams = new URLSearchParams(window.location.search);
+        const isTestMode =
+          urlParams.get('mode') === 'test' || TestState.shouldAutoStartTests();
+
+        if (isTestMode) {
+          log(
+            'info',
+            '[_emitTestCompleted] Test mode detected, setting Playwright completion flags...'
+          );
+
+          const allTests = TestState.getTests();
+          const completedTests = allTests.filter(
+            (t) => t.status === 'passed' || t.status === 'failed'
+          );
+
+          const summary = {
+            totalRun: completedTests.length,
+            passedCount: allTests.filter((t) => t.status === 'passed').length,
+            failedCount: allTests.filter((t) => t.status === 'failed').length,
+          };
+
+          this._setPlaywrightCompletionFlags(summary, allTests);
+        }
+      }
+    }, 100); // Small delay to ensure state is fully updated
   },
 
   async runTest(testId) {
@@ -493,7 +569,16 @@ export const testLogic = {
 
     try {
       // Call the test function
-      await testFunction(testController);
+      const testResult = await testFunction(testController);
+
+      // If the test function returned a boolean, automatically complete the test
+      if (typeof testResult === 'boolean') {
+        log(
+          'info',
+          `[TestLogic] Test '${testId}' returned ${testResult}, auto-completing...`
+        );
+        await testController.completeTest(testResult);
+      }
     } catch (error) {
       log(
         'error',

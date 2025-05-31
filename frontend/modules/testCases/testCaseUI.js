@@ -5,13 +5,13 @@ import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.
 import eventBus from '../../app/core/eventBus.js';
 import * as commonUI from '../commonUI/index.js'; // Changed path for renderLogicTree
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('testCaseUI', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[testCaseUI] ${message}`, ...data);
   }
 }
@@ -44,9 +44,25 @@ export class TestCaseUI {
       log('error', '[TestCaseUI] Root element not created in constructor!');
     }
 
+    // Setup delegated event listener for main controls
+    if (this.testCasesListContainer) {
+      this.boundHandleMainControlsClick =
+        this.handleMainControlsClick.bind(this);
+      this.testCasesListContainer.addEventListener(
+        'click',
+        this.boundHandleMainControlsClick
+      );
+    } else {
+      log(
+        'error',
+        '[TestCaseUI] testCasesListContainer not available in constructor for event listener setup!'
+      );
+    }
+
     // Defer full data loading and event subscriptions
     const readyHandler = (eventPayload) => {
-      log('info', 
+      log(
+        'info',
         '[TestCaseUI] Received app:readyForUiDataLoad. Initializing test cases UI.'
       );
       this.initialize(); // This will fetch test_files.json and subscribe to events
@@ -112,7 +128,8 @@ export class TestCaseUI {
       this.availableTestSets = await response.json();
       this.renderTestSetSelector(); // Display the list of available test sets
       this.initialized = true;
-      log('info', 
+      log(
+        'info',
         '[TestCaseUI] Initialization complete. Test set selector rendered.'
       );
       return true;
@@ -184,11 +201,17 @@ export class TestCaseUI {
   }
 
   async selectTestSet(folderName, testSetName) {
+    const logId = `selectTestSet-${Date.now()}`;
+    log(
+      'info',
+      `[TestCaseUI - ${logId}] Initiated for ${folderName}/${testSetName}`
+    );
+
     this.currentFolder = folderName;
     this.currentTestSet = testSetName;
     this.rulesLoadedForSet = false; // Mark as not loaded until confirmed by worker
     this.logToPanel(
-      `Selecting test set: "${testSetName}" from folder "${folderName}". Loading associated rules...`
+      `[${logId}] Selecting test set: "${testSetName}" from folder "${folderName}". Loading associated rules...`
     );
 
     if (this.testCasesListContainer)
@@ -211,7 +234,7 @@ export class TestCaseUI {
       this.testCases = await testsResponse.json();
 
       this.logToPanel(
-        `Rules and test cases for "${testSetName}" fetched. Applying rules to StateManager worker...`
+        `[${logId}] Rules and test cases for "${testSetName}" fetched. Applying rules to StateManager worker...`
       );
 
       // COMMAND 1: Send these specific rules to the worker
@@ -238,7 +261,7 @@ export class TestCaseUI {
             // For now, assume any rulesLoaded event after our command means our rules are active.
             clearTimeout(timeout);
             this.logToPanel(
-              `StateManager worker confirmed rules loaded for test set "${testSetName}". Static data in worker updated.`
+              `[${logId}] StateManager worker confirmed rules loaded for test set "${testSetName}". Static data in worker updated.`
             );
             this.rulesLoadedForSet = true; // Crucial flag
             unsub();
@@ -252,11 +275,11 @@ export class TestCaseUI {
 
       this.eventBus.publish('ui:notification', {
         type: 'info',
-        message: `Test set "${testSetName}" loaded. Rules are now active for testing.`,
+        message: `[${logId}] Test set "${testSetName}" loaded. Rules are now active for testing.`,
       });
     } catch (error) {
       this.logToPanel(
-        `Error loading test set "${testSetName}": ${error.message}`,
+        `[${logId}] Error loading test set "${testSetName}": ${error.message}`,
         'error'
       );
       log('error', `Failed to load test set "${testSetName}":`, error);
@@ -265,6 +288,9 @@ export class TestCaseUI {
   }
 
   renderTestCasesList() {
+    const logId = `renderList-${Date.now()}`;
+    log('info', `[TestCaseUI - ${logId}] Initiated for ${this.currentTestSet}`);
+
     if (
       !this.testCasesListContainer ||
       !this.testCases ||
@@ -305,8 +331,8 @@ export class TestCaseUI {
         </div>
         <div class="test-controls">
           <!-- Removed "Reload Test Data" button, rule loading is now part of selectTestSet -->
-          <button id="run-all-tests" class="button">Run All Tests for "${testSetDisplay}"</button>
-          <button id="cancel-all-tests" class="button" style="display: none;">Cancel Tests</button>
+          <button id="run-all-tests" class="button run-all-tests-button" data-test-type="run-all" data-action="run-all-tests" title="Run all tests in this test set">Run All Tests for "${testSetDisplay}"</button>
+          <button id="cancel-all-tests" class="button cancel-all-tests-button" data-test-type="cancel-all" data-action="cancel-tests" style="display: none;" title="Cancel running tests">Cancel Tests</button>
         </div>
         <div id="data-source-info" class="data-source-info">Current data source: <span id="data-source"></span></div>
         <div id="test-results-summary"></div>
@@ -314,8 +340,14 @@ export class TestCaseUI {
     `;
     this.testCasesListContainer.insertAdjacentHTML('beforeend', headerHtml);
 
+    // Create a dedicated container for the test cases table
+    const testCasesTableContainer = document.createElement('div');
+    testCasesTableContainer.id = 'test-cases-table-container';
+    testCasesTableContainer.className = 'test-cases-table-container';
+
     const table = document.createElement('table');
     table.className = 'results-table'; // From existing styles
+    table.id = 'test-cases-results-table';
     // ... (thead creation as before) ...
     const thead = table.createTHead();
     const headerRow = thead.insertRow();
@@ -374,7 +406,8 @@ export class TestCaseUI {
       } else {
         // Fallback: display location name as text if region couldn't be determined
         locationCell.textContent = this.escapeHtml(locationName);
-        log('warn', 
+        log(
+          'warn',
           `[TestCaseUI] Region could not be determined for location "${locationName}" using processed static data. Location Data:`,
           locationDataFromProcessed
         );
@@ -390,8 +423,14 @@ export class TestCaseUI {
 
       const actionCell = row.insertCell();
       const runButton = document.createElement('button');
-      runButton.className = 'button run-test';
+      runButton.className = 'button run-test individual-test-button';
       runButton.textContent = 'Run';
+      // Add unique identifiers for better targeting
+      runButton.id = `run-test-${index}`;
+      runButton.dataset.testIndex = index;
+      runButton.dataset.locationName = locationName;
+      runButton.dataset.testType = 'individual';
+      runButton.title = `Run test for ${locationName}`;
       runButton.addEventListener('click', async () => {
         const statusDiv = row.querySelector(`#test-status-${index}`);
         if (statusDiv) await this.loadTestCase(testCaseData, statusDiv);
@@ -406,30 +445,19 @@ export class TestCaseUI {
       resultCell.appendChild(statusDiv);
     });
     table.appendChild(tbody);
-    this.testCasesListContainer.appendChild(table);
+    testCasesTableContainer.appendChild(table);
 
-    // Add Download Links
+    // Add Download Links to the table container
     const folderPath = this.currentFolder ? `${this.currentFolder}/` : '';
     const linksHtml = `
       <div class="test-links" style="margin-top: 1rem;">
         <a href="./tests/${folderPath}${this.currentFolder}_rules.json" download target="_blank" class="download-link button">Download Rules Used</a>
         <a href="./tests/${folderPath}${this.currentTestSet}_tests.json" download target="_blank" class="download-link button">Download This Test Case File</a>
       </div>`;
-    this.testCasesListContainer.insertAdjacentHTML('beforeend', linksHtml);
+    testCasesTableContainer.insertAdjacentHTML('beforeend', linksHtml);
 
-    // Attach event listeners for new buttons
-    this.testCasesListContainer
-      .querySelector('#back-to-test-sets')
-      .addEventListener('click', () => {
-        this.clearDisplayAndState(); // Clear current test set specific data
-        this.renderTestSetSelector(); // Go back to selection screen
-      });
-    this.testCasesListContainer
-      .querySelector('#run-all-tests')
-      .addEventListener('click', () => this.runAllTests());
-    this.testCasesListContainer
-      .querySelector('#cancel-all-tests')
-      .addEventListener('click', () => this.cancelAllTests());
+    // Append the table container to the main list container
+    this.testCasesListContainer.appendChild(testCasesTableContainer);
 
     this.updateDataSourceIndicator(); // Update based on currently loaded rules
   }
@@ -530,7 +558,8 @@ export class TestCaseUI {
       }
       passed = passed && validationPassed; // Update overall pass status
     } catch (error) {
-      log('error', 
+      log(
+        'error',
         `Error running test case for "${locationName}" (worker evaluation):`,
         error
       );
@@ -566,10 +595,13 @@ export class TestCaseUI {
   }
 
   async runAllTests() {
+    const logId = `runAll-${Date.now()}`;
+    log('info', `[TestCaseUI - ${logId}] Initiated for ${this.currentTestSet}`);
+
     // Key check:
     if (!this.rulesLoadedForSet) {
       this.logToPanel(
-        'Cannot run all tests: Rules for the current test set are not loaded. Please select a test set.',
+        `[${logId}] Cannot run all tests: Rules for the current test set are not loaded. Please select a test set.`,
         'error'
       );
       const runAllButton =
@@ -591,7 +623,7 @@ export class TestCaseUI {
     this.shouldCancelTests = false;
 
     this.logToPanel(
-      `Running all ${this.testCases.location_tests.length} tests for "${this.currentTestSet}"...`,
+      `[${logId}] Running all ${this.testCases.location_tests.length} tests for "${this.currentTestSet}"...`,
       'system'
     );
 
@@ -697,7 +729,7 @@ export class TestCaseUI {
           ? 'success'
           : 'error';
       this.logToPanel(
-        `Tests for "${this.currentTestSet}" ${
+        `[${logId}] Tests for "${this.currentTestSet}" ${
           cancelledCount > 0 ? 'cancelled' : 'finished'
         }. Passed: ${passedCount}, Failed: ${failedCount}${
           cancelledCount > 0 ? `, Cancelled: ${cancelledCount}` : ''
@@ -757,106 +789,108 @@ export class TestCaseUI {
       this.viewChangeSubscription();
       this.viewChangeSubscription = null;
     }
+    // Remove the delegated event listener
+    if (this.testCasesListContainer && this.boundHandleMainControlsClick) {
+      this.testCasesListContainer.removeEventListener(
+        'click',
+        this.boundHandleMainControlsClick
+      );
+      log('info', '[TestCaseUI] Removed delegated click listener.');
+    }
     log('info', '[TestCaseUI] Disposed and unsubscribed from events.');
   }
 
   async showLocationDetails(locationStaticData) {
-    // Expects location object from this.currentTestRules
-    log('info', 
-      '[TestCaseUI] showLocationDetails called for:',
-      locationStaticData.name
+    // Placeholder for location detail functionality
+    log('info', '[TestCaseUI] Location details requested:', locationStaticData);
+  }
+
+  // Helper methods for easier test targeting
+  getIndividualTestButton(locationName) {
+    const button = this.rootElement.querySelector(
+      `button[data-test-type="individual"][data-location-name="${locationName}"]`
     );
-    if (!locationStaticData || !locationStaticData.name) {
-      log('warn', '[TestCaseUI] showLocationDetails: Invalid location data.');
-      return;
-    }
-    // ... (rest of modal setup as before)
-    const modalElement = this.rootElement.querySelector('#location-modal');
-    const modalTitle = this.rootElement.querySelector('#modal-location-name');
-    const modalDetails = this.rootElement.querySelector(
-      '#modal-location-details'
+    return button;
+  }
+
+  getIndividualTestButtonByIndex(index) {
+    const button = this.rootElement.querySelector(
+      `button[data-test-type="individual"][data-test-index="${index}"]`
     );
-    const modalRuleTree = this.rootElement.querySelector('#modal-rule-tree');
+    return button;
+  }
 
-    if (!modalElement || !modalTitle || !modalDetails || !modalRuleTree) {
-      log('error', '[TestCaseUI] Modal elements not found.');
-      return;
-    }
-
-    // For displaying the rule, we need a snapshot. The most relevant snapshot
-    // would be one set up for the *current test case shown in the UI*, if available.
-    // This is tricky as `showLocationDetails` might be called independently.
-    // As a fallback or for general display, we can use the *current global snapshot* from the proxy.
-    // Or, if we want to show how a rule *would* evaluate given the *current test's inventory*:
-    // For simplicity and since this is for *display*, let's use the current global snapshot from the proxy
-    // This will show how the rule evaluates *right now* in the main application state,
-    // NOT necessarily how it evaluated during the specific test run (which used a temporary test inventory).
-
-    const currentGlobalSnapshot = await stateManager.getSnapshot(); // Get the main app's current snapshot (make sure it's async if proxy returns promise)
-
-    if (!this.currentTestRules || !currentGlobalSnapshot) {
-      modalTitle.textContent = 'Error';
-      modalDetails.innerHTML =
-        '<p>Test rules or current game snapshot not available for details display.</p>';
-      modalRuleTree.innerHTML = '';
-      if (modalElement) modalElement.classList.remove('hidden');
-      return;
-    }
-
-    // The staticData for this interface is this.currentTestRules
-    const displaySnapshotInterface = createStateSnapshotInterface(
-      currentGlobalSnapshot,
-      this.currentTestRules
+  getRunAllTestsButton() {
+    const button = this.rootElement.querySelector(
+      'button[data-test-type="run-all"]'
     );
+    return button;
+  }
 
-    if (!displaySnapshotInterface) {
-      modalTitle.textContent = 'Error';
-      modalDetails.innerHTML =
-        '<p>Failed to create snapshot interface for rule display.</p>';
-      modalRuleTree.innerHTML = '';
-      if (modalElement) modalElement.classList.remove('hidden');
+  getCancelAllTestsButton() {
+    const button = this.rootElement.querySelector(
+      'button[data-test-type="cancel-all"]'
+    );
+    return button;
+  }
+
+  getAllIndividualTestButtons() {
+    const buttons = this.rootElement.querySelectorAll(
+      'button[data-test-type="individual"]'
+    );
+    return Array.from(buttons);
+  }
+
+  // Get test button targeting summary for debugging
+  getTestButtonSummary() {
+    const summary = {
+      runAllButton: !!this.getRunAllTestsButton(),
+      cancelButton: !!this.getCancelAllTestsButton(),
+      individualButtons: this.getAllIndividualTestButtons().length,
+      buttonDetails: this.getAllIndividualTestButtons().map((btn) => ({
+        id: btn.id,
+        index: btn.dataset.testIndex,
+        locationName: btn.dataset.locationName,
+        type: btn.dataset.testType,
+      })),
+    };
+    return summary;
+  }
+
+  // Delegated event handler for main control buttons
+  handleMainControlsClick(event) {
+    const clickedElement = event.target.closest('button'); // Get the button element, even if an inner element was clicked
+    if (!clickedElement) return;
+
+    const action = clickedElement.dataset.action;
+    const testType = clickedElement.dataset.testType;
+    const buttonId = clickedElement.id;
+
+    const logId = `event-${Date.now()}`;
+    log('info', `[TestCaseUI - ${logId}] Delegated click:`, {
+      id: buttonId,
+      action,
+      testType,
+    });
+
+    if (buttonId === 'back-to-test-sets') {
+      log('info', `[TestCaseUI - ${logId}] Back to Test Sets button clicked.`);
+      this.clearDisplayAndState();
+      this.renderTestSetSelector();
       return;
     }
 
-    let accessResultText = 'Rule not defined or evaluation failed (display).';
-    modalRuleTree.innerHTML = '';
-
-    if (locationStaticData.access_rule) {
-      try {
-        // Evaluate for display using the displaySnapshotInterface
-        const isAccessibleForDisplay = evaluateRule(
-          locationStaticData.access_rule,
-          displaySnapshotInterface
-        );
-        accessResultText = `Rule Display Evaluation (current app state): ${
-          isAccessibleForDisplay === undefined
-            ? 'UNKNOWN'
-            : isAccessibleForDisplay
-            ? 'TRUE'
-            : 'FALSE'
-        }`;
-
-        const treeElement = commonUI.renderLogicTree(
-          locationStaticData.access_rule,
-          false,
-          displaySnapshotInterface
-        );
-        modalRuleTree.appendChild(treeElement);
-      } catch (error) {
-        accessResultText = `Error evaluating rule for display: ${error.message}`;
-        modalRuleTree.textContent = 'Error rendering rule tree for display.';
-      }
-    } else {
-      accessResultText = 'No access rule defined.';
-      modalRuleTree.textContent = 'No rule defined for this location.';
+    if (action === 'run-all-tests' && testType === 'run-all') {
+      log('info', `[TestCaseUI - ${logId}] Run All Tests action triggered.`);
+      this.runAllTests();
+      return;
     }
 
-    modalTitle.textContent = `Details for ${locationStaticData.name}`;
-    modalDetails.innerHTML = `<p><strong>Region:</strong> ${
-      locationStaticData.region || locationStaticData.parent_region || 'N/A'
-    }</p>
-                              <p><strong>Current Display Evaluation:</strong> ${accessResultText}</p>`;
-    if (modalElement) modalElement.classList.remove('hidden');
+    if (action === 'cancel-tests' && testType === 'cancel-all') {
+      log('info', `[TestCaseUI - ${logId}] Cancel All Tests action triggered.`);
+      this.cancelAllTests();
+      return;
+    }
   }
 }
 

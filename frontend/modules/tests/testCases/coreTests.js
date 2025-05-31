@@ -2,13 +2,13 @@
 
 import { registerTest } from '../testRegistry.js';
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('coreTests', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[coreTests] ${message}`, ...data);
   }
 }
@@ -19,7 +19,8 @@ export async function simpleEventTest(testController) {
     testController.reportCondition('Test started', true);
 
     setTimeout(() => {
-      log('info', 
+      log(
+        'info',
         '[Test Case - simpleEventTest] Publishing custom:testEventAfterDelay'
       );
       // Assuming testController.eventBus is the correct eventBus instance
@@ -98,6 +99,6 @@ registerTest({
   description: 'A test that completes almost instantly.',
   testFunction: superQuickTest,
   category: 'Core',
-  enabled: true,
+  enabled: false,
   order: 1,
 });

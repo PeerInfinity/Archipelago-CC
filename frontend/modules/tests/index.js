@@ -3,13 +3,13 @@ import { TestUI } from './testUI.js';
 import { testLogic } from './testLogic.js';
 import eventBus from '../../app/core/eventBus.js'; // Assuming global eventBus
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('testsModule', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[testsModule] ${message}`, ...data);
   }
 }
@@ -40,18 +40,21 @@ export function register(registrationApi) {
       return testLogic.getSavableState();
     },
     applyLoadedDataFunction: async (data) => {
-      log('info', 
+      log(
+        'info',
         '[Tests Module] applyLoadedDataFunction called for testsConfig with:',
         data
       );
-      log('info', 
+      log(
+        'info',
         '[Tests Module] data.autoStartTestsOnLoad:',
         data?.autoStartTestsOnLoad
       );
       await testLogic.applyLoadedState(data);
 
       // Debug: Check if auto-start was set
-      log('info', 
+      log(
+        'info',
         '[Tests Module] After applyLoadedState (awaited), shouldAutoStartTests():',
         testLogic.shouldAutoStartTests()
       );
@@ -95,9 +98,29 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   // Listen for when test loaded state is fully applied (including auto-start check)
   eventBus.subscribe('test:loadedStateApplied', (eventData) => {
     log('info', '[Tests Module] test:loadedStateApplied received:', eventData);
-    log('info', 
+    log(
+      'info',
       '[Tests Module] Auto-start handling is now done by testLogic.applyLoadedState()'
     );
+  });
+
+  // Subscribe to test log messages to pipe them to the main logger
+  eventBus.subscribe('test:logAdded', (logData) => {
+    if (window.logger && typeof window.logger.log === 'function') {
+      const { testId, message, type } = logData;
+      const category = `TestRunner/${testId}`;
+      // Ensure type is a valid logger method, default to 'info'
+      const logLevel =
+        type && typeof window.logger[type] === 'function' ? type : 'info';
+      window.logger[logLevel](category, message);
+    } else {
+      // Fallback if logger isn't fully available, though unlikely if module logger works
+      const consoleFallback = console[type] || console.log;
+      consoleFallback(
+        `[TestRunner/${logData.testId}] (${logData.type || 'info'}):`,
+        logData.message
+      );
+    }
   });
 
   log('info', '[Tests Module] Initialization complete.');
