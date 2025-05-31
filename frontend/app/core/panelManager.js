@@ -976,14 +976,26 @@ class PanelManager {
       ) {
         log(
           'info',
-          `[PanelManager V8] Resolved ComponentItem. Current ID: '${resolvedItem.id}', Current Title: '${resolvedItem.title}', Expected Title: '${expectedTitleStr}'`
+          `[PanelManager V8] Resolved ComponentItem. Current ID: '${resolvedItem.id}', Initial Reported Title: '${resolvedItem.title}', Expected Title: '${expectedTitleStr}'`
         );
+        // Check if title needs to be set or corrected
         if (String(resolvedItem.title) !== expectedTitleStr) {
-          // Ensure string comparison
-          log(
-            'warn',
-            `[PanelManager V8] Title mismatch/needs setting. Current: '${resolvedItem.title}'. Attempting setTitle('${expectedTitleStr}').`
-          );
+          // Only log a warning if the initial title was something other than a typical placeholder/object string,
+          // or if it's an actual string that doesn't match.
+          if (
+            typeof resolvedItem.title === 'string' &&
+            resolvedItem.title !== '[object Object]'
+          ) {
+            log(
+              'warn',
+              `[PanelManager V8] Title mismatch. Current: '${resolvedItem.title}'. Attempting setTitle(\'${expectedTitleStr}\').`
+            );
+          } else if (typeof resolvedItem.title !== 'string') {
+            log(
+              'info', // Downgrade to info if it was initially an object, as it's less surprising
+              `[PanelManager V8] Initial title was not a string (type: ${typeof resolvedItem.title}). Attempting setTitle(\'${expectedTitleStr}\').`
+            );
+          }
           resolvedItem.setTitle(expectedTitleStr);
           log(
             'info',

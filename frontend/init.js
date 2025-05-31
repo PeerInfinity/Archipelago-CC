@@ -972,6 +972,118 @@ async function main() {
       }
     });
 
+  // Helper function to get module ID from componentType
+  const getModuleIdFromComponentType = (componentType) => {
+    const panelComponents = centralRegistry.getAllPanelComponents();
+    const componentDetails = panelComponents.get(componentType);
+    return componentDetails ? componentDetails.moduleId : null;
+  };
+
+  // --- Function to filter layout content based on enabled modules ---
+  function filterLayoutContent(content, isModuleEnabledFunc, getModuleIdFunc) {
+    if (!Array.isArray(content)) {
+      logger.warn(
+        'init',
+        'filterLayoutContent called with non-array content:',
+        content
+      );
+      return content; // Should be an array, but handle gracefully
+    }
+
+    logger.debug(
+      'init',
+      '[filterLayoutContent] Starting to process content array of length:',
+      content.length,
+      JSON.stringify(content)
+    );
+
+    return content
+      .map((item) => {
+        if (!item || typeof item !== 'object') {
+          logger.warn(
+            'init',
+            '[filterLayoutContent] Encountered invalid item:',
+            item
+          );
+          return item; // Skip invalid items
+        }
+        logger.debug(
+          'init',
+          `[filterLayoutContent] Processing item: ${item.type} - ${
+            item.title || item.componentType
+          }`
+        );
+
+        if (item.type === 'component') {
+          const moduleId = getModuleIdFunc(item.componentType);
+          logger.debug(
+            'init',
+            `[filterLayoutContent] Item is component. Type: ${item.componentType}, Derived ModuleId: ${moduleId}`
+          );
+
+          // If moduleId is null (componentType not registered) OR if the module is found but not enabled, filter out.
+          if (!moduleId || (moduleId && !isModuleEnabledFunc(moduleId))) {
+            if (!moduleId) {
+              logger.info(
+                'init',
+                `[filterLayoutContent] Filtering out component '${item.componentType}' because no module registered it (likely the owning module is disabled).`
+              );
+            } else {
+              // This case is when moduleId is found, but isModuleEnabledFunc(moduleId) is false
+              logger.info(
+                'init',
+                `[filterLayoutContent] Filtering out component '${item.componentType}' (module '${moduleId}') because module is disabled.`
+              );
+            }
+            return null; // Remove component
+          }
+          // If moduleId is found AND module is enabled, keep it.
+          // (No specific logging here, as keeping it is the default path if not filtered above)
+        }
+        // If item has its own content (e.g., stack, row, column), recursively filter it
+        if (item.content && Array.isArray(item.content)) {
+          logger.debug(
+            'init',
+            `[filterLayoutContent] Item '${item.type} - ${
+              item.title || 'N/A'
+            }' has children. Recursively filtering its content of length ${
+              item.content.length
+            }`
+          );
+          item.content = filterLayoutContent(
+            item.content,
+            isModuleEnabledFunc,
+            getModuleIdFunc
+          );
+          logger.debug(
+            'init',
+            `[filterLayoutContent] Item '${item.type} - ${
+              item.title || 'N/A'
+            }' children filtered. New content length: ${item.content.length}`
+          );
+          // If a container item (stack, row, column) becomes empty after filtering, remove it
+          if (
+            item.content.length === 0 &&
+            (item.type === 'stack' ||
+              item.type === 'row' ||
+              item.type === 'column')
+          ) {
+            logger.info(
+              'init',
+              `[filterLayoutContent] Filtering out empty container '${
+                item.type
+              }' (originally titled '${
+                item.title || 'N/A'
+              }') after its children were removed.`
+            );
+            return null;
+          }
+        }
+        return item;
+      })
+      .filter((item) => item !== null); // Remove null entries
+  }
+
   // --- Load Layout ---
   if (
     G_combinedModeData.layoutConfig &&
@@ -1003,6 +1115,60 @@ async function main() {
         logger.info('init', 'Using custom layout from layoutConfig.');
         layoutToLoad = G_combinedModeData.layoutConfig.custom;
       }
+
+      // --- Filter the layoutToLoad based on enabled modules ---
+      const isModuleEnabledFuncForLayout = (moduleId) => {
+        const moduleState = runtimeModuleStates.get(moduleId);
+        // Default to true if not in runtimeModuleStates, though it should be.
+        // Consider a module enabled if it's present and not explicitly set to enabled: false.
+        return moduleState ? moduleState.enabled !== false : true;
+      };
+
+      logger.debug(
+        'init',
+        'Full layoutToLoad BEFORE filtering:',
+        JSON.stringify(layoutToLoad)
+      );
+
+      if (layoutToLoad && layoutToLoad.root && layoutToLoad.root.content) {
+        logger.info(
+          'init',
+          'Filtering layout configuration (root.content) based on enabled modules...'
+        );
+        layoutToLoad.root.content = filterLayoutContent(
+          layoutToLoad.root.content,
+          isModuleEnabledFuncForLayout,
+          getModuleIdFromComponentType
+        );
+        logger.info('init', 'Layout configuration (root.content) filtered.');
+      } else if (layoutToLoad && Array.isArray(layoutToLoad.content)) {
+        // Handle cases where layoutToLoad directly has a 'content' array (e.g. root is an array of items)
+        logger.info(
+          'init',
+          'Filtering layout configuration (direct content array) based on enabled modules...'
+        );
+        layoutToLoad.content = filterLayoutContent(
+          layoutToLoad.content,
+          isModuleEnabledFuncForLayout,
+          getModuleIdFromComponentType
+        );
+        logger.info(
+          'init',
+          'Layout configuration (direct content array) filtered.'
+        );
+      } else {
+        logger.warn(
+          'init',
+          'LayoutToLoad does not have a recognized structure for filtering (root.content or direct content array). Skipping filtering.',
+          layoutToLoad
+        );
+      }
+
+      logger.debug(
+        'init',
+        'Full layoutToLoad AFTER filtering:',
+        JSON.stringify(layoutToLoad)
+      );
 
       // IMPORTANT: PanelManager must be initialized AFTER GoldenLayout has processed the layout
       // and created all initial components. The 'initialised' event is crucial.
@@ -1217,109 +1383,253 @@ async function main() {
   // This assumes moduleManagerApi is an empty object initially and we add properties to it.
   moduleManagerApi.enableModule = async (moduleId) => {
     const state = runtimeModuleStates.get(moduleId);
+    const moduleDefinition =
+      G_combinedModeData.moduleConfig?.moduleDefinitions?.[moduleId];
+
+    if (!moduleDefinition) {
+      logger.error(
+        'init',
+        `enableModule: No module definition found for module ${moduleId}. Cannot enable.`
+      );
+      return;
+    }
+
     if (state && state.enabled) {
       logger.info('init', `Module ${moduleId} is already enabled.`);
-      // Optionally, ensure its panel is visible if it was just hidden
       const componentType = centralRegistry.getComponentTypeForModule(moduleId);
       if (componentType && panelManagerInstance) {
-        // This part is tricky: GL might not have a simple "ensure visible if exists"
-        // We might try to activate it, or if createPanelForComponent is idempotent, call it.
-        // For now, if already enabled, we assume it might just need its panel focused.
-        // logger.debug('init', `Attempting to activate panel for already enabled module ${moduleId}`);
         panelManagerInstance.activatePanel(componentType);
       }
       return;
     }
 
-    if (state) {
-      state.enabled = true;
-      logger.info('init', `Enabling module: ${moduleId}`);
+    let actualModuleObject; // Declare here to be accessible later
 
+    // Ensure module is loaded and registered if it wasn't initially
+    if (!importedModules.has(moduleId)) {
+      logger.info(
+        'init',
+        `Module ${moduleId} was not previously imported. Importing and registering now.`
+      );
       try {
-        // 1. Re-initialize the module
-        // We need to find its original load priority index if _initializeSingleModule requires it.
-        // Or, adapt _initializeSingleModule to not strictly need an index if it's just for logging.
-        const moduleDefinition =
-          G_combinedModeData.moduleConfig?.moduleDefinitions?.[moduleId];
-        const loadPriorityArray =
-          G_combinedModeData.moduleConfig?.loadPriority || [];
-        let originalIndex = loadPriorityArray.indexOf(moduleId);
-        if (originalIndex === -1) {
-          logger.warn(
-            'init',
-            `Could not find original load priority index for ${moduleId}. Using -1.`
-          );
-          originalIndex = -1; // Or some default.
-        }
-
+        const moduleInstance = await import(moduleDefinition.path);
+        actualModuleObject = moduleInstance.default || moduleInstance; // Assign here
+        importedModules.set(moduleId, actualModuleObject);
         logger.debug(
           'init',
-          `Calling _initializeSingleModule for ${moduleId} with index ${originalIndex}`
+          `Dynamically imported module for enabling: ${moduleId}`
         );
-        await _initializeSingleModule(moduleId, originalIndex);
 
-        // 2. Re-run postInitialize if it exists for the module
-        const moduleInstance = importedModules.get(moduleId);
         if (
-          moduleInstance &&
-          typeof moduleInstance.postInitialize === 'function'
+          actualModuleObject &&
+          typeof actualModuleObject.register === 'function'
         ) {
-          logger.debug('init', `Calling postInitialize for ${moduleId}`);
-          await _postInitializeSingleModule(moduleId); // _postInitializeSingleModule uses createInitializationApi internally
-        }
-
-        // 3. Re-add the panel to Golden Layout
-        const componentType =
-          centralRegistry.getComponentTypeForModule(moduleId);
-        const titleFromInfo =
-          moduleInstance?.moduleInfo?.name || moduleInstance?.moduleInfo?.title;
-        const panelTitle = titleFromInfo || moduleId;
-
-        if (componentType && panelManagerInstance) {
-          logger.debug(
-            'init',
-            `Re-adding panel for ${moduleId}. Type: ${componentType}, Title: ${panelTitle}`
-          );
-          // createPanelForComponent will add it if not present, or potentially show/focus if it is.
-          // The behavior depends on panelManager's implementation.
-          await panelManagerInstance.createPanelForComponent(
-            componentType,
-            panelTitle
+          const registrationApi = createRegistrationApi(
+            moduleId,
+            actualModuleObject
           );
           logger.debug(
             'init',
-            `Panel for ${moduleId} should have been re-added/focused.`
+            `Registering dynamically loaded module: ${moduleId}`
           );
+          await actualModuleObject.register(registrationApi);
+          logger.info('init', `Module ${moduleId} dynamically registered.`);
+
+          // --- BEGIN NEW CODE: Register components with Golden Layout ---
+          if (window.goldenLayoutInstance) {
+            centralRegistry
+              .getAllPanelComponents()
+              .forEach((factoryDetails, componentType) => {
+                if (factoryDetails.moduleId === moduleId) {
+                  // Only process components from the current module
+                  if (typeof factoryDetails.componentClass === 'function') {
+                    window.goldenLayoutInstance.registerComponentFactoryFunction(
+                      componentType,
+                      (container, componentState) => {
+                        logger.debug(
+                          'init',
+                          `[Dynamic Enable] Creating component ${componentType} for module ${factoryDetails.moduleId}`
+                        );
+                        try {
+                          const uiProvider = new factoryDetails.componentClass(
+                            container,
+                            componentState,
+                            componentType
+                          );
+                          if (
+                            !uiProvider ||
+                            typeof uiProvider.getRootElement !== 'function'
+                          ) {
+                            logger.error(
+                              'init',
+                              `[Dynamic Enable] UI provider for ${componentType} is invalid.`
+                            );
+                            throw new Error(
+                              'UI provider is invalid or missing getRootElement method.'
+                            );
+                          }
+                          const rootElement = uiProvider.getRootElement();
+                          if (
+                            !rootElement ||
+                            !(rootElement instanceof HTMLElement)
+                          ) {
+                            logger.error(
+                              'init',
+                              `[Dynamic Enable] uiProvider.getRootElement() for ${componentType} did not return valid HTMLElement.`
+                            );
+                            throw new Error(
+                              'UI did not return a valid root DOM element.'
+                            );
+                          }
+                          container.element.innerHTML = '';
+                          container.element.append(rootElement);
+                          if (typeof uiProvider.onMount === 'function') {
+                            uiProvider.onMount(container, componentState);
+                          }
+                        } catch (e) {
+                          logger.error(
+                            'init',
+                            `[Dynamic Enable] Error instantiating component ${componentType}:`,
+                            e
+                          );
+                          container.element.innerHTML = `<div style="color: red; padding: 10px;">Error creating component: ${componentType}. ${e.message}</div>`;
+                        }
+                      }
+                    );
+                    logger.info(
+                      'init',
+                      `[Dynamic Enable] Registered component factory with Golden Layout for: ${componentType} from module ${moduleId}`
+                    );
+                  } else {
+                    logger.error(
+                      'init',
+                      `[Dynamic Enable] Component factory for ${componentType} from module ${moduleId} is not a function!`
+                    );
+                  }
+                }
+              });
+          } else {
+            logger.error(
+              'init',
+              '[Dynamic Enable] window.goldenLayoutInstance not available to register new components.'
+            );
+          }
+          // --- END NEW CODE ---
         } else {
-          if (!componentType) {
-            logger.warn(
-              'init',
-              `Cannot re-add panel for ${moduleId}: No componentType found in centralRegistry.`
-            );
-          }
-          if (!panelManagerInstance) {
-            logger.warn(
-              'init',
-              `Cannot re-add panel for ${moduleId}: panelManagerInstance (imported) not available.`
-            );
-          }
+          logger.debug(
+            'init',
+            `Dynamically loaded module ${moduleId} does not have a register function.`
+          );
         }
       } catch (error) {
         logger.error(
           'init',
-          `Error during enabling or re-adding panel for ${moduleId}:`,
+          `Error importing or registering module ${moduleId} during enableModule:`,
           error
         );
-        state.enabled = false; // Revert enabled state on error
-        // Optionally, publish module:stateChanged with enabled: false here
-        // eventBus.publish('module:stateChanged', { moduleId, enabled: false });
-        // return; // Stop further processing for this module
+        if (state) state.enabled = false;
+        runtimeModuleStates.set(moduleId, {
+          initialized: false,
+          enabled: false,
+        });
+        eventBus.publish('module:stateChanged', { moduleId, enabled: false });
+        return;
       }
     } else {
+      actualModuleObject = importedModules.get(moduleId); // Get existing module object
+    }
+
+    if (state) {
+      state.enabled = true;
+    } else {
+      runtimeModuleStates.set(moduleId, { initialized: false, enabled: true });
+    }
+    logger.info('init', `Enabling module: ${moduleId}`);
+
+    try {
+      const loadPriorityArray =
+        G_combinedModeData.moduleConfig?.loadPriority || [];
+      let originalIndex = loadPriorityArray.indexOf(moduleId);
+      if (originalIndex === -1) {
+        // Module might be entirely new (not in original loadPriority) if dynamically added post-initial load.
+        // Or it was disabled initially. In either case, find its definition.
+        const moduleDef =
+          G_combinedModeData.moduleConfig?.moduleDefinitions?.[moduleId];
+        if (moduleDef && typeof moduleDef.loadPriority === 'number') {
+          originalIndex = moduleDef.loadPriority; // Use priority from its definition if available
+          logger.info(
+            'init',
+            `Using loadPriority ${originalIndex} from module definition for ${moduleId}.`
+          );
+        } else {
+          logger.warn(
+            'init',
+            `Could not find original load priority index for ${moduleId} (might be a dynamically added/enabled module without explicit priority in definition). Using -1.`
+          );
+          originalIndex = -1;
+        }
+      }
+
+      logger.debug(
+        'init',
+        `Calling _initializeSingleModule for ${moduleId} with index ${originalIndex}`
+      );
+      await _initializeSingleModule(moduleId, originalIndex);
+
+      // Use actualModuleObject obtained earlier
+      if (
+        actualModuleObject &&
+        typeof actualModuleObject.postInitialize === 'function'
+      ) {
+        logger.debug('init', `Calling postInitialize for ${moduleId}`);
+        await _postInitializeSingleModule(moduleId);
+      }
+
+      const componentType = centralRegistry.getComponentTypeForModule(moduleId);
+      // Use actualModuleObject for moduleInfo
+      const titleFromInfo =
+        actualModuleObject?.moduleInfo?.name ||
+        actualModuleObject?.moduleInfo?.title;
+      const panelTitle = titleFromInfo || moduleId;
+
+      if (componentType && panelManagerInstance) {
+        logger.debug(
+          'init',
+          `Re-adding panel for ${moduleId}. Type: ${componentType}, Title: ${panelTitle}`
+        );
+        await panelManagerInstance.createPanelForComponent(
+          componentType,
+          panelTitle
+        );
+        logger.debug(
+          'init',
+          `Panel for ${moduleId} should have been re-added/focused.`
+        );
+      } else {
+        if (!componentType) {
+          logger.warn(
+            'init',
+            `Cannot re-add panel for ${moduleId}: No componentType found in centralRegistry. Module might not have a UI or failed registration.`
+          );
+        }
+        if (!panelManagerInstance) {
+          logger.warn(
+            'init',
+            `Cannot re-add panel for ${moduleId}: panelManagerInstance (imported) not available.`
+          );
+        }
+      }
+    } catch (error) {
       logger.error(
         'init',
-        `enableModule: No runtime state found for module ${moduleId}. Cannot enable.`
+        `Error during enabling or re-adding panel for ${moduleId}:`,
+        error
       );
+      // Revert enabled state on error
+      const currentState = runtimeModuleStates.get(moduleId);
+      if (currentState) currentState.enabled = false;
+      eventBus.publish('module:stateChanged', { moduleId, enabled: false });
+      return;
     }
 
     eventBus.publish('module:stateChanged', { moduleId, enabled: true });

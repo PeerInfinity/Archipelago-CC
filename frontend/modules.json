@@ -78,7 +78,7 @@
     },
     "testPlaythroughs": {
       "path": "./modules/testPlaythroughs/index.js",
-      "enabled": true
+      "enabled": false
     },
     "tests": {
       "path": "./modules/tests/index.js",
