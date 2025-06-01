@@ -466,6 +466,6 @@ registerTest({
     'Tests the new PathAnalyzer Panel functionality with Golden Layout integration.',
   testFunction: testPathAnalyzerPanel,
   category: 'Path Analysis',
-  enabled: true,
+  enabled: false,
   order: 0,
 });

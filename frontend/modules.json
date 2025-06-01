@@ -26,7 +26,7 @@
     },
     "timerPanel": {
       "path": "./modules/timerPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "inventory": {
       "path": "./modules/inventory/index.js",
@@ -78,7 +78,7 @@
     },
     "testPlaythroughs": {
       "path": "./modules/testPlaythroughs/index.js",
-      "enabled": false
+      "enabled": true
     },
     "tests": {
       "path": "./modules/tests/index.js",

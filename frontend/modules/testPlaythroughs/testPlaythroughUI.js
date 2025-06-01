@@ -1,13 +1,15 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js'; // ADDED: Static import
-
+import { evaluateRule } from '../stateManager/ruleEngine.js'; // ADDED
+import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js'; // ADDED
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('testPlaythroughUI', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[testPlaythroughUI] ${message}`, ...data);
   }
 }
@@ -35,20 +37,23 @@ export class TestPlaythroughUI {
     this.rulesLoaded = false;
     this.presetInfo = null;
     this.testStateInitialized = false;
+    this.allPresetsData = null; // ADDED: To store fetched preset data
 
     // Create and append root element immediately
     this.getRootElement(); // This creates this.rootElement and sets this.testPlaythroughsContainer
     if (this.rootElement) {
       this.container.element.appendChild(this.rootElement);
     } else {
-      log('error', 
+      log(
+        'error',
         '[TestPlaythroughUI] Root element not created in constructor!'
       );
     }
 
     // Defer the rest of initialization
     const readyHandler = (eventPayload) => {
-      log('info', 
+      log(
+        'info',
         '[TestPlaythroughUI] Received app:readyForUiDataLoad. Initializing playthroughs.'
       );
       this.initialize();
@@ -83,7 +88,8 @@ export class TestPlaythroughUI {
     // this.getRootElement(); // Already called in constructor
 
     if (!this.testPlaythroughsContainer) {
-      log('error', 
+      log(
+        'error',
         'Test Playthroughs panel container not found during initialization'
       );
       this.initialized = false;
@@ -104,7 +110,8 @@ export class TestPlaythroughUI {
         'ui:fileViewChanged',
         (data) => {
           if (data.newView !== 'test-playthroughs') {
-            log('info', 
+            log(
+              'info',
               '[TestPlaythroughUI] View changed away, clearing display.'
             );
             this.clearDisplay();
@@ -112,37 +119,87 @@ export class TestPlaythroughUI {
         }
       );
     } else {
-      log('error', 
+      log(
+        'error',
         '[TestPlaythroughUI] eventBus not available for subscription.'
       );
     }
     // --- End Event Subscription ---
 
     try {
-      // Load playthrough_files.json asynchronously
-      fetch('./playthroughs/playthrough_files.json')
+      const fetchPlaythroughs = fetch('./playthroughs/playthrough_files.json')
         .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
+          if (!response.ok)
+            throw new Error(
+              `HTTP error! status: ${response.status} fetching playthroughs`
+            );
           return response.json();
         })
         .then((data) => {
           this.playthroughFiles = data;
-          //log('info', 'Loaded playthrough files:', this.playthroughFiles);
-          this.renderPlaythroughList(); // Initial view
-          this.initialized = true; // Set initialized after successful load
-          log('info', '[TestPlaythroughUI] Initialized successfully.');
+          log(
+            'info',
+            '[TestPlaythroughUI] Playthrough files data loaded successfully.'
+          );
+          return true; // Indicate success for this fetch
         })
         .catch((error) => {
-          log('error', 'Error loading playthrough files data:', error);
+          log('error', 'Error loading playthrough_files.json:', error);
           if (this.testPlaythroughsContainer) {
             this.testPlaythroughsContainer.innerHTML = `<div class="error-message">Failed to load playthroughs: ${error.message}</div>`;
           }
-          this.initialized = false;
+          return false; // Indicate failure for this fetch
         });
 
-      return true; // Indicate setup started
+      const fetchPresets = fetch('./presets/preset_files.json')
+        .then((response) => {
+          if (!response.ok)
+            throw new Error(
+              `HTTP error! status: ${response.status} fetching presets`
+            );
+          return response.json();
+        })
+        .then((data) => {
+          this.allPresetsData = data;
+          log('info', '[TestPlaythroughUI] Presets data loaded successfully.');
+          return true; // Indicate success for this fetch
+        })
+        .catch((error) => {
+          log('error', 'Error loading preset_files.json:', error);
+          // Avoid overwriting playthrough error message if it occurred
+          if (this.testPlaythroughsContainer && !this.playthroughFiles) {
+            this.testPlaythroughsContainer.innerHTML = `<div class="error-message">Failed to load preset data: ${error.message}</div>`;
+          }
+          return false; // Indicate failure for this fetch
+        });
+
+      Promise.all([fetchPlaythroughs, fetchPresets]).then(
+        ([playthroughsSuccess, presetsSuccess]) => {
+          if (playthroughsSuccess && presetsSuccess) {
+            this.initialized = true;
+            this.renderPlaythroughList(); // Render list now that data is available
+            log(
+              'info',
+              '[TestPlaythroughUI] Initialized successfully (playthroughs and presets).'
+            );
+          } else {
+            this.initialized = false;
+            log(
+              'warn',
+              '[TestPlaythroughUI] Initialization failed. Playthroughs loaded: ${playthroughsSuccess}, Presets loaded: ${presetsSuccess}.'
+            );
+            // Error messages are already shown by individual catches
+            if (
+              !this.testPlaythroughsContainer.querySelector('.error-message')
+            ) {
+              this.testPlaythroughsContainer.innerHTML =
+                '<div class="error-message">Initialization failed. Check console for details.</div>'; // Generic fallback
+            }
+          }
+        }
+      );
+
+      return true; // Indicate setup process has started
     } catch (error) {
       log('error', 'Error setting up playthrough files loading:', error);
       if (this.testPlaythroughsContainer) {
@@ -171,7 +228,8 @@ export class TestPlaythroughUI {
     // Add null check
     if (!this.playthroughFiles) {
       html += '<p>Loading playthrough list...</p>';
-      log('warn', 
+      log(
+        'warn',
         'renderPlaythroughList called before playthroughFiles data was loaded.'
       );
     } else if (this.playthroughFiles.length === 0) {
@@ -391,7 +449,8 @@ export class TestPlaythroughUI {
           'error',
           `Test failed at step ${this.currentLogIndex + 1}: ${error.message}`
         );
-        log('error', 
+        log(
+          'error',
           `Playthrough Test Error at step ${this.currentLogIndex + 1}:`,
           error
         );
@@ -441,7 +500,8 @@ export class TestPlaythroughUI {
           'error',
           `Test failed at step ${this.currentLogIndex + 1}: ${error.message}`
         );
-        log('error', 
+        log(
+          'error',
           `Playthrough Test Error at step ${this.currentLogIndex + 1}:`,
           error
         );
@@ -482,8 +542,9 @@ export class TestPlaythroughUI {
 
       case 'initial_state':
         this.log('state', 'Comparing initial state...');
-        stateManager.computeReachableRegions(); // Ensure initial compute after load
-        this.compareAccessibleLocations(
+        // The worker should compute this after rules are loaded via loadRules command,
+        // and the state will be available via snapshot for compareAccessibleLocations.
+        await this.compareAccessibleLocations(
           event.accessible_locations,
           'Initial State'
         );
@@ -494,18 +555,62 @@ export class TestPlaythroughUI {
           const locName = event.location.name;
           this.log('info', `Simulating check for location: "${locName}"`);
 
-          const locData = stateManager.locations.find(
-            (l) => l.name === locName
-          );
+          // Get static data once to find the location details
+          const staticData = stateManager.getStaticData();
+          const locDef = staticData?.locations?.[locName];
 
-          if (!locData) {
+          if (!locDef) {
             this.log(
               'error',
-              `Location "${locName}" from log not found in current rules. Skipping check.`
+              `Location "${locName}" from log not found in current static data. Skipping check.`
             );
           } else {
-            const wasAccessible = stateManager.isLocationAccessible(locData);
-            if (!wasAccessible && !stateManager.isLocationChecked(locName)) {
+            const currentSnapshot = await stateManager.getLatestStateSnapshot(); // Get current dynamic state
+            if (!currentSnapshot) {
+              this.log(
+                'error',
+                `Could not get snapshot to check accessibility for "${locName}"`
+              );
+              throw new Error(`Snapshot unavailable for ${locName} check`);
+            }
+            const snapshotInterface = createStateSnapshotInterface(
+              currentSnapshot,
+              staticData
+            );
+            if (!snapshotInterface) {
+              this.log(
+                'error',
+                `Could not create snapshotInterface for "${locName}"`
+              );
+              throw new Error(
+                `SnapshotInterface creation failed for ${locName} check`
+              );
+            }
+
+            // Evaluate accessibility for locName
+            const parentRegionName = locDef.parent_region || locDef.region;
+            const parentRegionReachabilityStatus =
+              currentSnapshot.reachability?.[parentRegionName];
+            const isParentRegionEffectivelyReachable =
+              parentRegionReachabilityStatus === 'reachable' ||
+              parentRegionReachabilityStatus === 'checked';
+
+            const locationAccessRule = locDef.access_rule;
+            let locationRuleEvalResult = true;
+            if (locationAccessRule) {
+              locationRuleEvalResult = evaluateRule(
+                locationAccessRule,
+                snapshotInterface
+              );
+            }
+            const wasAccessible =
+              isParentRegionEffectivelyReachable &&
+              locationRuleEvalResult === true;
+
+            // Check if already checked using the snapshot
+            const isChecked = currentSnapshot.flags?.includes(locName);
+
+            if (!wasAccessible && !isChecked) {
               this.log(
                 'error',
                 `Log indicates checking "${locName}", but it was NOT accessible according to current logic!`
@@ -515,23 +620,30 @@ export class TestPlaythroughUI {
               );
             }
 
-            if (locData.item && !stateManager.isLocationChecked(locName)) {
+            // Check if location contains an item and add it
+            // The item an item is at a location is part of static data, not dynamic state.
+            const itemAtLocation = locDef.item; // Assuming item name is directly on locDef.item or locDef.item.name
+            const itemName =
+              typeof itemAtLocation === 'object'
+                ? itemAtLocation.name
+                : itemAtLocation;
+
+            if (itemName && !isChecked) {
               this.log(
                 'info',
-                `Found item "${locData.item.name}" at "${locName}". Adding to inventory.`
+                `Found item "${itemName}" at "${locName}". Adding to inventory.`
               );
-              const itemAdded = stateManager.addItemToInventory(
-                locData.item.name
+              // addItemToInventory is an async command now
+              await stateManager.addItemToInventory(itemName);
+              // No direct boolean return to check; assume success or rely on stateManager:stateChanged event if needed for confirmation
+              this.log(
+                'info',
+                `Item "${itemName}" sent to be added to inventory.`
               );
-              if (!itemAdded) {
-                this.log(
-                  'warn',
-                  `Could not add item "${locData.item.name}" (possibly unknown). State might be inaccurate.`
-                );
-              }
             }
 
-            stateManager.checkLocation(locName);
+            // Mark location as checked (async command)
+            await stateManager.checkLocation(locName);
             this.log('info', `Location "${locName}" marked as checked.`);
           }
         } else {
@@ -547,7 +659,7 @@ export class TestPlaythroughUI {
       case 'state_update':
         this.log('state', 'Comparing state after update...');
         // stateManager computation is triggered by addItemToInventory or should be up-to-date
-        this.compareAccessibleLocations(
+        await this.compareAccessibleLocations(
           event.accessible_locations,
           `State after event ${this.currentLogIndex + 1}`
         );
@@ -555,21 +667,20 @@ export class TestPlaythroughUI {
 
       default:
         this.log('info', `Skipping unhandled event type: ${event.event}`);
+        break;
     }
   }
 
   findPresetForPlaythrough(playthroughInfo) {
-    // Needs access to presetUI's loaded presets or load it itself
-    // For simplicity, let's assume presetUI is available via gameUI
-    if (!this.gameUI.presetUI || !this.gameUI.presetUI.presets) {
+    if (!this.allPresetsData) {
       this.log(
         'error',
-        'Preset data not available. Ensure Presets tab was loaded.'
+        'Preset data (this.allPresetsData) not loaded. Ensure initialize ran successfully.'
       );
       return null;
     }
 
-    const presetsData = this.gameUI.presetUI.presets;
+    const presetsData = this.allPresetsData; // Use the fetched data
     const gameId = Object.keys(presetsData).find(
       (gid) => presetsData[gid].name === playthroughInfo.game
     );
@@ -609,101 +720,141 @@ export class TestPlaythroughUI {
 
   async loadPresetRules(gameId, folderId, playerId, signal) {
     // Reuse logic from PresetUI.loadRulesFile but make it async and check signal
-    return new Promise((resolve, reject) => {
-      if (signal.aborted)
-        return reject(new DOMException('Aborted', 'AbortError'));
+    if (signal.aborted) {
+      this.log('info', 'Rules loading aborted by signal early.');
+      return false;
+    }
 
-      const presetsData = this.gameUI.presetUI.presets;
-      const folderData = presetsData[gameId]?.folders?.[folderId];
-      if (!folderData) return reject(new Error('Preset folder data not found'));
+    if (!this.allPresetsData) {
+      this.log(
+        'error',
+        'Preset data (this.allPresetsData) not loaded. Cannot load rules.'
+      );
+      return false;
+    }
 
-      let rulesFile = null;
-      if (playerId && gameId === 'multiworld') {
-        rulesFile = folderData.files.find((file) =>
-          file.endsWith(`_P${playerId}_rules.json`)
-        );
-        if (!rulesFile) {
-          rulesFile = folderData.files.find((file) =>
-            file.endsWith('_rules.json')
-          );
-          if (rulesFile)
-            this.log(
-              'info',
-              `Player-specific rules file not found for P${playerId}, using default rules.json`
-            );
-        }
-      } else {
+    const presetsData = this.allPresetsData;
+    const folderData = presetsData[gameId]?.folders?.[folderId];
+    if (!folderData) {
+      this.log(
+        'error',
+        `Preset folder data not found for gameId: ${gameId}, folderId: ${folderId}`
+      );
+      return false;
+    }
+
+    let rulesFile = null;
+    if (playerId && gameId === 'multiworld') {
+      rulesFile = folderData.files.find((file) =>
+        file.endsWith(`_P${playerId}_rules.json`)
+      );
+      if (!rulesFile) {
         rulesFile = folderData.files.find((file) =>
           file.endsWith('_rules.json')
         );
+        if (rulesFile)
+          this.log(
+            'info',
+            `Player-specific rules file not found for P${playerId}, using default rules.json`
+          );
+      }
+    } else {
+      rulesFile = folderData.files.find((file) => file.endsWith('_rules.json'));
+    }
+
+    if (!rulesFile) {
+      this.log(
+        'error',
+        `Could not find a suitable rules file in preset folder ${folderId}`
+      );
+      return false;
+    }
+
+    const filePath = `./presets/${gameId}/${folderId}/${rulesFile}`;
+    this.log('info', `Fetching rules: ${filePath}`);
+
+    try {
+      const response = await fetch(filePath);
+      if (signal.aborted) {
+        this.log('info', 'Rules loading aborted by signal during fetch.');
+        return false;
+      }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const rulesJsonData = await response.json();
+
+      if (signal.aborted) {
+        this.log('info', 'Rules loading aborted by signal after fetch.');
+        return false;
       }
 
-      if (!rulesFile) {
-        return reject(
-          new Error(
-            `Could not find a suitable rules file in preset folder ${folderId}`
-          )
-        );
-      }
+      // COMMAND: Send these specific rules to the worker
+      // Ensure playerId is a string, and provide a playerName if available/needed by your stateManager.loadRules
+      const effectivePlayerId = playerId ? String(playerId) : '1'; // Default to '1' if not provided
+      const playerName =
+        this.currentPlaythrough?.player_name || `Player${effectivePlayerId}`; // Get from playthrough or generate
 
-      const filePath = `./presets/${gameId}/${folderId}/${rulesFile}`;
-      this.log('info', `Fetching rules: ${filePath}`);
+      await stateManager.loadRules(rulesJsonData, {
+        playerId: effectivePlayerId,
+        playerName: playerName,
+      });
 
-      fetch(filePath)
-        .then((response) => {
-          if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-          if (!response.ok)
-            throw new Error(`HTTP error! status: ${response.status}`);
-          return response.json();
-        })
-        .then((jsonData) => {
-          if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
+      // Wait for worker to confirm rules are loaded and processed
+      let unsub; // MODIFIED: Declare unsub outside the Promise executor
+      const rulesLoadedConfirmation = await new Promise((resolve, reject) => {
+        const timeoutDuration = 10000; // 10 seconds timeout for rules loading
+        const timeoutId = setTimeout(() => {
+          if (unsub) unsub(); // MODIFIED: Check if unsub is defined before calling
+          this.log(
+            'error',
+            'Timeout waiting for StateManager worker to confirm preset rules loaded.'
+          );
+          reject(
+            new Error(
+              'Timeout waiting for StateManager worker to confirm preset rules loaded.'
+            )
+          );
+        }, timeoutDuration);
 
-          try {
-            // Clear existing data and load the new rules
-            this.gameUI.clearExistingData();
-            this.gameUI.currentRules = jsonData; // Track current rules
-
-            // Use stateManager directly
-            stateManager.initializeInventory(
-              [], // Start with empty inventory for preset load
-              jsonData.progression_mapping?.[playerId],
-              jsonData.items?.[playerId],
-              jsonData.item_groups?.[playerId] // Pass group data too
-            );
-
-            // Load settings, shops, starting items etc. via stateManager
-            stateManager.loadFromJSON(jsonData, playerId);
-
-            // Initialize the main UI (regions, locations etc.) - Crucial for inventoryUI setup
-            this.gameUI.initializeUI(jsonData, playerId);
-
+        unsub = this.eventBus.subscribe(
+          'stateManager:rulesLoaded',
+          (eventPayload) => {
+            clearTimeout(timeoutId);
             this.log(
               'info',
-              `Rules loaded for player ${playerId}. StateManager initialized.`
+              `StateManager worker confirmed preset rules loaded for player ${effectivePlayerId}.`
             );
+            unsub();
             resolve(true);
-          } catch (initError) {
-            reject(
-              new Error(
-                `Error initializing stateManager/UI: ${initError.message}`
-              )
-            );
           }
-        })
-        .catch((error) => {
-          if (error.name === 'AbortError') {
-            this.log('info', 'Rules loading aborted.');
-            resolve(false); // Resolve false if aborted cleanly
-          } else {
-            this.log(
-              'error',
-              `Failed to load or process rules file ${filePath}: ${error.message}`
-            );
-            reject(error); // Propagate other errors
-          }
-        });
-    });
+        );
+      });
+
+      if (!rulesLoadedConfirmation) {
+        this.log(
+          'error',
+          'Failed to get confirmation for preset rules loading from worker.'
+        );
+        return false;
+      }
+
+      this.log(
+        'info',
+        `Preset rules for player ${effectivePlayerId} loaded into StateManager worker successfully.`
+      );
+      return true;
+    } catch (error) {
+      if (error.name === 'AbortError' || signal.aborted) {
+        this.log('info', 'Rules loading aborted by error or signal.');
+      } else {
+        this.log(
+          'error',
+          `Failed to load or process rules file ${filePath}: ${error.message}`
+        );
+      }
+      return false;
+    }
   }
 
   async loadLogFile(filePath, signal) {
@@ -744,12 +895,82 @@ export class TestPlaythroughUI {
     });
   }
 
-  compareAccessibleLocations(logAccessible, context) {
-    // Get reachable but unchecked locations from stateManager
-    const stateAccessibleUnchecked = stateManager
-      .getProcessedLocations(undefined, true, false) // Get only reachable locations
-      .filter((loc) => !stateManager.isLocationChecked(loc.name)) // Filter out checked locations
-      .map((loc) => loc.name);
+  async compareAccessibleLocations(logAccessible, context) {
+    const snapshot = await stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData(); // ADDED: Get static data
+
+    this.log('info', `[compareAccessibleLocations] Context: '${context}'`, {
+      snapshot,
+      staticData,
+    });
+
+    if (!snapshot) {
+      this.log(
+        'error',
+        `[compareAccessibleLocations] Snapshot is null/undefined for context: ${context}`
+      );
+      throw new Error(
+        `Snapshot invalid (null) during playthrough test at: ${context}`
+      );
+    }
+    if (!staticData || !staticData.locations) {
+      this.log(
+        'error',
+        `[compareAccessibleLocations] Static data or staticData.locations is null/undefined for context: ${context}`,
+        { staticData }
+      );
+      throw new Error(
+        `Static data invalid during playthrough test at: ${context}`
+      );
+    }
+    // Snapshot itself does not directly contain all location definitions;
+    // staticData.locations contains the definitions, snapshot contains dynamic state (flags, reachability).
+
+    const stateAccessibleUnchecked = [];
+    const snapshotInterface = createStateSnapshotInterface(
+      snapshot,
+      staticData
+    ); // ADDED for rule evaluation
+
+    if (!snapshotInterface) {
+      this.log(
+        'error',
+        `[compareAccessibleLocations] Failed to create snapshotInterface for context: ${context}`
+      );
+      throw new Error(`SnapshotInterface creation failed at: ${context}`);
+    }
+
+    for (const locName in staticData.locations) {
+      const locDef = staticData.locations[locName]; // Location Definition from staticData
+
+      const isChecked = snapshot.flags?.includes(locName);
+      if (isChecked) continue; // Skip checked locations
+
+      // Determine accessibility based on snapshot and staticDef
+      const parentRegionName = locDef.parent_region || locDef.region;
+      const parentRegionReachabilityStatus =
+        snapshot.reachability?.[parentRegionName];
+      const isParentRegionEffectivelyReachable =
+        parentRegionReachabilityStatus === 'reachable' ||
+        parentRegionReachabilityStatus === 'checked';
+
+      const locationAccessRule = locDef.access_rule;
+      let locationRuleEvalResult = true; // Default to true if no rule
+      if (locationAccessRule) {
+        locationRuleEvalResult = evaluateRule(
+          locationAccessRule,
+          snapshotInterface
+        );
+      }
+      const doesLocationRuleEffectivelyPass = locationRuleEvalResult === true;
+
+      if (
+        isParentRegionEffectivelyReachable &&
+        doesLocationRuleEffectivelyPass
+      ) {
+        stateAccessibleUnchecked.push(locName);
+      }
+    }
 
     const stateAccessibleSet = new Set(stateAccessibleUnchecked);
     const logAccessibleSet = new Set(logAccessible.map((loc) => loc.name));
@@ -791,16 +1012,37 @@ export class TestPlaythroughUI {
     }
   }
 
-  log(type, message) {
-    if (!this.logContainer) return;
+  log(type, message, ...additionalData) {
+    // Log to panel
+    if (this.logContainer) {
+      const entry = document.createElement('div');
+      entry.classList.add('log-entry', `log-${type}`);
+      const textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      entry.textContent = textContent;
+      // Consider if additionalData should be stringified or handled for panel display
+      this.logContainer.appendChild(entry);
+      this.logContainer.scrollTop = this.logContainer.scrollHeight;
+    }
 
-    const entry = document.createElement('div');
-    entry.classList.add('log-entry', `log-${type}`);
-    entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-    this.logContainer.appendChild(entry);
-
-    // Auto-scroll to bottom
-    this.logContainer.scrollTop = this.logContainer.scrollHeight;
+    // Log to browser console (or global logger)
+    // Map custom types to console methods if needed, e.g., 'step' or 'mismatch'
+    let consoleMethodType = type;
+    if (type === 'step' || type === 'mismatch' || type === 'state') {
+      consoleMethodType = 'info'; // Or 'debug' or a specific style
+    } else if (type === 'success') {
+      consoleMethodType = 'info';
+    }
+    // Ensure type is a valid console method, defaulting to 'log'
+    if (
+      !['error', 'warn', 'info', 'debug', 'log'].includes(consoleMethodType)
+    ) {
+      consoleMethodType = 'log';
+    }
+    const consoleMethod = console[consoleMethodType] || console.log;
+    consoleMethod(
+      `[TestPlaythroughUI - ${type.toUpperCase()}] ${message}`,
+      ...additionalData
+    );
   }
 
   escapeHtml(unsafe) {
@@ -840,7 +1082,6 @@ export class TestPlaythroughUI {
       this.logContainer.innerHTML = '';
     }
     this.updateStepInfo(); // Clear step info display
-    this.eventBus = null; // Clear reference
   }
 
   dispose() {
@@ -856,10 +1097,7 @@ export class TestPlaythroughUI {
       log('info', '[TestPlaythroughUI] Unsubscribed from ui:fileViewChanged.');
     }
     this.clearTestState();
-    // Clear container content?
-    // if (this.testPlaythroughsContainer) {
-    //   this.testPlaythroughsContainer.innerHTML = '';
-    // }
+    this.updateStepInfo(); // Clear step info display
   }
 }
 

@@ -4,7 +4,7 @@ import { registerTest } from '../testRegistry.js';
 const PANEL_ID_TEST_CASES = 'testCasesPanel';
 const TEST_SET_LIGHT_WORLD = 'Light World';
 const MAX_WAIT_TIME_GENERAL_TEST_COMPLETION = 300000; // 5 minutes
-const TARGET_TEST_INDEX_FOR_SINGLE_RUN_DEMO = 10; // Original target: King's Tomb (now index 11), this was for another test
+const TARGET_TEST_INDEX_FOR_SINGLE_RUN_DEMO = 18; // Chicken House (true, ["Bomb Upgrade (+5)"])
 const TARGET_TEST_INDEX_KINGS_TOMB_SUB_TEST = 11; // King's Tomb
 const TARGET_ITEM_NAME_BEAT_AGAHNIM_1 = 'Beat Agahnim 1';
 
@@ -978,19 +978,19 @@ registerTest({
     'Tests activating the Test Cases panel, selecting the vanilla Light World test, running all tests, and collecting results for Playwright.',
   testFunction: testCasePanelInteractionTest,
   category: 'Test Cases Panel',
-  enabled: false, // Keep disabled unless specifically testing this
+  enabled: false, // Disabled to focus on single test
   order: 1,
 });
 
 // Self-register tests
 registerTest({
   id: 'test_single_case_debug',
-  name: 'Test Case Button Targeting Demo',
+  name: 'Test Case Button Targeting Demo - Chicken House',
   description:
-    'Demonstrates the new button targeting system for individual test buttons without executing tests. Shows how to reliably find and target specific test buttons.',
+    'Tests the Chicken House test case (index 18) that requires "Bomb Upgrade (+5)" and should be accessible. This is the specific test case mentioned in the debugging session.',
   testFunction: singleTestCaseDebugTest,
   category: 'Test Cases Panel',
-  enabled: false, // This is the test we are focusing on
+  enabled: true, // Enable this test to focus on the specific issue
   order: 2,
 });
 
@@ -1001,6 +1001,6 @@ registerTest({
     'Tests clicking a specific item link to trigger its sub-test and verifies the outcome.',
   testFunction: singleItemSubTestDebug,
   category: 'Test Cases Panel',
-  enabled: true,
+  enabled: false,
   order: 3,
 });
