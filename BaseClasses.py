@@ -1474,16 +1474,16 @@ class Spoiler:
             self.entrances[(entrance, direction, player)] = \
                 {"player": player, "entrance": entrance, "exit": exit_, "direction": direction}
 
-    def _log_sphere_details(self, file_handler, sphere_index: int,
+    def _log_sphere_details(self, file_handler, sphere_index: Union[int, str],
                               current_sphere_locations: Set[Location],
                               current_collection_state: CollectionState) -> None:
         """Logs details of the current sphere to the provided file handler."""
-        timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z"
+        # timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z" # REMOVED TIMESTAMP
         log_entry = {
             'type': 'state_update',  # ADDED: Event type for frontend processing
             'sphere_index': sphere_index,
             'sphere_locations': sorted([loc.name for loc in current_sphere_locations]), # Keep it sorted for consistency
-            'timestamp': timestamp,
+            # 'timestamp': timestamp, # REMOVED TIMESTAMP
             'player_data': {}
         }
         if not file_handler:
@@ -1531,7 +1531,7 @@ class Spoiler:
                 "type": "state_update", # Ensure this is included
                 "sphere_index": sphere_index,
                 "sphere_locations": sphere_location_names,
-                "timestamp": timestamp,
+                # 'timestamp': timestamp, # REMOVED TIMESTAMP
                 "player_data": player_specific_data, # Changed from direct inventory/accessibility
             }
             
@@ -1632,50 +1632,87 @@ class Spoiler:
             # Final sphere calculation pass (this uses initial_collection_spheres which was pruned)
             required_locations = {loc for sphere_set in initial_collection_spheres for loc in sphere_set}
             
-            current_playthrough_state = CollectionState(multiworld) # Fresh state for final playthrough
-            
-            # Log initial state (sphere 0: precollected items that remained after pruning)
-            # The state for this log should reflect only the *final* set of precollected items.
-            if spoiler_log_file_handler:
-                # state_for_sphere_0_log is based on the final state of multiworld.precollected_items
-                # (which might have been pruned by earlier playthrough logic).
-                # The CollectionState constructor already collects all items from multiworld.precollected_items.
-                state_for_sphere_0_log = CollectionState(multiworld)
-                
-                # DO NOT sweep for advancements for the sphere 0 log. We want to see the state
-                # with only the explicitly precollected items before any gameplay simulation.
-                # precollected_only_state.sweep_for_advancements() # RE-ADDED: Ensure reachability is based on these items
+            # --- ADD FLAGS FOR TOGGLING LOG DETAIL --- 
+            log_fractional_sphere_details = True # Set to False to disable 0.1, 1.1, etc. logs
+            log_integer_sphere_details = False    # Set to False to disable 1, 2, etc. logs (Sphere 0 always logs)
+            # --- END FLAGS --- 
 
-                # The "sphere_locations" for sphere 0 are conceptually the precollected items themselves,
-                # but _log_sphere_details expects locations. We pass an empty set for locations for sphere 0,
-                # and the inventory in state_for_sphere_0_log will represent the precollected items.
-                self._log_sphere_details(spoiler_log_file_handler, 0, set(), state_for_sphere_0_log)
+            # Initialize current_playthrough_state. This will be built up.
+            # Start with a completely empty state for the 0.x logging.
+            current_playthrough_state = CollectionState(multiworld)
+            for p_id in current_playthrough_state.prog_items: # Ensure it's truly empty
+                current_playthrough_state.prog_items[p_id].clear()
+            current_playthrough_state.advancements.clear()
+            current_playthrough_state.locations_checked.clear()
+
+            if spoiler_log_file_handler:
+                # Log precollected items one by one for "0.x" spheres
+                precollected_advancement_items = sorted(
+                    [item for p_items in multiworld.precollected_items.values() for item in p_items if item.advancement],
+                    key=lambda item: (item.player, item.name)
+                )
+                
+                sub_index_sphere0 = 0
+                for item in precollected_advancement_items:
+                    current_playthrough_state.collect(item, True) # Collect into the accumulating state, prevent sweep
+                    sub_index_sphere0 += 1
+                    if log_fractional_sphere_details: # CHECK FLAG
+                        self._log_sphere_details(spoiler_log_file_handler,
+                                                 f"0.{sub_index_sphere0}",
+                                                 set(), 
+                                                 current_playthrough_state.copy())
+
+                # After iterating through all precollected items (if any), log the final "sphere 0" state.
+                # This state reflects all precollected items. No sweep for advancements here.
+                # SPHERE 0 ALWAYS LOGS if spoiler_log_file_handler is available.
+                self._log_sphere_details(spoiler_log_file_handler, 0, set(), current_playthrough_state.copy())
+            
+            if not spoiler_log_file_handler: # If not logging, ensure state includes precollected items for main loop.
+                current_playthrough_state = CollectionState(multiworld)
 
             # This is the list that will store the final spheres for the text spoiler output
             final_collection_spheres: List[Set[Location]] = []
+            main_sphere_index_counter = 0
 
             while required_locations:
-                # Reachable locations from the current_playthrough_state
-                # Filter from required_locations to ensure we only consider what's left.
-                sphere = {loc for loc in required_locations if current_playthrough_state.can_reach(loc)}
+                main_sphere_index_counter += 1
+                current_full_sphere_locations = {loc for loc in required_locations if current_playthrough_state.can_reach(loc)}
 
-                for location in sphere:
-                    current_playthrough_state.collect(location.item, True, location)
-                
-                final_collection_spheres.append(sphere) # This list is used for self.playthrough
+                if not current_full_sphere_locations and required_locations:
+                    # Error handling as before
+                    raise RuntimeError(f'Not all required items reachable. Unreachable locations: {required_locations}')
 
-                # --- CALL TO NEW LOGGING METHOD ---
-                if spoiler_log_file_handler:
+                # Sort locations in the sphere for deterministic item collection order
+                sorted_locations_in_sphere = sorted(list(current_full_sphere_locations), key=lambda loc: (loc.player, loc.name))
+
+                item_sub_index = 0
+                for location in sorted_locations_in_sphere:
+                    # Collect one item
+                    current_playthrough_state.collect(location.item, True, location) # prevent_sweep = True implicitly handled by individual collection
+                    item_sub_index += 1
+                    
+                    # Log after this single item
+                    if spoiler_log_file_handler and log_fractional_sphere_details: # CHECK FLAG
+                        sub_sphere_label = f"{main_sphere_index_counter}.{item_sub_index}"
+                        self._log_sphere_details(spoiler_log_file_handler,
+                                                 sub_sphere_label,
+                                                 {location}, # The single location collected in this sub-step
+                                                 current_playthrough_state.copy())
+
+                # After all items in the current_full_sphere_locations are processed individually:
+                final_collection_spheres.append(current_full_sphere_locations) # Add the full set of locations for this sphere
+
+                # Log the state for the full sphere (as before)
+                if spoiler_log_file_handler and log_integer_sphere_details: # CHECK FLAG (but not for sphere 0, which is handled above)
                     self._log_sphere_details(spoiler_log_file_handler,
-                                             len(final_collection_spheres), # Sphere index (1-based)
-                                             sphere,
-                                             current_playthrough_state.copy())
-                # --- END CALL ---
-
+                                             main_sphere_index_counter, # Integer index for the full sphere
+                                             current_full_sphere_locations, # All locations making up this sphere
+                                             current_playthrough_state.copy()) # State AFTER all items in this sphere are collected
+                
                 logging.debug('Calculated final sphere %i, containing %i of %i progress items.', 
-                              len(final_collection_spheres), len(sphere), len(required_locations))
+                              main_sphere_index_counter, len(current_full_sphere_locations), len(required_locations))
 
-                required_locations -= sphere
+                required_locations -= current_full_sphere_locations
                 if not sphere and required_locations: # Added check for required_locations to prevent false error
                     logging.error(f'Not all required items reachable. Unreachable locations: {required_locations}')
                     # Consider if this should raise RuntimeError as before, or just log if some items are optional for beatable
