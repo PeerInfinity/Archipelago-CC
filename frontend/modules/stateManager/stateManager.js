@@ -43,6 +43,7 @@ export class StateManager {
     this.eventBus = null; // Legacy/optional
     this.postMessageCallback = null; // For worker communication
     this.evaluateRuleFromEngine = evaluateRuleFunction; // Store the injected rule evaluator
+    this.autoCollectEventsEnabled = true; // MODIFIED: Added flag, default to true
 
     // --- ADDED Check for missing evaluator --- >
     if (!this.evaluateRuleFromEngine) {
@@ -1481,17 +1482,19 @@ export class StateManager {
         // Process reachability with BFS
         const newlyReachable = this.runBFSPass();
 
-        // Auto-collect events
-        for (const loc of this.eventLocations.values()) {
-          if (this.knownReachableRegions.has(loc.region)) {
-            const canAccessLoc = this.isLocationAccessible(loc);
-            if (canAccessLoc && !this.inventory.has(loc.item.name)) {
-              this.inventory.addItem(loc.item.name);
-              this.checkedLocations.add(loc.name);
-              newEventCollected = true;
-              this._logDebug(
-                `Auto-collected event item: ${loc.item.name} from ${loc.name}`
-              );
+        // Auto-collect events - MODIFIED: Make conditional
+        if (this.autoCollectEventsEnabled) {
+          for (const loc of this.eventLocations.values()) {
+            if (this.knownReachableRegions.has(loc.region)) {
+              const canAccessLoc = this.isLocationAccessible(loc);
+              if (canAccessLoc && !this.inventory.has(loc.item.name)) {
+                this.inventory.addItem(loc.item.name);
+                this.checkedLocations.add(loc.name);
+                newEventCollected = true;
+                this._logDebug(
+                  `Auto-collected event item: ${loc.item.name} from ${loc.name}`
+                );
+              }
             }
           }
         }
@@ -3308,5 +3311,18 @@ export class StateManager {
    */
   getAllItemData() {
     return this.itemData || null;
+  }
+
+  setAutoCollectEventsConfig(enabled) {
+    // MODIFIED: Added new method
+    this._logDebug(
+      `[StateManager] Setting autoCollectEventsEnabled to: ${enabled}`
+    );
+    this.autoCollectEventsEnabled = !!enabled; // Ensure boolean
+    // If disabling, it might be necessary to re-evaluate reachability without auto-collection.
+    // For testing, this is usually paired with a state clear/reset before tests.
+    // If enabling, a re-computation might pick up pending events.
+    this.invalidateCache(); // Invalidate cache as this changes a core behavior
+    this._sendSnapshotUpdate(); // Send update if state might have changed due to this setting
   }
 }

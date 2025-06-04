@@ -1637,27 +1637,19 @@ class Spoiler:
             # Log initial state (sphere 0: precollected items that remained after pruning)
             # The state for this log should reflect only the *final* set of precollected items.
             if spoiler_log_file_handler:
-                # precollected_only_state is based on the final state of multiworld.precollected_items.
+                # state_for_sphere_0_log is based on the final state of multiworld.precollected_items
+                # (which might have been pruned by earlier playthrough logic).
                 # The CollectionState constructor already collects all items from multiworld.precollected_items.
-                precollected_only_state = CollectionState(multiworld) 
-                # The loop from line 1673 to 1675 that iterated over multiworld.precollected_items
-                # and called precollected_only_state.collect(item, True) has been removed as it was redundant.
+                state_for_sphere_0_log = CollectionState(multiworld)
                 
-                precollected_only_state.sweep_for_advancements() # RE-ADDED: Ensure reachability is based on these items
+                # DO NOT sweep for advancements for the sphere 0 log. We want to see the state
+                # with only the explicitly precollected items before any gameplay simulation.
+                # precollected_only_state.sweep_for_advancements() # RE-ADDED: Ensure reachability is based on these items
 
-                # The "sphere_locations" for sphere 0 are the precollected items themselves.
-                # We need their names, not Location objects.
-                precollected_item_names_for_log = set()
-                for p_id in multiworld.player_ids:
-                    for item in multiworld.precollected_items.get(p_id, []):
-                        # item.advancement filter also removed here for consistency if this set is used
-                        precollected_item_names_for_log.add(self.multiworld.get_name_string_for_object(item))
-                
-                # Create pseudo-Location objects for precollected items if needed by _log_sphere_details
-                # For now, passing empty set for locations, actual items are in inventory.
-                # Or, adjust _log_sphere_details to take item names for sphere 0.
-                # Let's pass an empty set for locations and rely on inventory for sphere 0.
-                self._log_sphere_details(spoiler_log_file_handler, 0, set(), precollected_only_state)
+                # The "sphere_locations" for sphere 0 are conceptually the precollected items themselves,
+                # but _log_sphere_details expects locations. We pass an empty set for locations for sphere 0,
+                # and the inventory in state_for_sphere_0_log will represent the precollected items.
+                self._log_sphere_details(spoiler_log_file_handler, 0, set(), state_for_sphere_0_log)
 
             # This is the list that will store the final spheres for the text spoiler output
             final_collection_spheres: List[Set[Location]] = []

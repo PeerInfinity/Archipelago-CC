@@ -899,6 +899,29 @@ self.onmessage = async function (e) {
         }
         break;
 
+      case 'setAutoCollectEventsConfig':
+        log(
+          'debug',
+          '[Worker] Received setAutoCollectEventsConfig command',
+          message.payload
+        );
+        if (
+          stateManagerInstance &&
+          message.payload &&
+          typeof message.payload.enabled === 'boolean'
+        ) {
+          stateManagerInstance.setAutoCollectEventsConfig(
+            message.payload.enabled
+          );
+        } else {
+          log(
+            'warn',
+            '[Worker] Invalid payload for setAutoCollectEventsConfig:',
+            message.payload
+          );
+        }
+        break;
+
       case 'updateWorkerLogConfig':
         log(
           'debug',

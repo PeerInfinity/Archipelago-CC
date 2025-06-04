@@ -669,10 +669,41 @@ export class TestSpoilerUI {
     })`;
     stepButton.onclick = () => this.stepSpoilerTest();
 
+    // ADDED: Checkbox for auto-collect events
+    const autoCollectCheckbox = document.createElement('input');
+    autoCollectCheckbox.type = 'checkbox';
+    autoCollectCheckbox.id = 'auto-collect-events-checkbox';
+    autoCollectCheckbox.checked = false; // Default to false, as tests usually disable it initially.
+    // The user can override this manually.
+    autoCollectCheckbox.style.marginLeft = '10px';
+    autoCollectCheckbox.onchange = async (event) => {
+      const isEnabled = event.target.checked;
+      try {
+        await stateManager.setAutoCollectEventsConfig(isEnabled);
+        this.log('info', `Auto-collect events manually set to: ${isEnabled}`);
+        // Optional: Consider if re-running the current step or refreshing view is needed.
+        // For now, the user can manually step again to see the effect.
+      } catch (error) {
+        this.log('error', 'Failed to set auto-collect events config:', error);
+        // Revert checkbox if the call failed
+        event.target.checked = !isEnabled;
+      }
+    };
+
+    const autoCollectLabel = document.createElement('label');
+    autoCollectLabel.htmlFor = 'auto-collect-events-checkbox';
+    autoCollectLabel.textContent = 'Auto-collect Events';
+    autoCollectLabel.style.marginLeft = '2px';
+    // END ADDED
+
     controlsDiv.appendChild(changeFileButton);
     controlsDiv.appendChild(testNameElement);
     controlsDiv.appendChild(runFullButton);
     controlsDiv.appendChild(stepButton);
+    // ADDED: Append checkbox and label
+    controlsDiv.appendChild(autoCollectCheckbox);
+    controlsDiv.appendChild(autoCollectLabel);
+    // END ADDED
 
     this.controlsContainer.innerHTML = ''; // Clear previous controls
     this.controlsContainer.appendChild(controlsDiv);
@@ -728,6 +759,22 @@ export class TestSpoilerUI {
       'info',
       'Skipping explicit rule loading. Assuming StateManager has current rules.'
     );
+
+    // MODIFIED: Disable auto-event collection for the test
+    try {
+      await stateManager.setAutoCollectEventsConfig(false);
+      this.log(
+        'info',
+        '[TestSpoilerUI] Disabled auto-collect events for test duration.'
+      );
+    } catch (error) {
+      this.log(
+        'error',
+        '[TestSpoilerUI] Failed to disable auto-collect events:',
+        error
+      );
+      // Decide if we should proceed or halt if this fails. For now, log and continue.
+    }
 
     this.renderResultsControls();
     this.updateStepInfo();
@@ -854,6 +901,20 @@ export class TestSpoilerUI {
       if (runButton) runButton.disabled = false;
       if (stepButton) stepButton.disabled = false;
       this.isRunning = false; // Ensure isRunning is reset
+      // MODIFIED: Re-enable auto-collect events
+      try {
+        await stateManager.setAutoCollectEventsConfig(true);
+        this.log(
+          'info',
+          '[TestSpoilerUI] Re-enabled auto-collect events after full test run.'
+        );
+      } catch (error) {
+        this.log(
+          'error',
+          '[TestSpoilerUI] Failed to re-enable auto-collect events after full test:',
+          error
+        );
+      }
       // Update UI based on the final overall success status
       // this.updateUIAfterTestCompletion(allEventsPassedSuccessfully, ...);
       // The updateUIAfterTestCompletion might be better called based on the more detailed messages above.
@@ -917,6 +978,15 @@ export class TestSpoilerUI {
     } finally {
       if (runButton) runButton.disabled = false;
       if (stepButton) stepButton.disabled = false;
+      // MODIFIED: REMOVE re-enabling auto-collect events here.
+      // It should remain disabled throughout a sequence of steps.
+      // It will be re-enabled by runFullSpoilerTest's finally, or by clearTestState/dispose.
+      /* try {
+        await stateManager.setAutoCollectEventsConfig(true);
+        this.log('info', '[TestSpoilerUI] Re-enabled auto-collect events after step.');
+      } catch (error) {
+        this.log('error', '[TestSpoilerUI] Failed to re-enable auto-collect events after step:', error);
+      } */
     }
   }
 
@@ -1664,6 +1734,24 @@ export class TestSpoilerUI {
     // It's managed by the loading logic (set on success, cleared on certain failures or when changing files).
     this.currentLogIndex = 0;
     this.testStateInitialized = false;
+
+    // MODIFIED: Re-enable auto-collect events as part of clearing test state
+    // This is a fire-and-forget call as clearTestState might not be awaited.
+    stateManager
+      .setAutoCollectEventsConfig(true)
+      .then(() =>
+        this.log(
+          'info',
+          '[TestSpoilerUI] Auto-collect events re-enabled via clearTestState.'
+        )
+      )
+      .catch((error) =>
+        this.log(
+          'error',
+          '[TestSpoilerUI] Failed to re-enable auto-collect events via clearTestState:',
+          error
+        )
+      );
     // this.clearDisplay(); // Let the calling view manage display clearing.
   }
 
@@ -1679,7 +1767,28 @@ export class TestSpoilerUI {
       this.viewChangeSubscription = null;
       log('info', '[TestSpoilerUI] Unsubscribed from ui:fileViewChanged.');
     }
-    this.clearTestState();
+    // this.clearTestState(); // clearTestState already handles re-enabling.
+    // Calling it here might be redundant if already called by GL.
+    // However, direct call to setAutoCollectEventsConfig ensures it happens during dispose.
+
+    // MODIFIED: Ensure auto-collect events is re-enabled on dispose
+    // Fire-and-forget, similar to clearTestState
+    stateManager
+      .setAutoCollectEventsConfig(true)
+      .then(() =>
+        this.log(
+          'info',
+          '[TestSpoilerUI] Auto-collect events re-enabled via dispose.'
+        )
+      )
+      .catch((error) =>
+        this.log(
+          'error',
+          '[TestSpoilerUI] Failed to re-enable auto-collect events via dispose:',
+          error
+        )
+      );
+
     this.updateStepInfo(); // Clear step info display
   }
 

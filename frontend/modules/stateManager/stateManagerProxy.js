@@ -1523,6 +1523,15 @@ export class StateManagerProxy {
   getRawJsonDataSource() {
     return this.currentRulesSource;
   }
+
+  // Method to enable/disable auto-collection of events in the worker's StateManager
+  async setAutoCollectEventsConfig(enabled) {
+    return this._sendCommand(
+      StateManagerProxy.COMMANDS.SET_AUTO_COLLECT_EVENTS_CONFIG,
+      { enabled }, // Pass 'enabled' as part of the payload
+      false // This is a fire-and-forget command, no specific response expected beyond ack
+    );
+  }
 }
 
 // --- ADDED: Function to create the main-thread snapshot interface ---
