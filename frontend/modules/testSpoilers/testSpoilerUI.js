@@ -37,7 +37,8 @@ export class TestSpoilerUI {
     this.rootElement = null; // Added
     this.activeRulesetName = null;
     this.gameName = null;
-    this.playerId = null;
+    this.playerId = null; // Initialized to null
+    this.log('debug', `[Constructor] Initial playerId: ${this.playerId}`); // Log initial playerId
     this.isLoadingLogPath = null; // ADDED: To prevent concurrent loads of the same log path
 
     // State for stepping through tests
@@ -45,6 +46,7 @@ export class TestSpoilerUI {
     this.currentLogIndex = 0;
     this.testStateInitialized = false;
     this.initialAutoLoadAttempted = false; // ADDED to help manage auto-load calls
+    this.eventProcessingDelayMs = 20; // ADDED: Default delay for event processing
 
     // Create and append root element immediately
     this.getRootElement(); // This creates this.rootElement and sets this.testSpoilersContainer
@@ -72,6 +74,10 @@ export class TestSpoilerUI {
           if (eventData && eventData.source) {
             const newRulesetName = eventData.source;
             this.playerId = eventData.playerId; // Set the player ID here
+            this.log(
+              'info',
+              `[stateManager:rulesLoaded event] playerId set to: ${this.playerId}`
+            ); // Log playerId change
 
             // If an auto-load was already tried for this exact ruleset via the cached check,
             // and this event is for the same ruleset, skip to avoid double processing.
@@ -100,11 +106,11 @@ export class TestSpoilerUI {
           } else {
             log(
               'warn',
-              '[TestSpoilerUI] stateManager:rulesLoaded event (Subscriber) did not contain a valid source.',
+              '[TestSpoilerUI] stateManager:rulesLoaded event (Subscriber) did not contain a valid source or playerId.',
               eventData
             );
             this.renderManualFileSelectionView(
-              'StateManager reported rules loaded, but source name is missing.'
+              'StateManager reported rules loaded, but source name or playerId is missing.'
             );
           }
         } catch (e) {
@@ -121,20 +127,27 @@ export class TestSpoilerUI {
 
       // After subscribing, check if StateManager already has a rules source (e.g. default rules loaded before UI ready)
       const initialRulesSource = stateManager.getRawJsonDataSource();
-      if (initialRulesSource) {
+      const initialPlayerId = stateManager.currentPlayerId; // Directly get from proxy state
+
+      if (initialRulesSource && initialPlayerId) {
         log(
           'info',
-          '[TestSpoilerUI] StateManager already has rules source (Cached Check on init):',
-          initialRulesSource
+          `[TestSpoilerUI] StateManager already has rules source and playerId (Cached Check on init): Source: ${initialRulesSource}, PlayerID: ${initialPlayerId}`
         );
         this.activeRulesetName = initialRulesSource;
+        this.playerId = initialPlayerId; // Set playerId from the proxy's current state
+        this.log(
+          'info',
+          `[TestSpoilerUI - Cached Check] playerId set to: ${this.playerId}`
+        );
+
         this.initialAutoLoadAttempted = true; // Mark that this path was taken
         // Use a microtask to ensure this runs after the current event loop tick, allowing UI to settle if needed.
         Promise.resolve().then(async () => {
           try {
             log(
               'info',
-              '[TestSpoilerUI] Attempting auto-load from cached source on init:',
+              '[TestSpoilerUI] Attempting auto-load from cached source and playerId on init:',
               this.activeRulesetName
             );
             await this.attemptAutoLoadSpoilerLog(this.activeRulesetName);
@@ -152,7 +165,7 @@ export class TestSpoilerUI {
       } else {
         log(
           'info',
-          '[TestSpoilerUI] StateManager does not have rules source yet (Cached Check on init). Waiting for event.'
+          `[TestSpoilerUI] StateManager does not have rules source or playerId yet (Cached Check on init: Source: ${initialRulesSource}, PlayerID: ${initialPlayerId}). Waiting for event.`
         );
         // The message "Test Spoilers panel ready. Checking for active ruleset..." is set in initialize()
         // and is appropriate if we need to wait for the event.
@@ -666,6 +679,10 @@ export class TestSpoilerUI {
   }
 
   async prepareSpoilerTest(isAutoLoad = false) {
+    this.log(
+      'debug',
+      `[prepareSpoilerTest] playerId at start: ${this.playerId}`
+    ); // Log playerId at start of prepareSpoilerTest
     this.testSpoilersContainer.innerHTML = '';
     this.ensureLogContainerReady();
 
@@ -719,6 +736,10 @@ export class TestSpoilerUI {
   }
 
   async runFullSpoilerTest() {
+    this.log(
+      'debug',
+      `[runFullSpoilerTest] playerId at start: ${this.playerId}`
+    ); // Log playerId at start of runFullSpoilerTest
     await this.prepareSpoilerTest();
     if (!this.testStateInitialized) {
       this.log(
@@ -757,48 +778,87 @@ export class TestSpoilerUI {
     if (runButton) runButton.disabled = true;
     if (stepButton) stepButton.disabled = true;
 
+    let allEventsPassedSuccessfully = true; // Renamed from allChecksPassed for clarity
+    let detailedErrorMessages = [];
+
     try {
+      // The main loop for processing events.
+      // Critical errors from prepareSpoilerTest or StateManager setup are caught before this.
+      // This loop now continues even if processSingleEvent reports an error for an event.
       while (this.currentLogIndex < this.spoilerLogData.length) {
         if (currentAbortController.signal.aborted) {
-          // MODIFIED: Use local variable
           throw new DOMException('Aborted', 'AbortError');
         }
-        await this.processSingleEvent(
-          this.spoilerLogData[this.currentLogIndex]
+
+        const event = this.spoilerLogData[this.currentLogIndex];
+        const eventProcessingResult = await this.processSingleEvent(event);
+
+        if (eventProcessingResult && eventProcessingResult.error) {
+          allEventsPassedSuccessfully = false;
+          const errorMessage = `Mismatch for event ${
+            this.currentLogIndex + 1
+          } (Sphere ${
+            event.sphere_index !== undefined ? event.sphere_index : 'N/A'
+          }): ${eventProcessingResult.message}`;
+          this.log('error', errorMessage);
+          detailedErrorMessages.push(errorMessage);
+          // UI update for individual error already happens in processSingleEvent via this.log('error', ...)
+        }
+        // Add a small delay to allow UI updates and prevent blocking
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.eventProcessingDelayMs)
         );
+
         this.currentLogIndex++;
         this.updateStepInfo();
-        // Add a small delay to allow UI updates and prevent blocking
-        await new Promise((resolve) => setTimeout(resolve, 5));
       }
 
-      // --- 5. Final Result ---
-      if (!currentAbortController.signal.aborted) {
+      // --- Final Result Determination ---
+      if (currentAbortController.signal.aborted) {
+        this.log('info', 'Spoiler test aborted by user.');
+        // No explicit success/failure message if aborted by user, just the abort log.
+      } else if (allEventsPassedSuccessfully) {
         this.log(
           'success',
-          'Spoiler test completed successfully. All states matched.'
+          'Spoiler test completed successfully. All events matched.'
         );
       } else {
-        this.log('info', 'Spoiler test aborted.');
+        // This specific log for overall failure might be redundant if individual errors are clear enough,
+        // but kept for a clear summary.
+        this.log(
+          'error',
+          `Spoiler test completed with ${detailedErrorMessages.length} mismatch(es). See logs above for details.`
+        );
       }
     } catch (error) {
+      // This catch block now primarily handles unexpected errors or aborts, not first mismatch.
       if (error.name === 'AbortError') {
         this.log('info', 'Spoiler test aborted.');
       } else {
+        // Log critical/unexpected errors not handled as part of normal event processing.
         this.log(
           'error',
-          `Test failed at step ${this.currentLogIndex + 1}: ${error.message}`
+          `Critical error during spoiler test execution at step ${
+            this.currentLogIndex + 1
+          }: ${error.message}`
         );
+        // Also log to the main logger for more detailed stack trace if available
         log(
           'error',
-          `Spoiler Test Error at step ${this.currentLogIndex + 1}:`,
+          `Critical Spoiler Test Error at step ${this.currentLogIndex + 1}:`,
           error
         );
+        allEventsPassedSuccessfully = false; // Ensure overall status reflects this critical failure
       }
     } finally {
       if (runButton) runButton.disabled = false;
       if (stepButton) stepButton.disabled = false;
-      // Don't reset abort controller here, allow stepping after failure/abort
+      this.isRunning = false; // Ensure isRunning is reset
+      // Update UI based on the final overall success status
+      // this.updateUIAfterTestCompletion(allEventsPassedSuccessfully, ...);
+      // The updateUIAfterTestCompletion might be better called based on the more detailed messages above.
+      // For now, individual logs and the final summary should cover it.
+      // Consider how to best summarize if there were both an abort and prior errors.
     }
   }
 
@@ -879,6 +939,10 @@ export class TestSpoilerUI {
   }
 
   async processSingleEvent(event) {
+    this.log(
+      'debug',
+      `[processSingleEvent] playerId at start: ${this.playerId}`
+    ); // Log playerId at start of processSingleEvent
     // This function now only processes a single event
     if (!event) return;
 
@@ -895,42 +959,111 @@ export class TestSpoilerUI {
 
     switch (eventType) {
       case 'state_update': {
-        // Check if player_data for the current player is available
         if (!event.player_data || !event.player_data[this.playerId]) {
           this.log(
             'warn',
             `State update event missing player_data for current player ${this.playerId}. Skipping comparison.`
           );
-          allChecksPassed = false; // Or true, depending on desired strictness. Let's be strict.
+          allChecksPassed = false;
           break;
         }
 
         const playerDataForCurrentTest = event.player_data[this.playerId];
-
-        // Extract inventory and accessible locations from the player-specific data
         const inventory_from_log =
-          playerDataForCurrentTest.inventory_details?.prog_items || {}; // Use prog_items
+          playerDataForCurrentTest.inventory_details?.prog_items || {};
         const accessible_from_log =
           playerDataForCurrentTest.accessible_locations || [];
 
         const context = {
           type: 'state_update',
-          sphere_number: event.sphere_index || this.currentLogIndex + 1, // Use sphere_index from log
-          player_id: this.playerId, // Use the component's current player ID
+          sphere_number:
+            event.sphere_index !== undefined
+              ? event.sphere_index
+              : this.currentLogIndex + 1,
+          player_id: this.playerId,
         };
 
         this.log(
           'info',
-          `Comparing State Update for player ${context.player_id} (Sphere ${context.sphere_number})`
+          `Preparing StateManager for sphere ${context.sphere_number} by applying log inventory.`
         );
-        this.log('debug', 'Log Inventory:', inventory_from_log);
-        this.log('debug', 'Log Accessible Locations:', accessible_from_log);
 
-        comparisonResult = await this.compareAccessibleLocations(
-          { accessible: accessible_from_log, inventory: inventory_from_log },
-          context
-        );
-        allChecksPassed = comparisonResult;
+        try {
+          // 1. Reset StateManager's inventory and checked locations for a clean slate for this sphere.
+          await stateManager.clearStateAndReset();
+          this.log('debug', 'StateManager state cleared for sphere.');
+
+          // 2. Apply the inventory from the log to the StateManager worker.
+          await stateManager.beginBatchUpdate(true);
+          this.log(
+            'debug',
+            'Beginning batch update for inventory application.'
+          );
+          if (Object.keys(inventory_from_log).length > 0) {
+            for (const [itemName, count] of Object.entries(
+              inventory_from_log
+            )) {
+              if (count > 0) {
+                // Ensure we only add items with a positive count
+                this.log(
+                  'debug',
+                  `Adding item via StateManager: ${itemName}, count: ${count}`
+                );
+                await stateManager.addItemToInventory(itemName, count);
+              }
+            }
+          } else {
+            this.log(
+              'debug',
+              'Inventory from log is empty. No items to add to StateManager.'
+            );
+          }
+          await stateManager.commitBatchUpdate();
+          this.log('debug', 'Committed batch update for inventory.');
+
+          // 3. Ping worker to ensure all commands are processed and state is stable.
+          await stateManager.pingWorker(
+            `spoiler_sphere_${context.sphere_number}_inventory_applied`
+          );
+          this.log(
+            'debug',
+            'Ping successful. StateManager ready for comparison.'
+          );
+
+          // 4. Get the fresh snapshot from the worker.
+          const freshSnapshot = await stateManager.getLatestStateSnapshot();
+          if (!freshSnapshot) {
+            this.log(
+              'error',
+              'Failed to retrieve a fresh snapshot from StateManager after inventory update.'
+            );
+            allChecksPassed = false;
+            break;
+          }
+          this.log(
+            'debug',
+            'Retrieved fresh snapshot from StateManager.',
+            freshSnapshot
+          );
+
+          // 5. Compare using the fresh snapshot.
+          comparisonResult = await this.compareAccessibleLocations(
+            accessible_from_log, // This is an array of location names
+            freshSnapshot, // The authoritative snapshot from the worker
+            this.playerId, // Pass player ID for context in comparison
+            context // Original context for logging
+          );
+          allChecksPassed = comparisonResult;
+        } catch (err) {
+          this.log(
+            'error',
+            `Error during StateManager interaction or comparison for sphere ${context.sphere_number}: ${err.message}`,
+            err
+          );
+          allChecksPassed = false;
+          // Ensure comparisonResult reflects failure if an error occurs before it's set
+          comparisonResult = false;
+        }
         break;
       }
 
@@ -938,6 +1071,14 @@ export class TestSpoilerUI {
       case 'inventory_changed': // Legacy, might be combined or removed if sphere_update covers all
       case 'accessibility_update': // Legacy, might be combined or removed
         {
+          // NOTE: This old logic for sphere_update etc. uses a modified snapshot.
+          // If these event types are still relevant for spoiler logs, they need similar refactoring
+          // as 'state_update' above to use the new worker-driven state comparison.
+          // For now, assuming 'state_update' is the primary event from Python sphere logs.
+          this.log(
+            'warn',
+            `Event type '${eventType}' found. If this is from a Python sphere log, its comparison logic might be outdated. Prefer 'state_update' events.`
+          );
           // Ensure player_data and specific player ID exist
           if (!event.player_data || !event.player_data[this.playerId]) {
             this.log(
@@ -948,9 +1089,10 @@ export class TestSpoilerUI {
             break;
           }
           const playerData = event.player_data[this.playerId];
-          const inventory_from_log = playerData.inventory || {};
-          const accessible_from_log = playerData.accessible_locations || [];
-          const context = {
+          const inventory_from_log_legacy = playerData.inventory || {};
+          const accessible_from_log_legacy =
+            playerData.accessible_locations || [];
+          const context_legacy = {
             type: eventType,
             sphere_number: event.sphere_number || this.currentLogIndex + 1, // Fallback sphere number
             player_id: this.playerId, // From current UI context
@@ -958,14 +1100,32 @@ export class TestSpoilerUI {
 
           this.log(
             'info',
-            `Comparing Sphere Update for player ${this.playerId} (Sphere ${context.sphere_number})`
+            `Comparing Sphere Update (Legacy Method) for player ${this.playerId} (Sphere ${context_legacy.sphere_number})`
           );
-          this.log('debug', 'Log Inventory:', inventory_from_log);
-          this.log('debug', 'Log Accessible Locations:', accessible_from_log);
+          this.log(
+            'debug',
+            'Log Inventory (Legacy):',
+            inventory_from_log_legacy
+          );
+          this.log(
+            'debug',
+            'Log Accessible Locations (Legacy):',
+            accessible_from_log_legacy
+          );
 
-          comparisonResult = await this.compareAccessibleLocations(
-            { accessible: accessible_from_log, inventory: inventory_from_log },
-            context
+          // This still uses the old compareAccessibleLocations that modifies a snapshot locally.
+          // To fix this, it would need to follow the same pattern as state_update (reset, set inv, ping, get fresh snap)
+          // then call the new compareAccessibleLocations.
+          // For now, this will likely be incorrect if state_update is the standard.
+          const logDataForLegacyComparison = {
+            accessible: accessible_from_log_legacy,
+            inventory: inventory_from_log_legacy,
+          };
+          comparisonResult = await this.compareAccessibleLocations_OLD(
+            // Temporarily call old version or adapt
+            logDataForLegacyComparison,
+            this.playerId, // Assuming old version might need playerID
+            context_legacy
           );
           allChecksPassed = comparisonResult;
         }
@@ -982,10 +1142,11 @@ export class TestSpoilerUI {
         this.log('state', 'Comparing initial state...');
         // The worker should compute this after rules are loaded via loadRules command,
         // and the state will be available via snapshot for compareAccessibleLocations.
-        await this.compareAccessibleLocations(
-          event.accessible_locations,
+        comparisonResult = await this.compareAccessibleLocations(
+          { accessible: event.accessible_locations, inventory: {} },
           'Initial State'
         );
+        allChecksPassed = comparisonResult;
         break;
 
       case 'checked_location':
@@ -1102,71 +1263,269 @@ export class TestSpoilerUI {
     if (!allChecksPassed) {
       this.log(
         'error',
-        `Test failed at step ${this.currentLogIndex + 1}: Comparison failed.`
+        `Test failed at step ${
+          this.currentLogIndex + 1
+        }: Comparison failed for event type '${eventType}'.`
       );
     }
+
+    return {
+      error: !allChecksPassed,
+      message: `Comparison for ${eventType} at step ${
+        this.currentLogIndex + 1
+      } ${comparisonResult ? 'Passed' : 'Failed'}`,
+    };
   }
 
-  async compareAccessibleLocations(logAccessible, context) {
-    const snapshot = await stateManager.getLatestStateSnapshot();
-    const staticData = stateManager.getStaticData(); // ADDED: Get static data
+  // Renaming old version to avoid conflict, or it could be removed if only state_update is used.
+  async compareAccessibleLocations_OLD(logData, playerId, context) {
+    const originalSnapshot = await stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData();
 
-    this.log('info', `[compareAccessibleLocations] Context: '${context}'`, {
-      snapshot,
+    this.log('info', `[compareAccessibleLocations_OLD] Context:`, {
+      context,
+      originalSnapshot,
       staticData,
+      logDataInventory: logData ? logData.inventory : 'N/A',
     });
 
-    if (!snapshot) {
+    if (!originalSnapshot) {
       this.log(
         'error',
-        `[compareAccessibleLocations] Snapshot is null/undefined for context: ${context}`
+        `[compareAccessibleLocations_OLD] Original Snapshot is null/undefined for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
       );
       throw new Error(
-        `Snapshot invalid (null) during spoiler test at: ${context}`
+        `Original Snapshot invalid (null) during spoiler test at: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
       );
     }
     if (!staticData || !staticData.locations) {
       this.log(
         'error',
-        `[compareAccessibleLocations] Static data or staticData.locations is null/undefined for context: ${context}`,
+        `[compareAccessibleLocations_OLD] Static data or staticData.locations is null/undefined for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`,
         { staticData }
       );
-      throw new Error(`Static data invalid during spoiler test at: ${context}`);
+      throw new Error(
+        `Static data invalid during spoiler test at: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
     }
-    // Snapshot itself does not directly contain all location definitions;
-    // staticData.locations contains the definitions, snapshot contains dynamic state (flags, reachability).
+
+    let modifiedSnapshot = JSON.parse(JSON.stringify(originalSnapshot));
+    if (logData && logData.inventory && playerId) {
+      if (!modifiedSnapshot.prog_items) {
+        modifiedSnapshot.prog_items = {};
+      }
+      if (
+        typeof modifiedSnapshot.prog_items[playerId] !== 'object' ||
+        modifiedSnapshot.prog_items[playerId] === null
+      ) {
+        modifiedSnapshot.prog_items[playerId] = {};
+      }
+      modifiedSnapshot.prog_items[playerId] = { ...logData.inventory };
+
+      this.log(
+        'debug',
+        `[compareAccessibleLocations_OLD] Overrode snapshot inventory for player ${playerId} with log inventory:`,
+        logData.inventory
+      );
+    } else {
+      this.log(
+        'debug',
+        '[compareAccessibleLocations_OLD] No inventory override from logData or missing playerId.'
+      );
+    }
 
     const stateAccessibleUnchecked = [];
     const snapshotInterface = createStateSnapshotInterface(
-      snapshot,
+      modifiedSnapshot,
       staticData
-    ); // ADDED for rule evaluation
+    );
 
     if (!snapshotInterface) {
       this.log(
         'error',
-        `[compareAccessibleLocations] Failed to create snapshotInterface for context: ${context}`
+        `[compareAccessibleLocations_OLD] Failed to create snapshotInterface for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
       );
-      throw new Error(`SnapshotInterface creation failed at: ${context}`);
+      throw new Error(
+        `SnapshotInterface creation failed at: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
     }
 
     for (const locName in staticData.locations) {
-      const locDef = staticData.locations[locName]; // Location Definition from staticData
-
-      const isChecked = snapshot.flags?.includes(locName);
-      if (isChecked) continue; // Skip checked locations
-
-      // Determine accessibility based on snapshot and staticDef
+      const locDef = staticData.locations[locName];
+      const isChecked = modifiedSnapshot.flags?.includes(locName);
+      if (isChecked) continue;
       const parentRegionName = locDef.parent_region || locDef.region;
       const parentRegionReachabilityStatus =
-        snapshot.reachability?.[parentRegionName];
+        modifiedSnapshot.reachability?.[parentRegionName];
+      const isParentRegionEffectivelyReachable =
+        parentRegionReachabilityStatus === 'reachable' ||
+        parentRegionReachabilityStatus === 'checked';
+      const locationAccessRule = locDef.access_rule;
+      let locationRuleEvalResult = true;
+      if (locationAccessRule) {
+        locationRuleEvalResult = evaluateRule(
+          locationAccessRule,
+          snapshotInterface
+        );
+      }
+      const doesLocationRuleEffectivelyPass = locationRuleEvalResult === true;
+      if (
+        isParentRegionEffectivelyReachable &&
+        doesLocationRuleEffectivelyPass
+      ) {
+        stateAccessibleUnchecked.push(locName);
+      }
+    }
+
+    const stateAccessibleSet = new Set(stateAccessibleUnchecked);
+    const accessibleFromLog =
+      logData && Array.isArray(logData.accessible) ? logData.accessible : [];
+    const logAccessibleSet = new Set(accessibleFromLog);
+
+    const missingFromState = [...logAccessibleSet].filter(
+      (name) => !stateAccessibleSet.has(name)
+    );
+    const extraInState = [...stateAccessibleSet].filter(
+      (name) => !logAccessibleSet.has(name)
+    );
+
+    if (missingFromState.length === 0 && extraInState.length === 0) {
+      this.log(
+        'success',
+        `[compareAccessibleLocations_OLD] State match OK for: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }. (${stateAccessibleSet.size} accessible & unchecked)`
+      );
+      return true;
+    } else {
+      this.log(
+        'error',
+        `[compareAccessibleLocations_OLD] STATE MISMATCH found for: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
+      if (missingFromState.length > 0) {
+        this.log(
+          'mismatch',
+          ` > [OLD] Locations accessible in LOG but NOT in STATE (or checked): ${missingFromState.join(
+            ', '
+          )}`
+        );
+      }
+      if (extraInState.length > 0) {
+        this.log(
+          'mismatch',
+          ` > [OLD] Locations accessible in STATE (and unchecked) but NOT in LOG: ${extraInState.join(
+            ', '
+          )}`
+        );
+      }
+      this.log('debug', '[compareAccessibleLocations_OLD] Mismatch Details:', {
+        context:
+          typeof context === 'string' ? context : JSON.stringify(context),
+        logAccessibleSet: Array.from(logAccessibleSet),
+        stateAccessibleSet: Array.from(stateAccessibleSet),
+        logInventoryUsed: logData ? logData.inventory : 'N/A',
+        originalSnapshotInventory: originalSnapshot.prog_items
+          ? originalSnapshot.prog_items[playerId] // Use playerId here
+          : 'N/A',
+      });
+      return false;
+    }
+  }
+
+  async compareAccessibleLocations(
+    logAccessibleLocationNames,
+    currentWorkerSnapshot,
+    playerId,
+    context
+  ) {
+    // currentWorkerSnapshot IS the authoritative snapshot from the worker AFTER its inventory was set.
+    // logAccessibleLocationNames is an array of location names from the Python log.
+    const staticData = stateManager.getStaticData();
+
+    this.log('info', `[compareAccessibleLocations] Comparing for context:`, {
+      context,
+      workerSnapshotInventory:
+        currentWorkerSnapshot?.prog_items?.[playerId] || 'N/A',
+      logAccessibleNamesCount: logAccessibleLocationNames.length,
+      // currentWorkerSnapshot, // Avoid logging the whole snapshot unless necessary for deep debug
+      // staticData, // Avoid logging whole staticData
+    });
+
+    if (!currentWorkerSnapshot) {
+      this.log(
+        'error',
+        `[compareAccessibleLocations] currentWorkerSnapshot is null/undefined for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
+      // comparisonResult will be false due to allChecksPassed being false in processSingleEvent
+      return false;
+    }
+    if (!staticData || !staticData.locations) {
+      this.log(
+        'error',
+        `[compareAccessibleLocations] Static data or staticData.locations is null/undefined for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`,
+        {
+          staticDataKeys: staticData
+            ? Object.keys(staticData)
+            : 'staticData is null',
+        }
+      );
+      return false;
+    }
+
+    // No need to modify the snapshot; it already has the correct inventory from the worker.
+    const stateAccessibleUnchecked = [];
+    const snapshotInterface = createStateSnapshotInterface(
+      currentWorkerSnapshot, // Use the authoritative snapshot directly
+      staticData
+    );
+
+    if (!snapshotInterface) {
+      this.log(
+        'error',
+        `[compareAccessibleLocations] Failed to create snapshotInterface for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
+      return false;
+    }
+
+    for (const locName in staticData.locations) {
+      const locDef = staticData.locations[locName];
+
+      // Check against the worker's snapshot flags
+      const isChecked = currentWorkerSnapshot.flags?.includes(locName);
+      if (isChecked) continue;
+
+      const parentRegionName = locDef.parent_region || locDef.region;
+      // Use reachability from the worker's snapshot
+      const parentRegionReachabilityStatus =
+        currentWorkerSnapshot.reachability?.[parentRegionName];
       const isParentRegionEffectivelyReachable =
         parentRegionReachabilityStatus === 'reachable' ||
         parentRegionReachabilityStatus === 'checked';
 
       const locationAccessRule = locDef.access_rule;
-      let locationRuleEvalResult = true; // Default to true if no rule
+      let locationRuleEvalResult = true;
       if (locationAccessRule) {
+        // snapshotInterface uses the worker's snapshot
         locationRuleEvalResult = evaluateRule(
           locationAccessRule,
           snapshotInterface
@@ -1183,10 +1542,8 @@ export class TestSpoilerUI {
     }
 
     const stateAccessibleSet = new Set(stateAccessibleUnchecked);
-    // Ensure logAccessible is an array. If not, default to an empty array.
-    const safeLogAccessible = Array.isArray(logAccessible) ? logAccessible : [];
-    // logAccessible should be an array of strings (location names)
-    const logAccessibleSet = new Set(safeLogAccessible);
+    // logAccessibleLocationNames is already an array of strings
+    const logAccessibleSet = new Set(logAccessibleLocationNames);
 
     const missingFromState = [...logAccessibleSet].filter(
       (name) => !stateAccessibleSet.has(name)
@@ -1198,10 +1555,18 @@ export class TestSpoilerUI {
     if (missingFromState.length === 0 && extraInState.length === 0) {
       this.log(
         'success',
-        `State match OK for: ${context}. (${stateAccessibleSet.size} accessible & unchecked)`
+        `State match OK for: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }. (${stateAccessibleSet.size} accessible & unchecked)`
       );
+      return true;
     } else {
-      this.log('error', `STATE MISMATCH found for: ${context}`);
+      this.log(
+        'error',
+        `STATE MISMATCH found for: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
       if (missingFromState.length > 0) {
         this.log(
           'mismatch',
@@ -1218,10 +1583,16 @@ export class TestSpoilerUI {
           )}`
         );
       }
-      // Optionally provide more details, e.g., log the full sets
-      // log('info', "Log Accessible Set:", logAccessibleSet);
-      // log('info', "State Accessible Set (Unchecked):", stateAccessibleSet);
-      throw new Error(`State mismatch during spoiler test at: ${context}`);
+      this.log('debug', '[compareAccessibleLocations] Mismatch Details:', {
+        context:
+          typeof context === 'string' ? context : JSON.stringify(context),
+        logAccessibleSet: Array.from(logAccessibleSet),
+        stateAccessibleSet: Array.from(stateAccessibleSet),
+        workerSnapshotInventoryUsed: currentWorkerSnapshot.prog_items
+          ? currentWorkerSnapshot.prog_items[playerId]
+          : 'N/A',
+      });
+      return false;
     }
   }
 

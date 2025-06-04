@@ -337,28 +337,31 @@ export class StateManager {
    * Adds an item and notifies all registered callbacks
    */
   addItemToInventory(itemName) {
-    // Simple passthrough, inventory class handles progressive logic if any
-    if (this.inventory && typeof this.inventory.addItem === 'function') {
-      this.inventory.addItem(itemName);
-      this._logDebug(
-        `[StateManager] addItemToInventory: Called inventory.addItem("${itemName}")`
-      );
-
-      // Only invalidate cache and send updates if NOT in batch mode
-      if (!this._batchMode) {
+    if (!this._batchMode) {
+      // Non-batch mode: Apply immediately and update
+      if (this.inventory && typeof this.inventory.addItem === 'function') {
+        this.inventory.addItem(itemName);
+        this._logDebug(
+          `[StateManager] addItemToInventory: Called inventory.addItem("${itemName}")`
+        );
         this.invalidateCache(); // Adding an item can change reachability
         this._sendSnapshotUpdate(); // Send a new snapshot
       } else {
         this._logDebug(
-          `[StateManager] addItemToInventory: In batch mode, deferring cache invalidation and snapshot update for "${itemName}"`
+          `[StateManager] addItemToInventory: Inventory or addItem method not available for "${itemName}"`,
+          null,
+          'warn'
         );
       }
     } else {
+      // Batch mode: Record the item update for later processing by commitBatchUpdate
       this._logDebug(
-        `[StateManager] addItemToInventory: Inventory or addItem method not available for "${itemName}"`,
-        null,
-        'warn'
+        `[StateManager] addItemToInventory: Batching item "${itemName}"`
       );
+      const currentBatchedCount = this._batchedUpdates.get(itemName) || 0;
+      this._batchedUpdates.set(itemName, currentBatchedCount + 1);
+      // DO NOT call this.inventory.addItem() here directly.
+      // DO NOT call invalidateCache() or _sendSnapshotUpdate() here directly.
     }
   }
 
@@ -3177,7 +3180,7 @@ export class StateManager {
 
     let accessibilityResult = false;
     try {
-      // 2. Clear current inventory and checked locations for the test scope
+      // 2. Clear current inventory and checked locations for the test
       this.inventory.items.clear();
       this.checkedLocations.clear(); // Tests usually start with no locations checked unless specified
 

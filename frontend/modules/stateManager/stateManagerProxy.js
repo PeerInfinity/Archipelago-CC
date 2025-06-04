@@ -33,13 +33,13 @@ function log(level, message, ...data) {
 export class StateManagerProxy {
   static COMMANDS = STATE_MANAGER_COMMANDS;
 
-  constructor(eventBus) {
+  constructor(eventBusInstance) {
     log('info', '[stateManagerProxy] Initializing Proxy...');
-    if (!eventBus) {
+    if (!eventBusInstance) {
       throw new Error('StateManagerProxy requires an eventBus instance.');
     }
     this.worker = null;
-    this.eventBus = eventBus;
+    this.eventBus = eventBusInstance;
     this.uiCache = null; // Initialize cache to null, indicating not yet loaded
     this.staticDataCache = {}; // Initialize staticDataCache to an empty object
     this.nextQueryId = 1;
@@ -52,6 +52,9 @@ export class StateManagerProxy {
     this.debugMode = false; // Initialize debugMode
     this.gameIdFromWorker = null; // ADDED: To store gameId from worker confirmation
     this.currentRulesSource = null; // ADDED: To store the source name of the current rules
+    this.messageCounter = 0; // DEPRECATED or RENAMED? Let's ensure nextMessageId is primary.
+    this.nextMessageId = 0; // MODIFIED: Initialize nextMessageId
+    this.config = null; // To store initial config like gameId, playerId
 
     this._setupInitialLoadPromise();
     this.initializeWorker();
@@ -480,10 +483,31 @@ export class StateManagerProxy {
   }
 
   sendQueryToWorker(message, timeoutMs = 10000) {
-    // Added timeout
+    if (!this.isWorkerInitialized()) {
+      const errorMessage =
+        '[StateManagerProxy] Worker not initialized. Cannot send query.';
+      log('error', errorMessage, {
+        command: message.command,
+        payload: message.payload,
+      });
+      this.eventBus.publish('stateManager:proxyError', {
+        message: errorMessage,
+        details: { command: message.command, payload: message.payload },
+      });
+      return Promise.reject(new Error(errorMessage));
+    }
+
     return new Promise((resolve, reject) => {
-      if (!this.worker) {
-        return reject(new Error('Worker not initialized'));
+      const message_id = this.messageCounter++;
+      // MODIFIED: Direct call to imported function
+      if (typeof logWorkerCommunication === 'function') {
+        // Check if the imported function exists
+        logWorkerCommunication(
+          'send-query',
+          message_id,
+          message.command,
+          message.payload
+        );
       }
 
       const queryId = this.nextQueryId++;
@@ -780,16 +804,18 @@ export class StateManagerProxy {
   // --- End of specific static data getters ---
 
   async addItemToInventory(item, quantity = 1) {
+    // This command sends data but doesn't inherently expect a unique response specific to this single item addition,
+    // especially if part of a batch. The snapshot update confirms the batch.
     return this._sendCommand(
-      StateManagerProxy.COMMANDS.ADD_ITEM,
+      StateManagerProxy.COMMANDS.ADD_ITEM_TO_INVENTORY,
       { item, quantity },
-      true
+      false // MODIFIED: Explicitly pass false for expectResponse
     );
   }
 
   async removeItemFromInventory(item, quantity = 1) {
     return this._sendCommand(
-      StateManagerProxy.COMMANDS.REMOVE_ITEM,
+      StateManagerProxy.COMMANDS.REMOVE_ITEM_FROM_INVENTORY,
       { item, quantity },
       true
     );
@@ -822,7 +848,7 @@ export class StateManagerProxy {
       checkedLocationIds
     );
     return this._sendCommand(
-      'syncCheckedLocationsFromServer', // Command name matches worker
+      StateManagerProxy.COMMANDS.SYNC_CHECKED_LOCATIONS_FROM_SERVER,
       { checkedLocationIds },
       true // Expect a response (e.g., updated snapshot or confirmation)
     );
@@ -838,7 +864,7 @@ export class StateManagerProxy {
       `[StateManagerProxy] Setting worker queue reporting to: ${enabled}`
     );
     return this._sendCommand(
-      'toggleQueueReporting',
+      StateManagerProxy.COMMANDS.TOGGLE_QUEUE_REPORTING,
       { enabled },
       true // Expect confirmation
     );
@@ -850,7 +876,7 @@ export class StateManagerProxy {
    */
   async getFullSnapshot() {
     return this._sendCommand(
-      StateManagerProxy.COMMANDS.GET_SNAPSHOT,
+      StateManagerProxy.COMMANDS.GET_FULL_SNAPSHOT_QUERY,
       null,
       true
     );
@@ -861,7 +887,11 @@ export class StateManagerProxy {
    * @returns {Promise<object>} A promise that resolves with the queue status.
    */
   async getWorkerQueueStatus() {
-    return this._sendCommand('getQueueStatus', null, true);
+    return this._sendCommand(
+      StateManagerProxy.COMMANDS.GET_WORKER_QUEUE_STATUS_QUERY,
+      null,
+      true
+    );
   }
 
   // Public method to get the latest snapshot directly from the cache
@@ -933,38 +963,73 @@ export class StateManagerProxy {
     expectResponse = false,
     timeout = 5000
   ) {
-    const message = { command, payload };
-    // queryId is not relevant for this version of _sendCommand, it's for sendQueryToWorker
-
-    log(
-      'info',
-      '[StateManagerProxy _sendCommand] Sending to worker:',
-      JSON.parse(JSON.stringify(message))
-    );
-
     if (!this.worker) {
-      log(
-        'error',
-        '[stateManagerProxy] Worker not available for _sendCommand.'
+      // MODIFIED: Direct call to imported logWorkerCommunication
+      if (typeof logWorkerCommunication === 'function') {
+        logWorkerCommunication(
+          `[Proxy -> Worker] Error: Worker not initialized. Command: ${command}`,
+          'error'
+        );
+      }
+      // Optionally, queue the command or throw a more specific error
+      throw new Error(
+        `Worker not initialized. Cannot send command: ${command}`
       );
-      // Optionally throw an error or handle gracefully
-      return;
     }
-    try {
+
+    const messageId = this.nextMessageId++;
+    const message = {
+      id: messageId,
+      command: command,
+      payload: payload,
+      expectResponse: expectResponse,
+    };
+
+    return new Promise((resolve, reject) => {
+      if (expectResponse) {
+        this.pendingQueries.set(messageId, { resolve, reject, timeout });
+        // Start timeout for query
+        setTimeout(() => {
+          if (this.pendingQueries.has(messageId)) {
+            this.pendingQueries.delete(messageId);
+            const queryError = new Error(
+              `Timeout waiting for response to command: ${command} (ID: ${messageId})`
+            );
+            // MODIFIED: Direct call to imported logWorkerCommunication
+            if (typeof logWorkerCommunication === 'function') {
+              logWorkerCommunication(
+                `[Proxy -> Worker] ${queryError.message}`,
+                'error'
+              );
+            }
+            reject(queryError);
+          }
+        }, timeout);
+      }
+
+      // MODIFIED: Direct call to imported logWorkerCommunication
+      if (typeof logWorkerCommunication === 'function') {
+        logWorkerCommunication(
+          `[Proxy -> Worker] ID: ${messageId}, CMD: ${command}`,
+          payload
+        );
+      }
       this.worker.postMessage(message);
-    } catch (error) {
-      log(
-        'error',
-        '[stateManagerProxy] Error sending command to worker:',
-        error,
-        message
-      );
-      // Handle serialization errors, etc.
-      this.eventBus.publish('stateManager:error', {
-        message: 'Error communicating with StateManager worker.',
-        isCritical: true,
-      });
+
+      if (!expectResponse) {
+        resolve(); // Resolve immediately for fire-and-forget commands
+      }
+    });
+  }
+
+  async clearStateAndReset() {
+    // MODIFIED: Direct call to imported logWorkerCommunication
+    if (typeof logWorkerCommunication === 'function') {
+      logWorkerCommunication('[Proxy -> Worker] COMMAND: clearStateAndReset');
     }
+    await this._sendCommand(StateManagerProxy.COMMANDS.CLEAR_STATE_AND_RESET);
+    // The worker's clearState method should handle sending a snapshot update.
+    // We'll rely on subsequent ping/snapshotUpdated events for synchronization.
   }
 
   /**
@@ -988,7 +1053,7 @@ export class StateManagerProxy {
       );
       try {
         const response = await this._sendCommand(
-          'evaluateRuleRequest',
+          StateManagerProxy.COMMANDS.EVALUATE_RULE_REMOTE,
           { rule },
           true // Expect a response
         );
@@ -1298,7 +1363,7 @@ export class StateManagerProxy {
     });
 
     this.sendCommandToWorker({
-      command: StateManagerProxy.COMMANDS.PING_WORKER,
+      command: StateManagerProxy.COMMANDS.PING,
       queryId: queryId, // Include queryId so worker can echo it back
       payload: dataToEcho,
     });
@@ -1316,7 +1381,7 @@ export class StateManagerProxy {
   async setupTestInventoryAndGetSnapshot(requiredItems, excludedItems) {
     return this.sendQueryToWorker({
       // Assuming sendQueryToWorker handles promises
-      command: 'SETUP_TEST_INVENTORY_AND_GET_SNAPSHOT', // Define this in COMMANDS
+      command: StateManagerProxy.COMMANDS.SETUP_TEST_INVENTORY, // Define this in COMMANDS
       payload: { requiredItems, excludedItems },
     });
   }
@@ -1348,7 +1413,8 @@ export class StateManagerProxy {
     try {
       // This command needs a response with the evaluation result.
       const response = await this.sendQueryToWorker({
-        command: StateManagerProxy.COMMANDS.EVALUATE_ACCESSIBILITY_FOR_TEST,
+        command:
+          StateManagerProxy.COMMANDS.EVALUATE_LOCATION_ACCESSIBILITY_TEST,
         payload: {
           locationName,
           requiredItems,

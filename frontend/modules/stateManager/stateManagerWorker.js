@@ -892,6 +892,35 @@ self.onmessage = async function (e) {
         }
         break;
 
+      case 'clearStateAndReset':
+        log('debug', '[Worker] Received clearStateAndReset command');
+        if (stateManagerInstance) {
+          stateManagerInstance.clearState({ recomputeAndSendUpdate: true });
+        }
+        break;
+
+      case 'updateWorkerLogConfig':
+        log(
+          'debug',
+          '[Worker] Received updateWorkerLogConfig command',
+          message.payload
+        );
+        if (message.payload && typeof message.payload.config === 'object') {
+          if (typeof self.setWorkerLogConfig === 'function') {
+            self.setWorkerLogConfig(message.payload.config);
+            log('info', '[Worker] Updated worker log config.');
+          } else {
+            log('warn', '[Worker] self.setWorkerLogConfig is not a function.');
+          }
+        } else {
+          log(
+            'warn',
+            '[Worker] Invalid payload for updateWorkerLogConfig:',
+            message.payload
+          );
+        }
+        break;
+
       default:
         log(
           'warn',
