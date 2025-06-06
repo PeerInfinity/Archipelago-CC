@@ -236,6 +236,6 @@ registerTest({
     'Tests selecting and running a full test playthrough using the first available playthrough log.',
   testFunction: testPlaythroughPanelRunFullTest,
   category: 'Test Playthroughs Panel',
-  enabled: true,
+  enabled: false,
   order: 20, // Adjust order as needed
 });

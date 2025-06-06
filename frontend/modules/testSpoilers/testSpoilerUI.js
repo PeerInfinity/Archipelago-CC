@@ -2,6 +2,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import eventBus from '../../app/core/eventBus.js'; // ADDED: Static import
 import { evaluateRule } from '../stateManager/ruleEngine.js'; // ADDED
 import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js'; // ADDED
+import { createRegionLink } from '../commonUI/index.js'; // ADDED
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -1636,7 +1637,39 @@ export class TestSpoilerUI {
       const entry = document.createElement('div');
       entry.classList.add('log-entry', `log-${type}`);
       const textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-      entry.textContent = textContent;
+
+      // MODIFIED: Check for location lists to make them clickable
+      const prefixMismatch =
+        ' > Locations accessible in LOG but NOT in STATE (or checked): ';
+      const prefixExtra =
+        ' > Locations accessible in STATE (and unchecked) but NOT in LOG: ';
+      let isLocationList = false;
+
+      if (message.startsWith(prefixMismatch)) {
+        isLocationList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixMismatch
+          )
+        );
+        const locations = message.substring(prefixMismatch.length).split(', ');
+        this._addLocationLinksToElement(entry, locations);
+      } else if (message.startsWith(prefixExtra)) {
+        isLocationList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixExtra
+          )
+        );
+        const locations = message.substring(prefixExtra.length).split(', ');
+        this._addLocationLinksToElement(entry, locations);
+      }
+
+      if (!isLocationList) {
+        entry.textContent = textContent;
+      }
+      // END MODIFIED
+
       // Consider if additionalData should be stringified or handled for panel display
       this.logContainer.appendChild(entry);
       this.logContainer.scrollTop = this.logContainer.scrollHeight;
@@ -1649,6 +1682,8 @@ export class TestSpoilerUI {
       consoleMethodType = 'info'; // Or 'debug' or a specific style
     } else if (type === 'success') {
       consoleMethodType = 'info';
+    } else {
+      consoleMethodType = 'log';
     }
     // Ensure type is a valid console method, defaulting to 'log'
     if (
@@ -1661,6 +1696,30 @@ export class TestSpoilerUI {
       `[TestSpoilerUI - ${type.toUpperCase()}] ${message}`,
       ...additionalData
     );
+  }
+
+  _addLocationLinksToElement(element, locationNames) {
+    locationNames.forEach((locName, index) => {
+      const staticData = stateManager.getStaticData();
+      const locDef = staticData?.locations?.[locName.trim()];
+      const regionName = locDef?.region || locDef?.parent_region;
+
+      if (regionName) {
+        const snapshot = stateManager.getLatestStateSnapshot();
+        const link = createRegionLink(regionName, false, snapshot);
+        link.textContent = this.escapeHtml(locName.trim());
+        link.title = `Navigate to region: ${this.escapeHtml(regionName)}`;
+        element.appendChild(link);
+      } else {
+        element.appendChild(
+          document.createTextNode(this.escapeHtml(locName.trim()))
+        );
+      }
+
+      if (index < locationNames.length - 1) {
+        element.appendChild(document.createTextNode(', '));
+      }
+    });
   }
 
   escapeHtml(unsafe) {
