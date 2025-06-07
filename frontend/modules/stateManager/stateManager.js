@@ -3336,15 +3336,18 @@ export class StateManager {
    * @returns {object|null} The itemData object or null if not loaded.
    */
   getAllItemData() {
-    return this.itemData || null;
+    return this.itemData;
+  }
+
+  getDungeons() {
+    return this.dungeons;
   }
 
   setAutoCollectEventsConfig(enabled) {
-    // MODIFIED: Added new method
-    this._logDebug(
+    this.autoCollectEventsEnabled = enabled;
+    this.logger.info(
       `[StateManager] Setting autoCollectEventsEnabled to: ${enabled}`
     );
-    this.autoCollectEventsEnabled = !!enabled; // Ensure boolean
     // If disabling, it might be necessary to re-evaluate reachability without auto-collection.
     // For testing, this is usually paired with a state clear/reset before tests.
     // If enabling, a re-computation might pick up pending events.

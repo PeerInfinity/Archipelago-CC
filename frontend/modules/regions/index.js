@@ -1,13 +1,13 @@
 // UI Class for this module
 import { RegionUI } from './regionUI.js';
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('regionsModule', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[regionsModule] ${message}`, ...data);
   }
 }
@@ -56,6 +56,8 @@ export function register(registrationApi) {
   // Register EventBus publisher intentions (used by RegionUI)
   registrationApi.registerEventBusPublisher(moduleId, 'ui:navigateToRegion');
   registrationApi.registerEventBusPublisher(moduleId, 'ui:navigateToLocation');
+  registrationApi.registerEventBusPublisher(moduleId, 'ui:navigateToDungeon');
+  registrationApi.registerEventBusPublisher(moduleId, 'ui:activatePanel');
 
   // Register Dispatcher sender intentions (used by RegionUI)
   registrationApi.registerDispatcherSender(
@@ -75,7 +77,8 @@ export function register(registrationApi) {
  */
 export async function initialize(mId, priorityIndex, initializationApi) {
   moduleId = mId;
-  log('info', 
+  log(
+    'info',
     `[${moduleId} Module] Initializing with priority ${priorityIndex}...`
   );
 

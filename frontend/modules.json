@@ -42,11 +42,13 @@
     },
     "locations": {
       "path": "./modules/locations/index.js",
-      "enabled": true
+      "enabled": true,
+      "requires": ["stateManager", "commonUI"]
     },
     "exits": {
       "path": "./modules/exits/index.js",
-      "enabled": true
+      "enabled": true,
+      "requires": ["stateManager", "commonUI"]
     },
     "pathAnalyzer": {
       "path": "./modules/pathAnalyzer/index.js",
@@ -58,7 +60,13 @@
     },
     "regions": {
       "path": "./modules/regions/index.js",
-      "enabled": true
+      "enabled": true,
+      "requires": ["stateManager", "commonUI"]
+    },
+    "dungeons": {
+      "path": "./modules/dungeons/index.js",
+      "enabled": true,
+      "requires": ["stateManager", "commonUI"]
     },
     "discovery": {
       "path": "./modules/discovery/index.js",
@@ -105,6 +113,7 @@
     "pathAnalyzer",
     "pathAnalyzerPanel",
     "regions",
+    "dungeons",
     "discovery",
     "loops",
     "presets",

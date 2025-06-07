@@ -107,6 +107,11 @@
             },
             {
               "type": "component",
+              "componentType": "dungeonsPanel",
+              "title": "Dungeons"
+            },
+            {
+              "type": "component",
               "componentType": "loopsPanel",
               "title": "Loops"
             }

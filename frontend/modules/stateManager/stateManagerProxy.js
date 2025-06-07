@@ -249,18 +249,10 @@ export class StateManagerProxy {
           }
 
           this.staticDataCache = newCache;
-          log(
-            'info',
-            '[StateManagerProxy rulesLoadedConfirmation] Updated staticDataCache. Keys in cache:',
-            Object.keys(this.staticDataCache)
-          );
-          log(
-            'info',
-            '[StateManagerProxy rulesLoadedConfirmation] Dungeons in cache:',
-            this.staticDataCache.dungeons
-              ? Object.keys(this.staticDataCache.dungeons)
-              : 'undefined'
-          );
+          //log('info',
+          //  '[StateManagerProxy rulesLoadedConfirmation] Updated staticDataCache. Keys in cache:',
+          //  Object.keys(this.staticDataCache)
+          //);
         } else {
           log(
             'warn',
@@ -401,6 +393,12 @@ export class StateManagerProxy {
             this.pendingQueries.delete(message.queryId);
           }
         }
+        break;
+      case 'computationProgress':
+        this.eventBus.publish(
+          'stateManager:computationProgress',
+          message.detail
+        );
         break;
       default:
         log(
@@ -713,31 +711,20 @@ export class StateManagerProxy {
     exitData,
     originalLocationOrder,
     originalExitOrder,
-    originalRegionOrder
+    originalRegionOrder,
+    dungeonData
   ) {
-    log(
-      'error',
-      '[StateManagerProxy setStaticData] DEPRECATED: This method is being called and will OVERWRITE dungeons data! Stack trace:',
-      new Error().stack
-    );
-
-    // For safety, ensure this.staticDataCache is initialized if it's null
-    if (!this.staticDataCache) {
-      this.staticDataCache = {};
-    }
-
-    // Update the cache directly. This is simpler than the worker's more complex
-    // object construction, as this data is assumed to be already in the correct format.
-    this.staticDataCache.items = itemData;
-    this.staticDataCache.groups = groupData; // Assume it's an object {id: group} or array [group] as needed by consumers
-    this.staticDataCache.locations = locationData; // Assumed to be an object {name: loc}
-    this.staticDataCache.regions = regionData; // Assumed to be an object {name: region}
-    this.staticDataCache.exits = exitData; // Assumed to be an object {name: exit}
-
-    this.staticDataCache.originalLocationOrder = originalLocationOrder;
-    this.staticDataCache.originalExitOrder = originalExitOrder;
-    this.staticDataCache.originalRegionOrder = originalRegionOrder;
-
+    this.staticData = {
+      items: itemData,
+      groups: groupData,
+      locations: locationData,
+      regions: regionData,
+      exits: exitData,
+      dungeons: dungeonData,
+    };
+    this.originalLocationOrder = originalLocationOrder || [];
+    this.originalExitOrder = originalExitOrder || [];
+    this.originalRegionOrder = originalRegionOrder || [];
     this.staticDataIsSet = true; // Mark static data as set
     log(
       'info',
@@ -752,33 +739,6 @@ export class StateManagerProxy {
    * @returns {object|null} The cached static game data.
    */
   getStaticData() {
-    log(
-      'info',
-      '[StateManagerProxy getStaticData] Called. Stack trace:',
-      new Error().stack
-    );
-    log(
-      'info',
-      '[StateManagerProxy getStaticData] Cache:',
-      this.staticDataCache
-    );
-    log(
-      'info',
-      '[StateManagerProxy getStaticData] Cache type:',
-      typeof this.staticDataCache
-    );
-    log(
-      'info',
-      '[StateManagerProxy getStaticData] Cache keys:',
-      this.staticDataCache ? Object.keys(this.staticDataCache) : 'null'
-    );
-    log(
-      'info',
-      '[StateManagerProxy getStaticData] Dungeons in cache:',
-      this.staticDataCache?.dungeons
-        ? Object.keys(this.staticDataCache.dungeons)
-        : 'undefined'
-    );
     return this.staticDataCache;
   }
 
@@ -1567,28 +1527,6 @@ export class StateManagerProxy {
       false // This is a fire-and-forget command, no specific response expected beyond ack
     );
   }
-
-  /**
-   * Debug method to inspect location rules
-   */
-  debugLocationRule(locationName) {
-    const locations = this.getStaticData().locations;
-    const location = Object.values(locations).find(
-      (loc) => loc.name && loc.name.includes(locationName)
-    );
-
-    if (location) {
-      console.log(`Location: ${location.name}`);
-      console.log(
-        'Access rule:',
-        JSON.stringify(location.access_rule, null, 2)
-      );
-      return location.access_rule;
-    } else {
-      console.log(`Location containing "${locationName}" not found`);
-      return null;
-    }
-  }
 }
 
 // --- ADDED: Function to create the main-thread snapshot interface ---
@@ -1604,8 +1542,6 @@ export function createStateSnapshotInterface(
   staticData,
   contextVariables = {}
 ) {
-  // Debug logging removed to prevent console spam
-
   let snapshotHelpersInstance = null; // Changed variable name for clarity
   const gameId = snapshot?.game; // Get gameId from the snapshot
 
@@ -1861,29 +1797,6 @@ export function createStateSnapshotInterface(
 
           return undefined;
         }
-
-        // Handle boss.can_defeat -> boss.defeat_rule mapping
-        if (attributeName === 'can_defeat') {
-          console.log(
-            '[BOSS DEBUG] Resolving can_defeat from boss object:',
-            baseObject
-          );
-          console.log(
-            '[BOSS DEBUG] Boss object keys:',
-            Object.keys(baseObject)
-          );
-          console.log('[BOSS DEBUG] Boss defeat_rule:', baseObject.defeat_rule);
-          if (baseObject.defeat_rule) {
-            console.log(
-              '[BOSS DEBUG] Returning defeat_rule:',
-              baseObject.defeat_rule
-            );
-            return baseObject.defeat_rule;
-          } else {
-            console.log('[BOSS DEBUG] No defeat_rule found on boss object');
-            return undefined;
-          }
-        }
       }
 
       return undefined;
@@ -1956,9 +1869,6 @@ export function createStateSnapshotInterface(
     },
     resolveName: rawInterfaceForHelpers.resolveName,
   };
-
-  // Debug logging removed to prevent console spam
-
   return finalSnapshotInterface;
 }
 // --- END ADDED FUNCTION ---

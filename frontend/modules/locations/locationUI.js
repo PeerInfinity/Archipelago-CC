@@ -1143,6 +1143,17 @@ export class LocationUI {
         }
         locationCard.appendChild(regionInfoDiv);
 
+        // Dungeon Info & Link (only if region belongs to a dungeon)
+        const dungeonData = this.findDungeonForRegion(regionNameForLink);
+        if (dungeonData) {
+          const dungeonInfoDiv = document.createElement('div');
+          dungeonInfoDiv.className = 'text-sm location-card-dungeon-link';
+          dungeonInfoDiv.appendChild(document.createTextNode('Dungeon: '));
+          const dungeonLink = this.createDungeonLink(dungeonData.name);
+          dungeonInfoDiv.appendChild(dungeonLink);
+          locationCard.appendChild(dungeonInfoDiv);
+        }
+
         // Player Info
         if (location.player) {
           const playerInfoDiv = document.createElement('div');
@@ -1341,6 +1352,72 @@ export class LocationUI {
 
     modalDetails.innerHTML = detailsContent;
     modalElement.classList.remove('hidden');
+  }
+
+  /**
+   * Helper function to find which dungeon a region belongs to
+   * @param {string} regionName - The name of the region to search for
+   * @returns {Object|null} - The dungeon object that contains this region, or null if not found
+   */
+  findDungeonForRegion(regionName) {
+    const staticData = stateManager.getStaticData();
+    if (!staticData || !staticData.dungeons) {
+      return null;
+    }
+
+    // Search through all dungeons to find one that contains this region
+    for (const dungeonData of Object.values(staticData.dungeons)) {
+      if (dungeonData.regions && dungeonData.regions.includes(regionName)) {
+        return dungeonData;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Creates a clickable link to navigate to a specific dungeon
+   * @param {string} dungeonName - The name of the dungeon to link to
+   * @returns {HTMLElement} - The clickable dungeon link element
+   */
+  createDungeonLink(dungeonName) {
+    const link = document.createElement('a');
+    link.href = '#';
+    link.textContent = dungeonName;
+    link.classList.add('dungeon-link');
+    link.style.color = '#4CAF50';
+    link.style.textDecoration = 'none';
+    link.style.fontWeight = 'bold';
+
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent event from bubbling to parent elements
+
+      log('info', `[LocationUI] Dungeon link clicked for: ${dungeonName}`);
+
+      // Publish panel activation first
+      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
+      log('info', `[LocationUI] Published ui:activatePanel for dungeonsPanel.`);
+
+      // Then publish navigation
+      eventBus.publish('ui:navigateToDungeon', {
+        dungeonName: dungeonName,
+        sourcePanel: 'locations',
+      });
+      log(
+        'info',
+        `[LocationUI] Published ui:navigateToDungeon for ${dungeonName}.`
+      );
+    });
+
+    // Add hover effect
+    link.addEventListener('mouseenter', () => {
+      link.style.textDecoration = 'underline';
+    });
+    link.addEventListener('mouseleave', () => {
+      link.style.textDecoration = 'none';
+    });
+
+    return link;
   }
 }
 
