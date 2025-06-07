@@ -276,39 +276,22 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'attribute': {
-        const objectResult = evaluateRule(rule.object, context, depth + 1);
-        if (objectResult === undefined) {
-          result = undefined; // Cannot access attribute of undefined
-        } else if (objectResult === null) {
-          log(
-            'warn',
-            `[evaluateRule] Attribute \'${rule.attr}\' accessed on null object. Rule:`,
-            rule.object
-          );
-          result = undefined; // Accessing attr of null is likely undefined
-        } else {
-          // If the resolved object has the attribute directly, use it
-          if (rule.attr in objectResult) {
-            result = objectResult[rule.attr];
+        const baseObject = evaluateRule(rule.object, context, depth + 1);
+        if (baseObject !== undefined && baseObject !== null) {
+          if (typeof context.resolveAttribute === 'function') {
+            // Use the new, more direct resolver if available on the interface
+            result = context.resolveAttribute(baseObject, rule.attr);
+          } else if (
+            typeof baseObject === 'object' &&
+            Object.prototype.hasOwnProperty.call(baseObject, rule.attr)
+          ) {
+            // Fallback for older interfaces or direct object property access
+            result = baseObject[rule.attr];
           } else {
-            // Special handling: if object resolved to the 'settings' context, try getSetting
-            if (typeof objectResult.getSetting === 'function') {
-              // Check if objectResult resembles the settings part of the context
-              // This is heuristic - ideally rule.object would resolve clearly
-              const settingsFromContext = context.resolveName('settings');
-              if (objectResult === settingsFromContext) {
-                result = context.getSetting(rule.attr);
-                // log('info', `[evaluateRule Attribute] Used getSetting for ${rule.attr}:`, result);
-              } else {
-                // log('warn', `[evaluateRule Attribute] objectResult has getSetting but doesn't match context.settings`);
-                result = undefined;
-              }
-            } else {
-              // Attribute not found directly, and not a settings lookup context
-              // log('warn', `[evaluateRule Attribute] Attribute '${rule.attr}' not found on object:`, objectResult);
-              result = undefined; // Attribute doesn't exist
-            }
+            result = undefined;
           }
+        } else {
+          result = undefined;
         }
         break;
       }
@@ -392,19 +375,19 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'subscript': {
-        const value = evaluateRule(rule.value, context, depth + 1);
+        const list = evaluateRule(rule.value, context, depth + 1);
         const index = evaluateRule(rule.index, context, depth + 1);
 
-        if (value === undefined || index === undefined) {
+        if (list === undefined || index === undefined) {
           result = undefined; // If array/object or index is unknown, result is unknown
-        } else if (value && typeof value === 'object') {
-          result = value[index]; // Access property/index
-          // If value[index] itself is undefined (property doesn't exist), result remains undefined.
+        } else if (list && typeof list === 'object') {
+          result = list[index]; // Access property/index
+          // If list[index] itself is undefined (property doesn't exist), result remains undefined.
         } else {
           log(
             'warn',
             '[evaluateRule] Subscript applied to non-object/non-map or null value.',
-            { rule, value }
+            { rule, list }
           );
           result = undefined;
         }

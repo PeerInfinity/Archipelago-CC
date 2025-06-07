@@ -20,13 +20,13 @@ import {
 } from '../commonUI/index.js';
 import { getDispatcher } from './index.js'; // Added import for dispatcher
 
-
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('locationUI', message, ...data);
   } else {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    const consoleMethod =
+      console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[locationUI] ${message}`, ...data);
   }
 }
@@ -55,7 +55,8 @@ export class LocationUI {
 
     // Defer full data-dependent initialization
     const readyHandler = (eventPayload) => {
-      log('info', 
+      log(
+        'info',
         '[LocationUI] Received app:readyForUiDataLoad. Initializing base panel structure and event listeners.'
       );
       this.initialize(); // This sets up stateManager event listeners like snapshotUpdated
@@ -71,7 +72,8 @@ export class LocationUI {
       // this.locationsGrid.innerHTML = '<p>Loading locations...</p>';
 
       this.isInitialized = true; // Mark that basic panel setup is done.
-      log('info', 
+      log(
+        'info',
         '[LocationUI] Basic panel setup complete after app:readyForUiDataLoad. Awaiting StateManager readiness.'
       );
 
@@ -143,7 +145,8 @@ export class LocationUI {
 
         if (!this.isInitialized) {
           // This case should be rare if app:readyForUiDataLoad sets isInitialized correctly.
-          log('warn', 
+          log(
+            'warn',
             '[LocationUI stateManager:ready] Panel base not yet initialized by app:readyForUiDataLoad. This is unexpected. Proceeding with render attempt.'
           );
           // Attempt to initialize basic event subscriptions if not done.
@@ -155,24 +158,28 @@ export class LocationUI {
           !this.originalLocationOrder ||
           this.originalLocationOrder.length === 0
         ) {
-          log('warn', 
+          log(
+            'warn',
             '[LocationUI stateManager:ready] Original location order not available. Attempting to fetch now.'
           );
           const currentStaticData = stateManager.getStaticData();
           if (currentStaticData && currentStaticData.locations) {
             this.originalLocationOrder =
               stateManager.getOriginalLocationOrder();
-            log('info', 
+            log(
+              'info',
               `[LocationUI stateManager:ready] Fetched ${this.originalLocationOrder.length} location keys for original order.`
             );
           } else {
-            log('error', 
+            log(
+              'error',
               '[LocationUI stateManager:ready] Failed to fetch static data/locations for original order. Location panel may not display correctly.'
             );
           }
         }
 
-        log('info', 
+        log(
+          'info',
           '[LocationUI stateManager:ready] Triggering initial full display update.'
         );
         this.updateLocationDisplay(); // This is now the primary trigger for the first full render.
@@ -202,7 +209,8 @@ export class LocationUI {
         log('info', '[LocationUI] Saw locationChecked (handled by snapshot)')
       ); // No update needed, handled by snapshot
       subscribe('stateManager:checkedLocationsCleared', () =>
-        log('info', 
+        log(
+          'info',
           '[LocationUI] Saw checkedLocationsCleared (handled by snapshot)'
         )
       ); // No update needed, handled by snapshot
@@ -210,14 +218,16 @@ export class LocationUI {
       // Subscribe to loop state changes if relevant
       // Also need rules loaded to trigger initial display and get static data
       subscribe('stateManager:rulesLoaded', (event) => {
-        log('info', 
+        log(
+          'info',
           '[LocationUI] Received stateManager:rulesLoaded event. Full refresh triggered.'
         );
 
         // Access snapshot from event (this is the new initial snapshot for the loaded rules)
         const newSnapshot = event.snapshot;
         if (!newSnapshot) {
-          log('warn', 
+          log(
+            'warn',
             '[LocationUI rulesLoaded] Snapshot missing from event payload. Aborting refresh.'
           );
           return;
@@ -230,13 +240,15 @@ export class LocationUI {
         const currentStaticData = stateManager.getStaticData();
         if (currentStaticData && currentStaticData.locations) {
           this.originalLocationOrder = stateManager.getOriginalLocationOrder();
-          log('info', 
+          log(
+            'info',
             `[LocationUI rulesLoaded] Stored ${
               this.originalLocationOrder ? this.originalLocationOrder.length : 0
             } location keys for original order.`
           );
         } else {
-          log('warn', 
+          log(
+            'warn',
             '[LocationUI rulesLoaded] Static data or locations not available from proxy when trying to refresh order. Panel may not sort correctly.'
           );
           this.originalLocationOrder = []; // Reset if not available
@@ -351,7 +363,8 @@ export class LocationUI {
   // Called when the panel is initialized
   async initialize() {
     // Make async
-    log('info', 
+    log(
+      'info',
       '[LocationUI] Initializing panel (subscribing to state events)...'
     );
 
@@ -422,7 +435,8 @@ export class LocationUI {
         !currentTarget.classList.contains('location-card')
       ) {
         if (currentTarget.classList.contains('region-link')) {
-          log('info', 
+          log(
+            'info',
             '[LocationUI] Click originated from a region-link, ignoring for location card action.'
           );
           return; // Ignore clicks on region links
@@ -445,19 +459,22 @@ export class LocationUI {
                 this.handleLocationClick(locationData); // PASS parsed data
               }
             } else {
-              log('warn', 
+              log(
+                'warn',
                 '[LocationUI] Failed to parse location data from dataset.'
               );
             }
           } catch (e) {
-            log('error', 
+            log(
+              'error',
               '[LocationUI] Error parsing location data from dataset:',
               e,
               locationString
             );
           }
         } else {
-          log('warn', 
+          log(
+            'warn',
             '[LocationUI] Clicked location card missing data-location attribute.'
           );
         }
@@ -488,7 +505,8 @@ export class LocationUI {
     this.updateLocationDisplay(); // Trigger UI update to show pending state immediately
 
     if (!this.dispatcher) {
-      log('error', 
+      log(
+        'error',
         '[LocationUI] Dispatcher not available in handleLocationClick. Cannot send location check request.'
       );
       // Optionally, try to re-acquire it, though if initialize() hasn't run, it might still be null.
@@ -499,14 +517,16 @@ export class LocationUI {
 
     const locationName = locationData.name;
 
-    log('info', 
+    log(
+      'info',
       `[LocationUI] Clicked on location: ${locationName}, Region: ${locationData.region}`
     );
 
     // Check if we have a valid snapshot for rule evaluation (optional, based on previous logic)
     const snapshot = await stateManager.getLatestStateSnapshot();
     if (!snapshot) {
-      log('warn', 
+      log(
+        'warn',
         '[LocationUI] Unable to get current game state snapshot. Proceeding with click dispatch anyway.'
       );
       // Potentially show a message to the user or just proceed with the event publish
@@ -531,7 +551,8 @@ export class LocationUI {
       });
       log('info', '[LocationUI] Dispatched user:locationCheck', payload);
     } else {
-      log('error', 
+      log(
+        'error',
         '[LocationUI] Dispatcher still not available to handle location click after re-fetch.' // Updated error message
       );
     }
@@ -541,14 +562,15 @@ export class LocationUI {
     // this.showLocationDetails(locationData); // MODIFIED: Commented out to prevent modal on simple click
 
     // If there was logging for which locations were clicked for analytics/debugging:
-    // log('info', 
+    // log('info',
     //   `User interaction: Location card for '${locationData.name}' clicked.`
     // );
   }
 
   // Restore syncWithState - primarily for fetching latest state and updating display
   syncWithState() {
-    log('info', 
+    log(
+      'info',
       '[LocationUI] syncWithState called (now just triggers updateLocationDisplay)'
     );
     this.updateLocationDisplay();
@@ -561,7 +583,8 @@ export class LocationUI {
     // Ensure the panel's basic initialization (DOM structure, non-data listeners) is done.
     // this.isInitialized is set by the app:readyForUiDataLoad handler.
     if (!this.isInitialized) {
-      log('warn', 
+      log(
+        'warn',
         '[LocationUI updateLocationDisplay] Panel not yet initialized by app:readyForUiDataLoad. Aborting display update.'
       );
       return;
@@ -570,7 +593,8 @@ export class LocationUI {
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
 
-    log('info', 
+    log(
+      'info',
       `[LocationUI updateLocationDisplay] Start State - Snapshot: ${!!snapshot} Static Data: ${!!staticData}`
     );
 
@@ -580,7 +604,8 @@ export class LocationUI {
       !staticData.locations ||
       !staticData.items
     ) {
-      log('warn', 
+      log(
+        'warn',
         '[LocationUI] Static location/item data or snapshot not ready. Displaying loading message or clearing grid.'
       );
       // Clear the grid or show a specific loading message
@@ -601,7 +626,8 @@ export class LocationUI {
           sortMethod === 'accessibility_original') &&
         Object.keys(staticData.locations).length > 0 // Only warn if there should be locations
       ) {
-        log('warn', 
+        log(
+          'warn',
           '[LocationUI updateLocationDisplay] Original location order is empty (and an original-order sort is selected). Locations might appear unsorted or panel might wait for re-render.'
         );
       }
@@ -610,7 +636,8 @@ export class LocationUI {
       const freshlyFetchedOrder = stateManager.getOriginalLocationOrder();
       if (freshlyFetchedOrder && freshlyFetchedOrder.length > 0) {
         this.originalLocationOrder = freshlyFetchedOrder;
-        log('info', 
+        log(
+          'info',
           `[LocationUI updateLocationDisplay] Fallback fetch for originalLocationOrder succeeded: ${this.originalLocationOrder.length} items.`
         );
       }
@@ -626,7 +653,8 @@ export class LocationUI {
       staticData
     );
     if (!snapshotInterface) {
-      log('error', 
+      log(
+        'error',
         '[LocationUI] Failed to create snapshot interface. Aborting render.'
       );
       this.locationsGrid.innerHTML = '<p>Error creating display context.</p>';
@@ -968,7 +996,8 @@ export class LocationUI {
           );
         } else {
           // Fallback to name sort if original order isn't available for some reason
-          log('warn', 
+          log(
+            'warn',
             '[LocationUI] Original location order not available, falling back to name sort.'
           );
           return a.name.localeCompare(b.name);
@@ -976,7 +1005,8 @@ export class LocationUI {
       }
     });
 
-    log('info', 
+    log(
+      'info',
       `[LocationUI] Processing ${filteredLocations.length} locations from snapshot.`
     );
 
@@ -1125,10 +1155,16 @@ export class LocationUI {
         if (location.access_rule) {
           const ruleDiv = document.createElement('div');
           ruleDiv.className = 'text-sm';
+          // Create context-aware snapshot interface with location object
+          const locationContextInterface = createStateSnapshotInterface(
+            snapshot,
+            staticData,
+            { location: location }
+          );
           const logicTreeElement = commonUI.renderLogicTree(
             location.access_rule,
             this.colorblindSettings,
-            snapshotInterface
+            locationContextInterface
           );
           ruleDiv.appendChild(document.createTextNode('Rule: '));
           ruleDiv.appendChild(logicTreeElement); // Append the DOM element
@@ -1162,7 +1198,7 @@ export class LocationUI {
     // --- ADD: Log input and snapshot data --- >
     //log('info', `[LocationUI getLocationStatus] Checking: ${locationName}`);
     if (!snapshot || !snapshot.reachability) {
-      //log('info', 
+      //log('info',
       //  `[LocationUI getLocationStatus] Snapshot or reachability missing for ${locationName}`
       //);
       return 'unknown'; // Or some default/loading state
@@ -1170,7 +1206,7 @@ export class LocationUI {
     // Reachability is now expected to be a boolean in the snapshot
     const isReachable = snapshot.reachability[locationName] === true;
     const isChecked = snapshot.flags?.includes(locationName);
-    //log('info', 
+    //log('info',
     //  `[LocationUI getLocationStatus] Name: ${locationName}, Reachability: ${reachabilityStatus}, Checked: ${isChecked}`
     //);
     // --- END LOG --- >
@@ -1208,7 +1244,8 @@ export class LocationUI {
     const modalRuleTree = this.rootElement.querySelector('#modal-rule-tree');
 
     if (!modalElement || !modalTitle || !modalDetails || !modalRuleTree) {
-      log('error', 
+      log(
+        'error',
         '[LocationUI] Modal elements not found in this.rootElement.'
       );
       return;
@@ -1262,15 +1299,21 @@ export class LocationUI {
         }
 
         // Render the rule tree using the imported renderLogicTree
-        // Ensure commonUI default export is not used if renderLogicTree is a named export
+        // Create context-aware snapshot interface with location object
+        const locationContextInterface = createStateSnapshotInterface(
+          snapshot,
+          staticData,
+          { location: location }
+        );
         const treeElement = renderLogicTree(
           location.access_rule,
           this.colorblindSettings,
-          snapshotInterface
+          locationContextInterface
         );
         modalRuleTree.appendChild(treeElement);
       } catch (error) {
-        log('error', 
+        log(
+          'error',
           '[LocationUI showLocationDetails] Error evaluating rule locally:',
           error
         );

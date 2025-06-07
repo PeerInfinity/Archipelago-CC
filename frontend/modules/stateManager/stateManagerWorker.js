@@ -279,6 +279,7 @@ self.onmessage = async function (e) {
           locations: stateManagerInstance.locations,
           regions: stateManagerInstance.regions,
           exits: stateManagerInstance.exits, // Ensure exits are included
+          dungeons: stateManagerInstance.dungeons, // ADDED: Include dungeons data
           originalLocationOrder: stateManagerInstance.originalLocationOrder, // Ensure orders are included
           originalExitOrder: stateManagerInstance.originalExitOrder,
           originalRegionOrder: stateManagerInstance.originalRegionOrder,

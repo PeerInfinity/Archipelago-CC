@@ -61,6 +61,7 @@ export class StateManager {
     // Region and location data
     this.locations = []; // Flat array of all locations
     this.regions = {}; // Map of region name -> region data
+    this.dungeons = {}; // ADDED: Map of dungeon name -> dungeon data
     this.eventLocations = new Map(); // Map of location name -> event location data
 
     // Enhance the indirectConnections to match Python implementation
@@ -337,13 +338,15 @@ export class StateManager {
   /**
    * Adds an item and notifies all registered callbacks
    */
-  addItemToInventory(itemName) {
+  addItemToInventory(itemName, count = 1) {
     if (!this._batchMode) {
       // Non-batch mode: Apply immediately and update
       if (this.inventory && typeof this.inventory.addItem === 'function') {
-        this.inventory.addItem(itemName);
+        for (let i = 0; i < count; i++) {
+          this.inventory.addItem(itemName);
+        }
         this._logDebug(
-          `[StateManager] addItemToInventory: Called inventory.addItem("${itemName}")`
+          `[StateManager] addItemToInventory: Called inventory.addItem("${itemName}") ${count} times`
         );
         this.invalidateCache(); // Adding an item can change reachability
         this._sendSnapshotUpdate(); // Send a new snapshot
@@ -357,10 +360,10 @@ export class StateManager {
     } else {
       // Batch mode: Record the item update for later processing by commitBatchUpdate
       this._logDebug(
-        `[StateManager] addItemToInventory: Batching item "${itemName}"`
+        `[StateManager] addItemToInventory: Batching item "${itemName}" with count ${count}`
       );
       const currentBatchedCount = this._batchedUpdates.get(itemName) || 0;
-      this._batchedUpdates.set(itemName, currentBatchedCount + 1);
+      this._batchedUpdates.set(itemName, currentBatchedCount + count);
       // DO NOT call this.inventory.addItem() here directly.
       // DO NOT call invalidateCache() or _sendSnapshotUpdate() here directly.
     }
@@ -561,6 +564,21 @@ export class StateManager {
     this._logDebug(
       `Loaded ${this.originalRegionOrder.length} regions and their original order.`
     );
+
+    // ADDED: Load dungeons for the selected player
+    this.dungeons = jsonData.dungeons?.[selectedPlayerId] || {};
+    this._logDebug(`Loaded ${Object.keys(this.dungeons).length} dungeons.`);
+
+    // ADDED: Link regions to their dungeons
+    for (const regionName in this.regions) {
+      const region = this.regions[regionName];
+      if (region.dungeon && this.dungeons[region.dungeon]) {
+        // The region.dungeon from JSON is just a name.
+        // We replace it with a direct reference to the dungeon object.
+        region.dungeon = this.dungeons[region.dungeon];
+      }
+    }
+    this._logDebug('Linked regions to their dungeon objects.');
 
     // Load group data for the selected player
     const playerSpecificGroupData =
@@ -2004,16 +2022,17 @@ export class StateManager {
 
     // Process all batched updates
     for (const [itemName, count] of this._batchedUpdates.entries()) {
-      const existingCount = this.inventory.count(itemName);
-      const diff = count - existingCount;
-
-      if (diff > 0) {
-        for (let i = 0; i < diff; i++) {
+      if (count > 0) {
+        for (let i = 0; i < count; i++) {
           this.inventory.addItem(itemName);
         }
         inventoryChanged = true;
-      } else if (diff < 0) {
-        log('warn', `Batch commit needs inventory.removeItem for ${itemName}`);
+      } else if (count < 0) {
+        // This case is not currently used as we only add items in batch mode
+        log(
+          'warn',
+          `Batch commit with count ${count} needs inventory.removeItem for ${itemName}`
+        );
       }
     }
 
@@ -2724,12 +2743,14 @@ export class StateManager {
         groups: self.groupData,
         locations: self.locations,
         regions: self.regions,
+        dungeons: self.dungeons, // ADDED
       },
       getStaticData: () => ({
         items: self.itemData,
         groups: self.groupData,
         locations: self.locations,
         regions: self.regions,
+        dungeons: self.dungeons, // ADDED
       }),
     };
     // log('info',
@@ -2866,6 +2887,8 @@ export class StateManager {
       difficultyRequirements: this.state?.difficultyRequirements,
       shops: this.state?.shops,
       gameMode: this.mode,
+      // ADDED: Expose dungeons in the main snapshot body for easier access by some components
+      dungeons: this.dungeons,
     };
     return snapshot;
   }

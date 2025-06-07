@@ -1542,7 +1542,11 @@ export class StateManagerProxy {
  * @param {object | null} staticData - The cached static data (items, groups, etc.).
  * @returns {object} - An object conforming to the StateSnapshotInterface.
  */
-export function createStateSnapshotInterface(snapshot, staticData) {
+export function createStateSnapshotInterface(
+  snapshot,
+  staticData,
+  contextVariables = {}
+) {
   let snapshotHelpersInstance = null; // Changed variable name for clarity
   const gameId = snapshot?.game; // Get gameId from the snapshot
 
@@ -1593,6 +1597,14 @@ export function createStateSnapshotInterface(snapshot, staticData) {
     snapshot: snapshot,
     staticData: staticData,
     resolveName: (name) => {
+      // Check context variables first (e.g., 'location' when evaluating location access rules)
+      if (
+        contextVariables &&
+        Object.prototype.hasOwnProperty.call(contextVariables, name)
+      ) {
+        return contextVariables[name];
+      }
+
       switch (name) {
         case 'True':
           return true;
@@ -1620,6 +1632,8 @@ export function createStateSnapshotInterface(snapshot, staticData) {
           return staticData?.items;
         case 'groups':
           return staticData?.groups;
+        case 'dungeons':
+          return staticData?.dungeons;
         case 'player':
           return snapshot?.player?.slot;
         default:
@@ -1702,7 +1716,13 @@ export function createStateSnapshotInterface(snapshot, staticData) {
       if (staticData.regions[regionName]) return staticData.regions[regionName];
       return undefined;
     },
-    getStaticData: () => staticData,
+    getStaticData: () => ({
+      items: staticData.itemData,
+      groups: staticData.groupData,
+      locations: staticData.locationData,
+      regions: staticData.regionData,
+      dungeons: staticData.dungeonData,
+    }),
     getStateValue: (pathString) => {
       if (!snapshot || !snapshot.state) return undefined;
       if (typeof pathString !== 'string' || pathString.trim() === '')
@@ -1719,6 +1739,50 @@ export function createStateSnapshotInterface(snapshot, staticData) {
     getLocationItem: (locationName) => {
       if (!snapshot || !snapshot.locationItems) return undefined;
       return snapshot.locationItems[locationName];
+    },
+    // ADDED: A more direct way to resolve attribute chains
+    resolveAttribute: (baseObject, attributeName) => {
+      if (
+        baseObject &&
+        typeof baseObject === 'object' &&
+        Object.prototype.hasOwnProperty.call(baseObject, attributeName)
+      ) {
+        const attrValue = baseObject[attributeName];
+        if (typeof attrValue === 'function') {
+          // If the attribute is a function, we need to bind it to its object
+          // so that 'this' is correctly set when the function is called.
+          return attrValue.bind(baseObject);
+        }
+        return attrValue;
+      }
+
+      // Handle common attribute name mismatches between Python and JavaScript
+      if (baseObject && typeof baseObject === 'object') {
+        // Handle location.parent_region -> get actual region object from location.region
+        if (attributeName === 'parent_region' && baseObject.region) {
+          const regionName = baseObject.region;
+          // Look up the actual region object from static data
+          if (staticData && staticData.regions) {
+            // staticData.regions might be nested by player, try to find the region
+            for (const playerId in staticData.regions) {
+              if (
+                staticData.regions[playerId] &&
+                staticData.regions[playerId][regionName]
+              ) {
+                return staticData.regions[playerId][regionName];
+              }
+            }
+            // If not nested by player, try direct lookup
+            if (staticData.regions[regionName]) {
+              return staticData.regions[regionName];
+            }
+          }
+          // Fallback: return the region name if we can't find the object
+          return regionName;
+        }
+      }
+
+      return undefined;
     },
   };
 

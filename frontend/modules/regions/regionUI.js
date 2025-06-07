@@ -703,10 +703,12 @@ export class RegionUI {
     // Reset the unknown evaluation counter for this rendering cycle
     resetUnknownEvaluationCounter();
 
-    const useColorblind =
-      typeof this.colorblindSettings === 'boolean'
-        ? this.colorblindSettings
-        : Object.keys(this.colorblindSettings).length > 0;
+    //const useColorblind =
+    //  typeof this.colorblindSettings === 'boolean'
+    //    ? this.colorblindSettings
+    //    : Object.keys(this.colorblindSettings).length > 0;
+
+    const useColorblind = true;
 
     // Get references to structural elements within this.regionsContainer
     // this.regionsContainer is this.rootElement.querySelector('#region-details-container') (set in constructor)
@@ -1533,10 +1535,16 @@ export class RegionUI {
 
         // Render logic tree for the location rule
         if (locationDef.access_rule) {
+          // Create context-aware snapshot interface with location object
+          const locationContextInterface = createStateSnapshotInterface(
+            snapshot,
+            stateManager.getStaticData(),
+            { location: locationDef }
+          );
           const logicTreeElement = renderLogicTree(
             locationDef.access_rule,
             useColorblind,
-            snapshotInterface
+            locationContextInterface
           );
           const ruleDiv = document.createElement('div');
           ruleDiv.style.marginLeft = '1rem';
