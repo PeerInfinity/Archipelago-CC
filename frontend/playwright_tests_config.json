@@ -2,6 +2,10 @@
   "autoStartTestsOnLoad": true,
   "defaultEnabledState": false,
   "categories": {
+    "Test Spoilers Panel": {
+      "isEnabled": true,
+      "order": -2
+    },
     "Test Playthroughs Panel": {
       "isEnabled": true,
       "order": -1

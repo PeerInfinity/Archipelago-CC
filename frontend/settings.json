@@ -6,6 +6,11 @@
     "showDevTools": false,
     "debugMode": false
   },
+  "featureFlags": {
+    "useCanonicalStateFormat": false,
+    "useAgnosticHelpers": false,
+    "legacyInventoryFormat": true
+  },
   "logging": {
     "defaultLevel": "WARN",
     "categoryLevels": {

@@ -413,11 +413,11 @@ export const evaluateRule = (rule, context, depth = 0) => {
               result = evaluateRule(bossObject.defeat_rule, context, depth + 1);
               break;
             } else {
-              log('warn', '[evaluateRule] Boss object missing defeat_rule', {
-                bossObject,
-                functionObject: rule.function.object,
-                contextCurrentLocation: context.currentLocation?.name,
-              });
+              //log('warn', '[evaluateRule] Boss object missing defeat_rule', {
+              //  bossObject,
+              //  functionObject: rule.function.object,
+              //  contextCurrentLocation: context.currentLocation?.name,
+              //});
               result = undefined;
               break;
             }
