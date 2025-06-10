@@ -1,9 +1,9 @@
 import { ALTTPInventory } from './games/alttp/alttpInventory.js';
 import { ALTTPState } from './games/alttp/alttpState.js';
-import { ALTTPWorkerHelpers } from './games/alttp/alttpWorkerHelpers.js';
 import { GameInventory } from './helpers/gameInventory.js'; // Ensure GameInventory is imported
 import { GameState } from './helpers/index.js'; // Added import for GameState
 import { GameWorkerHelpers } from './helpers/gameWorkerHelpers.js'; // Added import for GameWorkerHelpers
+import * as alttpLogic from './logic/games/alttp/alttpLogic.js'; // REFACTOR: Import agnostic helpers
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -79,6 +79,9 @@ export class StateManager {
     // Flag to prevent recursion during computation
     this._computing = false;
 
+    // Flag to prevent recursion during helper execution
+    this._inHelperExecution = false;
+
     // Game configuration
     this.mode = null;
     this.settings = null;
@@ -97,7 +100,7 @@ export class StateManager {
 
     // Add debug mode flag
     this.debugMode = false; // Set to true to enable detailed logging
-    
+
     // REFACTOR: Track whether we're using canonical state format
     this._useCanonicalStateFormat = false;
 
@@ -348,7 +351,9 @@ export class StateManager {
         // REFACTOR: Use format-agnostic helper
         this._addItemToInventory(itemName, count);
         this._logDebug(
-          `[StateManager] addItemToInventory: Added "${itemName}" x${count} (format: ${this._useCanonicalStateFormat ? 'canonical' : 'legacy'})`
+          `[StateManager] addItemToInventory: Added "${itemName}" x${count} (format: ${
+            this._useCanonicalStateFormat ? 'canonical' : 'legacy'
+          })`
         );
         this.invalidateCache(); // Adding an item can change reachability
         this._sendSnapshotUpdate(); // Send a new snapshot
@@ -388,31 +393,20 @@ export class StateManager {
       `[StateManager addItemToInventoryByName] Attempting to add: ${itemName}, Count: ${count}, FromServer: ${fromServer}`
     );
 
-    // The inventory's addItem method now handles progressive logic directly.
-    // We just call it `count` times.
-    if (this.inventory && typeof this.inventory.addItem === 'function') {
-      for (let i = 0; i < count; i++) {
-        this.inventory.addItem(itemName);
-      }
-      this._logDebug(
-        `[StateManager addItemToInventoryByName] Called inventory.addItem("${itemName}") ${count} times.`
-      );
+    // Use format-agnostic helper method that works with both legacy and canonical formats
+    this._addItemToInventory(itemName, count);
+    this._logDebug(
+      `[StateManager addItemToInventoryByName] Added ${count} of "${itemName}" using format-agnostic method.`
+    );
 
-      // Publish events and update state
-      this._publishEvent('stateManager:inventoryItemAdded', {
-        itemName,
-        count,
-        currentInventory: this.inventory.items, // Or a copy
-      });
-      this.invalidateCache(); // Adding items can change reachability
-      this._sendSnapshotUpdate(); // Send a new snapshot
-    } else {
-      this._logDebug(
-        `[StateManager addItemToInventoryByName] Inventory or addItem method not available for item "${itemName}" (Count: ${count}).`,
-        null,
-        'warn'
-      );
-    }
+    // Publish events and update state
+    this._publishEvent('stateManager:inventoryItemAdded', {
+      itemName,
+      count,
+      currentInventory: this.inventory.items, // Or a copy
+    });
+    this.invalidateCache(); // Adding items can change reachability
+    this._sendSnapshotUpdate(); // Send a new snapshot
 
     // If the item is an event item and settings indicate auto-checking event locations
     const itemDetails = this.itemData[itemName];
@@ -426,8 +420,7 @@ export class StateManager {
   }
 
   getItemCount(itemName) {
-    const count = this.inventory.count(itemName);
-    return count;
+    return this._countItem(itemName);
   }
 
   /**
@@ -648,7 +641,7 @@ export class StateManager {
     // After state.loadSettings, this.state.settings should be populated.
     // Sync the StateManager's main settings reference to this.
     this.settings = this.state.settings;
-    
+
     // REFACTOR: Initialize canonical state format after settings are loaded
     this._initializeCanonicalStateFormat();
 
@@ -913,30 +906,13 @@ export class StateManager {
       `Processed ${this.exits.length} exits and populated originalExitOrder.`
     );
 
-    // --- Helper Instantiation: Now occurs AFTER this.state.loadSettings() ---
-    // this.settings.game should now be correctly set by the game-specific state's loadSettings method.
-    this.helpers = null; // Ensure helpers are reset
-    if (this.settings && this.settings.game === 'A Link to the Past') {
-      this.helpers = new ALTTPWorkerHelpers(this);
-      log(
-        'info',
-        '[StateManager loadFromJSON] ALTTPWorkerHelpers instantiated.'
-      );
-    } else if (this.settings && this.settings.game === 'Adventure') {
-      this.helpers = new GameWorkerHelpers(this); // Use GameWorkerHelpers for Adventure
-      log(
-        'info',
-        '[StateManager loadFromJSON] GameWorkerHelpers instantiated for Adventure.'
-      );
-    } else {
-      log(
-        'warn',
-        '[StateManager loadFromJSON] No specific helpers for game:',
-        this.settings ? this.settings.game : 'undefined',
-        '. Using base GameWorkerHelpers as a fallback.'
-      );
-      this.helpers = new GameWorkerHelpers(this); // Fallback to GameWorkerHelpers
-    }
+    // --- Helper Instantiation ---
+    this.helpers = new GameWorkerHelpers(this);
+    log(
+      'info',
+      '[StateManager loadFromJSON] GameWorkerHelpers instantiated for game:',
+      this.settings ? this.settings.game : 'undefined'
+    );
     // --- END Helper Instantiation ---
 
     // --- Create game-specific inventory instance ---
@@ -1511,8 +1487,8 @@ export class StateManager {
           for (const loc of this.eventLocations.values()) {
             if (this.knownReachableRegions.has(loc.region)) {
               const canAccessLoc = this.isLocationAccessible(loc);
-              if (canAccessLoc && !this.inventory.has(loc.item.name)) {
-                this.inventory.addItem(loc.item.name);
+              if (canAccessLoc && !this._hasItem(loc.item.name)) {
+                this._addItemToInventory(loc.item.name, 1);
                 this.checkedLocations.add(loc.name);
                 newEventCollected = true;
                 this._logDebug(
@@ -1726,7 +1702,11 @@ export class StateManager {
     // The check for serverProvidedUncheckedLocations was removed from here.
     // A location being unchecked by the server does not mean it's inaccessible by rules.
 
-    const reachableRegions = this.computeReachableRegions();
+    // Recursion protection: if we're already computing reachable regions,
+    // use the current state instead of triggering another computation
+    const reachableRegions = this._computing
+      ? this.knownReachableRegions
+      : this.computeReachableRegions();
     if (!reachableRegions.has(location.region)) {
       return false;
     }
@@ -2198,6 +2178,65 @@ export class StateManager {
   }
 
   /**
+   * REFACTOR: Centralized executeHelper method that handles both agnostic and legacy helpers
+   * @param {string} name - The helper function name
+   * @param {...any} args - Arguments to pass to the helper function
+   * @returns {any} Result from the helper function
+   */
+  executeHelper(name, ...args) {
+    // REFACTOR: Hardcoded flag to enable agnostic helpers in worker thread
+    const useAgnosticHelpers = true;
+
+    // Recursion protection: prevent getSnapshot from calling isLocationAccessible during helper execution
+    const wasInHelperExecution = this._inHelperExecution;
+    this._inHelperExecution = true;
+
+    // Debug logging for helper execution (can be enabled when needed)
+    this._logDebug(
+      `[StateManager Worker executeHelper] Helper: ${name}, useAgnosticHelpers: ${useAgnosticHelpers}, game: ${
+        this.settings?.game
+      }, hasHelper: ${!!alttpLogic[name]}`
+    );
+
+    try {
+      if (useAgnosticHelpers && this.settings?.game === 'A Link to the Past') {
+        if (alttpLogic[name]) {
+          try {
+            const snapshot = this.getSnapshot(); // Get the current, full canonical state
+            const staticData = {
+              progressionMapping: this.progressionMapping,
+              groupData: this.groupData,
+              itemData: this.itemData,
+            };
+
+            // The agnostic helper is called with the full state, plus any additional args.
+            // The structure alttpLogic[name](state, world, itemName, staticData) needs to be mapped from `args`.
+            // Assuming the first arg is typically the `itemName` or main subject.
+            return alttpLogic[name](snapshot, 'world', args[0], staticData);
+          } catch (error) {
+            log(
+              'error',
+              `[StateManager] Error executing agnostic helper ${name}:`,
+              error
+            );
+            // Fallback on error is risky, but might be desired during transition
+          }
+        }
+      }
+
+      // Fallback to legacy worker helpers
+      if (!this.helpers) {
+        log('error', '[StateManager] Legacy helpers not initialized!');
+        return false; // Or undefined
+      }
+      return this.helpers.executeHelper(name, ...args);
+    } finally {
+      // Restore the previous state
+      this._inHelperExecution = wasInHelperExecution;
+    }
+  }
+
+  /**
    * Implementation of can_reach state method that mirrors Python
    */
   can_reach(region, type = 'Region', player = 1) {
@@ -2651,10 +2690,10 @@ export class StateManager {
     const self = this;
     const anInterface = {
       _isSnapshotInterface: true,
-      hasItem: (itemName) => self.inventory.has(itemName),
-      countItem: (itemName) => self.inventory.count(itemName),
-      hasGroup: (groupName) => self.inventory.countGroup(groupName) > 0,
-      countGroup: (groupName) => self.inventory.countGroup(groupName),
+      hasItem: (itemName) => self._hasItem(itemName),
+      countItem: (itemName) => self._countItem(itemName),
+      hasGroup: (groupName) => self._hasGroup(groupName),
+      countGroup: (groupName) => self._countGroup(groupName),
       // Flags in this context usually refer to checked locations or game-specific state flags
       hasFlag: (flagName) =>
         self.checkedLocations.has(flagName) ||
@@ -2667,11 +2706,8 @@ export class StateManager {
       isRegionReachable: (regionName) => self.isRegionReachable(regionName),
       isLocationChecked: (locName) => self.isLocationChecked(locName),
       executeHelper: (name, ...args) => {
-        if (!self.helpers) {
-          log('error', '[SelfSnapshotInterface] Helpers not initialized!');
-          return undefined;
-        }
-        return self.helpers.executeHelper(name, ...args);
+        // Just delegate to the new centralized method
+        return self.executeHelper(name, ...args);
       },
       executeStateManagerMethod: (name, ...args) => {
         return self.executeStateMethod(name, ...args);
@@ -2810,12 +2846,9 @@ export class StateManager {
     }
 
     // 1. Inventory
-    // REFACTOR: Check feature flag for canonical inventory format
-    const useCanonicalFormat = 
-      this.settings?.featureFlags?.useCanonicalStateFormat ||
-      (typeof window !== 'undefined' && 
-       window.settings?.featureFlags?.useCanonicalStateFormat);
-    
+    // REFACTOR: Hardcoded flag for canonical inventory format in worker thread
+    const useCanonicalFormat = true;
+
     let inventorySnapshot = {};
     if (this.inventory && this.itemData) {
       if (this._useCanonicalStateFormat) {
@@ -2861,7 +2894,8 @@ export class StateManager {
       this.locations.forEach((loc) => {
         if (this.isLocationChecked(loc.name)) {
           finalReachability[loc.name] = 'checked';
-        } else if (this.isLocationAccessible(loc)) {
+        } else if (!this._inHelperExecution && this.isLocationAccessible(loc)) {
+          // Skip location accessibility check during helper execution to prevent recursion
           finalReachability[loc.name] = 'reachable';
         } else {
           finalReachability[loc.name] = 'unreachable';
@@ -2893,14 +2927,17 @@ export class StateManager {
     // 4. Convert eventLocations Map to plain object
     const eventLocationsObject = {};
     if (this.eventLocations && this.eventLocations instanceof Map) {
-      for (const [locationName, locationData] of this.eventLocations.entries()) {
+      for (const [
+        locationName,
+        locationData,
+      ] of this.eventLocations.entries()) {
         eventLocationsObject[locationName] = locationData;
       }
     }
 
     // 5. Assemble Snapshot
-    // REFACTOR NOTE: Currently there is duplication between top-level properties and 
-    // properties inside 'state'. This will be consolidated when we implement the 
+    // REFACTOR NOTE: Currently there is duplication between top-level properties and
+    // properties inside 'state'. This will be consolidated when we implement the
     // canonical state format. For now, we maintain backward compatibility.
     const snapshot = {
       inventory: inventorySnapshot,
@@ -2928,24 +2965,28 @@ export class StateManager {
       autoCollectEventsEnabled: this.autoCollectEventsEnabled !== false, // Default true
       eventLocations: eventLocationsObject,
       startRegions: this.startRegions || ['Menu'],
-      
-      // Note: We don't include progressionMapping, itemData, groupData, etc. here 
+
+      // Note: We don't include progressionMapping, itemData, groupData, etc. here
       // because they are static data already available in staticDataCache
     };
-    
+
     // REFACTOR: Temporary logging to verify new properties
     if (this.debugMode) {
-      log('info', '[StateManager getSnapshot] Snapshot includes new properties:', {
-        debugMode: snapshot.debugMode,
-        autoCollectEventsEnabled: snapshot.autoCollectEventsEnabled,
-        eventLocationsCount: Object.keys(snapshot.eventLocations).length,
-        hasGameId: !!snapshot.gameId,
-        startRegions: snapshot.startRegions,
-        inventoryFormat: useCanonicalFormat ? 'canonical' : 'legacy',
-        inventoryItemCount: Object.keys(snapshot.inventory).length
-      });
+      log(
+        'info',
+        '[StateManager getSnapshot] Snapshot includes new properties:',
+        {
+          debugMode: snapshot.debugMode,
+          autoCollectEventsEnabled: snapshot.autoCollectEventsEnabled,
+          eventLocationsCount: Object.keys(snapshot.eventLocations).length,
+          hasGameId: !!snapshot.gameId,
+          startRegions: snapshot.startRegions,
+          inventoryFormat: useCanonicalFormat ? 'canonical' : 'legacy',
+          inventoryItemCount: Object.keys(snapshot.inventory).length,
+        }
+      );
     }
-    
+
     return snapshot;
   }
 
@@ -2953,15 +2994,13 @@ export class StateManager {
    * REFACTOR: Initialize canonical state format if feature flag is enabled
    */
   _initializeCanonicalStateFormat() {
-    const useCanonical = 
-      this.settings?.featureFlags?.useCanonicalStateFormat ||
-      (typeof window !== 'undefined' && 
-       window.settings?.featureFlags?.useCanonicalStateFormat);
-    
+    // REFACTOR: Hardcoded flag to enable canonical state format in worker thread
+    const useCanonical = true;
+
     if (useCanonical && !this._useCanonicalStateFormat) {
       log('info', '[StateManager] Switching to canonical state format');
       this._useCanonicalStateFormat = true;
-      
+
       // Convert existing inventory to canonical format if it exists
       if (this.inventory && this.itemData) {
         this._migrateInventoryToCanonical();
@@ -2969,7 +3008,7 @@ export class StateManager {
     } else if (!useCanonical && this._useCanonicalStateFormat) {
       log('info', '[StateManager] Switching back to legacy state format');
       this._useCanonicalStateFormat = false;
-      
+
       // Convert back to legacy format if needed
       if (this.inventory && this.itemData) {
         this._migrateInventoryToLegacy();
@@ -2983,18 +3022,18 @@ export class StateManager {
   _migrateInventoryToCanonical() {
     if (this.inventory instanceof ALTTPInventory) {
       const canonicalInventory = {};
-      
+
       // Initialize all items to 0
       for (const itemName in this.itemData) {
         if (Object.hasOwn(this.itemData, itemName)) {
           canonicalInventory[itemName] = this.inventory.count(itemName);
         }
       }
-      
+
       // Store original for migration back if needed
       this._legacyInventory = this.inventory;
       this.inventory = canonicalInventory;
-      
+
       log('info', '[StateManager] Migrated inventory to canonical format');
     }
   }
@@ -3020,11 +3059,11 @@ export class StateManager {
         log('warn', `[StateManager] Adding unknown item: ${itemName}`);
         this.inventory[itemName] = 0;
       }
-      
+
       const currentCount = this.inventory[itemName];
       const itemDef = this.itemData[itemName];
       const maxCount = itemDef?.max_count ?? Infinity;
-      
+
       this.inventory[itemName] = Math.min(currentCount + count, maxCount);
     } else {
       // Legacy format: ALTTPInventory instance
@@ -3054,6 +3093,34 @@ export class StateManager {
     } else {
       return this.inventory.count(itemName);
     }
+  }
+
+  /**
+   * REFACTOR: Helper function to count groups that works with both formats
+   */
+  _countGroup(groupName) {
+    if (this._useCanonicalStateFormat) {
+      // In canonical format, inventory is a plain object, so we need to manually count group items
+      let count = 0;
+      if (this.itemData) {
+        for (const itemName in this.itemData) {
+          const itemInfo = this.itemData[itemName];
+          if (itemInfo?.groups?.includes(groupName)) {
+            count += this.inventory[itemName] || 0;
+          }
+        }
+      }
+      return count;
+    } else {
+      return this.inventory.countGroup(groupName);
+    }
+  }
+
+  /**
+   * REFACTOR: Helper function to check if group has items that works with both formats
+   */
+  _hasGroup(groupName) {
+    return this._countGroup(groupName) > 0;
   }
 
   applyRuntimeState(payload) {
@@ -3294,14 +3361,14 @@ export class StateManager {
     this._logDebug(
       `[StateManager _createInventoryInstance] Attempting to create inventory for game: ${gameName}`
     );
-    
+
     // REFACTOR: Check if we should use canonical format
     if (this._useCanonicalStateFormat) {
       this._logDebug(
         `[StateManager _createInventoryInstance] Creating canonical inventory for ${gameName}`
       );
       const canonicalInventory = {};
-      
+
       // Initialize all items to 0
       if (this.itemData) {
         for (const itemName in this.itemData) {
@@ -3310,10 +3377,10 @@ export class StateManager {
           }
         }
       }
-      
+
       return canonicalInventory;
     }
-    
+
     // Legacy format
     if (gameName === 'A Link to the Past') {
       this._logDebug(
