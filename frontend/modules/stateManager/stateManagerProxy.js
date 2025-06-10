@@ -1159,9 +1159,6 @@ export class StateManagerProxy {
           alttpSnapshotHelpers:
             mainThreadLoggerConfig.categoryLevels?.alttpSnapshotHelpers ||
             mainThreadLoggerConfig.defaultLevel,
-          alttpWorkerHelpers:
-            mainThreadLoggerConfig.categoryLevels?.alttpWorkerHelpers ||
-            mainThreadLoggerConfig.defaultLevel,
         },
         filters: mainThreadLoggerConfig.filters,
         showTimestamp: mainThreadLoggerConfig.showTimestamp,
@@ -1637,31 +1634,21 @@ export function createStateSnapshotInterface(
       }
     },
     hasItem: (itemName) => {
-      // REFACTOR: Check feature flag for using agnostic helpers
-      const useAgnosticHelpers = 
-        snapshot?.settings?.featureFlags?.useAgnosticHelpers || 
-        (typeof window !== 'undefined' && 
-         window.settings?.featureFlags?.useAgnosticHelpers);
-      
-      if (useAgnosticHelpers && snapshot?.game === 'A Link to the Past') {
+      // Use agnostic helpers for A Link to the Past
+      if (snapshot?.game === 'A Link to the Past') {
         return alttpLogic.has(snapshot, itemName, staticData);
       }
       
-      // Legacy implementation
+      // Legacy implementation for other games
       return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
     },
     countItem: (itemName) => {
-      // REFACTOR: Check feature flag for using agnostic helpers
-      const useAgnosticHelpers = 
-        snapshot?.settings?.featureFlags?.useAgnosticHelpers || 
-        (typeof window !== 'undefined' && 
-         window.settings?.featureFlags?.useAgnosticHelpers);
-      
-      if (useAgnosticHelpers && snapshot?.game === 'A Link to the Past') {
+      // Use agnostic helpers for A Link to the Past
+      if (snapshot?.game === 'A Link to the Past') {
         return alttpLogic.count(snapshot, itemName, staticData);
       }
       
-      // Legacy implementation
+      // Legacy implementation for other games
       return snapshot?.inventory?.[itemName] || 0;
     },
     countGroup: (groupName) => {
@@ -1844,21 +1831,15 @@ export function createStateSnapshotInterface(
     ...rawInterfaceForHelpers,
     helpers: snapshotHelpersInstance,
     executeHelper: (helperName, ...args) => {
-      // REFACTOR: Check feature flag for using agnostic helpers
-      const useAgnosticHelpers = 
-        snapshot?.settings?.featureFlags?.useAgnosticHelpers || 
-        (typeof window !== 'undefined' && 
-         window.settings?.featureFlags?.useAgnosticHelpers);
-      
-      if (useAgnosticHelpers && snapshot?.game === 'A Link to the Past') {
-        // Use the new thread-agnostic helpers
+      // Use agnostic helpers for A Link to the Past
+      if (snapshot?.game === 'A Link to the Past') {
         if (alttpLogic[helperName]) {
           // Call the agnostic helper with state as first parameter
           return alttpLogic[helperName](snapshot, 'world', args[0], staticData);
         }
       }
       
-      // Fall back to legacy helpers
+      // Fall back to legacy helpers for other games
       if (
         snapshotHelpersInstance &&
         typeof snapshotHelpersInstance[helperName] === 'function'

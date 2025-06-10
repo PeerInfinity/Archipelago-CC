@@ -110,7 +110,7 @@ export function can_light_torches(state, world, itemName, staticData) {
 export function can_melt_things(state, world, itemName, staticData) {
   return has(state, 'Fire Rod', staticData) || 
          (has(state, 'Bombos', staticData) && 
-          (has(state, 'Progressive Sword', staticData) || state.settings?.swordless));
+          (has_sword(state, world, itemName, staticData) || state.settings?.swordless));
 }
 
 export function can_fly(state, world, itemName, staticData) {
@@ -186,7 +186,7 @@ export function can_defeat_ganon(state, world, itemName, staticData) {
   return can_shoot_silver_arrows(state, world, itemName, staticData) && 
          (has(state, 'Lamp', staticData) || 
           (has(state, 'Fire Rod', staticData) && can_extend_magic(state, world, itemName, staticData))) &&
-         (count(state, 'Progressive Sword', staticData) >= 2 || 
+         (has_beam_sword(state, world, itemName, staticData) || 
           (has(state, 'Hammer', staticData) && 
            (state.settings?.game_mode === 'swordless' || state.settings?.swordless)));
 }
@@ -298,12 +298,13 @@ export function can_get_good_bee(state, world, itemName, staticData) {
   return (has(state, 'Bug Catching Net', staticData) && 
           bottleCount > 0 && 
           (has(state, 'Pegasus Boots', staticData) || 
-           (has(state, 'Progressive Sword', staticData) && has(state, 'Quake', staticData))));
+           (has_sword(state, world, itemName, staticData) && has(state, 'Quake', staticData))));
 }
 
 export function can_retrieve_tablet(state, world, itemName, staticData) {
   return has(state, 'Book of Mudora', staticData) && 
-         count(state, 'Progressive Sword', staticData) >= 2;
+         (has_beam_sword(state, world, itemName, staticData) ||
+          (state.settings?.swordless && has(state, 'Hammer', staticData)));
 }
 
 export function can_flute(state, world, itemName, staticData) {
@@ -362,16 +363,23 @@ export function has_crystals(state, world, itemName, staticData) {
 }
 
 export function has_beam_sword(state, world, itemName, staticData) {
-  return count(state, 'Progressive Sword', staticData) >= 2;
+  return has(state, 'Master Sword', staticData) || 
+         has(state, 'Tempered Sword', staticData) || 
+         has(state, 'Golden Sword', staticData) ||
+         count(state, 'Progressive Sword', staticData) >= 2;
 }
 
 export function has_melee_weapon(state, world, itemName, staticData) {
-  return has(state, 'Progressive Sword', staticData) || 
-         has(state, 'Hammer', staticData) || 
-         has(state, 'Fire Rod', staticData) || 
-         has(state, 'Cane of Somaria', staticData) || 
-         has(state, 'Cane of Byrna', staticData) || 
-         has(state, 'Bug Catching Net', staticData);
+  return has_sword(state, world, itemName, staticData) || 
+         has(state, 'Hammer', staticData);
+}
+
+export function has_sword(state, world, itemName, staticData) {
+  return has(state, 'Fighter Sword', staticData) || 
+         has(state, 'Master Sword', staticData) || 
+         has(state, 'Tempered Sword', staticData) || 
+         has(state, 'Golden Sword', staticData) ||
+         has(state, 'Progressive Sword', staticData);
 }
 
 export function has_rod(state, world, itemName, staticData) {
@@ -401,7 +409,7 @@ export function can_bomb_clip(state, world, itemName, staticData) {
 
 export function can_spin_speed(state, world, itemName, staticData) {
   return has(state, 'Pegasus Boots', staticData) && 
-         has(state, 'Progressive Sword', staticData) && 
+         has_sword(state, world, itemName, staticData) && 
          state.settings?.mode === 'minor_glitches';
 }
 
@@ -472,12 +480,6 @@ export function has_triforce_pieces(state, world, itemName, staticData) {
   return triforceCount + powerStarCount >= requiredCount;
 }
 
-export function has_sword(state, world, itemName, staticData) {
-  return has(state, 'Fighter Sword', staticData) ||
-         has(state, 'Master Sword', staticData) ||
-         has(state, 'Tempered Sword', staticData) ||
-         has(state, 'Golden Sword', staticData);
-}
 
 
 export function has_any(state, world, itemName, staticData) {
@@ -488,20 +490,52 @@ export function has_any(state, world, itemName, staticData) {
 }
 
 export function location_item_name(state, world, itemName, staticData) {
-  // TODO: Implement location item lookup
-  // Requires: staticData.locations with item placement data
-  // Expected format: locations[locationName] = { item: itemName, player: playerNum }
-  // Or: Integration with multiworld location data
+  // Look up what item is placed at a specific location
   const locationName = itemName;
   
-  if (staticData && staticData.locations && staticData.locations[locationName]) {
-    const locationData = staticData.locations[locationName];
-    if (locationData.item && locationData.player !== undefined) {
-      return [locationData.item, locationData.player];
+  // First check if we have location-item mapping in static data locations object
+  if (staticData && staticData.locations) {
+    // Check if locations is a direct mapping object
+    if (typeof staticData.locations === 'object' && !Array.isArray(staticData.locations)) {
+      const locationData = staticData.locations[locationName];
+      if (locationData && locationData.item) {
+        // Return array format: [item_name, player_number]
+        return [locationData.item.name, locationData.item.player || 1];
+      }
     }
   }
   
-  return undefined; // Location item data not available
+  // Search through regions for the location
+  if (staticData && staticData.regions) {
+    const playerSlot = state.player?.slot || '1';
+    const playerRegions = staticData.regions[playerSlot];
+    
+    if (playerRegions) {
+      for (const regionName in playerRegions) {
+        const region = playerRegions[regionName];
+        if (region.locations && Array.isArray(region.locations)) {
+          const location = region.locations.find(loc => loc.name === locationName);
+          if (location && location.item) {
+            // Return array format: [item_name, player_number]
+            return [location.item.name, location.item.player || 1];
+          }
+        }
+      }
+    }
+  }
+  
+  // Check if we have item placement data in the state itself
+  if (state.locationItems && state.locationItems[locationName]) {
+    const item = state.locationItems[locationName];
+    if (typeof item === 'string') {
+      return [item, state.player?.slot || 1];
+    } else if (item && item.name) {
+      return [item.name, item.player || state.player?.slot || 1];
+    }
+  }
+  
+  // Return null if no data available
+  return null;
 }
 
 export function item_name_in_location_names(state, world, itemName, staticData) {

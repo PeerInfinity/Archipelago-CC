@@ -6,11 +6,6 @@
     "showDevTools": false,
     "debugMode": false
   },
-  "featureFlags": {
-    "useCanonicalStateFormat": true,
-    "useAgnosticHelpers": true,
-    "legacyInventoryFormat": false
-  },
   "logging": {
     "defaultLevel": "WARN",
     "categoryLevels": {
@@ -95,7 +90,6 @@
       "alttpHelpers": "WARN",
       "alttpInventory": "WARN",
       "alttpSnapshotHelpers": "WARN",
-      "alttpWorkerHelpers": "WARN",
       "ALTTPState": "WARN",
       "StateManager": "WARN",
       "INIT_STEP": "INFO",

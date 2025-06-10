@@ -1945,7 +1945,7 @@ export class StateManager {
         this._logDebug(
           `[StateManager Class] Location ${locationName} contains item: ${location.item.name}`
         );
-        this.inventory.addItem(location.item.name);
+        this._addItemToInventory(location.item.name, 1);
         this._logDebug(
           `[StateManager Class] Added ${location.item.name} to inventory.`
         );
@@ -2178,14 +2178,12 @@ export class StateManager {
   }
 
   /**
-   * REFACTOR: Centralized executeHelper method that handles both agnostic and legacy helpers
+   * Execute a helper function using the thread-agnostic logic
    * @param {string} name - The helper function name
    * @param {...any} args - Arguments to pass to the helper function
    * @returns {any} Result from the helper function
    */
   executeHelper(name, ...args) {
-    // REFACTOR: Hardcoded flag to enable agnostic helpers in worker thread
-    const useAgnosticHelpers = true;
 
     // Recursion protection: prevent getSnapshot from calling isLocationAccessible during helper execution
     const wasInHelperExecution = this._inHelperExecution;
@@ -2193,13 +2191,14 @@ export class StateManager {
 
     // Debug logging for helper execution (can be enabled when needed)
     this._logDebug(
-      `[StateManager Worker executeHelper] Helper: ${name}, useAgnosticHelpers: ${useAgnosticHelpers}, game: ${
+      `[StateManager Worker executeHelper] Helper: ${name}, game: ${
         this.settings?.game
       }, hasHelper: ${!!alttpLogic[name]}`
     );
 
     try {
-      if (useAgnosticHelpers && this.settings?.game === 'A Link to the Past') {
+      // Use agnostic helpers for A Link to the Past
+      if (this.settings?.game === 'A Link to the Past') {
         if (alttpLogic[name]) {
           try {
             const snapshot = this.getSnapshot(); // Get the current, full canonical state
@@ -2219,12 +2218,13 @@ export class StateManager {
               `[StateManager] Error executing agnostic helper ${name}:`,
               error
             );
-            // Fallback on error is risky, but might be desired during transition
+            // Don't fallback on error - this would mask issues
+            return false;
           }
         }
       }
 
-      // Fallback to legacy worker helpers
+      // Fallback to legacy worker helpers for other games
       if (!this.helpers) {
         log('error', '[StateManager] Legacy helpers not initialized!');
         return false; // Or undefined
@@ -2459,7 +2459,7 @@ export class StateManager {
         break;
 
       case 'item_check':
-        const hasItem = this.inventory.has(rule.item);
+        const hasItem = this._hasItem(rule.item);
         log(
           'info',
           `${indent}ITEM CHECK: ${rule.item} - ${hasItem ? 'HAVE' : 'MISSING'}`
@@ -2467,7 +2467,7 @@ export class StateManager {
         break;
 
       case 'count_check':
-        const count = this.inventory.count(rule.item);
+        const count = this._countItem(rule.item);
         log(
           'info',
           `${indent}COUNT CHECK: ${rule.item} (${count}) >= ${rule.count} - ${
@@ -2859,7 +2859,7 @@ export class StateManager {
         for (const itemName in this.itemData) {
           if (Object.hasOwn(this.itemData, itemName)) {
             // Use the inventory's count() method which understands progressive items
-            const itemCount = this.inventory.count(itemName);
+            const itemCount = this._countItem(itemName);
             if (useCanonicalFormat || itemCount > 0) {
               // In canonical format, include all items (even with 0 count)
               // In legacy format, only include items with count > 0
@@ -2994,24 +2994,14 @@ export class StateManager {
    * REFACTOR: Initialize canonical state format if feature flag is enabled
    */
   _initializeCanonicalStateFormat() {
-    // REFACTOR: Hardcoded flag to enable canonical state format in worker thread
-    const useCanonical = true;
-
-    if (useCanonical && !this._useCanonicalStateFormat) {
-      log('info', '[StateManager] Switching to canonical state format');
+    // Always use canonical state format
+    if (!this._useCanonicalStateFormat) {
+      log('info', '[StateManager] Using canonical state format');
       this._useCanonicalStateFormat = true;
 
       // Convert existing inventory to canonical format if it exists
       if (this.inventory && this.itemData) {
         this._migrateInventoryToCanonical();
-      }
-    } else if (!useCanonical && this._useCanonicalStateFormat) {
-      log('info', '[StateManager] Switching back to legacy state format');
-      this._useCanonicalStateFormat = false;
-
-      // Convert back to legacy format if needed
-      if (this.inventory && this.itemData) {
-        this._migrateInventoryToLegacy();
       }
     }
   }
@@ -3026,7 +3016,7 @@ export class StateManager {
       // Initialize all items to 0
       for (const itemName in this.itemData) {
         if (Object.hasOwn(this.itemData, itemName)) {
-          canonicalInventory[itemName] = this.inventory.count(itemName);
+          canonicalInventory[itemName] = this._countItem(itemName);
         }
       }
 
@@ -3239,15 +3229,8 @@ export class StateManager {
         let itemsProcessedCount = 0;
         payload.receivedItemsForProcessing.forEach((itemDetail) => {
           if (itemDetail && itemDetail.itemName) {
-            if (typeof this.inventory.addItem === 'function') {
-              this.inventory.addItem(itemDetail.itemName);
-              itemsProcessedCount++;
-            } else {
-              log(
-                'warn',
-                `[StateManager applyRuntimeState] this.inventory.addItem is not a function for item: ${itemDetail.itemName}`
-              );
-            }
+            this._addItemToInventory(itemDetail.itemName, 1);
+            itemsProcessedCount++;
           }
         });
         if (itemsProcessedCount > 0) {
@@ -3513,7 +3496,7 @@ export class StateManager {
       for (const itemName in itemsForTest) {
         const count = itemsForTest[itemName];
         for (let i = 0; i < count; i++) {
-          this.inventory.addItem(itemName); // addItem handles progressive logic
+          this._addItemToInventory(itemName, 1); // Format-agnostic method handles progressive logic
         }
       }
 
