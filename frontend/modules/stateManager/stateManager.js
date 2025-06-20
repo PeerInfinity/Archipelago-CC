@@ -102,7 +102,7 @@ export class StateManager {
     this.debugMode = false; // Set to true to enable detailed logging
 
     // REFACTOR: Track whether we're using canonical state format
-    this._useCanonicalStateFormat = false;
+    this._useCanonicalStateFormat = true;
 
     // New maps for item and location IDs
     this.itemNameToId = {};
@@ -222,18 +222,14 @@ export class StateManager {
     this.itemData = itemData; // Store for convenience
     this.groupData = groupData; // Store groupData
 
-    if (this.inventory && this.groupData) {
-      // Ensure inventory is created before assigning groupData
+    if (!this._useCanonicalStateFormat && this.inventory && this.groupData) {
+      // Legacy format: Ensure inventory has groupData reference
       this.inventory.groupData = this.groupData;
       this._logDebug(
-        '[StateManager initializeInventory] Assigned groupData to inventory.'
-      );
-    } else {
-      log(
-        'warn',
-        '[StateManager initializeInventory] Inventory or groupData not available for assignment to inventory.groupData.'
+        '[StateManager initializeInventory] Assigned groupData to inventory (legacy format).'
       );
     }
+    // In canonical format, groupData is accessed from StateManager instance directly
     // Do not publish here, wait for full rules load
   }
 
@@ -257,13 +253,23 @@ export class StateManager {
   }
 
   clearInventory() {
-    const progressionMapping = this.inventory.progressionMapping || {};
-    const itemData = this.inventory.itemData || {};
-    const groupData = this.inventory.groupData || {};
-    this.inventory = new ALTTPInventory([], progressionMapping, itemData);
-    this.inventory.groupData = groupData;
-    this.itemData = itemData;
-    this.groupData = groupData;
+    if (this._useCanonicalStateFormat) {
+      // Canonical format: reset all items to 0
+      if (this.inventory && this.itemData) {
+        for (const itemName in this.itemData) {
+          if (Object.hasOwn(this.itemData, itemName)) {
+            this.inventory[itemName] = 0;
+          }
+        }
+      }
+    } else {
+      // Legacy format: recreate ALTTPInventory
+      const progressionMapping = this.inventory.progressionMapping || this.progressionMapping || {};
+      const itemData = this.inventory.itemData || this.itemData || {};
+      const groupData = this.inventory.groupData || this.groupData || {};
+      this.inventory = new ALTTPInventory([], progressionMapping, itemData);
+      this.inventory.groupData = groupData;
+    }
     this._logDebug('[StateManager Class] Inventory cleared.');
 
     // Only invalidate cache and recompute if NOT in batch mode
@@ -280,29 +286,33 @@ export class StateManager {
   }
 
   clearState(options = { recomputeAndSendUpdate: true }) {
-    const progressionMapping = this.inventory
-      ? this.inventory.progressionMapping || {}
-      : {};
-    const itemData = this.inventory ? this.inventory.itemData || {} : {};
-    const groupData = this.inventory ? this.inventory.groupData || {} : {};
-
     // Re-initialize inventory
-    if (this.inventory && typeof this.inventory.reset === 'function') {
-      this.inventory.reset();
-      // Ensure critical data like progressionMapping, itemData, groupData are restored if reset clears them
-      // This assumes they are part of the core ruleset and should persist across a clearState.
-      if (this.inventory.progressionMapping !== progressionMapping)
-        this.inventory.progressionMapping = progressionMapping;
-      if (this.inventory.itemData !== itemData)
-        this.inventory.itemData = itemData;
-      if (this.inventory.groupData !== groupData)
-        this.inventory.groupData = groupData;
+    if (this._useCanonicalStateFormat) {
+      // Canonical format: reset all items to 0
+      if (this.inventory && this.itemData) {
+        for (const itemName in this.itemData) {
+          if (Object.hasOwn(this.itemData, itemName)) {
+            this.inventory[itemName] = 0;
+          }
+        }
+      }
     } else {
-      this.inventory = this._createInventoryInstance(
-        this.settings ? this.settings.game : this.gameId || 'UnknownGame'
-      );
-      // _createInventoryInstance should ideally use this.progressionMapping, this.itemData from StateManager instance itself
-      // For now, assuming _createInventoryInstance correctly initializes with these.
+      // Legacy format: use reset method or recreate
+      if (this.inventory && typeof this.inventory.reset === 'function') {
+        this.inventory.reset();
+        // Ensure critical data like progressionMapping, itemData, groupData are restored if reset clears them
+        // This assumes they are part of the core ruleset and should persist across a clearState.
+        if (this.inventory.progressionMapping !== this.progressionMapping)
+          this.inventory.progressionMapping = this.progressionMapping;
+        if (this.inventory.itemData !== this.itemData)
+          this.inventory.itemData = this.itemData;
+        if (this.inventory.groupData !== this.groupData)
+          this.inventory.groupData = this.groupData;
+      } else {
+        this.inventory = this._createInventoryInstance(
+          this.settings ? this.settings.game : this.gameId || 'UnknownGame'
+        );
+      }
     }
 
     // Re-initialize game-specific state (e.g., ALTTPState)
@@ -403,7 +413,7 @@ export class StateManager {
     this._publishEvent('stateManager:inventoryItemAdded', {
       itemName,
       count,
-      currentInventory: this.inventory.items, // Or a copy
+      currentInventory: this._useCanonicalStateFormat ? this.inventory : this.inventory.items, // Handle both formats
     });
     this.invalidateCache(); // Adding items can change reachability
     this._sendSnapshotUpdate(); // Send a new snapshot
@@ -3164,22 +3174,24 @@ export class StateManager {
         `[StateManager applyRuntimeState] Inventory re-initialized via _createInventoryInstance for ${gameNameForInventory}.`
       );
     }
-    // Ensure itemData and groupData are on the inventory if _createInventoryInstance doesn't handle it or reset clears it.
-    // This assumes this.itemData and this.groupData (on StateManager) are the canonical sources from rules.json.
-    if (
-      this.inventory &&
-      this.itemData &&
-      this.inventory.itemData !== this.itemData
-    ) {
-      this.inventory.itemData = this.itemData;
+    // In legacy format, ensure itemData and groupData are on the inventory
+    if (!this._useCanonicalStateFormat) {
+      if (
+        this.inventory &&
+        this.itemData &&
+        this.inventory.itemData !== this.itemData
+      ) {
+        this.inventory.itemData = this.itemData;
+      }
+      if (
+        this.inventory &&
+        this.groupData &&
+        this.inventory.groupData !== this.groupData
+      ) {
+        this.inventory.groupData = this.groupData;
+      }
     }
-    if (
-      this.inventory &&
-      this.groupData &&
-      this.inventory.groupData !== this.groupData
-    ) {
-      this.inventory.groupData = this.groupData;
-    }
+    // In canonical format, itemData and groupData are accessed from StateManager instance
 
     // 3. Clear pathfinding cache and related structures
     this.indirectConnections = new Map();

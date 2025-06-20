@@ -89,7 +89,6 @@
       "codeMirrorEditorUI": "WARN",
       "alttpHelpers": "WARN",
       "alttpInventory": "WARN",
-      "alttpSnapshotHelpers": "WARN",
       "ALTTPState": "WARN",
       "StateManager": "WARN",
       "INIT_STEP": "INFO",

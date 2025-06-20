@@ -10,7 +10,7 @@ if (!isWorkerContext && window.logger) {
 // TODO: Import eventBus
 
 // import { ALTTPHelpers } from './games/alttp/helpers.js'; // OLD - REMOVE/REPLACE
-import { ALTTPSnapshotHelpers } from './games/alttp/alttpSnapshotHelpers.js'; // NEW
+// import { ALTTPSnapshotHelpers } from './games/alttp/alttpSnapshotHelpers.js'; // DEPRECATED - Using agnostic helpers
 import { evaluateRule } from './ruleEngine.js'; // Make this an active import
 // import { evaluateRule } from './ruleEngine.js'; // Already imported
 import { GameSnapshotHelpers } from './helpers/gameSnapshotHelpers.js'; // Added import
@@ -1156,9 +1156,6 @@ export class StateManagerProxy {
           alttpHelpers:
             mainThreadLoggerConfig.categoryLevels?.alttpHelpers ||
             mainThreadLoggerConfig.defaultLevel,
-          alttpSnapshotHelpers:
-            mainThreadLoggerConfig.categoryLevels?.alttpSnapshotHelpers ||
-            mainThreadLoggerConfig.defaultLevel,
         },
         filters: mainThreadLoggerConfig.filters,
         showTimestamp: mainThreadLoggerConfig.showTimestamp,
@@ -1816,13 +1813,9 @@ export function createStateSnapshotInterface(
     },
   };
 
-  if (gameId === 'A Link to the Past') {
-    snapshotHelpersInstance = new ALTTPSnapshotHelpers(rawInterfaceForHelpers);
-  } else if (gameId === 'Adventure') {
-    snapshotHelpersInstance = new GameSnapshotHelpers(rawInterfaceForHelpers);
-  } else {
-    snapshotHelpersInstance = new GameSnapshotHelpers(rawInterfaceForHelpers);
-  }
+  // For ALTTP, we no longer need ALTTPSnapshotHelpers since we use agnostic helpers
+  // All games now use the base GameSnapshotHelpers
+  snapshotHelpersInstance = new GameSnapshotHelpers(rawInterfaceForHelpers);
 
   const finalSnapshotInterface = {
     _isSnapshotInterface: true,
@@ -1866,7 +1859,7 @@ export function createStateSnapshotInterface(
       return finalSnapshotInterface;
     },
     executeStateManagerMethod: (methodName, ...args) => {
-      // Simplified for brevity, use previous full implementation
+      // Handle special can_reach method
       if (methodName === 'can_reach' && args.length >= 1) {
         const targetName = args[0];
         const targetType = args[1] || 'Region';
@@ -1875,18 +1868,45 @@ export function createStateSnapshotInterface(
         if (targetType === 'Location')
           return finalSnapshotInterface.isLocationAccessible(targetName);
       }
+      
+      // For ALTTP, use agnostic helpers for all helper methods
+      if (snapshot?.game === 'A Link to the Past') {
+        // Map method names to helper names if needed
+        let helperName = methodName;
+        if (methodName === '_lttp_has_key') {
+          helperName = '_has_specific_key_count';
+        }
+        
+        // Check if this is a helper function in alttpLogic
+        if (alttpLogic[helperName]) {
+          // All agnostic helpers follow the same pattern: (state, world, itemName, staticData)
+          // For has_any, itemName should be an array
+          // For _has_specific_key_count, itemName should be a string like "Small Key (Palace),3"
+          // For most others, itemName is a single item name
+          
+          // Special handling for multi-argument methods that need to be formatted
+          let itemNameArg = args[0];
+          if (helperName === 'has_any' && args.length > 1) {
+            // If multiple args are passed, combine them into an array
+            itemNameArg = args;
+          } else if (helperName === '_has_specific_key_count' && args.length > 1) {
+            // Combine key name and count into comma-separated string
+            itemNameArg = `${args[0]},${args[1]}`;
+          }
+          
+          return alttpLogic[helperName](snapshot, 'world', itemNameArg, staticData);
+        }
+      }
+      
+      // For other games, fall back to legacy helper system
       if (
         snapshotHelpersInstance &&
         typeof snapshotHelpersInstance.executeHelper === 'function'
       ) {
-        if (methodName === '_lttp_has_key')
-          return snapshotHelpersInstance.executeHelper(
-            '_has_specific_key_count',
-            ...args
-          );
-        if (methodName === 'has_any')
-          return snapshotHelpersInstance.executeHelper('has_any', ...args);
+        // Try to execute the method directly on the helper instance
+        return snapshotHelpersInstance.executeHelper(methodName, ...args);
       }
+      
       return undefined;
     },
     resolveName: rawInterfaceForHelpers.resolveName,
