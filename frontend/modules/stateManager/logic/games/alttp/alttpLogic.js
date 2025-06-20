@@ -199,8 +199,7 @@ export function can_use_bombs(state, world, itemName, staticData) {
   // Start with base bombs (10 unless bombless start)
   let bombs = 0;
   const bomblessStart = state.settings?.bombless_start || 
-                       (state.state && state.state.flags && state.state.flags.includes('bombless_start')) ||
-                       (state.flags && state.flags.includes('bombless_start'));
+                       (state.state && state.state.flags && state.state.flags.includes('bombless_start'));
   if (!bomblessStart) {
     bombs = 10;
   }
@@ -905,4 +904,243 @@ export const helperFunctions = {
   can_reach_dark_world,
   open_mode,
   swordless_mode
+};
+
+// ============================================================================
+// ALTTP State Management Module (Option 2 implementation)
+// ============================================================================
+
+/**
+ * ALTTP-specific state management module
+ * Handles game-specific state properties that were previously in ALTTPState
+ */
+export const alttpStateModule = {
+  /**
+   * Initialize ALTTP-specific state
+   * @returns {Object} Initial ALTTP state object
+   */
+  initializeState() {
+    return {
+      gameMode: null,
+      difficultyRequirements: {
+        progressive_bottle_limit: 4,
+        boss_heart_container_limit: 10,
+        heart_piece_limit: 24,
+      },
+      requiredMedallions: ['Ether', 'Quake'], // Default medallions
+      shops: [],
+      treasureHuntRequired: 20,
+      // BATCH 2: Add flags and events management
+      flags: [], // Array of flags (replaces Set from ALTTPState)
+      events: [], // Array of events (replaces Set from ALTTPState)
+    };
+  },
+
+  /**
+   * Load game settings and update ALTTP state
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {Object} settings - Settings from rules JSON
+   * @returns {Object} Updated ALTTP state
+   */
+  loadSettings(gameState, settings) {
+    if (!settings) return gameState;
+
+    const updatedState = { ...gameState };
+
+    // Store game mode
+    updatedState.gameMode = settings.game_mode || 'standard';
+
+    // Store difficulty requirements
+    if (settings.difficulty_requirements) {
+      updatedState.difficultyRequirements = {
+        ...updatedState.difficultyRequirements,
+        ...settings.difficulty_requirements,
+      };
+    }
+
+    // Store medallions
+    if (settings.required_medallions && Array.isArray(settings.required_medallions)) {
+      updatedState.requiredMedallions = settings.required_medallions;
+    }
+
+    // Store treasure hunt count
+    if (typeof settings.treasure_hunt_required === 'number') {
+      updatedState.treasureHuntRequired = settings.treasure_hunt_required;
+    }
+
+    // BATCH 2: Set common flags based on settings (from ALTTPState.loadSettings)
+    if (settings.bombless_start) {
+      updatedState = this.setFlag(updatedState, 'bombless_start');
+    }
+    if (settings.retro_bow) {
+      updatedState = this.setFlag(updatedState, 'retro_bow');
+    }
+    if (settings.swordless) {
+      updatedState = this.setFlag(updatedState, 'swordless');
+    }
+    if (settings.enemy_shuffle) {
+      updatedState = this.setFlag(updatedState, 'enemy_shuffle');
+    }
+
+    return updatedState;
+  },
+
+  /**
+   * Load shop data
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {Array} shops - Array of shop data objects
+   * @returns {Object} Updated ALTTP state
+   */
+  loadShops(gameState, shops) {
+    return {
+      ...gameState,
+      shops: shops || [],
+    };
+  },
+
+  /**
+   * Get state data for snapshot (backward compatibility)
+   * @param {Object} gameState - Current ALTTP game state
+   * @returns {Object} State data for snapshot
+   */
+  getStateForSnapshot(gameState) {
+    return {
+      gameMode: gameState.gameMode,
+      difficultyRequirements: gameState.difficultyRequirements,
+      requiredMedallions: gameState.requiredMedallions,
+      shops: gameState.shops,
+      treasureHuntRequired: gameState.treasureHuntRequired,
+      // BATCH 2: Include flags and events in snapshot
+      flags: gameState.flags || [],
+      events: gameState.events || [],
+    };
+  },
+
+  /**
+   * Reset ALTTP state to defaults
+   * @returns {Object} Reset ALTTP state
+   */
+  resetState() {
+    return this.initializeState();
+  },
+
+  // BATCH 2: Flags and Events Management Functions
+
+  /**
+   * Set a flag in the ALTTP state
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {string} flagName - Name of the flag to set
+   * @returns {Object} Updated ALTTP state
+   */
+  setFlag(gameState, flagName) {
+    const updatedState = { ...gameState };
+    if (!updatedState.flags.includes(flagName)) {
+      updatedState.flags = [...updatedState.flags, flagName];
+    }
+    return updatedState;
+  },
+
+  /**
+   * Check if a flag is set
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {string} flagName - Name of the flag to check
+   * @returns {boolean} True if flag is set
+   */
+  hasFlag(gameState, flagName) {
+    return gameState.flags && gameState.flags.includes(flagName);
+  },
+
+  /**
+   * Set an event in the ALTTP state
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {string} eventName - Name of the event to set
+   * @returns {Object} Updated ALTTP state
+   */
+  setEvent(gameState, eventName) {
+    const updatedState = { ...gameState };
+    if (!updatedState.events.includes(eventName)) {
+      updatedState.events = [...updatedState.events, eventName];
+    }
+    return updatedState;
+  },
+
+  /**
+   * Check if an event is set (checks both flags and events)
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {string} eventName - Name of the event to check
+   * @returns {boolean} True if event is set
+   */
+  hasEvent(gameState, eventName) {
+    return (gameState.flags && gameState.flags.includes(eventName)) ||
+           (gameState.events && gameState.events.includes(eventName));
+  },
+
+  /**
+   * Process an event item and set appropriate event flag
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {string} itemName - Name of the item that triggers an event
+   * @returns {Object} Updated ALTTP state or null if no event triggered
+   */
+  processEventItem(gameState, itemName) {
+    // Event mapping from ALTTPState
+    const eventMapping = {
+      'Beat Agahnim 1': 'Beat Agahnim 1',
+      'Beat Agahnim 2': 'Beat Agahnim 2',
+      'Open Floodgate': 'Open Floodgate',
+      'Crystal 1': 'Crystal 1',
+      'Crystal 2': 'Crystal 2',
+      'Crystal 3': 'Crystal 3',
+      'Crystal 4': 'Crystal 4',
+      'Crystal 5': 'Crystal 5',
+      'Crystal 6': 'Crystal 6',
+      'Crystal 7': 'Crystal 7',
+      'Red Pendant': 'Red Pendant',
+      'Blue Pendant': 'Blue Pendant',
+      'Green Pendant': 'Green Pendant',
+      'Get Frog': 'Get Frog',
+      'Pick Up Purple Chest': 'Pick Up Purple Chest',
+      'Return Smith': 'Return Smith',
+      'Shovel': 'Shovel',
+      'Flute': 'Flute',
+      'Activated Flute': 'Activated Flute',
+    };
+
+    if (eventMapping[itemName]) {
+      return this.setEvent(gameState, eventMapping[itemName]);
+    }
+    return null; // No event triggered
+  },
+
+  /**
+   * Check if an item/flag/event exists (unified check)
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {string} itemName - Name to check (could be flag or event)
+   * @returns {boolean} True if item/flag/event exists
+   */
+  has(gameState, itemName) {
+    // Check if it's an event first
+    if (this.hasEvent(gameState, itemName)) {
+      return true;
+    }
+    // Else fall back to flag check
+    return this.hasFlag(gameState, itemName);
+  },
+
+  /**
+   * Get flags array (for backward compatibility)
+   * @param {Object} gameState - Current ALTTP game state
+   * @returns {Array} Array of flags
+   */
+  getFlags(gameState) {
+    return gameState.flags || [];
+  },
+
+  /**
+   * Get events array (for backward compatibility)
+   * @param {Object} gameState - Current ALTTP game state
+   * @returns {Array} Array of events
+   */
+  getEvents(gameState) {
+    return gameState.events || [];
+  }
 };

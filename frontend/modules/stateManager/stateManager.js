@@ -1,9 +1,10 @@
 // ALTTPInventory removed - using canonical inventory format
-import { ALTTPState } from './games/alttp/alttpState.js';
+// BATCH 3: Removed ALTTPState import - now using alttpStateModule only
 import { GameInventory } from './helpers/gameInventory.js'; // Ensure GameInventory is imported
 import { GameState } from './helpers/index.js'; // Added import for GameState
 import { GameWorkerHelpers } from './helpers/gameWorkerHelpers.js'; // Added import for GameWorkerHelpers
 import * as alttpLogic from './logic/games/alttp/alttpLogic.js'; // REFACTOR: Import agnostic helpers
+import { alttpStateModule } from './logic/games/alttp/alttpLogic.js'; // BATCH 1: Import state module
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -38,6 +39,9 @@ export class StateManager {
     this.state = null; // Initialize as null
     // Pass 'this' (the manager instance) to helpers when running in worker context
     this.helpers = null; // Initialize as null
+
+    // BATCH 1: Game-specific state module (Option 2)
+    this.gameStateModule = null; // Will be set based on game type
 
     // Injected dependencies
     this.eventBus = null; // Legacy/optional
@@ -111,314 +115,6 @@ export class StateManager {
     this.originalExitOrder = [];
 
     this.logger.info('StateManager', 'Instance created with injected logger.');
-
-    // Initialize canonical state structure
-    this._initializeCanonicalState();
-    
-    // Create compatibility aliases during transition
-    // These will be removed once all code is updated
-    Object.defineProperty(this, 'inventory', {
-      get: () => this.currentState.inventory,
-      set: (value) => { this.currentState.inventory = value; }
-    });
-    
-    // Create a proxy Set for checkedLocations that syncs with flags array
-    this._checkedLocationsSet = null;
-    Object.defineProperty(this, 'checkedLocations', {
-      get: () => {
-        if (!this._checkedLocationsSet) {
-          // Create a proxy Set that syncs with the flags array
-          const locationFlags = this.currentState.flags.filter(f => !f.startsWith('event:'));
-          this._checkedLocationsSet = new Set(locationFlags);
-          
-          // Override Set methods to sync with flags array
-          const originalAdd = this._checkedLocationsSet.add.bind(this._checkedLocationsSet);
-          const originalDelete = this._checkedLocationsSet.delete.bind(this._checkedLocationsSet);
-          const originalClear = this._checkedLocationsSet.clear.bind(this._checkedLocationsSet);
-          
-          this._checkedLocationsSet.add = (value) => {
-            const result = originalAdd(value);
-            if (!this.currentState.flags.includes(value)) {
-              this.currentState.flags.push(value);
-            }
-            return result;
-          };
-          
-          this._checkedLocationsSet.delete = (value) => {
-            const result = originalDelete(value);
-            const index = this.currentState.flags.indexOf(value);
-            if (index > -1) {
-              this.currentState.flags.splice(index, 1);
-            }
-            return result;
-          };
-          
-          this._checkedLocationsSet.clear = () => {
-            originalClear();
-            this.currentState.flags = this.currentState.flags.filter(f => f.startsWith('event:'));
-          };
-          
-          this._checkedLocationsSet.has = (value) => {
-            return this.currentState.flags.includes(value);
-          };
-        }
-        return this._checkedLocationsSet;
-      },
-      set: (value) => {
-        // Clear cache to force recreation
-        this._checkedLocationsSet = null;
-        // Remove all location flags and add new ones
-        this.currentState.flags = this.currentState.flags.filter(f => f.startsWith('event:'));
-        if (value instanceof Set) {
-          this.currentState.flags.push(...Array.from(value));
-        }
-      }
-    });
-    
-    Object.defineProperty(this, 'settings', {
-      get: () => this.currentState.settings,
-      set: (value) => { this.currentState.settings = value; }
-    });
-    
-    Object.defineProperty(this, 'debugMode', {
-      get: () => this.currentState.debugMode,
-      set: (value) => { this.currentState.debugMode = value; }
-    });
-    
-    Object.defineProperty(this, 'autoCollectEventsEnabled', {
-      get: () => this.currentState.autoCollectEventsEnabled,
-      set: (value) => { this.currentState.autoCollectEventsEnabled = value; }
-    });
-    
-    // Static data aliases
-    Object.defineProperty(this, 'locations', {
-      get: () => this.staticData.locations,
-      set: (value) => { this.staticData.locations = value; }
-    });
-    
-    Object.defineProperty(this, 'regions', {
-      get: () => this.staticData.regions,
-      set: (value) => { this.staticData.regions = value; }
-    });
-    
-    Object.defineProperty(this, 'itemData', {
-      get: () => this.staticData.itemData,
-      set: (value) => { this.staticData.itemData = value; }
-    });
-    
-    Object.defineProperty(this, 'groupData', {
-      get: () => this.staticData.groupData,
-      set: (value) => { this.staticData.groupData = value; }
-    });
-    
-    Object.defineProperty(this, 'progressionMapping', {
-      get: () => this.staticData.progressionMapping,
-      set: (value) => { this.staticData.progressionMapping = value; }
-    });
-    
-    // Computation state aliases
-    Object.defineProperty(this, 'knownReachableRegions', {
-      get: () => this.computationState.knownReachableRegions,
-      set: (value) => { this.computationState.knownReachableRegions = value; }
-    });
-    
-    Object.defineProperty(this, 'knownUnreachableRegions', {
-      get: () => this.computationState.knownUnreachableRegions,
-      set: (value) => { this.computationState.knownUnreachableRegions = value; }
-    });
-    
-    Object.defineProperty(this, 'path', {
-      get: () => this.computationState.path,
-      set: (value) => { this.computationState.path = value; }
-    });
-    
-    Object.defineProperty(this, 'blockedConnections', {
-      get: () => this.computationState.blockedConnections,
-      set: (value) => { this.computationState.blockedConnections = value; }
-    });
-    
-    Object.defineProperty(this, 'indirectConnections', {
-      get: () => this.computationState.indirectConnections,
-      set: (value) => { this.computationState.indirectConnections = value; }
-    });
-    
-    Object.defineProperty(this, 'cacheValid', {
-      get: () => this.computationState.cacheValid,
-      set: (value) => { this.computationState.cacheValid = value; }
-    });
-    
-    // Other state aliases
-    Object.defineProperty(this, 'mode', {
-      get: () => this.currentState.gameMode,
-      set: (value) => { this.currentState.gameMode = value; }
-    });
-    
-    Object.defineProperty(this, 'playerSlot', {
-      get: () => this.currentState.player.slot,
-      set: (value) => { this.currentState.player.slot = value; }
-    });
-    
-    Object.defineProperty(this, 'team', {
-      get: () => this.currentState.player.team,
-      set: (value) => { this.currentState.player.team = value; }
-    });
-    
-    Object.defineProperty(this, 'dungeons', {
-      get: () => this.currentState.dungeons,
-      set: (value) => { this.currentState.dungeons = value; }
-    });
-    
-    Object.defineProperty(this, 'eventLocations', {
-      get: () => {
-        // Convert object to Map for compatibility
-        const map = new Map();
-        for (const [key, value] of Object.entries(this.currentState.eventLocations)) {
-          map.set(key, value);
-        }
-        return map;
-      },
-      set: (value) => {
-        // Convert Map to object for storage
-        if (value instanceof Map) {
-          this.currentState.eventLocations = Object.fromEntries(value);
-        } else {
-          this.currentState.eventLocations = value;
-        }
-      }
-    });
-    
-    Object.defineProperty(this, 'startRegions', {
-      get: () => this.currentState.startRegions,
-      set: (value) => { this.currentState.startRegions = value; }
-    });
-    
-    Object.defineProperty(this, 'gameId', {
-      get: () => this.currentState.gameId,
-      set: (value) => { 
-        this.currentState.gameId = value;
-        // Also update game name for consistency
-        if (value === 'alttp') {
-          this.currentState.game = 'A Link to the Past';
-        } else {
-          this.currentState.game = value;
-        }
-      }
-    });
-    
-    // Create a proxy for the state property that syncs with canonical state
-    this._gameStateInstance = null;
-    Object.defineProperty(this, 'state', {
-      get: () => this._gameStateInstance,
-      set: (value) => {
-        this._gameStateInstance = value;
-        // Sync state instance data with canonical state
-        if (value) {
-          // Copy initial settings from the state instance
-          if (value.difficultyRequirements) {
-            this.currentState.difficultyRequirements = value.difficultyRequirements;
-          }
-          if (value.requiredMedallions) {
-            this.currentState.requiredMedallions = value.requiredMedallions;
-          }
-          if (value.shops) {
-            this.currentState.shops = value.shops;
-          }
-          if (value.treasureHuntRequired !== undefined) {
-            this.currentState.treasureHuntRequired = value.treasureHuntRequired;
-          }
-          
-          // Override state methods to sync with canonical state
-          if (value.setFlag) {
-            const originalSetFlag = value.setFlag.bind(value);
-            value.setFlag = (flag) => {
-              originalSetFlag(flag);
-              // Add to canonical flags if not already present
-              if (!this.currentState.flags.includes(flag)) {
-                this.currentState.flags.push(flag);
-              }
-            };
-          }
-          
-          if (value.addEvent) {
-            const originalAddEvent = value.addEvent.bind(value);
-            value.addEvent = (event) => {
-              originalAddEvent(event);
-              // Add to canonical events with prefix
-              const eventFlag = `event:${event}`;
-              if (!this.currentState.events.includes(event)) {
-                this.currentState.events.push(event);
-              }
-              if (!this.currentState.flags.includes(eventFlag)) {
-                this.currentState.flags.push(eventFlag);
-              }
-            };
-          }
-        }
-      }
-    });
-  }
-
-  /**
-   * Initialize the canonical state structure
-   */
-  _initializeCanonicalState() {
-    // Dynamic state that changes during gameplay
-    this.currentState = {
-      // Game identification
-      game: 'Unknown',
-      gameId: 'unknown',
-      
-      // Player info
-      player: {
-        slot: this.playerSlot || 1,
-        team: this.team || 0,
-        name: 'Player1'
-      },
-      
-      // Core game state
-      inventory: {},           // Plain object of item counts
-      flags: [],              // Array of all flags (including checked locations)
-      events: [],             // Array of collected events
-      
-      // Game-specific state
-      gameMode: null,
-      difficultyRequirements: {},
-      requiredMedallions: [],
-      shops: [],
-      treasureHuntRequired: 20,
-      
-      // Dynamic computed state
-      reachability: {},       // Pre-computed accessibility
-      dungeons: {},          // Dynamic dungeon states
-      
-      // Configuration
-      settings: {},          // All game settings
-      debugMode: false,
-      autoCollectEventsEnabled: true,
-      
-      // References
-      eventLocations: {},    // Event location mappings
-      startRegions: ['Menu']
-    };
-
-    // Static data (loaded once, not part of state snapshots)
-    this.staticData = {
-      locations: [],         // Full location definitions
-      regions: {},          // Full region definitions  
-      itemData: {},         // Item definitions
-      groupData: {},        // Item group definitions
-      progressionMapping: {} // Progressive item mappings
-    };
-
-    // Internal computation state (not exported)
-    this.computationState = {
-      knownReachableRegions: new Set(),
-      knownUnreachableRegions: new Set(),
-      path: new Map(),
-      blockedConnections: new Set(),
-      indirectConnections: new Map(),
-      cacheValid: false
-    };
   }
 
   /**
@@ -552,10 +248,10 @@ export class StateManager {
 
   clearInventory() {
     // Canonical format: reset all items to 0
-    if (this.currentState.inventory && this.staticData.itemData) {
-      for (const itemName in this.staticData.itemData) {
-        if (Object.hasOwn(this.staticData.itemData, itemName)) {
-          this.currentState.inventory[itemName] = 0;
+    if (this.inventory && this.itemData) {
+      for (const itemName in this.itemData) {
+        if (Object.hasOwn(this.itemData, itemName)) {
+          this.inventory[itemName] = 0;
         }
       }
     }
@@ -576,16 +272,17 @@ export class StateManager {
 
   clearState(options = { recomputeAndSendUpdate: true }) {
     // Re-initialize inventory - canonical format: reset all items to 0
-    if (this.currentState.inventory && this.staticData.itemData) {
-      for (const itemName in this.staticData.itemData) {
-        if (Object.hasOwn(this.staticData.itemData, itemName)) {
-          this.currentState.inventory[itemName] = 0;
+    if (this.inventory && this.itemData) {
+      for (const itemName in this.itemData) {
+        if (Object.hasOwn(this.itemData, itemName)) {
+          this.inventory[itemName] = 0;
         }
       }
-    } else if (!this.currentState.inventory) {
+    } else if (!this.inventory) {
       // If inventory doesn't exist, create it
-      const gameName = this.currentState.settings?.game || this.currentState.gameId || 'UnknownGame';
-      this.currentState.inventory = this._createInventoryInstance(gameName);
+      this.inventory = this._createInventoryInstance(
+        this.settings ? this.settings.game : this.gameId || 'UnknownGame'
+      );
     }
 
     // Re-initialize game-specific state (e.g., ALTTPState)
@@ -597,18 +294,26 @@ export class StateManager {
       if (determinedGameName === 'Adventure') {
         this.state = new GameState(determinedGameName, this.logger);
       } else if (determinedGameName === 'A Link to the Past') {
-        this.state = new ALTTPState(this.logger);
+        // BATCH 3: Use gameStateModule only, no more ALTTPState
+        this.gameStateModule = alttpStateModule.initializeState();
+        this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP
+        
+        // Load settings into gameStateModule
+        if (gameSettings) {
+          this.gameStateModule = alttpStateModule.loadSettings(this.gameStateModule, gameSettings);
+        }
       } else {
         this.state = new GameState(determinedGameName, this.logger);
       }
-      if (this.state.loadSettings) this.state.loadSettings(gameSettings);
+      // BATCH 3: Only load settings into state for non-ALTTP games
+      if (this.state && this.state.loadSettings) this.state.loadSettings(gameSettings);
     } else {
       // Fallback if no settings to determine game type
-      this.state = new ALTTPState(this.logger); // Or a generic GameState
+      // BATCH 3: Default to ALTTP with gameStateModule only
+      this.gameStateModule = alttpStateModule.initializeState();
+      this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP fallback
     }
 
-    // Clear the checkedLocations cache when clearing state
-    this._checkedLocationsSet = null;
     this.clearCheckedLocations({ sendUpdate: false }); // Call quietly
 
     this.indirectConnections = new Map();
@@ -883,7 +588,7 @@ export class StateManager {
 
     // Load other direct properties
     // this.gameId is now set by the new logic involving determinedGameId, so the old direct assignment is removed.
-    this.startRegions = jsonData.start_regions?.[selectedPlayerId] || ['Menu'];
+    this.startRegions = jsonData.start_regions?.[selectedPlayerId] || [];
     this.mode = jsonData.mode?.[selectedPlayerId] || null;
     this.itempoolCounts = jsonData.itempool_counts?.[selectedPlayerId] || {};
     this.progressionMapping =
@@ -908,10 +613,12 @@ export class StateManager {
         '[StateManager loadFromJSON] GameState instantiated for Adventure.'
       );
     } else if (gameNameForStateAndHelpers === 'A Link to the Past') {
-      this.state = new ALTTPState(this.logger);
+      // BATCH 3: Use gameStateModule only for ALTTP
+      this.gameStateModule = alttpStateModule.initializeState();
+      this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP
       log(
         'info',
-        '[StateManager loadFromJSON] ALTTPState instantiated for A Link to the Past.'
+        '[StateManager loadFromJSON] ALTTP game state module initialized for A Link to the Past.'
       );
     } else {
       this.state = new GameState(gameNameForStateAndHelpers, this.logger);
@@ -920,13 +627,20 @@ export class StateManager {
         `[StateManager loadFromJSON] Unknown game '${gameNameForStateAndHelpers}'. Using base GameState.`
       );
     }
-    // Pass the settings FROM THE FILE to the state object.
-    // The state object's loadSettings should handle merging/applying these.
-    this.state.loadSettings(gameSettingsFromFile);
-    // After state.loadSettings, this.state.settings should be populated.
-    // Sync the StateManager's main settings reference to this.
-    this.settings = this.state.settings;
+    // BATCH 3: Handle settings loading for both ALTTP (gameStateModule) and other games (state)
+    if (gameNameForStateAndHelpers === 'A Link to the Past') {
+      // For ALTTP, load settings into gameStateModule and manually set StateManager settings
+      this.gameStateModule = alttpStateModule.loadSettings(this.gameStateModule, gameSettingsFromFile);
+      this.settings = gameSettingsFromFile; // Direct assignment for ALTTP
+      log('info', '[StateManager loadFromJSON] Settings loaded into ALTTP game state module.');
+    } else {
+      // For other games, use the traditional state.loadSettings approach
+      this.state.loadSettings(gameSettingsFromFile);
+      this.settings = this.state.settings;
+    }
 
+    // REFACTOR: Initialize canonical state format after settings are loaded
+    this._initializeCanonicalStateFormat();
 
     // CRITICAL: Ensure this.settings.game is aligned with the gameNameForStateAndHelpers
     // This ensures helpers are chosen based on the game we just instantiated state for.
@@ -1210,7 +924,7 @@ export class StateManager {
       // throw new Error("Failed to initialize inventory in StateManager");
     } else {
       this._logDebug(
-        `[StateManager loadFromJSON] Canonical inventory created for game: ${this.settings.game}`
+        `[StateManager loadFromJSON] Game-specific inventory instance ${this.inventory.constructor.name} created.`
       );
       // If groupData specifically needs to be on the inventory instance itself and inventory classes support it:
       // Example: if (this.groupData && typeof this.inventory.setGroupData === 'function') {
@@ -1221,12 +935,15 @@ export class StateManager {
     }
     // --- END Create game-specific inventory instance ---
 
-    // Load shop data if available in jsonData (depends on this.state being set, which it is by constructor)
-    if (this.state && typeof this.state.loadShops === 'function') {
-      if (jsonData.shops && jsonData.shops[selectedPlayerId]) {
+    // BATCH 3: Load shop data into appropriate system (gameStateModule for ALTTP, state for others)
+    if (jsonData.shops && jsonData.shops[selectedPlayerId]) {
+      if (this.settings?.game === 'A Link to the Past' && this.gameStateModule) {
+        // For ALTTP, load shops into gameStateModule
+        this.gameStateModule = alttpStateModule.loadShops(this.gameStateModule, jsonData.shops[selectedPlayerId]);
+        log('info', '[StateManager loadFromJSON] Shops loaded into ALTTP game state module.');
+      } else if (this.state && typeof this.state.loadShops === 'function') {
+        // For other games, load shops into state
         this.state.loadShops(jsonData.shops[selectedPlayerId]);
-      } else {
-        // log('warn', 'No shop data found for player in JSON.');
       }
     }
 
@@ -1734,14 +1451,6 @@ export class StateManager {
     try {
       // Get start regions and initialize BFS
       const startRegions = this.getStartRegions();
-      
-      // Ensure startRegions is valid
-      if (!Array.isArray(startRegions) || startRegions.length === 0) {
-        log('error', 'Invalid startRegions:', startRegions);
-        this.knownReachableRegions = new Set(['Menu']);
-        this.cacheValid = true;
-        return this.knownReachableRegions;
-      }
 
       // Initialize path tracking
       this.path.clear();
@@ -1967,13 +1676,11 @@ export class StateManager {
   }
 
   getStartRegions() {
-    // Get start regions from canonical state
-    if (!this.currentState) {
-      return ['Menu'];
+    // Get start regions from state object if available, or use default
+    if (this.state && this.state.startRegions) {
+      return this.state.startRegions;
     }
-    const regions = this.currentState.startRegions || ['Menu'];
-    // Ensure it's always an array
-    return Array.isArray(regions) ? regions : ['Menu'];
+    return ['Menu'];
   }
 
   /**
@@ -2205,7 +1912,15 @@ export class StateManager {
     this.beginBatchUpdate(true);
     requiredItems.forEach((itemName) => {
       this.addItemToInventory(itemName);
-      if (this.state?.processEventItem) {
+      
+      // BATCH 3: Process event items using gameStateModule only for ALTTP
+      if (this.gameStateModule && this.settings?.game === 'A Link to the Past') {
+        const updatedState = alttpStateModule.processEventItem(this.gameStateModule, itemName);
+        if (updatedState) {
+          this.gameStateModule = updatedState;
+        }
+      } else if (this.state?.processEventItem) {
+        // For other games, still use state.processEventItem
         this.state.processEventItem(itemName);
       }
     });
@@ -2987,12 +2702,14 @@ export class StateManager {
       countItem: (itemName) => self._countItem(itemName),
       hasGroup: (groupName) => self._hasGroup(groupName),
       countGroup: (groupName) => self._countGroup(groupName),
-      // Flags in this context usually refer to checked locations or game-specific state flags
+      // BATCH 3: Flags check gameStateModule for ALTTP, state for others
       hasFlag: (flagName) =>
         self.checkedLocations.has(flagName) ||
-        (self.state &&
-          typeof self.state.hasFlag === 'function' &&
-          self.state.hasFlag(flagName)),
+        (self.gameStateModule && self.settings?.game === 'A Link to the Past' 
+          ? alttpStateModule.hasFlag(self.gameStateModule, flagName)
+          : (self.state &&
+             typeof self.state.hasFlag === 'function' &&
+             self.state.hasFlag(flagName))),
       getSetting: (settingName) =>
         self.settings ? self.settings[settingName] : undefined,
       getAllSettings: () => self.settings,
@@ -3034,8 +2751,13 @@ export class StateManager {
         }
 
         // Core StateManager components often accessed by rules
-        if (name === 'inventory') return self.inventory; // The ALTTPInventory instance
-        if (name === 'state') return self.state; // The ALTTPState instance (for game-specific flags/logic)
+        if (name === 'inventory') return self.inventory; // The inventory instance
+        // BATCH 3: Return gameStateModule for ALTTP, state for others
+        if (name === 'state') {
+          return self.gameStateModule && self.settings?.game === 'A Link to the Past'
+            ? self.gameStateModule
+            : self.state; // For other games, return the state instance
+        }
         if (name === 'settings') return self.settings; // The settings object for the current game
         // Note: 'helpers' itself is usually not resolved by name directly in rules this way,
         // rather its methods are called via 'helper' or 'state_method' rule types,
@@ -3131,40 +2853,57 @@ export class StateManager {
   }
 
   getSnapshot() {
-    if (!this.computationState.cacheValid) {
+    if (!this.cacheValid) {
       this._logDebug(
         '[StateManager getSnapshot] Cache invalid, recomputing reachability...'
       );
       this.computeReachableRegions();
     }
 
-    // Update reachability in canonical state
-    this.currentState.reachability = {};
-    if (this.staticData.regions) {
-      for (const regionName in this.staticData.regions) {
-        if (this.computationState.knownReachableRegions.has(regionName)) {
-          this.currentState.reachability[regionName] = 'reachable';
+    // 1. Inventory
+    let inventorySnapshot = {};
+    if (this.inventory) {
+      // In canonical format, inventory is already a plain object with all items
+      inventorySnapshot = { ...this.inventory };
+    } else {
+      log(
+        'warn',
+        `[StateManager getSnapshot] Inventory is not available. Snapshot inventory may be empty.`
+      );
+    }
+
+    // 2. Reachability
+    const finalReachability = {};
+    if (this.regions) {
+      for (const regionName in this.regions) {
+        if (this.knownReachableRegions.has(regionName)) {
+          finalReachability[regionName] = 'reachable';
         } else {
-          this.currentState.reachability[regionName] = 'unreachable';
+          finalReachability[regionName] = this.knownUnreachableRegions.has(
+            regionName
+          )
+            ? 'unreachable'
+            : 'unreachable';
         }
       }
     }
-    if (this.staticData.locations) {
-      this.staticData.locations.forEach((loc) => {
+    if (this.locations) {
+      this.locations.forEach((loc) => {
         if (this.isLocationChecked(loc.name)) {
-          this.currentState.reachability[loc.name] = 'checked';
+          finalReachability[loc.name] = 'checked';
         } else if (!this._inHelperExecution && this.isLocationAccessible(loc)) {
-          this.currentState.reachability[loc.name] = 'reachable';
+          // Skip location accessibility check during helper execution to prevent recursion
+          finalReachability[loc.name] = 'reachable';
         } else {
-          this.currentState.reachability[loc.name] = 'unreachable';
+          finalReachability[loc.name] = 'unreachable';
         }
       });
     }
 
-    // Create locationItems map for backward compatibility
+    // 3. LocationItems
     const locationItemsMap = {};
-    if (this.staticData.locations) {
-      this.staticData.locations.forEach((loc) => {
+    if (this.locations) {
+      this.locations.forEach((loc) => {
         if (
           loc.item &&
           typeof loc.item.name === 'string' &&
@@ -3174,60 +2913,77 @@ export class StateManager {
             name: loc.item.name,
             player: loc.item.player,
           };
+        } else if (loc.item) {
+          locationItemsMap[loc.name] = null;
         } else {
           locationItemsMap[loc.name] = null;
         }
       });
     }
 
-    // Return a snapshot that maintains backward compatibility while using canonical state
+    // 4. Convert eventLocations Map to plain object
+    const eventLocationsObject = {};
+    if (this.eventLocations && this.eventLocations instanceof Map) {
+      for (const [
+        locationName,
+        locationData,
+      ] of this.eventLocations.entries()) {
+        eventLocationsObject[locationName] = locationData;
+      }
+    }
+
+    // 5. Assemble Snapshot
+    // REFACTOR NOTE: Currently there is duplication between top-level properties and
+    // properties inside 'state'. This will be consolidated when we implement the
+    // canonical state format. For now, we maintain backward compatibility.
     const snapshot = {
-      // Core state from canonical structure
-      inventory: { ...this.currentState.inventory },
-      settings: { ...this.currentState.settings },
-      flags: [...this.currentState.flags],
-      checkedLocations: this.currentState.flags.filter(f => !f.startsWith('event:')),
-      
-      // For backward compatibility, create state object from canonical data
-      state: {
-        game: this.currentState.game,
-        flags: this.currentState.flags.filter(f => !f.startsWith('event:') && !this.staticData.locations?.find(l => l.name === f)),
-        events: this.currentState.events,
-        gameMode: this.currentState.gameMode,
-        difficultyRequirements: this.currentState.difficultyRequirements,
-        requiredMedallions: this.currentState.requiredMedallions,
-        shops: this.currentState.shops,
-        treasureHuntRequired: this.currentState.treasureHuntRequired,
-        settings: { ...this.currentState.settings }
-      },
-      
-      reachability: { ...this.currentState.reachability },
+      inventory: inventorySnapshot,
+      settings: { ...this.settings },
+      // BATCH 3: Use gameStateModule flags for ALTTP, state for others
+      flags: this.gameStateModule?.flags || (this.state?.getFlags ? this.state.getFlags() : []),
+      checkedLocations: Array.from(this.checkedLocations || []),
+      // BATCH 3: Use gameStateModule data for ALTTP, state for others  
+      state: this.gameStateModule && this.settings?.game === 'A Link to the Past' 
+        ? alttpStateModule.getStateForSnapshot(this.gameStateModule)
+        : (this.state ? this.state.getState() : {}), // Contains game-specific state like mode, dungeon states
+      reachability: finalReachability,
       locationItems: locationItemsMap,
-      player: { ...this.currentState.player },
-      game: this.currentState.game,
-      gameId: this.currentState.gameId,
-      difficultyRequirements: this.currentState.difficultyRequirements,
-      shops: this.currentState.shops,
-      gameMode: this.currentState.gameMode,
-      dungeons: { ...this.currentState.dungeons },
-      debugMode: this.currentState.debugMode,
-      autoCollectEventsEnabled: this.currentState.autoCollectEventsEnabled,
-      eventLocations: { ...this.currentState.eventLocations },
-      startRegions: Array.isArray(this.currentState.startRegions) ? [...this.currentState.startRegions] : ['Menu'],
+      // serverProvidedUncheckedLocations: Array.from(this.serverProvidedUncheckedLocations || []), // Optionally expose if UI needs it directly
+      player: {
+        name: this.settings?.playerName || `Player ${this.playerSlot}`,
+        slot: this.playerSlot,
+        team: this.team, // Assuming this.team exists on StateManager
+      },
+      game: this.gameId || this.settings?.game || 'Unknown', // Prioritize this.gameId
+      gameId: this.gameId || this.settings?.game || 'Unknown', // REFACTOR: Add consistent gameId
+      // BATCH 1: Use gameStateModule data instead of this.state properties
+      difficultyRequirements: this.gameStateModule?.difficultyRequirements || this.state?.difficultyRequirements,
+      shops: this.gameStateModule?.shops || this.state?.shops,
+      gameMode: this.gameStateModule?.gameMode || this.mode,
+      // ADDED: Expose dungeons in the main snapshot body for easier access by some components
+      dungeons: this.dungeons,
+      // REFACTOR: Add missing properties for canonical state
+      debugMode: this.debugMode || false,
+      autoCollectEventsEnabled: this.autoCollectEventsEnabled !== false, // Default true
+      eventLocations: eventLocationsObject,
+      startRegions: this.startRegions || ['Menu'],
+
+      // Note: We don't include progressionMapping, itemData, groupData, etc. here
+      // because they are static data already available in staticDataCache
     };
 
-    // Log if debug mode
-    if (this.currentState.debugMode) {
+    // REFACTOR: Temporary logging to verify new properties
+    if (this.debugMode) {
       log(
         'info',
-        '[StateManager getSnapshot] Snapshot created from canonical state:',
+        '[StateManager getSnapshot] Snapshot includes new properties:',
         {
           debugMode: snapshot.debugMode,
           autoCollectEventsEnabled: snapshot.autoCollectEventsEnabled,
           eventLocationsCount: Object.keys(snapshot.eventLocations).length,
           hasGameId: !!snapshot.gameId,
           startRegions: snapshot.startRegions,
-          inventoryFormat: 'canonical',
+          inventoryFormat: useCanonicalFormat ? 'canonical' : 'legacy',
           inventoryItemCount: Object.keys(snapshot.inventory).length,
         }
       );
@@ -3236,6 +2992,54 @@ export class StateManager {
     return snapshot;
   }
 
+  /**
+   * REFACTOR: Initialize canonical state format if feature flag is enabled
+   */
+  _initializeCanonicalStateFormat() {
+    // Always use canonical state format
+    if (!this._useCanonicalStateFormat) {
+      log('info', '[StateManager] Using canonical state format');
+      this._useCanonicalStateFormat = true;
+
+      // Convert existing inventory to canonical format if it exists
+      if (this.inventory && this.itemData) {
+        this._migrateInventoryToCanonical();
+      }
+    }
+  }
+
+  /**
+   * REFACTOR: Convert current Map-based inventory to canonical plain object format
+   */
+  _migrateInventoryToCanonical() {
+    if (this.inventory instanceof ALTTPInventory) {
+      const canonicalInventory = {};
+
+      // Initialize all items to 0
+      for (const itemName in this.itemData) {
+        if (Object.hasOwn(this.itemData, itemName)) {
+          canonicalInventory[itemName] = this._countItem(itemName);
+        }
+      }
+
+      // Store original for migration back if needed
+      this._legacyInventory = this.inventory;
+      this.inventory = canonicalInventory;
+
+      log('info', '[StateManager] Migrated inventory to canonical format');
+    }
+  }
+
+  /**
+   * REFACTOR: Convert canonical inventory back to Map-based format
+   */
+  _migrateInventoryToLegacy() {
+    if (this._legacyInventory) {
+      this.inventory = this._legacyInventory;
+      this._legacyInventory = null;
+      log('info', '[StateManager] Migrated inventory back to legacy format');
+    }
+  }
 
   /**
    * Helper function to add items to canonical inventory
@@ -3311,7 +3115,14 @@ export class StateManager {
       if (determinedGameName === 'Adventure') {
         this.state = new GameState(determinedGameName, this.logger);
       } else if (determinedGameName === 'A Link to the Past') {
-        this.state = new ALTTPState(this.logger);
+        // BATCH 3: Use gameStateModule only for ALTTP
+        this.gameStateModule = alttpStateModule.initializeState();
+        this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP
+        
+        // Load settings into gameStateModule
+        if (gameSettings) {
+          this.gameStateModule = alttpStateModule.loadSettings(this.gameStateModule, gameSettings);
+        }
       } else {
         this.state = new GameState(determinedGameName, this.logger);
       }
