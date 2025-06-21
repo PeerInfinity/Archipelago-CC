@@ -1,10 +1,9 @@
 // ALTTPInventory removed - using canonical inventory format
 // BATCH 3: Removed ALTTPState import - now using alttpStateModule only
-import { GameInventory } from './helpers/gameInventory.js'; // Ensure GameInventory is imported
 import { GameState } from './helpers/index.js'; // Added import for GameState
-import { GameWorkerHelpers } from './helpers/gameWorkerHelpers.js'; // Added import for GameWorkerHelpers
 import * as alttpLogic from './logic/games/alttp/alttpLogic.js'; // REFACTOR: Import agnostic helpers
 import { alttpStateModule } from './logic/games/alttp/alttpLogic.js'; // BATCH 1: Import state module
+import * as genericLogic from './logic/games/generic/genericLogic.js'; // Import generic logic module
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -42,6 +41,10 @@ export class StateManager {
 
     // BATCH 1: Game-specific state module (Option 2)
     this.gameStateModule = null; // Will be set based on game type
+    
+    // Dynamic logic module selection
+    this.logicModule = null; // e.g., alttpLogic.alttpStateModule or genericLogic.genericStateModule
+    this.helperFunctions = null; // e.g., alttpLogic.helperFunctions or genericLogic.helperFunctions
 
     // Injected dependencies
     this.eventBus = null; // Legacy/optional
@@ -285,33 +288,42 @@ export class StateManager {
       );
     }
 
-    // Re-initialize game-specific state (e.g., ALTTPState)
+    // Re-initialize game-specific state using dynamic logic modules
     if (this.state && typeof this.state.reset === 'function') {
       this.state.reset();
     } else if (this.settings) {
       const gameSettings = this.settings;
       const determinedGameName = gameSettings.game || this.gameId;
-      if (determinedGameName === 'Adventure') {
-        this.state = new GameState(determinedGameName, this.logger);
-      } else if (determinedGameName === 'A Link to the Past') {
-        // BATCH 3: Use gameStateModule only, no more ALTTPState
-        this.gameStateModule = alttpStateModule.initializeState();
-        this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP
-        
-        // Load settings into gameStateModule
-        if (gameSettings) {
-          this.gameStateModule = alttpStateModule.loadSettings(this.gameStateModule, gameSettings);
-        }
+      
+      // Re-select logic module for state clearing
+      switch (determinedGameName) {
+        case 'A Link to the Past':
+          this.logicModule = alttpLogic.alttpStateModule;
+          this.helperFunctions = alttpLogic.helperFunctions;
+          break;
+        default: 
+          this.logicModule = genericLogic.genericStateModule;
+          this.helperFunctions = genericLogic.helperFunctions;
+          break;
+      }
+      
+      // Re-initialize using selected logic module
+      this.gameStateModule = this.logicModule.initializeState();
+      this.gameStateModule = this.logicModule.loadSettings(this.gameStateModule, gameSettings);
+      
+      // For backward compatibility, handle legacy state system
+      if (determinedGameName === 'A Link to the Past') {
+        this.state = null;
       } else {
         this.state = new GameState(determinedGameName, this.logger);
+        if (this.state.loadSettings) this.state.loadSettings(gameSettings);
       }
-      // BATCH 3: Only load settings into state for non-ALTTP games
-      if (this.state && this.state.loadSettings) this.state.loadSettings(gameSettings);
     } else {
-      // Fallback if no settings to determine game type
-      // BATCH 3: Default to ALTTP with gameStateModule only
-      this.gameStateModule = alttpStateModule.initializeState();
-      this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP fallback
+      // Fallback if no settings to determine game type - use generic logic
+      this.logicModule = genericLogic.genericStateModule;
+      this.helperFunctions = genericLogic.helperFunctions;
+      this.gameStateModule = this.logicModule.initializeState();
+      this.state = null;
     }
 
     this.clearCheckedLocations({ sendUpdate: false }); // Call quietly
@@ -597,70 +609,71 @@ export class StateManager {
       'Loaded startRegions, mode, itempoolCounts, and progressionMapping.'
     );
 
-    // --- Instantiate Game-Specific State ---
+    // --- Select and Initialize Game-Specific Logic Module ---
     const gameSettingsFromFile = jsonData.settings?.[selectedPlayerId] || {};
     // Use this.gameId (now more reliably set) if gameSettingsFromFile.game is missing
-    const gameNameForStateAndHelpers = gameSettingsFromFile.game || this.gameId;
+    const gameName = gameSettingsFromFile.game || this.gameId;
 
     this._logDebug(
-      `[StateManager loadFromJSON] Instantiating state/helpers for game: "${gameNameForStateAndHelpers}" (derived from settings.game or this.gameId)`
+      `[StateManager loadFromJSON] Selecting logic module for game: "${gameName}" (derived from settings.game or this.gameId)`
     );
 
-    if (gameNameForStateAndHelpers === 'Adventure') {
-      this.state = new GameState(gameNameForStateAndHelpers, this.logger);
-      log(
-        'info',
-        '[StateManager loadFromJSON] GameState instantiated for Adventure.'
-      );
-    } else if (gameNameForStateAndHelpers === 'A Link to the Past') {
-      // BATCH 3: Use gameStateModule only for ALTTP
-      this.gameStateModule = alttpStateModule.initializeState();
-      this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP
-      log(
-        'info',
-        '[StateManager loadFromJSON] ALTTP game state module initialized for A Link to the Past.'
-      );
-    } else {
-      this.state = new GameState(gameNameForStateAndHelpers, this.logger);
-      log(
-        'warn',
-        `[StateManager loadFromJSON] Unknown game '${gameNameForStateAndHelpers}'. Using base GameState.`
-      );
+    switch (gameName) {
+      case 'A Link to the Past':
+        this.logicModule = alttpLogic.alttpStateModule;
+        this.helperFunctions = alttpLogic.helperFunctions;
+        break;
+      // "Adventure" and any other simple game will use the default.
+      default: 
+        this.logicModule = genericLogic.genericStateModule;
+        this.helperFunctions = genericLogic.helperFunctions;
+        break;
     }
-    // BATCH 3: Handle settings loading for both ALTTP (gameStateModule) and other games (state)
-    if (gameNameForStateAndHelpers === 'A Link to the Past') {
-      // For ALTTP, load settings into gameStateModule and manually set StateManager settings
-      this.gameStateModule = alttpStateModule.loadSettings(this.gameStateModule, gameSettingsFromFile);
-      this.settings = gameSettingsFromFile; // Direct assignment for ALTTP
-      log('info', '[StateManager loadFromJSON] Settings loaded into ALTTP game state module.');
+
+    // Initialize the state using the selected module
+    this.gameStateModule = this.logicModule.initializeState();
+    
+    // Load settings using the selected module
+    this.gameStateModule = this.logicModule.loadSettings(this.gameStateModule, gameSettingsFromFile);
+    
+    // Set the main settings object for the StateManager instance
+    this.settings = gameSettingsFromFile;
+    this.settings.game = gameName; // Ensure game name is correctly set
+    
+    log('info', `[StateManager] Loaded logic module for: "${gameName}"`);
+
+    // For backward compatibility, keep state as null for ALTTP, create GameState for others
+    if (gameName === 'A Link to the Past') {
+      this.state = null;
     } else {
-      // For other games, use the traditional state.loadSettings approach
+      this.state = new GameState(gameName, this.logger);
       this.state.loadSettings(gameSettingsFromFile);
+      // Override settings with state.settings for non-ALTTP games (maintains backward compatibility)
       this.settings = this.state.settings;
     }
 
     // REFACTOR: Initialize canonical state format after settings are loaded
     this._initializeCanonicalStateFormat();
 
-    // CRITICAL: Ensure this.settings.game is aligned with the gameNameForStateAndHelpers
+    // CRITICAL: Ensure this.settings.game is aligned with the gameName
     // This ensures helpers are chosen based on the game we just instantiated state for.
     if (this.settings && typeof this.settings === 'object') {
       // Ensure settings is an object
       if (
         !this.settings.game ||
-        this.settings.game !== gameNameForStateAndHelpers
+        this.settings.game !== gameName
       ) {
         this._logDebug(
-          `[StateManager loadFromJSON] Aligning this.settings.game to "${gameNameForStateAndHelpers}". Previous was: "${this.settings.game}"`
+          `[StateManager loadFromJSON] Aligning this.settings.game to "${gameName}". Previous was: "${this.settings.game}"`
         );
-        this.settings.game = gameNameForStateAndHelpers;
+        this.settings.game = gameName;
       }
     } else {
       log(
         'error',
         '[StateManager loadFromJSON] this.settings is not an object after state.loadSettings. Re-initializing as empty object.'
       );
-      this.settings = { game: gameNameForStateAndHelpers }; // Fallback
+      this.settings = { game: gameName }; // Fallback
     }
     this._logDebug(
       `[StateManager loadFromJSON] Effective this.settings.game for helper instantiation: "${this.settings.game}"`
@@ -903,14 +916,14 @@ export class StateManager {
       `Processed ${this.exits.length} exits and populated originalExitOrder.`
     );
 
-    // --- Helper Instantiation ---
-    this.helpers = new GameWorkerHelpers(this);
+    // --- Game Logic Module Selected Above ---
+    // Note: this.logicModule and this.helperFunctions are now set based on game type
+    // Legacy this.helpers is no longer used as executeHelper now uses this.helperFunctions
+    this.helpers = null; // Legacy helpers no longer needed
     log(
       'info',
-      '[StateManager loadFromJSON] GameWorkerHelpers instantiated for game:',
-      this.settings ? this.settings.game : 'undefined'
+      `[StateManager loadFromJSON] Dynamic logic module loaded for game: ${this.settings?.game}`
     );
-    // --- END Helper Instantiation ---
 
     // --- Create game-specific inventory instance ---
     this.inventory = this._createInventoryInstance(this.settings.game);
@@ -935,15 +948,15 @@ export class StateManager {
     }
     // --- END Create game-specific inventory instance ---
 
-    // BATCH 3: Load shop data into appropriate system (gameStateModule for ALTTP, state for others)
-    if (jsonData.shops && jsonData.shops[selectedPlayerId]) {
-      if (this.settings?.game === 'A Link to the Past' && this.gameStateModule) {
-        // For ALTTP, load shops into gameStateModule
-        this.gameStateModule = alttpStateModule.loadShops(this.gameStateModule, jsonData.shops[selectedPlayerId]);
-        log('info', '[StateManager loadFromJSON] Shops loaded into ALTTP game state module.');
+    // Load shop data using dynamic logic module
+    if (jsonData.shops && jsonData.shops[selectedPlayerId] && this.logicModule) {
+      if (typeof this.logicModule.loadShops === 'function') {
+        this.gameStateModule = this.logicModule.loadShops(this.gameStateModule, jsonData.shops[selectedPlayerId]);
+        log('info', `[StateManager loadFromJSON] Shops loaded into ${this.settings?.game} game state module.`);
       } else if (this.state && typeof this.state.loadShops === 'function') {
-        // For other games, load shops into state
+        // Fallback for games using legacy state system
         this.state.loadShops(jsonData.shops[selectedPlayerId]);
+        log('info', `[StateManager loadFromJSON] Shops loaded into legacy state for ${this.settings?.game}.`);
       }
     }
 
@@ -1913,14 +1926,14 @@ export class StateManager {
     requiredItems.forEach((itemName) => {
       this.addItemToInventory(itemName);
       
-      // BATCH 3: Process event items using gameStateModule only for ALTTP
-      if (this.gameStateModule && this.settings?.game === 'A Link to the Past') {
-        const updatedState = alttpStateModule.processEventItem(this.gameStateModule, itemName);
+      // Process event items using dynamic logic module
+      if (this.gameStateModule && this.logicModule) {
+        const updatedState = this.logicModule.processEventItem(this.gameStateModule, itemName);
         if (updatedState) {
           this.gameStateModule = updatedState;
         }
       } else if (this.state?.processEventItem) {
-        // For other games, still use state.processEventItem
+        // Fallback for games using legacy state system
         this.state.processEventItem(itemName);
       }
     });
@@ -2201,43 +2214,21 @@ export class StateManager {
     this._logDebug(
       `[StateManager Worker executeHelper] Helper: ${name}, game: ${
         this.settings?.game
-      }, hasHelper: ${!!alttpLogic[name]}`
+      }, hasHelper: ${!!(this.helperFunctions && this.helperFunctions[name])}`
     );
 
     try {
-      // Use agnostic helpers for A Link to the Past
-      if (this.settings?.game === 'A Link to the Past') {
-        if (alttpLogic[name]) {
-          try {
-            const snapshot = this.getSnapshot(); // Get the current, full canonical state
-            const staticData = {
-              progressionMapping: this.progressionMapping,
-              groupData: this.groupData,
-              itemData: this.itemData,
-            };
-
-            // The agnostic helper is called with the full state, plus any additional args.
-            // The structure alttpLogic[name](state, world, itemName, staticData) needs to be mapped from `args`.
-            // Assuming the first arg is typically the `itemName` or main subject.
-            return alttpLogic[name](snapshot, 'world', args[0], staticData);
-          } catch (error) {
-            log(
-              'error',
-              `[StateManager] Error executing agnostic helper ${name}:`,
-              error
-            );
-            // Don't fallback on error - this would mask issues
-            return false;
-          }
-        }
+      // The `this.helperFunctions` property is now set dynamically based on the game.
+      if (this.helperFunctions && this.helperFunctions[name]) {
+        const snapshot = this.getSnapshot(); 
+        const staticData = {
+          progressionMapping: this.progressionMapping,
+          groupData: this.groupData,
+          itemData: this.itemData,
+        };
+        return this.helperFunctions[name](snapshot, 'world', args[0], staticData);
       }
-
-      // Fallback to legacy worker helpers for other games
-      if (!this.helpers) {
-        log('error', '[StateManager] Legacy helpers not initialized!');
-        return false; // Or undefined
-      }
-      return this.helpers.executeHelper(name, ...args);
+      return false; // Default return if no helper is found
     } finally {
       // Restore the previous state
       this._inHelperExecution = wasInHelperExecution;
@@ -2705,8 +2696,8 @@ export class StateManager {
       // BATCH 3: Flags check gameStateModule for ALTTP, state for others
       hasFlag: (flagName) =>
         self.checkedLocations.has(flagName) ||
-        (self.gameStateModule && self.settings?.game === 'A Link to the Past' 
-          ? alttpStateModule.hasFlag(self.gameStateModule, flagName)
+        (self.gameStateModule && self.logicModule && typeof self.logicModule.hasFlag === 'function'
+          ? self.logicModule.hasFlag(self.gameStateModule, flagName)
           : (self.state &&
              typeof self.state.hasFlag === 'function' &&
              self.state.hasFlag(flagName))),
@@ -2942,9 +2933,9 @@ export class StateManager {
       // BATCH 3: Use gameStateModule flags for ALTTP, state for others
       flags: this.gameStateModule?.flags || (this.state?.getFlags ? this.state.getFlags() : []),
       checkedLocations: Array.from(this.checkedLocations || []),
-      // BATCH 3: Use gameStateModule data for ALTTP, state for others  
-      state: this.gameStateModule && this.settings?.game === 'A Link to the Past' 
-        ? alttpStateModule.getStateForSnapshot(this.gameStateModule)
+      // Use dynamic logic module for state data
+      state: this.gameStateModule && this.logicModule && typeof this.logicModule.getStateForSnapshot === 'function'
+        ? this.logicModule.getStateForSnapshot(this.gameStateModule)
         : (this.state ? this.state.getState() : {}), // Contains game-specific state like mode, dungeon states
       reachability: finalReachability,
       locationItems: locationItemsMap,
@@ -3112,17 +3103,26 @@ export class StateManager {
       // Fallback: Re-create state if reset is not available but settings are
       const gameSettings = this.settings;
       const determinedGameName = gameSettings.game || this.gameId;
-      if (determinedGameName === 'Adventure') {
-        this.state = new GameState(determinedGameName, this.logger);
-      } else if (determinedGameName === 'A Link to the Past') {
-        // BATCH 3: Use gameStateModule only for ALTTP
-        this.gameStateModule = alttpStateModule.initializeState();
-        this.state = null; // BATCH 3: No longer using ALTTPState for ALTTP
-        
-        // Load settings into gameStateModule
-        if (gameSettings) {
-          this.gameStateModule = alttpStateModule.loadSettings(this.gameStateModule, gameSettings);
-        }
+      
+      // Re-select logic module for runtime state reset
+      switch (determinedGameName) {
+        case 'A Link to the Past':
+          this.logicModule = alttpLogic.alttpStateModule;
+          this.helperFunctions = alttpLogic.helperFunctions;
+          break;
+        default: 
+          this.logicModule = genericLogic.genericStateModule;
+          this.helperFunctions = genericLogic.helperFunctions;
+          break;
+      }
+      
+      // Re-initialize using selected logic module
+      this.gameStateModule = this.logicModule.initializeState();
+      this.gameStateModule = this.logicModule.loadSettings(this.gameStateModule, gameSettings);
+      
+      // For backward compatibility, handle legacy state system
+      if (determinedGameName === 'A Link to the Past') {
+        this.state = null;
       } else {
         this.state = new GameState(determinedGameName, this.logger);
       }

@@ -16,6 +16,7 @@ import { evaluateRule } from './ruleEngine.js'; // Make this an active import
 import { GameSnapshotHelpers } from './helpers/gameSnapshotHelpers.js'; // Added import
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js'; // Import shared commands
 import { helperFunctions as alttpLogic } from './logic/games/alttp/alttpLogic.js'; // REFACTOR: Import agnostic helpers
+import { helperFunctions as genericLogic } from './logic/games/generic/genericLogic.js'; // Import generic logic module
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -1625,21 +1626,35 @@ export function createStateSnapshotInterface(
       }
     },
     hasItem: (itemName) => {
-      // Use agnostic helpers for A Link to the Past
-      if (snapshot?.game === 'A Link to the Past') {
-        return alttpLogic.has(snapshot, itemName, staticData);
+      const gameName = snapshot?.game;
+      let selectedHelpers = genericLogic; // Default to generic
+
+      if (gameName === 'A Link to the Past') {
+        selectedHelpers = alttpLogic;
+      }
+
+      // Use dynamic helper selection for has functionality
+      if (selectedHelpers && selectedHelpers.has) {
+        return selectedHelpers.has(snapshot, itemName, staticData);
       }
       
-      // Legacy implementation for other games
+      // Legacy implementation fallback
       return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
     },
     countItem: (itemName) => {
-      // Use agnostic helpers for A Link to the Past
-      if (snapshot?.game === 'A Link to the Past') {
-        return alttpLogic.count(snapshot, itemName, staticData);
+      const gameName = snapshot?.game;
+      let selectedHelpers = genericLogic; // Default to generic
+
+      if (gameName === 'A Link to the Past') {
+        selectedHelpers = alttpLogic;
+      }
+
+      // Use dynamic helper selection for count functionality
+      if (selectedHelpers && selectedHelpers.count) {
+        return selectedHelpers.count(snapshot, itemName, staticData);
       }
       
-      // Legacy implementation for other games
+      // Legacy implementation fallback
       return snapshot?.inventory?.[itemName] || 0;
     },
     countGroup: (groupName) => {
@@ -1818,24 +1833,28 @@ export function createStateSnapshotInterface(
     ...rawInterfaceForHelpers,
     helpers: snapshotHelpersInstance,
     executeHelper: (helperName, ...args) => {
-      // Use agnostic helpers for A Link to the Past
-      if (snapshot?.game === 'A Link to the Past') {
-        if (alttpLogic[helperName]) {
-          // Call the agnostic helper with state as first parameter
-          return alttpLogic[helperName](snapshot, 'world', args[0], staticData);
-        }
+      const gameName = snapshot?.game;
+      let selectedHelpers = genericLogic; // Default to generic
+
+      if (gameName === 'A Link to the Past') {
+        selectedHelpers = alttpLogic;
+      }
+      // Add other `else if` blocks for future complex games
+
+      if (selectedHelpers && selectedHelpers[helperName]) {
+        // Call the agnostic helper, passing the snapshot as the state
+        return selectedHelpers[helperName](snapshot, 'world', args[0], staticData);
       }
       
-      // Fall back to legacy helpers for other games
+      // Fall back to legacy helpers for games that haven't been migrated yet
       if (
         snapshotHelpersInstance &&
         typeof snapshotHelpersInstance[helperName] === 'function'
       ) {
         return snapshotHelpersInstance[helperName](...args);
       }
-      // Optional: Log a warning if the helper is not found, or if snapshotHelpersInstance is missing.
-      // log('warn', \`[SnapshotInterface] Helper function "\${helperName}\" not found on snapshotHelpersInstance.\`);
-      return undefined; // Default behavior for missing helpers
+      
+      return undefined; // Helper not found
     },
     evaluateRule: function (rule, contextName = null) {
       return evaluateRule(rule, this, contextName);
