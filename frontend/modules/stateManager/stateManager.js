@@ -183,7 +183,8 @@ export class StateManager {
   }
 
   /**
-   * Initializes inventory with loaded game data
+   * DEPRECATED: Legacy inventory initialization method.
+   * Use _createInventoryInstance() for canonical format instead.
    */
   initializeInventory(
     gameName,
@@ -192,40 +193,12 @@ export class StateManager {
     itemData,
     groupData
   ) {
-    // +gameName, +groupData
-    if (gameName === 'Adventure') {
-      // TODO: Create AdventureInventory if it needs specific logic beyond ALTTPInventory.
-      // For now, Adventure will use ALTTPInventory structure.
-      this.inventory = new ALTTPInventory(
-        items,
-        progressionMapping,
-        itemData,
-        this.logger
-      );
-      this.logger.info(
-        'StateManager',
-        'Instantiated ALTTPInventory for Adventure game.'
-      );
-    } else {
-      // Default to A Link to the Past or other games using ALTTPInventory
-      this.inventory = new ALTTPInventory(
-        items,
-        progressionMapping,
-        itemData,
-        this.logger
-      );
-      this.logger.info(
-        'StateManager',
-        'Instantiated ALTTPInventory for game:',
-        gameName
-      );
-    }
-
+    // Use canonical format for all games
+    this.inventory = this._createInventoryInstance(gameName);
     this.itemData = itemData; // Store for convenience
     this.groupData = groupData; // Store groupData
-
-    // In canonical format, groupData is accessed from StateManager instance directly
-    // Do not publish here, wait for full rules load
+    
+    log('info', `[StateManager] Initialized canonical inventory for game: ${gameName}`);
   }
 
   registerUICallback(name, callback) {
@@ -344,9 +317,7 @@ export class StateManager {
         // REFACTOR: Use format-agnostic helper
         this._addItemToInventory(itemName, count);
         this._logDebug(
-          `[StateManager] addItemToInventory: Added "${itemName}" x${count} (format: ${
-            this._useCanonicalStateFormat ? 'canonical' : 'legacy'
-          })`
+          `[StateManager] addItemToInventory: Added "${itemName}" x${count} (canonical format)`
         );
         this.invalidateCache(); // Adding an item can change reachability
         this._sendSnapshotUpdate(); // Send a new snapshot
@@ -636,8 +607,7 @@ export class StateManager {
     // All games now use gameStateModule - no legacy GameState needed
     this.state = null;
 
-    // REFACTOR: Initialize canonical state format after settings are loaded
-    this._initializeCanonicalStateFormat();
+    // REFACTOR: Always using canonical state format
 
     // CRITICAL: Ensure this.settings.game is aligned with the gameName
     // This ensures helpers are chosen based on the game we just instantiated state for.
@@ -2854,19 +2824,14 @@ export class StateManager {
     }
 
     // 5. Assemble Snapshot
-    // REFACTOR NOTE: Currently there is duplication between top-level properties and
-    // properties inside 'state'. This will be consolidated when we implement the
-    // canonical state format. For now, we maintain backward compatibility.
+    // REFACTOR: Duplication removed - using single source of truth for all fields
     const snapshot = {
       inventory: inventorySnapshot,
       settings: { ...this.settings },
       // All games now use gameStateModule flags
       flags: this.gameStateModule?.flags || [],
       checkedLocations: Array.from(this.checkedLocations || []),
-      // Use dynamic logic module for state data
-      state: this.gameStateModule && this.logicModule && typeof this.logicModule.getStateForSnapshot === 'function'
-        ? this.logicModule.getStateForSnapshot(this.gameStateModule)
-        : {}, // Default to empty state object
+      // REFACTOR: Removed 'state' object to eliminate duplication
       reachability: finalReachability,
       locationItems: locationItemsMap,
       // serverProvidedUncheckedLocations: Array.from(this.serverProvidedUncheckedLocations || []), // Optionally expose if UI needs it directly
@@ -2875,12 +2840,15 @@ export class StateManager {
         slot: this.playerSlot,
         team: this.team, // Assuming this.team exists on StateManager
       },
-      game: this.gameId || this.settings?.game || 'Unknown', // Prioritize this.gameId
-      gameId: this.gameId || this.settings?.game || 'Unknown', // REFACTOR: Add consistent gameId
+      game: this.gameId || this.settings?.game || 'Unknown', // Single game identifier
       // All games now use gameStateModule data
       difficultyRequirements: this.gameStateModule?.difficultyRequirements,
       shops: this.gameStateModule?.shops,
       gameMode: this.gameStateModule?.gameMode || this.mode,
+      // ALTTP-specific properties promoted from state object
+      requiredMedallions: this.gameStateModule?.requiredMedallions,
+      treasureHuntRequired: this.gameStateModule?.treasureHuntRequired,
+      events: this.gameStateModule?.events || [],
       // ADDED: Expose dungeons in the main snapshot body for easier access by some components
       dungeons: this.dungeons,
       // REFACTOR: Add missing properties for canonical state
@@ -2893,19 +2861,18 @@ export class StateManager {
       // because they are static data already available in staticDataCache
     };
 
-    // REFACTOR: Temporary logging to verify new properties
+    // REFACTOR: Debug logging for snapshot structure
     if (this.debugMode) {
       log(
         'info',
-        '[StateManager getSnapshot] Snapshot includes new properties:',
+        '[StateManager getSnapshot] Snapshot structure:',
         {
-          debugMode: snapshot.debugMode,
-          autoCollectEventsEnabled: snapshot.autoCollectEventsEnabled,
-          eventLocationsCount: Object.keys(snapshot.eventLocations).length,
-          hasGameId: !!snapshot.gameId,
-          startRegions: snapshot.startRegions,
-          inventoryFormat: useCanonicalFormat ? 'canonical' : 'legacy',
+          game: snapshot.game,
           inventoryItemCount: Object.keys(snapshot.inventory).length,
+          flagsCount: snapshot.flags.length,
+          checkedLocationsCount: snapshot.checkedLocations.length,
+          eventsCount: snapshot.events.length,
+          eventLocationsCount: Object.keys(snapshot.eventLocations).length,
         }
       );
     }
@@ -2913,54 +2880,11 @@ export class StateManager {
     return snapshot;
   }
 
-  /**
-   * REFACTOR: Initialize canonical state format if feature flag is enabled
-   */
-  _initializeCanonicalStateFormat() {
-    // Always use canonical state format
-    if (!this._useCanonicalStateFormat) {
-      log('info', '[StateManager] Using canonical state format');
-      this._useCanonicalStateFormat = true;
+  // REMOVED: Legacy canonical state format initialization - now always canonical
 
-      // Convert existing inventory to canonical format if it exists
-      if (this.inventory && this.itemData) {
-        this._migrateInventoryToCanonical();
-      }
-    }
-  }
+  // REMOVED: Legacy inventory migration - now always canonical
 
-  /**
-   * REFACTOR: Convert current Map-based inventory to canonical plain object format
-   */
-  _migrateInventoryToCanonical() {
-    if (this.inventory instanceof ALTTPInventory) {
-      const canonicalInventory = {};
-
-      // Initialize all items to 0
-      for (const itemName in this.itemData) {
-        if (Object.hasOwn(this.itemData, itemName)) {
-          canonicalInventory[itemName] = this._countItem(itemName);
-        }
-      }
-
-      // Store original for migration back if needed
-      this._legacyInventory = this.inventory;
-      this.inventory = canonicalInventory;
-
-      log('info', '[StateManager] Migrated inventory to canonical format');
-    }
-  }
-
-  /**
-   * REFACTOR: Convert canonical inventory back to Map-based format
-   */
-  _migrateInventoryToLegacy() {
-    if (this._legacyInventory) {
-      this.inventory = this._legacyInventory;
-      this._legacyInventory = null;
-      log('info', '[StateManager] Migrated inventory back to legacy format');
-    }
-  }
+  // REMOVED: Legacy inventory migration - now always canonical
 
   /**
    * Helper function to add items to canonical inventory

@@ -1687,7 +1687,7 @@ export function createStateSnapshotInterface(
       return count;
     },
     hasFlag: (flagName) =>
-      !!(snapshot?.state?.flags && snapshot.state.flags.includes(flagName)),
+      !!(snapshot?.flags && snapshot.flags.includes(flagName)),
     getSetting: (settingName) => snapshot?.settings?.[settingName],
     isRegionReachable: (regionName) => {
       const status = snapshot?.reachability?.[regionName];

@@ -17,8 +17,8 @@ export function has(state, itemName, staticData) {
     return true;
   }
   
-  // Also check state.state.events for compatibility with current format
-  if (state.state && state.state.events && state.state.events.includes(itemName)) {
+  // Also check state.events (promoted from state.state.events)
+  if (state.events && state.events.includes(itemName)) {
     return true;
   }
   
@@ -199,7 +199,7 @@ export function can_use_bombs(state, world, itemName, staticData) {
   // Start with base bombs (10 unless bombless start)
   let bombs = 0;
   const bomblessStart = state.settings?.bombless_start || 
-                       (state.state && state.state.flags && state.state.flags.includes('bombless_start'));
+                       (state.flags && state.flags.includes('bombless_start'));
   if (!bomblessStart) {
     bombs = 10;
   }
@@ -458,7 +458,7 @@ export function can_shoot_arrows(state, world, itemName, staticData) {
   
   // Check retro bow mode
   const retroBow = state.settings?.retro_bow || 
-                  (state.state && state.state.flags && state.state.flags.includes('retro_bow'));
+                  (state.flags && state.flags.includes('retro_bow'));
   
   if (retroBow) {
     // In retro bow mode, need to buy arrows from shops
@@ -472,7 +472,7 @@ export function can_shoot_arrows(state, world, itemName, staticData) {
 export function has_triforce_pieces(state, world, itemName, staticData) {
   // Get required count from world settings
   const requiredCount = state.settings?.treasure_hunt_required || 
-                       (state.state && state.state.treasureHuntRequired) || 0;
+                       state.treasureHuntRequired || 0;
   
   const triforceCount = count(state, 'Triforce Piece', staticData);
   const powerStarCount = count(state, 'Power Star', staticData);
@@ -567,7 +567,7 @@ export function item_name_in_location_names(state, world, itemName, staticData) 
 
 export function GanonDefeatRule(state, world, itemName, staticData) {
   const isSwordless = state.settings?.swordless ||
-                     (state.state && state.state.flags && state.state.flags.includes('swordless'));
+                     (state.flags && state.flags.includes('swordless'));
   
   if (isSwordless) {
     // Swordless mode requirements
@@ -805,7 +805,7 @@ export function open_mode(state, world, itemName, staticData) {
 export function swordless_mode(state, world, itemName, staticData) {
   // Check if this is swordless mode
   return state.settings?.swordless === true ||
-         (state.state && state.state.flags && state.state.flags.includes('swordless'));
+         (state.flags && state.flags.includes('swordless'));
 }
 
 // Helper function registry
