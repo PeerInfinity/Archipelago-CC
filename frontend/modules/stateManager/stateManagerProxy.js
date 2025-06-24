@@ -9,14 +9,12 @@ if (!isWorkerContext && window.logger) {
 
 // TODO: Import eventBus
 
-// import { ALTTPHelpers } from './games/alttp/helpers.js'; // OLD - REMOVE/REPLACE
-// import { ALTTPSnapshotHelpers } from './games/alttp/alttpSnapshotHelpers.js'; // DEPRECATED - Using agnostic helpers
-import { evaluateRule } from './ruleEngine.js'; // Make this an active import
-// import { evaluateRule } from './ruleEngine.js'; // Already imported
-import { GameSnapshotHelpers } from './helpers/gameSnapshotHelpers.js'; // Added import
+// Legacy imports removed - now using agnostic helpers
+import { evaluateRule } from './ruleEngine.js';
+// Legacy GameSnapshotHelpers import removed - using agnostic helpers directly
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js'; // Import shared commands
-import { helperFunctions as alttpLogic } from './logic/games/alttp/alttpLogic.js'; // REFACTOR: Import agnostic helpers
-import { helperFunctions as genericLogic } from './logic/games/generic/genericLogic.js'; // Import generic logic module
+import { helperFunctions as alttpLogic } from './logic/games/alttp/alttpLogic.js';
+import { helperFunctions as genericLogic } from './logic/games/generic/genericLogic.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -1532,7 +1530,7 @@ export function createStateSnapshotInterface(
   staticData,
   contextVariables = {}
 ) {
-  let snapshotHelpersInstance = null; // Changed variable name for clarity
+  // Legacy snapshotHelpersInstance removed - using agnostic helpers directly
   const gameId = snapshot?.game; // Get gameId from the snapshot
 
   function findLocationDataInStatic(locationName) {
@@ -1822,16 +1820,14 @@ export function createStateSnapshotInterface(
     },
   };
 
-  // For ALTTP, we no longer need ALTTPSnapshotHelpers since we use agnostic helpers
-  // All games now use the base GameSnapshotHelpers
-  snapshotHelpersInstance = new GameSnapshotHelpers(rawInterfaceForHelpers);
+  // Legacy GameSnapshotHelpers removed - all games now use agnostic helpers directly
 
   const finalSnapshotInterface = {
     _isSnapshotInterface: true,
     inventory: snapshot?.inventory || {},
     events: snapshot?.events || {},
     ...rawInterfaceForHelpers,
-    helpers: snapshotHelpersInstance,
+    // Legacy helpers property removed - use executeHelper method instead
     executeHelper: (helperName, ...args) => {
       const gameName = snapshot?.game;
       let selectedHelpers = genericLogic; // Default to generic
@@ -1846,15 +1842,7 @@ export function createStateSnapshotInterface(
         return selectedHelpers[helperName](snapshot, 'world', args[0], staticData);
       }
       
-      // Fall back to legacy helpers for games that haven't been migrated yet
-      if (
-        snapshotHelpersInstance &&
-        typeof snapshotHelpersInstance[helperName] === 'function'
-      ) {
-        return snapshotHelpersInstance[helperName](...args);
-      }
-      
-      return undefined; // Helper not found
+      return undefined; // Helper not found - all games should use agnostic helpers
     },
     evaluateRule: function (rule, contextName = null) {
       return evaluateRule(rule, this, contextName);
@@ -1862,12 +1850,11 @@ export function createStateSnapshotInterface(
     resolveRuleObject: (ruleObjectPath) => {
       if (ruleObjectPath && ruleObjectPath.type === 'name') {
         const name = ruleObjectPath.name;
-        if (name === 'helpers') return snapshotHelpersInstance;
+        // Legacy helpers reference removed - use executeHelper method instead
         if (name === 'state' || name === 'settings' || name === 'inventory')
           return finalSnapshotInterface;
         if (name === 'player') return snapshot?.player?.slot;
-        if (snapshotHelpersInstance?.entities?.[name])
-          return snapshotHelpersInstance.entities[name];
+        // Legacy entities system removed - use snapshot data directly
       }
       return finalSnapshotInterface;
     },
@@ -1911,15 +1898,7 @@ export function createStateSnapshotInterface(
         }
       }
       
-      // For other games, fall back to legacy helper system
-      if (
-        snapshotHelpersInstance &&
-        typeof snapshotHelpersInstance.executeHelper === 'function'
-      ) {
-        // Try to execute the method directly on the helper instance
-        return snapshotHelpersInstance.executeHelper(methodName, ...args);
-      }
-      
+      // Legacy helper system removed - all games should use agnostic helpers
       return undefined;
     },
     resolveName: rawInterfaceForHelpers.resolveName,
