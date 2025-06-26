@@ -608,7 +608,7 @@ export class TestPlaythroughUI {
               locationRuleEvalResult === true;
 
             // Check if already checked using the snapshot
-            const isChecked = currentSnapshot.flags?.includes(locName);
+            const isChecked = currentSnapshot.checkedLocations?.includes(locName);
 
             if (!wasAccessible && !isChecked) {
               this.log(
@@ -943,7 +943,7 @@ export class TestPlaythroughUI {
     for (const locName in staticData.locations) {
       const locDef = staticData.locations[locName]; // Location Definition from staticData
 
-      const isChecked = snapshot.flags?.includes(locName);
+      const isChecked = snapshot.checkedLocations?.includes(locName);
       if (isChecked) continue; // Skip checked locations
 
       // Determine accessibility based on snapshot and staticDef

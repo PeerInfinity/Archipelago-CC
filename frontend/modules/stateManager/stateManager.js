@@ -1859,38 +1859,76 @@ export class StateManager {
    * Mark a location as checked
    */
   checkLocation(locationName) {
-    if (!this.checkedLocations.has(locationName)) {
-      this.checkedLocations.add(locationName);
-      this._logDebug(`[StateManager Class] Checked location: ${locationName}`);
+    let locationWasActuallyChecked = false;
+    
+    // First check if location is already checked
+    if (this.checkedLocations.has(locationName)) {
+      this._logDebug(`[StateManager Class] Location ${locationName} is already checked, ignoring.`);
+      
+      // Publish event to notify UI that location check was rejected due to already being checked
+      this._publishEvent('locationCheckRejected', {
+        locationName: locationName,
+        reason: 'already_checked'
+      });
+    } else {
+      // Find the location data
       const location = this.locations.find((loc) => loc.name === locationName);
-
-      // --- ADDED: Grant item from location --- >
-      if (location && location.item && typeof location.item.name === 'string') {
-        this._logDebug(
-          `[StateManager Class] Location ${locationName} contains item: ${location.item.name}`
-        );
-        this._addItemToInventory(location.item.name, 1);
-        this._logDebug(
-          `[StateManager Class] Added ${location.item.name} to inventory.`
-        );
-        // Potentially trigger an event for item acquisition if needed by other systems
-        // this._publishEvent('itemAcquired', { itemName: location.item.name, locationName });
-      } else if (location && location.item) {
-        this._logDebug(
-          `[StateManager Class] Location ${locationName} has an item, but item.name is not a string: ${JSON.stringify(
-            location.item
-          )}`
-        );
+      if (!location) {
+        this._logDebug(`[StateManager Class] Location ${locationName} not found in locations data.`);
+        
+        // Publish event to notify UI that location check was rejected due to location not found
+        this._publishEvent('locationCheckRejected', {
+          locationName: locationName,
+          reason: 'location_not_found'
+        });
       } else {
-        this._logDebug(
-          `[StateManager Class] Location ${locationName} has no item or location data is incomplete.`
-        );
-      }
-      // --- END ADDED --- >
+        // Validate that the location is accessible before checking
+        if (!this.isLocationAccessible(location)) {
+          this._logDebug(`[StateManager Class] Location ${locationName} is not accessible, cannot check.`);
+          
+          // Publish event to notify UI that location check was rejected due to inaccessibility
+          this._publishEvent('locationCheckRejected', {
+            locationName: locationName,
+            reason: 'not_accessible'
+          });
+        } else {
+          // Location is accessible, proceed with checking
+          this.checkedLocations.add(locationName);
+          this._logDebug(`[StateManager Class] Checked location: ${locationName}`);
+          locationWasActuallyChecked = true;
 
-      this.invalidateCache();
-      this._sendSnapshotUpdate();
+          // --- ADDED: Grant item from location --- >
+          if (location && location.item && typeof location.item.name === 'string') {
+            this._logDebug(
+              `[StateManager Class] Location ${locationName} contains item: ${location.item.name}`
+            );
+            this._addItemToInventory(location.item.name, 1);
+            this._logDebug(
+              `[StateManager Class] Added ${location.item.name} to inventory.`
+            );
+            // Potentially trigger an event for item acquisition if needed by other systems
+            // this._publishEvent('itemAcquired', { itemName: location.item.name, locationName });
+          } else if (location && location.item) {
+            this._logDebug(
+              `[StateManager Class] Location ${locationName} has an item, but item.name is not a string: ${JSON.stringify(
+                location.item
+              )}`
+            );
+          } else {
+            this._logDebug(
+              `[StateManager Class] Location ${locationName} has no item or location data is incomplete.`
+            );
+          }
+          // --- END ADDED --- >
+
+          this.invalidateCache();
+        }
+      }
     }
+
+    // Always send a snapshot update so the UI knows the operation completed
+    // This ensures pending states are cleared even if the location wasn't actually checked
+    this._sendSnapshotUpdate();
   }
 
   /**
@@ -2010,8 +2048,26 @@ export class StateManager {
       return;
     }
 
-    // Publish specific events like checkedLocationsCleared or errors via EventBus if available
-    if (this.eventBus) {
+    // In worker mode, send events through postMessage for the proxy to republish
+    if (this.postMessageCallback) {
+      try {
+        this.postMessageCallback({
+          type: 'eventPublish',
+          eventType: eventType,
+          eventData: eventData
+        });
+        this._logDebug(
+          `[StateManager Class] Sent ${eventType} event via postMessage for republishing.`
+        );
+      } catch (error) {
+        log(
+          'error',
+          `[StateManager Class] Error sending ${eventType} event via postMessage:`,
+          error
+        );
+      }
+    } else if (this.eventBus) {
+      // Main thread mode - publish directly to eventBus
       try {
         this.eventBus.publish(`stateManager:${eventType}`, eventData);
         this._logDebug(
@@ -2024,11 +2080,11 @@ export class StateManager {
           error
         );
       }
-    } else if (!this.postMessageCallback) {
-      // Only warn if not in worker mode and eventBus is missing
+    } else {
+      // Neither worker mode nor eventBus available
       log(
         'warn',
-        `[StateManager Class] Event bus not available to publish ${eventType}.`
+        `[StateManager Class] No event publishing method available for ${eventType}.`
       );
     }
   }

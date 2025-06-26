@@ -400,6 +400,9 @@ export class StateManagerProxy {
           message.detail
         );
         break;
+      case 'eventPublish': // New case for event republishing from worker
+        this._handleEventPublish(message);
+        break;
       default:
         log(
           'warn',
@@ -460,6 +463,23 @@ export class StateManagerProxy {
       );
       // Potentially publish an event if generic pongs are useful
       // this.eventBus.publish('stateManager:pongReceived', { payload: message.payload });
+    }
+  }
+
+  _handleEventPublish(message) {
+    try {
+      // Republish the event from the worker on the main thread's eventBus
+      this.eventBus.publish(`stateManager:${message.eventType}`, message.eventData);
+      this._logDebug(
+        `[StateManagerProxy] Republished worker event: ${message.eventType}`,
+        message.eventData
+      );
+    } catch (error) {
+      log(
+        'error',
+        `[StateManagerProxy] Error republishing worker event ${message.eventType}:`,
+        error
+      );
     }
   }
 
@@ -974,7 +994,7 @@ export class StateManagerProxy {
 
     const messageId = this.nextMessageId++;
     const message = {
-      id: messageId,
+      queryId: messageId,
       command: command,
       payload: payload,
       expectResponse: expectResponse,

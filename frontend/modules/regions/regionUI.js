@@ -51,6 +51,10 @@ export class RegionUI {
     this.isInitialized = false; // Add flag
     this.colorblindSettings = {}; // Add colorblind settings cache
     this.navigationTarget = null; // Add navigation target state
+    
+    // Separate tracking for "Show All" mode expansion states
+    // Map of regionName -> boolean (expanded state)
+    this.showAllExpansionState = new Map();
 
     // Create the path analyzer
     this.pathAnalyzer = new PathAnalyzerUI(this);
@@ -415,6 +419,20 @@ export class RegionUI {
     if (showAllRegionsCheckbox) {
       showAllRegionsCheckbox.addEventListener('change', (e) => {
         this.showAll = e.target.checked;
+        
+        // When switching from "Show All" to navigation mode, clean up the visitedRegions array
+        if (!this.showAll) {
+          // Remove all entries with UIDs starting with "all_" (these were added for "Show All" mode)
+          this.visitedRegions = this.visitedRegions.filter(region => 
+            !region.uid.toString().startsWith('all_')
+          );
+          
+          // If no navigation regions remain, show the start region
+          if (this.visitedRegions.length === 0) {
+            this.showStartRegion('Menu');
+          }
+        }
+        
         this.renderAllRegions();
       });
     }
@@ -439,6 +457,7 @@ export class RegionUI {
     log('info', '[RegionUI] Clearing visited regions state.');
     this.visitedRegions = [];
     this.nextUID = 1;
+    this.showAllExpansionState.clear(); // Clear "Show All" expansion state
     // REMOVED: Direct DOM manipulation, renderAllRegions handles clearing content
     /*
     if (this.regionsContainer) { ... }
@@ -526,16 +545,10 @@ export class RegionUI {
     if (block) {
       block.expanded = !block.expanded;
     } else if (typeof uid === 'string' && uid.startsWith('all_')) {
-      // Handle regions that are only visible in "Show All" mode and might not be in visitedRegions yet
-      // If toggling such a region, we add it to visitedRegions to track its expanded state.
+      // Handle regions in "Show All" mode using separate tracking
       const regionName = uid.substring(4); // Extract region name from uid like "all_RegionName"
-      // We assume if it's not in block, it was previously collapsed (or not yet interacted with)
-      // So, toggling means expanding it and adding to track its state.
-      this.visitedRegions.push({
-        name: regionName,
-        expanded: true, // Toggling from an untracked/collapsed state means expand it
-        uid: uid,
-      });
+      const currentState = this.showAllExpansionState.get(regionName) || false;
+      this.showAllExpansionState.set(regionName, !currentState);
     }
     this.renderAllRegions();
   }
@@ -552,19 +565,9 @@ export class RegionUI {
         );
         return;
       }
-      Object.keys(staticData.regions).forEach((regionName, index) => {
-        // Iterate staticData.regions
-        const uid = `all_${index}`;
-        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-        if (regionObj) {
-          regionObj.expanded = true;
-        } else {
-          this.visitedRegions.push({
-            name: regionName,
-            expanded: true,
-            uid: uid,
-          });
-        }
+      // Use separate tracking for "Show All" mode - don't pollute visitedRegions
+      Object.keys(staticData.regions).forEach((regionName) => {
+        this.showAllExpansionState.set(regionName, true);
       });
     } else {
       this.visitedRegions.forEach((region) => {
@@ -586,19 +589,9 @@ export class RegionUI {
         );
         return;
       }
-      Object.keys(staticData.regions).forEach((regionName, index) => {
-        // Iterate staticData.regions
-        const uid = `all_${index}`;
-        const regionObj = this.visitedRegions.find((r) => r.uid === uid);
-        if (regionObj) {
-          regionObj.expanded = false;
-        } else {
-          this.visitedRegions.push({
-            name: regionName,
-            expanded: false,
-            uid: uid,
-          });
-        }
+      // Use separate tracking for "Show All" mode - don't pollute visitedRegions
+      Object.keys(staticData.regions).forEach((regionName) => {
+        this.showAllExpansionState.set(regionName, false);
       });
     } else {
       this.visitedRegions.forEach((region) => {
@@ -819,7 +812,7 @@ export class RegionUI {
         uid: `all_${name}`,
         expanded:
           name === this.navigationTarget || // Expand if it's the navigation target
-          this.visitedRegions.find((r) => r.uid === `all_${name}`)?.expanded ||
+          this.showAllExpansionState.get(name) || // Use separate tracking for "Show All" mode
           false,
         isReachable:
           snapshot.reachability?.[name] === true ||
@@ -1451,7 +1444,7 @@ export class RegionUI {
         }
         locAccessible = regionIsReachable && locAccessible; // Must be in reachable region AND pass rule
 
-        const locChecked = snapshot.flags?.includes(locationDef.name) ?? false; // Use flags from snapshot
+        const locChecked = snapshot.checkedLocations?.includes(locationDef.name) ?? false; // Use checkedLocations from snapshot
 
         // Loop mode discovery check
         const isLocationDiscovered =

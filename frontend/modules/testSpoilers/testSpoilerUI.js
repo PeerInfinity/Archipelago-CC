@@ -1279,7 +1279,7 @@ export class TestSpoilerUI {
               locationRuleEvalResult === true;
 
             // Check if already checked using the snapshot
-            const isChecked = currentSnapshot.flags?.includes(locName);
+            const isChecked = currentSnapshot.checkedLocations?.includes(locName);
 
             if (!wasAccessible && !isChecked) {
               this.log(
@@ -1436,7 +1436,7 @@ export class TestSpoilerUI {
 
     for (const locName in staticData.locations) {
       const locDef = staticData.locations[locName];
-      const isChecked = modifiedSnapshot.flags?.includes(locName);
+      const isChecked = modifiedSnapshot.checkedLocations?.includes(locName);
       if (isChecked) continue;
       const parentRegionName = locDef.parent_region || locDef.region;
       const parentRegionReachabilityStatus =
@@ -1583,7 +1583,7 @@ export class TestSpoilerUI {
       const locDef = staticData.locations[locName];
 
       // Check against the worker's snapshot flags
-      const isChecked = currentWorkerSnapshot.flags?.includes(locName);
+      const isChecked = currentWorkerSnapshot.checkedLocations?.includes(locName);
       if (isChecked) continue;
 
       const parentRegionName = locDef.parent_region || locDef.region;

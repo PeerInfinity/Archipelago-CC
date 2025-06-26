@@ -262,6 +262,9 @@ export class LocationUI {
         this.updateLocationDisplay();
       });
 
+      // Subscribe to state manager location check rejection events
+      subscribe('stateManager:locationCheckRejected', this.handleLocationCheckRejected.bind(this));
+
       // Subscribe to loop state changes if relevant
       subscribe('loop:stateChanged', debouncedUpdate); // May affect explored status visibility
       subscribe('loop:actionCompleted', debouncedUpdate); // May affect explored status
@@ -564,9 +567,28 @@ export class LocationUI {
     // If there was logging for which locations were clicked for analytics/debugging:
     // log('info',
     //   `User interaction: Location card for '${locationData.name}' clicked.`
-    // );
+        // );
   }
 
+  /**
+   * Handles location check rejection events from the state manager.
+   * This is called when the state manager rejects a location check due to inaccessibility.
+   */
+  handleLocationCheckRejected(eventData) {
+    const { locationName, reason } = eventData;
+    
+    log('info', `[LocationUI] Location check rejected for ${locationName}: ${reason}`);
+    
+    // Clear pending state for this location
+    if (this.pendingLocations.has(locationName)) {
+      this.pendingLocations.delete(locationName);
+      log('info', `[LocationUI] Cleared pending state for rejected location: ${locationName}`);
+      
+      // Update the display to reflect the cleared pending state
+      this.updateLocationDisplay();
+    }
+  }
+  
   // Restore syncWithState - primarily for fetching latest state and updating display
   syncWithState() {
     log(
@@ -680,10 +702,11 @@ export class LocationUI {
     let filteredLocations = Object.values(staticData.locations).filter(
       (loc) => {
         const name = loc.name;
-        const isChecked = !!snapshot?.flags?.includes(name);
+        const isChecked = !!snapshot?.checkedLocations?.includes(name);
 
-        // If location is checked by stateManager, it's no longer pending from UI perspective
-        if (isChecked && this.pendingLocations.has(name)) {
+        // Clear pending state for locations that have been processed by stateManager
+        if (this.pendingLocations.has(name) && isChecked) {
+          // Location was successfully checked, clear pending
           this.pendingLocations.delete(name);
         }
         const isPending = this.pendingLocations.has(name); // Check if pending AFTER potential removal
@@ -806,7 +829,7 @@ export class LocationUI {
     filteredLocations.sort((a, b) => {
       if (sortMethod === 'accessibility') {
         // Recalculate detailedStatus for item a
-        const isCheckedA = !!snapshot?.flags?.includes(a.name);
+        const isCheckedA = !!snapshot?.checkedLocations?.includes(a.name);
         const isPendingA = this.pendingLocations.has(a.name) && !isCheckedA;
         const parentRegionNameA = a.parent_region || a.region;
         const parentRegionReachabilityStatusA =
@@ -843,7 +866,7 @@ export class LocationUI {
         }
 
         // Recalculate detailedStatus for item b
-        const isCheckedB = !!snapshot?.flags?.includes(b.name);
+        const isCheckedB = !!snapshot?.checkedLocations?.includes(b.name);
         const isPendingB = this.pendingLocations.has(b.name) && !isCheckedB;
         const parentRegionNameB = b.parent_region || b.region;
         const parentRegionReachabilityStatusB =
@@ -891,7 +914,7 @@ export class LocationUI {
         return a.name.localeCompare(b.name);
       } else if (sortMethod === 'accessibility_original') {
         // Determine detailedStatus for item a (similar to 'accessibility' sort)
-        const isCheckedA = !!snapshot?.flags?.includes(a.name);
+        const isCheckedA = !!snapshot?.checkedLocations?.includes(a.name);
         const isPendingA = this.pendingLocations.has(a.name) && !isCheckedA;
         const parentRegionNameA = a.parent_region || a.region;
         const parentRegionReachabilityStatusA =
@@ -925,7 +948,7 @@ export class LocationUI {
           detailedStatusA = 'region_accessible_location_rule_fails';
 
         // Determine detailedStatus for item b (similar to 'accessibility' sort)
-        const isCheckedB = !!snapshot?.flags?.includes(b.name);
+        const isCheckedB = !!snapshot?.checkedLocations?.includes(b.name);
         const isPendingB = this.pendingLocations.has(b.name) && !isCheckedB;
         const parentRegionNameB = b.parent_region || b.region;
         const parentRegionReachabilityStatusB =
@@ -1023,7 +1046,7 @@ export class LocationUI {
       const fragment = document.createDocumentFragment();
       filteredLocations.forEach((location) => {
         const name = location.name;
-        const isChecked = !!snapshot?.flags?.includes(name);
+        const isChecked = !!snapshot?.checkedLocations?.includes(name);
         const isPending = this.pendingLocations.has(name) && !isChecked;
         const isExplored = discoveryStateSingleton.isLocationDiscovered(name);
 
@@ -1216,7 +1239,7 @@ export class LocationUI {
     }
     // Reachability is now expected to be a boolean in the snapshot
     const isReachable = snapshot.reachability[locationName] === true;
-    const isChecked = snapshot.flags?.includes(locationName);
+    const isChecked = snapshot.checkedLocations?.includes(locationName);
     //log('info',
     //  `[LocationUI getLocationStatus] Name: ${locationName}, Reachability: ${reachabilityStatus}, Checked: ${isChecked}`
     //);

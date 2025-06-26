@@ -223,7 +223,7 @@ export class TimerLogic {
 
     let locationToCheck = null;
     for (const loc of locationsArray) {
-      const isChecked = snapshot.flags?.includes(loc.name);
+      const isChecked = snapshot.checkedLocations?.includes(loc.name);
       if (isChecked) continue;
 
       // Use snapshotInterface for all evaluations
@@ -304,7 +304,7 @@ export class TimerLogic {
     let quickCheckTarget = null;
 
     for (const loc of locationsArray) {
-      const isChecked = snapshot.flags?.includes(loc.name);
+      const isChecked = snapshot.checkedLocations?.includes(loc.name);
       if (isChecked) continue;
 
       // Use snapshotInterface for all evaluations

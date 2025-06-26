@@ -411,8 +411,8 @@ export class TestController {
 
       case 'IS_LOCATION_CHECKED': {
         const snapshot = this.stateManager.getSnapshot();
-        if (snapshot && snapshot.flags && actionDetails.locationName) {
-          result = snapshot.flags.includes(actionDetails.locationName);
+        if (snapshot && snapshot.checkedLocations && actionDetails.locationName) {
+          result = snapshot.checkedLocations.includes(actionDetails.locationName);
         } else {
           this.log(
             'Warning: Could not determine if location is checked for IS_LOCATION_CHECKED.',
