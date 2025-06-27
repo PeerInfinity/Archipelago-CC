@@ -442,9 +442,10 @@ self.onmessage = async function (e) {
               // LOG 4: Start of try block for checkLocation
               log('info', `[SMW] checkLocation: try block entered.`);
               const locationName = message.payload.locationName;
+              const addItems = message.payload.addItems !== undefined ? message.payload.addItems : true;
               log(
                 'info',
-                `[SMW] checkLocation: locationName extracted: "${locationName}" (type: ${typeof locationName})`
+                `[SMW] checkLocation: locationName extracted: "${locationName}" (type: ${typeof locationName}), addItems: ${addItems}`
               );
 
               if (typeof locationName !== 'string') {
@@ -460,9 +461,9 @@ self.onmessage = async function (e) {
               // LOG 5: Before calling instance.checkLocation
               log(
                 'info',
-                `[SMW] checkLocation: About to call stateManagerInstance.checkLocation("${locationName}")`
+                `[SMW] checkLocation: About to call stateManagerInstance.checkLocation("${locationName}", ${addItems})`
               );
-              stateManagerInstance.checkLocation(locationName);
+              stateManagerInstance.checkLocation(locationName, addItems);
               // LOG 6: After calling instance.checkLocation
               log(
                 'info',
@@ -505,6 +506,7 @@ self.onmessage = async function (e) {
                 error: `Error processing checkLocation: ${error.message}`,
               });
             }
+
           } else {
             // Presumed 'evaluateRuleRequest'
             log(
@@ -531,6 +533,7 @@ self.onmessage = async function (e) {
             // Process checkLocation without warning, as this is an expected path.
             try {
               const locationName = message.payload.locationName;
+              const addItems = message.payload.addItems !== undefined ? message.payload.addItems : true;
               if (typeof locationName !== 'string') {
                 log(
                   'error',
@@ -542,9 +545,9 @@ self.onmessage = async function (e) {
               }
               log(
                 'info',
-                `[SMW] checkLocation (no queryId): About to call stateManagerInstance.checkLocation("${locationName}")`
+                `[SMW] checkLocation (no queryId): About to call stateManagerInstance.checkLocation("${locationName}", ${addItems})`
               );
-              stateManagerInstance.checkLocation(locationName);
+              stateManagerInstance.checkLocation(locationName, addItems);
               log(
                 'info',
                 `[SMW] checkLocation (no queryId): stateManagerInstance.checkLocation completed for "${locationName}".`
@@ -561,6 +564,7 @@ self.onmessage = async function (e) {
                 error.stack
               );
             }
+
           } else {
             // For other commands without queryId in this grouped case, issue the general warning.
             log(

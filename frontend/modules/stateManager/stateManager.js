@@ -1861,10 +1861,14 @@ export class StateManager {
     return this.checkedLocations.has(locationName);
   }
 
+
+
   /**
    * Mark a location as checked
+   * @param {string} locationName - Name of the location to check
+   * @param {boolean} addItems - Whether to add the location's item to inventory (default: true)
    */
-  checkLocation(locationName) {
+  checkLocation(locationName, addItems = true) {
     let locationWasActuallyChecked = false;
     
     // First check if location is already checked
@@ -1903,8 +1907,8 @@ export class StateManager {
           this._logDebug(`[StateManager Class] Checked location: ${locationName}`);
           locationWasActuallyChecked = true;
 
-          // --- ADDED: Grant item from location --- >
-          if (location && location.item && typeof location.item.name === 'string') {
+          // --- ADDED: Grant item from location (if addItems is true) --- >
+          if (addItems && location && location.item && typeof location.item.name === 'string') {
             this._logDebug(
               `[StateManager Class] Location ${locationName} contains item: ${location.item.name}`
             );
@@ -1914,15 +1918,19 @@ export class StateManager {
             );
             // Potentially trigger an event for item acquisition if needed by other systems
             // this._publishEvent('itemAcquired', { itemName: location.item.name, locationName });
-          } else if (location && location.item) {
+          } else if (addItems && location && location.item) {
             this._logDebug(
               `[StateManager Class] Location ${locationName} has an item, but item.name is not a string: ${JSON.stringify(
                 location.item
               )}`
             );
-          } else {
+          } else if (addItems) {
             this._logDebug(
               `[StateManager Class] Location ${locationName} has no item or location data is incomplete.`
+            );
+          } else {
+            this._logDebug(
+              `[StateManager Class] Location ${locationName} marked as checked without adding items (addItems=false).`
             );
           }
           // --- END ADDED --- >
@@ -3009,8 +3017,15 @@ export class StateManager {
       payload
     );
 
-    // 1. Reset game-specific state (e.g., ALTTPState for events, dungeon states etc.)
-    if (this.settings) {
+    // Check if this is a full reset or incremental update
+    const isFullReset = payload.resetInventory !== false; // Default to true for backward compatibility
+    
+    this._logDebug(
+      `[StateManager applyRuntimeState] ${isFullReset ? 'Full reset' : 'Incremental update'} mode`
+    );
+
+    // 1. Reset game-specific state only for full resets
+    if (isFullReset && this.settings) {
       // Fallback: Re-create state if reset is not available but settings are
       const gameSettings = this.settings;
       const determinedGameName = gameSettings.game || this.gameId;
@@ -3036,23 +3051,29 @@ export class StateManager {
       this._logDebug(
         '[StateManager applyRuntimeState] Game-specific state (this.state) set to null - using gameStateModule only.'
       );
-    } else {
+    } else if (isFullReset) {
       log(
         'warn',
         '[StateManager applyRuntimeState] Could not reset or re-initialize game-specific state (this.state).'
       );
     }
 
-    // 2. Reset inventory - canonical format always recreates
-    const gameNameForInventory = this.settings
-      ? this.settings.game
-      : this.gameId || 'UnknownGame';
-    this.inventory = this._createInventoryInstance(gameNameForInventory);
-    this._logDebug(
-      `[StateManager applyRuntimeState] Inventory re-initialized via _createInventoryInstance for ${gameNameForInventory}.`
-    );
-    // In canonical format, itemData and groupData are accessed from StateManager instance directly
-    // No need to assign them to inventory object
+    // 2. Reset inventory only for full resets
+    if (isFullReset) {
+      const gameNameForInventory = this.settings
+        ? this.settings.game
+        : this.gameId || 'UnknownGame';
+      this.inventory = this._createInventoryInstance(gameNameForInventory);
+      this._logDebug(
+        `[StateManager applyRuntimeState] Inventory re-initialized via _createInventoryInstance for ${gameNameForInventory}.`
+      );
+      // In canonical format, itemData and groupData are accessed from StateManager instance directly
+      // No need to assign them to inventory object
+    } else {
+      this._logDebug(
+        '[StateManager applyRuntimeState] Preserving existing inventory (incremental update).'
+      );
+    }
 
     // 3. Clear pathfinding cache and related structures
     this.indirectConnections = new Map();
@@ -3061,33 +3082,42 @@ export class StateManager {
       '[StateManager applyRuntimeState] Pathfinding cache and indirect connections cleared.'
     );
 
-    // 4. Process Server Checked Locations (conditionally)
+    // 4. Process Server Checked Locations
     if (
       payload.serverCheckedLocationNames &&
       Array.isArray(payload.serverCheckedLocationNames)
     ) {
-      let changed = false;
-      payload.serverCheckedLocationNames.forEach((name) => {
-        if (this.checkedLocations && !this.checkedLocations.has(name)) {
-          this.checkedLocations.add(name);
-          changed = true;
-        }
-      });
-      
-      if (changed) {
+      if (isFullReset) {
+        // For full reset (initial connection), replace checked locations with server's authoritative list
+        this.checkedLocations = new Set(payload.serverCheckedLocationNames);
         this._logDebug(
-          `[StateManager applyRuntimeState] Merged ${
-            payload.serverCheckedLocationNames.length
-          } server checked locations. New total: ${
-            this.checkedLocations ? this.checkedLocations.size : 'undefined'
-          }`
+          `[StateManager applyRuntimeState] Replaced checked locations with server authoritative list: ${payload.serverCheckedLocationNames.length} locations`
         );
       } else {
-        this._logDebug(
-          `[StateManager applyRuntimeState] No new server checked locations to add. Total remains: ${
-            this.checkedLocations ? this.checkedLocations.size : 'undefined'
-          }`
-        );
+        // For incremental updates, merge new locations with existing ones
+        let changed = false;
+        payload.serverCheckedLocationNames.forEach((name) => {
+          if (this.checkedLocations && !this.checkedLocations.has(name)) {
+            this.checkedLocations.add(name);
+            changed = true;
+          }
+        });
+        
+        if (changed) {
+          this._logDebug(
+            `[StateManager applyRuntimeState] Merged ${
+              payload.serverCheckedLocationNames.length
+            } server checked locations. New total: ${
+              this.checkedLocations ? this.checkedLocations.size : 'undefined'
+            }`
+          );
+        } else {
+          this._logDebug(
+            `[StateManager applyRuntimeState] No new server checked locations to add. Total remains: ${
+              this.checkedLocations ? this.checkedLocations.size : 'undefined'
+            }`
+          );
+        }
       }
     } else {
       this._logDebug(

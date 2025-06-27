@@ -836,10 +836,10 @@ export class StateManagerProxy {
     );
   }
 
-  async checkLocation(locationName) {
+  async checkLocation(locationName, addItems = true) {
     return this._sendCommand(
       StateManagerProxy.COMMANDS.CHECK_LOCATION,
-      { locationName },
+      { locationName, addItems },
       true
     );
   }

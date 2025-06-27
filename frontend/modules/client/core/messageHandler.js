@@ -421,12 +421,19 @@ export class MessageHandler {
         }
       }
 
-      // If there are items to process, add them to inventory incrementally
+      // ReceivedItems is the authoritative message for item additions
       if (processedItemDetails.length > 0) {
-        this._logDebug(
-          `[MessageHandler _handleReceivedItems] Adding ${processedItemDetails.length} items to inventory incrementally.`
-        );
-        // Add each item individually to preserve existing inventory
+        if (data.index === 0) {
+          this._logDebug(
+            `[MessageHandler _handleReceivedItems] Full inventory sync (index=0): Adding ${processedItemDetails.length} items directly to inventory.`
+          );
+        } else {
+          this._logDebug(
+            `[MessageHandler _handleReceivedItems] Incremental items (index=${data.index}): Adding ${processedItemDetails.length} items to inventory.`
+          );
+        }
+        
+        // Add all items to inventory
         for (const itemDetail of processedItemDetails) {
           if (itemDetail && itemDetail.itemName) {
             await stateManager.addItemToInventory(itemDetail.itemName, 1);
@@ -499,32 +506,10 @@ export class MessageHandler {
   }
 
   async _handlePrintJSON(data) {
-    // This command is used for displaying complex data, often from the server.
-    const stateManager = await this._getStateManager();
-
-    // The server sends an 'ItemSend' type message when a location is checked.
-    // We use this to mark the location as checked in our state manager.
-    // The item itself is handled by the 'ReceivedItems' packet.
-    if (stateManager && data.type === 'ItemSend' && data.item) {
-      const locationId = data.item?.location;
-      if (locationId !== null && locationId !== undefined) {
-        const locationName = getLocationNameFromServerId(
-          locationId,
-          stateManager
-        );
-
-        const snapshot = await stateManager.getLatestStateSnapshot();
-        const isAlreadyChecked = snapshot?.checkedLocations?.includes(locationName);
-
-        if (locationName && !isAlreadyChecked) {
-          // Tell the state manager to check this location. It will update the state
-          // and trigger a snapshot update, which will cause the UI to refresh.
-          stateManager.checkLocation(locationName);
-        }
-      }
-    }
-
-    // Handle PrintJSON messages that contain console text (Join, Tutorial, etc.)
+    // PrintJSON is purely for displaying messages to the player
+    // Location updates are handled by RoomUpdate, items by ReceivedItems
+    
+    // Handle PrintJSON messages that contain console text (Join, Tutorial, ItemSend, etc.)
     if (this.eventBus && data.data && Array.isArray(data.data)) {
       // PrintJSON data is an array of structured text objects with type information
       // Forward the raw structured data for proper formatting
@@ -575,32 +560,29 @@ export class MessageHandler {
       `Syncing ${serverLocationIds.length} checked locations from server to stateManager`
     );
 
-    const serverCheckedLocationNames = [];
-    if (serverLocationIds && serverLocationIds.length > 0) {
-      for (const id of serverLocationIds) {
-        const name = getLocationNameFromServerId(id, stateManager);
-        if (name && name !== `Location ${id}`) {
-          serverCheckedLocationNames.push(name);
-        } else {
+          if (serverLocationIds && serverLocationIds.length > 0) {
+        let locationsMarked = 0;
+        for (const id of serverLocationIds) {
+          const name = getLocationNameFromServerId(id, stateManager);
+          if (name && name !== `Location ${id}`) {
+            // Mark each location individually using RoomUpdate approach (without adding items)
+            await stateManager.checkLocation(name, false);
+            locationsMarked++;
+          } else {
+            log(
+              'warn',
+              `[MessageHandler _syncLocationsFromServer] Could not map server location ID ${id} to a known name.`
+            );
+          }
+        }
+        
+        if (locationsMarked > 0) {
           log(
-            'warn',
-            `[MessageHandler _syncLocationsFromServer] Could not map server location ID ${id} to a known name.`
+            'info',
+            `Location sync complete: Marked ${locationsMarked} locations as checked via RoomUpdate.`
           );
         }
       }
-    }
-
-    // This method call now correctly merges the new locations with existing ones
-    // in the state manager, preventing previously checked locations from being forgotten.
-    if (serverCheckedLocationNames.length > 0) {
-      stateManager.applyRuntimeStateData({
-        serverCheckedLocationNames: serverCheckedLocationNames,
-      });
-      log(
-        'info',
-        `Location sync complete: Requested sync for ${serverCheckedLocationNames.length} locations.`
-      );
-    }
   }
 
   // Helper methods
