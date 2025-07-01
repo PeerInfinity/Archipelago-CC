@@ -153,6 +153,20 @@ export async function testSpoilersPanelFullRun(testController) {
             `[${testRunId}] Polling: buttonReady=${buttonReady}, hasDetailedResults=${!!detailedResults}, processedEvents=${detailedResults?.processedEvents || 0}/${detailedResults?.totalEvents || 0}`
           );
           
+          // ENHANCED DEBUG: Log full detailedResults structure when available
+          if (detailedResults) {
+            testController.log(
+              `[${testRunId}] DEBUG detailedResults: ${JSON.stringify({
+                passed: detailedResults.passed,
+                totalEvents: detailedResults.totalEvents,
+                processedEvents: detailedResults.processedEvents,
+                errorCount: detailedResults.errorMessages?.length || 0,
+                sphereCount: detailedResults.sphereResults?.length || 0,
+                testLogPath: detailedResults.testLogPath
+              })}`
+            );
+          }
+          
           return buttonReady && detailedResults && hasProcessedEvents;
         },
         MAX_WAIT_TIME_TEST_COMPLETION,

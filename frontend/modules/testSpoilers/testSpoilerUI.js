@@ -47,7 +47,7 @@ export class TestSpoilerUI {
     this.currentLogIndex = 0;
     this.testStateInitialized = false;
     this.initialAutoLoadAttempted = false; // ADDED to help manage auto-load calls
-    this.eventProcessingDelayMs = 20; // ADDED: Default delay for event processing
+    this.eventProcessingDelayMs = 0; // ELIMINATED: No delay to prevent background processing issues
     this.stopOnFirstError = true; // ADDED: To control test run behavior - TEMPORARILY DISABLED for debugging
     this.currentMismatchDetails = null; // ADDED: Store current mismatch details for result aggregation
 
@@ -1341,9 +1341,11 @@ export class TestSpoilerUI {
               );
               throw new Error(`Snapshot unavailable for ${locName} check`);
             }
+            // Create a location-specific snapshotInterface with the location as context
             const snapshotInterface = createStateSnapshotInterface(
               currentSnapshot,
-              staticData
+              staticData,
+              { location: locDef } // Pass the location definition as context
             );
             if (!snapshotInterface) {
               this.log(
@@ -1541,18 +1543,27 @@ export class TestSpoilerUI {
       const locDef = staticData.locations[locName];
       const isChecked = modifiedSnapshot.checkedLocations?.includes(locName);
       if (isChecked) continue;
+      
       const parentRegionName = locDef.parent_region || locDef.region;
       const parentRegionReachabilityStatus =
         modifiedSnapshot.reachability?.[parentRegionName];
       const isParentRegionEffectivelyReachable =
         parentRegionReachabilityStatus === 'reachable' ||
         parentRegionReachabilityStatus === 'checked';
+      
       const locationAccessRule = locDef.access_rule;
       let locationRuleEvalResult = true;
       if (locationAccessRule) {
+        // Create a location-specific snapshotInterface with the location as context
+        const locationSnapshotInterface = createStateSnapshotInterface(
+          modifiedSnapshot,
+          staticData,
+          { location: locDef } // Pass the location definition as context
+        );
+        
         locationRuleEvalResult = evaluateRule(
           locationAccessRule,
-          snapshotInterface
+          locationSnapshotInterface
         );
       }
       const doesLocationRuleEffectivelyPass = locationRuleEvalResult === true;
@@ -1700,10 +1711,16 @@ export class TestSpoilerUI {
       const locationAccessRule = locDef.access_rule;
       let locationRuleEvalResult = true;
       if (locationAccessRule) {
-        // snapshotInterface uses the worker's snapshot
+        // Create a location-specific snapshotInterface with the location as context
+        const locationSnapshotInterface = createStateSnapshotInterface(
+          currentWorkerSnapshot,
+          staticData,
+          { location: locDef } // Pass the location definition as context
+        );
+        
         locationRuleEvalResult = evaluateRule(
           locationAccessRule,
-          snapshotInterface
+          locationSnapshotInterface
         );
       }
       const doesLocationRuleEffectivelyPass = locationRuleEvalResult === true;
@@ -2217,12 +2234,19 @@ export class TestSpoilerUI {
       // Evaluate the rule and provide detailed breakdown
       let locationRuleResult;
       try {
-        locationRuleResult = evaluateRule(locationAccessRule, snapshotInterface);
+        // Create a location-specific snapshotInterface with the location as context for analysis
+        const locationSnapshotInterface = createStateSnapshotInterface(
+          currentWorkerSnapshot,
+          staticData,
+          { location: locDef } // Pass the location definition as context
+        );
+        
+        locationRuleResult = evaluateRule(locationAccessRule, locationSnapshotInterface);
         this.log('info', `    Access Rule Result: ${locationRuleResult} ${locationRuleResult ? '✓' : '✗'}`);
         
-        // Provide detailed rule breakdown
+        // Provide detailed rule breakdown using the location-specific interface
         this.log('info', `    Detailed Rule Analysis:`);
-        this._analyzeRuleTree(locationAccessRule, snapshotInterface, '      ');
+        this._analyzeRuleTree(locationAccessRule, locationSnapshotInterface, '      ');
         
       } catch (error) {
         this.log('error', `    Access Rule Evaluation Error: ${error.message}`);
