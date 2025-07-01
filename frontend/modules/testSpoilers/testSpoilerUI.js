@@ -48,7 +48,8 @@ export class TestSpoilerUI {
     this.testStateInitialized = false;
     this.initialAutoLoadAttempted = false; // ADDED to help manage auto-load calls
     this.eventProcessingDelayMs = 20; // ADDED: Default delay for event processing
-    this.stopOnFirstError = true; // ADDED: To control test run behavior
+    this.stopOnFirstError = true; // ADDED: To control test run behavior - TEMPORARILY DISABLED for debugging
+    this.currentMismatchDetails = null; // ADDED: Store current mismatch details for result aggregation
 
     // Create and append root element immediately
     this.getRootElement(); // This creates this.rootElement and sets this.testSpoilersContainer
@@ -65,25 +66,6 @@ export class TestSpoilerUI {
         '[TestSpoilerUI] Received app:readyForUiDataLoad. Initializing spoilers.'
       );
       this.initialize(); // This will call the modified initialize method
-
-      // REMOVE/COMMENT OUT: stateManager:rulesLoaded subscription that triggers auto-load
-      /*
-      this.eventBus.subscribe('stateManager:rulesLoaded', async (eventData) => {
-        // ... existing auto-load logic based on rulesLoaded ...
-      });
-      */
-
-      // REMOVE/COMMENT OUT: Logic that checks initialRulesSource and calls attemptAutoLoadSpoilerLog
-      /*
-      const initialRulesSource = stateManager.getRawJsonDataSource();
-      const initialPlayerId = stateManager.currentPlayerId; 
-
-      if (initialRulesSource && initialPlayerId) {
-        // ... existing auto-load logic based on cached source ...
-      } else {
-        // ...
-      }
-      */
 
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
@@ -186,6 +168,17 @@ export class TestSpoilerUI {
     this.testSpoilersContainer.innerHTML = '';
     this.ensureLogContainerReady(); // Create #spoiler-log-output and #spoiler-controls-container
 
+    // ADDED: Check for existing ruleset immediately on initialization
+    try {
+      const currentRulesetSource = stateManager.getRawJsonDataSource();
+      if (currentRulesetSource && !this.activeRulesetName) {
+        this.activeRulesetName = currentRulesetSource;
+        this.log('info', `Found existing ruleset on initialization: ${this.activeRulesetName}`);
+      }
+    } catch (error) {
+      this.log('debug', `Could not get current ruleset source: ${error.message}`);
+    }
+
     // MODIFIED: Always render manual file selection view on initialization
     this.renderManualFileSelectionView(
       'Select a spoiler log file or load the suggested one if available.'
@@ -211,7 +204,7 @@ export class TestSpoilerUI {
     this.rulesLoadedUnsub = this.eventBus.subscribe(
       'stateManager:rulesLoaded',
       async (eventData) => {
-        log(
+        this.log(
           'info',
           `[TestSpoilerUI] Received stateManager:rulesLoaded (Subscriber)`,
           eventData
@@ -220,7 +213,7 @@ export class TestSpoilerUI {
           const newRulesetName = eventData.source;
           this.activeRulesetName = newRulesetName; // Update active ruleset name
           this.playerId = eventData.playerId;
-          log(
+          this.log(
             'info',
             `Active ruleset updated to: ${newRulesetName}, Player ID: ${this.playerId}`
           );
@@ -292,14 +285,17 @@ export class TestSpoilerUI {
     if (rulesetPath) {
       // Example rulesetPath: "presets/alttp/MySeed123/MySeed123_rules.json"
       // or from a direct file load: "MySeed123_rules.json" (less likely for auto-load)
+      
+      // FIXED: Remove leading "./" if present to avoid fetch issues
+      const cleanedRulesetPath = rulesetPath.startsWith('./') ? rulesetPath.substring(2) : rulesetPath;
 
-      const lastSlashIndex = rulesetPath.lastIndexOf('/');
+      const lastSlashIndex = cleanedRulesetPath.lastIndexOf('/');
       const directoryPath =
-        lastSlashIndex === -1 ? '' : rulesetPath.substring(0, lastSlashIndex);
+        lastSlashIndex === -1 ? '' : cleanedRulesetPath.substring(0, lastSlashIndex);
       const rulesFilename =
         lastSlashIndex === -1
-          ? rulesetPath
-          : rulesetPath.substring(lastSlashIndex + 1);
+          ? cleanedRulesetPath
+          : cleanedRulesetPath.substring(lastSlashIndex + 1);
 
       let baseNameForLog;
       if (rulesFilename.endsWith('_rules.json')) {
@@ -467,7 +463,7 @@ export class TestSpoilerUI {
       this.currentSpoilerLogPath = logPath; // Set path only on successful load and parse of non-empty data
       this.log(
         'info',
-        `Successfully fetched and parsed spoiler log from: ${logPath}`
+        `Successfully fetched and parsed spoiler log from: ${logPath}. Found ${newLogEvents.length} events.`
       );
       await this.prepareSpoilerTest(true);
     } catch (error) {
@@ -707,7 +703,7 @@ export class TestSpoilerUI {
     this.log(
       'debug',
       `[prepareSpoilerTest] playerId at start: ${this.playerId}`
-    ); // Log playerId at start of prepareSpoilerTest
+    );
     this.testSpoilersContainer.innerHTML = '';
     this.ensureLogContainerReady();
 
@@ -715,9 +711,11 @@ export class TestSpoilerUI {
       this.logContainer.innerHTML = '';
     }
 
+    this.log('debug', `[prepareSpoilerTest] Resetting currentLogIndex from ${this.currentLogIndex} to 0`);
     this.currentLogIndex = 0;
     this.testStateInitialized = false;
     this.abortController = new AbortController();
+    this.log('debug', `[prepareSpoilerTest] Reset complete. currentLogIndex=${this.currentLogIndex}, testStateInitialized=${this.testStateInitialized}`);
 
     if (!this.spoilerLogData || this.spoilerLogData.length === 0) {
       this.log(
@@ -778,10 +776,14 @@ export class TestSpoilerUI {
 
   async runFullSpoilerTest() {
     this.log(
-      'debug',
-      `[runFullSpoilerTest] playerId at start: ${this.playerId}`
-    ); // Log playerId at start of runFullSpoilerTest
+      'info',
+      `[runFullSpoilerTest] Starting full spoiler test. playerId: ${this.playerId}`
+    );
+    
     await this.prepareSpoilerTest();
+    
+    this.log('info', `[runFullSpoilerTest] After prepareSpoilerTest: testStateInitialized=${this.testStateInitialized}, currentLogIndex=${this.currentLogIndex}`);
+    
     if (!this.testStateInitialized) {
       this.log(
         'error',
@@ -821,18 +823,39 @@ export class TestSpoilerUI {
 
     let allEventsPassedSuccessfully = true; // Renamed from allChecksPassed for clarity
     let detailedErrorMessages = [];
+    let sphereResults = []; // ADDED: Track results for each sphere
+    let mismatchDetails = []; // ADDED: Track detailed mismatch information
 
     try {
       // The main loop for processing events.
       // Critical errors from prepareSpoilerTest or StateManager setup are caught before this.
       // This loop now continues even if processSingleEvent reports an error for an event.
+      this.log('info', `Starting main processing loop. Total events to process: ${this.spoilerLogData.length}`);
+      
       while (this.currentLogIndex < this.spoilerLogData.length) {
+        this.log('debug', `Loop iteration: currentLogIndex=${this.currentLogIndex}, totalEvents=${this.spoilerLogData.length}`);
+        
         if (currentAbortController.signal.aborted) {
+          this.log('warn', `Processing aborted at event ${this.currentLogIndex + 1}`);
           throw new DOMException('Aborted', 'AbortError');
         }
 
         const event = this.spoilerLogData[this.currentLogIndex];
+        this.log('debug', `About to process event ${this.currentLogIndex + 1}: ${JSON.stringify(event).substring(0, 200)}...`);
+        
         const eventProcessingResult = await this.processSingleEvent(event);
+        this.log('debug', `Completed processing event ${this.currentLogIndex + 1}, result: ${JSON.stringify(eventProcessingResult)}`);
+
+        // ADDED: Capture detailed sphere results
+        const sphereResult = {
+          eventIndex: this.currentLogIndex,
+          sphereIndex: event.sphere_index !== undefined ? event.sphere_index : this.currentLogIndex + 1,
+          eventType: event.type,
+          passed: !eventProcessingResult?.error,
+          message: eventProcessingResult?.message || 'Processed successfully',
+          details: eventProcessingResult?.details || null
+        };
+        sphereResults.push(sphereResult);
 
         if (eventProcessingResult && eventProcessingResult.error) {
           allEventsPassedSuccessfully = false;
@@ -844,6 +867,16 @@ export class TestSpoilerUI {
           this.log('error', errorMessage);
           detailedErrorMessages.push(errorMessage);
 
+          // ADDED: Capture detailed mismatch information
+          if (this.currentMismatchDetails) {
+            mismatchDetails.push({
+              eventIndex: this.currentLogIndex,
+              sphereIndex: sphereResult.sphereIndex,
+              ...this.currentMismatchDetails
+            });
+            this.currentMismatchDetails = null; // Clear for next event
+          }
+
           // ADDED: Check if we should stop on this error
           if (this.stopOnFirstError) {
             this.log(
@@ -853,16 +886,36 @@ export class TestSpoilerUI {
             break; // Exit the loop
           }
         }
+        
         // Add a small delay to allow UI updates and prevent blocking
-        await new Promise((resolve) =>
-          setTimeout(resolve, this.eventProcessingDelayMs)
-        );
+        this.log('debug', `Adding delay of ${this.eventProcessingDelayMs}ms before next event`);
+        try {
+          await new Promise((resolve) =>
+            setTimeout(resolve, this.eventProcessingDelayMs)
+          );
+          this.log('debug', `Delay completed successfully`);
+        } catch (delayError) {
+          this.log('error', `Error during delay: ${delayError.message}`);
+          throw delayError;
+        }
 
-        this.currentLogIndex++;
-        this.updateStepInfo();
+        try {
+          this.currentLogIndex++;
+          this.log('debug', `Incremented currentLogIndex to ${this.currentLogIndex}`);
+          
+          this.updateStepInfo();
+          this.log('debug', `updateStepInfo() completed`);
+          
+          this.log('debug', `About to check loop condition: ${this.currentLogIndex} < ${this.spoilerLogData.length} = ${this.currentLogIndex < this.spoilerLogData.length}`);
+        } catch (incrementError) {
+          this.log('error', `Error during loop increment/update: ${incrementError.message}`);
+          throw incrementError;
+        }
       }
 
       // --- Final Result Determination ---
+      this.log('info', `Exited main processing loop. Final currentLogIndex: ${this.currentLogIndex}, Total events: ${this.spoilerLogData.length}`);
+      
       if (currentAbortController.signal.aborted) {
         this.log('info', 'Spoiler test aborted by user.');
         // No explicit success/failure message if aborted by user, just the abort log.
@@ -903,6 +956,55 @@ export class TestSpoilerUI {
       if (runButton) runButton.disabled = false;
       if (stepButton) stepButton.disabled = false;
       this.isRunning = false; // Ensure isRunning is reset
+      
+      // ADDED: Store detailed test results in window object for external access
+      const detailedTestResults = {
+        passed: allEventsPassedSuccessfully,
+        logEntries: [],
+        errorMessages: detailedErrorMessages,
+        sphereResults: sphereResults,
+        mismatchDetails: mismatchDetails,
+        totalEvents: this.spoilerLogData ? this.spoilerLogData.length : 0,
+        processedEvents: this.currentLogIndex,
+        testLogPath: this.currentSpoilerLogPath,
+        playerId: this.playerId,
+        completedAt: new Date().toISOString()
+      };
+
+      // Collect log entries from the UI
+      if (this.logContainer) {
+        const logEntries = this.logContainer.querySelectorAll('.log-entry');
+        logEntries.forEach((entry) => {
+          detailedTestResults.logEntries.push(entry.textContent);
+        });
+      }
+
+      // Store in window for external access (like Playwright tests)
+      if (typeof window !== 'undefined') {
+        window.__spoilerTestResults__ = detailedTestResults;
+        this.log(
+          'info',
+          'Detailed spoiler test results stored in window.__spoilerTestResults__'
+        );
+      }
+
+      // Store in localStorage as backup
+      try {
+        localStorage.setItem(
+          '__spoilerTestResults__',
+          JSON.stringify(detailedTestResults)
+        );
+        this.log(
+          'info',
+          'Detailed spoiler test results stored in localStorage'
+        );
+      } catch (e) {
+        this.log(
+          'warn',
+          `Could not store detailed results in localStorage: ${e.message}`
+        );
+      }
+
       // MODIFIED: Re-enable auto-collect events
       try {
         await stateManager.setAutoCollectEventsConfig(true);
@@ -917,11 +1019,6 @@ export class TestSpoilerUI {
           error
         );
       }
-      // Update UI based on the final overall success status
-      // this.updateUIAfterTestCompletion(allEventsPassedSuccessfully, ...);
-      // The updateUIAfterTestCompletion might be better called based on the more detailed messages above.
-      // For now, individual logs and the final summary should cover it.
-      // Consider how to best summarize if there were both an abort and prior errors.
     }
   }
 
@@ -1346,6 +1443,12 @@ export class TestSpoilerUI {
       message: `Comparison for ${eventType} at step ${
         this.currentLogIndex + 1
       } ${comparisonResult ? 'Passed' : 'Failed'}`,
+      details: {
+        eventType: eventType,
+        eventIndex: this.currentLogIndex,
+        sphereIndex: event.sphere_index !== undefined ? event.sphere_index : this.currentLogIndex + 1,
+        playerId: this.playerId
+      }
     };
   }
 
@@ -1646,6 +1749,10 @@ export class TestSpoilerUI {
             ', '
           )}`
         );
+        console.error(`[MISMATCH DETAIL] Missing from state (${missingFromState.length}):`, missingFromState);
+        
+        // ADDED: Detailed analysis for each missing location
+        this._analyzeFailingLocations(missingFromState, staticData, currentWorkerSnapshot, snapshotInterface, 'MISSING_FROM_STATE');
       }
       if (extraInState.length > 0) {
         this.log(
@@ -1654,6 +1761,10 @@ export class TestSpoilerUI {
             ', '
           )}`
         );
+        console.error(`[MISMATCH DETAIL] Extra in state (${extraInState.length}):`, extraInState);
+        
+        // ADDED: Detailed analysis for each extra location
+        this._analyzeFailingLocations(extraInState, staticData, currentWorkerSnapshot, snapshotInterface, 'EXTRA_IN_STATE');
       }
       this.log('debug', '[compareAccessibleLocations] Mismatch Details:', {
         context:
@@ -1664,6 +1775,19 @@ export class TestSpoilerUI {
           ? currentWorkerSnapshot.prog_items[playerId]
           : 'N/A',
       });
+      
+      // ADDED: Store detailed mismatch information for result aggregation
+      this.currentMismatchDetails = {
+        context: typeof context === 'string' ? context : JSON.stringify(context),
+        missingFromState: missingFromState,
+        extraInState: extraInState,
+        logAccessibleCount: logAccessibleSet.size,
+        stateAccessibleCount: stateAccessibleSet.size,
+        inventoryUsed: currentWorkerSnapshot.prog_items
+          ? currentWorkerSnapshot.prog_items[playerId]
+          : null,
+      };
+      
       return false;
     }
   }
@@ -2028,6 +2152,316 @@ export class TestSpoilerUI {
     }
     // The actual initial message like "Attempting to load..." should be logged via this.log()
     // by the calling function (e.g., attemptAutoLoadSpoilerLog or initialize).
+  }
+
+  /**
+   * Analyzes failing locations by examining their region accessibility and rule tree evaluation
+   * @param {string[]} locationNames - Array of location names to analyze
+   * @param {Object} staticData - Static game data
+   * @param {Object} currentWorkerSnapshot - Current state snapshot from worker
+   * @param {Object} snapshotInterface - Interface for evaluating rules against snapshot
+   * @param {string} analysisType - Type of analysis (MISSING_FROM_STATE or EXTRA_IN_STATE)
+   */
+  _analyzeFailingLocations(locationNames, staticData, currentWorkerSnapshot, snapshotInterface, analysisType) {
+    this.log('info', `[LOCATION ANALYSIS] Analyzing ${locationNames.length} ${analysisType} locations:`);
+    
+    // First, log some general context about the state
+    this.log('info', `[CONTEXT] Current snapshot overview:`);
+    if (currentWorkerSnapshot.prog_items && currentWorkerSnapshot.prog_items[this.playerId]) {
+      const inventory = currentWorkerSnapshot.prog_items[this.playerId];
+      const itemCount = Object.keys(inventory).length;
+      const totalItems = Object.values(inventory).reduce((sum, count) => sum + count, 0);
+      this.log('info', `  Player ${this.playerId} inventory: ${itemCount} unique items, ${totalItems} total items`);
+      this.log('info', `  Sample items: ${Object.entries(inventory).slice(0, 5).map(([item, count]) => `${item}:${count}`).join(', ')}${itemCount > 5 ? '...' : ''}`);
+    } else {
+      this.log('info', `  Player ${this.playerId} inventory: Empty or not found`);
+    }
+    
+    const reachableRegions = Object.entries(currentWorkerSnapshot.reachability || {})
+      .filter(([region, status]) => status === 'reachable' || status === 'checked')
+      .map(([region]) => region);
+    this.log('info', `  Reachable regions (${reachableRegions.length}): ${reachableRegions.slice(0, 10).join(', ')}${reachableRegions.length > 10 ? '...' : ''}`);
+    
+    this.log('info', `  Checked locations: ${currentWorkerSnapshot.checkedLocations?.length || 0}`);
+    
+    // Log available functions in snapshotInterface
+    const availableFunctions = Object.keys(snapshotInterface).filter(k => typeof snapshotInterface[k] === 'function');
+    this.log('info', `  Available helper functions: ${availableFunctions.join(', ')}`);
+    
+    this.log('info', ''); // Separator
+    
+    for (const locName of locationNames) {
+      const locDef = staticData.locations[locName];
+      if (!locDef) {
+        this.log('error', `  ${locName}: Location definition not found in static data`);
+        this.log('info', `    Available locations sample: ${Object.keys(staticData.locations).slice(0, 5).join(', ')}...`);
+        continue;
+      }
+
+      const parentRegionName = locDef.parent_region || locDef.region;
+      const parentRegionReachabilityStatus = currentWorkerSnapshot.reachability?.[parentRegionName];
+      const isParentRegionReachable = parentRegionReachabilityStatus === 'reachable' || parentRegionReachabilityStatus === 'checked';
+      
+      this.log('info', `  ${locName}:`);
+      this.log('info', `    Region: ${parentRegionName} (${parentRegionReachabilityStatus || 'undefined'}) ${isParentRegionReachable ? '✓' : '✗'}`);
+      this.log('info', `    Location definition: ${JSON.stringify(locDef)}`);
+      
+      const locationAccessRule = locDef.access_rule;
+      if (!locationAccessRule) {
+        this.log('info', `    Access Rule: None (always accessible if region is reachable)`);
+        continue;
+      }
+
+      this.log('info', `    Access Rule Structure: ${JSON.stringify(locationAccessRule)}`);
+
+      // Evaluate the rule and provide detailed breakdown
+      let locationRuleResult;
+      try {
+        locationRuleResult = evaluateRule(locationAccessRule, snapshotInterface);
+        this.log('info', `    Access Rule Result: ${locationRuleResult} ${locationRuleResult ? '✓' : '✗'}`);
+        
+        // Provide detailed rule breakdown
+        this.log('info', `    Detailed Rule Analysis:`);
+        this._analyzeRuleTree(locationAccessRule, snapshotInterface, '      ');
+        
+      } catch (error) {
+        this.log('error', `    Access Rule Evaluation Error: ${error.message}`);
+        this.log('error', `    Error stack: ${error.stack}`);
+        this.log('info', `    SnapshotInterface keys: ${Object.keys(snapshotInterface).join(', ')}`);
+      }
+
+      // Final assessment
+      const shouldBeAccessible = isParentRegionReachable && (locationRuleResult === true);
+      const actuallyAccessible = analysisType === 'EXTRA_IN_STATE';
+      
+      if (analysisType === 'MISSING_FROM_STATE') {
+        this.log('info', `    Expected: Accessible (region: ${isParentRegionReachable}, rule: ${locationRuleResult})`);
+        this.log('info', `    Actual: Not accessible in our implementation`);
+        if (!isParentRegionReachable) {
+          this.log('error', `    ISSUE: Region ${parentRegionName} is not reachable`);
+        } else if (locationRuleResult !== true) {
+          this.log('error', `    ISSUE: Access rule evaluation failed`);
+        }
+      } else {
+        this.log('info', `    Expected: Not accessible according to Python log`);
+        this.log('info', `    Actual: Accessible in our implementation (region: ${isParentRegionReachable}, rule: ${locationRuleResult})`);
+      }
+      
+      this.log('info', ''); // Empty line for readability
+    }
+  }
+
+  /**
+   * Recursively analyzes a rule tree to show detailed evaluation breakdown
+   * @param {Object} rule - The rule object to analyze
+   * @param {Object} snapshotInterface - Interface for evaluating rules
+   * @param {string} indent - Current indentation level for display
+   * @param {number} depth - Current recursion depth (to prevent infinite loops)
+   */
+  _analyzeRuleTree(rule, snapshotInterface, indent = '', depth = 0) {
+    if (depth > 10) {
+      this.log('warn', `${indent}[MAX DEPTH REACHED]`);
+      return;
+    }
+
+    if (!rule || typeof rule !== 'object') {
+      const result = rule;
+      this.log('info', `${indent}Primitive: ${JSON.stringify(result)}`);
+      return result;
+    }
+
+    const ruleType = rule.type;
+    let result;
+    let evaluationError = null;
+    
+    try {
+      result = evaluateRule(rule, snapshotInterface);
+      const resultSymbol = result === true ? '✓' : result === false ? '✗' : result === undefined ? '?' : result;
+      
+      switch (ruleType) {
+        case 'and':
+          this.log('info', `${indent}AND (${resultSymbol}):`);
+          if (rule.conditions && Array.isArray(rule.conditions)) {
+            for (let i = 0; i < rule.conditions.length; i++) {
+              const condition = rule.conditions[i];
+              const conditionResult = this._analyzeRuleTree(condition, snapshotInterface, indent + '  ', depth + 1);
+              this.log('info', `${indent}  Condition ${i + 1}: ${conditionResult} ${conditionResult === true ? '✓' : conditionResult === false ? '✗' : '?'}`);
+            }
+          }
+          break;
+          
+        case 'or':
+          this.log('info', `${indent}OR (${resultSymbol}):`);
+          if (rule.conditions && Array.isArray(rule.conditions)) {
+            for (let i = 0; i < rule.conditions.length; i++) {
+              const condition = rule.conditions[i];
+              const conditionResult = this._analyzeRuleTree(condition, snapshotInterface, indent + '  ', depth + 1);
+              this.log('info', `${indent}  Condition ${i + 1}: ${conditionResult} ${conditionResult === true ? '✓' : conditionResult === false ? '✗' : '?'}`);
+            }
+          }
+          break;
+          
+        case 'not':
+          this.log('info', `${indent}NOT (${resultSymbol}):`);
+          if (rule.operand) {
+            const operandResult = this._analyzeRuleTree(rule.operand, snapshotInterface, indent + '  ', depth + 1);
+            this.log('info', `${indent}  Operand: ${operandResult} → NOT = ${result}`);
+          }
+          break;
+          
+        case 'item_check':
+          let itemName, hasItem;
+          try {
+            itemName = evaluateRule(rule.item, snapshotInterface);
+            hasItem = snapshotInterface.hasItem ? snapshotInterface.hasItem(itemName) : false;
+            this.log('info', `${indent}HAS_ITEM "${itemName}": ${hasItem} (${resultSymbol})`);
+            
+            // Show inventory state for debugging
+            if (snapshotInterface.prog_items) {
+              const currentCount = snapshotInterface.countItem ? snapshotInterface.countItem(itemName) : 0;
+              this.log('info', `${indent}  Current inventory count for "${itemName}": ${currentCount}`);
+            }
+          } catch (itemError) {
+            this.log('error', `${indent}HAS_ITEM evaluation error: ${itemError.message}`);
+            this.log('info', `${indent}  Rule.item: ${JSON.stringify(rule.item)}`);
+          }
+          break;
+          
+        case 'count_check':
+          let countItemName, countRequired, currentCount;
+          try {
+            countItemName = evaluateRule(rule.item, snapshotInterface);
+            countRequired = rule.count ? evaluateRule(rule.count, snapshotInterface) : 1;
+            currentCount = snapshotInterface.countItem ? snapshotInterface.countItem(countItemName) : 0;
+            this.log('info', `${indent}COUNT_ITEM "${countItemName}": ${currentCount} >= ${countRequired} = ${currentCount >= countRequired} (${resultSymbol})`);
+          } catch (countError) {
+            this.log('error', `${indent}COUNT_ITEM evaluation error: ${countError.message}`);
+            this.log('info', `${indent}  Rule.item: ${JSON.stringify(rule.item)}`);
+            this.log('info', `${indent}  Rule.count: ${JSON.stringify(rule.count)}`);
+          }
+          break;
+          
+        case 'helper':
+          const helperName = rule.name;
+          let args = [];
+          try {
+            args = rule.args ? rule.args.map(arg => evaluateRule(arg, snapshotInterface)) : [];
+            this.log('info', `${indent}HELPER ${helperName}(${args.map(a => JSON.stringify(a)).join(', ')}): ${resultSymbol}`);
+            
+            // Check if helper function exists
+            if (snapshotInterface[helperName]) {
+              this.log('info', `${indent}  Helper function "${helperName}" found in snapshotInterface`);
+            } else {
+              this.log('error', `${indent}  Helper function "${helperName}" NOT FOUND in snapshotInterface`);
+              this.log('info', `${indent}  Available helper functions: ${Object.keys(snapshotInterface).filter(k => typeof snapshotInterface[k] === 'function').join(', ')}`);
+            }
+          } catch (helperError) {
+            this.log('error', `${indent}HELPER evaluation error: ${helperError.message}`);
+            this.log('info', `${indent}  Helper name: ${helperName}`);
+            this.log('info', `${indent}  Raw args: ${JSON.stringify(rule.args)}`);
+          }
+          break;
+          
+        case 'attribute':
+          let objectValue;
+          try {
+            if (rule.object) {
+              this.log('info', `${indent}ATTRIBUTE ${rule.attr} (${resultSymbol}):`);
+              objectValue = this._analyzeRuleTree(rule.object, snapshotInterface, indent + '  ', depth + 1);
+              this.log('info', `${indent}  Object value: ${JSON.stringify(objectValue)}`);
+              
+              if (objectValue && typeof objectValue === 'object') {
+                if (rule.attr in objectValue) {
+                  this.log('info', `${indent}  Attribute "${rule.attr}" found: ${JSON.stringify(objectValue[rule.attr])}`);
+                } else {
+                  this.log('error', `${indent}  Attribute "${rule.attr}" NOT FOUND in object`);
+                  this.log('info', `${indent}  Available attributes: ${Object.keys(objectValue).join(', ')}`);
+                }
+              } else {
+                this.log('error', `${indent}  Object is not an object or is null/undefined: ${typeof objectValue}`);
+              }
+            } else {
+              this.log('info', `${indent}ATTRIBUTE ${rule.attr}: ${resultSymbol}`);
+              this.log('error', `${indent}  No object specified for attribute access`);
+            }
+          } catch (attrError) {
+            this.log('error', `${indent}ATTRIBUTE evaluation error: ${attrError.message}`);
+            this.log('info', `${indent}  Attribute name: ${rule.attr}`);
+            this.log('info', `${indent}  Object rule: ${JSON.stringify(rule.object)}`);
+          }
+          break;
+          
+        case 'function_call':
+          let funcObj, funcName;
+          try {
+            funcObj = rule.function ? evaluateRule(rule.function, snapshotInterface) : null;
+            funcName = funcObj?.name || rule.function?.attr || 'unknown';
+            this.log('info', `${indent}FUNCTION_CALL ${funcName}(...): ${resultSymbol}`);
+            
+            this.log('info', `${indent}  Function object: ${JSON.stringify(funcObj)}`);
+            this.log('info', `${indent}  Function type: ${typeof funcObj}`);
+            
+            if (rule.function) {
+              this._analyzeRuleTree(rule.function, snapshotInterface, indent + '  ', depth + 1);
+            }
+            
+            if (rule.args && rule.args.length > 0) {
+              this.log('info', `${indent}  Function arguments:`);
+              for (let i = 0; i < rule.args.length; i++) {
+                const argResult = this._analyzeRuleTree(rule.args[i], snapshotInterface, indent + '    ', depth + 1);
+                this.log('info', `${indent}    Arg ${i + 1}: ${JSON.stringify(argResult)}`);
+              }
+            }
+          } catch (funcError) {
+            this.log('error', `${indent}FUNCTION_CALL evaluation error: ${funcError.message}`);
+            this.log('info', `${indent}  Function rule: ${JSON.stringify(rule.function)}`);
+            this.log('info', `${indent}  Args rule: ${JSON.stringify(rule.args)}`);
+          }
+          break;
+          
+        case 'identifier':
+          this.log('info', `${indent}IDENTIFIER "${rule.name}": ${resultSymbol}`);
+          // Check if identifier exists in context
+          if (snapshotInterface[rule.name] !== undefined) {
+            this.log('info', `${indent}  Identifier "${rule.name}" found: ${JSON.stringify(snapshotInterface[rule.name])}`);
+          } else {
+            this.log('error', `${indent}  Identifier "${rule.name}" NOT FOUND in context`);
+            this.log('info', `${indent}  Available identifiers: ${Object.keys(snapshotInterface).join(', ')}`);
+          }
+          break;
+          
+        case 'literal':
+          this.log('info', `${indent}LITERAL: ${JSON.stringify(rule.value)} (${resultSymbol})`);
+          break;
+          
+        case 'name':
+          this.log('info', `${indent}NAME: ${resultSymbol}`);
+          this.log('info', `${indent}  name: ${rule.name}`);
+          // Check what this name resolves to
+          if (snapshotInterface[rule.name] !== undefined) {
+            this.log('info', `${indent}  Resolves to: ${JSON.stringify(snapshotInterface[rule.name])}`);
+          } else {
+            this.log('error', `${indent}  Name "${rule.name}" NOT FOUND in context`);
+          }
+          break;
+          
+        default:
+          this.log('info', `${indent}${ruleType.toUpperCase()}: ${resultSymbol}`);
+          // Try to show some basic info about the rule
+          if (rule.name) this.log('info', `${indent}  name: ${rule.name}`);
+          if (rule.value !== undefined) this.log('info', `${indent}  value: ${JSON.stringify(rule.value)}`);
+          this.log('info', `${indent}  Full rule: ${JSON.stringify(rule)}`);
+          break;
+      }
+      
+    } catch (error) {
+      evaluationError = error;
+      this.log('error', `${indent}ERROR evaluating ${ruleType}: ${error.message}`);
+      this.log('error', `${indent}  Error stack: ${error.stack}`);
+      this.log('info', `${indent}  Full rule causing error: ${JSON.stringify(rule)}`);
+    }
+    
+    return result;
   }
 }
 

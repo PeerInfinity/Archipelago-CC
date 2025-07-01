@@ -105,6 +105,51 @@ test.describe('Application End-to-End Tests', () => {
       console.log('PW DEBUG: No test case results found in localStorage.');
     }
 
+    // Check for detailed spoiler test results
+    const spoilerTestResults = await page.evaluate(() => {
+      const windowResults = typeof window !== 'undefined' && window.__spoilerTestResults__ ? window.__spoilerTestResults__ : null;
+      const localStorageResults = localStorage.getItem('__spoilerTestResults__');
+      return {
+        windowResults,
+        localStorageResults: localStorageResults ? JSON.parse(localStorageResults) : null
+      };
+    });
+
+    if (spoilerTestResults.windowResults) {
+      const results = spoilerTestResults.windowResults;
+      console.log(`PW DEBUG: Spoiler test overview: passed=${results.passed}, processed=${results.processedEvents}/${results.totalEvents}`);
+      
+      if (results.mismatchDetails && results.mismatchDetails.length > 0) {
+        console.log(`PW DEBUG: MISMATCH DETAILS (${results.mismatchDetails.length} mismatches):`);
+        results.mismatchDetails.forEach((mismatch, index) => {
+          console.log(`PW DEBUG: Mismatch ${index + 1}:`);
+          console.log(`  - Context: ${mismatch.context}`);
+          console.log(`  - Event: ${mismatch.eventIndex}, Sphere: ${mismatch.sphereIndex}`);
+          console.log(`  - Missing from state: ${JSON.stringify(mismatch.missingFromState)}`);
+          console.log(`  - Extra in state: ${JSON.stringify(mismatch.extraInState)}`);
+          console.log(`  - Log accessible count: ${mismatch.logAccessibleCount}`);
+          console.log(`  - State accessible count: ${mismatch.stateAccessibleCount}`);
+        });
+      } else {
+        console.log('PW DEBUG: No mismatch details found.');
+      }
+      
+      if (results.errorMessages && results.errorMessages.length > 0) {
+        console.log(`PW DEBUG: ERROR MESSAGES:`);
+        results.errorMessages.forEach((msg, index) => {
+          console.log(`  ${index + 1}: ${msg}`);
+        });
+      }
+    } else {
+      console.log('PW DEBUG: No detailed spoiler test results found in window.__spoilerTestResults__.');
+    }
+
+    if (spoilerTestResults.localStorageResults) {
+      console.log(`PW DEBUG: Detailed spoiler test results from localStorage: ${JSON.stringify(spoilerTestResults.localStorageResults, null, 2)}`);
+    } else {
+      console.log('PW DEBUG: No detailed spoiler test results found in localStorage.__spoilerTestResults__.');
+    }
+
     console.log('PW DEBUG: All Playwright assertions passed.');
   });
 });
