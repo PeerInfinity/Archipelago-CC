@@ -1142,6 +1142,8 @@ export class TestSpoilerUI {
           playerDataForCurrentTest.inventory_details?.prog_items || {};
         const accessible_from_log =
           playerDataForCurrentTest.accessible_locations || [];
+        const accessible_regions_from_log =
+          playerDataForCurrentTest.accessible_regions || [];
 
         const context = {
           type: 'state_update',
@@ -1216,12 +1218,23 @@ export class TestSpoilerUI {
           );
 
           // 5. Compare using the fresh snapshot.
-          comparisonResult = await this.compareAccessibleLocations(
+          const locationComparisonResult = await this.compareAccessibleLocations(
             accessible_from_log, // This is an array of location names
             freshSnapshot, // The authoritative snapshot from the worker
             this.playerId, // Pass player ID for context in comparison
             context // Original context for logging
           );
+          
+          // 6. Compare accessible regions using the fresh snapshot.
+          const regionComparisonResult = await this.compareAccessibleRegions(
+            accessible_regions_from_log, // This is an array of region names
+            freshSnapshot, // The authoritative snapshot from the worker
+            this.playerId, // Pass player ID for context in comparison
+            context // Original context for logging
+          );
+          
+          // Both location and region comparisons must pass
+          comparisonResult = locationComparisonResult && regionComparisonResult;
           allChecksPassed = comparisonResult;
         } catch (err) {
           this.log(
@@ -1261,6 +1274,8 @@ export class TestSpoilerUI {
           const inventory_from_log_legacy = playerData.inventory || {};
           const accessible_from_log_legacy =
             playerData.accessible_locations || [];
+          const accessible_regions_from_log_legacy =
+            playerData.accessible_regions || [];
           const context_legacy = {
             type: eventType,
             sphere_number: event.sphere_number || this.currentLogIndex + 1, // Fallback sphere number
@@ -1281,8 +1296,14 @@ export class TestSpoilerUI {
             'Log Accessible Locations (Legacy):',
             accessible_from_log_legacy
           );
+          this.log(
+            'debug',
+            'Log Accessible Regions (Legacy):',
+            accessible_regions_from_log_legacy
+          );
 
           // This still uses the old compareAccessibleLocations that modifies a snapshot locally.
+          // NOTE: Legacy method only compares locations, not regions. Region comparison is only available for 'state_update' events.
           // To fix this, it would need to follow the same pattern as state_update (reset, set inv, ping, get fresh snap)
           // then call the new compareAccessibleLocations.
           // For now, this will likely be incorrect if state_update is the standard.
@@ -1809,6 +1830,125 @@ export class TestSpoilerUI {
     }
   }
 
+  async compareAccessibleRegions(
+    logAccessibleRegionNames,
+    currentWorkerSnapshot,
+    playerId,
+    context
+  ) {
+    // Similar to compareAccessibleLocations but for regions
+    const staticData = stateManager.getStaticData();
+
+    this.log('info', `[compareAccessibleRegions] Comparing for context:`, {
+      context,
+      workerSnapshotInventory:
+        currentWorkerSnapshot?.prog_items?.[playerId] || 'N/A',
+      logAccessibleRegionsCount: logAccessibleRegionNames.length,
+    });
+
+    if (!currentWorkerSnapshot) {
+      this.log(
+        'error',
+        `[compareAccessibleRegions] currentWorkerSnapshot is null/undefined for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
+      return false;
+    }
+    if (!staticData || !staticData.regions) {
+      this.log(
+        'error',
+        `[compareAccessibleRegions] Static data or staticData.regions is null/undefined for context: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`,
+        {
+          staticDataKeys: staticData
+            ? Object.keys(staticData)
+            : 'staticData is null',
+        }
+      );
+      return false;
+    }
+
+    // Get accessible regions from the current worker snapshot
+    const stateAccessibleRegions = [];
+    
+    // Use the reachability data from the worker snapshot, but filter to only actual regions
+    if (currentWorkerSnapshot.reachability && staticData.regions) {
+      for (const regionName in currentWorkerSnapshot.reachability) {
+        // Only include entries that are actually regions (not locations)
+        if (staticData.regions[regionName]) {
+          const reachabilityStatus = currentWorkerSnapshot.reachability[regionName];
+          if (reachabilityStatus === 'reachable' || reachabilityStatus === 'checked') {
+            stateAccessibleRegions.push(regionName);
+          }
+        }
+      }
+    }
+
+    const stateAccessibleSet = new Set(stateAccessibleRegions);
+    const logAccessibleSet = new Set(logAccessibleRegionNames);
+
+    const missingFromState = [...logAccessibleSet].filter(
+      (name) => !stateAccessibleSet.has(name)
+    );
+    const extraInState = [...stateAccessibleSet].filter(
+      (name) => !logAccessibleSet.has(name)
+    );
+
+    if (missingFromState.length === 0 && extraInState.length === 0) {
+      this.log(
+        'success',
+        `Region match OK for: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }. (${stateAccessibleSet.size} accessible regions)`
+      );
+      return true;
+    } else {
+      this.log(
+        'error',
+        `REGION MISMATCH found for: ${
+          typeof context === 'string' ? context : JSON.stringify(context)
+        }`
+      );
+      if (missingFromState.length > 0) {
+        this.log(
+          'mismatch',
+          ` > Regions accessible in LOG but NOT in STATE: ${missingFromState.join(
+            ', '
+          )}`
+        );
+        console.error(`[REGION MISMATCH DETAIL] Missing from state (${missingFromState.length}):`, missingFromState);
+        
+        // ADDED: Detailed analysis for each missing region
+        this._analyzeFailingRegions(missingFromState, staticData, currentWorkerSnapshot, playerId, 'MISSING_FROM_STATE');
+      }
+      if (extraInState.length > 0) {
+        this.log(
+          'mismatch',
+          ` > Regions accessible in STATE but NOT in LOG: ${extraInState.join(
+            ', '
+          )}`
+        );
+        console.error(`[REGION MISMATCH DETAIL] Extra in state (${extraInState.length}):`, extraInState);
+        
+        // ADDED: Detailed analysis for each extra region
+        this._analyzeFailingRegions(extraInState, staticData, currentWorkerSnapshot, playerId, 'EXTRA_IN_STATE');
+      }
+      this.log('debug', '[compareAccessibleRegions] Mismatch Details:', {
+        context:
+          typeof context === 'string' ? context : JSON.stringify(context),
+        logAccessibleSet: Array.from(logAccessibleSet),
+        stateAccessibleSet: Array.from(stateAccessibleSet),
+        workerSnapshotInventoryUsed: currentWorkerSnapshot.prog_items
+          ? currentWorkerSnapshot.prog_items[playerId]
+          : 'N/A',
+      });
+      
+      return false;
+    }
+  }
+
   log(type, message, ...additionalData) {
     // Log to panel
     if (this.logContainer) {
@@ -1816,34 +1956,56 @@ export class TestSpoilerUI {
       entry.classList.add('log-entry', `log-${type}`);
       const textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
 
-      // MODIFIED: Check for location lists to make them clickable
-      const prefixMismatch =
+      // MODIFIED: Check for location and region lists to make them clickable
+      const prefixLocationMismatch =
         ' > Locations accessible in LOG but NOT in STATE (or checked): ';
-      const prefixExtra =
+      const prefixLocationExtra =
         ' > Locations accessible in STATE (and unchecked) but NOT in LOG: ';
-      let isLocationList = false;
+      const prefixRegionMismatch =
+        ' > Regions accessible in LOG but NOT in STATE: ';
+      const prefixRegionExtra =
+        ' > Regions accessible in STATE but NOT in LOG: ';
+      let isSpecialList = false;
 
-      if (message.startsWith(prefixMismatch)) {
-        isLocationList = true;
+      if (message.startsWith(prefixLocationMismatch)) {
+        isSpecialList = true;
         entry.appendChild(
           document.createTextNode(
-            `[${new Date().toLocaleTimeString()}]` + prefixMismatch
+            `[${new Date().toLocaleTimeString()}]` + prefixLocationMismatch
           )
         );
-        const locations = message.substring(prefixMismatch.length).split(', ');
+        const locations = message.substring(prefixLocationMismatch.length).split(', ');
         this._addLocationLinksToElement(entry, locations);
-      } else if (message.startsWith(prefixExtra)) {
-        isLocationList = true;
+      } else if (message.startsWith(prefixLocationExtra)) {
+        isSpecialList = true;
         entry.appendChild(
           document.createTextNode(
-            `[${new Date().toLocaleTimeString()}]` + prefixExtra
+            `[${new Date().toLocaleTimeString()}]` + prefixLocationExtra
           )
         );
-        const locations = message.substring(prefixExtra.length).split(', ');
+        const locations = message.substring(prefixLocationExtra.length).split(', ');
         this._addLocationLinksToElement(entry, locations);
+      } else if (message.startsWith(prefixRegionMismatch)) {
+        isSpecialList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixRegionMismatch
+          )
+        );
+        const regions = message.substring(prefixRegionMismatch.length).split(', ');
+        this._addRegionLinksToElement(entry, regions);
+      } else if (message.startsWith(prefixRegionExtra)) {
+        isSpecialList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixRegionExtra
+          )
+        );
+        const regions = message.substring(prefixRegionExtra.length).split(', ');
+        this._addRegionLinksToElement(entry, regions);
       }
 
-      if (!isLocationList) {
+      if (!isSpecialList) {
         entry.textContent = textContent;
       }
       // END MODIFIED
@@ -1906,6 +2068,29 @@ export class TestSpoilerUI {
       }
 
       if (index < locationNames.length - 1) {
+        element.appendChild(document.createTextNode(', '));
+      }
+    });
+  }
+
+  _addRegionLinksToElement(element, regionNames) {
+    regionNames.forEach((regionName, index) => {
+      const staticData = stateManager.getStaticData();
+      const regionDef = staticData?.regions?.[regionName.trim()];
+
+      if (regionDef) {
+        const snapshot = stateManager.getLatestStateSnapshot();
+        const link = createRegionLink(regionName.trim(), false, snapshot);
+        link.textContent = this.escapeHtml(regionName.trim());
+        link.title = `Navigate to region: ${this.escapeHtml(regionName.trim())}`;
+        element.appendChild(link);
+      } else {
+        element.appendChild(
+          document.createTextNode(this.escapeHtml(regionName.trim()))
+        );
+      }
+
+      if (index < regionNames.length - 1) {
         element.appendChild(document.createTextNode(', '));
       }
     });
@@ -2272,6 +2457,142 @@ export class TestSpoilerUI {
       }
       
       this.log('info', ''); // Empty line for readability
+    }
+  }
+
+  /**
+   * Analyzes failing regions by finding exits that lead to them and examining their access rules
+   * @param {Array} regionNames - List of region names to analyze
+   * @param {Object} staticData - Static game data
+   * @param {Object} currentWorkerSnapshot - Current state snapshot from worker
+   * @param {string} playerId - Player ID for context
+   * @param {string} analysisType - Type of analysis (MISSING_FROM_STATE or EXTRA_IN_STATE)
+   */
+  _analyzeFailingRegions(regionNames, staticData, currentWorkerSnapshot, playerId, analysisType) {
+    this.log('info', `[REGION ANALYSIS] Analyzing ${regionNames.length} ${analysisType} regions:`);
+    
+    // Get list of currently accessible regions for context
+    const accessibleRegions = Object.entries(currentWorkerSnapshot.reachability || {})
+      .filter(([region, status]) => (status === 'reachable' || status === 'checked') && staticData.regions[region])
+      .map(([region]) => region);
+    
+    this.log('info', `[CONTEXT] Currently accessible regions (${accessibleRegions.length}): ${accessibleRegions.slice(0, 10).join(', ')}${accessibleRegions.length > 10 ? '...' : ''}`);
+    
+    // Log player inventory for context
+    if (currentWorkerSnapshot.prog_items && currentWorkerSnapshot.prog_items[playerId]) {
+      const inventory = currentWorkerSnapshot.prog_items[playerId];
+      const itemCount = Object.keys(inventory).length;
+      const totalItems = Object.values(inventory).reduce((sum, count) => sum + count, 0);
+      this.log('info', `[CONTEXT] Player ${playerId} inventory: ${itemCount} unique items, ${totalItems} total items`);
+    } else {
+      this.log('info', `[CONTEXT] Player ${playerId} inventory: Empty or not found`);
+    }
+    
+    this.log('info', ''); // Separator
+
+    for (const targetRegionName of regionNames) {
+      const targetRegionDef = staticData.regions[targetRegionName];
+      if (!targetRegionDef) {
+        this.log('error', `  ${targetRegionName}: Region definition not found in static data`);
+        continue;
+      }
+
+      this.log('info', `  ${targetRegionName}:`);
+      this.log('info', `    Current status: ${currentWorkerSnapshot.reachability?.[targetRegionName] || 'undefined'}`);
+      this.log('info', `    Region definition: ${JSON.stringify(targetRegionDef)}`);
+
+      // Find all exits from accessible regions that lead to this target region
+      const exitsToTarget = [];
+      
+      for (const sourceRegionName of accessibleRegions) {
+        const sourceRegionDef = staticData.regions[sourceRegionName];
+        if (!sourceRegionDef || !sourceRegionDef.exits) continue;
+
+        for (const exitName in sourceRegionDef.exits) {
+          const exitDef = sourceRegionDef.exits[exitName];
+          if (exitDef.target === targetRegionName) {
+            exitsToTarget.push({
+              exitName,
+              sourceRegion: sourceRegionName,
+              exitDef
+            });
+          }
+        }
+      }
+
+      if (exitsToTarget.length === 0) {
+        this.log('warn', `    No exits found from accessible regions to ${targetRegionName}`);
+        this.log('info', `    This region might be starting region or have exits from inaccessible regions`);
+      } else {
+        this.log('info', `    Found ${exitsToTarget.length} exit(s) from accessible regions:`);
+        
+        for (const exitInfo of exitsToTarget) {
+          this.log('info', `      Exit: ${exitInfo.exitName} (from ${exitInfo.sourceRegion})`);
+          this.log('info', `        Exit definition: ${JSON.stringify(exitInfo.exitDef)}`);
+          
+          const exitAccessRule = exitInfo.exitDef.access_rule;
+          if (!exitAccessRule) {
+            this.log('info', `        Access Rule: None (always accessible)`);
+            this.log('info', `        → This exit should be accessible, so ${targetRegionName} should be reachable`);
+          } else {
+            this.log('info', `        Access Rule Structure: ${JSON.stringify(exitAccessRule)}`);
+            
+            // Evaluate the exit rule
+            try {
+              const snapshotInterface = createStateSnapshotInterface(
+                currentWorkerSnapshot,
+                staticData
+              );
+              
+              const exitRuleResult = evaluateRule(exitAccessRule, snapshotInterface);
+              this.log('info', `        Access Rule Result: ${exitRuleResult} ${exitRuleResult ? '✓' : '✗'}`);
+              
+              // Provide detailed rule breakdown
+              this.log('info', `        Detailed Rule Analysis:`);
+              this._analyzeRuleTree(exitAccessRule, snapshotInterface, '          ');
+              
+              if (exitRuleResult === true) {
+                this.log('info', `        → This exit should be accessible, so ${targetRegionName} should be reachable`);
+              } else {
+                this.log('info', `        → This exit is not accessible, blocking access to ${targetRegionName}`);
+              }
+              
+            } catch (error) {
+              this.log('error', `        Access Rule Evaluation Error: ${error.message}`);
+            }
+          }
+          this.log('info', ''); // Space between exits
+        }
+      }
+
+      // Final assessment
+      if (analysisType === 'MISSING_FROM_STATE') {
+        this.log('info', `    Expected: Region should be accessible according to Python log`);
+        this.log('info', `    Actual: Region is not accessible in our implementation`);
+        
+        if (exitsToTarget.length > 0) {
+          const accessibleExits = exitsToTarget.filter(exit => {
+            if (!exit.exitDef.access_rule) return true;
+            try {
+              const snapshotInterface = createStateSnapshotInterface(currentWorkerSnapshot, staticData);
+              return evaluateRule(exit.exitDef.access_rule, snapshotInterface) === true;
+            } catch {
+              return false;
+            }
+          });
+          
+          if (accessibleExits.length > 0) {
+            this.log('error', `    ISSUE: ${accessibleExits.length} exit(s) should provide access but region is not reachable`);
+          } else {
+            this.log('info', `    All exits have failed access rules - this may be correct`);
+          }
+        }
+      } else {
+        this.log('info', `    Expected: Region should not be accessible according to Python log`);
+        this.log('info', `    Actual: Region is accessible in our implementation`);
+      }
+      
+      this.log('info', ''); // Empty line for readability between regions
     }
   }
 
