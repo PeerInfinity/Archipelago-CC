@@ -225,6 +225,7 @@ playwright-report.json
 package-lock.json
 package.json
 *-old.js
+*-old/
 NewDocs/*
 test_results/*.json
 test_files-full.json
