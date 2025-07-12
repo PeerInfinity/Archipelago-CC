@@ -79,3 +79,109 @@ The entire pipeline can be run automatically from the command line using Playwri
 - **Validation:** The Playwright script (`tests/e2e/app.spec.js`) waits for this `localStorage` flag, reads the results, and asserts that all tests passed, reporting the final outcome to the command line.
 
 This end-to-end pipeline ensures a high degree of confidence that the frontend client is a faithful and accurate implementation of Archipelago's game logic.
+
+## Enhanced Testing Workflow
+
+Recent improvements have streamlined the testing process with better tooling and analysis capabilities:
+
+### New NPM Scripts
+
+```bash
+# Enhanced testing commands:
+npm run test:health    # Pre-flight environment validation
+npm run test:analyze   # Human-readable report analysis  
+npm run test:full      # Complete workflow: health → test → analyze
+
+# Additional testing modes:
+npm run test:headed    # Run tests with visible browser (good for observing execution)
+npm run test:debug     # Interactive debugging mode (requires manual interaction)
+npm run test:ui        # Open Playwright's interactive UI
+```
+
+### Pre-Flight Health Checks (`scripts/test-health-check.js`)
+
+Before running tests, the health check validates:
+- **Development Server**: Confirms `localhost:8000` accessibility
+- **Frontend Files**: Verifies required files are present
+- **Test Configuration**: Validates test config and test files
+- **Browser Dependencies**: Ensures Playwright browsers are installed
+- **Test Data**: Confirms availability of test data directories
+
+This prevents test failures due to environment issues and provides faster feedback for setup problems.
+
+### Enhanced Test Results Analysis (`scripts/analyze-test-results.js`)
+
+The analyzer converts verbose Playwright JSON reports (37k+ tokens) into concise, actionable summaries:
+
+**Key Features:**
+- Overall statistics (duration, pass/fail counts)
+- In-app test details extraction with clear status indicators
+- Performance timing analysis
+- Error categorization and highlighting
+- Key event timeline
+
+**Sample Output:**
+```
+🧪 Archipelago Test Results Summary
+=====================================
+
+📊 Overall Statistics:
+   Duration: 6.10s
+   Tests Expected: 1
+   Passed: 1
+   Failed: 0
+
+🎯 In-App Test Details:
+   Total Run: 2
+   Passed: 2
+   Failed: 0
+
+   ✅ Test Spoilers Panel - Full Run (Test Spoilers Panel)
+   ⏸️ Test Playthrough Panel - Run Full Test (Test Playthroughs Panel)
+
+⚡ Performance Analysis:
+   Test Execution: 6.10s
+   Key Timing Events:
+      4:42:55 PM: Polling for condition: "Test Spoilers panel DOM element"...
+      4:42:55 PM: Condition met for: "Test Spoilers panel DOM element"...
+```
+
+### Development Workflow
+
+**Recommended workflow for testing changes:**
+
+```bash
+# Before making changes:
+npm run test:health
+
+# After making changes:
+npm run test:full
+
+# For debugging specific issues:
+npm run test:headed    # Watch tests run in visible browser
+npm run test:debug     # Interactive debugging (step-by-step)
+npm run test:ui        # Playwright UI for test management
+```
+
+### Testing Mode Comparison
+
+| Command | Use Case | Browser | Interaction | Best For |
+|---------|----------|---------|-------------|----------|
+| `npm test` | CI/Automation | Headless | None | Automated validation |
+| `npm run test:headed` | Development | Visible | Observation only | Watching test execution |
+| `npm run test:debug` | Debugging | Visible | Interactive | Step-by-step debugging |
+| `npm run test:ui` | Management | Playwright UI | Full control | Test development |
+| `npm run test:full` | Complete workflow | Headless | None | Pre-commit validation |
+
+**Notes:**
+- **`test:debug`** requires manual interaction and is designed for setting breakpoints and stepping through test code
+- **`test:headed`** is better for simply observing test execution without manual intervention
+- **`test:debug`** may fail in CI-like environments due to timeout waiting for manual interaction
+
+### Benefits of Enhanced Testing
+
+1. **Faster Feedback**: Health checks catch issues early before test execution
+2. **Better Visibility**: Concise reports highlight key information without information overload
+3. **Easier Debugging**: Structured error analysis with timing data and categorized errors
+4. **Reliability**: Environment validation reduces false test failures
+5. **Maintainability**: Clear test organization and consistent reporting format

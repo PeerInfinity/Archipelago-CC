@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+import { test, expect } from '@playwright/test';
 
 test.describe('Application End-to-End Tests', () => {
   const APP_URL = 'http://localhost:8000/frontend/?mode=test'; // Use the new test mode URL

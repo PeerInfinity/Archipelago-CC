@@ -1666,7 +1666,7 @@ export class TestSpoilerUI {
     this.log('info', `[compareAccessibleLocations] Comparing for context:`, {
       context,
       workerSnapshotInventory:
-        currentWorkerSnapshot?.prog_items?.[playerId] || 'N/A',
+        currentWorkerSnapshot?.inventory ? 'available' : 'not available',
       logAccessibleNamesCount: logAccessibleLocationNames.length,
       // currentWorkerSnapshot, // Avoid logging the whole snapshot unless necessary for deep debug
       // staticData, // Avoid logging whole staticData
@@ -1842,7 +1842,7 @@ export class TestSpoilerUI {
     this.log('info', `[compareAccessibleRegions] Comparing for context:`, {
       context,
       workerSnapshotInventory:
-        currentWorkerSnapshot?.prog_items?.[playerId] || 'N/A',
+        currentWorkerSnapshot?.inventory ? 'available' : 'not available',
       logAccessibleRegionsCount: logAccessibleRegionNames.length,
     });
 
