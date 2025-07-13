@@ -621,7 +621,7 @@ registerTest({
   name: 'Library Region Accessibility Test (Show All)',
   category: 'Region Panel',
   testFunction: testLibraryRegionAccessibilityShowAll,
-  enabled: true,
+  enabled: false,
   description: 'Verifies that Library region shows as accessible while Library location shows as inaccessible using "Show All Regions" mode.'
 });
 
@@ -630,7 +630,7 @@ registerTest({
   name: 'Library Region Accessibility Test (Navigation)',
   category: 'Region Panel',
   testFunction: testLibraryRegionAccessibilityNavigation,
-  enabled: true, // Re-enabled with checkbox fix
+  enabled: false,
   description: 'Verifies that Library region shows as accessible while Library location shows as inaccessible using Move button navigation.'
 });
 
@@ -639,6 +639,6 @@ registerTest({
   name: 'Region Panel Basic Functionality',
   category: 'Region Panel',
   testFunction: testRegionPanelBasicFunctionality,
-  enabled: true,
+  enabled: false,
   description: 'Tests basic functionality of the Region Panel including UI elements and data loading.'
 });

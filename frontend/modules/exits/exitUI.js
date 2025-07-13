@@ -666,7 +666,7 @@ export class ExitUI {
       const connectedRegionName = exit.connectedRegion;
 
       // Get the parent region status, prioritizing regionReachability
-      const parentRegionStatus = snapshot.regionReachability?.[parentRegionName] || snapshot.reachability?.[parentRegionName];
+      const parentRegionStatus = snapshot.regionReachability?.[parentRegionName];
       const parentRegionReachable =
         parentRegionStatus === true ||
         parentRegionStatus === 'reachable' ||
@@ -684,7 +684,7 @@ export class ExitUI {
       }
 
       // Get the connected region status, prioritizing regionReachability
-      const connectedRegionStatus = snapshot.regionReachability?.[connectedRegionName] || snapshot.reachability?.[connectedRegionName];
+      const connectedRegionStatus = snapshot.regionReachability?.[connectedRegionName];
       const connectedRegionReachable =
         connectedRegionStatus === true ||
         connectedRegionStatus === 'reachable' ||
@@ -930,13 +930,13 @@ export class ExitUI {
         const connectedRegionName = exit.connectedRegion;
 
         // Get region status using new regionReachability field with fallback
-        const parentRegionStatus = snapshot.regionReachability?.[parentRegionName] || snapshot.reachability?.[parentRegionName];
+        const parentRegionStatus = snapshot.regionReachability?.[parentRegionName];
         const parentRegionReachable =
           parentRegionStatus === true ||
           parentRegionStatus === 'reachable' ||
           parentRegionStatus === 'checked';
           
-        const connectedRegionStatus = snapshot.regionReachability?.[connectedRegionName] || snapshot.reachability?.[connectedRegionName];
+        const connectedRegionStatus = snapshot.regionReachability?.[connectedRegionName];
         const connectedRegionReachable =
           connectedRegionStatus === true ||
           connectedRegionStatus === 'reachable' ||

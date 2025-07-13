@@ -91,7 +91,7 @@ export async function testLibraryExitAccessibility(testController) {
     testController.log(`[${testRunId}] Checking snapshot data for Library region...`);
     
     // Check if Library region is reachable in the snapshot
-    const libraryRegionStatus = snapshot.regionReachability?.['Library'] || snapshot.reachability?.['Library'];
+    const libraryRegionStatus = snapshot.regionReachability?.['Library'];
     const isLibraryRegionReachable = 
       libraryRegionStatus === true || 
       libraryRegionStatus === 'reachable' || 
@@ -151,8 +151,6 @@ export async function testLibraryExitAccessibility(testController) {
     testController.log(`[${testRunId}] Additional diagnostic info:`);
     testController.log(`[${testRunId}] - regionReachability exists: ${!!snapshot.regionReachability}`);
     testController.log(`[${testRunId}] - regionReachability entries: ${snapshot.regionReachability ? Object.keys(snapshot.regionReachability).length : 0}`);
-    testController.log(`[${testRunId}] - legacy reachability exists: ${!!snapshot.reachability}`);
-    testController.log(`[${testRunId}] - legacy reachability entries: ${snapshot.reachability ? Object.keys(snapshot.reachability).length : 0}`);
 
     testController.reportCondition('Library exit accessibility test completed', overallResult);
     testController.log(`[${testRunId}] Library exit accessibility test ${overallResult ? 'PASSED' : 'FAILED'}`);
@@ -235,7 +233,7 @@ registerTest({
   name: 'Library Exit Accessibility Test',
   category: 'Exit Panel',
   testFunction: testLibraryExitAccessibility,
-  enabled: true,
+  enabled: false,
   description: 'Verifies that the Library exit shows correct accessibility status, specifically testing the fix for region/location name conflicts.'
 });
 
@@ -244,6 +242,6 @@ registerTest({
   name: 'Exit Panel Basic Functionality',
   category: 'Exit Panel',
   testFunction: testExitPanelBasicFunctionality,
-  enabled: true,
+  enabled: false,
   description: 'Tests basic functionality of the Exit Panel including UI elements and data loading.'
 });

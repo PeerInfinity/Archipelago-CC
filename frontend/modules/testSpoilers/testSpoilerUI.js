@@ -1381,7 +1381,7 @@ export class TestSpoilerUI {
             // Evaluate accessibility for locName
             const parentRegionName = locDef.parent_region || locDef.region;
             const parentRegionReachabilityStatus =
-              currentSnapshot.reachability?.[parentRegionName];
+              currentSnapshot.regionReachability?.[parentRegionName];
             const isParentRegionEffectivelyReachable =
               parentRegionReachabilityStatus === 'reachable' ||
               parentRegionReachabilityStatus === 'checked';
@@ -1567,7 +1567,7 @@ export class TestSpoilerUI {
       
       const parentRegionName = locDef.parent_region || locDef.region;
       const parentRegionReachabilityStatus =
-        modifiedSnapshot.reachability?.[parentRegionName];
+        modifiedSnapshot.regionReachability?.[parentRegionName];
       const isParentRegionEffectivelyReachable =
         parentRegionReachabilityStatus === 'reachable' ||
         parentRegionReachabilityStatus === 'checked';
@@ -1724,7 +1724,7 @@ export class TestSpoilerUI {
       const parentRegionName = locDef.parent_region || locDef.region;
       // Use reachability from the worker's snapshot
       const parentRegionReachabilityStatus =
-        currentWorkerSnapshot.reachability?.[parentRegionName];
+        currentWorkerSnapshot.regionReachability?.[parentRegionName];
       const isParentRegionEffectivelyReachable =
         parentRegionReachabilityStatus === 'reachable' ||
         parentRegionReachabilityStatus === 'checked';
@@ -1874,7 +1874,7 @@ export class TestSpoilerUI {
     const stateAccessibleRegions = [];
     
     // Use the regionReachability data from the worker snapshot (no filtering needed!)
-    const regionReachabilityData = currentWorkerSnapshot.regionReachability || currentWorkerSnapshot.reachability;
+    const regionReachabilityData = currentWorkerSnapshot.regionReachability;
     if (regionReachabilityData) {
       for (const regionName in regionReachabilityData) {
         // With regionReachability, we know all entries are regions, no filtering needed
@@ -2378,7 +2378,7 @@ export class TestSpoilerUI {
       this.log('info', `  Player ${this.playerId} inventory: Empty or not found`);
     }
     
-    const reachableRegions = Object.entries(currentWorkerSnapshot.reachability || {})
+    const reachableRegions = Object.entries(currentWorkerSnapshot.regionReachability || {})
       .filter(([region, status]) => status === 'reachable' || status === 'checked')
       .map(([region]) => region);
     this.log('info', `  Reachable regions (${reachableRegions.length}): ${reachableRegions.slice(0, 10).join(', ')}${reachableRegions.length > 10 ? '...' : ''}`);
@@ -2400,7 +2400,7 @@ export class TestSpoilerUI {
       }
 
       const parentRegionName = locDef.parent_region || locDef.region;
-      const parentRegionReachabilityStatus = currentWorkerSnapshot.reachability?.[parentRegionName];
+      const parentRegionReachabilityStatus = currentWorkerSnapshot.regionReachability?.[parentRegionName];
       const isParentRegionReachable = parentRegionReachabilityStatus === 'reachable' || parentRegionReachabilityStatus === 'checked';
       
       this.log('info', `  ${locName}:`);
@@ -2471,7 +2471,7 @@ export class TestSpoilerUI {
     this.log('info', `[REGION ANALYSIS] Analyzing ${regionNames.length} ${analysisType} regions:`);
     
     // Get list of currently accessible regions for context
-    const accessibleRegions = Object.entries(currentWorkerSnapshot.reachability || {})
+    const accessibleRegions = Object.entries(currentWorkerSnapshot.regionReachability || {})
       .filter(([region, status]) => (status === 'reachable' || status === 'checked') && staticData.regions[region])
       .map(([region]) => region);
     
@@ -2497,7 +2497,7 @@ export class TestSpoilerUI {
       }
 
       this.log('info', `  ${targetRegionName}:`);
-      this.log('info', `    Current status: ${currentWorkerSnapshot.reachability?.[targetRegionName] || 'undefined'}`);
+      this.log('info', `    Current status: ${currentWorkerSnapshot.regionReachability?.[targetRegionName] || 'undefined'}`);
       this.log('info', `    Region definition: ${JSON.stringify(targetRegionDef)}`);
 
       // Find all exits from accessible regions that lead to this target region

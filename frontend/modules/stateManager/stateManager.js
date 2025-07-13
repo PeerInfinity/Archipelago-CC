@@ -2939,8 +2939,6 @@ export class StateManager {
       // REFACTOR: Separated region and location reachability to prevent name conflicts
       regionReachability: regionReachability,
       locationReachability: locationReachability,
-      // DEPRECATED: Keep legacy reachability for backward compatibility during transition
-      reachability: { ...regionReachability, ...locationReachability },
       locationItems: locationItemsMap,
       // serverProvidedUncheckedLocations: Array.from(this.serverProvidedUncheckedLocations || []), // Optionally expose if UI needs it directly
       player: {

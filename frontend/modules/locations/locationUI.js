@@ -714,7 +714,7 @@ export class LocationUI {
         // Determine detailed status for filtering
         const parentRegionName = loc.parent_region || loc.region; // Use parent_region, fallback to region
         const parentRegionReachabilityStatus =
-          snapshot?.reachability?.[parentRegionName];
+          snapshot?.regionReachability?.[parentRegionName];
         const isParentRegionEffectivelyReachable =
           parentRegionReachabilityStatus === 'reachable' ||
           parentRegionReachabilityStatus === 'checked';
@@ -833,7 +833,7 @@ export class LocationUI {
         const isPendingA = this.pendingLocations.has(a.name) && !isCheckedA;
         const parentRegionNameA = a.parent_region || a.region;
         const parentRegionReachabilityStatusA =
-          snapshot?.reachability?.[parentRegionNameA];
+          snapshot?.regionReachability?.[parentRegionNameA];
         const isParentRegionEffectivelyReachableA =
           parentRegionReachabilityStatusA === 'reachable' ||
           parentRegionReachabilityStatusA === 'checked';
@@ -870,7 +870,7 @@ export class LocationUI {
         const isPendingB = this.pendingLocations.has(b.name) && !isCheckedB;
         const parentRegionNameB = b.parent_region || b.region;
         const parentRegionReachabilityStatusB =
-          snapshot?.reachability?.[parentRegionNameB];
+          snapshot?.regionReachability?.[parentRegionNameB];
         const isParentRegionEffectivelyReachableB =
           parentRegionReachabilityStatusB === 'reachable' ||
           parentRegionReachabilityStatusB === 'checked';
@@ -918,7 +918,7 @@ export class LocationUI {
         const isPendingA = this.pendingLocations.has(a.name) && !isCheckedA;
         const parentRegionNameA = a.parent_region || a.region;
         const parentRegionReachabilityStatusA =
-          snapshot?.reachability?.[parentRegionNameA];
+          snapshot?.regionReachability?.[parentRegionNameA];
         const isParentRegionEffectivelyReachableA =
           parentRegionReachabilityStatusA === 'reachable' ||
           parentRegionReachabilityStatusA === 'checked';
@@ -952,7 +952,7 @@ export class LocationUI {
         const isPendingB = this.pendingLocations.has(b.name) && !isCheckedB;
         const parentRegionNameB = b.parent_region || b.region;
         const parentRegionReachabilityStatusB =
-          snapshot?.reachability?.[parentRegionNameB];
+          snapshot?.regionReachability?.[parentRegionNameB];
         const isParentRegionEffectivelyReachableB =
           parentRegionReachabilityStatusB === 'reachable' ||
           parentRegionReachabilityStatusB === 'checked';

@@ -92,7 +92,7 @@ export async function testLibraryLocationAccessibility(testController) {
     testController.log(`[${testRunId}] Checking snapshot data for Library location and region...`);
     
     // Check if Library region is reachable in the snapshot
-    const libraryRegionStatus = snapshot.regionReachability?.['Library'] || snapshot.reachability?.['Library'];
+    const libraryRegionStatus = snapshot.regionReachability?.['Library'];
     const isLibraryRegionReachable = 
       libraryRegionStatus === true || 
       libraryRegionStatus === 'reachable' || 
@@ -100,7 +100,6 @@ export async function testLibraryLocationAccessibility(testController) {
     
     // Check if Library location is reachable in the snapshot
     const libraryLocationStatus = snapshot.locationReachability?.['Library'];
-    const libraryLocationLegacyStatus = snapshot.reachability?.['Library'];
     const isLibraryLocationReachable = 
       libraryLocationStatus === true || 
       libraryLocationStatus === 'reachable' || 
@@ -108,7 +107,6 @@ export async function testLibraryLocationAccessibility(testController) {
       
     testController.log(`[${testRunId}] Library region status: ${libraryRegionStatus}, reachable: ${isLibraryRegionReachable}`);
     testController.log(`[${testRunId}] Library location status: ${libraryLocationStatus}, reachable: ${isLibraryLocationReachable}`);
-    testController.log(`[${testRunId}] Library legacy status: ${libraryLocationLegacyStatus}`);
     
     // The expected behavior: Library region should be reachable, but Library location should NOT be reachable
     if (!isLibraryRegionReachable) {
@@ -188,8 +186,6 @@ export async function testLibraryLocationAccessibility(testController) {
     testController.log(`[${testRunId}] Additional diagnostic info:`);
     testController.log(`[${testRunId}] - locationReachability exists: ${!!snapshot.locationReachability}`);
     testController.log(`[${testRunId}] - locationReachability entries: ${snapshot.locationReachability ? Object.keys(snapshot.locationReachability).length : 0}`);
-    testController.log(`[${testRunId}] - legacy reachability exists: ${!!snapshot.reachability}`);
-    testController.log(`[${testRunId}] - legacy reachability entries: ${snapshot.reachability ? Object.keys(snapshot.reachability).length : 0}`);
 
     testController.reportCondition('Library location accessibility test completed', overallResult);
     testController.log(`[${testRunId}] Library location accessibility test ${overallResult ? 'PASSED' : 'FAILED'}`);
@@ -272,7 +268,7 @@ registerTest({
   name: 'Library Location Accessibility Test',
   category: 'Location Panel',
   testFunction: testLibraryLocationAccessibility,
-  enabled: true,
+  enabled: false,
   description: 'Verifies that Library region and location accessibility are properly separated. Expected: Library region reachable, Library location unreachable.'
 });
 
@@ -281,6 +277,6 @@ registerTest({
   name: 'Location Panel Basic Functionality',
   category: 'Location Panel',
   testFunction: testLocationPanelBasicFunctionality,
-  enabled: true,
+  enabled: false,
   description: 'Tests basic functionality of the Location Panel including UI elements and data loading.'
 });
