@@ -277,9 +277,10 @@ class RuleAnalyzer(ast.NodeVisitor):
     - Helper functions
     - Nested expressions
     """
-    def __init__(self, closure_vars=None, seen_funcs=None):
+    def __init__(self, closure_vars=None, seen_funcs=None, game_handler=None):
         self.closure_vars = closure_vars or {}  # Helper functions available in closure
         self.seen_funcs = seen_funcs or {}  # Track analyzed helper functions
+        self.game_handler = game_handler  # Game-specific handler for name replacements
         self.debug_log = []
         self.error_log = []
 
@@ -412,7 +413,8 @@ class RuleAnalyzer(ast.NodeVisitor):
                           # Pass the seen_funcs dictionary (it's mutable state)
                           recursive_result = analyze_rule(rule_func=actual_func, 
                                                           closure_vars=self.closure_vars.copy(), 
-                                                          seen_funcs=self.seen_funcs) # Pass the dict
+                                                          seen_funcs=self.seen_funcs, # Pass the dict
+                                                          game_handler=self.game_handler)
                           if recursive_result.get('type') != 'error':
                               logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                               return recursive_result # Return the detailed analysis result
@@ -511,6 +513,13 @@ class RuleAnalyzer(ast.NodeVisitor):
             # Specifically log 'self'
             if name == 'self':
                 logging.debug("visit_Name: Detected 'self'")
+
+            # Use game handler to replace names if available
+            if self.game_handler and hasattr(self.game_handler, 'replace_name'):
+                original_name = name
+                name = self.game_handler.replace_name(name)
+                if name != original_name:
+                    logging.debug(f"visit_Name: Game handler replaced '{original_name}' with '{name}'")
 
             result = {'type': 'name', 'name': name}
             logging.debug(f"visit_Name: Set result to {result}")
@@ -1006,7 +1015,8 @@ class LambdaFinder(ast.NodeVisitor):
 def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None, 
                  closure_vars: Optional[Dict[str, Any]] = None, 
                  seen_funcs: Optional[Dict[int, int]] = None,
-                 ast_node: Optional[ast.AST] = None) -> Dict[str, Any]:
+                 ast_node: Optional[ast.AST] = None,
+                 game_handler=None) -> Dict[str, Any]:
     """
     Analyzes a rule function or an AST node representing a rule.
 
@@ -1035,7 +1045,7 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
         if ast_node:
             logging.debug(f"Analyzing provided AST node: {type(ast_node).__name__}")
             # Need an analyzer instance here too
-            analyzer = RuleAnalyzer(closure_vars=closure_vars, seen_funcs=seen_funcs)
+            analyzer = RuleAnalyzer(closure_vars=closure_vars, seen_funcs=seen_funcs, game_handler=game_handler)
             analysis_result = analyzer.visit(ast_node) 
 
         # --- Option 2: Analyze a function object (existing logic) --- 
@@ -1091,7 +1101,7 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
             if cleaned_source is None:
                 logging.error("analyze_rule: Failed to clean source, returning error.")
                 # Need to initialize analyzer logs for the error result
-                analyzer = RuleAnalyzer() # Create dummy analyzer for logs
+                analyzer = RuleAnalyzer(game_handler=game_handler) # Create dummy analyzer for logs
                 return {
                     'type': 'error',
                     'message': 'Failed to clean or retrieve source code for rule function.',
@@ -1109,7 +1119,7 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                 logging.debug(f"analyze_rule: Incremented func_id {func_id} count in seen_funcs: {seen_funcs}")
 
                 # Pass the LOCAL copy to the RuleAnalyzer instance
-                analyzer = RuleAnalyzer(closure_vars=local_closure_vars, seen_funcs=seen_funcs)
+                analyzer = RuleAnalyzer(closure_vars=local_closure_vars, seen_funcs=seen_funcs, game_handler=game_handler)
 
                 # Check if cleaned_source contains "Bridge"
                 if cleaned_source and "Bridge" in cleaned_source:
@@ -1147,11 +1157,11 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
              # No function or AST node provided
              logging.warning("analyze_rule: Called without rule_func or ast_node.")
              analysis_result = None
-             analyzer = RuleAnalyzer() # Create dummy analyzer for logs
+             analyzer = RuleAnalyzer(game_handler=game_handler) # Create dummy analyzer for logs
 
         # --- Ensure analyzer is always defined for final logging/error return ---
         if analyzer is None: 
-             analyzer = RuleAnalyzer() # Should only happen if ast_node and rule_func are None
+             analyzer = RuleAnalyzer(game_handler=game_handler) # Should only happen if ast_node and rule_func are None
 
         # --- Refined Result/Error Handling ---
         # Check if the analyzer recorded errors during visitation

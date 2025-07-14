@@ -22,7 +22,7 @@ __all__ = [
 ]
 
 no_gui = False
-skip_required_files = False
+skip_required_files = True
 skip_autosave = False
 _world_settings_name_cache: Dict[str, str] = {}  # TODO: cache on disk and update when worlds change
 _world_settings_name_cache_updated = False

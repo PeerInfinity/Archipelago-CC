@@ -29,6 +29,10 @@ class BaseGameExportHandler:
     def expand_helper(self, helper_name: str) -> Dict[str, Any]:
         """Expand a helper function into basic rule conditions."""
         return None
+    
+    def replace_name(self, name: str) -> str:
+        """Replace a name with another name if needed for game-specific logic."""
+        return name
         
     def expand_count_check(self, items: List[str], count: int = 1) -> Dict[str, Any]:
         """Create a count check rule for one or more items."""

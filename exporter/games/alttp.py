@@ -21,6 +21,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_activate_crystal_switch',
             'can_bomb_or_bonk',
             'can_extend_magic',
+            'can_get_good_bee',
             'can_kill_most_things',
             'can_lift_heavy_rocks',
             'can_lift_rocks',
@@ -74,6 +75,13 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
              # Comprehension details usually don't contain rules to expand
 
         return rule
+
+    def replace_name(self, name: str) -> str:
+        """Replace ALTTP-specific name references with standard equivalents."""
+        if name == 'ep_boss' or name == 'ep_prize':
+            logger.debug(f"ALTTP: Replacing '{name}' with 'location'")
+            return 'location'
+        return name
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return ALTTP-specific item table data."""
