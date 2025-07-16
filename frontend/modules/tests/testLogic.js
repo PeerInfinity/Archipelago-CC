@@ -625,7 +625,7 @@ export const testLogic = {
             resolve();
           }
         };
-        eventBusInstance.subscribe('test:completed', specificEventListener);
+        eventBusInstance.subscribe('test:completed', specificEventListener, 'tests');
       });
 
       // Start the test

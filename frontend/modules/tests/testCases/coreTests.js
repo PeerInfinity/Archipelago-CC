@@ -26,7 +26,7 @@ export async function simpleEventTest(testController) {
       // Assuming testController.eventBus is the correct eventBus instance
       testController.eventBus.publish('custom:testEventAfterDelay', {
         detail: 'Event Fired!',
-      });
+      }, 'tests');
     }, 1000);
 
     testController.log('Waiting for custom:testEventAfterDelay...');

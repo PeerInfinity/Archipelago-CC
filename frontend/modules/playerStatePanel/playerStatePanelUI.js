@@ -45,13 +45,13 @@ export class PlayerStatePanelUI {
         // Listen for region changes
         const handle = eventBus.subscribe('playerState:regionChanged', (data) => {
             this.updateDisplay();
-        });
+        }, 'playerStatePanel');
         this.unsubscribeHandles.push(handle);
         
         // Also listen for rules loaded to get initial state
         const rulesHandle = eventBus.subscribe('state:rulesLoaded', () => {
             this.updateDisplay();
-        });
+        }, 'playerStatePanel');
         this.unsubscribeHandles.push(rulesHandle);
     }
 

@@ -51,7 +51,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // initializationApi.eventBus.subscribe('app:modeChanged', (newMode) => {
   //   log('info', `[JSON Module] Detected mode change to: ${newMode}`);
   //   // The JsonUI instance itself would need a method to update its display if it's already rendered
-  // });
+  // }, 'json');
 
   log('info', '[JSON Module] Basic initialization complete.');
 }

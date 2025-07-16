@@ -58,7 +58,7 @@ export class ExitUI {
 
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'exits');
 
     this.container.on('destroy', () => {
       // ADDED: Ensure cleanup
@@ -78,7 +78,7 @@ export class ExitUI {
           this.updateExitDisplay();
         }
       }
-    );
+    , 'exits');
   }
 
   onPanelDestroy() {
@@ -104,7 +104,7 @@ export class ExitUI {
 
     const subscribe = (eventName, handler) => {
       log('info', `[ExitUI] Subscribing to ${eventName}`);
-      const unsubscribe = eventBus.subscribe(eventName, handler);
+      const unsubscribe = eventBus.subscribe(eventName, handler, 'exits');
       this.stateUnsubscribeHandles.push(unsubscribe);
     };
 
@@ -430,7 +430,7 @@ export class ExitUI {
         // Notify UI components about queue changes
         eventBus.publish('loopState:queueUpdated', {
           queue: loopStateSingleton.actionQueue,
-        });
+        }, 'exits');
       } else {
         // Path not found - display error message
         const errorMessage = `Cannot find a path to ${exit.region} in loop mode.`;

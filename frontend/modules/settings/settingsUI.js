@@ -47,7 +47,7 @@ class SettingsUI {
       this.initialize(); // This will create the JSONEditor instance
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'settings');
 
     this.container.on('destroy', () => {
       // ADDED: Ensure cleanup

@@ -65,7 +65,7 @@ export async function initialize(id, index, initApi) {
   // const moduleManager = api.getModuleManager(); // Hypothetical manager
 
   // Subscribe to events needed for UI updates (e.g., when a panel is closed)
-  // eventBus.subscribe('panel:closed', handlePanelClosed);
+  // eventBus.subscribe('panel:closed', handlePanelClosed, 'modules');
 }
 
 // Potentially add an uninitialize function if needed for cleanup

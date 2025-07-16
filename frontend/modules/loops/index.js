@@ -184,7 +184,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     const subscribe = (eventName, handler) => {
       log('info', `[Loops Module] Subscribing to ${eventName}`);
       try {
-        const unsubscribe = _moduleEventBus.subscribe(eventName, handler);
+        const unsubscribe = _moduleEventBus.subscribe(eventName, handler, 'loops');
         loopUnsubscribeHandles.push(unsubscribe);
       } catch (e) {
         log('error', `[Loops Module] Failed to subscribe to ${eventName}:`, e);

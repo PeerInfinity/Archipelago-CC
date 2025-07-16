@@ -773,11 +773,11 @@ class CommonUI {
       e.stopPropagation(); // Prevent event from bubbling to parent elements
 
       // Publish panel activation first
-      eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
+      eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'commonUI');
       log('info', `[commonUI] Published ui:activatePanel for regionsPanel.`);
 
       // Then publish navigation
-      eventBus.publish('ui:navigateToRegion', { regionName: regionName });
+      eventBus.publish('ui:navigateToRegion', { regionName: regionName }, 'commonUI');
       log(
         'info',
         `[commonUI] Published ui:navigateToRegion for ${regionName}.`
@@ -853,7 +853,7 @@ class CommonUI {
       eventBus.publish('ui:navigateToLocation', {
         locationName: locationName,
         regionName: regionName,
-      });
+      }, 'commonUI');
     });
 
     return link;

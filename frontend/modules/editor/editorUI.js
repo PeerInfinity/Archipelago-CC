@@ -63,7 +63,7 @@ class EditorUI {
       this.initialize(); // This will create the textarea and subscribe to data events
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'editor');
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -196,7 +196,7 @@ class EditorUI {
           this._displayCurrentSourceContent();
         }
       }
-    );
+    , 'editor');
 
     if (this.unsubscribeHandles['localStorageData']) {
       log('warn', 
@@ -239,7 +239,7 @@ class EditorUI {
           this._displayCurrentSourceContent();
         }
       }
-    );
+    , 'editor');
   }
 
   // Unsubscribe from EventBus events
@@ -260,7 +260,7 @@ class EditorUI {
       this.contentSources[this.currentSourceKey].text = event.target.value;
     }
     // Optional: Dispatch an event if other modules need to know about changes immediately
-    // eventBus.publish(`editor:contentChanged:${this.currentSourceKey}`, { text: event.target.value });
+    // eventBus.publish(`editor:contentChanged:${this.currentSourceKey}`, { text: event.target.value }, 'editor');
   }
 
   initializeEditor() {

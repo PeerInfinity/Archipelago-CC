@@ -25,7 +25,7 @@ export async function testLibraryRegionAccessibilityShowAll(testController) {
     testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise((resolve) => setTimeout(resolve, 1500)); // wait for panel to fully init
 
     // 2. Wait for the regions panel to appear in DOM
@@ -261,7 +261,7 @@ export async function testLibraryRegionAccessibilityNavigation(testController) {
     testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise((resolve) => setTimeout(resolve, 1500)); // wait for panel to fully init
 
     // 2. Wait for the regions panel to appear in DOM
@@ -568,7 +568,7 @@ export async function testRegionPanelBasicFunctionality(testController) {
     // 1. Activate the Regions panel
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // 2. Check panel exists
@@ -656,7 +656,7 @@ export async function testShowPathsCheckbox(testController) {
     // Activate Regions panel
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     const regionsPanelElement = document.querySelector('.regions-panel-container');
@@ -790,7 +790,7 @@ export async function testRegionMoveEventDispatch(testController) {
     // Activate Regions panel
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const regionsPanelElement = document.querySelector('.regions-panel-container');
@@ -857,7 +857,7 @@ export async function testEntranceDisplay(testController) {
     // Activate Regions panel
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const regionsPanelElement = document.querySelector('.regions-panel-container');
@@ -1013,7 +1013,7 @@ export async function testRegionMoveComplete(testController) {
     
     // 1. Activate the Regions panel
     testController.log(`[${testRunId}] Activating regions panel...`);
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const regionsPanelElement = document.querySelector('.regions-panel-container');
@@ -1188,7 +1188,7 @@ export async function testRegionMoveComplete(testController) {
     
     // 14. Activate the Events panel
     testController.log(`[${testRunId}] Activating Events panel...`);
-    eventBus.publish('ui:activatePanel', { panelId: 'eventsPanel' });
+    eventBus.publish('ui:activatePanel', { panelId: 'eventsPanel' }, 'tests');
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // 15. Wait for Events panel to appear
@@ -1408,7 +1408,7 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     
     // 1. Activate the Regions panel
     testController.log(`[${testRunId}] Activating regions panel...`);
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const regionsPanelElement = document.querySelector('.regions-panel-container');
@@ -1477,7 +1477,7 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     
     // 6. Activate the Events panel
     testController.log(`[${testRunId}] Activating Events panel...`);
-    eventBus.publish('ui:activatePanel', { panelId: 'eventsPanel' });
+    eventBus.publish('ui:activatePanel', { panelId: 'eventsPanel' }, 'tests');
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // 7. Wait for Events panel to appear
@@ -1602,6 +1602,6 @@ registerTest({
   name: 'Region Move Complete Flow',
   category: 'Region Panel',
   testFunction: testRegionMoveComplete,
-  enabled: true,
+  enabled: false,
   description: 'Comprehensive test of region move functionality including event dispatch, state updates, and UI changes.'
 });

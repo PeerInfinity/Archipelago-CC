@@ -49,7 +49,7 @@ export class InventoryUI {
       );
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'inventory');
 
     this.container.on('destroy', () => {
       this.destroy();
@@ -345,7 +345,7 @@ export class InventoryUI {
 
     const subscribe = (eventName, handler) => {
       log('info', `[InventoryUI] Subscribing to ${eventName}`);
-      const unsubscribe = eventBus.subscribe(eventName, handler.bind(this));
+      const unsubscribe = eventBus.subscribe(eventName, handler.bind(this), 'inventory');
       this.unsubscribeHandles.push(unsubscribe);
     };
 

@@ -69,7 +69,7 @@ export class TestSpoilerUI {
 
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'testSpoilers');
 
     this.container.on('destroy', () => {
       // ADDED: Ensure cleanup
@@ -247,7 +247,7 @@ export class TestSpoilerUI {
           }
         }
       }
-    );
+    , 'testSpoilers');
 
     // MODIFIED: The stateManager:rawJsonDataLoaded listener will also ONLY update suggested file.
     if (this.rawJsonDataUnsub) this.rawJsonDataUnsub(); // Unsubscribe
@@ -269,7 +269,7 @@ export class TestSpoilerUI {
           }
         }
       }
-    );
+    , 'testSpoilers');
 
     this.initialized = true;
     this.log(

@@ -207,7 +207,7 @@ export class TestUI {
     };
 
     for (const [eventName, handler] of Object.entries(handlers)) {
-      const unsubscribe = eventBus.subscribe(eventName, handler.bind(this));
+      const unsubscribe = eventBus.subscribe(eventName, handler.bind(this), 'tests');
       this.unsubscribeHandles.push(unsubscribe);
     }
   }

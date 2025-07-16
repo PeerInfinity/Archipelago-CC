@@ -64,11 +64,11 @@ export class DungeonUI {
       }
     };
 
-    eventBus.subscribe('settings:changed', settingsHandler);
-    eventBus.subscribe('stateManager:ready', readyHandler);
-    eventBus.subscribe('stateManager:snapshotUpdated', debouncedUpdate);
-    eventBus.subscribe('stateManager:rulesLoaded', () => this.update());
-    eventBus.subscribe('ui:navigateToDungeon', navigateToDungeonHandler);
+    eventBus.subscribe('settings:changed', settingsHandler, 'dungeons');
+    eventBus.subscribe('stateManager:ready', readyHandler, 'dungeons');
+    eventBus.subscribe('stateManager:snapshotUpdated', debouncedUpdate, 'dungeons');
+    eventBus.subscribe('stateManager:rulesLoaded', () => this.update(), 'dungeons');
+    eventBus.subscribe('ui:navigateToDungeon', navigateToDungeonHandler, 'dungeons');
 
     // Store handlers for cleanup
     this.unsubscribeHandles.push(

@@ -22,7 +22,7 @@ export class PlayerState {
                 this.eventBus.publish('playerState:regionChanged', {
                     oldRegion,
                     newRegion: regionName
-                });
+                }, 'playerState');
             }
         }
     }

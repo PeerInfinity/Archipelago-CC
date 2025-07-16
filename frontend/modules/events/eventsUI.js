@@ -157,18 +157,15 @@ class EventsUI {
     // Defer loading data until the app signals it's ready
     eventBus.subscribe(
       'app:readyForUiDataLoad',
-      this.handleAppReady.bind(this)
-    );
+      this.handleAppReady.bind(this),
+      this.moduleId
+    , 'events');
 
     this.unsubscribeModuleState = eventBus.subscribe(
       'module:stateChanged',
-      this.moduleStateChangeHandler
-    );
-    centralRegistry.registerEventBusSubscriberIntent(
-      this.moduleId,
-      'module:stateChanged',
-      this.moduleStateChangeHandler
-    );
+      this.moduleStateChangeHandler,
+      this.moduleId
+    , 'events');
 
     this.container.on('destroy', () => {
       this.destroy();
@@ -846,7 +843,8 @@ class EventsUI {
       // Use the stored handler reference for unsubscribe
       eventBus.unsubscribe(
         'module:stateChanged',
-        this.moduleStateChangeHandler
+        this.moduleStateChangeHandler,
+        this.moduleId
       );
       this.unsubscribeModuleState = null;
       log('info', '[EventsUI] Unsubscribed from module:stateChanged.');

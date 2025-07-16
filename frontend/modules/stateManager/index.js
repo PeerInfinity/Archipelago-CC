@@ -292,7 +292,7 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
         source: sourceNameForTheseRules, // MODIFIED: Use the same accurately determined source
         rawJsonData: rulesConfigToUse,
         selectedPlayerInfo: playerInfo,
-      });
+      }, 'stateManager');
       logger.info(
         moduleInfo.name,
         '[StateManager Module] Published stateManager:rawJsonDataLoaded.'
@@ -313,7 +313,7 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
       eventBus.publish('stateManager:error', {
         message: `Failed to initialize proxy or load rules: ${error.message}`,
         isCritical: true,
-      });
+      }, 'stateManager');
     } else {
       logger.error(
         moduleInfo.name,

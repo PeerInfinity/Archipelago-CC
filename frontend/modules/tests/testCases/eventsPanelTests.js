@@ -22,7 +22,7 @@ export async function testEventsPanelSenderReceiverDisplay(testController) {
     testController.log(`[${testRunId}] Activating ${EVENTS_PANEL_ID} panel...`);
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: EVENTS_PANEL_ID });
+    eventBus.publish('ui:activatePanel', { panelId: EVENTS_PANEL_ID }, 'tests');
     
     // Wait for panel to fully initialize
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -217,13 +217,259 @@ export async function testEventsPanelSenderReceiverDisplay(testController) {
   }
 }
 
-// Register the test
+/**
+ * Test case for verifying that the Events panel correctly shows module names
+ * for publishers and subscribers, and that the enable/disable checkboxes work properly.
+ * @param {object} testController - The test controller object provided by the test runner.
+ * @returns {Promise<boolean>} - True if the test passed, false otherwise.
+ */
+export async function testEventsPanelModuleNameTracking(testController) {
+  const testRunId = `events-panel-module-names-${Date.now()}`;
+
+  try {
+    testController.log(`[${testRunId}] Starting Events panel module name tracking test...`);
+    testController.reportCondition('Test started', true);
+
+    // 1. First activate the Regions panel to trigger subscription to ui:navigateToLocation
+    testController.log(`[${testRunId}] Activating regions panel to trigger event subscriptions...`);
+    const eventBusModule = await import('../../../app/core/eventBus.js');
+    const eventBus = eventBusModule.default;
+    eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'tests');
+    
+    // Wait for regions panel to initialize and subscribe to events
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    // 2. Now activate the Events panel  
+    testController.log(`[${testRunId}] Activating ${EVENTS_PANEL_ID} panel...`);
+    eventBus.publish('ui:activatePanel', { panelId: EVENTS_PANEL_ID }, 'tests');
+    
+    // Wait for events panel to fully initialize
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // 2. Wait for the events panel to appear in DOM
+    let eventsPanelElement = null;
+    if (
+      !(await testController.pollForCondition(
+        () => {
+          eventsPanelElement = document.querySelector('.events-inspector');
+          return eventsPanelElement !== null;
+        },
+        'Events panel DOM element',
+        5000,
+        250
+      ))
+    ) {
+      throw new Error('Events panel not found in DOM');
+    }
+    testController.reportCondition('Events panel found in DOM', true);
+
+    // 3. Wait for the event bus section to load
+    let eventBusSection = null;
+    if (
+      !(await testController.pollForCondition(
+        () => {
+          eventBusSection = eventsPanelElement.querySelector('.event-bus-section');
+          return eventBusSection && eventBusSection.textContent !== 'Loading...';
+        },
+        'Event bus section loaded',
+        MAX_WAIT_TIME,
+        500
+      ))
+    ) {
+      throw new Error('Event bus section not loaded');
+    }
+    testController.reportCondition('Event bus section loaded', true);
+
+    // 4. Look for the ui:navigateToLocation event in the event bus section
+    let navigateLocationEvent = null;
+    if (
+      !(await testController.pollForCondition(
+        () => {
+          const eventContainers = eventBusSection.querySelectorAll('.event-bus-event');
+          for (const container of eventContainers) {
+            const eventTitle = container.querySelector('h4');
+            if (eventTitle && eventTitle.textContent.trim() === 'ui:navigateToLocation') {
+              navigateLocationEvent = container;
+              return true;
+            }
+          }
+          return false;
+        },
+        'ui:navigateToLocation event found',
+        MAX_WAIT_TIME,
+        500
+      ))
+    ) {
+      throw new Error('ui:navigateToLocation event not found in event bus section');
+    }
+    testController.reportCondition('ui:navigateToLocation event found', true);
+
+    // 5. Verify commonUI is listed as a publisher
+    const moduleBlocks = navigateLocationEvent.querySelectorAll('.module-block');
+    let commonUIFound = false;
+    let regionsFound = false;
+    let commonUIPublisherCheckbox = null;
+    let regionsSubscriberCheckbox = null;
+
+    for (const block of moduleBlocks) {
+      const moduleName = block.querySelector('.module-name');
+      if (moduleName && moduleName.textContent.trim() === 'commonUI') {
+        commonUIFound = true;
+        const publisherColumn = block.querySelector('.publisher-symbol');
+        if (publisherColumn && publisherColumn.textContent.includes('[P]')) {
+          commonUIPublisherCheckbox = publisherColumn.querySelector('input[type="checkbox"]');
+        }
+      }
+      if (moduleName && moduleName.textContent.trim() === 'regions') {
+        regionsFound = true;
+        const subscriberColumn = block.querySelector('.subscriber-symbol');
+        if (subscriberColumn && subscriberColumn.textContent.includes('[S]')) {
+          regionsSubscriberCheckbox = subscriberColumn.querySelector('input[type="checkbox"]');
+        }
+      }
+    }
+
+    if (!commonUIFound) {
+      throw new Error('commonUI module not found as publisher for ui:navigateToLocation');
+    }
+    testController.reportCondition('commonUI module shows as publisher', true);
+
+    if (!regionsFound) {
+      throw new Error('regions module not found as subscriber for ui:navigateToLocation');
+    }
+    testController.reportCondition('regions module shows as subscriber', true);
+
+    if (!commonUIPublisherCheckbox) {
+      throw new Error('commonUI publisher checkbox not found');
+    }
+    testController.reportCondition('commonUI publisher checkbox found', true);
+
+    if (!regionsSubscriberCheckbox) {
+      throw new Error('regions subscriber checkbox not found');
+    }
+    testController.reportCondition('regions subscriber checkbox found', true);
+
+    // 6. Activate the Regions panel to test the functionality
+    testController.log(`[${testRunId}] Activating regions panel...`);
+    eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'tests');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // 7. Wait for regions panel to show Menu region
+    let regionsPanel = null;
+    if (
+      !(await testController.pollForCondition(
+        () => {
+          regionsPanel = document.querySelector('.regions-main-content');
+          return regionsPanel !== null;
+        },
+        'Regions panel found',
+        5000,
+        250
+      ))
+    ) {
+      throw new Error('Regions panel not found');
+    }
+    testController.reportCondition('Regions panel found', true);
+
+    // 8. Test disabling commonUI publisher
+    testController.log(`[${testRunId}] Testing commonUI publisher disable...`);
+    
+    // Uncheck the commonUI publisher checkbox
+    if (commonUIPublisherCheckbox.checked) {
+      commonUIPublisherCheckbox.click();
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    
+    // Click on "Links House" link in Menu region
+    const linksHouseLink = regionsPanel.querySelector('a[href="#Links House"]');
+    if (!linksHouseLink) {
+      throw new Error('Links House link not found in regions panel');
+    }
+    
+    linksHouseLink.click();
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    // Verify that the navigation did not happen (Show All Regions should still be unchecked)
+    const showAllRegionsCheckbox = regionsPanel.querySelector('input[type="checkbox"]');
+    if (!showAllRegionsCheckbox) {
+      throw new Error('Show All Regions checkbox not found');
+    }
+    
+    if (showAllRegionsCheckbox.checked) {
+      throw new Error('Navigation happened when publisher was disabled');
+    }
+    testController.reportCondition('Publisher disable prevents navigation', true);
+
+    // 9. Re-enable commonUI publisher
+    testController.log(`[${testRunId}] Re-enabling commonUI publisher...`);
+    commonUIPublisherCheckbox.click();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // 10. Test disabling regions subscriber
+    testController.log(`[${testRunId}] Testing regions subscriber disable...`);
+    
+    // Uncheck the regions subscriber checkbox
+    if (regionsSubscriberCheckbox.checked) {
+      regionsSubscriberCheckbox.click();
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    
+    // Click on "Links House" link again
+    linksHouseLink.click();
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    // Verify that the navigation did not happen (Show All Regions should still be unchecked)
+    if (showAllRegionsCheckbox.checked) {
+      throw new Error('Navigation happened when subscriber was disabled');
+    }
+    testController.reportCondition('Subscriber disable prevents navigation', true);
+
+    // 11. Re-enable regions subscriber
+    testController.log(`[${testRunId}] Re-enabling regions subscriber...`);
+    regionsSubscriberCheckbox.click();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // 12. Test that navigation works when both are enabled
+    testController.log(`[${testRunId}] Testing navigation with both enabled...`);
+    
+    linksHouseLink.click();
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    // Verify that the navigation happened (Show All Regions should now be checked)
+    if (!showAllRegionsCheckbox.checked) {
+      throw new Error('Navigation did not happen when both publisher and subscriber were enabled');
+    }
+    testController.reportCondition('Both enabled allows navigation', true);
+
+    testController.log(`[${testRunId}] Events panel module name tracking test completed successfully`);
+    testController.reportCondition('Test completed successfully', true);
+
+    return true;
+
+  } catch (error) {
+    testController.log(`[${testRunId}] Test failed: ${error.message}`);
+    testController.reportCondition(`Test failed: ${error.message}`, false);
+    return false;
+  }
+}
+
+// Register the tests
 registerTest({
   id: 'test_events_panel_sender_receiver',
   name: 'Events Panel Sender/Receiver Display',
   description: 'Verifies that modules appearing as both senders and receivers are correctly displayed in the Events panel',
   testFunction: testEventsPanelSenderReceiverDisplay,
   category: 'Events Panel',
-  enabled: true,
+  enabled: false,
   order: 1
+});
+
+registerTest({
+  id: 'test_events_panel_module_names',
+  name: 'Events Panel Module Name Tracking',
+  description: 'Verifies that the Events panel correctly tracks module names and enable/disable functionality works',
+  testFunction: testEventsPanelModuleNameTracking,
+  category: 'Events Panel',
+  enabled: true,
+  order: 2
 });

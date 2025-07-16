@@ -48,7 +48,7 @@ export class JsonUI {
           data
         );
       }
-    });
+    }, 'json');
 
     // Listen for modes.json being loaded
     eventBus.subscribe('app:modesJsonLoaded', (data) => {
@@ -63,7 +63,7 @@ export class JsonUI {
           data
         );
       }
-    });
+    }, 'json');
 
     // Check if modes.json was already loaded and the event missed
     if (window.G_modesConfig) {

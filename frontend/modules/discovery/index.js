@@ -114,7 +114,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
           '[Discovery Module] Cannot clear discovery: Singleton not available.'
         );
       }
-    });
+    }, 'discovery');
     _unsubscribeHandles.push(unsubscribe);
   } else {
     log('error', 

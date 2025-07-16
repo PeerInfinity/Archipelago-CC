@@ -98,7 +98,7 @@ export class RegionUI {
 
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'regions');
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -127,7 +127,7 @@ export class RegionUI {
 
     const subscribe = (eventName, handler) => {
       log('info', `[RegionUI] Subscribing to ${eventName}`);
-      const unsubscribe = eventBus.subscribe(eventName, handler);
+      const unsubscribe = eventBus.subscribe(eventName, handler, 'regions');
       this.unsubscribeHandles.push(unsubscribe);
     };
 
@@ -1660,7 +1660,7 @@ export class RegionUI {
                 // Use eventBus for consistency with LocationUI
                 eventBus.publish('user:checkLocationRequest', {
                   locationData: locationDef,
-                });
+                }, 'regions');
               } else {
                 log(
                   'info',
@@ -1951,14 +1951,14 @@ export class RegionUI {
       log('info', `[RegionUI] Dungeon link clicked for: ${dungeonName}`);
 
       // Publish panel activation first (like createRegionLink does)
-      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
+      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' }, 'regions');
       log('info', `[RegionUI] Published ui:activatePanel for dungeonsPanel.`);
 
       // Then publish navigation
       eventBus.publish('ui:navigateToDungeon', {
         dungeonName: dungeonName,
         sourcePanel: 'regions',
-      });
+      }, 'regions');
       log(
         'info',
         `[RegionUI] Published ui:navigateToDungeon for ${dungeonName}.`

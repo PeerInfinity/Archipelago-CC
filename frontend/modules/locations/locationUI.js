@@ -79,7 +79,7 @@ export class LocationUI {
 
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'locations');
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -105,7 +105,7 @@ export class LocationUI {
           this.updateLocationDisplay(); // Trigger redraw
         }
       }
-    );
+    , 'locations');
   }
 
   onPanelDestroy() {
@@ -133,7 +133,7 @@ export class LocationUI {
 
       const subscribe = (eventName, handler) => {
         log('info', `[LocationUI] Subscribing to ${eventName}`);
-        const unsubscribe = eventBus.subscribe(eventName, handler);
+        const unsubscribe = eventBus.subscribe(eventName, handler, 'locations');
         this.stateUnsubscribeHandles.push(unsubscribe);
       };
 
@@ -1421,14 +1421,14 @@ export class LocationUI {
       log('info', `[LocationUI] Dungeon link clicked for: ${dungeonName}`);
 
       // Publish panel activation first
-      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
+      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' }, 'locations');
       log('info', `[LocationUI] Published ui:activatePanel for dungeonsPanel.`);
 
       // Then publish navigation
       eventBus.publish('ui:navigateToDungeon', {
         dungeonName: dungeonName,
         sourcePanel: 'locations',
-      });
+      }, 'locations');
       log(
         'info',
         `[LocationUI] Published ui:navigateToDungeon for ${dungeonName}.`

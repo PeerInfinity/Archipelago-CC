@@ -62,7 +62,7 @@ export function register(registrationApi) {
       // Optionally, trigger a UI refresh if the panel might already be open
       eventBus.publish('test:listUpdated', {
         tests: await testLogic.getTests(),
-      });
+      }, 'tests');
     },
   });
 
@@ -93,7 +93,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       localStorage.getItem('archipelagoToolSuite_lastActiveMode') ||
       'unknown';
     log('info', '[Tests Module] Current application mode:', currentMode);
-  });
+  }, 'tests');
 
   // Listen for when test loaded state is fully applied (including auto-start check)
   eventBus.subscribe('test:loadedStateApplied', (eventData) => {
@@ -102,7 +102,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       'info',
       '[Tests Module] Auto-start handling is now done by testLogic.applyLoadedState()'
     );
-  });
+  }, 'tests');
 
   // Subscribe to test log messages to pipe them to the main logger
   eventBus.subscribe('test:logAdded', (logData) => {
@@ -121,7 +121,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         logData.message
       );
     }
-  });
+  }, 'tests');
 
   log('info', '[Tests Module] Initialization complete.');
 }

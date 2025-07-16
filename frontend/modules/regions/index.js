@@ -43,22 +43,6 @@ export function register(registrationApi) {
     RegionUIWrapper
   );
 
-  // Register EventBus subscriber intentions
-  const eventsToSubscribe = [
-    'stateManager:inventoryChanged',
-    'stateManager:regionsComputed',
-    'stateManager:locationChecked',
-    'stateManager:checkedLocationsCleared',
-    'loop:stateChanged',
-    'loop:actionCompleted',
-    'loop:discoveryChanged',
-    'loop:modeChanged',
-    'settings:changed', // For colorblind mode etc. within RegionUI
-  ];
-  eventsToSubscribe.forEach((eventName) => {
-    registrationApi.registerEventBusSubscriberIntent(eventName);
-  });
-
   // Register EventBus publisher intentions (used by RegionUI)
   registrationApi.registerEventBusPublisher('ui:navigateToRegion');
   registrationApi.registerEventBusPublisher('ui:navigateToLocation');
@@ -130,7 +114,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
   moduleDispatcher = initializationApi.getDispatcher();
 
   // Example: Subscribe to something using the module-wide eventBus if needed later
-  // const handle = moduleEventBus.subscribe('some:event', () => {});
+  // const handle = moduleEventBus.subscribe('some:event', () => {}, 'moduleName');
   // moduleUnsubscribeHandles.push(handle);
 
   // If the module needs to perform async setup, do it here
