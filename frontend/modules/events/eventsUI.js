@@ -230,7 +230,47 @@ class EventsUI {
     style.textContent = CSS;
     this.rootElement.appendChild(style);
 
-    // 2. Create and append structural elements - Dispatcher first
+    // 2. Create and append Expand/Collapse buttons
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.marginBottom = '10px';
+    buttonContainer.style.textAlign = 'center';
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.gap = '10px';
+    buttonContainer.style.justifyContent = 'center';
+    
+    const expandCollapseAllButton = document.createElement('button');
+    expandCollapseAllButton.textContent = 'Collapse All';
+    expandCollapseAllButton.style.padding = '5px 10px';
+    expandCollapseAllButton.style.backgroundColor = '#61afef';
+    expandCollapseAllButton.style.color = '#282c34';
+    expandCollapseAllButton.style.border = 'none';
+    expandCollapseAllButton.style.borderRadius = '3px';
+    expandCollapseAllButton.style.cursor = 'pointer';
+    expandCollapseAllButton.style.fontSize = '12px';
+    expandCollapseAllButton.addEventListener('click', () => {
+      this._toggleAllDetails();
+    });
+    
+    const expandCollapseCategoriesButton = document.createElement('button');
+    expandCollapseCategoriesButton.textContent = 'Collapse Categories';
+    expandCollapseCategoriesButton.style.padding = '5px 10px';
+    expandCollapseCategoriesButton.style.backgroundColor = '#61afef';
+    expandCollapseCategoriesButton.style.color = '#282c34';
+    expandCollapseCategoriesButton.style.border = 'none';
+    expandCollapseCategoriesButton.style.borderRadius = '3px';
+    expandCollapseCategoriesButton.style.cursor = 'pointer';
+    expandCollapseCategoriesButton.style.fontSize = '12px';
+    expandCollapseCategoriesButton.addEventListener('click', () => {
+      this._toggleCategoryDetails();
+    });
+    
+    buttonContainer.appendChild(expandCollapseAllButton);
+    buttonContainer.appendChild(expandCollapseCategoriesButton);
+    this.rootElement.appendChild(buttonContainer);
+    this.expandCollapseAllButton = expandCollapseAllButton;
+    this.expandCollapseCategoriesButton = expandCollapseCategoriesButton;
+
+    // 3. Create and append structural elements - Dispatcher first
     const dispatcherDetails = document.createElement('details');
     dispatcherDetails.open = true;
     dispatcherDetails.className = 'main-details-section';
@@ -252,7 +292,7 @@ class EventsUI {
     `;
     this.rootElement.appendChild(eventBusDetails);
 
-    // 3. Query for the sections within the appended elements
+    // 4. Query for the sections within the appended elements
     this.dispatcherSection = dispatcherDetails.querySelector(
       '.dispatcher-section'
     );
@@ -733,6 +773,46 @@ class EventsUI {
       }
     });
     return checkbox;
+  }
+
+  // Method to toggle all details elements
+  _toggleAllDetails() {
+    const allDetails = this.rootElement.querySelectorAll('details');
+    const allOpen = Array.from(allDetails).every(detail => detail.open);
+    
+    if (allOpen) {
+      // Close all details
+      allDetails.forEach(detail => {
+        detail.open = false;
+      });
+      this.expandCollapseAllButton.textContent = 'Expand All';
+    } else {
+      // Open all details
+      allDetails.forEach(detail => {
+        detail.open = true;
+      });
+      this.expandCollapseAllButton.textContent = 'Collapse All';
+    }
+  }
+
+  // Method to toggle only category details elements
+  _toggleCategoryDetails() {
+    const categoryDetails = this.rootElement.querySelectorAll('details.category-block');
+    const allOpen = Array.from(categoryDetails).every(detail => detail.open);
+    
+    if (allOpen) {
+      // Close all category details
+      categoryDetails.forEach(detail => {
+        detail.open = false;
+      });
+      this.expandCollapseCategoriesButton.textContent = 'Expand Categories';
+    } else {
+      // Open all category details
+      categoryDetails.forEach(detail => {
+        detail.open = true;
+      });
+      this.expandCollapseCategoriesButton.textContent = 'Collapse Categories';
+    }
   }
 
   // ADDED: Helper to render a single module entry for the dispatcher view

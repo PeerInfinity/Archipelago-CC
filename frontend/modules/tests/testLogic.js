@@ -193,6 +193,17 @@ export const testLogic = {
         autoStartToApply
       );
     }
+    
+    // Store the hideDisabledTests value
+    let hideDisabledToApply = false;
+    if (data && typeof data.hideDisabledTests === 'boolean') {
+      hideDisabledToApply = data.hideDisabledTests;
+      log(
+        'info',
+        '[TestLogic applyLoadedState] hideDisabledToApply:',
+        hideDisabledToApply
+      );
+    }
 
     // Ensure discovery is complete before applying loaded state
     await initializeTestDiscovery();
@@ -223,6 +234,24 @@ export const testLogic = {
       '[TestLogic applyLoadedState] Stored loadedAutoStartSetting:',
       loadedAutoStartSetting
     );
+    
+    // Apply the hideDisabledTests setting
+    let hideDisabledChanged = false;
+    const oldHideDisabledValue = TestState.shouldHideDisabledTests();
+    log(
+      'info',
+      '[TestLogic applyLoadedState] oldHideDisabledValue after discovery:',
+      oldHideDisabledValue
+    );
+    if (hideDisabledToApply !== oldHideDisabledValue) {
+      TestState.setHideDisabledTests(hideDisabledToApply);
+      hideDisabledChanged = true;
+      log(
+        'info',
+        '[TestLogic applyLoadedState] Set hideDisabledTests to:',
+        hideDisabledToApply
+      );
+    }
     if (data && typeof data.defaultEnabledState === 'boolean') {
       TestState.testLogicState.defaultEnabledState = data.defaultEnabledState;
     }
@@ -335,10 +364,15 @@ export const testLogic = {
 
     if (eventBusInstance) {
       const testsToPublish = await this.getTests();
-      eventBusInstance.publish('test:listUpdated', { tests: testsToPublish }, 'tests');
+      eventBusInstance.publish('tests:listUpdated', { tests: testsToPublish }, 'tests');
       if (autoStartChanged) {
-        eventBusInstance.publish('test:autoStartConfigChanged', {
+        eventBusInstance.publish('tests:autoStartConfigChanged', {
           autoStartEnabled: TestState.shouldAutoStartTests(),
+        }, 'tests');
+      }
+      if (hideDisabledChanged) {
+        eventBusInstance.publish('tests:hideDisabledConfigChanged', {
+          hideDisabledEnabled: TestState.shouldHideDisabledTests(),
         }, 'tests');
       }
     }
@@ -358,7 +392,7 @@ export const testLogic = {
 
     // Publish event to notify that loaded state is fully applied
     if (eventBusInstance) {
-      eventBusInstance.publish('test:loadedStateApplied', {
+      eventBusInstance.publish('tests:loadedStateApplied', {
         autoStartEnabled: TestState.shouldAutoStartTests(),
         testCount: currentTests.length,
         enabledTestCount: currentTests.filter((t) => t.isEnabled).length,
@@ -398,8 +432,19 @@ export const testLogic = {
   setAutoStartTests(shouldAutoStart) {
     TestState.setAutoStartTests(shouldAutoStart);
     if (eventBusInstance) {
-      eventBusInstance.publish('test:autoStartConfigChanged', {
+      eventBusInstance.publish('tests:autoStartConfigChanged', {
         autoStartEnabled: shouldAutoStart,
+      }, 'tests');
+    }
+  },
+  shouldHideDisabledTests() {
+    return TestState.shouldHideDisabledTests();
+  },
+  setHideDisabledTests(shouldHide) {
+    TestState.setHideDisabledTests(shouldHide);
+    if (eventBusInstance) {
+      eventBusInstance.publish('tests:hideDisabledConfigChanged', {
+        hideDisabledEnabled: shouldHide,
       }, 'tests');
     }
   },
@@ -408,7 +453,7 @@ export const testLogic = {
     await initializeTestDiscovery();
     TestState.toggleTestEnabled(testId, isEnabled);
     if (eventBusInstance)
-      eventBusInstance.publish('test:listUpdated', {
+      eventBusInstance.publish('tests:listUpdated', {
         tests: await this.getTests(),
       }, 'tests');
   },
@@ -417,7 +462,7 @@ export const testLogic = {
     await initializeTestDiscovery();
     if (TestState.updateTestOrder(testId, direction)) {
       if (eventBusInstance)
-        eventBusInstance.publish('test:listUpdated', {
+        eventBusInstance.publish('tests:listUpdated', {
           tests: await this.getTests(),
         }, 'tests');
     }
@@ -427,7 +472,7 @@ export const testLogic = {
   _setTestStatus(testId, status, eventWaitingFor = null) {
     TestState.setTestStatus(testId, status, eventWaitingFor);
     if (eventBusInstance)
-      eventBusInstance.publish('test:statusChanged', {
+      eventBusInstance.publish('tests:statusChanged', {
         testId,
         status,
         eventWaitingFor,
@@ -437,7 +482,7 @@ export const testLogic = {
   _addTestCondition(testId, description, status) {
     TestState.addTestCondition(testId, description, status);
     if (eventBusInstance)
-      eventBusInstance.publish('test:conditionReported', {
+      eventBusInstance.publish('tests:conditionReported', {
         testId,
         description,
         status,
@@ -447,7 +492,7 @@ export const testLogic = {
   _emitLogMessage(testId, message, type) {
     TestState.addTestLog(testId, message, type || 'info');
     if (eventBusInstance)
-      eventBusInstance.publish('test:logAdded', { testId, message, type }, 'tests');
+      eventBusInstance.publish('tests:logAdded', { testId, message, type }, 'tests');
   },
 
   _emitTestCompleted(testId, overallStatus) {
@@ -472,7 +517,7 @@ export const testLogic = {
         'info',
         `[_emitTestCompleted] Publishing test:completed event for testId: ${testId}`
       );
-      eventBusInstance.publish('test:completed', {
+      eventBusInstance.publish('tests:completed', {
         testId,
         name: test ? test.name : testId,
         overallStatus: overallStatus ? 'passed' : 'failed',
@@ -607,7 +652,7 @@ export const testLogic = {
     log('info', `[TestLogic] Running ${enabledTests.length} enabled tests...`);
 
     if (eventBusInstance)
-      eventBusInstance.publish('test:allRunsStarted', {
+      eventBusInstance.publish('tests:allRunsStarted', {
         testCount: enabledTests.length,
       }, 'tests');
 
@@ -619,13 +664,13 @@ export const testLogic = {
         const specificEventListener = (eventData) => {
           if (eventData.testId === test.id) {
             eventBusInstance.unsubscribe(
-              'test:completed',
+              'tests:completed',
               specificEventListener
             );
             resolve();
           }
         };
-        eventBusInstance.subscribe('test:completed', specificEventListener, 'tests');
+        eventBusInstance.subscribe('tests:completed', specificEventListener, 'tests');
       });
 
       // Start the test
@@ -639,6 +684,16 @@ export const testLogic = {
 
     // Emit summary event
     const finalTests = TestState.getTests();
+    const ranTests = finalTests.filter(t => enabledTests.some(e => e.id === t.id));
+    
+    // Count failed conditions (subtests)
+    const failedConditionsCount = ranTests.reduce((total, test) => {
+      if (test.conditions && Array.isArray(test.conditions)) {
+        return total + test.conditions.filter(cond => cond.status === 'failed').length;
+      }
+      return total;
+    }, 0);
+    
     const summary = {
       totalRun: enabledTests.length,
       passedCount: finalTests.filter(
@@ -647,12 +702,13 @@ export const testLogic = {
       failedCount: finalTests.filter(
         (t) => enabledTests.some((e) => e.id === t.id) && t.status === 'failed'
       ).length,
+      failedConditionsCount: failedConditionsCount,
     };
 
     log('info', '[TestLogic] All enabled tests completed:', summary);
 
     if (eventBusInstance)
-      eventBusInstance.publish('test:allRunsCompleted', { summary }, 'tests');
+      eventBusInstance.publish('tests:allRunsCompleted', { summary }, 'tests');
 
     // Set Playwright completion flags for automated testing
     this._setPlaywrightCompletionFlags(summary, finalTests);
@@ -670,7 +726,7 @@ export const testLogic = {
   toggleCategoryEnabled(categoryName, isEnabled) {
     TestState.toggleCategoryEnabled(categoryName, isEnabled);
     if (eventBusInstance)
-      eventBusInstance.publish('test:categoryChanged', {
+      eventBusInstance.publish('tests:categoryChanged', {
         categoryName,
         isEnabled,
       }, 'tests');
@@ -679,7 +735,7 @@ export const testLogic = {
   updateCategoryOrder(categoryName, direction) {
     if (TestState.updateCategoryOrder(categoryName, direction)) {
       if (eventBusInstance)
-        eventBusInstance.publish('test:categoriesUpdated', {
+        eventBusInstance.publish('tests:categoriesUpdated', {
           categories: TestState.getCategories(),
         }, 'tests');
     }
@@ -695,7 +751,7 @@ export const testLogic = {
     });
 
     if (eventBusInstance) {
-      eventBusInstance.publish('test:allCategoriesChanged', {
+      eventBusInstance.publish('tests:allCategoriesChanged', {
         isEnabled,
         categories,
       }, 'tests');

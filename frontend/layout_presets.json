@@ -15,11 +15,6 @@
             },
             {
               "type": "component",
-              "componentType": "playerStatePanel",
-              "title": "Player State"
-            },
-            {
-              "type": "component",
               "componentType": "testsPanel",
               "title": "Tests"
             },
@@ -88,6 +83,11 @@
               "type": "component",
               "componentType": "settingsPanel",
               "title": "Settings"
+            },
+            {
+              "type": "component",
+              "componentType": "playerStatePanel",
+              "title": "Player State"
             }
           ]
         },

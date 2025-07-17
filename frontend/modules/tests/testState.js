@@ -6,6 +6,7 @@
 export const testLogicState = {
   tests: [], // Initialize as empty; will be populated by testDiscovery and testLogic
   autoStartTestsOnLoad: false,
+  hideDisabledTests: false, // Default to false - show all tests
   defaultEnabledState: false, // Default for newly discovered tests or categories
   currentRunningTestId: null,
   categories: {
@@ -26,6 +27,7 @@ export function findTestById(testId) {
 export function getSavableTestConfig() {
   return {
     autoStartTestsOnLoad: testLogicState.autoStartTestsOnLoad,
+    hideDisabledTests: testLogicState.hideDisabledTests,
     defaultEnabledState: testLogicState.defaultEnabledState,
     categories: JSON.parse(JSON.stringify(testLogicState.categories)), // Deep copy
     tests: testLogicState.tests.map((t) => ({
@@ -49,6 +51,16 @@ export function setAutoStartTests(shouldAutoStart) {
 
 export function shouldAutoStartTests() {
   return testLogicState.autoStartTestsOnLoad;
+}
+
+export function setHideDisabledTests(shouldHide) {
+  if (typeof shouldHide === 'boolean') {
+    testLogicState.hideDisabledTests = shouldHide;
+  }
+}
+
+export function shouldHideDisabledTests() {
+  return testLogicState.hideDisabledTests;
 }
 
 export function toggleTestEnabled(testId, isEnabled) {

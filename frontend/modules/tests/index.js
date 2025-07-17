@@ -33,18 +33,20 @@ export function register(registrationApi) {
 
   // Register events that tests publishes
   registrationApi.registerEventBusPublisher('ui:activatePanel');
-  registrationApi.registerEventBusPublisher('test:listUpdated');
-  registrationApi.registerEventBusPublisher('test:autoStartConfigChanged');
-  registrationApi.registerEventBusPublisher('test:loadedStateApplied');
-  registrationApi.registerEventBusPublisher('test:statusChanged');
-  registrationApi.registerEventBusPublisher('test:conditionReported');
-  registrationApi.registerEventBusPublisher('test:logAdded');
-  registrationApi.registerEventBusPublisher('test:completed');
-  registrationApi.registerEventBusPublisher('test:allRunsStarted');
-  registrationApi.registerEventBusPublisher('test:allRunsCompleted');
-  registrationApi.registerEventBusPublisher('test:categoryChanged');
-  registrationApi.registerEventBusPublisher('test:categoriesUpdated');
-  registrationApi.registerEventBusPublisher('test:allCategoriesChanged');
+  registrationApi.registerEventBusPublisher('tests:listUpdated');
+  registrationApi.registerEventBusPublisher('tests:autoStartConfigChanged');
+  registrationApi.registerEventBusPublisher('tests:hideDisabledConfigChanged');
+  registrationApi.registerEventBusPublisher('tests:loadedStateApplied');
+  registrationApi.registerEventBusPublisher('tests:statusChanged');
+  registrationApi.registerEventBusPublisher('tests:conditionReported');
+  registrationApi.registerEventBusPublisher('tests:logAdded');
+  registrationApi.registerEventBusPublisher('tests:completed');
+  registrationApi.registerEventBusPublisher('tests:allRunsStarted');
+  registrationApi.registerEventBusPublisher('tests:allRunsCompleted');
+  registrationApi.registerEventBusPublisher('tests:categoryChanged');
+  registrationApi.registerEventBusPublisher('tests:categoriesUpdated');
+  registrationApi.registerEventBusPublisher('tests:allCategoriesChanged');
+  registrationApi.registerEventBusPublisher('tests:testEventAfterDelay');
 
   registrationApi.registerJsonDataHandler('testsConfig', {
     displayName: 'Tests Configuration',
@@ -75,7 +77,7 @@ export function register(registrationApi) {
       );
 
       // Optionally, trigger a UI refresh if the panel might already be open
-      eventBus.publish('test:listUpdated', {
+      eventBus.publish('tests:listUpdated', {
         tests: await testLogic.getTests(),
       }, 'tests');
     },
@@ -111,7 +113,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   }, 'tests');
 
   // Listen for when test loaded state is fully applied (including auto-start check)
-  eventBus.subscribe('test:loadedStateApplied', (eventData) => {
+  eventBus.subscribe('tests:loadedStateApplied', (eventData) => {
     log('info', '[Tests Module] test:loadedStateApplied received:', eventData);
     log(
       'info',
@@ -120,7 +122,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   }, 'tests');
 
   // Subscribe to test log messages to pipe them to the main logger
-  eventBus.subscribe('test:logAdded', (logData) => {
+  eventBus.subscribe('tests:logAdded', (logData) => {
     if (window.logger && typeof window.logger.log === 'function') {
       const { testId, message, type } = logData;
       const category = `TestRunner/${testId}`;

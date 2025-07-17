@@ -21,23 +21,23 @@ export async function simpleEventTest(testController) {
     setTimeout(() => {
       log(
         'info',
-        '[Test Case - simpleEventTest] Publishing custom:testEventAfterDelay'
+        '[Test Case - simpleEventTest] Publishing tests:testEventAfterDelay'
       );
       // Assuming testController.eventBus is the correct eventBus instance
-      testController.eventBus.publish('custom:testEventAfterDelay', {
+      testController.eventBus.publish('tests:testEventAfterDelay', {
         detail: 'Event Fired!',
       }, 'tests');
     }, 1000);
 
-    testController.log('Waiting for custom:testEventAfterDelay...');
+    testController.log('Waiting for tests:testEventAfterDelay...');
     const eventData = await testController.waitForEvent(
-      'custom:testEventAfterDelay',
+      'tests:testEventAfterDelay',
       2000
     );
 
     let passCondition = eventData && eventData.detail === 'Event Fired!';
     testController.reportCondition(
-      'custom:testEventAfterDelay received correctly',
+      'tests:testEventAfterDelay received correctly',
       passCondition
     );
     await testController.completeTest(passCondition);
@@ -89,7 +89,7 @@ registerTest({
     'Checks if waitForEvent correctly pauses and resumes on a custom event.',
   testFunction: simpleEventTest,
   category: 'Core',
-  enabled: false,
+  enabled: true,
   order: 0,
 });
 

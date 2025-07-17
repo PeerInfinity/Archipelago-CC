@@ -1456,18 +1456,7 @@ export class RegionUI {
         li.classList.toggle('accessible', isTraversable);
         li.classList.toggle('inaccessible', !isTraversable);
         
-        // Render logic tree for the entrance rule if present
-        if (entrance.accessRule) {
-          const logicTreeElement = renderLogicTree(
-            entrance.accessRule,
-            useColorblind,
-            snapshotInterface
-          );
-          const ruleDiv = document.createElement('div');
-          ruleDiv.style.marginLeft = '1rem';
-          ruleDiv.innerHTML = `Rule: ${logicTreeElement.outerHTML}`;
-          li.appendChild(ruleDiv);
-        }
+        // Logic tree display removed for entrances - only showing entrance name
         
         entrancesList.appendChild(li);
       });

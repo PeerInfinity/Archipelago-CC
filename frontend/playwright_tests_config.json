@@ -1,5 +1,6 @@
 {
   "autoStartTestsOnLoad": true,
+  "hideDisabledTests": false,
   "defaultEnabledState": false,
   "categories": {
     "Test Spoilers Panel": {

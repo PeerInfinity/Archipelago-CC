@@ -26,6 +26,7 @@ export class TestUI {
     this.testListContainer.className = 'test-list-container';
 
     this.autoStartCheckbox = null; // Placeholder for the checkbox element
+    this.hideDisabledCheckbox = null; // Placeholder for the hide disabled checkbox
 
     this.unsubscribeHandles = [];
 
@@ -71,16 +72,21 @@ export class TestUI {
     const controlsContainer = document.createElement('div');
     controlsContainer.className = 'test-panel-controls';
     controlsContainer.style.marginBottom = '10px';
+    controlsContainer.style.display = 'flex';
+    controlsContainer.style.flexDirection = 'column';
+    controlsContainer.style.alignItems = 'flex-start'; // Left align all items
+    controlsContainer.style.gap = '10px';
 
     const runAllButton = document.createElement('button');
     runAllButton.textContent = 'Run All Enabled Tests';
     runAllButton.className = 'button run-all-tests-button';
+    runAllButton.style.display = 'block';
+    runAllButton.style.width = 'fit-content';
     controlsContainer.appendChild(runAllButton);
 
     // Enable All checkbox
     const enableAllLabel = document.createElement('label');
     enableAllLabel.style.display = 'block';
-    enableAllLabel.style.marginTop = '10px';
     enableAllLabel.style.fontWeight = 'bold';
     this.enableAllCheckbox = document.createElement('input');
     this.enableAllCheckbox.type = 'checkbox';
@@ -95,7 +101,6 @@ export class TestUI {
     // Auto-start checkbox
     const autoStartLabel = document.createElement('label');
     autoStartLabel.style.display = 'block';
-    autoStartLabel.style.marginTop = '10px';
     this.autoStartCheckbox = document.createElement('input');
     this.autoStartCheckbox.type = 'checkbox';
     this.autoStartCheckbox.id = 'auto-start-tests-checkbox';
@@ -107,9 +112,25 @@ export class TestUI {
     );
     controlsContainer.appendChild(autoStartLabel);
 
+    // Hide Disabled Tests checkbox
+    const hideDisabledLabel = document.createElement('label');
+    hideDisabledLabel.style.display = 'block';
+    this.hideDisabledCheckbox = document.createElement('input');
+    this.hideDisabledCheckbox.type = 'checkbox';
+    this.hideDisabledCheckbox.id = 'hide-disabled-tests-checkbox';
+    this.hideDisabledCheckbox.style.marginRight = '5px';
+    this.hideDisabledCheckbox.checked = testLogic.shouldHideDisabledTests(); // Set initial state
+    hideDisabledLabel.appendChild(this.hideDisabledCheckbox);
+    hideDisabledLabel.appendChild(
+      document.createTextNode('Hide Disabled Tests')
+    );
+    controlsContainer.appendChild(hideDisabledLabel);
+
     this.overallStatusElement = document.createElement('div');
     this.overallStatusElement.className = 'overall-test-status';
-    this.overallStatusElement.style.marginTop = '5px';
+    this.overallStatusElement.style.display = 'block';
+    this.overallStatusElement.style.minHeight = '20px'; // Reserve space even when empty
+    this.overallStatusElement.textContent = 'Idle'; // Set initial message
     controlsContainer.appendChild(this.overallStatusElement);
 
     this.rootElement.appendChild(controlsContainer);
@@ -124,7 +145,7 @@ export class TestUI {
         this.overallStatusElement.style.color = 'lightblue'; // Indicate running
         try {
           await testLogic.runAllEnabledTests();
-          // Summary is handled by 'test:allRunsCompleted' event
+          // Summary is handled by 'tests:allRunsCompleted' event
         } catch (error) {
           log('error', 'Error running all tests:', error);
           this.overallStatusElement.textContent = `Error: ${error.message}`;
@@ -146,6 +167,13 @@ export class TestUI {
       });
     }
 
+    // Listener for the hide disabled tests checkbox
+    if (this.hideDisabledCheckbox) {
+      this.hideDisabledCheckbox.addEventListener('change', (event) => {
+        testLogic.setHideDisabledTests(event.target.checked);
+      });
+    }
+
     this.testListContainer.addEventListener('click', (event) => {
       const target = event.target;
       const testItemElement = target.closest('.test-item');
@@ -154,55 +182,69 @@ export class TestUI {
       const testId = testItemElement.dataset.testId;
 
       if (target.classList.contains('run-single-test-button')) {
-        // Clear overall status when running a single test
-        if (this.overallStatusElement)
-          this.overallStatusElement.textContent = '';
+        // Show which test is running
+        if (this.overallStatusElement) {
+          const test = testLogic.getTests().then(tests => {
+            const currentTest = tests.find(t => t.id === testId);
+            if (currentTest) {
+              this.overallStatusElement.textContent = `Running test: ${currentTest.name}`;
+              this.overallStatusElement.style.color = 'lightblue';
+            }
+          }).catch(console.error);
+        }
         testLogic.runTest(testId);
       } else if (target.classList.contains('test-enable-checkbox')) {
         testLogic.toggleTestEnabled(testId, target.checked);
-        // The list will re-render via 'test:listUpdated'
+        // The list will re-render via 'tests:listUpdated'
       } else if (target.classList.contains('move-test-up-button')) {
         testLogic.updateTestOrder(testId, 'up');
-        // The list will re-render via 'test:listUpdated'
+        // The list will re-render via 'tests:listUpdated'
       } else if (target.classList.contains('move-test-down-button')) {
         testLogic.updateTestOrder(testId, 'down');
-        // The list will re-render via 'test:listUpdated'
+        // The list will re-render via 'tests:listUpdated'
       }
     });
   }
 
   _subscribeToLogicEvents() {
     const handlers = {
-      'test:listUpdated': (data) =>
+      'tests:listUpdated': (data) =>
         this.renderTestList(data.tests).catch(console.error),
-      'test:statusChanged': (data) =>
+      'tests:statusChanged': (data) =>
         this.updateTestStatus(data.testId, data.status, data.eventWaitingFor),
-      'test:conditionReported': (data) =>
+      'tests:conditionReported': (data) =>
         this.updateTestCondition(data.testId, {
           description: data.description,
           status: data.status,
         }),
-      'test:completed': (data) => {
+      'tests:completed': (data) => {
         log(
           'info',
           `[TestUI] Received test:completed event for ${data.testId}: ${data.overallStatus}`
         );
         this.updateTestStatus(data.testId, data.overallStatus);
+        // Reset overall status to Idle when a single test completes
+        if (this.overallStatusElement && this.overallStatusElement.textContent.startsWith('Running test:')) {
+          this.overallStatusElement.textContent = 'Idle';
+          this.overallStatusElement.style.color = '';
+        }
       },
-      'test:executionStarted': (data) => {
+      'tests:executionStarted': (data) => {
         /* Optionally handle test start indication */
       },
-      'test:allRunsCompleted': (data) =>
+      'tests:allRunsCompleted': (data) =>
         this.displayOverallSummary(data.summary),
-      'test:logMessage': (data) =>
+      'tests:logMessage': (data) =>
         this.logTestMessage(data.testId, data.message, data.type),
-      'test:autoStartConfigChanged': (data) =>
+      'tests:autoStartConfigChanged': (data) =>
         this.updateAutoStartCheckbox(data.autoStartEnabled),
-      'test:allCategoriesChanged': (data) =>
+      'tests:hideDisabledConfigChanged': (data) =>
+        this.updateHideDisabledCheckbox(data.hideDisabledEnabled),
+      'tests:allCategoriesChanged': (data) =>
         this.renderTestList().catch(console.error),
-      'test:categoryChanged': (data) =>
+      'tests:categoryChanged': (data) =>
         this.updateEnableAllCheckbox().catch(console.error),
-      'test:categoriesUpdated': (data) =>
+      'tests:categoriesUpdated': (data) =>
         this.renderTestList().catch(console.error),
     };
 
@@ -221,9 +263,17 @@ export class TestUI {
       return;
     }
 
+    // Check if we should hide disabled tests
+    const shouldHideDisabled = testLogic.shouldHideDisabledTests();
+
     // Group tests by category
     const testsByCategory = {};
     tests.forEach((test) => {
+      // Skip disabled tests if hiding is enabled
+      if (shouldHideDisabled && !test.isEnabled) {
+        return;
+      }
+      
       if (!testsByCategory[test.category]) {
         testsByCategory[test.category] = [];
       }
@@ -237,6 +287,16 @@ export class TestUI {
     orderedCategories.forEach((category, categoryIndex) => {
       // Skip categories that have no tests
       if (!testsByCategory[category]) return;
+      
+      // If hiding disabled tests, also skip categories where all tests are disabled
+      if (shouldHideDisabled && testsByCategory[category].length === 0) {
+        return;
+      }
+      
+      // If hiding disabled tests, also skip categories that are disabled
+      if (shouldHideDisabled && !testLogic.isCategoryEnabled(category)) {
+        return;
+      }
 
       const categorySection = document.createElement('div');
       categorySection.className = 'test-category-section';
@@ -308,7 +368,7 @@ export class TestUI {
         const isEnabled = event.target.checked;
         testLogic.toggleCategoryEnabled(category, isEnabled);
         // Update all test checkboxes in this category (for immediate visual feedback)
-        // This will be confirmed by the re-render triggered by 'test:listUpdated'
+        // This will be confirmed by the re-render triggered by 'tests:listUpdated'
         const testCheckboxes = categorySection.querySelectorAll(
           '.test-enable-checkbox'
         );
@@ -530,7 +590,15 @@ export class TestUI {
 
   displayOverallSummary(summary) {
     if (this.overallStatusElement) {
-      this.overallStatusElement.textContent = `All tests finished. Passed: ${summary.passedCount}, Failed: ${summary.failedCount}, Total: ${summary.totalRun}.`;
+      let message = `All tests finished. Passed: ${summary.passedCount}, Failed: ${summary.failedCount}, Total: ${summary.totalRun}`;
+      
+      // Add failed conditions count if available
+      if (summary.failedConditionsCount !== undefined) {
+        message += `, Failed Subtests: ${summary.failedConditionsCount}`;
+      }
+      
+      message += '.';
+      this.overallStatusElement.textContent = message;
       this.overallStatusElement.style.color =
         summary.failedCount > 0 ? 'lightcoral' : 'lightgreen';
     }
@@ -540,6 +608,14 @@ export class TestUI {
     if (this.autoStartCheckbox) {
       this.autoStartCheckbox.checked = isEnabled;
     }
+  }
+
+  updateHideDisabledCheckbox(isEnabled) {
+    if (this.hideDisabledCheckbox) {
+      this.hideDisabledCheckbox.checked = isEnabled;
+    }
+    // Trigger re-render to apply filtering
+    this.renderTestList().catch(console.error);
   }
 
   async updateEnableAllCheckbox() {

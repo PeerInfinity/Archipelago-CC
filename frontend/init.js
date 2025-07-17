@@ -30,6 +30,7 @@ centralRegistry.registerEventBusPublisher('core', 'app:modesJsonLoaded');
 centralRegistry.registerEventBusPublisher('core', 'app:readyForUiDataLoad');
 centralRegistry.registerEventBusPublisher('core', 'app:activeModeDetermined');
 centralRegistry.registerEventBusPublisher('core', 'uiHostRegistry:hostStatusChanged');
+centralRegistry.registerEventBusPublisher('core', 'ui:activatePanel');
 
 import { GoldenLayout } from './libs/golden-layout/js/esm/golden-layout.js';
 
