@@ -268,7 +268,7 @@ registerTest({
   name: 'Library Location Accessibility Test',
   category: 'Location Panel',
   testFunction: testLibraryLocationAccessibility,
-  enabled: false,
+  //enabled: false,
   description: 'Verifies that Library region and location accessibility are properly separated. Expected: Library region reachable, Library location unreachable.'
 });
 
@@ -277,6 +277,6 @@ registerTest({
   name: 'Location Panel Basic Functionality',
   category: 'Location Panel',
   testFunction: testLocationPanelBasicFunctionality,
-  enabled: false,
+  //enabled: false,
   description: 'Tests basic functionality of the Location Panel including UI elements and data loading.'
 });

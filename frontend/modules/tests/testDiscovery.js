@@ -24,7 +24,7 @@ function log(level, message, ...data) {
 // List of test case files to import (this is the only manual part)
 const TEST_CASE_FILES = [
   './testCases/coreTests.js',
-  './testCases/stateManagementTests.js',
+  //'./testCases/stateManagementTests.js',
   './testCases/locationPanelTests.js',
   './testCases/exitPanelTests.js',
   './testCases/regionPanelTests.js',

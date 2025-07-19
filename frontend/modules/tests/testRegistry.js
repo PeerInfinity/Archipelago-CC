@@ -61,7 +61,7 @@ export function registerTest(testDefinition) {
     description,
     testFunction,
     category = 'Uncategorized',
-    enabled = false,
+    enabled, // Don't provide default here, preserve undefined
     order,
   } = testDefinition;
 

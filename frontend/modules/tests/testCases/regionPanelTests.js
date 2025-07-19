@@ -621,7 +621,7 @@ registerTest({
   name: 'Library Region Accessibility Test (Show All)',
   category: 'Region Panel',
   testFunction: testLibraryRegionAccessibilityShowAll,
-  enabled: false,
+  //enabled: false,
   description: 'Verifies that Library region shows as accessible while Library location shows as inaccessible using "Show All Regions" mode.'
 });
 
@@ -630,7 +630,7 @@ registerTest({
   name: 'Library Region Accessibility Test (Navigation)',
   category: 'Region Panel',
   testFunction: testLibraryRegionAccessibilityNavigation,
-  enabled: false,
+  //enabled: false,
   description: 'Verifies that Library region shows as accessible while Library location shows as inaccessible using Move button navigation.'
 });
 
@@ -639,7 +639,7 @@ registerTest({
   name: 'Region Panel Basic Functionality',
   category: 'Region Panel',
   testFunction: testRegionPanelBasicFunctionality,
-  enabled: false,
+  //enabled: false,
   description: 'Tests basic functionality of the Region Panel including UI elements and data loading.'
 });
 
@@ -972,7 +972,7 @@ registerTest({
   name: 'Show Paths Checkbox',
   category: 'Region Panel',
   testFunction: testShowPathsCheckbox,
-  enabled: false,
+  //enabled: false,
   description: 'Tests the Show Paths checkbox functionality for hiding/showing the full region path.'
 });
 
@@ -981,7 +981,7 @@ registerTest({
   name: 'Region Move Event Dispatch',
   category: 'Region Panel',
   testFunction: testRegionMoveEventDispatch,
-  enabled: false,
+  //enabled: false,
   description: 'Tests that clicking Move buttons dispatches user:regionMove events.'
 });
 
@@ -990,7 +990,7 @@ registerTest({
   name: 'Entrance Display',
   category: 'Region Panel',
   testFunction: testEntranceDisplay,
-  enabled: false,
+  //enabled: false,
   description: 'Tests that region entrances are displayed with proper formatting and accessibility.'
 });
 
@@ -1593,7 +1593,7 @@ registerTest({
   name: 'Region Move Event Handler Toggle',
   category: 'Region Panel',
   testFunction: testRegionMoveEventHandlerToggle,
-  enabled: false,
+  //enabled: false,
   description: 'Tests the ability to toggle the regions module event handler for user:regionMove events through the Events panel.'
 });
 
@@ -1602,6 +1602,6 @@ registerTest({
   name: 'Region Move Complete Flow',
   category: 'Region Panel',
   testFunction: testRegionMoveComplete,
-  enabled: false,
+  //enabled: false,
   description: 'Comprehensive test of region move functionality including event dispatch, state updates, and UI changes.'
 });

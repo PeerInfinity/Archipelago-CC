@@ -949,21 +949,6 @@ export class ExitUI {
             rulePasses = false;
           }
 
-        // DEBUG: Log for Library exit in rendering section
-        if (exit.name === 'Library') {
-          console.log('[ExitUI DEBUG] Library exit RENDERING logic:', {
-            exitName: exit.name,
-            parentRegionName,
-            connectedRegionName,
-            parentRegionStatus,
-            parentRegionReachable,
-            connectedRegionStatus,
-            connectedRegionReachable,
-            rulePasses,
-            hasAccessRule: !!exit.access_rule
-          });
-        }
-
         let stateClass = 'unknown-exit-state'; // Default for truly unknown/edge cases
         let statusText = 'Unknown Status';
 

@@ -204,7 +204,7 @@ registerTest({
   name: 'PlayerState Initial Region',
   category: 'Player State',
   testFunction: testPlayerStateInitialRegion,
-  enabled: true,
+  //enabled: true,
   description: 'Tests that PlayerState initializes with Menu as the current region.'
 });
 
@@ -213,7 +213,7 @@ registerTest({
   name: 'PlayerState Region Update',
   category: 'Player State',
   testFunction: testPlayerStateRegionUpdate,
-  enabled: true,
+  //enabled: true,
   description: 'Tests that PlayerState updates region via user:regionMove events.'
 });
 
@@ -222,7 +222,7 @@ registerTest({
   name: 'PlayerState Reset on Rules Loaded',
   category: 'Player State',
   testFunction: testPlayerStateResetOnRulesLoaded,
-  enabled: true,
+  //enabled: true,
   description: 'Tests that PlayerState resets to Menu when rules are loaded.'
 });
 
@@ -231,7 +231,7 @@ registerTest({
   name: 'PlayerState Event Publishing',
   category: 'Player State',
   testFunction: testPlayerStateEventPublishing,
-  enabled: true,
+  //enabled: true,
   description: 'Tests that PlayerState publishes playerState:regionChanged events.'
 });
 
@@ -240,7 +240,7 @@ registerTest({
   name: 'PlayerStatePanel Display',
   category: 'Player State',
   testFunction: testPlayerStatePanelDisplay,
-  enabled: true,
+  //enabled: true,
   description: 'Tests that PlayerStatePanel displays in the DOM.'
 });
 
@@ -249,6 +249,6 @@ registerTest({
   name: 'PlayerStatePanel Update',
   category: 'Player State',
   testFunction: testPlayerStatePanelUpdate,
-  enabled: true,
+  //enabled: true,
   description: 'Tests that PlayerStatePanel updates when region changes.'
 });

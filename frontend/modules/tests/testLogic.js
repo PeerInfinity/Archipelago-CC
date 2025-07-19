@@ -333,8 +333,15 @@ export const testLogic = {
             // But allow some overrides from loaded data if needed
           });
         } else {
-          // Use discovered test as-is
-          currentTests.push({ ...discoveredTest });
+          // Use discovered test but only apply defaultEnabledState if test has no explicit enabled value
+          const finalEnabledState = discoveredTest.isEnabled !== undefined 
+            ? discoveredTest.isEnabled  // Use explicit value from registration
+            : TestState.testLogicState.defaultEnabledState;  // Use default only if no explicit value
+          
+          currentTests.push({ 
+            ...discoveredTest,
+            isEnabled: finalEnabledState
+          });
         }
       });
 
@@ -356,8 +363,17 @@ export const testLogic = {
         }
       });
     } else {
-      // No loaded data, use discovered tests as-is
-      currentTests.push(...discoveredTests);
+      // No loaded data, use discovered tests but only apply defaultEnabledState if test has no explicit enabled value
+      discoveredTests.forEach((discoveredTest) => {
+        const finalEnabledState = discoveredTest.isEnabled !== undefined 
+          ? discoveredTest.isEnabled  // Use explicit value from registration
+          : TestState.testLogicState.defaultEnabledState;  // Use default only if no explicit value
+        
+        currentTests.push({ 
+          ...discoveredTest,
+          isEnabled: finalEnabledState
+        });
+      });
     }
 
     // Sort by order

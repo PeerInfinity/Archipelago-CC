@@ -47,7 +47,7 @@
       "testPlaythroughsModule": "WARN",
       "testPlaythroughUI": "WARN",
       "testSpoilerModule": "WARN",
-      "testSpoilerUI": "INFO",
+      "testSpoilerUI": "WARN",
       "testDiscovery": "WARN",
       "testRegistry": "WARN",
       "commonUI": "WARN",

@@ -835,7 +835,7 @@ registerTest({
     'Very simple test to isolate Path Analyzer issues without state manager.',
   testFunction: simplePathAnalyzerTest,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: -2, // Run first
 });
 
@@ -845,7 +845,7 @@ registerTest({
   description: 'Simple debug test to isolate Path Analyzer issues.',
   testFunction: debugPathAnalyzerTest,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: -1,
 });
 
@@ -855,7 +855,7 @@ registerTest({
   description: 'Opens the Path Analyzer panel and selects a region to analyze.',
   testFunction: testPathAnalyzerPanel,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: 0,
 });
 
@@ -865,7 +865,7 @@ registerTest({
   description: 'Tests Path Analyzer with Library region (no parentheses).',
   testFunction: testPathAnalyzerLibrary,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: 1,
 });
 
@@ -875,7 +875,7 @@ registerTest({
   description: 'Tests Path Analyzer with Misery Mire (Entrance) region (with parentheses).',
   testFunction: testPathAnalyzerMiseryMireEntrance,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: 2,
 });
 
@@ -885,7 +885,7 @@ registerTest({
   description: 'Tests Path Analyzer UI interaction with Library region (no parentheses).',
   testFunction: testPathAnalyzerUILibrary,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: 3,
 });
 
@@ -993,7 +993,7 @@ registerTest({
   description: 'Debug test to check actual DOM structure for Library paths',
   testFunction: debugPathAnalyzerLibraryPaths,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: 2.5,
 });
 
@@ -1003,6 +1003,6 @@ registerTest({
   description: 'Tests Path Analyzer UI interaction with Misery Mire (Entrance) region (with parentheses).',
   testFunction: testPathAnalyzerUIMiseryMireEntrance,
   category: 'Path Analysis',
-  enabled: false,
+  //enabled: false,
   //order: 4,
 });
