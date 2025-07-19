@@ -100,7 +100,7 @@ export class JsonUI {
   _createBaseUI() {
     const html = `
       <div class="json-panel-container panel-container" style="overflow-y: auto; height: 100%;">
-        <div class="sidebar-header">
+        <div class="json-header">
           <h2>JSON Data Management</h2>
         </div>
 

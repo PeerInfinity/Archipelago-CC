@@ -80,7 +80,7 @@ To confirm your development environment is working, let's make a small change to
 
 1.  Open the file `frontend/modules/inventory/inventoryUI.js`.
 2.  Find the `_createBaseUI()` method.
-3.  Inside the `innerHTML` string for the `.sidebar-header`, change `<h2>Inventory</h2>` to `<h2>My Inventory</h2>`.
+3.  Inside the `innerHTML` string for the `.inventory-header`, change `<h2>Inventory</h2>` to `<h2>My Inventory</h2>`.
 4.  Save the file.
 5.  Refresh the page at `http://localhost:8000/`.
 

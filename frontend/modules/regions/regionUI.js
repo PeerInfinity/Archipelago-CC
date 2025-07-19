@@ -243,7 +243,7 @@ export class RegionUI {
     subscribe('stateManager:rulesLoaded', (event) => {
       log(
         'info',
-        '[RegionUI] Received stateManager:rulesLoaded event. Full refresh triggered.'
+        '[RegionUI] Received stateManager:rulesLoaded event. Full refresh triggered with state reset.'
       );
 
       // Access snapshot from event (this is the new initial snapshot for the loaded rules)
@@ -255,6 +255,16 @@ export class RegionUI {
         );
         return;
       }
+
+      // RESET UI STATE: Clear all panel-specific state that should reset when rules are reloaded
+      log('info', '[RegionUI rulesLoaded] Resetting panel state...');
+      this.visitedRegions = []; // Clear all visited regions
+      this.showAllExpansionState.clear(); // Clear expansion states for "Show All" mode
+      this.navigationTarget = null; // Clear any navigation target
+      this.nextUID = 1; // Reset UID counter
+      
+      // Force clear the UI display immediately to remove any stale DOM content
+      this.clear(); // This will clear the regions container and reset expansion states
 
       // Fetch and store the NEW static data, including the original region order.
       const currentStaticData = stateManager.getStaticData();
@@ -274,18 +284,18 @@ export class RegionUI {
         this.originalRegionOrder = []; // Reset if not available
       }
 
-      // If 'Show All' is off and visitedRegions is empty (e.g., after a rules reload clears it),
-      // re-initialize with the start region. This needs the new staticData.
-      if (!this.showAll && this.visitedRegions.length === 0) {
+      // After state reset, re-initialize with the start region if 'Show All' is off
+      // This ensures we always start fresh with the default region
+      if (!this.showAll) {
         log(
           'info',
-          "[RegionUI rulesLoaded] Show All is off and visitedRegions is empty after rules load, setting start region to 'Menu'."
+          "[RegionUI rulesLoaded] Show All is off, resetting to start region 'Menu'."
         );
         // showStartRegion internally calls this.update() if successful
         this.showStartRegion('Menu');
       } else {
-        // Otherwise, trigger a full display update directly.
-        log('info', '[RegionUI rulesLoaded] Triggering full display update.');
+        // If 'Show All' is on, trigger a full display update directly.
+        log('info', '[RegionUI rulesLoaded] Triggering full display update after state reset.');
         this.update(); // this.update() calls renderAllRegions()
       }
     });

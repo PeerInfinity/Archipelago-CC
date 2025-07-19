@@ -427,6 +427,9 @@ export class StateManager {
   loadFromJSON(jsonData, selectedPlayerId) {
     this.invalidateCache(); // +++ ADDED: Ensure cache is cleared for new rules load +++
 
+    // Clear checked locations for fresh rules load
+    this.clearCheckedLocations({ sendUpdate: false }); // Don't send update during initialization
+
     // --- VERY EARLY DIAGNOSTIC LOG (using console.log directly) ---
     //log('info',
     //  `[StateManager Worker loadFromJSON VERY EARLY DIRECT LOG] Entered method. Player ID: ${selectedPlayerId}. jsonData keys: ${

@@ -220,7 +220,7 @@ export class LocationUI {
       subscribe('stateManager:rulesLoaded', (event) => {
         log(
           'info',
-          '[LocationUI] Received stateManager:rulesLoaded event. Full refresh triggered.'
+          '[LocationUI] Received stateManager:rulesLoaded event. Full refresh triggered with state reset.'
         );
 
         // Access snapshot from event (this is the new initial snapshot for the loaded rules)
@@ -235,6 +235,14 @@ export class LocationUI {
         // Note: this.uiCache in StateManagerProxy is updated with this snapshot,
         // so stateManager.getLatestStateSnapshot() SHOULD return this soon after,
         // but using event.snapshot is more direct for this event.
+
+        // RESET UI STATE: Clear all panel-specific state that should reset when rules are reloaded
+        log('info', '[LocationUI rulesLoaded] Resetting panel state...');
+        this.pendingLocations.clear(); // Clear all pending location states
+        // Note: No need to clear checked locations here as they come from the game state snapshot
+        
+        // Force clear the UI display immediately to remove any stale DOM content
+        this.clear(); // This will clear the locations grid
 
         // Fetch and store the NEW static data, including the original location order.
         const currentStaticData = stateManager.getStaticData();
@@ -258,7 +266,7 @@ export class LocationUI {
         // trigger a full display update.
         // The updateLocationDisplay method will use stateManager.getLatestStateSnapshot()
         // and stateManager.getStaticData() which should reflect the newly loaded data.
-        log('info', '[LocationUI rulesLoaded] Triggering full display update.');
+        log('info', '[LocationUI rulesLoaded] Triggering full display update after state reset.');
         this.updateLocationDisplay();
       });
 

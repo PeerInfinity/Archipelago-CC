@@ -73,7 +73,7 @@ export class InventoryUI {
     element.style.overflow = 'hidden';
 
     element.innerHTML = `
-        <div class="sidebar-header" style="flex-shrink: 0;">
+        <div class="inventory-header" style="flex-shrink: 0;">
           <h2>Inventory</h2>
           <!-- Expand button might need separate logic if needed outside GL -->
         </div>
@@ -91,10 +91,10 @@ export class InventoryUI {
             <label for="sort-alphabetically">Sort alphabetically</label>
           </div>
         </div>
-        <div id="inventory-groups" class="sidebar-content" style="flex-grow: 1; overflow-y: auto;">
+        <div id="inventory-groups" class="inventory-content" style="flex-grow: 1; overflow-y: auto;">
           <!-- Populated by JS -->
         </div>
-        <div id="inventory-flat" class="sidebar-content" style="display: none; flex-grow: 1; overflow-y: auto;">
+        <div id="inventory-flat" class="inventory-content" style="display: none; flex-grow: 1; overflow-y: auto;">
           <!-- Populated by JS -->
         </div>
         `;

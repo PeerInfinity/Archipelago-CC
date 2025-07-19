@@ -118,11 +118,19 @@ export function updateTestOrder(testId, direction) {
 export function setTestStatus(testId, status, eventWaitingFor = null) {
   const test = findTestById(testId);
   if (test) {
+    const previousStatus = test.status;
     test.status = status;
     test.currentEventWaitingFor =
       status === 'waiting_for_event' ? eventWaitingFor : null;
-    if (status === 'running' || status === 'pending') {
+    
+    // Only clear conditions when starting fresh (transitioning from non-active or completed states to running)
+    if (status === 'running' && (previousStatus === 'pending' || previousStatus === 'disabled' || previousStatus === 'passed' || previousStatus === 'failed' || !previousStatus)) {
       test.conditions = []; // Clear conditions
+      test.logs = []; // Clear logs
+    }
+    // Also clear when explicitly set to pending (test reset)
+    if (status === 'pending') {
+      test.conditions = []; // Clear conditions  
       test.logs = []; // Clear logs
     }
   }

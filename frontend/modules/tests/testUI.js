@@ -429,21 +429,53 @@ export class TestUI {
   }
 
   updateTestStatus(testId, status, eventWaitingFor = null) {
+    // Get previous status BEFORE updating the element
     const statusEl = this.testListContainer.querySelector(
       `.test-status-display[data-status-for="${testId}"]`
     );
+    
+    let previousStatus = null;
+    if (statusEl) {
+      const classList = Array.from(statusEl.classList);
+      const statusClass = classList.find(cls => 
+        cls.startsWith('test-status-') && cls !== 'test-status-display'
+      );
+      if (statusClass) {
+        previousStatus = statusClass.replace('test-status-', '');
+      }
+    }
+    
+    // Update the status element
     if (statusEl) {
       this.updateTestStatusElement(statusEl, status, eventWaitingFor);
     }
-    if (status === 'running' || status === 'pending') {
+    
+    // Clear UI immediately when we know clearing should happen (synchronously)
+    // This matches the same logic as in testState.js for when state gets cleared
+    this._clearUIIfNeeded(testId, status, previousStatus);
+  }
+  
+  _clearUIIfNeeded(testId, newStatus, previousStatus) {
+    // Apply the same clearing logic as testState.js
+    const shouldClear = (
+      (newStatus === 'running' && (previousStatus === 'pending' || previousStatus === 'disabled' || previousStatus === 'passed' || previousStatus === 'failed' || !previousStatus)) ||
+      (newStatus === 'pending')
+    );
+    
+    if (shouldClear) {
       const conditionsList = this.testListContainer.querySelector(
         `.test-conditions-list[data-conditions-for="${testId}"]`
       );
-      if (conditionsList) conditionsList.innerHTML = '';
+      if (conditionsList) {
+        conditionsList.innerHTML = '';
+      }
+      
       const logArea = this.testListContainer.querySelector(
         `.test-log-area[data-log-for="${testId}"]`
       );
-      if (logArea) logArea.innerHTML = '';
+      if (logArea) {
+        logArea.innerHTML = '';
+      }
     }
   }
 
