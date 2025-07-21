@@ -51,7 +51,7 @@ export class RegionUI {
     // If set to true, we'll show the full visited path. If false, only show last region
     this.showPaths = true;
     this.isInitialized = false; // Add flag
-    this.colorblindSettings = {}; // Add colorblind settings cache
+    this.colorblindSettings = false; // Add colorblind settings cache
     this.navigationTarget = null; // Add navigation target state
     
     // Separate tracking for "Show All" mode expansion states
@@ -84,8 +84,8 @@ export class RegionUI {
       // Full render will occur on 'stateManager:ready'.
 
       // Initialize settings cache and showAll state here as they don't depend on StateManager data
-      this.colorblindSettings =
-        settingsManager.getSetting('colorblindMode.regions') || {};
+      this.colorblindSettings = false; // Will be loaded async
+      this._loadColorblindSettings();
       const showAllCheckbox =
         this.rootElement.querySelector('#show-all-regions');
       this.showAll = showAllCheckbox ? showAllCheckbox.checked : false;
@@ -143,8 +143,8 @@ export class RegionUI {
           '[RegionUI stateManager:ready] Panel base not yet initialized by app:readyForUiDataLoad. This is unexpected. Proceeding with render attempt.'
         );
         // Initialize settings cache and showAll state if not done by app:readyForUiDataLoad handler
-        this.colorblindSettings =
-          settingsManager.getSetting('colorblindMode.regions') || {};
+        this.colorblindSettings = false; // Will be loaded async
+        this._loadColorblindSettings();
         const showAllCheckbox =
           this.rootElement.querySelector('#show-all-regions');
         this.showAll = showAllCheckbox ? showAllCheckbox.checked : false;
@@ -232,8 +232,7 @@ export class RegionUI {
           `[RegionUI] Settings changed (${key}), updating cache and triggering update.`
         );
         // Update local cache
-        this.colorblindSettings =
-          settingsManager.getSetting('colorblindMode.regions') || {};
+        this._loadColorblindSettings();
         if (this.isInitialized) debouncedUpdate(); // Trigger redraw if initialized
       }
     };
@@ -351,6 +350,16 @@ export class RegionUI {
     subscribe('user:regionMove', handleRegionMove);
 
     log('info', '[RegionUI] Event subscriptions complete.');
+  }
+
+  async _loadColorblindSettings() {
+    try {
+      this.colorblindSettings = await settingsManager.getSetting('colorblindMode.regions', false);
+      log('debug', `[RegionUI] Loaded colorblind settings: ${this.colorblindSettings}`);
+    } catch (error) {
+      log('error', '[RegionUI] Failed to load colorblind settings:', error);
+      this.colorblindSettings = false;
+    }
   }
 
   onPanelDestroy() {
@@ -751,12 +760,7 @@ export class RegionUI {
     // Reset the unknown evaluation counter for this rendering cycle
     resetUnknownEvaluationCounter();
 
-    //const useColorblind =
-    //  typeof this.colorblindSettings === 'boolean'
-    //    ? this.colorblindSettings
-    //    : Object.keys(this.colorblindSettings).length > 0;
-
-    const useColorblind = true;
+    const useColorblind = this.colorblindSettings;
 
     // Get references to structural elements within this.regionsContainer
     // this.regionsContainer is this.rootElement.querySelector('#region-details-container') (set in constructor)
@@ -1055,7 +1059,7 @@ export class RegionUI {
 
   createRegionLink(regionName, snapshot) {
     // Just call commonUI directly, which now handles event publishing
-    return commonUI.createRegionLink(regionName, this.colorblindMode, snapshot);
+    return commonUI.createRegionLink(regionName, this.colorblindSettings, snapshot);
   }
 
   /**
@@ -1213,7 +1217,7 @@ export class RegionUI {
     return commonUI.createLocationLink(
       locationName,
       regionName,
-      this.colorblindMode,
+      this.colorblindSettings,
       snapshot
     );
   }
@@ -1812,13 +1816,13 @@ export class RegionUI {
    * Toggles colorblind mode and updates the UI
    */
   toggleColorblindMode() {
-    this.colorblindMode = !this.colorblindMode;
+    this.colorblindSettings = !this.colorblindSettings;
 
     // Update the path analyzer's colorblind mode as well
-    this.pathAnalyzer.setColorblindMode(this.colorblindMode);
+    this.pathAnalyzer.setColorblindMode(this.colorblindSettings);
 
     // Sync with commonUI
-    commonUI.setColorblindMode(this.colorblindMode);
+    commonUI.setColorblindMode(this.colorblindSettings);
 
     // Update colorblind indicators in the UI
     this._updateColorblindIndicators();
@@ -1845,7 +1849,7 @@ export class RegionUI {
 
       // Add new symbol if needed
       if (
-        this.colorblindMode &&
+        this.colorblindSettings &&
         (node.classList.contains('pass') || node.classList.contains('fail'))
       ) {
         const symbolSpan = document.createElement('span');

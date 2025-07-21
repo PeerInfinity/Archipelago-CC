@@ -42,18 +42,26 @@ export class DungeonUI {
       }
     }, 50);
 
-    const readyHandler = () => {
+    const readyHandler = async () => {
       this.isInitialized = true;
-      this.colorblindSettings =
-        settingsManager.getSetting('colorblindMode.regions') || {};
+      try {
+        this.colorblindSettings = await settingsManager.getSetting('colorblindMode.dungeons', false);
+      } catch (error) {
+        log('error', 'Error loading colorblind settings:', error);
+        this.colorblindSettings = false;
+      }
       this.update();
       eventBus.unsubscribe('stateManager:ready', readyHandler);
     };
 
-    const settingsHandler = ({ key, value }) => {
-      if (key === '*' || key.startsWith('colorblindMode.regions')) {
-        this.colorblindSettings =
-          settingsManager.getSetting('colorblindMode.regions') || {};
+    const settingsHandler = async ({ key, value }) => {
+      if (key === '*' || key.startsWith('colorblindMode.dungeons')) {
+        try {
+          this.colorblindSettings = await settingsManager.getSetting('colorblindMode.dungeons', false);
+        } catch (error) {
+          log('error', 'Error loading colorblind settings during update:', error);
+          this.colorblindSettings = false;
+        }
         if (this.isInitialized) debouncedUpdate();
       }
     };

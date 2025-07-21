@@ -38,7 +38,9 @@ export class ExitUI {
     this.originalExitOrder = [];
     this.container.element.appendChild(this.rootElement);
     this.attachEventListeners();
-    this.subscribeToSettings();
+    this.subscribeToSettings().catch(error => {
+      log('error', 'Error subscribing to settings:', error);
+    });
 
     // Defer full data-dependent initialization
     const readyHandler = (eventPayload) => {
@@ -66,15 +68,31 @@ export class ExitUI {
     });
   }
 
-  subscribeToSettings() {
+  async subscribeToSettings() {
     if (this.settingsUnsubscribe) {
       this.settingsUnsubscribe();
     }
+    
+    // Load initial colorblind settings
+    try {
+      this.colorblindSettings = await settingsManager.getSetting('colorblindMode.exits', false);
+    } catch (error) {
+      log('error', 'Error loading colorblind settings:', error);
+      this.colorblindSettings = false;
+    }
+    
     this.settingsUnsubscribe = eventBus.subscribe(
       'settings:changed',
-      ({ key, value }) => {
+      async ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.exits')) {
           log('info', 'ExitUI reacting to settings change:', key);
+          // Update colorblind settings cache
+          try {
+            this.colorblindSettings = await settingsManager.getSetting('colorblindMode.exits', false);
+          } catch (error) {
+            log('error', 'Error loading colorblind settings during update:', error);
+            this.colorblindSettings = false;
+          }
           this.updateExitDisplay();
         }
       }

@@ -20,17 +20,41 @@ test.describe('Application End-to-End Tests', () => {
     console.log('PW DEBUG: Page navigation complete (network idle).');
 
     // Wait for the __playwrightTestsComplete__ flag to be set to 'true' in localStorage
+    // Also check for early termination due to errors
     console.log(
       'PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag in localStorage...'
     );
     await page.waitForFunction(
       () => {
         const flag = localStorage.getItem('__playwrightTestsComplete__');
+        const errorFlag = localStorage.getItem('__playwrightTestsError__');
+        const results = localStorage.getItem('__playwrightTestResults__');
+        
         // This console.log will appear in Playwright's output (from the browser context)
         // and will also be caught by page.on('console') above.
         console.log(
           `Polling localStorage __playwrightTestsComplete__: "${flag}" (type: ${typeof flag})`
         );
+        
+        // If there's an error flag, exit early
+        if (errorFlag === 'true') {
+          console.log('PW DEBUG: Early termination due to test error detected');
+          return true;
+        }
+        
+        // If we have results and they indicate all tests are done (even with failures), exit
+        if (results) {
+          try {
+            const parsed = JSON.parse(results);
+            if (parsed.summary && parsed.summary.totalExpected === (parsed.summary.totalRun + parsed.summary.skippedCount)) {
+              console.log('PW DEBUG: All expected tests completed (with possible failures)');
+              return true;
+            }
+          } catch (e) {
+            // Ignore parse errors
+          }
+        }
+        
         return flag === 'true';
       },
       null,

@@ -50,8 +50,10 @@ export class LocationUI {
 
     // Attach control listeners immediately
     this.attachEventListeners();
-    // Subscribe to settings
-    this.subscribeToSettings();
+    // Subscribe to settings (async)
+    this.subscribeToSettings().catch(error => {
+      log('error', 'Error subscribing to settings:', error);
+    });
 
     // Defer full data-dependent initialization
     const readyHandler = (eventPayload) => {
@@ -86,22 +88,30 @@ export class LocationUI {
     });
   }
 
-  subscribeToSettings() {
+  async subscribeToSettings() {
     if (this.settingsUnsubscribe) {
       this.settingsUnsubscribe();
     }
     // Update local cache on any settings change
-    this.colorblindSettings =
-      settingsManager.getSetting('colorblindMode.locations') || {};
+    try {
+      this.colorblindSettings = await settingsManager.getSetting('colorblindMode.locations', false);
+    } catch (error) {
+      log('error', 'Error loading colorblind settings:', error);
+      this.colorblindSettings = false;
+    }
 
     this.settingsUnsubscribe = eventBus.subscribe(
       'settings:changed',
-      ({ key, value }) => {
+      async ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.locations')) {
           log('info', 'LocationUI reacting to settings change:', key);
           // Update cache
-          this.colorblindSettings =
-            settingsManager.getSetting('colorblindMode.locations') || {};
+          try {
+            this.colorblindSettings = await settingsManager.getSetting('colorblindMode.locations', false);
+          } catch (error) {
+            log('error', 'Error loading colorblind settings during update:', error);
+            this.colorblindSettings = false;
+          }
           this.updateLocationDisplay(); // Trigger redraw
         }
       }
