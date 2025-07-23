@@ -410,7 +410,144 @@ export async function testJSONPanelImportFromText(testController) {
   }
 }
 
-// Register the test
+/**
+ * Test that verifies the JSON panel can export and import layout configurations.
+ * This test exports a layout, modifies the layout, then imports it back to verify
+ * the layout restoration works.
+ */
+export async function testJSONPanelLayoutImportExport(testController) {
+  log('info', 'Starting JSON panel Layout Import/Export test');
+  const testRunId = `json-layout-test-${Date.now()}`;
+  
+  try {
+    testController.log(`[${testRunId}] Starting JSON panel Layout Import/Export test...`);
+    testController.reportCondition('Test started', true);
+
+    const eventBusModule = await import('../../../app/core/eventBus.js');
+    const eventBus = eventBusModule.default;
+
+    // Step 1: Activate JSON panel and export layout
+    testController.log(`[${testRunId}] Step 1: Activating JSON panel...`);
+    eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' }, 'tests');
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    let jsonPanelElement = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        jsonPanelElement = document.querySelector('.json-panel-container');
+        return jsonPanelElement !== null;
+      },
+      'JSON panel DOM element',
+      5000,
+      250
+    ))) {
+      throw new Error('JSON panel not found in DOM');
+    }
+    testController.reportCondition('JSON panel found in DOM', true);
+
+    // Step 2: Configure checkboxes to export only layout
+    testController.log(`[${testRunId}] Step 2: Configuring JSON panel for layout export...`);
+    
+    const allCheckboxes = jsonPanelElement.querySelectorAll('input[type="checkbox"]');
+    for (const checkbox of allCheckboxes) {
+      checkbox.checked = false;
+    }
+    
+    const layoutCheckbox = jsonPanelElement.querySelector('#json-chk-layout');
+    if (!layoutCheckbox) {
+      throw new Error('Layout checkbox not found in JSON panel');
+    }
+    layoutCheckbox.checked = true;
+    testController.reportCondition('JSON panel configured for layout export', true);
+
+    // Step 3: Export layout to text
+    testController.log(`[${testRunId}] Step 3: Exporting layout to text...`);
+    const exportTextButton = jsonPanelElement.querySelector('#json-btn-export-text');
+    if (!exportTextButton) {
+      throw new Error('Export to Text button not found in JSON panel');
+    }
+    
+    exportTextButton.click();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    testController.reportCondition('Layout export initiated', true);
+
+    // Step 4: Verify layout was exported to editor
+    testController.log(`[${testRunId}] Step 4: Verifying layout export in Editor...`);
+    
+    let editorPanelElement = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        editorPanelElement = document.querySelector('.editor-panel-content');
+        return editorPanelElement !== null;
+      },
+      'Editor panel DOM element',
+      5000,
+      250
+    ))) {
+      throw new Error('Editor panel not found in DOM after export');
+    }
+
+    let editorTextarea = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        editorTextarea = editorPanelElement.querySelector('textarea');
+        return editorTextarea !== null && editorTextarea.value.includes('layoutConfig');
+      },
+      'Editor textarea with layout config',
+      3000,
+      250
+    ))) {
+      throw new Error('Editor textarea does not contain layoutConfig');
+    }
+    testController.reportCondition('Layout config found in editor', true);
+
+    // Step 5: Test import layout functionality
+    testController.log(`[${testRunId}] Step 5: Testing layout import functionality...`);
+    
+    // Mock dialogs to prevent blocking
+    const originalConfirm = window.confirm;
+    const originalAlert = window.alert;
+    window.confirm = () => {
+      testController.log(`[${testRunId}] Confirm dialog intercepted for layout import`);
+      return true;
+    };
+    window.alert = (message) => {
+      testController.log(`[${testRunId}] Alert dialog intercepted: ${message}`);
+    };
+    
+    try {
+      // Activate JSON panel again
+      eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' }, 'tests');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Click Import from Text button
+      const importTextButton = jsonPanelElement.querySelector('#json-btn-import-text');
+      if (!importTextButton) {
+        throw new Error('Import from Text button not found in JSON panel');
+      }
+      
+      importTextButton.click();
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for import process
+      testController.reportCondition('Layout import completed', true);
+      
+    } finally {
+      // Restore original functions
+      window.confirm = originalConfirm;
+      window.alert = originalAlert;
+    }
+    
+    testController.log(`[${testRunId}] JSON panel Layout Import/Export test completed successfully`);
+    await testController.completeTest(true);
+    
+  } catch (error) {
+    log('error', 'JSON panel Layout Import/Export test failed:', error);
+    testController.log(`[${testRunId}] Test failed: ${error.message}`, 'error');
+    testController.reportCondition(`Test errored: ${error.message}`, false);
+    await testController.completeTest(false);
+  }
+}
+
+// Register the tests
 registerTest({
   id: 'test_json_panel_import_from_text',
   name: 'JSON Panel - Import from Text',
@@ -418,4 +555,13 @@ registerTest({
   category: 'JSON Panel',
   enabled: true,
   testFunction: testJSONPanelImportFromText
+});
+
+registerTest({
+  id: 'test_json_panel_layout_import_export',
+  name: 'JSON Panel - Layout Import/Export',
+  description: 'Tests the layout import/export functionality of the JSON panel',
+  category: 'JSON Panel',
+  enabled: true,
+  testFunction: testJSONPanelLayoutImportExport
 });

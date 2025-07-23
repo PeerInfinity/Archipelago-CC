@@ -124,12 +124,12 @@ export class JsonUI {
           </div>
           <div class="checkbox-container">
             <button class="button button-small text-export-btn" data-config-key="layoutConfig">Text</button>
-            <input type="checkbox" id="json-chk-layout" data-config-key="layoutConfig" />
+            <input type="checkbox" id="json-chk-layout" data-config-key="layoutConfig" checked />
             <label for="json-chk-layout">Layout Config (layout_presets.json / Current)</label>
           </div>
           <div class="checkbox-container">
             <button class="button button-small text-export-btn" data-config-key="userSettings">Text</button>
-            <input type="checkbox" id="json-chk-settings" data-config-key="userSettings" />
+            <input type="checkbox" id="json-chk-settings" data-config-key="userSettings" checked />
             <label for="json-chk-settings">User Settings (settings.json)</label>
           </div>
           <!-- Placeholder for module-specific data checkboxes -->
@@ -323,34 +323,43 @@ export class JsonUI {
       );
     }
     if (selectedDataKeys.includes('layoutConfig')) {
-      // Save the current live layout state
+      // Save the current live layout state using Golden Layout 2.x API
+      let rawLayoutConfig = null;
       if (
         window.goldenLayoutInstance &&
-        typeof window.goldenLayoutInstance.toJSON === 'function'
+        typeof window.goldenLayoutInstance.saveLayout === 'function'
       ) {
-        dataToSave.layoutConfig = window.goldenLayoutInstance.toJSON();
+        rawLayoutConfig = window.goldenLayoutInstance.saveLayout();
         log('info', 
-          '[JsonUI] Included current layoutConfig from window.goldenLayoutInstance:',
-          dataToSave.layoutConfig ? 'Exists' : 'MISSING'
+          '[JsonUI] Retrieved current layoutConfig from window.goldenLayoutInstance.saveLayout():',
+          rawLayoutConfig ? 'Exists' : 'MISSING'
         );
       } else if (
         this.container &&
         this.container.layoutManager &&
-        typeof this.container.layoutManager.toJSON === 'function'
+        typeof this.container.layoutManager.saveLayout === 'function'
       ) {
-        // Fallback to container.layoutManager if global is not found (less likely for current setup but good to have a check)
-        dataToSave.layoutConfig = this.container.layoutManager.toJSON();
+        // Fallback to container.layoutManager if global is not found
+        rawLayoutConfig = this.container.layoutManager.saveLayout();
         log('warn', 
-          '[JsonUI] Used this.container.layoutManager.toJSON() as fallback for layoutConfig:',
-          dataToSave.layoutConfig ? 'Exists' : 'MISSING'
+          '[JsonUI] Used this.container.layoutManager.saveLayout() as fallback for layoutConfig:',
+          rawLayoutConfig ? 'Exists' : 'MISSING'
         );
       } else {
         // Fallback to loaded preset if live one isn't available
-        dataToSave.layoutConfig = window.G_combinedModeData?.layoutConfig;
+        rawLayoutConfig = window.G_combinedModeData?.layoutConfig;
         log('warn', 
           '[JsonUI] Could not get live layout, falling back to preset layoutConfig from G_combinedModeData:',
-          dataToSave.layoutConfig ? 'Exists' : 'MISSING'
+          rawLayoutConfig ? 'Exists' : 'MISSING'
         );
+      }
+      
+      // Clean the layout config for compatibility with Golden Layout 2.x on reload
+      if (rawLayoutConfig) {
+        dataToSave.layoutConfig = this._transformLayoutConfigSizes(rawLayoutConfig);
+        log('info', '[JsonUI] Cleaned layoutConfig by removing problematic size/dimensions properties');
+      } else {
+        dataToSave.layoutConfig = rawLayoutConfig;
       }
     }
     if (selectedDataKeys.includes('userSettings')) {
@@ -443,21 +452,29 @@ export class JsonUI {
       return window.G_combinedModeData?.moduleConfig;
     }
     if (configKey === 'layoutConfig') {
-      // Get the current live layout state
+      // Get the current live layout state using Golden Layout 2.x API
+      let rawLayoutConfig = null;
       if (
         window.goldenLayoutInstance &&
-        typeof window.goldenLayoutInstance.toJSON === 'function'
+        typeof window.goldenLayoutInstance.saveLayout === 'function'
       ) {
-        return window.goldenLayoutInstance.toJSON();
+        rawLayoutConfig = window.goldenLayoutInstance.saveLayout();
       } else if (
         this.container &&
         this.container.layoutManager &&
-        typeof this.container.layoutManager.toJSON === 'function'
+        typeof this.container.layoutManager.saveLayout === 'function'
       ) {
-        return this.container.layoutManager.toJSON();
+        rawLayoutConfig = this.container.layoutManager.saveLayout();
       } else {
         // Fallback to loaded preset if live one isn't available
-        return window.G_combinedModeData?.layoutConfig;
+        rawLayoutConfig = window.G_combinedModeData?.layoutConfig;
+      }
+      
+      // Clean the layout config for compatibility with Golden Layout 2.x on reload
+      if (rawLayoutConfig) {
+        return this._transformLayoutConfigSizes(rawLayoutConfig);
+      } else {
+        return rawLayoutConfig;
       }
     }
     if (configKey === 'userSettings') {
@@ -1117,6 +1134,11 @@ export class JsonUI {
         } catch (e) {
           log('error', '[JsonUI] Error applying settings:', e);
         }
+      } else if (dataKey === 'layoutConfig') {
+        // Skip live layout configuration application - layouts will be applied on page reload
+        log('info', 
+          '[JsonUI] Found layoutConfig, skipping live application (will be applied on reload)'
+        );
       }
       // Check registered module handlers
       else if (handlers.has(dataKey)) {
@@ -1142,5 +1164,92 @@ export class JsonUI {
 
     // Optionally adjust the alert message based on requiresReloadDetected
     // For now, the generic alert in _handleLoadFromFile should suffice.
+  }
+
+  async _applyLayoutConfig(layoutConfig) {
+    if (!layoutConfig) {
+      log('warn', '[JsonUI] No layout config provided to apply');
+      return;
+    }
+
+    log('info', '[JsonUI] Attempting to apply layout config:', layoutConfig);
+
+    // Check if we have access to the Golden Layout instance
+    let goldenLayoutInstance = null;
+    
+    if (window.goldenLayoutInstance) {
+      goldenLayoutInstance = window.goldenLayoutInstance;
+      log('info', '[JsonUI] Using window.goldenLayoutInstance for layout application');
+    } else if (this.container && this.container.layoutManager) {
+      goldenLayoutInstance = this.container.layoutManager;
+      log('info', '[JsonUI] Using this.container.layoutManager for layout application');
+    } else {
+      throw new Error('No Golden Layout instance available for layout application');
+    }
+
+    // Transform layout config to ensure size values are strings (Golden Layout 2.x requirement)
+    let transformedConfig = this._transformLayoutConfigSizes(layoutConfig);
+    log('info', '[JsonUI] Transformed layout config sizes from numbers to strings');
+
+    // Check if the layout config is a "Resolved Config" and convert it if needed
+    let configToLoad = transformedConfig;
+    
+    // According to Golden Layout 2.x docs, when reloading a saved layout,
+    // first convert the saved "Resolved Config" to a "Config" by calling LayoutConfig.fromResolved()
+    if (window.LayoutConfig && typeof window.LayoutConfig.fromResolved === 'function') {
+      try {
+        configToLoad = window.LayoutConfig.fromResolved(transformedConfig);
+        log('info', '[JsonUI] Converted resolved config to config using LayoutConfig.fromResolved()');
+      } catch (e) {
+        log('warn', '[JsonUI] Failed to convert with LayoutConfig.fromResolved(), using config as-is:', e);
+        // If conversion fails, try using the config as-is
+      }
+    } else {
+      log('warn', '[JsonUI] LayoutConfig.fromResolved() not available, using config as-is');
+    }
+
+    // Apply the layout using Golden Layout 2.x loadLayout() method
+    if (typeof goldenLayoutInstance.loadLayout === 'function') {
+      try {
+        await goldenLayoutInstance.loadLayout(configToLoad);
+        log('info', '[JsonUI] Layout loaded successfully using loadLayout()');
+      } catch (e) {
+        log('error', '[JsonUI] Error calling loadLayout():', e);
+        throw new Error(`Failed to load layout: ${e.message}`);
+      }
+    } else {
+      throw new Error('Golden Layout instance does not have loadLayout() method available');
+    }
+  }
+
+  /**
+   * Recursively transforms layout config to remove problematic entries that cause Golden Layout parsing issues.
+   * Removes 'size' and 'dimensions' entries that contain numeric values incompatible with Golden Layout 2.x.
+   */
+  _transformLayoutConfigSizes(config) {
+    if (!config || typeof config !== 'object') {
+      return config;
+    }
+
+    // Create a deep copy to avoid mutating the original
+    const transformed = Array.isArray(config) ? [...config] : { ...config };
+
+    // Properties that cause parsing issues in Golden Layout 2.x - remove them entirely
+    const problematicProps = ['size', 'dimensions'];
+
+    for (const key in transformed) {
+      const value = transformed[key];
+      
+      if (problematicProps.includes(key)) {
+        // Remove problematic properties entirely
+        delete transformed[key];
+        log('info', `[JsonUI] Removed problematic property ${key} from layout config`);
+      } else if (typeof value === 'object' && value !== null) {
+        // Recursively transform nested objects and arrays
+        transformed[key] = this._transformLayoutConfigSizes(value);
+      }
+    }
+
+    return transformed;
   }
 }
