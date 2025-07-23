@@ -27,4 +27,5 @@ export function register(registrationApi) {
   registrationApi.registerPanelComponent('editorPanel', EditorUI);
 
   registrationApi.registerEventBusPublisher('ui:activatePanel');
+  registrationApi.registerEventBusPublisher('editor:contentResponse');
 }

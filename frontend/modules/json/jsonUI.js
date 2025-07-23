@@ -144,8 +144,9 @@ export class JsonUI {
         </div>
 
         <div class="json-section button-group">
-          <button id="json-btn-save-file" class="button">Save Combined to File</button>
           <button id="json-btn-export-text" class="button">Export to Text</button>
+          <button id="json-btn-import-text" class="button">Import from Text</button>
+          <button id="json-btn-save-file" class="button">Save Combined to File</button>
           <label class="file-input-button-label">
             Load Combined from File
             <input type="file" id="json-btn-load-file" accept=".json" style="display: none;" />
@@ -207,8 +208,9 @@ export class JsonUI {
   }
 
   _attachEventListeners(contextElement) {
-    const saveFileButton = contextElement.querySelector('#json-btn-save-file');
     const exportTextButton = contextElement.querySelector('#json-btn-export-text');
+    const importTextButton = contextElement.querySelector('#json-btn-import-text');
+    const saveFileButton = contextElement.querySelector('#json-btn-save-file');
     const loadFileLabel = contextElement.querySelector(
       '.file-input-button-label'
     );
@@ -220,11 +222,14 @@ export class JsonUI {
       '#json-btn-reset-defaults'
     );
 
-    if (saveFileButton) {
-      saveFileButton.addEventListener('click', () => this._handleSaveToFile());
-    }
     if (exportTextButton) {
       exportTextButton.addEventListener('click', () => this._handleExportToText());
+    }
+    if (importTextButton) {
+      importTextButton.addEventListener('click', () => this._handleImportFromText());
+    }
+    if (saveFileButton) {
+      saveFileButton.addEventListener('click', () => this._handleSaveToFile());
     }
     if (loadFileInput) {
       loadFileInput.addEventListener('change', (event) =>
@@ -350,8 +355,8 @@ export class JsonUI {
     }
     if (selectedDataKeys.includes('userSettings')) {
       try {
-        // Assuming settingsManager is imported and has a method to get all settings
-        dataToSave.userSettings = settingsManager.getSettings(); // User to verify this method
+        // settingsManager.getSettings() is async, so we need to await it
+        dataToSave.userSettings = await settingsManager.getSettings();
         log('info', 
           '[JsonUI] Included userSettings:',
           dataToSave.userSettings ? 'Exists' : 'MISSING'
@@ -457,7 +462,7 @@ export class JsonUI {
     }
     if (configKey === 'userSettings') {
       try {
-        return settingsManager.getSettings();
+        return await settingsManager.getSettings();
       } catch (e) {
         log('error', `[JsonUI] Failed to get userSettings:`, e);
         return null;
@@ -575,6 +580,104 @@ export class JsonUI {
     }
   }
 
+  async _handleImportFromText() {
+    log('info', '[JsonUI] Import from Text button clicked');
+
+    // First, activate the Editor panel without overwriting content
+    eventBus.publish('ui:activatePanel', { panelId: 'editorPanel' }, 'json');
+
+    // Wait a moment for the panel to activate
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Now request the current content from the editor, specifically requesting dataForExport source
+    const editorContent = await this._requestEditorContent();
+    
+    if (!editorContent || !editorContent.text.trim()) {
+      alert('No text found in the Editor panel. Please enter or paste JSON data in the Editor first.');
+      return;
+    }
+
+    // Show confirmation dialog
+    const confirmImport = confirm(
+      'Do you want to load the data from the Editor text? This will apply the JSON data to the current application state.'
+    );
+
+    if (!confirmImport) {
+      log('info', '[JsonUI] Import from text cancelled by user');
+      return;
+    }
+
+    // Parse and load the data using the same logic as _handleLoadFromFile
+    try {
+      const loadedData = JSON.parse(editorContent.text);
+      log('info', '[JsonUI] Editor text content parsed successfully:', loadedData);
+
+      const modeName =
+        loadedData.modeName || this.modeNameInput.value.trim() || 'default';
+
+      if (this.modeNameInput && modeName) {
+        this.modeNameInput.value = modeName;
+        this.updateCurrentModeDisplay(modeName);
+      }
+
+      // Construct dataToStore by including only what's in loadedData, plus meta fields
+      const dataToStore = {
+        modeName: modeName,
+        savedTimestamp: new Date().toISOString(),
+      };
+      // Iterate over loadedData and add its properties to dataToStore, excluding meta fields already set
+      for (const key in loadedData) {
+        if (
+          loadedData.hasOwnProperty(key) &&
+          key !== 'modeName' &&
+          key !== 'savedTimestamp'
+        ) {
+          dataToStore[key] = loadedData[key];
+        }
+      }
+
+      // Apply non-reloadable data
+      await this._applyNonReloadData(loadedData);
+
+      // Show success alert
+      alert(
+        `Data for mode '${modeName}' loaded from Editor text and applied where possible. Reload if prompted or if layout/module changes were included. This data has NOT been saved to LocalStorage yet.`
+      );
+    } catch (error) {
+      log('error', '[JsonUI] Error parsing JSON from Editor text:', error);
+      alert(
+        'Failed to parse JSON from Editor text. Ensure it contains valid JSON configuration.'
+      );
+    }
+  }
+
+  async _requestEditorContent() {
+    // Create a promise to wait for the editor response
+    return new Promise((resolve) => {
+      // Set up a one-time listener for the editor response
+      const responseHandler = (eventData) => {
+        log('info', '[JsonUI] Received editor content response:', eventData);
+        eventBus.unsubscribe('editor:contentResponse', responseHandler);
+        resolve(eventData);
+      };
+      
+      eventBus.subscribe('editor:contentResponse', responseHandler, 'json');
+      
+      // Request content from the editor
+      eventBus.publish('editor:requestContent', {
+        requestId: 'json-import-request',
+        requestedSource: 'dataForExport'
+      }, 'json');
+      
+      // Set a timeout in case no response comes
+      setTimeout(() => {
+        eventBus.unsubscribe('editor:contentResponse', responseHandler);
+        log('warn', '[JsonUI] Timeout waiting for editor content response');
+        resolve({ text: '', source: 'timeout' });
+      }, 5000);
+    });
+  }
+
   _handleLoadFromFile(event) {
     const file = event.target.files[0];
     if (!file) {
@@ -642,7 +745,7 @@ export class JsonUI {
         //   );
 
         // --- Apply non-reloadable data ---
-        this._applyNonReloadData(loadedData); // Apply data directly from loadedData
+        await this._applyNonReloadData(loadedData); // Apply data directly from loadedData
 
         // Show alert (might need adjustment based on requiresReload checks)
         alert(
@@ -986,7 +1089,7 @@ export class JsonUI {
     });
   }
 
-  _applyNonReloadData(loadedData) {
+  async _applyNonReloadData(loadedData) {
     const handlers = centralRegistry.getAllJsonDataHandlers();
     let requiresReloadDetected = false;
 
@@ -1004,11 +1107,16 @@ export class JsonUI {
         );
         // this.applyRulesConfig(loadedData.rulesConfig);
       } else if (dataKey === 'userSettings') {
-        // TODO: Implement live settings application
+        // Implement live settings application
         log('info', 
-          '[JsonUI] Found userSettings, calling apply function (placeholder)...'
+          '[JsonUI] Found userSettings, applying settings...'
         );
-        // settingsManager.updateSettings(loadedData.userSettings);
+        try {
+          await settingsManager.updateSettings(loadedData.userSettings);
+          log('info', '[JsonUI] Settings applied successfully');
+        } catch (e) {
+          log('error', '[JsonUI] Error applying settings:', e);
+        }
       }
       // Check registered module handlers
       else if (handlers.has(dataKey)) {

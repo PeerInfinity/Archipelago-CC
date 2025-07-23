@@ -30,6 +30,7 @@ const TEST_CASE_FILES = [
   './testCases/eventsPanelTests.js',
   './testCases/pathAnalyzerTests.js',
   './testCases/settingsPanelTests.js',
+  './testCases/JSONPanelTests.js',
   './testCases/testSpoilersPanelTests.js',
 ];
 

@@ -296,6 +296,63 @@ class EditorUI {
         }
       }
     , 'editor');
+
+    // Subscribe to content request events from other modules
+    if (this.unsubscribeHandles['contentRequest']) {
+      log('warn', 
+        'EditorUI already subscribed to contentRequest. Unsubscribing previous first.'
+      );
+      this.unsubscribeHandles['contentRequest']();
+    }
+    
+    log('info', "EditorUI subscribing to 'editor:requestContent'");
+    this.unsubscribeHandles['contentRequest'] = eventBus.subscribe(
+      'editor:requestContent',
+      (eventData) => {
+        log('info', '[EditorUI] Received content request:', eventData);
+        
+        // Get current content
+        const content = this.getContent();
+        
+        // If a specific source was requested, check if we're on that source
+        if (eventData.requestedSource && eventData.requestedSource !== this.currentSourceKey) {
+          log('warn', 
+            `[EditorUI] Requested source '${eventData.requestedSource}' but current source is '${this.currentSourceKey}'`
+          );
+          // Switch to the requested source if it exists
+          if (this.contentSources[eventData.requestedSource]) {
+            this.currentSourceKey = eventData.requestedSource;
+            if (this.editorDropdown) {
+              this.editorDropdown.value = eventData.requestedSource;
+            }
+            this._displayCurrentSourceContent();
+            
+            // Get content from the newly selected source
+            const newContent = this.getContent();
+            
+            // Respond with the content
+            eventBus.publish('editor:contentResponse', {
+              ...newContent,
+              requestId: eventData.requestId
+            }, 'editor');
+          } else {
+            // Respond with error if requested source doesn't exist
+            eventBus.publish('editor:contentResponse', {
+              text: '',
+              source: 'error',
+              error: `Requested source '${eventData.requestedSource}' not found`,
+              requestId: eventData.requestId
+            }, 'editor');
+          }
+        } else {
+          // Respond with current content
+          eventBus.publish('editor:contentResponse', {
+            ...content,
+            requestId: eventData.requestId
+          }, 'editor');
+        }
+      }
+    , 'editor');
   }
 
   // Unsubscribe from EventBus events
