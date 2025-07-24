@@ -90,6 +90,11 @@
               "type": "component",
               "componentType": "playerStatePanel",
               "title": "Player State"
+            },
+            {
+              "type": "component",
+              "componentType": "progressBarPanel",
+              "title": "Progress Bars"
             }
           ]
         },

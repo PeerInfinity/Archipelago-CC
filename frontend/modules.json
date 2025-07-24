@@ -107,6 +107,15 @@
     "tests": {
       "path": "./modules/tests/index.js",
       "enabled": true
+    },
+    "progressBar": {
+      "path": "./modules/progressBar/index.js",
+      "enabled": true
+    },
+    "progressBarPanel": {
+      "path": "./modules/progressBarPanel/index.js",
+      "enabled": true,
+      "requires": ["progressBar"]
     }
   },
   "loadPriority": [
@@ -135,6 +144,8 @@
     "testCases",
     "testPlaythroughs",
     "testSpoilers",
-    "tests"
+    "tests",
+    "progressBar",
+    "progressBarPanel"
   ]
 }

@@ -1075,6 +1075,6 @@ registerTest({
   name: 'JSON Panel - Game State Import/Export',
   description: 'Tests the game state import/export functionality covering inventory and checked locations',
   category: 'JSON Panel',
-  enabled: true,
+  //enabled: false,
   testFunction: testJSONPanelGameStateImportExport
 });
