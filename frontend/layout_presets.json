@@ -42,7 +42,7 @@
         "content": [
           {
             "type": "stack",
-            "height": 50,
+            "height": 25,
             "id": "progressbar-stack",
             "content": [
               {
@@ -54,7 +54,7 @@
           },
           {
             "type": "stack",
-            "height": 50,
+            "height": 75,
             "id": "middle-stack",
             "content": [
               {
@@ -111,6 +111,11 @@
                 "type": "component",
                 "componentType": "progressBarPanel",
                 "title": "Progress Bars"
+              },
+              {
+                "type": "component",
+                "componentType": "metaGamePanel",
+                "title": "Meta Game"
               }
             ]
           }

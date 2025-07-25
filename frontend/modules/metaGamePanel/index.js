@@ -11,7 +11,9 @@ export function register(registrationApi) {
   
   // Register event bus publishers
   registrationApi.registerEventBusPublisher('metaGamePanel:configurationApplied');
+  registrationApi.registerEventBusPublisher('metaGamePanel:jsonConfigurationApplied');
   registrationApi.registerEventBusPublisher('metaGamePanel:error');
+  registrationApi.registerEventBusPublisher('metaGame:jsFileContent');
   
   // Register settings schema
   registrationApi.registerSettingsSchema({
@@ -32,16 +34,36 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   logger.info('metaGamePanel', 'Initializing MetaGamePanel module...');
   
   try {
-    // Get access to metaGame module functions
+    // Get access to metaGame module functions via centralRegistry
     const metaGameAPI = {
-      loadConfiguration: initializationApi.getModuleFunction('MetaGame', 'loadConfiguration'),
-      getStatus: initializationApi.getModuleFunction('MetaGame', 'getStatus')
+      loadConfiguration: window.centralRegistry?.getPublicFunction('MetaGame', 'loadConfiguration'),
+      getStatus: window.centralRegistry?.getPublicFunction('MetaGame', 'getStatus'),
+      updateJSONConfiguration: window.centralRegistry?.getPublicFunction('MetaGame', 'updateJSONConfiguration')
     };
+    
+    console.log('MetaGamePanel: metaGameAPI setup:', {
+      loadConfiguration: !!metaGameAPI.loadConfiguration,
+      getStatus: !!metaGameAPI.getStatus,
+      updateJSONConfiguration: !!metaGameAPI.updateJSONConfiguration,
+      centralRegistry: !!window.centralRegistry
+    });
     
     // Set up a way to pass APIs to UI instances when they're created
     MetaGamePanelUI.prototype.initializeAPIs = function() {
       this.setAPIs(eventBus, logger, metaGameAPI);
     };
+    
+    // Also initialize APIs for any existing UI instances
+    // This handles the case where Golden Layout creates the UI before module initialization
+    const existingPanels = document.querySelectorAll('.metagame-panel');
+    existingPanels.forEach(panelElement => {
+      // Try to find the UI instance associated with this element
+      // This is a bit hacky but necessary due to Golden Layout timing
+      if (panelElement.__uiInstance) {
+        console.log('MetaGamePanel: Initializing APIs for existing panel instance');
+        panelElement.__uiInstance.setAPIs(eventBus, logger, metaGameAPI);
+      }
+    });
     
     logger.info('metaGamePanel', 'MetaGamePanel module initialized successfully');
     

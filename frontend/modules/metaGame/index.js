@@ -41,9 +41,11 @@ export function register(registrationApi) {
   // Register public functions for other modules to call
   registrationApi.registerPublicFunction(moduleInfo.name, 'loadConfiguration', loadConfiguration);
   registrationApi.registerPublicFunction(moduleInfo.name, 'getStatus', getStatus);
+  registrationApi.registerPublicFunction(moduleInfo.name, 'updateJSONConfiguration', updateJSONConfiguration);
   
   // Register event publishers
   registrationApi.registerEventBusPublisher('metaGame:configurationLoaded');
+  registrationApi.registerEventBusPublisher('metaGame:configurationUpdated');
   registrationApi.registerEventBusPublisher('metaGame:ready');
   registrationApi.registerEventBusPublisher('metaGame:error');
   registrationApi.registerEventBusPublisher('progressBar:create');
@@ -51,6 +53,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('progressBar:hide');
   registrationApi.registerEventBusPublisher('progressBar:destroy');
   registrationApi.registerEventBusPublisher('ui:activatePanel');
+  registrationApi.registerEventBusPublisher('progressBarPanel:showUIContent');
+  registrationApi.registerEventBusPublisher('progressBarPanel:hideUIContent');
   // Note: metaGame-specific progress bar events are registered dynamically when progress bars are created
   
   // Register settings schema
@@ -136,4 +140,16 @@ export function getStatus() {
     return { initialized: false };
   }
   return metaGameLogic.getStatus();
+}
+
+export async function updateJSONConfiguration(jsonData) {
+  console.log('MetaGame.updateJSONConfiguration called with:', jsonData);
+  if (!metaGameLogic) {
+    console.error('MetaGame module not initialized');
+    throw new Error('MetaGame module not initialized');
+  }
+  console.log('Calling metaGameLogic.updateJSONConfiguration with:', jsonData);
+  const result = await metaGameLogic.updateJSONConfiguration(jsonData);
+  console.log('metaGameLogic.updateJSONConfiguration returned:', result);
+  return result;
 }

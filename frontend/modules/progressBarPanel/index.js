@@ -26,6 +26,8 @@ export function register(registrationApi) {
 
   registrationApi.registerEventBusPublisher('progressBar:create');
   registrationApi.registerEventBusPublisher('progressBar:destroy');
+  registrationApi.registerEventBusPublisher('progressBarPanel:showUIContent');
+  registrationApi.registerEventBusPublisher('progressBarPanel:hideUIContent');
   
   log('info', 'ProgressBarPanel module registered successfully');
 }

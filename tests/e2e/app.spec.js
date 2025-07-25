@@ -32,9 +32,9 @@ test.describe('Application End-to-End Tests', () => {
         
         // This console.log will appear in Playwright's output (from the browser context)
         // and will also be caught by page.on('console') above.
-        console.log(
-          `Polling localStorage __playwrightTestsComplete__: "${flag}" (type: ${typeof flag})`
-        );
+        //console.log(
+        //  `Polling localStorage __playwrightTestsComplete__: "${flag}" (type: ${typeof flag})`
+        //);
         
         // If there's an error flag, exit early
         if (errorFlag === 'true') {

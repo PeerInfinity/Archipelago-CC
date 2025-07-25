@@ -5,9 +5,14 @@ export async function initializeMetaGame({ eventBus, dispatcher, logger, progres
   
   try {
     // Step 1: Activate the Progress Bar panel (layout is already configured)
+    eventBus.registerPublisher('ui:activatePanel', 'progressBarTest');
     eventBus.publish('ui:activatePanel', { panelId: 'progressBarPanel' }, 'progressBarTest');
     
-    // Step 2: Create the two named progress bars
+    // Step 2: Hide the default UI content (header, buttons, info text)
+    eventBus.registerPublisher('progressBarPanel:hideUIContent', 'progressBarTest');
+    eventBus.publish('progressBarPanel:hideUIContent', {}, 'progressBarTest');
+    
+    // Step 3: Create the two named progress bars
     await createProgressBars(progressBarAPI);
     
     logger.info('progressBarTest', 'Progress bar test configuration initialized successfully');

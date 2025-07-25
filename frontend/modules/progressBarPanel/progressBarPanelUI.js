@@ -6,6 +6,9 @@ export class ProgressBarPanelUI {
     this.componentState = componentState;
     this.rootElement = null;
     this.mainAreaElement = null;
+    this.headerElement = null;
+    this.buttonContainer = null;
+    this.infoElement = null;
     this.unsubscribeHandles = [];
     this.isInitialized = false;
     
@@ -48,9 +51,9 @@ export class ProgressBarPanelUI {
     this.rootElement.classList.add('progress-bar-panel', 'panel-container');
     
     // Create header
-    const headerElement = document.createElement('div');
-    headerElement.classList.add('panel-header');
-    headerElement.innerHTML = '<h3>Progress Bars</h3>';
+    this.headerElement = document.createElement('div');
+    this.headerElement.classList.add('panel-header');
+    this.headerElement.innerHTML = '<h3>Progress Bars</h3>';
     
     // Create main content area where progress bars will be placed
     this.mainAreaElement = document.createElement('div');
@@ -60,16 +63,16 @@ export class ProgressBarPanelUI {
     this.mainAreaElement.style.height = 'calc(100% - 50px)'; // Account for header
     
     // Create info text
-    const infoElement = document.createElement('div');
-    infoElement.classList.add('progress-bar-panel-info');
-    infoElement.style.color = '#888';
-    infoElement.style.fontSize = '12px';
-    infoElement.style.marginBottom = '12px';
-    infoElement.innerHTML = 'Progress bars created via progressBar:create events will appear here.';
+    this.infoElement = document.createElement('div');
+    this.infoElement.classList.add('progress-bar-panel-info');
+    this.infoElement.style.color = '#888';
+    this.infoElement.style.fontSize = '12px';
+    this.infoElement.style.marginBottom = '12px';
+    this.infoElement.innerHTML = 'Progress bars created via progressBar:create events will appear here.';
     
     // Append elements
-    this.rootElement.appendChild(headerElement);
-    this.mainAreaElement.appendChild(infoElement);
+    this.rootElement.appendChild(this.headerElement);
+    this.mainAreaElement.appendChild(this.infoElement);
     this.rootElement.appendChild(this.mainAreaElement);
     
     // Add to container
@@ -93,15 +96,23 @@ export class ProgressBarPanelUI {
 
   // Subscribe to relevant events
   _subscribeToEvents() {
-    // No specific events to subscribe to for this simple panel
-    // Progress bars will be created by the progressBar module
-    // and placed in our main area element
+    // Subscribe to show/hide UI content events
+    const showUIHandler = () => this.showUIContent();
+    const hideUIHandler = () => this.hideUIContent();
+    
+    eventBus.subscribe('progressBarPanel:showUIContent', showUIHandler, 'progressBarPanel');
+    eventBus.subscribe('progressBarPanel:hideUIContent', hideUIHandler, 'progressBarPanel');
+    
+    this.unsubscribeHandles.push(
+      () => eventBus.unsubscribe('progressBarPanel:showUIContent', showUIHandler),
+      () => eventBus.unsubscribe('progressBarPanel:hideUIContent', hideUIHandler)
+    );
   }
 
   // Add a test button for demonstration purposes
   _addTestButton() {
-    const buttonContainer = document.createElement('div');
-    buttonContainer.style.marginBottom = '12px';
+    this.buttonContainer = document.createElement('div');
+    this.buttonContainer.style.marginBottom = '12px';
     
     const testButton = document.createElement('button');
     testButton.textContent = 'Create Test Progress Bar';
@@ -114,9 +125,9 @@ export class ProgressBarPanelUI {
     clearButton.style.padding = '6px 12px';
     clearButton.onclick = () => this._clearAllProgressBars();
     
-    buttonContainer.appendChild(testButton);
-    buttonContainer.appendChild(clearButton);
-    this.mainAreaElement.insertBefore(buttonContainer, this.mainAreaElement.firstChild);
+    this.buttonContainer.appendChild(testButton);
+    this.buttonContainer.appendChild(clearButton);
+    this.mainAreaElement.insertBefore(this.buttonContainer, this.mainAreaElement.firstChild);
   }
 
   // Create a test progress bar for demonstration
@@ -178,6 +189,40 @@ export class ProgressBarPanelUI {
   // Get the main area element (for external use)
   getMainAreaElement() {
     return this.mainAreaElement;
+  }
+
+  // Show UI content (header, buttons, info text)
+  showUIContent() {
+    this.log('debug', 'Showing Progress Bar Panel UI content');
+    
+    if (this.headerElement) {
+      this.headerElement.style.display = '';
+    }
+    
+    if (this.buttonContainer) {
+      this.buttonContainer.style.display = '';
+    }
+    
+    if (this.infoElement) {
+      this.infoElement.style.display = '';
+    }
+  }
+
+  // Hide UI content (header, buttons, info text) - keep only progress bars visible
+  hideUIContent() {
+    this.log('debug', 'Hiding Progress Bar Panel UI content');
+    
+    if (this.headerElement) {
+      this.headerElement.style.display = 'none';
+    }
+    
+    if (this.buttonContainer) {
+      this.buttonContainer.style.display = 'none';
+    }
+    
+    if (this.infoElement) {
+      this.infoElement.style.display = 'none';
+    }
   }
 
   // Cleanup when panel is destroyed

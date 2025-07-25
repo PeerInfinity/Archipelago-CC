@@ -9,11 +9,24 @@ export class MetaGamePanelUI {
     this.metaGameAPI = null;
     
     this.currentConfiguration = '';
-    this.filePathInput = null;
-    this.configurationTextarea = null;
+    this.currentJSFileContent = '';
+    this.configurationDropdown = null;
+    this.jsonDataTextarea = null;
     this.statusElement = null;
     
+    // Available preset configurations
+    this.presetConfigurations = [
+      {
+        name: 'Progress Bar Test',
+        path: './configs/progressBarTest.js'
+      }
+      // Future configurations can be added here
+    ];
+    
     this.createUI();
+    
+    // Store reference to this instance on the DOM element for later access
+    this.rootElement.__uiInstance = this;
   }
   
   createUI() {
@@ -42,38 +55,38 @@ export class MetaGamePanelUI {
           color: #333;
         }
         
-        .metagame-file-section {
+        .metagame-dropdown-section {
           margin-bottom: 15px;
         }
         
-        .metagame-file-section label {
+        .metagame-dropdown-section label {
           display: block;
           margin-bottom: 5px;
           font-weight: bold;
         }
         
-        .metagame-file-input {
-          width: 70%;
+        .metagame-dropdown {
+          width: 80%;
           padding: 5px;
           border: 1px solid #ccc;
           border-radius: 3px;
         }
         
-        .metagame-load-btn {
+        .metagame-view-js-btn {
           margin-left: 10px;
           padding: 5px 15px;
-          background-color: #007cba;
+          background-color: #6c757d;
           color: white;
           border: none;
           border-radius: 3px;
           cursor: pointer;
         }
         
-        .metagame-load-btn:hover {
-          background-color: #005a87;
+        .metagame-view-js-btn:hover {
+          background-color: #545b62;
         }
         
-        .metagame-load-btn:disabled {
+        .metagame-view-js-btn:disabled {
           background-color: #ccc;
           cursor: not-allowed;
         }
@@ -85,14 +98,15 @@ export class MetaGamePanelUI {
           margin-bottom: 15px;
         }
         
-        .metagame-config-section label {
+        .metagame-json-section label {
           display: block;
           margin-bottom: 5px;
           font-weight: bold;
         }
         
-        .metagame-config-textarea {
+        .metagame-json-textarea {
           flex: 1;
+          width: 100%;
           min-height: 200px;
           padding: 8px;
           border: 1px solid #ccc;
@@ -101,6 +115,7 @@ export class MetaGamePanelUI {
           font-size: 12px;
           white-space: pre;
           overflow: auto;
+          box-sizing: border-box;
         }
         
         .metagame-actions {
@@ -170,29 +185,31 @@ export class MetaGamePanelUI {
     this.rootElement.innerHTML = styles + `
       <div class="metagame-header">
         <h3>MetaGame Configuration</h3>
-        <p>Load and configure metaGame module behavior</p>
+        <p>Select and configure metaGame module behavior</p>
       </div>
       
-      <div class="metagame-file-section">
-        <label for="metagame-file-path">Configuration File Path:</label>
-        <input type="text" 
-               id="metagame-file-path" 
-               class="metagame-file-input" 
-               placeholder="./progressBarTest.js"
-               value="">
-        <button class="metagame-load-btn" id="metagame-load-btn">Load</button>
+      <div class="metagame-dropdown-section">
+        <label for="metagame-config-dropdown">Select Configuration:</label>
+        <select id="metagame-config-dropdown" class="metagame-dropdown">
+          <option value="">-- Select a configuration --</option>
+          ${this.presetConfigurations.map(config => 
+            `<option value="${config.path}">${config.name}</option>`
+          ).join('')}
+        </select>
+        <button class="metagame-view-js-btn" id="metagame-view-js-btn" disabled>View js file contents</button>
       </div>
       
       <div class="metagame-config-section">
-        <label for="metagame-config">Configuration (Read-only after loading):</label>
-        <textarea id="metagame-config" 
-                  class="metagame-config-textarea" 
-                  placeholder="Configuration will appear here after loading a file..."
-                  readonly></textarea>
+        <div class="metagame-json-section">
+          <label for="metagame-json-data">JSON Configuration Data (editable):</label>
+          <textarea id="metagame-json-data" 
+                    class="metagame-json-textarea" 
+                    placeholder="Select a configuration above to load JSON data for editing..."></textarea>
+        </div>
       </div>
       
       <div class="metagame-actions">
-        <button class="metagame-apply-btn" id="metagame-apply-btn" disabled>Apply Configuration</button>
+        <button class="metagame-apply-btn" id="metagame-apply-btn" disabled>Apply JSON Configuration</button>
         <button class="metagame-clear-btn" id="metagame-clear-btn">Clear</button>
       </div>
       
@@ -200,8 +217,8 @@ export class MetaGamePanelUI {
     `;
     
     // Get references to UI elements
-    this.filePathInput = this.rootElement.querySelector('#metagame-file-path');
-    this.configurationTextarea = this.rootElement.querySelector('#metagame-config');
+    this.configurationDropdown = this.rootElement.querySelector('#metagame-config-dropdown');
+    this.jsonDataTextarea = this.rootElement.querySelector('#metagame-json-data');
     this.statusElement = this.rootElement.querySelector('#metagame-status');
     
     // Set up event listeners
@@ -209,107 +226,195 @@ export class MetaGamePanelUI {
   }
   
   setupEventListeners() {
-    const loadBtn = this.rootElement.querySelector('#metagame-load-btn');
+    const viewJsBtn = this.rootElement.querySelector('#metagame-view-js-btn');
     const applyBtn = this.rootElement.querySelector('#metagame-apply-btn');
     const clearBtn = this.rootElement.querySelector('#metagame-clear-btn');
     
-    loadBtn.addEventListener('click', () => this.handleLoadFile());
-    applyBtn.addEventListener('click', () => this.handleApplyConfiguration());
-    clearBtn.addEventListener('click', () => this.handleClearConfiguration());
+    // Configuration dropdown change handler
+    this.configurationDropdown.addEventListener('change', () => this.handleConfigurationSelection());
     
-    // Allow Enter key in file path input to trigger load
-    this.filePathInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        this.handleLoadFile();
-      }
-    });
+    // Button event handlers
+    viewJsBtn.addEventListener('click', () => this.handleViewJSFile());
+    applyBtn.addEventListener('click', () => this.handleApplyJSONConfiguration());
+    clearBtn.addEventListener('click', () => this.handleClearConfiguration());
   }
   
-  async handleLoadFile() {
-    const filePath = this.filePathInput.value.trim();
-    if (!filePath) {
-      this.showStatus('Please enter a file path', 'error');
+  async handleConfigurationSelection() {
+    const selectedPath = this.configurationDropdown.value;
+    
+    
+    if (!selectedPath) {
+      // No configuration selected - reset everything
+      this.currentConfiguration = '';
+      this.currentJSFileContent = '';
+      this.jsonDataTextarea.value = '';
+      this.jsonDataTextarea.placeholder = 'Select a configuration above to load JSON data for editing...';
+      
+      // Disable buttons
+      const viewJsBtn = this.rootElement.querySelector('#metagame-view-js-btn');
+      const applyBtn = this.rootElement.querySelector('#metagame-apply-btn');
+      viewJsBtn.disabled = true;
+      applyBtn.disabled = true;
+      
+      this.hideStatus();
       return;
     }
     
     try {
-      this.showStatus('Loading configuration file...', 'info');
+      this.showStatus('Loading configuration...', 'info');
       
-      // Load the file to preview its content
-      const response = await fetch(filePath);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch file: ${response.status} ${response.statusText}`);
+      if (!this.metaGameAPI) {
+        throw new Error('MetaGame API not available');
       }
       
-      const fileContent = await response.text();
-      this.configurationTextarea.value = fileContent;
-      this.currentConfiguration = filePath;
+      // Load the configuration through metaGameAPI
+      const result = await this.metaGameAPI.loadConfiguration(selectedPath);
       
-      // Enable the apply button
+      if (!result.success) {
+        throw new Error('Failed to load configuration through metaGame API');
+      }
+      
+      // Store the current configuration info
+      this.currentConfiguration = selectedPath;
+      
+      // Load the JS file content for viewing
+      // Convert the relative path to an absolute path from the frontend root
+      const jsFilePath = selectedPath.startsWith('./configs/') 
+        ? `./modules/metaGame/configs/${selectedPath.substring('./configs/'.length)}`
+        : selectedPath;
+      
+      
+      const response = await fetch(jsFilePath);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch JS file: ${response.status} ${response.statusText}`);
+      }
+      this.currentJSFileContent = await response.text();
+      
+      // Extract and display JSON configuration data
+      if (result.configuration) {
+        this.jsonDataTextarea.value = JSON.stringify(result.configuration, null, 2);
+        this.jsonDataTextarea.placeholder = '';
+      } else {
+        this.jsonDataTextarea.value = '{}';
+      }
+      
+      // Enable buttons
+      const viewJsBtn = this.rootElement.querySelector('#metagame-view-js-btn');
       const applyBtn = this.rootElement.querySelector('#metagame-apply-btn');
+      viewJsBtn.disabled = false;
       applyBtn.disabled = false;
       
-      this.showStatus(`Configuration loaded from: ${filePath}`, 'success');
+      this.showStatus(`Configuration loaded: ${selectedPath}`, 'success');
       
     } catch (error) {
       this.showStatus(`Failed to load configuration: ${error.message}`, 'error');
+      
+      // Reset on error
+      this.currentConfiguration = '';
+      this.currentJSFileContent = '';
+      this.jsonDataTextarea.value = '';
+      
+      const viewJsBtn = this.rootElement.querySelector('#metagame-view-js-btn');
+      const applyBtn = this.rootElement.querySelector('#metagame-apply-btn');
+      viewJsBtn.disabled = true;
+      applyBtn.disabled = true;
+      
       if (this.logger) {
-        this.logger.error('metaGamePanel', 'Failed to load configuration file:', error);
+        this.logger.error('metaGamePanel', 'Failed to load configuration:', error);
       }
     }
   }
   
-  async handleApplyConfiguration() {
+  handleViewJSFile() {
+    if (!this.currentJSFileContent) {
+      this.showStatus('No JS file content available', 'error');
+      return;
+    }
+    
+    try {
+      // Send the JS file content to the Editor panel
+      if (this.eventBus) {
+        this.eventBus.publish('metaGame:jsFileContent', {
+          content: this.currentJSFileContent,
+          filePath: this.currentConfiguration,
+          activatePanel: true
+        }, 'metaGamePanel');
+        
+        this.showStatus('JS file content sent to Editor panel', 'success');
+      } else {
+        throw new Error('EventBus not available');
+      }
+      
+    } catch (error) {
+      this.showStatus(`Failed to view JS file: ${error.message}`, 'error');
+      
+      if (this.logger) {
+        this.logger.error('metaGamePanel', 'Failed to view JS file:', error);
+      }
+    }
+  }
+  
+  async handleApplyJSONConfiguration() {
     if (!this.currentConfiguration) {
       this.showStatus('No configuration loaded', 'error');
       return;
     }
     
     try {
-      this.showStatus('Applying configuration...', 'info');
+      this.showStatus('Applying JSON configuration...', 'info');
       
-      if (!this.metaGameAPI) {
-        throw new Error('MetaGame API not available');
+      // Parse the JSON data from the textarea
+      const jsonText = this.jsonDataTextarea.value.trim();
+      if (!jsonText) {
+        throw new Error('No JSON data to apply');
       }
       
-      // Apply the configuration through the metaGame module
-      const result = await this.metaGameAPI.loadConfiguration(this.currentConfiguration);
+      let jsonData;
+      try {
+        jsonData = JSON.parse(jsonText);
+      } catch (parseError) {
+        throw new Error(`Invalid JSON: ${parseError.message}`);
+      }
       
-      if (result.success) {
-        this.showStatus('Configuration applied successfully!', 'success');
-        
-        if (this.eventBus) {
-          this.eventBus.publish('metaGamePanel:configurationApplied', {
-            filePath: this.currentConfiguration,
-            configuration: result.configuration
-          }, 'metaGamePanel');
-        }
-      } else {
-        throw new Error('Configuration application failed');
+      // Apply the JSON configuration to the metaGame module
+      if (!this.metaGameAPI || !this.metaGameAPI.updateJSONConfiguration) {
+        throw new Error('MetaGame API updateJSONConfiguration not available');
+      }
+      
+      await this.metaGameAPI.updateJSONConfiguration(jsonData);
+      
+      this.showStatus('JSON configuration applied successfully!', 'success');
+      
+      if (this.eventBus) {
+        this.eventBus.publish('metaGamePanel:jsonConfigurationApplied', {
+          filePath: this.currentConfiguration,
+          jsonData: jsonData
+        }, 'metaGamePanel');
       }
       
     } catch (error) {
-      this.showStatus(`Failed to apply configuration: ${error.message}`, 'error');
+      this.showStatus(`Failed to apply JSON configuration: ${error.message}`, 'error');
       
       if (this.logger) {
-        this.logger.error('metaGamePanel', 'Failed to apply configuration:', error);
-      }
-      
-      if (this.eventBus) {
-        this.eventBus.publish('metaGamePanel:error', {
-          error: error.message,
-          action: 'applyConfiguration'
-        }, 'metaGamePanel');
+        this.logger.error('metaGamePanel', 'Failed to apply JSON configuration:', error);
       }
     }
   }
   
   handleClearConfiguration() {
-    this.filePathInput.value = '';
-    this.configurationTextarea.value = '';
-    this.currentConfiguration = '';
+    // Reset dropdown to default selection
+    this.configurationDropdown.value = '';
     
+    // Clear data
+    this.currentConfiguration = '';
+    this.currentJSFileContent = '';
+    this.jsonDataTextarea.value = '';
+    this.jsonDataTextarea.placeholder = 'Select a configuration above to load JSON data for editing...';
+    
+    // Disable buttons
+    const viewJsBtn = this.rootElement.querySelector('#metagame-view-js-btn');
     const applyBtn = this.rootElement.querySelector('#metagame-apply-btn');
+    viewJsBtn.disabled = true;
     applyBtn.disabled = true;
     
     this.hideStatus();
@@ -341,10 +446,21 @@ export class MetaGamePanelUI {
   }
   
   onMount(container, componentState) {
+    console.log('MetaGamePanel: onMount called');
+    
     // Initialize APIs when mounted
     if (this.initializeAPIs) {
+      console.log('MetaGamePanel: Calling initializeAPIs');
       this.initializeAPIs();
+    } else {
+      console.log('MetaGamePanel: initializeAPIs not available');
     }
+    
+    console.log('MetaGamePanel: APIs after onMount:', {
+      metaGameAPI: !!this.metaGameAPI,
+      eventBus: !!this.eventBus,
+      logger: !!this.logger
+    });
     
     if (this.logger) {
       this.logger.info('metaGamePanel', 'MetaGamePanel UI mounted');

@@ -211,11 +211,17 @@ export class MetaGameLogic {
     
     // Replace placeholders in the text with actual data
     let text = config.text || '';
-    if (eventData && eventData.region) {
-      text = text.replace('[region name]', eventData.region);
+    
+    // Handle region name replacement - try multiple possible property names
+    if (eventData && (eventData.region || eventData.targetRegion)) {
+      const regionName = eventData.region || eventData.targetRegion;
+      text = text.replace(/\[region name\]/g, regionName);
     }
-    if (eventData && eventData.location) {
-      text = text.replace('[location name]', eventData.location);
+    
+    // Handle location name replacement - try multiple possible property names
+    if (eventData && (eventData.location || eventData.locationName)) {
+      const locationName = eventData.location || eventData.locationName;
+      text = text.replace(/\[location name\]/g, locationName);
     }
     
     // Get the target element for the progress bar
@@ -361,6 +367,39 @@ export class MetaGameLogic {
     return { action: 'continue' };
   }
   
+  async updateJSONConfiguration(jsonData) {
+    this.logger.info('metaGame', 'Updating JSON configuration:', jsonData);
+    
+    try {
+      // Validate that we have a current configuration to update
+      if (!this.configuration) {
+        throw new Error('No configuration currently loaded to update');
+      }
+      
+      // Update the configuration's JSON data
+      this.configuration = { ...this.configuration, ...jsonData };
+      this.logger.info('metaGame', 'Configuration updated with new JSON data');
+      
+      // Reprocess the configuration to apply changes
+      await this.processConfiguration();
+      
+      // Publish update event
+      this.eventBus.publish('metaGame:configurationUpdated', { 
+        configuration: this.configuration 
+      }, 'metaGame');
+      
+      this.logger.info('metaGame', 'JSON configuration updated successfully');
+      return { success: true, configuration: this.configuration };
+      
+    } catch (error) {
+      this.logger.error('metaGame', 'Failed to update JSON configuration:', error);
+      this.eventBus.publish('metaGame:error', { 
+        error: `Configuration update failed: ${error.message}`
+      }, 'metaGame');
+      throw error;
+    }
+  }
+
   getStatus() {
     return {
       initialized: true,
