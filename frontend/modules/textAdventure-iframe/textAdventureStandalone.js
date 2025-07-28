@@ -39,6 +39,46 @@ export class TextAdventureStandalone {
         this.createUI();
         this.setupEventListeners();
         this.displayWelcomeMessage();
+        
+        // Check if rules are already loaded when we initialize
+        this.checkForExistingRules();
+    }
+    
+    checkForExistingRules() {
+        // Poll for state availability instead of using a fixed delay
+        this.pollForExistingRules(0);
+    }
+    
+    pollForExistingRules(attempt) {
+        const maxAttempts = 20; // Maximum 20 attempts (2 seconds total with 100ms intervals)
+        const pollInterval = 100; // 100ms between attempts
+        
+        if (attempt >= maxAttempts) {
+            log('warn', 'Timed out waiting for state manager to become available');
+            return;
+        }
+        
+        if (this.stateManager && typeof this.stateManager.getLatestStateSnapshot === 'function') {
+            const snapshot = this.stateManager.getLatestStateSnapshot();
+            log('debug', `checkForExistingRules - attempt ${attempt + 1} - snapshot retrieved:`, snapshot);
+            
+            if (snapshot && snapshot.game) {
+                log('debug', `Found existing rules on attempt ${attempt + 1}, triggering handleRulesLoaded`);
+                this.handleRulesLoaded({ snapshot });
+                return;
+            } else if (attempt > 5) {
+                // After several attempts, if we have a state manager but no game data, stop trying
+                log('debug', `No existing rules found after ${attempt + 1} attempts - snapshot:`, snapshot);
+                return;
+            }
+        } else {
+            log('debug', `StateManager not yet available on attempt ${attempt + 1}, continuing to poll...`);
+        }
+        
+        // Continue polling after a short delay
+        setTimeout(() => {
+            this.pollForExistingRules(attempt + 1);
+        }, pollInterval);
     }
 
     createUI() {
@@ -139,7 +179,7 @@ Load a rules file in the main application to begin your adventure.`;
     handleRulesLoaded(data) {
         log('info', 'Rules loaded in iframe');
         this.clearDisplay();
-        this.displayMessage('Rules loaded! Your adventure begins...');
+        this.displayMessage('Rules loaded! Your adventure begins');
         
         // Wait a moment then display current region
         setTimeout(() => {

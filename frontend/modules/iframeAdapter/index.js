@@ -67,12 +67,20 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     moduleEventBus = initializationApi.getEventBus();
     moduleDispatcher = initializationApi.getDispatcher();
     
-    // Create the adapter core instance
-    adapterCore = new IframeAdapterCore(moduleEventBus, moduleDispatcher);
-    
-    // Make adapter core available globally for iframe panels
-    if (typeof window !== 'undefined') {
-        window.iframeAdapterCore = adapterCore;
+    try {
+        // Create the adapter core instance
+        log('debug', 'Creating IframeAdapterCore instance...');
+        adapterCore = new IframeAdapterCore(moduleEventBus, moduleDispatcher);
+        log('debug', 'IframeAdapterCore instance created successfully');
+        
+        // Make adapter core available globally for iframe panels
+        if (typeof window !== 'undefined') {
+            window.iframeAdapterCore = adapterCore;
+            log('debug', 'IframeAdapterCore made available globally');
+        }
+    } catch (error) {
+        log('error', 'Error creating IframeAdapterCore:', error);
+        throw error;
     }
     
     log('info', `[${moduleId} Module] Initialization complete.`);

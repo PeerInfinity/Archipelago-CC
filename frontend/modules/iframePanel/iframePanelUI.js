@@ -43,7 +43,7 @@ export class IframePanelUI {
         this.initialize();
         this.setupEventSubscriptions();
         
-        log('info', `IframePanelUI initialized with ID: ${this.iframeId}`);
+        log('info', `IframePanel initialized with ID: ${this.iframeId}`);
     }
 
     // Required method for Golden Layout
@@ -139,13 +139,13 @@ export class IframePanelUI {
             const loadUrlUnsubscribe = eventBus.subscribe('iframe:loadUrl', (data) => {
                 log('debug', 'UI component received iframe:loadUrl event:', data);
                 this.handleLoadUrl(data);
-            }, 'iframePanelUI');
+            }, 'iframePanel');
             this.unsubscribeHandles.push(loadUrlUnsubscribe);
 
             // Subscribe to unload commands
             const unloadUnsubscribe = eventBus.subscribe('iframe:unload', (data) => {
                 this.handleUnload(data);
-            }, 'iframePanelUI');
+            }, 'iframePanel');
             this.unsubscribeHandles.push(unloadUnsubscribe);
             
             log('debug', 'Event subscriptions set up successfully');
@@ -193,12 +193,14 @@ export class IframePanelUI {
     loadIframe(url) {
         try {
             log('debug', `loadIframe called with URL: ${url}`);
+            
+            // Clear any existing iframe first (this is a replacement)
+            this.unloadIframe(true);
+            
+            // Now set the current URL
             this.currentUrl = url;
             this.isLoaded = false;
             this.isConnected = false;
-            
-            // Clear any existing iframe
-            this.unloadIframe();
             
             // Update status
             this.updateStatus(`Loading: ${url}`);
@@ -248,8 +250,9 @@ export class IframePanelUI {
 
     /**
      * Unload current iframe
+     * @param {boolean} isReplacement - True if this unload is part of loading a new iframe
      */
-    unloadIframe() {
+    unloadIframe(isReplacement = false) {
         if (this.iframe) {
             // Notify adapter that iframe is disconnecting
             if (this.isConnected && window.iframeAdapterCore) {
@@ -260,7 +263,10 @@ export class IframePanelUI {
             this.iframe = null;
             this.isLoaded = false;
             this.isConnected = false;
-            this.currentUrl = null;
+            // Only reset currentUrl if this is not part of replacement
+            if (!isReplacement) {
+                this.currentUrl = null;
+            }
         }
         
         if (this.connectionTimeout) {
@@ -268,9 +274,12 @@ export class IframePanelUI {
             this.connectionTimeout = null;
         }
         
-        this.showEmptyState();
-        this.updateStatus('Iframe Panel Ready - No content loaded');
-        this.hideError();
+        // Only show empty state and reset status if not replacing
+        if (!isReplacement) {
+            this.showEmptyState();
+            this.updateStatus('Iframe Panel Ready - No content loaded');
+            this.hideError();
+        }
         
         // Generate new iframe ID for next load
         this.iframeId = generateIframeId();
@@ -279,7 +288,7 @@ export class IframePanelUI {
         if (moduleEventBus) {
             moduleEventBus.publish('iframePanel:unloaded', { 
                 panelId: this.container?.id 
-            }, 'iframePanelUI');
+            }, 'iframePanel');
         }
     }
 
@@ -311,7 +320,7 @@ export class IframePanelUI {
                 panelId: this.container?.id,
                 error: errorMessage,
                 url: this.currentUrl
-            }, 'iframePanelUI');
+            }, 'iframePanel');
         }
     }
 
@@ -406,7 +415,7 @@ export class IframePanelUI {
                 panelId: this.container?.id,
                 iframeId: this.iframeId,
                 url: this.currentUrl
-            }, 'iframePanelUI');
+            }, 'iframePanel');
             log('debug', `iframePanel:loaded event published successfully via moduleEventBus`);
         } else {
             log('error', `Cannot publish iframePanel:loaded event - moduleEventBus is null`);

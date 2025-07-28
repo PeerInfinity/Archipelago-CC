@@ -108,8 +108,8 @@ async function initializeStandalone() {
         window.iframeDiscoveryState = discoveryStateProxy;
         window.iframeClient = iframeClient;
         
-        // Wait a moment for static data to arrive
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Wait a brief moment for initial data to arrive
+        await new Promise(resolve => setTimeout(resolve, 200));
         
         // Create and initialize the text adventure
         const appContainer = document.getElementById('appContainer');

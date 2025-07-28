@@ -118,6 +118,7 @@
       "vanillaJsonEditorModule": "WARN",
       "vanillaJsonEditorUI": "WARN",
       "iframeAdapter": "DEBUG",
+      "iframeAdapterCore": "DEBUG",
       "iframePanel": "DEBUG",
       "iframePanelUI": "DEBUG",
       "iframeManagerPanel": "DEBUG",

@@ -181,8 +181,9 @@ export class IframeClient {
             this.connectionReject = null;
         }
         
-        // Request initial static data
+        // Request initial static data and state snapshot
         this.requestStaticData();
+        this.requestStateSnapshot();
     }
 
     /**
@@ -218,7 +219,7 @@ export class IframeClient {
      */
     handleStateSnapshot(message) {
         this.cachedStateSnapshot = message.data.snapshot;
-        log('debug', 'State snapshot updated');
+        log('debug', 'State snapshot updated:', this.cachedStateSnapshot);
         
         // Trigger snapshot update event
         this.triggerEventListeners('eventBus', 'stateManager:snapshotUpdated', { 
@@ -327,6 +328,14 @@ export class IframeClient {
      */
     requestStaticData() {
         this.sendToParent(MessageTypes.REQUEST_STATIC_DATA, {});
+    }
+
+    /**
+     * Request current state snapshot from main app
+     */
+    requestStateSnapshot() {
+        log('debug', 'Requesting state snapshot from main app');
+        this.sendToParent(MessageTypes.REQUEST_STATE_SNAPSHOT, {});
     }
 
     /**

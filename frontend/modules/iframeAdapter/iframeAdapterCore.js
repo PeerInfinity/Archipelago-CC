@@ -56,6 +56,7 @@ export class IframeAdapterCore {
         this.messageHandlers.set(MessageTypes.PUBLISH_EVENT_BUS, this.handlePublishEventBus.bind(this));
         this.messageHandlers.set(MessageTypes.PUBLISH_EVENT_DISPATCHER, this.handlePublishEventDispatcher.bind(this));
         this.messageHandlers.set(MessageTypes.REQUEST_STATIC_DATA, this.handleRequestStaticData.bind(this));
+        this.messageHandlers.set(MessageTypes.REQUEST_STATE_SNAPSHOT, this.handleRequestStateSnapshot.bind(this));
     }
 
     /**
@@ -81,6 +82,11 @@ export class IframeAdapterCore {
         }
         
         log('debug', `Received message: ${message.type} from iframe: ${message.iframeId}`);
+        
+        // Debug log all available handlers
+        if (message.type === 'REQUEST_STATE_SNAPSHOT') {
+            log('debug', 'Available message handlers:', Array.from(this.messageHandlers.keys()));
+        }
         
         // Get message handler
         const handler = this.messageHandlers.get(message.type);
@@ -311,9 +317,9 @@ export class IframeAdapterCore {
         
         // Get static data from state manager if available
         let staticData = null;
-        if (typeof window !== 'undefined' && window.stateManagerProxySingleton) {
+        if (typeof window !== 'undefined' && window.stateManagerProxy) {
             try {
-                staticData = window.stateManagerProxySingleton.getStaticData();
+                staticData = window.stateManagerProxy.getStaticData();
             } catch (error) {
                 log('error', 'Error getting static data:', error);
             }
@@ -324,6 +330,49 @@ export class IframeAdapterCore {
             staticData
         });
         
+        safePostMessage(source, response);
+    }
+
+    /**
+     * Handle REQUEST_STATE_SNAPSHOT message
+     * @param {object} message - Message object
+     * @param {Window} source - Source window
+     */
+    handleRequestStateSnapshot(message, source) {
+        const { iframeId } = message;
+        
+        log('debug', `Received REQUEST_STATE_SNAPSHOT from iframe: ${iframeId}`);
+        
+        if (!this.iframes.has(iframeId)) {
+            this.sendErrorToIframe(source, iframeId, 'NOT_REGISTERED', 'Iframe not registered');
+            return;
+        }
+        
+        // Get current state snapshot from state manager if available
+        let stateSnapshot = null;
+        if (typeof window !== 'undefined' && window.stateManagerProxy) {
+            try {
+                log('debug', `stateManagerProxy is available for iframe ${iframeId}`);
+                stateSnapshot = window.stateManagerProxy.getLatestStateSnapshot();
+                log('info', `Retrieved state snapshot for iframe ${iframeId} - has game data:`, !!(stateSnapshot && stateSnapshot.game));
+                if (stateSnapshot) {
+                    log('debug', `State snapshot keys:`, Object.keys(stateSnapshot));
+                } else {
+                    log('warn', `State snapshot is null for iframe ${iframeId}`);
+                }
+            } catch (error) {
+                log('error', 'Error getting state snapshot:', error);
+            }
+        } else {
+            log('warn', `stateManagerProxy not available for iframe ${iframeId} - window:`, typeof window, 'proxy:', !!window.stateManagerProxy);
+        }
+        
+        // Send response using STATE_SNAPSHOT message type
+        const response = createMessage(MessageTypes.STATE_SNAPSHOT, iframeId, {
+            snapshot: stateSnapshot
+        });
+        
+        log('debug', `Sending STATE_SNAPSHOT response to iframe ${iframeId}`);
         safePostMessage(source, response);
     }
 
