@@ -6,21 +6,12 @@
 //   return stateManagerSingleton.instance;
 // }
 
-// Evaluation trace object for capturing debug info
+import { createUniversalLogger } from './universalLogger.js';
 
-// Helper function for logging with fallback
-function log(level, message, ...data) {
-  if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('ruleEngine', message, ...data);
-  } else {
-    // In worker context, only log ERROR and WARN levels to keep console clean
-    if (level === 'error' || level === 'warn') {
-      const consoleMethod =
-        console[level === 'info' ? 'log' : level] || console.log;
-      consoleMethod(`[ruleEngine] ${message}`, ...data);
-    }
-  }
-}
+// Create logger for this module
+const logger = createUniversalLogger('ruleEngine');
+
+// Evaluation trace object for capturing debug info
 
 class RuleTrace {
   constructor(rule, depth) {
@@ -89,21 +80,7 @@ function hasDefeatMethod(ruleObj, stateSnapshotInterface) {
 }
 
 function safeLog(message, level = 'debug') {
-  // Check if we're in a worker context (no window object)
-  const isWorkerContext = typeof window === 'undefined';
-
-  // Use the new logger service if available
-  if (!isWorkerContext && window.logger) {
-    window.logger[level]('ruleEngine', message);
-  } else if (
-    !isWorkerContext &&
-    window.consoleManager &&
-    typeof window.consoleManager[level] === 'function'
-  ) {
-    window.consoleManager[level](message);
-  } else {
-    console[level] ? console[level](message) : log('info', message);
-  }
+  logger[level](message);
 }
 
 /**
@@ -166,8 +143,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
   // Check if context is provided and is a valid snapshot interface
   const isValidContext = context && context._isSnapshotInterface === true;
   if (!isValidContext) {
-    log(
-      'warn',
+    logger.warn(
       '[evaluateRule] Missing or invalid context (snapshotInterface). Evaluation may fail or be inaccurate.',
       { rule: rule, contextProvided: !!context }
     );
@@ -189,8 +165,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
           } else {
-            log(
-              'warn',
+            logger.warn(
               `[evaluateRule SnapshotIF] context.executeHelper is not a function for helper \'${rule.name}\'. Assuming undefined.`
             );
             result = undefined;

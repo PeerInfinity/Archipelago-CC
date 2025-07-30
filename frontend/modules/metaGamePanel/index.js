@@ -1,4 +1,5 @@
 import { MetaGamePanelUI } from './metaGamePanelUI.js';
+import { createUniversalLogger } from '../../app/core/universalLogger.js';
 
 export const moduleInfo = {
   name: 'MetaGamePanel',
@@ -29,9 +30,9 @@ export function register(registrationApi) {
 
 export function initialize(moduleId, priorityIndex, initializationApi) {
   const eventBus = initializationApi.getEventBus();
-  const logger = initializationApi.getLogger();
+  const logger = createUniversalLogger('metaGamePanel');
   
-  logger.info('metaGamePanel', 'Initializing MetaGamePanel module...');
+  logger.info('Initializing MetaGamePanel module...');
   
   try {
     // Get access to metaGame module functions via centralRegistry
@@ -41,7 +42,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       updateJSONConfiguration: window.centralRegistry?.getPublicFunction('MetaGame', 'updateJSONConfiguration')
     };
     
-    console.log('MetaGamePanel: metaGameAPI setup:', {
+    logger.debug('metaGameAPI setup:', {
       loadConfiguration: !!metaGameAPI.loadConfiguration,
       getStatus: !!metaGameAPI.getStatus,
       updateJSONConfiguration: !!metaGameAPI.updateJSONConfiguration,
@@ -50,7 +51,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     
     // Set up a way to pass APIs to UI instances when they're created
     MetaGamePanelUI.prototype.initializeAPIs = function() {
-      this.setAPIs(eventBus, logger, metaGameAPI);
+      this.setAPIs(eventBus, metaGameAPI);
     };
     
     // Also initialize APIs for any existing UI instances
@@ -60,20 +61,20 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       // Try to find the UI instance associated with this element
       // This is a bit hacky but necessary due to Golden Layout timing
       if (panelElement.__uiInstance) {
-        console.log('MetaGamePanel: Initializing APIs for existing panel instance');
-        panelElement.__uiInstance.setAPIs(eventBus, logger, metaGameAPI);
+        logger.debug('Initializing APIs for existing panel instance');
+        panelElement.__uiInstance.setAPIs(eventBus, metaGameAPI);
       }
     });
     
-    logger.info('metaGamePanel', 'MetaGamePanel module initialized successfully');
+    logger.info('MetaGamePanel module initialized successfully');
     
     // Return cleanup function
     return () => {
-      logger.info('metaGamePanel', 'Cleaning up MetaGamePanel module...');
+      logger.info('Cleaning up MetaGamePanel module...');
     };
     
   } catch (error) {
-    logger.error('metaGamePanel', 'Failed to initialize MetaGamePanel module:', error);
+    logger.error('Failed to initialize MetaGamePanel module:', error);
     throw error;
   }
 }

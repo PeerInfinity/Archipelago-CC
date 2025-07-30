@@ -4,20 +4,10 @@
 import { evaluateRule } from './ruleEngine.js';
 import { helperFunctions as alttpLogic } from './gameLogic/alttp/alttpLogic.js';
 import { helperFunctions as genericLogic } from './gameLogic/generic/genericLogic.js';
+import { createUniversalLogger } from './universalLogger.js';
 
-// Helper function for logging with fallback
-function log(level, message, ...data) {
-  if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('stateInterface', message, ...data);
-  } else {
-    // In worker context, only log ERROR and WARN levels to keep console clean
-    if (level === 'error' || level === 'warn') {
-      const consoleMethod =
-        console[level === 'info' ? 'log' : level] || console.log;
-      consoleMethod(`[stateInterface] ${message}`, ...data);
-    }
-  }
-}
+// Create logger for this module
+const logger = createUniversalLogger('stateInterface');
 
 /**
  * Creates an interface object suitable for main-thread rule evaluation

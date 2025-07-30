@@ -57,6 +57,7 @@ export class IframeAdapterCore {
         this.messageHandlers.set(MessageTypes.PUBLISH_EVENT_DISPATCHER, this.handlePublishEventDispatcher.bind(this));
         this.messageHandlers.set(MessageTypes.REQUEST_STATIC_DATA, this.handleRequestStaticData.bind(this));
         this.messageHandlers.set(MessageTypes.REQUEST_STATE_SNAPSHOT, this.handleRequestStateSnapshot.bind(this));
+        this.messageHandlers.set(MessageTypes.REQUEST_LOG_CONFIG, this.handleRequestLogConfig.bind(this));
     }
 
     /**
@@ -160,10 +161,26 @@ export class IframeAdapterCore {
         // Register the iframe
         this.registerIframe(iframeId, source);
         
-        // Send adapter ready response
+        // Get current logging configuration to send with ready response
+        let loggingConfig = null;
+        if (typeof window !== 'undefined' && window.logger) {
+            try {
+                const currentConfig = window.logger.getConfig();
+                loggingConfig = {
+                    defaultLevel: currentConfig.defaultLevel,
+                    categoryLevels: currentConfig.categoryLevels || {},
+                    enabled: currentConfig.enabled
+                };
+            } catch (error) {
+                log('warn', 'Could not get logging config for ready response:', error);
+            }
+        }
+        
+        // Send adapter ready response with initial logging configuration
         const response = createMessage(MessageTypes.ADAPTER_READY, iframeId, {
             adapterVersion: '1.0.0',
-            capabilities: ['eventBus', 'dispatcher', 'stateManager']
+            capabilities: ['eventBus', 'dispatcher', 'stateManager', 'logging'],
+            loggingConfig: loggingConfig
         });
         
         safePostMessage(source, response);
@@ -398,6 +415,79 @@ export class IframeAdapterCore {
         });
         log('debug', `Sending null STATE_SNAPSHOT response to iframe ${iframeId}`);
         safePostMessage(source, response);
+    }
+
+    /**
+     * Handle request for logging configuration
+     * @param {object} message - The message object
+     * @param {Window} source - Source window
+     */
+    handleRequestLogConfig(message, source) {
+        const { iframeId } = message;
+        
+        log('debug', `Received REQUEST_LOG_CONFIG from iframe: ${iframeId}`);
+        
+        if (!this.iframes.has(iframeId)) {
+            this.sendErrorToIframe(source, iframeId, 'NOT_REGISTERED', 'Iframe not registered');
+            return;
+        }
+        
+        // Get current logging configuration from the main thread logger
+        let loggingConfig = null;
+        if (typeof window !== 'undefined' && window.logger) {
+            try {
+                // Get the current logger configuration
+                const currentConfig = window.logger.getConfig();
+                loggingConfig = {
+                    defaultLevel: currentConfig.defaultLevel,
+                    categoryLevels: currentConfig.categoryLevels || {},
+                    enabled: currentConfig.enabled
+                };
+                
+                log('debug', `Sending logging config to iframe ${iframeId}:`, loggingConfig);
+            } catch (error) {
+                log('error', 'Error getting logging configuration:', error);
+                // Send minimal fallback config
+                loggingConfig = {
+                    defaultLevel: 'WARN',
+                    categoryLevels: {},
+                    enabled: true
+                };
+            }
+        } else {
+            log('warn', 'Main thread logger not available, sending fallback config');
+            // Send minimal fallback config
+            loggingConfig = {
+                defaultLevel: 'WARN',
+                categoryLevels: {},
+                enabled: true
+            };
+        }
+        
+        // Send logging configuration response
+        const response = createMessage(MessageTypes.LOG_CONFIG_RESPONSE, iframeId, {
+            loggingConfig
+        });
+        
+        safePostMessage(source, response);
+    }
+
+    /**
+     * Broadcast logging configuration update to all connected iframes
+     * @param {object} loggingConfig - New logging configuration
+     */
+    broadcastLogConfigUpdate(loggingConfig) {
+        log('debug', 'Broadcasting logging config update to all iframes:', loggingConfig);
+        
+        for (const [iframeId, iframe] of this.iframes.entries()) {
+            if (iframe && iframe.connected) {
+                const message = createMessage(MessageTypes.LOG_CONFIG_UPDATE, iframeId, {
+                    loggingConfig
+                });
+                
+                safePostMessage(iframe.window, message);
+            }
+        }
     }
 
     /**

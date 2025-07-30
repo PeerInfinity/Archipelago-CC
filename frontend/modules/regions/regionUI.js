@@ -15,7 +15,6 @@ import {
   renderLogicTree,
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
-  setupCrossBrowserDropdown,
 } from '../commonUI/index.js';
 
 // Helper function for logging with fallback
@@ -448,11 +447,7 @@ export class RegionUI {
     // Sort Select
     const sortSelect = this.rootElement.querySelector('#region-sort-select');
     if (sortSelect) {
-      setupCrossBrowserDropdown(sortSelect, (selectedValue) => {
-        log('info', `[RegionUI] Sort dropdown changed to: "${selectedValue}"`);
-        log('info', `[RegionUI] Dropdown.value is now: "${sortSelect.value}"`);
-        this.renderAllRegions();
-      });
+      sortSelect.addEventListener('change', () => this.renderAllRegions());
     }
 
     // Filter Checkboxes

@@ -1,4 +1,4 @@
-import { setupCrossBrowserDropdown } from '../commonUI/index.js';
+import { createUniversalLogger } from '../../app/core/universalLogger.js';
 
 export class MetaGamePanelUI {
   constructor(container, componentState, componentType) {
@@ -7,8 +7,8 @@ export class MetaGamePanelUI {
     this.componentType = componentType;
     this.rootElement = null;
     this.eventBus = null;
-    this.logger = null;
     this.metaGameAPI = null;
+    this.logger = createUniversalLogger('metaGamePanel');
     
     this.currentConfiguration = '';
     this.currentJSFileContent = '';
@@ -30,6 +30,7 @@ export class MetaGamePanelUI {
     // Store reference to this instance on the DOM element for later access
     this.rootElement.__uiInstance = this;
   }
+
   
   createUI() {
     this.rootElement = document.createElement('div');
@@ -232,8 +233,8 @@ export class MetaGamePanelUI {
     const applyBtn = this.rootElement.querySelector('#metagame-apply-btn');
     const clearBtn = this.rootElement.querySelector('#metagame-clear-btn');
     
-    // Configuration dropdown change handler - use cross-browser fix
-    setupCrossBrowserDropdown(this.configurationDropdown, () => this.handleConfigurationSelection());
+    // Configuration dropdown change handler
+    this.configurationDropdown.addEventListener('change', () => this.handleConfigurationSelection());
     
     // Button event handlers
     viewJsBtn.addEventListener('click', () => this.handleViewJSFile());
@@ -321,9 +322,7 @@ export class MetaGamePanelUI {
       viewJsBtn.disabled = true;
       applyBtn.disabled = true;
       
-      if (this.logger) {
-        this.logger.error('metaGamePanel', 'Failed to load configuration:', error);
-      }
+      this.logger.error('Failed to load configuration:', error);
     }
   }
   
@@ -350,9 +349,7 @@ export class MetaGamePanelUI {
     } catch (error) {
       this.showStatus(`Failed to view JS file: ${error.message}`, 'error');
       
-      if (this.logger) {
-        this.logger.error('metaGamePanel', 'Failed to view JS file:', error);
-      }
+      this.logger.error('Failed to view JS file:', error);
     }
   }
   
@@ -397,9 +394,7 @@ export class MetaGamePanelUI {
     } catch (error) {
       this.showStatus(`Failed to apply JSON configuration: ${error.message}`, 'error');
       
-      if (this.logger) {
-        this.logger.error('metaGamePanel', 'Failed to apply JSON configuration:', error);
-      }
+      this.logger.error('Failed to apply JSON configuration:', error);
     }
   }
   
@@ -421,9 +416,7 @@ export class MetaGamePanelUI {
     
     this.hideStatus();
     
-    if (this.logger) {
-      this.logger.info('metaGamePanel', 'Configuration cleared');
-    }
+    this.logger.info('Configuration cleared');
   }
   
   showStatus(message, type) {
@@ -448,41 +441,33 @@ export class MetaGamePanelUI {
   }
   
   onMount(container, componentState) {
-    console.log('MetaGamePanel: onMount called');
+    this.logger.debug('onMount called');
     
     // Initialize APIs when mounted
     if (this.initializeAPIs) {
-      console.log('MetaGamePanel: Calling initializeAPIs');
+      this.logger.debug('Calling initializeAPIs');
       this.initializeAPIs();
     } else {
-      console.log('MetaGamePanel: initializeAPIs not available');
+      this.logger.debug('initializeAPIs not available');
     }
     
-    console.log('MetaGamePanel: APIs after onMount:', {
+    this.logger.debug('APIs after onMount:', {
       metaGameAPI: !!this.metaGameAPI,
-      eventBus: !!this.eventBus,
-      logger: !!this.logger
+      eventBus: !!this.eventBus
     });
     
-    if (this.logger) {
-      this.logger.info('metaGamePanel', 'MetaGamePanel UI mounted');
-    }
+    this.logger.info('MetaGamePanel UI mounted');
   }
   
   onUnmount() {
-    if (this.logger) {
-      this.logger.info('metaGamePanel', 'MetaGamePanel UI unmounted');
-    }
+    this.logger.info('MetaGamePanel UI unmounted');
   }
   
   // Set API references from the parent module
-  setAPIs(eventBus, logger, metaGameAPI) {
+  setAPIs(eventBus, metaGameAPI) {
     this.eventBus = eventBus;
-    this.logger = logger;
     this.metaGameAPI = metaGameAPI;
     
-    if (this.logger) {
-      this.logger.debug('metaGamePanel', 'APIs set for MetaGamePanel UI');
-    }
+    this.logger.debug('APIs set for MetaGamePanel UI');
   }
 }

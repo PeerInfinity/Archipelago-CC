@@ -2,7 +2,7 @@
 
 import { evaluateRule } from '../shared/ruleEngine.js';
 // Import the function directly from its source file
-import { createStateSnapshotInterface } from '../stateManager/stateManagerProxy.js';
+import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 // eventBus will be injected during module initialization
 let eventBus = null;
@@ -915,6 +915,7 @@ export default commonUIInstance;
 /**
  * Setup cross-browser dropdown event handling
  * This fixes Firefox issues where dropdown selection doesn't fire standard events
+ * Further testing reveals that this fix is only necessary when running in Firefox in WSL.
  * @param {HTMLSelectElement} selectElement - The dropdown element
  * @param {Function} onSelectionChange - Callback when selection changes (receives the selected value)
  */

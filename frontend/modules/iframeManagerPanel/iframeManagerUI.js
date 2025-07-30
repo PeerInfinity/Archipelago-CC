@@ -1,6 +1,5 @@
 // UI component for iframe manager panel module
 import { moduleEventBus } from './index.js';
-import { setupCrossBrowserDropdown } from '../commonUI/commonUI.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -213,9 +212,13 @@ export class IframeManagerUI {
     setupEventListeners() {
         // Known pages dropdown change
         if (this.knownPagesSelect) {
-            setupCrossBrowserDropdown(this.knownPagesSelect, (value) => {
-                this.handleKnownPageSelection(value);
+            log('debug', 'Setting up known pages dropdown event listener');
+            this.knownPagesSelect.addEventListener('change', (e) => {
+                log('debug', `Dropdown changed to: ${e.target.value}`);
+                this.handleKnownPageSelection(e.target.value);
             });
+        } else {
+            log('warn', 'Known pages dropdown not found when setting up event listeners');
         }
 
         // Load button click

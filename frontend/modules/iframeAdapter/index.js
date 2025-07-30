@@ -73,6 +73,14 @@ export async function initialize(mId, priorityIndex, initializationApi) {
         adapterCore = new IframeAdapterCore(moduleEventBus, moduleDispatcher);
         log('debug', 'IframeAdapterCore instance created successfully');
         
+        // Subscribe to logger configuration updates to sync with iframes
+        if (moduleEventBus) {
+            moduleEventBus.subscribe('logger:configurationUpdated', (loggingConfig) => {
+                log('debug', 'Received logger configuration update, broadcasting to iframes');
+                adapterCore.broadcastLogConfigUpdate(loggingConfig);
+            }, moduleId);
+        }
+        
         // Make adapter core available globally for iframe panels
         if (typeof window !== 'undefined') {
             window.iframeAdapterCore = adapterCore;

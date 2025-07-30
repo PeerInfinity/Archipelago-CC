@@ -3,19 +3,15 @@ import * as alttpLogic from '../shared/gameLogic/alttp/alttpLogic.js';
 import { alttpStateModule } from '../shared/gameLogic/alttp/alttpLogic.js';
 import * as genericLogic from '../shared/gameLogic/generic/genericLogic.js';
 
-// Helper function for logging with fallback
-// Note: This is only for module-level logging before StateManager instance is created
+// Import universal logger for consistent logging across contexts
+import { createUniversalLogger } from '../../app/core/universalLogger.js';
+
+// Create module-level logger
+const moduleLogger = createUniversalLogger('stateManager');
+
+// Helper function for logging with fallback (for backward compatibility)
 function log(level, message, ...data) {
-  if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('stateManager', message, ...data);
-  } else {
-    // In worker context, only log ERROR and WARN levels to keep console clean
-    if (level === 'error' || level === 'warn') {
-      const consoleMethod =
-        console[level === 'info' ? 'log' : level] || console.log;
-      consoleMethod(`[stateManager] ${message}`, ...data);
-    }
-  }
+  moduleLogger[level](message, ...data);
 }
 
 /**

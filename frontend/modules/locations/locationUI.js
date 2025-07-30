@@ -17,7 +17,6 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
-  setupCrossBrowserDropdown,
 } from '../commonUI/index.js';
 import { getDispatcher } from './index.js'; // Added import for dispatcher
 
@@ -416,14 +415,8 @@ export class LocationUI {
       );
     }
 
-    // Handle sort dropdown with cross-browser fix
-    const sortSelect = this.rootElement.querySelector('#sort-select');
-    if (sortSelect) {
-      setupCrossBrowserDropdown(sortSelect, () => this.updateLocationDisplay());
-    }
-
-    // Handle checkboxes with standard event listeners
     [
+      'sort-select',
       'show-checked',
       'show-pending',
       'show-reachable',

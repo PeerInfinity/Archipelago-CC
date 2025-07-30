@@ -2,8 +2,8 @@
 // Stateless state snapshot interface creation - thread-agnostic
 
 import { evaluateRule } from './ruleEngine.js';
-import { helperFunctions as alttpLogic } from './gameLogic/alttpLogic.js';
-import { helperFunctions as genericLogic } from './gameLogic/genericLogic.js';
+import { helperFunctions as alttpLogic } from './gameLogic/alttp/alttpLogic.js';
+import { helperFunctions as genericLogic } from './gameLogic/generic/genericLogic.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {

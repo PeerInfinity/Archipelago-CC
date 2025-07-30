@@ -8,12 +8,19 @@ import {
     DiscoveryStateProxy 
 } from './mockDependencies.js';
 import { TextAdventureStandalone } from './textAdventureStandalone.js';
+import { createUniversalLogger, initializeIframeLogger } from './shared/universalLogger.js';
 
-// Helper function for logging
-function log(level, message, ...data) {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[standalone] ${message}`, ...data);
-}
+// Initialize iframe logger with conservative defaults
+// The main thread will send the actual configuration via postMessage
+initializeIframeLogger({
+    defaultLevel: 'WARN',
+    categoryLevels: {
+        // Start with WARN level, will be updated when main thread sends config
+    }
+});
+
+// Create logger for this module
+const logger = createUniversalLogger('standalone');
 
 /**
  * Update connection status in UI
@@ -76,7 +83,7 @@ function showApp() {
  */
 async function initializeStandalone() {
     try {
-        log('info', 'Initializing standalone text adventure...');
+        logger.info('Initializing standalone text adventure...');
         
         // Check if we're running inside an iframe panel (parent has iframe status)
         const isInIframePanel = window.self !== window.top;
@@ -98,7 +105,7 @@ async function initializeStandalone() {
         }
         
         updateConnectionStatus('Connected successfully', 'connected');
-        log('info', 'Connection established');
+        logger.info('Connection established');
         
         // Create mock dependencies
         const stateManagerProxy = new StateManagerProxy(iframeClient);
@@ -138,10 +145,10 @@ async function initializeStandalone() {
         // Update status to show we're ready
         updateConnectionStatus('Ready - Text Adventure loaded', 'connected');
         
-        log('info', 'Standalone text adventure initialized successfully');
+        logger.info('Standalone text adventure initialized successfully');
         
     } catch (error) {
-        log('error', 'Failed to initialize standalone text adventure:', error);
+        logger.error('Failed to initialize standalone text adventure:', error);
         showError(`Failed to connect: ${error.message}`);
     }
 }

@@ -1,12 +1,10 @@
 // Standalone version of TextAdventure adapted for iframe communication
 import { createStateSnapshotInterface, evaluateRule } from './mockDependencies.js';
 import { IframeStateAdapter } from './stateAdapter.js';
+import { createUniversalLogger } from './shared/universalLogger.js';
 
-// Helper function for logging
-function log(level, message, ...data) {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[textAdventureStandalone] ${message}`, ...data);
-}
+// Create logger for this module
+const logger = createUniversalLogger('textAdventureStandalone');
 
 export class TextAdventureStandalone {
     constructor(container, dependencies) {
@@ -37,7 +35,7 @@ export class TextAdventureStandalone {
         this.initialize();
         this.setupEventSubscriptions();
         
-        log('info', 'TextAdventureStandalone initialized');
+        logger.info('TextAdventureStandalone initialized');
     }
 
     initialize() {
@@ -59,25 +57,25 @@ export class TextAdventureStandalone {
         const pollInterval = 100; // 100ms between attempts
         
         if (attempt >= maxAttempts) {
-            log('warn', 'Timed out waiting for state manager to become available');
+            logger.warn('Timed out waiting for state manager to become available');
             return;
         }
         
         if (this.stateManager && typeof this.stateManager.getLatestStateSnapshot === 'function') {
             const snapshot = this.stateManager.getLatestStateSnapshot();
-            log('debug', `checkForExistingRules - attempt ${attempt + 1} - snapshot retrieved:`, snapshot);
+            logger.debug(`checkForExistingRules - attempt ${attempt + 1} - snapshot retrieved:`, snapshot);
             
             if (snapshot && snapshot.game) {
-                log('debug', `Found existing rules on attempt ${attempt + 1}, triggering handleRulesLoaded`);
+                logger.debug(`Found existing rules on attempt ${attempt + 1}, triggering handleRulesLoaded`);
                 this.handleRulesLoaded({ snapshot });
                 return;
             } else if (attempt > 5) {
                 // After several attempts, if we have a state manager but no game data, stop trying
-                log('debug', `No existing rules found after ${attempt + 1} attempts - snapshot:`, snapshot);
+                logger.debug(`No existing rules found after ${attempt + 1} attempts - snapshot:`, snapshot);
                 return;
             }
         } else {
-            log('debug', `StateManager not yet available on attempt ${attempt + 1}, continuing to poll...`);
+            logger.debug(`StateManager not yet available on attempt ${attempt + 1}, continuing to poll...`);
         }
         
         // Continue polling after a short delay
@@ -159,7 +157,7 @@ export class TextAdventureStandalone {
         }, 'textAdventureStandalone');
 
         this.eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
-            log('debug', 'Received stateManager:snapshotUpdated event in iframe:', data);
+            logger.debug('Received stateManager:snapshotUpdated event in iframe:', data);
             this.handleStateChange(data);
         }, 'textAdventureStandalone');
 
@@ -183,7 +181,7 @@ Load a rules file in the main application to begin your adventure.`;
     }
 
     handleRulesLoaded(data) {
-        log('info', 'Rules loaded in iframe');
+        logger.info('Rules loaded in iframe');
         this.clearDisplay();
         this.displayMessage('Rules loaded! Your adventure begins');
         
@@ -194,19 +192,19 @@ Load a rules file in the main application to begin your adventure.`;
     }
 
     handleRegionChange(data) {
-        log('info', 'Region changed:', data);
+        logger.info('Region changed:', data);
         this.displayCurrentRegion();
     }
 
     handleStateChange(data) {
         // Normal state change, redisplay current region to show updated location status
-        log('debug', 'State changed, redisplaying current region to show updated status');
+        logger.debug('State changed, redisplaying current region to show updated status');
         // Don't automatically redisplay here to avoid multiple region messages
         // Let the one-time event listener in waitForStateUpdateThenDisplayRegion handle it
     }
 
     waitForStateUpdateThenDisplayRegion(locationName) {
-        log('debug', `Waiting for state update after checking location ${locationName}`);
+        logger.debug(`Waiting for state update after checking location ${locationName}`);
         
         // Flag to ensure we only display region once
         let hasDisplayed = false;
@@ -215,25 +213,25 @@ Load a rules file in the main application to begin your adventure.`;
         const onStateUpdate = (eventData) => {
             // Skip if we've already displayed the region
             if (hasDisplayed) {
-                log('debug', `Already displayed region for ${locationName}, skipping duplicate event`);
+                logger.debug(`Already displayed region for ${locationName}, skipping duplicate event`);
                 return;
             }
             
-            log('debug', `Received state update event, checking for ${locationName}`, eventData);
+            logger.debug(`Received state update event, checking for ${locationName}`, eventData);
             const snapshot = eventData.snapshot || eventData;
             
             if (snapshot && snapshot.checkedLocations && snapshot.checkedLocations.includes(locationName)) {
-                log('debug', `Location ${locationName} found in state update, displaying region`);
+                logger.debug(`Location ${locationName} found in state update, displaying region`);
                 hasDisplayed = true; // Set flag before displaying
                 this.displayCurrentRegion();
                 // Clean up the listener after use (note: unsubscribe not fully implemented in iframe context)
                 try {
                     this.eventBus.unsubscribe('stateManager:snapshotUpdated', onStateUpdate);
                 } catch (error) {
-                    log('debug', 'Unsubscribe not implemented in iframe eventBus, ignoring error');
+                    logger.debug('Unsubscribe not implemented in iframe eventBus, ignoring error');
                 }
             } else {
-                log('debug', `Location ${locationName} not yet in state update, keeping listener active`, {
+                logger.debug(`Location ${locationName} not yet in state update, keeping listener active`, {
                     hasSnapshot: !!snapshot,
                     hasCheckedLocations: !!(snapshot && snapshot.checkedLocations),
                     checkedLocations: snapshot?.checkedLocations || 'none'
@@ -250,7 +248,7 @@ Load a rules file in the main application to begin your adventure.`;
         // Fallback timeout in case the state update doesn't include our location
         setTimeout(() => {
             if (!hasDisplayed) {
-                log('warn', `Timeout waiting for ${locationName} to appear in state, displaying region anyway`);
+                logger.warn(`Timeout waiting for ${locationName} to appear in state, displaying region anyway`);
                 hasDisplayed = true;
                 this.displayCurrentRegion();
             }
@@ -258,7 +256,7 @@ Load a rules file in the main application to begin your adventure.`;
             try {
                 this.eventBus.unsubscribe('stateManager:snapshotUpdated', onStateUpdate);
             } catch (error) {
-                log('debug', 'Unsubscribe not implemented in iframe eventBus, ignoring error');
+                logger.debug('Unsubscribe not implemented in iframe eventBus, ignoring error');
             }
         }, 2000);
     }
@@ -267,7 +265,7 @@ Load a rules file in the main application to begin your adventure.`;
         const input = this.inputField.value.trim();
         if (!input) return;
 
-        log('debug', `Processing command: "${input}"`);
+        logger.debug(`Processing command: "${input}"`);
 
         // Display user input
         this.displayMessage(`> ${input}`, 'user-input');
@@ -345,7 +343,7 @@ Load a rules file in the main application to begin your adventure.`;
                 response = this.handleRegionMove(command.target);
                 // For successful moves, display region immediately after
                 if (response && !response.includes('blocked') && !response.includes('Cannot determine')) {
-                    log('debug', `Successful move completed, displaying current region. Response: "${response}"`);
+                    logger.debug(`Successful move completed, displaying current region. Response: "${response}"`);
                     // Display region immediately after response message
                     setTimeout(() => {
                         this.displayCurrentRegion();
@@ -392,7 +390,7 @@ Load a rules file in the main application to begin your adventure.`;
     }
 
     handleRegionMove(exitName) {
-        log('debug', `Handling region move: ${exitName}`);
+        logger.debug(`Handling region move: ${exitName}`);
         
         if (!this.isExitAccessible(exitName)) {
             return `The path to ${exitName} is blocked.`;
@@ -469,7 +467,7 @@ Load a rules file in the main application to begin your adventure.`;
     handleCustomDataSelection(value) {
         if (!value) return;
 
-        log('info', 'Loading custom data:', value);
+        logger.info('Loading custom data:', value);
 
         // Create mock custom data for Adventure
         if (value === 'adventure') {
@@ -580,7 +578,7 @@ Load a rules file in the main application to begin your adventure.`;
                 const snapshotInterface = createStateSnapshotInterface(snapshot, staticData, { location: locationDef });
                 locAccessible = evaluateRule(locationDef.access_rule, snapshotInterface);
             } catch (e) {
-                log('error', `Error evaluating location rule for ${locationName}:`, e);
+                logger.error(`Error evaluating location rule for ${locationName}:`, e);
                 locAccessible = false;
             }
         }
@@ -606,7 +604,7 @@ Load a rules file in the main application to begin your adventure.`;
                 const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
                 exitAccessible = evaluateRule(exitDef.access_rule, snapshotInterface);
             } catch (e) {
-                log('error', `Error evaluating exit rule for ${exitName}:`, e);
+                logger.error(`Error evaluating exit rule for ${exitName}:`, e);
                 exitAccessible = false;
             }
         }
@@ -652,7 +650,7 @@ Load a rules file in the main application to begin your adventure.`;
         }
 
         const message = this.generateRegionMessage(regionInfo.name);
-        log('debug', `displayCurrentRegion - generated message for ${regionInfo.name}:`, message);
+        logger.debug(`displayCurrentRegion - generated message for ${regionInfo.name}:`, message);
         this.addMessage(message);
     }
 
@@ -680,12 +678,12 @@ Load a rules file in the main application to begin your adventure.`;
             const snapshot = this.stateManager.getLatestStateSnapshot();
             const checkedLocations = snapshot?.checkedLocations || [];
             
-            log('debug', `generateRegionMessage - iframe snapshot checkedLocations:`, checkedLocations);
+            logger.debug(`generateRegionMessage - iframe snapshot checkedLocations:`, checkedLocations);
             
             const uncheckedLocations = availableLocations.filter(loc => !checkedLocations.includes(loc));
             const checkedLocationsList = availableLocations.filter(loc => checkedLocations.includes(loc));
             
-            log('debug', `generateRegionMessage - unchecked: ${uncheckedLocations.length}, checked: ${checkedLocationsList.length}`);
+            logger.debug(`generateRegionMessage - unchecked: ${uncheckedLocations.length}, checked: ${checkedLocationsList.length}`);
             
             if (uncheckedLocations.length > 0) {
                 const locationLinks = uncheckedLocations.map(loc => this.createLocationLink(loc)).join(', ');
@@ -724,7 +722,7 @@ Load a rules file in the main application to begin your adventure.`;
         
         if (!type || !target) return;
 
-        log('debug', 'Link clicked:', { type, target });
+        logger.debug('Link clicked:', { type, target });
 
         // Display what was clicked
         const actionText = type === 'location' ? 'check' : 'move';
@@ -797,7 +795,7 @@ You can also click on location and exit names in the text to interact with them.
         // Scroll to bottom
         this.textArea.scrollTop = this.textArea.scrollHeight;
 
-        log('debug', 'Message displayed:', { message, type: messageType });
+        logger.debug('Message displayed:', { message, type: messageType });
     }
 
     clearDisplay() {
@@ -807,7 +805,7 @@ You can also click on location and exit names in the text to interact with them.
     }
 
     dispose() {
-        log('info', 'TextAdventureStandalone disposing...');
+        logger.info('TextAdventureStandalone disposing...');
         
         // Clean up UI
         if (this.rootElement) {

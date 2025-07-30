@@ -4,12 +4,10 @@
 // Using local shared module copies for iframe self-containment
 import { evaluateRule as sharedEvaluateRule } from './shared/ruleEngine.js';
 import { createStateSnapshotInterface as sharedCreateStateInterface } from './shared/stateInterface.js';
+import { createUniversalLogger } from './shared/universalLogger.js';
 
-// Helper function for logging
-function log(level, message, ...data) {
-    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[mockDependencies] ${message}`, ...data);
-}
+// Create logger for this module
+const logger = createUniversalLogger('mockDependencies');
 
 /**
  * Mock StateManager Proxy that communicates with main app
@@ -22,7 +20,7 @@ export class StateManagerProxy {
     getLatestStateSnapshot() {
         const snapshot = this.iframeClient.getStateSnapshot();
         if (!snapshot) {
-            log('warn', 'No state snapshot available');
+            logger.warn('No state snapshot available');
             return null;
         }
         return snapshot;
@@ -31,7 +29,7 @@ export class StateManagerProxy {
     getStaticData() {
         const staticData = this.iframeClient.getStaticData();
         if (!staticData) {
-            log('warn', 'No static data available');
+            logger.warn('No static data available');
             return null;
         }
         return staticData;
@@ -52,7 +50,7 @@ export class EventBusProxy {
         
         // Return unsubscribe function
         return () => {
-            log('warn', 'Unsubscribe not fully implemented in iframe client');
+            logger.warn('Unsubscribe not fully implemented in iframe client');
         };
     }
 
@@ -86,7 +84,7 @@ export class PlayerStateProxy {
         this.iframeClient.subscribeEventBus('playerState:regionChanged', (data) => {
             if (data && data.newRegion) {
                 this.currentRegion = data.newRegion;
-                log('debug', `Player region changed to: ${this.currentRegion}`);
+                logger.debug(`Player region changed to: ${this.currentRegion}`);
             }
         });
     }
