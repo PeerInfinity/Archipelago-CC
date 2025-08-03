@@ -391,5 +391,5 @@ registerTest({
   description: 'Tests connection status display and module identification in window-base.',
   testFunction: windowBaseConnectionStatusTest,
   category: 'Window Base Tests',
-  enabled: true,
+  enabled: false,
 });

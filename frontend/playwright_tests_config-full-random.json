@@ -1,7 +1,7 @@
 {
   "autoStartTestsOnLoad": true,
   "hideDisabledTests": false,
-  "randomizeOrder": false,
+  "randomizeOrder": true,
   "defaultEnabledState": true,
   "tests": []
 }

@@ -36,6 +36,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('tests:listUpdated');
   registrationApi.registerEventBusPublisher('tests:autoStartConfigChanged');
   registrationApi.registerEventBusPublisher('tests:hideDisabledConfigChanged');
+  registrationApi.registerEventBusPublisher('tests:randomizeOrderConfigChanged');
   registrationApi.registerEventBusPublisher('tests:loadedStateApplied');
   registrationApi.registerEventBusPublisher('files:jsonLoaded'); // For loading rules in tests
   registrationApi.registerEventBusPublisher('tests:statusChanged');

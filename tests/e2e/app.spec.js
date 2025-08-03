@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Application End-to-End Tests', () => {
-  const APP_URL = 'http://localhost:8000/frontend/?mode=test'; // Use the new test mode URL
+  const testMode = process.env.TEST_MODE || 'test'; // Default to 'test' if not specified
+  const APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
 
   test('run in-app tests and check results', async ({ page }) => {
     // Listen for console logs from the page and relay them to Playwright's output
@@ -14,7 +15,8 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`BROWSER LOG (${msg.type()}): ${msg.text()}`);
     });
 
-    console.log('PW DEBUG: Navigating to application...');
+    console.log(`PW DEBUG: Navigating to application using mode: ${testMode}`);
+    console.log(`PW DEBUG: URL: ${APP_URL}`);
     // Wait until network activity has ceased, giving SPA more time to initialize
     await page.goto(APP_URL, { waitUntil: 'networkidle', timeout: 60000 });
     console.log('PW DEBUG: Page navigation complete (network idle).');
