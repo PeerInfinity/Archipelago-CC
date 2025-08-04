@@ -598,7 +598,7 @@ export async function testJSONPanelGameStateImportExport(testController) {
       },
       'Mushroom location found',
       10000,
-      500
+      50
     );
     
     if (!mushroomLocation) {
@@ -789,7 +789,7 @@ export async function testJSONPanelGameStateImportExport(testController) {
       },
       'Bottle Merchant location found',
       10000,
-      500
+      50
     );
     
     if (!bottleMerchantLocation) {

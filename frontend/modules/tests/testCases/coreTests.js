@@ -122,7 +122,7 @@ export async function rulesReloadTest(testController) {
       },
       'Mushroom location found',
       5000,
-      500
+      50
     );
     
     if (mushroomLocation) {
@@ -267,7 +267,7 @@ export async function rulesReloadTest(testController) {
       },
       'Links House S&Q move button found',
       5000,
-      500
+      50
     );
     
     if (moveButton) {

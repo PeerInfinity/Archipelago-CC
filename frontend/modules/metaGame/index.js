@@ -32,6 +32,7 @@ export function register(registrationApi) {
   registrationApi.registerPublicFunction(moduleInfo.name, 'loadConfiguration', loadConfiguration);
   registrationApi.registerPublicFunction(moduleInfo.name, 'getStatus', getStatus);
   registrationApi.registerPublicFunction(moduleInfo.name, 'updateJSONConfiguration', updateJSONConfiguration);
+  registrationApi.registerPublicFunction(moduleInfo.name, 'clearConfiguration', clearConfiguration);
   
   // Register event publishers
   registrationApi.registerEventBusPublisher('metaGame:configurationLoaded');
@@ -143,4 +144,15 @@ export async function updateJSONConfiguration(jsonData) {
   const result = await metaGameLogic.updateJSONConfiguration(jsonData);
   console.log('metaGameLogic.updateJSONConfiguration returned:', result);
   return result;
+}
+
+export function clearConfiguration() {
+  console.log('MetaGame.clearConfiguration called');
+  if (!metaGameLogic) {
+    console.log('MetaGame module not initialized - nothing to clear');
+    return;
+  }
+  console.log('Calling metaGameLogic.cleanup');
+  metaGameLogic.cleanup();
+  console.log('MetaGame configuration cleared');
 }

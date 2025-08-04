@@ -223,6 +223,7 @@ debug_mode_settings.txt
 rule_analysis_debug.log
 server_log.txt
 playwright-report.json
+playwright-analysis.txt
 *-old.js
 *-old.py
 *-old/

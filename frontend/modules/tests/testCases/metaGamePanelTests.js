@@ -138,8 +138,8 @@ export async function testMetaGameProgressBarIntegration(testController) {
         return null;
       },
       'Links House S&Q move button found',
-      15000,
-      1000
+      2000,
+      50
     );
 
     if (moveButton) {
@@ -160,8 +160,8 @@ export async function testMetaGameProgressBarIntegration(testController) {
           return moveButtons.length > 0 ? moveButtons[0] : null;
         },
         'Any move button found',
-        5000,
-        1000
+        2000,
+        50
       );
       
       if (anyMoveButton) {
@@ -234,8 +234,8 @@ export async function testMetaGameProgressBarIntegration(testController) {
         return null;
       },
       'Unchecked location found',
-      10000,
-      1000
+      2000,
+      50
     );
 
     if (locationToCheck) {
@@ -310,6 +310,21 @@ export async function testMetaGamePanelUI(testController) {
   try {
     testController.log('Starting meta game panel UI test...');
     testController.reportCondition('Test started', true);
+
+    // Load default rules to ensure clean state
+    testController.log('Loading default rules to reset state...');
+    await testController.loadDefaultRules();
+    testController.log('Default rules loaded successfully');
+
+    // Clear any existing MetaGame configuration to prevent state pollution
+    testController.log('Clearing any existing metaGame configuration...');
+    const metaGameClearAPI = window.centralRegistry.getPublicFunction('MetaGame', 'clearConfiguration');
+    if (metaGameClearAPI) {
+      await metaGameClearAPI();
+      testController.log('MetaGame configuration cleared');
+    } else {
+      testController.log('MetaGame clearConfiguration API not available - continuing anyway');
+    }
 
     // Step 1: Activate metaGame panel
     testController.log('Activating metaGame panel...');
@@ -541,8 +556,8 @@ export async function testMetaGamePanelUI(testController) {
         return null;
       },
       'Links House S&Q move button found for modified test',
-      15000,
-      1000
+      2000,
+      50
     );
 
     if (moveButton2) {
@@ -622,8 +637,8 @@ export async function testMetaGamePanelUI(testController) {
         return null;
       },
       'Mushroom location found and unchecked',
-      10000,
-      1000
+      2000,
+      50
     );
 
     if (mushroomLocation) {
@@ -646,8 +661,8 @@ export async function testMetaGamePanelUI(testController) {
           return null;
         },
         'Any unchecked location found',
-        5000,
-        1000
+        2000,
+        50
       );
       
       if (anyLocation) {

@@ -45,6 +45,8 @@ export class MetaGamePanelUI {
           display: flex;
           flex-direction: column;
           font-family: Arial, sans-serif;
+          box-sizing: border-box;
+          overflow: hidden;
         }
         
         .metagame-header {
@@ -71,8 +73,10 @@ export class MetaGamePanelUI {
         .metagame-dropdown {
           width: 80%;
           padding: 5px;
-          border: 1px solid #ccc;
+          border: 1px solid #555;
           border-radius: 3px;
+          background-color: #2d2d2d;
+          color: #e0e0e0;
         }
         
         .metagame-view-js-btn {
@@ -98,32 +102,47 @@ export class MetaGamePanelUI {
           flex: 1;
           display: flex;
           flex-direction: column;
-          margin-bottom: 15px;
+          margin-bottom: 0;
+          min-height: 0;
+          overflow: hidden;
+        }
+        
+        .metagame-json-section {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-height: 0;
         }
         
         .metagame-json-section label {
           display: block;
           margin-bottom: 5px;
           font-weight: bold;
+          flex-shrink: 0;
         }
         
         .metagame-json-textarea {
           flex: 1;
           width: 100%;
-          min-height: 200px;
+          min-height: 0;
           padding: 8px;
-          border: 1px solid #ccc;
+          border: 1px solid #555;
           border-radius: 3px;
           font-family: 'Courier New', monospace;
           font-size: 12px;
           white-space: pre;
           overflow: auto;
           box-sizing: border-box;
+          background-color: #1e1e1e;
+          color: #e0e0e0;
+          resize: none;
         }
         
         .metagame-actions {
           margin-top: 10px;
           text-align: right;
+          flex-shrink: 0;
+          padding-bottom: 5px;
         }
         
         .metagame-apply-btn {

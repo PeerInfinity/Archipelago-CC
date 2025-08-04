@@ -12,6 +12,7 @@ export class MetaGameLogic {
     this.isReady = false;
     this.eventHandlers = new Map();
     this.progressBars = new Map(); // Track created progress bars
+    this.registeredDispatcherReceivers = []; // Track registered dispatcher receivers for cleanup
     
     this.logger.info('metaGame', 'MetaGameLogic instance created');
   }
@@ -114,8 +115,8 @@ export class MetaGameLogic {
     console.log('Processing configuration with data:', this.configuration);
     this.logger.info('metaGame', 'Processing configuration...');
     
-    // Register event dispatcher receivers now that we have configuration
-    if (this.registrationApi) {
+    // Register event dispatcher receivers now that we have configuration (only if not already registered)
+    if (this.registrationApi && this.registeredDispatcherReceivers.length === 0) {
       // Create handler functions that call our methods
       const regionMoveHandler = (eventData, context) => {
         return this.handleRegionMoveEvent(eventData, context);
@@ -139,7 +140,15 @@ export class MetaGameLogic {
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
       );
       
+      // Track registered receivers for cleanup
+      this.registeredDispatcherReceivers.push(
+        { moduleName: 'MetaGame', eventName: 'user:regionMove', handler: regionMoveHandler },
+        { moduleName: 'MetaGame', eventName: 'user:locationCheck', handler: locationCheckHandler }
+      );
+      
       this.logger.info('metaGame', 'Event dispatcher receivers registered after configuration loading');
+    } else if (this.registeredDispatcherReceivers.length > 0) {
+      this.logger.debug('metaGame', 'Event dispatcher receivers already registered, skipping duplicate registration');
     }
     
     // Process eventDispatcher configuration
@@ -461,6 +470,9 @@ export class MetaGameLogic {
     
     // Clean up event handlers
     this.eventHandlers.clear();
+    
+    // Clear registered dispatcher receivers array (note: actual unregistration not implemented yet)
+    this.registeredDispatcherReceivers = [];
     
     // Remove container if we created one
     const container = document.querySelector('#metaGame-progress-container');

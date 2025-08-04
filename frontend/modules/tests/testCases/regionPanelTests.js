@@ -1127,10 +1127,18 @@ export async function testRegionMoveComplete(testController) {
     // 1. Activate the Regions panel
     testController.log(`[${testRunId}] Activating regions panel...`);
     eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
-    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    const regionsPanelElement = document.querySelector('.regions-panel-container');
-    if (!regionsPanelElement) {
+    // Wait for regions panel to appear
+    let regionsPanelElement = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        regionsPanelElement = document.querySelector('.regions-panel-container');
+        return regionsPanelElement !== null;
+      },
+      'Regions panel activated',
+      5000,
+      50
+    ))) {
       throw new Error('Regions panel not found');
     }
     testController.reportCondition('Regions panel activated', true);
@@ -1229,7 +1237,19 @@ export async function testRegionMoveComplete(testController) {
     // 7. Click the Move button
     testController.log(`[${testRunId}] Clicking Move button...`);
     targetMoveButton.click();
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Wait for playerState to be updated
+    if (!(await testController.pollForCondition(
+      () => {
+        const newCurrentRegion = playerState.getCurrentRegion();
+        return newCurrentRegion === 'Links House';
+      },
+      'PlayerState updated to Links House',
+      5000,
+      50
+    ))) {
+      throw new Error('PlayerState was not updated to Links House');
+    }
     
     // 8. Verify event was dispatched
     testController.reportCondition('user:regionMove event dispatched to bottom', userRegionMoveDispatched);
@@ -1244,10 +1264,19 @@ export async function testRegionMoveComplete(testController) {
     testController.reportCondition('regions module received event', regionsModuleReceived);
     
     // 11. Verify Links House region now appears in the Regions panel
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for UI update
-    
-    const linksHouseRegionBlock = regionsContainer.querySelector('.region-block[data-region="Links House"]');
-    testController.reportCondition('Links House region appears in panel', !!linksHouseRegionBlock);
+    let linksHouseRegionBlock = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        linksHouseRegionBlock = regionsContainer.querySelector('.region-block[data-region="Links House"]');
+        return linksHouseRegionBlock !== null;
+      },
+      'Links House region appears in panel',
+      5000,
+      50
+    ))) {
+      throw new Error('Links House region block did not appear in panel');
+    }
+    testController.reportCondition('Links House region appears in panel', true);
     
     // 12. Verify playerState panel shows Links House as current location
     const playerStatePanelElement = document.querySelector('.player-state-panel-container');
@@ -1302,7 +1331,6 @@ export async function testRegionMoveComplete(testController) {
     // 14. Activate the Events panel
     testController.log(`[${testRunId}] Activating Events panel...`);
     eventBus.publish('ui:activatePanel', { panelId: 'eventsPanel' }, 'tests');
-    await new Promise(resolve => setTimeout(resolve, 2000));
     
     // 15. Wait for Events panel to appear
     let eventsPanelElement = null;
@@ -1407,7 +1435,9 @@ export async function testRegionMoveComplete(testController) {
     // Try to click the Move button - event should NOT be sent
     testController.log(`[${testRunId}] Clicking Move button with sender disabled...`);
     lightWorldMoveButton.click();
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Wait a moment for any potential processing, then verify no change occurred
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     // Verify event was NOT dispatched
     testController.reportCondition('user:regionMove event NOT dispatched (sender disabled)', !userRegionMoveDispatched);
@@ -1447,7 +1477,20 @@ export async function testRegionMoveComplete(testController) {
     testController.log(`[${testRunId}] moduleDispatcher exists: ${!!moduleDispatcher}`);
     testController.log(`[${testRunId}] moduleDispatcher.publish is function: ${typeof moduleDispatcher?.publish === 'function'}`);
     lightWorldMoveButton.click();
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Wait for playerState to be updated (it should still process the event)
+    if (!(await testController.pollForCondition(
+      () => {
+        const currentRegion = playerState.getCurrentRegion();
+        return currentRegion === 'Light World';
+      },
+      'PlayerState updated to Light World (receiver disabled)',
+      5000,
+      50
+    ))) {
+      // This is acceptable - playerState might not process if event routing is disabled
+      testController.log(`[${testRunId}] PlayerState did not update - this may be expected`);
+    }
     
     // Verify event WAS dispatched
     // testController.reportCondition('user:regionMove event dispatched (receiver disabled)', userRegionMoveDispatched);
@@ -1477,14 +1520,26 @@ export async function testRegionMoveComplete(testController) {
     // Try to click the Move button - should work normally
     testController.log(`[${testRunId}] Clicking Move button with both enabled...`);
     lightWorldMoveButton.click();
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Wait for Light World region block to appear
+    let lightWorldBlockAfterBothEnabled = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        lightWorldBlockAfterBothEnabled = regionsContainer.querySelector('.region-block[data-region="Light World"]');
+        return lightWorldBlockAfterBothEnabled !== null;
+      },
+      'Light World region appeared (both enabled)',
+      5000,
+      50
+    ))) {
+      throw new Error('Light World region block did not appear after enabling both sender and receiver');
+    }
     
     // Verify event WAS dispatched
     // testController.reportCondition('user:regionMove event dispatched (both enabled)', userRegionMoveDispatched);
     
     // Verify Light World region block now appears
-    const lightWorldBlockAfterBothEnabled = regionsContainer.querySelector('.region-block[data-region="Light World"]');
-    testController.reportCondition('Light World region appeared (both enabled)', !!lightWorldBlockAfterBothEnabled);
+    testController.reportCondition('Light World region appeared (both enabled)', true);
     
     // Verify player state shows Light World
     const regionAfterBothEnabled = playerState.getCurrentRegion();

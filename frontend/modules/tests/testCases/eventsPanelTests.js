@@ -18,6 +18,11 @@ export async function testEventsPanelSenderReceiverDisplay(testController) {
     testController.log(`[${testRunId}] Starting Events panel sender/receiver display test...`);
     testController.reportCondition('Test started', true);
 
+    // Reset state by loading default rules to ensure clean test environment
+    testController.log(`[${testRunId}] Loading default rules to reset state...`);
+    await testController.loadDefaultRules();
+    testController.log(`[${testRunId}] Default rules loaded successfully`);
+
     // 1. Activate the Events panel
     testController.log(`[${testRunId}] Activating ${EVENTS_PANEL_ID} panel...`);
     const eventBusModule = await import('../../../app/core/eventBus.js');
@@ -114,7 +119,7 @@ export async function testEventsPanelSenderReceiverDisplay(testController) {
 
       // Check that the sender column has content (indicating it's a sender)
       const senderSymbol = senderColumn.textContent.trim();
-      const hasSenderSymbol = senderSymbol.includes('⬆️') || senderSymbol.includes('[S]');
+      const hasSenderSymbol = senderSymbol.includes('⬆') || senderSymbol.includes('[S]');
       
       if (!hasSenderSymbol) {
         throw new Error(`Expected sender symbol in sender column, found: "${senderSymbol}"`);
@@ -153,7 +158,7 @@ export async function testEventsPanelSenderReceiverDisplay(testController) {
         // Check if this entry has sender functionality
         if (senderColumn) {
           const senderSymbol = senderColumn.textContent.trim();
-          const hasSenderSymbol = senderSymbol.includes('⬆️') || senderSymbol.includes('[S]');
+          const hasSenderSymbol = senderSymbol.includes('⬆') || senderSymbol.includes('[S]');
           if (hasSenderSymbol) {
             senderEntryFound = true;
           }
@@ -226,6 +231,11 @@ export async function testEventsPanelModuleNameTracking(testController) {
   try {
     testController.log(`[${testRunId}] Starting Events panel module name tracking test...`);
     testController.reportCondition('Test started', true);
+
+    // Reset state by loading default rules to ensure clean test environment
+    testController.log(`[${testRunId}] Loading default rules to reset state...`);
+    await testController.loadDefaultRules();
+    testController.log(`[${testRunId}] Default rules loaded successfully`);
 
     // 1. First activate the Regions panel to trigger subscription to ui:navigateToRegion
     testController.log(`[${testRunId}] Activating regions panel to trigger event subscriptions...`);
