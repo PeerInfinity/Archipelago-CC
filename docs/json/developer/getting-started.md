@@ -106,5 +106,5 @@ This project includes an end-to-end test suite using Playwright. To run it:
 You are now ready to start developing! Refer to the following documents for more detailed information:
 
 - **[System Architecture](./architecture.md)**: For a high-level understanding of how the project is structured.
-- **[Creating Modules](./guides/06-creating-modules.md)**: For a practical guide on adding new features.
-- **[Testing Pipeline](./guides/05-testing-pipeline.md)**: To understand how game logic is tested and validated.
+- **[Creating Modules](./guides/creating-modules.md)**: For a practical guide on adding new features.
+- **[Testing Pipeline](./guides/testing-pipeline.md)**: To understand how game logic is tested and validated.

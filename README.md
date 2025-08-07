@@ -46,7 +46,7 @@ The frontend is built with modern, vanilla JavaScript (ES6+ Modules), a Web Work
 
 - **To get started, please see the [Developer Getting Started Guide](./docs/json/developer/getting-started.md).**
 - To understand the project's structure, read the **[System Architecture Overview](./docs/json/developer/architecture.md)**.
-- To learn how to contribute, review the guides on the **[Module System](./docs/json/developer/guides/02-module-system.md)** and **[State Management](./docs/json/developer/guides/01-state-management.md)**.
+- To learn how to contribute, review the guides on the **[Module System](./docs/json/developer/guides/module-system.md)** and **[State Management](./docs/json/developer/guides/state-management.md)**.
 
 ## Current Status & Roadmap
 

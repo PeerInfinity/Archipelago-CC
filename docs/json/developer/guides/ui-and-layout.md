@@ -86,7 +86,7 @@ export class MyModuleUI {
 
 ### Module UI Registration
 
-For a UI class to be used by Golden Layout, it must be registered during the application's [registration phase](./02-module-system.md).
+For a UI class to be used by Golden Layout, it must be registered during the application's [registration phase](./module-system.md).
 
 In your module's `index.js`:
 
