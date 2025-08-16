@@ -525,6 +525,9 @@ class GeneralOptions(Group):
 
     output_path: OutputPath = OutputPath("output")
     skip_required_files: bool = False
+    save_sphere_log: bool = False
+    log_fractional_sphere_details: bool = True
+    log_integer_sphere_details: bool = False
 
 
 class ServerOptions(Group):

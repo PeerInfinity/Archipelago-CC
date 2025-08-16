@@ -23,7 +23,7 @@ This guide provides the necessary steps to set up a local development environmen
 First, clone the project repository from GitHub to your local machine.
 
 ```bash
-git clone <repository-url>
+git clone -b JSONExport https://github.com/PeerInfinity/Archipelago.git archipelago-json-export-tools
 cd archipelago-json-export-tools
 ```
 
@@ -45,6 +45,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+**Note:** The virtual environment only stays active for the current terminal session. You'll need to reactivate it in new terminal windows by running `source .venv/bin/activate` (or `.venv\Scripts\activate` on Windows) from the project directory. However, the virtual environment is primarily needed for Python backend tools and running the HTTP server - frontend development and testing mostly relies on Node.js.
+
 ### 3. Run the Frontend Locally
 
 The frontend application must be served by an HTTP server because modern browser security policies prevent Web Workers (a core part of the architecture) from running on pages loaded directly from the local filesystem (`file://`).
@@ -52,15 +54,13 @@ The frontend application must be served by an HTTP server because modern browser
 The simplest way to do this is with Python's built-in HTTP server.
 
 ```bash
-# Navigate to the frontend directory
-cd frontend
-
-# Start the server (this will serve the current directory)
+# Start the server from the project root directory
+# (This ensures the frontend directory is accessible at /frontend/)
 # For Python 3:
 python -m http.server 8000
 ```
 
-Now, open your web browser and navigate to: **`http://localhost:8000/`**
+Now, open your web browser and navigate to: **`http://localhost:8000/frontend/`**
 
 You should see the web client's interface load with its default panel layout.
 
@@ -82,7 +82,7 @@ To confirm your development environment is working, let's make a small change to
 2.  Find the `_createBaseUI()` method.
 3.  Inside the `innerHTML` string for the `.inventory-header`, change `<h2>Inventory</h2>` to `<h2>My Inventory</h2>`.
 4.  Save the file.
-5.  Refresh the page at `http://localhost:8000/`.
+5.  Refresh the page at `http://localhost:8000/frontend/`.
 
 You should see the title of the Inventory panel change to "My Inventory".
 
@@ -92,7 +92,7 @@ This project includes an end-to-end test suite using Playwright that validates t
 
 1.  Make sure you have Node.js and npm installed.
 2.  In the project's root directory, run `npm install` to get the testing dependencies.
-3.  Ensure the local server is still running (`python -m http.server 8000` in the `frontend` directory).
+3.  Ensure the local server is still running (`python -m http.server 8000` from the project root directory).
 4.  In a **new terminal**, run the primary test command from the project root:
     ```bash
     npm test
@@ -106,6 +106,64 @@ This project includes an end-to-end test suite using Playwright that validates t
 -   `npm run test:ui`: Opens Playwright's interactive UI for managing and running tests.
 
 **Note on Cursor Editor:** If you are using the Cursor editor, there is a known issue where Playwright commands may fail on the first attempt. If `npm test` fails, simply run it a second time.
+
+## Advanced Setup
+
+The following steps are needed for working with the testing pipeline and adding support for new games. These are not required for basic frontend development.
+
+### 1. Install Additional Dependencies
+
+Some world modules require additional Python packages that aren't in the base requirements.txt. Run the module updater to install them:
+
+```bash
+# Make sure your virtual environment is active
+source .venv/bin/activate
+
+# Install additional dependencies for all world modules
+python ModuleUpdate.py --yes
+```
+
+This will install game-specific dependencies like `pyevermizer`, `zilliandomizer`, and others needed for the full testing pipeline.
+
+### 2. Generate Game Template Files
+
+To work with the testing pipeline or add support for new games, you'll need template files:
+
+```bash
+# Make sure your virtual environment is active
+source .venv/bin/activate
+
+# Generate template YAML files for all supported games
+python -c "from Options import generate_yaml_templates; generate_yaml_templates('Templates')"
+```
+
+This creates a `Templates/` directory with YAML files for each supported game (e.g., "A Hat in Time.yaml", "A Link to the Past.yaml").
+
+**Note:** You may see some compilation warnings about `_speedups.c` - these are normal and don't affect functionality.
+
+### 3. Set Up Host Configuration
+
+For testing the generation pipeline, you need to create and configure a `host.yaml` file:
+
+```bash
+# Make sure your virtual environment is active
+source .venv/bin/activate
+
+# Create or update host.yaml with default settings
+python Launcher.py --update_settings
+```
+
+This creates a `host.yaml` file in the project root. For testing purposes, you need to edit this file to set:
+
+```yaml
+general_options:
+  skip_required_files: true
+  save_sphere_log: true
+```
+
+These settings allow:
+- `skip_required_files: true` - The generation process to work without requiring all optional game files to be present
+- `save_sphere_log: true` - Creation of spheres_log.jsonl files needed for testing the JavaScript implementation against Python logic
 
 ## Next Steps
 

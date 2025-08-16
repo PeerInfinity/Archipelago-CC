@@ -17,6 +17,7 @@ from typing_extensions import NotRequired, TypedDict
 import NetUtils
 import Options
 import Utils
+from settings import get_settings
 
 # --- New Imports for Spoiler Logging (and existing TestDataLogger) ---
 import json
@@ -1601,40 +1602,46 @@ class Spoiler:
                     else:
                         removed_precollected.append(item)
         
+        # --- GET SETTINGS FOR LOGGING CONTROL ---
+        settings = get_settings()
+        save_sphere_log = settings.general_options.save_sphere_log
+        
         # --- SPOILER LOGGING SETUP ---
         spoiler_log_file_handler = None
         log_file_path = "" # Initialize to prevent NameError in finally if open fails
-        try:
-            # Use temp_dir from multiworld if available for spheres_log.jsonl, otherwise fallback to output_path
-            log_output_directory = getattr(self.multiworld, 'temp_dir_for_spheres_log', None)
+        
+        if save_sphere_log:
+            try:
+                # Use temp_dir from multiworld if available for spheres_log.jsonl, otherwise fallback to output_path
+                log_output_directory = getattr(self.multiworld, 'temp_dir_for_spheres_log', None)
 
-            if log_output_directory is None:
-                # Fallback to current behavior: use multiworld.output_path or 'output'
-                log_output_directory = getattr(self.multiworld, 'output_path', 'output')
-                # Ensure the fallback directory exists
-                if not os.path.exists(log_output_directory):
-                    os.makedirs(log_output_directory, exist_ok=True)
-            # If log_output_directory was set from 'temp_dir_for_spheres_log', we assume it exists (created by TemporaryDirectory).
-            
-            log_filename = f"AP_{self.multiworld.seed_name}_spheres_log.jsonl"
-            log_file_path = os.path.join(log_output_directory, log_filename)
-            
-            logging.info(f"Attempting to open spoiler log file for sphere data at: {log_file_path}")
-            spoiler_log_file_handler = open(log_file_path, "w") 
-            logging.info(f"Spoiler sphere log will be written to: {log_file_path}")
-        except Exception as e:
-            # Log the error and ensure spoiler_log_file_handler is None if open fails
-            logging.error(f"Failed to open spoiler log file {log_file_path}: {e}")
-            spoiler_log_file_handler = None 
+                if log_output_directory is None:
+                    # Fallback to current behavior: use multiworld.output_path or 'output'
+                    log_output_directory = getattr(self.multiworld, 'output_path', 'output')
+                    # Ensure the fallback directory exists
+                    if not os.path.exists(log_output_directory):
+                        os.makedirs(log_output_directory, exist_ok=True)
+                # If log_output_directory was set from 'temp_dir_for_spheres_log', we assume it exists (created by TemporaryDirectory).
+                
+                log_filename = f"AP_{self.multiworld.seed_name}_spheres_log.jsonl"
+                log_file_path = os.path.join(log_output_directory, log_filename)
+                
+                logging.info(f"Attempting to open spoiler log file for sphere data at: {log_file_path}")
+                spoiler_log_file_handler = open(log_file_path, "w") 
+                logging.info(f"Spoiler sphere log will be written to: {log_file_path}")
+            except Exception as e:
+                # Log the error and ensure spoiler_log_file_handler is None if open fails
+                logging.error(f"Failed to open spoiler log file {log_file_path}: {e}")
+                spoiler_log_file_handler = None 
         # --- END SPOILER LOGGING SETUP ---
 
         try:
             # Final sphere calculation pass (this uses initial_collection_spheres which was pruned)
             required_locations = {loc for sphere_set in initial_collection_spheres for loc in sphere_set}
             
-            # --- ADD FLAGS FOR TOGGLING LOG DETAIL --- 
-            log_fractional_sphere_details = True # Set to False to disable 0.1, 1.1, etc. logs
-            log_integer_sphere_details = False    # Set to False to disable 1, 2, etc. logs (Sphere 0 always logs)
+            # --- GET LOG DETAIL FLAGS FROM SETTINGS --- 
+            log_fractional_sphere_details = settings.general_options.log_fractional_sphere_details
+            log_integer_sphere_details = settings.general_options.log_integer_sphere_details
             # --- END FLAGS --- 
 
             # Initialize current_playthrough_state. This will be built up.
