@@ -66,7 +66,11 @@ def main():
         print("❌ Python not found. Please install Python 3.8+ first.")
         return False
     
-    python_cmd = "python3" if check_command_exists("python3") else "python"
+    # On Windows, prefer 'python' over 'python3' as it's more reliable
+    if os.name == 'nt':  # Windows
+        python_cmd = "python" if check_command_exists("python") else "python3"
+    else:  # Unix-like
+        python_cmd = "python3" if check_command_exists("python3") else "python"
     print(f"✅ Python found: {python_cmd}")
     
     # Check Node.js (optional but recommended)
@@ -114,12 +118,12 @@ def main():
     # Step 4: Generate Game Template Files
     print_step(4, "Generating Game Template Files")
     
-    templates_dir = project_root / "Templates"
+    templates_dir = project_root / "Players" / "Templates"
     if templates_dir.exists() and any(templates_dir.glob("*.yaml")):
         print("✅ Template files already exist")
     else:
         print("Generating template YAML files...")
-        cmd = [python_venv, "-c", "from Options import generate_yaml_templates; generate_yaml_templates('Templates')"]
+        cmd = [python_venv, "-c", "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"]
         if not run_command(cmd, "Generate template files"):
             print("⚠️  Template generation may have failed, but this won't prevent basic development")
     

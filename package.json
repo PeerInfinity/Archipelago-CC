@@ -25,6 +25,10 @@
     "test:random:headed": "TEST_MODE=test-full-random playwright test --headed",
     "test:random:debug": "TEST_MODE=test-full-random playwright test --debug",
     "test:random:ui": "TEST_MODE=test-full-random playwright test --ui",
+    "test:spoilers": "TEST_MODE=test-spoilers playwright test",
+    "test:spoilers:headed": "TEST_MODE=test-spoilers playwright test --headed",
+    "test:spoilers:debug": "TEST_MODE=test-spoilers playwright test --debug",
+    "test:spoilers:ui": "TEST_MODE=test-spoilers playwright test --ui",
     "test:health": "node scripts/test-health-check.js",
     "test:analyze": "node scripts/analyze-test-results.js",
     "test:full-suite": "npm run test:health && npm test && npm run test:analyze"

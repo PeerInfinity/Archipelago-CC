@@ -137,6 +137,33 @@ This project includes an end-to-end test suite using Playwright that validates t
 
 **Note on Cursor Editor:** If you are using the Cursor editor, there is a known issue where Playwright commands may fail on the first attempt. If `npm test` fails, simply run it a second time.
 
+## VSCode Setup
+
+If you're using Visual Studio Code, here are some recommended configuration steps to improve your development experience:
+
+### Setting the Default Python Interpreter
+
+To ensure VSCode uses the project's virtual environment for Python development:
+
+1. **Open the project** in VSCode (open the `archipelago-json` folder)
+
+2. **Open the Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+
+3. **Select Python Interpreter**:
+   - Type `Python: Select Interpreter`
+   - Choose the interpreter from your `.venv` directory:
+     - **Windows:** `./.venv/Scripts/python.exe`
+     - **macOS/Linux:** `./.venv/bin/python`
+
+4. **Verify the selection**: You should see the virtual environment name (e.g., `(.venv)`) in the status bar at the bottom of VSCode
+
+### Integrated Terminal
+
+VSCode's integrated terminal should automatically activate the virtual environment when you open a new terminal session. If it doesn't:
+
+- **Windows:** Run `.venv\Scripts\activate`
+- **macOS/Linux:** Run `source .venv/bin/activate`
+
 ## Advanced Setup
 
 The following steps are needed for working with the testing pipeline and adding support for new games. These are not required for basic frontend development.
@@ -164,10 +191,10 @@ To work with the testing pipeline or add support for new games, you'll need temp
 source .venv/bin/activate
 
 # Generate template YAML files for all supported games
-python -c "from Options import generate_yaml_templates; generate_yaml_templates('Templates')"
+python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 ```
 
-This creates a `Templates/` directory with YAML files for each supported game (e.g., "A Hat in Time.yaml", "A Link to the Past.yaml").
+This creates a `Players/Templates/` directory with YAML files for each supported game (e.g., "A Hat in Time.yaml", "A Link to the Past.yaml").
 
 **Note:** You may see some compilation warnings about `_speedups.c` - these are normal and don't affect functionality.
 
