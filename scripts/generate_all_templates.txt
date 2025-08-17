@@ -1,3 +1,6 @@
+source .venv/bin/activate
+REM .venv\Scripts\activate
+
 python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 1 > generate_output.txt
 python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 2
 python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 3

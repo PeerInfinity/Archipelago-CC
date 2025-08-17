@@ -78,6 +78,18 @@ To test a new game implementation, follow these steps:
 
 ### Prerequisites
 
+**⚠️ IMPORTANT: Complete Development Environment Setup First**
+
+Before following these testing instructions, you must first set up your development environment by following the steps in `../getting-started.md`. This includes:
+
+- Setting up a Python virtual environment (`.venv`)
+- Installing required dependencies (`pip install -r requirements.txt`)
+- Configuring your local development server
+
+If you skip the getting-started setup, you may encounter dependency errors or other issues during the testing process.
+
+### Testing-Specific Prerequisites
+
 1. **Clear Players Directory:** Ensure the main `Players/` directory contains no `.yaml` files. This prevents Archipelago from treating them as additional players in multiworld generation. The `Players/Templates/` subdirectory should contain all template files.
 
 2. **Generate Template Files:** If not already done, generate template files:
@@ -110,8 +122,14 @@ To test a new game implementation, follow these steps:
 
 3. **Generate Test Data:** Run Generate.py for your chosen game:
    ```bash
+   # Activate your virtual environment first
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   
+   # Then run the generation command
    python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 1 > generate_output.txt
    ```
+   
+   **Important:** Use `"Templates/[GameName].yaml"` as the path, **not** `"Players/Templates/[GameName].yaml"`. The `--weights_file_path` is relative to the `player_files_path` setting in `host.yaml` (which defaults to "Players"), so the full path becomes `Players/Templates/[GameName].yaml` automatically.
    
    **Check for Export Errors:** Examine `generate_output.txt` for error messages or parsing failures. If errors exist:
    - Fix game-specific issues in your `exporter/games/[game].py` file
