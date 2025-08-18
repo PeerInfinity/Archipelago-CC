@@ -6,6 +6,7 @@ from .alttp import ALttPGameExportHandler
 from .generic import GenericGameExportHandler
 from .adventure import AdventureGameExportHandler
 from .shorthike import ShortHikeGameExportHandler
+from .ahit import AHitGameExportHandler
 
 # Register game-specific helper expanders
 GAME_HANDLERS: Dict[str, Type[BaseGameExportHandler]] = {
@@ -13,6 +14,7 @@ GAME_HANDLERS: Dict[str, Type[BaseGameExportHandler]] = {
     'Generic': GenericGameExportHandler,
     'Adventure': AdventureGameExportHandler,
     'A Short Hike': ShortHikeGameExportHandler,
+    'A Hat in Time': AHitGameExportHandler,
 }
 
 def get_game_export_handler(game_name: str) -> BaseGameExportHandler:
