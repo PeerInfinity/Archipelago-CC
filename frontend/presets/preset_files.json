@@ -83,7 +83,8 @@
         "files": [
           "AP_01043188731678011336.archipelago",
           "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json"
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
         ]
       },
       "AP_84719271504320872445": {
@@ -98,7 +99,8 @@
         "files": [
           "AP_84719271504320872445.archipelago",
           "AP_84719271504320872445_Spoiler.txt",
-          "AP_84719271504320872445_rules.json"
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
         ]
       }
     }
@@ -301,7 +303,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -321,7 +324,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -341,7 +345,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -361,7 +366,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -381,7 +387,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -402,7 +409,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apcvcotm",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -423,7 +431,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apcv64",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -443,7 +452,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -463,7 +473,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -484,7 +495,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apcivvi",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -504,7 +516,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -524,7 +537,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -544,7 +558,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -564,7 +579,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -584,7 +600,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -604,7 +621,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -625,7 +643,8 @@
           "AP-14089154938208861744-P1-Player1_0.6.1.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -645,7 +664,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -666,7 +686,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apmq",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -706,7 +727,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -726,7 +748,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -746,7 +769,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -766,7 +790,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -787,7 +812,8 @@
           "AP-14089154938208861744-P1-Player1_0.6.1.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -807,7 +833,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -828,7 +855,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apkdl3",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -848,7 +876,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -868,7 +897,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -888,7 +918,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -908,7 +939,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -929,7 +961,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apmlss",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -950,7 +983,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apmm2",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -970,7 +1004,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -990,7 +1025,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1011,7 +1047,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apmc",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1031,7 +1068,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1051,7 +1089,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1071,7 +1110,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1091,7 +1131,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1111,7 +1152,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1132,7 +1174,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apemerald",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1152,7 +1195,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1172,7 +1216,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1192,7 +1237,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1212,7 +1258,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1233,7 +1280,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apsmz3",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1253,7 +1301,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1273,7 +1322,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1293,7 +1343,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1313,7 +1364,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1333,7 +1385,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1353,7 +1406,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1373,7 +1427,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1393,7 +1448,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1434,7 +1490,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apsm64ex",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1454,7 +1511,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1475,7 +1533,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apsm",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1495,7 +1554,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1515,7 +1575,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1535,7 +1596,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1555,7 +1617,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1576,7 +1639,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.aptww",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1596,7 +1660,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1616,7 +1681,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1636,7 +1702,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1657,7 +1724,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apv6",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1677,7 +1745,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1697,7 +1766,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1717,7 +1787,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1738,7 +1809,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apygo06",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1759,7 +1831,8 @@
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apzl",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1779,7 +1852,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }

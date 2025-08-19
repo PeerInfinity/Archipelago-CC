@@ -2108,7 +2108,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 28
       },
       "Miss To Great (5 Pack)": {
         "name": "Miss To Great (5 Pack)",
@@ -2123,7 +2123,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 8
       },
       "Extra Life": {
         "name": "Extra Life",
@@ -2138,7 +2138,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Magical Wonderland": {
         "name": "Magical Wonderland",
@@ -2153,7 +2153,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Iyaiya": {
         "name": "Iyaiya",
@@ -2168,7 +2168,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Wonderful Pain": {
         "name": "Wonderful Pain",
@@ -2228,7 +2228,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Heart-Pounding Flight": {
         "name": "Heart-Pounding Flight",
@@ -2258,7 +2258,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Shiguang Tuya": {
         "name": "Shiguang Tuya",
@@ -2288,7 +2288,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Dolphin and Broadcast": {
         "name": "Dolphin and Broadcast",
@@ -2303,7 +2303,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Yuki no Shizuku Ame no Oto": {
         "name": "Yuki no Shizuku Ame no Oto",
@@ -2318,7 +2318,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Best One feat.tooko": {
         "name": "Best One feat.tooko",
@@ -2348,7 +2348,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Night Wander": {
         "name": "Night Wander",
@@ -2363,7 +2363,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Dohna Dohna no Uta": {
         "name": "Dohna Dohna no Uta",
@@ -2378,7 +2378,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Spring Carnival": {
         "name": "Spring Carnival",
@@ -2393,7 +2393,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "DISCO NIGHT": {
         "name": "DISCO NIGHT",
@@ -2408,7 +2408,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Koi no Moonlight": {
         "name": "Koi no Moonlight",
@@ -2453,7 +2453,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "midstream jam": {
         "name": "midstream jam",
@@ -2483,7 +2483,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Confession": {
         "name": "Confession",
@@ -2498,7 +2498,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Galaxy Striker": {
         "name": "Galaxy Striker",
@@ -2513,7 +2513,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Departure Road": {
         "name": "Departure Road",
@@ -2528,7 +2528,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Bass Telekinesis": {
         "name": "Bass Telekinesis",
@@ -2543,7 +2543,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Cage of Almeria": {
         "name": "Cage of Almeria",
@@ -2558,7 +2558,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Ira": {
         "name": "Ira",
@@ -2588,7 +2588,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Medicine of Sing": {
         "name": "Medicine of Sing",
@@ -2603,7 +2603,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "irregulyze": {
         "name": "irregulyze",
@@ -2618,7 +2618,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "I don't care about Christmas though": {
         "name": "I don't care about Christmas though",
@@ -2678,7 +2678,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "NISEGAO": {
         "name": "NISEGAO",
@@ -2738,7 +2738,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Shinsou Masui": {
         "name": "Shinsou Masui",
@@ -2768,7 +2768,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Shenri Kuaira -repeat-": {
         "name": "Shenri Kuaira -repeat-",
@@ -2783,7 +2783,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Latitude": {
         "name": "Latitude",
@@ -2798,7 +2798,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Aqua Stars": {
         "name": "Aqua Stars",
@@ -2813,7 +2813,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Funkotsu Saishin Casino": {
         "name": "Funkotsu Saishin Casino",
@@ -2828,7 +2828,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Clock Room & Spiritual World": {
         "name": "Clock Room & Spiritual World",
@@ -2843,7 +2843,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "INTERNET OVERDOSE": {
         "name": "INTERNET OVERDOSE",
@@ -2858,7 +2858,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Tu Hua": {
         "name": "Tu Hua",
@@ -2888,7 +2888,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "MilK": {
         "name": "MilK",
@@ -2903,7 +2903,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "umpopoff": {
         "name": "umpopoff",
@@ -7013,7 +7013,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Irreplaceable": {
         "name": "Irreplaceable",
@@ -7028,7 +7028,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Moonlight Banquet": {
         "name": "Moonlight Banquet",
@@ -8318,7 +8318,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Etude -Sunset-": {
         "name": "Etude -Sunset-",
@@ -8333,7 +8333,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Goodbye Boss": {
         "name": "Goodbye Boss",
@@ -8348,7 +8348,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Stargazer": {
         "name": "Stargazer",
@@ -10148,7 +10148,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Sweet Dream VIVINOS": {
         "name": "Sweet Dream VIVINOS",
@@ -10703,7 +10703,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Tsukuyomi Ni Naru": {
         "name": "Tsukuyomi Ni Naru",
@@ -11587,7 +11587,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 18
       }
     }
   },

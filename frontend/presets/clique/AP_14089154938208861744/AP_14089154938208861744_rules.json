@@ -118,7 +118,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Button Activation": {
         "name": "Button Activation",

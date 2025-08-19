@@ -4022,7 +4022,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Brog's Flickering Torch": {
         "name": "Brog's Flickering Torch",
@@ -4037,7 +4037,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Brog's Grue Egg": {
         "name": "Brog's Grue Egg",
@@ -4052,7 +4052,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Brog's Plank": {
         "name": "Brog's Plank",
@@ -4067,7 +4067,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Flatheadia Fudge": {
         "name": "Flatheadia Fudge",
@@ -4082,7 +4082,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Griff's Air Pump": {
         "name": "Griff's Air Pump",
@@ -4097,7 +4097,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Griff's Dragon Tooth": {
         "name": "Griff's Dragon Tooth",
@@ -4112,7 +4112,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Griff's Inflatable Raft": {
         "name": "Griff's Inflatable Raft",
@@ -4127,7 +4127,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Griff's Inflatable Sea Captain": {
         "name": "Griff's Inflatable Sea Captain",
@@ -4142,7 +4142,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Hammer": {
         "name": "Hammer",
@@ -4157,7 +4157,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Hungus Lard": {
         "name": "Hungus Lard",
@@ -4172,7 +4172,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Jar of Hotbugs": {
         "name": "Jar of Hotbugs",
@@ -4187,7 +4187,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lantern": {
         "name": "Lantern",
@@ -4202,7 +4202,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Large Telegraph Hammer": {
         "name": "Large Telegraph Hammer",
@@ -4217,7 +4217,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lucy's Playing Card: 1 Pip": {
         "name": "Lucy's Playing Card: 1 Pip",
@@ -4232,7 +4232,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lucy's Playing Card: 2 Pips": {
         "name": "Lucy's Playing Card: 2 Pips",
@@ -4247,7 +4247,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lucy's Playing Card: 3 Pips": {
         "name": "Lucy's Playing Card: 3 Pips",
@@ -4262,7 +4262,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lucy's Playing Card: 4 Pips": {
         "name": "Lucy's Playing Card: 4 Pips",
@@ -4277,7 +4277,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Map": {
         "name": "Map",
@@ -4292,7 +4292,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Mead Light": {
         "name": "Mead Light",
@@ -4307,7 +4307,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Moss of Mareilon": {
         "name": "Moss of Mareilon",
@@ -4322,7 +4322,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Mug": {
         "name": "Mug",
@@ -4337,7 +4337,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Old Scratch Card": {
         "name": "Old Scratch Card",
@@ -4352,7 +4352,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Perma-Suck Machine": {
         "name": "Perma-Suck Machine",
@@ -4367,7 +4367,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Plastic Six-Pack Holder": {
         "name": "Plastic Six-Pack Holder",
@@ -4382,7 +4382,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Pouch of Zorkmids": {
         "name": "Pouch of Zorkmids",
@@ -4397,7 +4397,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Prozork Tablet": {
         "name": "Prozork Tablet",
@@ -4412,7 +4412,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Quelbee Honeycomb": {
         "name": "Quelbee Honeycomb",
@@ -4427,7 +4427,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Rope": {
         "name": "Rope",
@@ -4442,7 +4442,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Scroll Fragment: ANS": {
         "name": "Scroll Fragment: ANS",
@@ -4457,7 +4457,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Scroll Fragment: GIV": {
         "name": "Scroll Fragment: GIV",
@@ -4472,7 +4472,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Shovel": {
         "name": "Shovel",
@@ -4487,7 +4487,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Snapdragon": {
         "name": "Snapdragon",
@@ -4502,7 +4502,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Student ID": {
         "name": "Student ID",
@@ -4517,7 +4517,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Subway Token": {
         "name": "Subway Token",
@@ -4532,7 +4532,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Sword": {
         "name": "Sword",
@@ -4547,7 +4547,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "ZIMDOR Scroll": {
         "name": "ZIMDOR Scroll",
@@ -4562,7 +4562,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Zork Rocks": {
         "name": "Zork Rocks",
@@ -4577,7 +4577,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Hotspot: 666 Mailbox": {
         "name": "Hotspot: 666 Mailbox",
@@ -5447,7 +5447,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Spell: GOLGATEM": {
         "name": "Spell: GOLGATEM",
@@ -5462,7 +5462,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Spell: IGRAM": {
         "name": "Spell: IGRAM",
@@ -5477,7 +5477,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Spell: KENDALL": {
         "name": "Spell: KENDALL",
@@ -5492,7 +5492,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Spell: NARWILE": {
         "name": "Spell: NARWILE",
@@ -5507,7 +5507,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Spell: REZROV": {
         "name": "Spell: REZROV",
@@ -5522,7 +5522,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Spell: THROCK": {
         "name": "Spell: THROCK",
@@ -5537,7 +5537,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Spell: VOXAM": {
         "name": "Spell: VOXAM",
@@ -5552,7 +5552,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Subway Destination: Flood Control Dam #3": {
         "name": "Subway Destination: Flood Control Dam #3",
@@ -5567,7 +5567,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Subway Destination: Hades": {
         "name": "Subway Destination: Hades",
@@ -5582,7 +5582,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Subway Destination: Monastery": {
         "name": "Subway Destination: Monastery",
@@ -5597,7 +5597,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Teleporter Destination: Dungeon Master's Lair": {
         "name": "Teleporter Destination: Dungeon Master's Lair",
@@ -5612,7 +5612,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Teleporter Destination: GUE Tech": {
         "name": "Teleporter Destination: GUE Tech",
@@ -5627,7 +5627,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Teleporter Destination: Hades": {
         "name": "Teleporter Destination: Hades",
@@ -5642,7 +5642,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Teleporter Destination: Monastery Station": {
         "name": "Teleporter Destination: Monastery Station",
@@ -5657,7 +5657,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Teleporter Destination: Spell Lab": {
         "name": "Teleporter Destination: Spell Lab",
@@ -5672,7 +5672,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Totemizer Destination: Hall of Inquisition": {
         "name": "Totemizer Destination: Hall of Inquisition",
@@ -5687,7 +5687,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Totemizer Destination: Infinity": {
         "name": "Totemizer Destination: Infinity",
@@ -5702,7 +5702,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Totemizer Destination: Straight to Hell": {
         "name": "Totemizer Destination: Straight to Hell",
@@ -5717,7 +5717,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Totemizer Destination: Surface of Merz": {
         "name": "Totemizer Destination: Surface of Merz",
@@ -5732,7 +5732,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Totem: Brog": {
         "name": "Totem: Brog",
@@ -5747,7 +5747,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Totem: Griff": {
         "name": "Totem: Griff",
@@ -5762,7 +5762,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Totem: Lucy": {
         "name": "Totem: Lucy",
@@ -5777,7 +5777,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Inquisition Propaganda Flyer": {
         "name": "Inquisition Propaganda Flyer",
@@ -5792,7 +5792,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 32
       },
       "Unreadable Spell Scroll": {
         "name": "Unreadable Spell Scroll",
@@ -5807,7 +5807,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 30
       },
       "Magic Contraband": {
         "name": "Magic Contraband",
@@ -5822,7 +5822,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 38
       },
       "Frobozz Electric Gadget": {
         "name": "Frobozz Electric Gadget",
@@ -5837,7 +5837,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 18
       },
       "Nonsensical Inquisition Paperwork": {
         "name": "Nonsensical Inquisition Paperwork",
@@ -5852,7 +5852,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 28
       }
     }
   },

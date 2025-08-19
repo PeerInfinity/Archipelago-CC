@@ -1457,6 +1457,36 @@
   },
   "items": {
     "1": {
+      "Cave Key": {
+        "name": "Cave Key",
+        "id": 91630179862871,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Powered Blaster": {
+        "name": "Powered Blaster",
+        "id": 91630179862862,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
       "Life Extension": {
         "name": "Life Extension",
         "id": 91630179862866,
@@ -1470,22 +1500,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Volcanic Key": {
-        "name": "Volcanic Key",
-        "id": 91630179862872,
-        "groups": [
-          "Everything",
-          "Keys"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
+        "max_count": 12
       },
       "Clip Extension": {
         "name": "Clip Extension",
@@ -1500,22 +1515,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Full Heal": {
-        "name": "Full Heal",
-        "id": 91630179862876,
-        "groups": [
-          "Everything",
-          "Filler"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
+        "max_count": 12
       },
       "Shake Trap": {
         "name": "Shake Trap",
@@ -1532,9 +1532,24 @@
         "type": null,
         "max_count": 1
       },
-      "Powered Blaster": {
-        "name": "Powered Blaster",
-        "id": 91630179862862,
+      "Ninja Trap": {
+        "name": "Ninja Trap",
+        "id": 91630179862881,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Flamethrower": {
+        "name": "Flamethrower",
+        "id": 91630179862863,
         "groups": [
           "Everything",
           "Weapons"
@@ -1545,21 +1560,22 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
-      "System Power": {
-        "name": "System Power",
-        "id": 91630179862875,
+      "Ice Trap": {
+        "name": "Ice Trap",
+        "id": 91630179862879,
         "groups": [
-          "Everything"
+          "Everything",
+          "Traps"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Faster Reload": {
         "name": "Faster Reload",
@@ -1574,7 +1590,66 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 12
+      },
+      "System Power": {
+        "name": "System Power",
+        "id": 91630179862875,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ice Spreadshot": {
+        "name": "Ice Spreadshot",
+        "id": 91630179862864,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Swamp Key": {
+        "name": "Swamp Key",
+        "id": 91630179862874,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Volcanic Key": {
+        "name": "Volcanic Key",
+        "id": 91630179862872,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
       },
       "Special Extension": {
         "name": "Special Extension",
@@ -1589,14 +1664,28 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
-      "Cave Key": {
-        "name": "Cave Key",
-        "id": 91630179862871,
+      "Jacket": {
+        "name": "Jacket",
+        "id": 91630179862870,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Volt Laser": {
+        "name": "Volt Laser",
+        "id": 91630179862865,
         "groups": [
           "Everything",
-          "Keys"
+          "Weapons"
         ],
         "advancement": true,
         "priority": false,
@@ -1604,7 +1693,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Quick-fire Mode": {
         "name": "Quick-fire Mode",
@@ -1634,67 +1723,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Flamethrower": {
-        "name": "Flamethrower",
-        "id": 91630179862863,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ice Trap": {
-        "name": "Ice Trap",
-        "id": 91630179862879,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ninja Trap": {
-        "name": "Ninja Trap",
-        "id": 91630179862881,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Volt Laser": {
-        "name": "Volt Laser",
-        "id": 91630179862865,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Active Camouflage": {
         "name": "Active Camouflage",
@@ -1711,49 +1740,20 @@
         "type": null,
         "max_count": 1
       },
-      "Swamp Key": {
-        "name": "Swamp Key",
-        "id": 91630179862874,
+      "Full Heal": {
+        "name": "Full Heal",
+        "id": 91630179862876,
         "groups": [
           "Everything",
-          "Keys"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ice Spreadshot": {
-        "name": "Ice Spreadshot",
-        "id": 91630179862864,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jacket": {
-        "name": "Jacket",
-        "id": 91630179862870,
-        "groups": [
-          "Everything"
+          "Filler"
         ],
         "advancement": false,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 6
       }
     }
   },

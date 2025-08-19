@@ -12422,7 +12422,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Security Visor": {
         "name": "Security Visor",
@@ -12497,7 +12497,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Dragoon Helmet": {
         "name": "Dragoon Helmet",
@@ -12527,7 +12527,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Advisor Hat": {
         "name": "Advisor Hat",
@@ -12557,7 +12557,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Combat Helmet": {
         "name": "Combat Helmet",
@@ -12587,7 +12587,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lab Glasses": {
         "name": "Lab Glasses",
@@ -12602,7 +12602,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Empire Crown": {
         "name": "Empire Crown",
@@ -12617,7 +12617,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Viletian Crown": {
         "name": "Viletian Crown",
@@ -12632,7 +12632,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Sunglasses": {
         "name": "Sunglasses",
@@ -12647,7 +12647,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Old Coat": {
         "name": "Old Coat",
@@ -12662,7 +12662,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Trendy Jacket": {
         "name": "Trendy Jacket",
@@ -12677,7 +12677,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Security Vest": {
         "name": "Security Vest",
@@ -12737,7 +12737,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Dragoon Armor": {
         "name": "Dragoon Armor",
@@ -12767,7 +12767,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Advisor Robe": {
         "name": "Advisor Robe",
@@ -12797,7 +12797,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Military Armor": {
         "name": "Military Armor",
@@ -12827,7 +12827,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lab Coat": {
         "name": "Lab Coat",
@@ -12842,7 +12842,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Empress Robe": {
         "name": "Empress Robe",
@@ -12857,7 +12857,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Princess Dress": {
         "name": "Princess Dress",
@@ -12872,7 +12872,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Eternal Coat": {
         "name": "Eternal Coat",
@@ -12887,7 +12887,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Synthetic Plume": {
         "name": "Synthetic Plume",
@@ -12932,7 +12932,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Nymph Hairband": {
         "name": "Nymph Hairband",
@@ -12977,7 +12977,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Chaos Stole": {
         "name": "Chaos Stole",
@@ -13007,7 +13007,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Chaos Horn": {
         "name": "Chaos Horn",
@@ -13037,7 +13037,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Azure Stole": {
         "name": "Azure Stole",
@@ -13067,7 +13067,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Shiny Rock": {
         "name": "Shiny Rock",
@@ -13082,7 +13082,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Galaxy Earrings": {
         "name": "Galaxy Earrings",
@@ -13097,7 +13097,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Selen's Bangle": {
         "name": "Selen's Bangle",
@@ -13112,7 +13112,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Glass Pumpkin": {
         "name": "Glass Pumpkin",
@@ -13127,7 +13127,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Gilded Egg": {
         "name": "Gilded Egg",
@@ -13142,7 +13142,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Meyef": {
         "name": "Meyef",
@@ -13157,7 +13157,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Griffin": {
         "name": "Griffin",
@@ -13172,7 +13172,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Merchant Crow": {
         "name": "Merchant Crow",
@@ -13187,7 +13187,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Kobo": {
         "name": "Kobo",
@@ -13202,7 +13202,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Sprite": {
         "name": "Sprite",
@@ -13217,7 +13217,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Demon": {
         "name": "Demon",
@@ -13232,7 +13232,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Potion": {
         "name": "Potion",
@@ -13247,7 +13247,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Ether": {
         "name": "Ether",
@@ -13262,7 +13262,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 8
       },
       "Sand Vial": {
         "name": "Sand Vial",
@@ -13277,7 +13277,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Hi-Potion": {
         "name": "Hi-Potion",
@@ -13292,7 +13292,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 6
       },
       "Hi-Ether": {
         "name": "Hi-Ether",
@@ -13307,7 +13307,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Sand Bottle": {
         "name": "Sand Bottle",
@@ -13322,7 +13322,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 6
       },
       "Berry Pick-Mi-Up": {
         "name": "Berry Pick-Mi-Up",
@@ -13337,7 +13337,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Berry Pick-Mi-Up+": {
         "name": "Berry Pick-Mi-Up+",
@@ -13352,7 +13352,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Mind Refresh": {
         "name": "Mind Refresh",
@@ -13367,7 +13367,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Mind Refresh ULTRA": {
         "name": "Mind Refresh ULTRA",
@@ -13412,7 +13412,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 6
       },
       "Warp Shard": {
         "name": "Warp Shard",
@@ -13427,7 +13427,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Dream Wisp": {
         "name": "Dream Wisp",
@@ -13487,7 +13487,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Biscuit": {
         "name": "Biscuit",
@@ -13592,7 +13592,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Plump Maggot": {
         "name": "Plump Maggot",
@@ -13637,7 +13637,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Empress Cake": {
         "name": "Empress Cake",
@@ -13682,7 +13682,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Galaxy Stone": {
         "name": "Galaxy Stone",
@@ -13697,7 +13697,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Essence Crystal": {
         "name": "Essence Crystal",
@@ -13757,7 +13757,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -13787,7 +13787,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Plasma IV Bag": {
         "name": "Plasma IV Bag",
@@ -13802,7 +13802,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Cheveur Drumstick": {
         "name": "Cheveur Drumstick",
@@ -13877,7 +13877,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Cheveux Feather": {
         "name": "Cheveux Feather",
@@ -14012,7 +14012,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Timespinner Spindle": {
         "name": "Timespinner Spindle",
@@ -14027,7 +14027,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Timespinner Gear 1": {
         "name": "Timespinner Gear 1",
@@ -14042,7 +14042,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Timespinner Gear 2": {
         "name": "Timespinner Gear 2",
@@ -14057,7 +14057,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Timespinner Gear 3": {
         "name": "Timespinner Gear 3",
@@ -14072,7 +14072,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Twin Pyramid Key": {
         "name": "Twin Pyramid Key",
@@ -14087,7 +14087,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Celestial Sash": {
         "name": "Celestial Sash",
@@ -14102,7 +14102,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Succubus Hairpin": {
         "name": "Succubus Hairpin",
@@ -14117,7 +14117,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Talaria Attachment": {
         "name": "Talaria Attachment",
@@ -14132,7 +14132,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Water Mask": {
         "name": "Water Mask",
@@ -14147,7 +14147,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Gas Mask": {
         "name": "Gas Mask",
@@ -14162,7 +14162,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Soul Scanner": {
         "name": "Soul Scanner",
@@ -14177,7 +14177,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Security Keycard A": {
         "name": "Security Keycard A",
@@ -14192,7 +14192,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Security Keycard B": {
         "name": "Security Keycard B",
@@ -14207,7 +14207,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Security Keycard C": {
         "name": "Security Keycard C",
@@ -14222,7 +14222,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Security Keycard D": {
         "name": "Security Keycard D",
@@ -14237,7 +14237,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Library Keycard V": {
         "name": "Library Keycard V",
@@ -14252,7 +14252,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Tablet": {
         "name": "Tablet",
@@ -14267,7 +14267,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Elevator Keycard": {
         "name": "Elevator Keycard",
@@ -14282,7 +14282,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Jewelry Box": {
         "name": "Jewelry Box",
@@ -14297,7 +14297,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Goddess Brooch": {
         "name": "Goddess Brooch",
@@ -14312,7 +14312,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Wyrm Brooch": {
         "name": "Wyrm Brooch",
@@ -14327,7 +14327,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Greed Brooch": {
         "name": "Greed Brooch",
@@ -14342,7 +14342,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Eternal Brooch": {
         "name": "Eternal Brooch",
@@ -14357,7 +14357,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Blue Orb": {
         "name": "Blue Orb",
@@ -14372,7 +14372,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Blade Orb": {
         "name": "Blade Orb",
@@ -14387,7 +14387,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Fire Orb": {
         "name": "Fire Orb",
@@ -14402,7 +14402,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Plasma Orb": {
         "name": "Plasma Orb",
@@ -14417,7 +14417,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Iron Orb": {
         "name": "Iron Orb",
@@ -14432,7 +14432,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Ice Orb": {
         "name": "Ice Orb",
@@ -14462,7 +14462,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Gun Orb": {
         "name": "Gun Orb",
@@ -14477,7 +14477,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Umbra Orb": {
         "name": "Umbra Orb",
@@ -14492,7 +14492,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Empire Orb": {
         "name": "Empire Orb",
@@ -14507,7 +14507,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Eye Orb": {
         "name": "Eye Orb",
@@ -14522,7 +14522,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Blood Orb": {
         "name": "Blood Orb",
@@ -14537,7 +14537,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Forbidden Tome": {
         "name": "Forbidden Tome",
@@ -14552,7 +14552,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Shattered Orb": {
         "name": "Shattered Orb",
@@ -14567,7 +14567,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Nether Orb": {
         "name": "Nether Orb",
@@ -14582,7 +14582,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Radiant Orb": {
         "name": "Radiant Orb",
@@ -14597,7 +14597,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Aura Blast": {
         "name": "Aura Blast",
@@ -14612,7 +14612,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Colossal Blade": {
         "name": "Colossal Blade",
@@ -14627,7 +14627,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Infernal Flames": {
         "name": "Infernal Flames",
@@ -14657,7 +14657,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Colossal Hammer": {
         "name": "Colossal Hammer",
@@ -14672,7 +14672,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Frozen Spires": {
         "name": "Frozen Spires",
@@ -14687,7 +14687,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Storm Eye": {
         "name": "Storm Eye",
@@ -14702,7 +14702,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Arm Cannon": {
         "name": "Arm Cannon",
@@ -14717,7 +14717,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Dark Flames": {
         "name": "Dark Flames",
@@ -14732,7 +14732,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Aura Serpent": {
         "name": "Aura Serpent",
@@ -14747,7 +14747,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Chaos Blades": {
         "name": "Chaos Blades",
@@ -14762,7 +14762,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Crimson Vortex": {
         "name": "Crimson Vortex",
@@ -14777,7 +14777,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Djinn Inferno": {
         "name": "Djinn Inferno",
@@ -14792,7 +14792,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Bombardment": {
         "name": "Bombardment",
@@ -14807,7 +14807,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Corruption": {
         "name": "Corruption",
@@ -14822,7 +14822,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Lightwall": {
         "name": "Lightwall",
@@ -14837,7 +14837,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Bleak Ring": {
         "name": "Bleak Ring",
@@ -14852,7 +14852,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Scythe Ring": {
         "name": "Scythe Ring",
@@ -14867,7 +14867,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Pyro Ring": {
         "name": "Pyro Ring",
@@ -14882,7 +14882,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Royal Ring": {
         "name": "Royal Ring",
@@ -14897,7 +14897,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Shield Ring": {
         "name": "Shield Ring",
@@ -14912,7 +14912,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Icicle Ring": {
         "name": "Icicle Ring",
@@ -14927,7 +14927,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Tailwind Ring": {
         "name": "Tailwind Ring",
@@ -14942,7 +14942,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Economizer Ring": {
         "name": "Economizer Ring",
@@ -14957,7 +14957,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Dusk Ring": {
         "name": "Dusk Ring",
@@ -14972,7 +14972,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Star of Lachiem": {
         "name": "Star of Lachiem",
@@ -14987,7 +14987,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Oculus Ring": {
         "name": "Oculus Ring",
@@ -15002,7 +15002,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Sanguine Ring": {
         "name": "Sanguine Ring",
@@ -15017,7 +15017,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Sun Ring": {
         "name": "Sun Ring",
@@ -15032,7 +15032,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Silence Ring": {
         "name": "Silence Ring",
@@ -15047,7 +15047,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Shadow Seal": {
         "name": "Shadow Seal",
@@ -15062,7 +15062,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Hope Ring": {
         "name": "Hope Ring",
@@ -15077,7 +15077,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Max HP": {
         "name": "Max HP",
@@ -15092,7 +15092,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 24
       },
       "Max Aura": {
         "name": "Max Aura",
@@ -15107,7 +15107,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 26
       },
       "Timeworn Warp Beacon": {
         "name": "Timeworn Warp Beacon",
@@ -15167,7 +15167,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Poison Trap": {
         "name": "Poison Trap",
@@ -15182,7 +15182,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Chaos Trap": {
         "name": "Chaos Trap",
@@ -15377,7 +15377,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 28
       }
     }
   },

@@ -1065,6 +1065,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Boss Relic"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -1108,7 +1112,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 30
       },
       "Rare Card Draw": {
         "name": "Rare Card Draw",
@@ -1122,7 +1126,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Relic": {
         "name": "Relic",
@@ -1136,7 +1140,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 20
       },
       "Boss Relic": {
         "name": "Boss Relic",
@@ -1150,7 +1154,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       }
     }
   },

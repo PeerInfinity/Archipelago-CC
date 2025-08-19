@@ -15,6 +15,9 @@ import os
 import re
 import subprocess
 import sys
+import time
+import urllib.request
+import urllib.error
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -42,6 +45,18 @@ def check_virtual_environment() -> bool:
         # If import works but no VIRTUAL_ENV, warn but allow to continue
         return True
     except ImportError:
+        return False
+
+
+def check_http_server(url: str = "http://localhost:8000", timeout: int = 5) -> bool:
+    """
+    Check if the HTTP server is running by attempting to connect.
+    Returns True if server is reachable, False otherwise.
+    """
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as response:
+            return response.getcode() == 200
+    except (urllib.error.URLError, urllib.error.HTTPError, OSError):
         return False
 
 
@@ -105,6 +120,35 @@ def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict =
         return -1, "", "Command timed out"
     except Exception as e:
         return -1, "", str(e)
+
+
+def count_total_spheres(spheres_log_path: str) -> float:
+    """
+    Get the highest sphere_index from spheres_log.jsonl file.
+    Returns the sphere_index value from the last line in the file.
+    """
+    try:
+        if not os.path.exists(spheres_log_path):
+            return 0
+        
+        with open(spheres_log_path, 'r') as f:
+            last_sphere = 0
+            for line in f:
+                line = line.strip()
+                if line:
+                    try:
+                        sphere_data = json.loads(line)
+                        sphere_index = sphere_data.get('sphere_index', 0)
+                        # Convert to float to handle values like "1.1", "2.3", etc.
+                        if isinstance(sphere_index, str):
+                            last_sphere = float(sphere_index)
+                        else:
+                            last_sphere = float(sphere_index)
+                    except (json.JSONDecodeError, ValueError):
+                        continue
+            return last_sphere
+    except (IOError, OSError):
+        return 0
 
 
 def parse_playwright_analysis(analysis_text: str) -> Dict:
@@ -221,7 +265,8 @@ def test_template(template_file: str, templates_dir: str, project_root: str) -> 
             'warning_count': 0,
             'first_error_line': None,
             'first_warning_line': None,
-            'return_code': None
+            'return_code': None,
+            'processing_time_seconds': 0
         },
         'spoiler_test': {
             'success': False,
@@ -232,7 +277,13 @@ def test_template(template_file: str, templates_dir: str, project_root: str) -> 
             'warning_count': 0,
             'first_error_line': None,
             'first_warning_line': None,
-            'return_code': None
+            'return_code': None,
+            'processing_time_seconds': 0
+        },
+        'rules_file': {
+            'path': None,
+            'size_bytes': 0,
+            'size_mb': 0.0
         },
         'analysis': {
             'success': False,
@@ -253,7 +304,11 @@ def test_template(template_file: str, templates_dir: str, project_root: str) -> 
         "--seed", seed
     ]
     
+    # Time the generation process
+    gen_start_time = time.time()
     gen_return_code, gen_stdout, gen_stderr = run_command(generate_cmd, cwd=project_root, timeout=600)
+    gen_end_time = time.time()
+    gen_processing_time = round(gen_end_time - gen_start_time, 2)
     
     # Write generate output to file
     generate_output_file = os.path.join(project_root, "generate_output.txt")
@@ -270,7 +325,8 @@ def test_template(template_file: str, templates_dir: str, project_root: str) -> 
         'error_count': gen_error_count,
         'warning_count': gen_warning_count,
         'first_error_line': gen_first_error,
-        'first_warning_line': gen_first_warning
+        'first_warning_line': gen_first_warning,
+        'processing_time_seconds': gen_processing_time
     })
     
     if gen_return_code != 0:
@@ -293,12 +349,17 @@ def test_template(template_file: str, templates_dir: str, project_root: str) -> 
     spoiler_env = os.environ.copy()
     spoiler_env['RULES_OVERRIDE'] = rules_path
     
+    # Time the spoiler test process
+    spoiler_start_time = time.time()
     spoiler_return_code, spoiler_stdout, spoiler_stderr = run_command(
         spoiler_cmd, cwd=project_root, timeout=900, env=spoiler_env
     )
+    spoiler_end_time = time.time()
+    spoiler_processing_time = round(spoiler_end_time - spoiler_start_time, 2)
     
     result['spoiler_test']['return_code'] = spoiler_return_code
     result['spoiler_test']['success'] = spoiler_return_code == 0
+    result['spoiler_test']['processing_time_seconds'] = spoiler_processing_time
     
     # Step 3: Run test analysis
     print("Running test analysis...")
@@ -324,6 +385,41 @@ def test_template(template_file: str, templates_dir: str, project_root: str) -> 
     else:
         result['analysis']['first_error_line'] = "playwright-analysis.txt not found"
     
+    # Read total spheres from spheres_log.jsonl file
+    spheres_log_path = os.path.join(project_root, 'frontend', 'presets', game_name, seed_id, f'{seed_id}_spheres_log.jsonl')
+    total_spheres = count_total_spheres(spheres_log_path)
+    result['spoiler_test']['total_spheres'] = total_spheres
+    
+    # If test passed, sphere_reached should equal total_spheres
+    if result['spoiler_test']['pass_fail'] == 'passed':
+        result['spoiler_test']['sphere_reached'] = total_spheres
+    
+    # Get rules file size
+    rules_file_path = os.path.join(project_root, 'frontend', 'presets', game_name, seed_id, f'{seed_id}_rules.json')
+    try:
+        if os.path.exists(rules_file_path):
+            file_size_bytes = os.path.getsize(rules_file_path)
+            file_size_mb = round(file_size_bytes / (1024 * 1024), 2)
+            result['rules_file'] = {
+                'path': f'frontend/presets/{game_name}/{seed_id}/{seed_id}_rules.json',
+                'size_bytes': file_size_bytes,
+                'size_mb': file_size_mb
+            }
+        else:
+            result['rules_file'] = {
+                'path': f'frontend/presets/{game_name}/{seed_id}/{seed_id}_rules.json',
+                'size_bytes': 0,
+                'size_mb': 0.0,
+                'note': 'File not found'
+            }
+    except OSError:
+        result['rules_file'] = {
+            'path': f'frontend/presets/{game_name}/{seed_id}/{seed_id}_rules.json',
+            'size_bytes': 0,
+            'size_mb': 0.0,
+            'note': 'Error reading file size'
+        }
+    
     print(f"Completed {template_name}: Generation={'✓' if result['generation']['success'] else '✗'}, "
           f"Test={'✓' if result['spoiler_test']['pass_fail'] == 'passed' else '✗'}")
     
@@ -342,6 +438,19 @@ def main():
         type=str,
         default='scripts/output/template-test-results.json',
         help='Output file path (default: scripts/output/template-test-results.json)'
+    )
+    parser.add_argument(
+        '--skip-list',
+        type=str,
+        nargs='*',
+        default=['Archipelago.yaml', 'Universal Tracker.yaml'],
+        help='List of template files to skip (default: Archipelago.yaml Universal Tracker.yaml)'
+    )
+    parser.add_argument(
+        '--include-list',
+        type=str,
+        nargs='*',
+        help='List of template files to test (if specified, only these files will be tested, overrides skip-list)'
     )
     
     args = parser.parse_args()
@@ -369,6 +478,18 @@ def main():
         print("Continuing anyway...")
         print("")
     
+    # Check if HTTP server is running (required for spoiler tests)
+    if not check_http_server():
+        print("❌ ERROR: HTTP development server not running!")
+        print("")
+        print("The spoiler tests require a local development server.")
+        print("Please start the server first:")
+        print("  python -m http.server 8000")
+        print("")
+        print("Then access the frontend at: http://localhost:8000/frontend/")
+        print("Once the server is running, run this script again.")
+        sys.exit(1)
+    
     # Determine project root and templates directory
     project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     
@@ -382,13 +503,51 @@ def main():
         sys.exit(1)
     
     # Get list of YAML files
-    yaml_files = [f for f in os.listdir(templates_dir) if f.endswith('.yaml')]
-    if not yaml_files:
+    all_yaml_files = [f for f in os.listdir(templates_dir) if f.endswith('.yaml')]
+    if not all_yaml_files:
         print(f"Error: No YAML files found in {templates_dir}")
         sys.exit(1)
     
+    # Handle include list vs skip list logic
+    if args.include_list is not None:
+        # Include list mode: only test specified files
+        yaml_files = [f for f in all_yaml_files if f in args.include_list]
+        skipped_files = [f for f in all_yaml_files if f not in args.include_list]
+        
+        # Check if any requested files don't exist
+        missing_files = [f for f in args.include_list if f not in all_yaml_files]
+        if missing_files:
+            print(f"Warning: Requested files not found: {', '.join(missing_files)}")
+        
+        if not yaml_files:
+            print(f"Error: None of the requested files were found in {templates_dir}")
+            if args.include_list:
+                print(f"Requested: {', '.join(args.include_list)}")
+                print(f"Available: {', '.join(all_yaml_files)}")
+            sys.exit(1)
+        
+        filter_description = f"include list ({len(args.include_list)} requested)"
+    else:
+        # Skip list mode: exclude specified files
+        yaml_files = [f for f in all_yaml_files if f not in args.skip_list]
+        skipped_files = [f for f in all_yaml_files if f in args.skip_list]
+        
+        if not yaml_files:
+            print(f"Error: No testable YAML files found after filtering (all files are in skip list)")
+            sys.exit(1)
+        
+        filter_description = f"skip list ({len(args.skip_list)} excluded)"
+    
     yaml_files.sort()
-    print(f"Found {len(yaml_files)} template files to test")
+    print(f"Found {len(all_yaml_files)} template files ({len(yaml_files)} testable, {len(skipped_files)} filtered by {filter_description})")
+    
+    if skipped_files and len(skipped_files) <= 10:  # Only show if reasonable number
+        if args.include_list is not None:
+            print(f"Not included: {', '.join(skipped_files)}")
+        else:
+            print(f"Skipping: {', '.join(skipped_files)}")
+    elif len(skipped_files) > 10:
+        print(f"{'Not included' if args.include_list is not None else 'Skipping'}: {len(skipped_files)} files (too many to list)")
     
     # Load or create results structure
     results_file = os.path.join(project_root, args.output_file)

@@ -3489,7 +3489,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 15
       },
       "Extra Max HP": {
         "name": "Extra Max HP",
@@ -3504,7 +3504,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 29
       },
       "Spell Refresher": {
         "name": "Spell Refresher",
@@ -3519,7 +3519,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 8
       },
       "Potion": {
         "name": "Potion",
@@ -3533,7 +3533,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 26
       },
       "Gold (200)": {
         "name": "Gold (200)",
@@ -3548,7 +3548,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 14
       },
       "Gold (1000)": {
         "name": "Gold (1000)",
@@ -3563,7 +3563,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Wand (Tier 1)": {
         "name": "Wand (Tier 1)",
@@ -3578,7 +3578,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Wand (Tier 2)": {
         "name": "Wand (Tier 2)",
@@ -3593,7 +3593,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 6
       },
       "Wand (Tier 3)": {
         "name": "Wand (Tier 3)",
@@ -3608,7 +3608,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 9
       },
       "Wand (Tier 4)": {
         "name": "Wand (Tier 4)",
@@ -3623,7 +3623,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 5
       },
       "Wand (Tier 5)": {
         "name": "Wand (Tier 5)",
@@ -3638,7 +3638,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Wand (Tier 6)": {
         "name": "Wand (Tier 6)",
@@ -3653,7 +3653,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 3
       },
       "Kantele": {
         "name": "Kantele",
@@ -3803,7 +3803,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 3
       },
       "Orb": {
         "name": "Orb",
@@ -3833,7 +3833,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Secret Potion": {
         "name": "Secret Potion",
@@ -3848,7 +3848,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 8
       },
       "Powder Pouch": {
         "name": "Powder Pouch",
@@ -3863,7 +3863,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 12
       },
       "Chaos Die": {
         "name": "Chaos Die",
@@ -3878,7 +3878,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 8
       },
       "Greed Die": {
         "name": "Greed Die",
@@ -3893,7 +3893,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Kammi": {
         "name": "Kammi",
@@ -3908,7 +3908,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 3
       },
       "Refreshing Gourd": {
         "name": "Refreshing Gourd",
@@ -3938,7 +3938,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Broken Wand": {
         "name": "Broken Wand",
@@ -3953,7 +3953,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       }
     }
   },

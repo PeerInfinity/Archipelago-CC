@@ -1700,7 +1700,7 @@ class Spoiler:
                     
                     # Log after this single item
                     if spoiler_log_file_handler and log_fractional_sphere_details: # CHECK FLAG
-                        sub_sphere_label = f"{main_sphere_index_counter}.{item_sub_index}"
+                        sub_sphere_label = f"{main_sphere_index_counter - 1}.{item_sub_index}"
                         self._log_sphere_details(spoiler_log_file_handler,
                                                  sub_sphere_label,
                                                  {location}, # The single location collected in this sub-step

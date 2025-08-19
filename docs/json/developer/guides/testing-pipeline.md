@@ -78,12 +78,16 @@ For testing multiple games efficiently, use the automated testing script that ha
 
 ### Quick Start with Automation
 
-**⚠️ IMPORTANT: Activate Virtual Environment First**
+**⚠️ IMPORTANT: Prerequisites Required**
 
 ```bash
-# Activate your virtual environment (REQUIRED)
+# 1. Activate your virtual environment (REQUIRED)
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
+# 2. Start the development server (REQUIRED - in another terminal)
+python -m http.server 8000
+
+# 3. Run the automation script
 # Test all templates in the default Templates directory
 python scripts/test-all-templates.py
 
@@ -92,14 +96,30 @@ python scripts/test-all-templates.py --templates-dir /path/to/templates
 
 # Custom output file location
 python scripts/test-all-templates.py --output-file custom-results.json
+
+# Customize which files to skip (default skips non-game templates)
+python scripts/test-all-templates.py --skip-list "Archipelago.yaml" "Universal Tracker.yaml"
+
+# Test all files (including non-games) by providing an empty skip list
+python scripts/test-all-templates.py --skip-list
+
+# Test only specific templates (include list overrides skip list)
+python scripts/test-all-templates.py --include-list "Adventure.yaml" "A Short Hike.yaml"
+
+# Test a single template
+python scripts/test-all-templates.py --include-list "Adventure.yaml"
 ```
 
-**Note:** The script will freeze during `Generate.py` execution if the virtual environment is not activated, as it cannot access the required Python dependencies.
+**Prerequisites:**
+- **Virtual Environment**: The script will detect and warn if not activated. Generation may freeze without proper dependencies.
+- **HTTP Server**: Required for spoiler tests. The script will exit with a clear error if not running on `localhost:8000`.
 
 The automation script (`scripts/test-all-templates.py`) provides:
 
 - **Complete Pipeline Automation**: Runs Generate.py, spoiler tests, and analysis for each template
 - **Comprehensive Metrics**: Captures error/warning counts, sphere progression, and pass/fail status
+- **Smart Filtering**: Automatically skips non-game templates by default, with options for custom skip/include lists
+- **Targeted Testing**: Use `--include-list` to test only specific templates, perfect for retesting after fixes
 - **Incremental Updates**: Results saved after each template to prevent data loss
 - **Detailed JSON Output**: Structured results with timestamps and diagnostic information
 - **Progress Tracking**: Real-time feedback and summary statistics
@@ -111,6 +131,31 @@ The automation script (`scripts/test-all-templates.py`) provides:
 - Execution timestamps and performance data
 
 This automated approach is ideal for regression testing, validating multiple games simultaneously, or generating comprehensive test reports across the entire game catalog.
+
+### Test Results Visualization
+
+After running the automation script, generate a visual chart of the test results:
+
+```bash
+# Generate chart with default settings (outputs to docs/json/developer/guides/test-results.md)
+python scripts/generate-test-chart.py
+
+# Use custom input/output locations
+python scripts/generate-test-chart.py --input-file custom-results.json --output-file custom-chart.md
+```
+
+The chart generation script (`scripts/generate-test-chart.py`) creates a comprehensive markdown table showing:
+
+- **Game Name**: Human-readable game names
+- **Test Result**: Pass/fail status with visual indicators (✅ ❌ ❓)
+- **Generation Errors**: Count of errors during world generation
+- **Sphere Reached**: How far the test progressed before completion/failure
+- **Max Spheres**: Total logical spheres available in the game
+- **Progress**: Visual progress indicators with percentages
+
+**📊 [View Current Test Results](test-results.md)** - Live status of all template tests
+
+The generated chart includes summary statistics, color-coded progress indicators, and detailed notes explaining each metric. This provides an at-a-glance overview of the health of all game templates and helps identify which games may need attention.
 
 ## Running the Complete Testing Pipeline (Manual Process)
 
