@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Yacht Dice",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -4058,8 +4058,7 @@
   },
   "settings": {
     "1": {
-      "game": "Yacht Dice",
-      "accessibility": "items"
+      "game": "Yacht Dice"
     }
   },
   "game_info": {

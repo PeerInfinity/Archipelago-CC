@@ -501,27 +501,6 @@
       }
     }
   },
-  "clique": {
-    "name": "Clique",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Clique"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
   "dlcquest": {
     "name": "DLCQuest",
     "folders": {
@@ -640,7 +619,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.1.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.4.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -707,7 +686,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -796,6 +776,27 @@
       }
     }
   },
+  "jak_and_daxter__the_precursor_legacy": {
+    "name": "Jak and Daxter: The Precursor Legacy",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Jak and Daxter: The Precursor Legacy"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    }
+  },
   "kingdom_hearts_2": {
     "name": "Kingdom Hearts 2",
     "folders": {
@@ -809,7 +810,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.1.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.4.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -917,6 +918,7 @@
         ],
         "files": [
           "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apladx",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
@@ -1031,28 +1033,6 @@
       }
     }
   },
-  "minecraft": {
-    "name": "Minecraft",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Minecraft"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1.apmc",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
   "muse_dash": {
     "name": "Muse Dash",
     "folders": {
@@ -1158,6 +1138,27 @@
       }
     }
   },
+  "paint": {
+    "name": "Paint",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Paint"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    }
+  },
   "pokemon_emerald": {
     "name": "Pokemon Emerald",
     "folders": {
@@ -1194,6 +1195,7 @@
         ],
         "files": [
           "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apblue",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
@@ -1232,27 +1234,6 @@
             "player": 1,
             "name": "Player1",
             "game": "Risk of Rain 2"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "rogue_legacy": {
-    "name": "Rogue Legacy",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Rogue Legacy"
           }
         ],
         "files": [
@@ -1328,8 +1309,8 @@
       }
     }
   },
-  "shivers": {
-    "name": "Shivers",
+  "shapez": {
+    "name": "shapez",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -1337,7 +1318,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Shivers"
+            "game": "shapez"
           }
         ],
         "files": [
@@ -1349,8 +1330,8 @@
       }
     }
   },
-  "slay_the_spire": {
-    "name": "Slay the Spire",
+  "shivers": {
+    "name": "Shivers",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -1358,7 +1339,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Slay the Spire"
+            "game": "Shivers"
           }
         ],
         "files": [
@@ -1469,7 +1450,8 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
     }
@@ -1489,6 +1471,28 @@
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_Player1.apsm64ex",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    }
+  },
+  "super_mario_land_2": {
+    "name": "Super Mario Land 2",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Super Mario Land 2"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apsml2",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"

@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Aquaria",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -1896,6 +1896,10 @@
                         "name": "self"
                       },
                       "attr": "player"
+                    },
+                    {
+                      "type": "name",
+                      "name": "damaging_items_minus_nature_form"
                     }
                   ]
                 }
@@ -13936,8 +13940,7 @@
   },
   "settings": {
     "1": {
-      "game": "Aquaria",
-      "accessibility": "items"
+      "game": "Aquaria"
     }
   },
   "game_info": {

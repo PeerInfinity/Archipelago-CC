@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Shivers",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -1989,7 +1989,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Key for Generator Room",
+              "name": "Ash Pot Bottom",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2406,7 +2406,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ash Pot Bottom",
+              "name": "Key for Generator Room",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6317,8 +6317,7 @@
   },
   "settings": {
     "1": {
-      "game": "Shivers",
-      "accessibility": "items"
+      "game": "Shivers"
     }
   },
   "game_info": {

@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Sonic Adventure 2 Battle",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -4624,31 +4624,15 @@
             "id": 16712732,
             "crystal": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "ItemName"
-                    },
-                    "attr": "eggman_mystic_melody"
-                  }
+              "type": "item_check",
+              "item": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "ItemName"
                 },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "ItemName"
-                    },
-                    "attr": "eggman_jet_engine"
-                  }
-                }
-              ]
+                "attr": "eggman_jet_engine"
+              }
             },
             "progress_type": 1,
             "locked": false,
@@ -9674,8 +9658,7 @@
   },
   "settings": {
     "1": {
-      "game": "Sonic Adventure 2 Battle",
-      "accessibility": "items"
+      "game": "Sonic Adventure 2 Battle"
     }
   },
   "game_info": {

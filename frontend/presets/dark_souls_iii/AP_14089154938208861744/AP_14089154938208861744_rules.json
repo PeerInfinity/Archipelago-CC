@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Dark Souls III",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -110,7 +110,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Nameless Knight Leggings",
+              "name": "Havel's Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -128,25 +128,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "CA: Speckled Stoneplate Ring+1 - by miniboss",
-            "id": 100004,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Speckled Stoneplate Ring+1",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -182,7 +164,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Elite Knight Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -413,7 +395,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sunset Armor",
+              "name": "Silver Eagle Kite Shield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -431,7 +413,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Lloyd's Shield Ring",
+              "name": "Man-grub's Staff",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -485,25 +467,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Manikin Claws",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Wolf Ring+2 - left of boss room exit",
-            "id": 100018,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Wolf Ring+2",
+              "name": "Yellow Bug Pellet",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -521,7 +485,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Rusted Coin x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -542,7 +506,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -596,7 +560,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Crystal Gem",
+              "name": "Farron Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -650,7 +614,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Reinforced Club",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -668,7 +632,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Flame Stoneplate Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -710,7 +674,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dead Again",
+              "name": "Eastern Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -731,7 +695,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Shriving Stone",
+              "name": "Gundyr's Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -773,7 +737,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Black Hand Hat",
+              "name": "Lorian's Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -878,7 +842,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Winged Knight Gauntlets",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -899,7 +863,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Red Bug Pellet",
+              "name": "Profuse Sweat",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -920,7 +884,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Great Farron Dart",
+              "name": "Cleric Blue Robe",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -962,7 +926,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Old Sage's Blindfold",
+              "name": "Drakeblood Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -983,7 +947,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Silver Eagle Kite Shield",
+              "name": "Drakeblood Greatsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1004,7 +968,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fallen Knight Armor",
+              "name": "Painting Guardian Gown",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1025,7 +989,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Poisonbite Ring",
+              "name": "Loincloth",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1067,7 +1031,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Blue Tearstone Ring",
+              "name": "Lightning Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1117,96 +1081,6 @@
             }
           },
           {
-            "name": "FS: Millwood Knight Helm - Captain's Ashes",
-            "id": 100049,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Millwood Knight Helm",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Millwood Knight Armor - Captain's Ashes",
-            "id": 100050,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Millwood Knight Armor",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Millwood Knight Gauntlets - Captain's Ashes",
-            "id": 100051,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Millwood Knight Gauntlets",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Millwood Knight Leggings - Captain's Ashes",
-            "id": 100052,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Millwood Knight Leggings",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Refined Gem - Captain's Ashes",
-            "id": 100053,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Refined Gem",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
             "name": "FS: Vordt's Great Hammer - Ludleth for Vordt",
             "id": 100054,
             "crystal": null,
@@ -1214,7 +1088,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Darkmoon Ring",
+              "name": "Ring of Sacrifice",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1229,7 +1103,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Havel's Greatshield",
+              "name": "Spiked Shield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1244,7 +1118,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1259,7 +1133,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Homing Soulmass",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1289,7 +1163,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Blessed Gem",
+              "name": "Herald Gloves",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1304,7 +1178,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Butcher Knife",
+              "name": "Lightning Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1349,7 +1223,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1394,7 +1268,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Fume Ultra Greatsword",
+              "name": "Rusted Coin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1454,7 +1328,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Executioner Gauntlets",
+              "name": "Sunlight Shield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1499,7 +1373,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1544,7 +1418,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Smough's Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1559,7 +1433,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1664,7 +1538,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1679,7 +1553,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1769,7 +1643,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Manikin Claws",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1784,7 +1658,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1800,150 +1674,6 @@
             "locked": false,
             "item": {
               "name": "Titanite Chunk",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Friede's Great Scythe - Ludleth for Friede",
-            "id": 100094,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Friede's Great Scythe",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Rose of Ariandel - Ludleth for Friede",
-            "id": 100095,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Rose of Ariandel",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Demon's Scar - Ludleth for Demon Prince",
-            "id": 100096,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Demon's Scar",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Seething Chaos - Ludleth for Demon Prince",
-            "id": 100097,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Seething Chaos",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Frayed Blade - Ludleth for Midir",
-            "id": 100098,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Frayed Blade",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Old Moonlight - Ludleth for Midir",
-            "id": 100099,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Old Moonlight",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Gael's Greatsword - Ludleth for Gael",
-            "id": 100100,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Gael's Greatsword",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FS: Repeating Crossbow - Ludleth for Gael",
-            "id": 100101,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Repeating Crossbow",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1982,7 +1712,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Executioner Leggings",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2090,7 +1820,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Heavy Gem",
+              "name": "Reinforced Club",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2144,7 +1874,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Great Deep Soul",
+              "name": "Kukri x5",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2183,7 +1913,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2219,7 +1949,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Crestfallen Knight",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2276,7 +2006,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Nameless Soldier",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2297,7 +2027,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2357,7 +2087,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Herald Helm",
+              "name": "Ember x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2375,7 +2105,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2468,7 +2198,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Shadow Gauntlets",
+              "name": "Sunset Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2680,7 +2410,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Homeward Bone",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2701,7 +2431,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Giant's Coal",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2722,7 +2452,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard x2",
+              "name": "Large Titanite Shard x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2740,7 +2470,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fallen Knight Helm",
+              "name": "Firebomb x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2758,7 +2488,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Helm of Thorns",
+              "name": "Drang Shoes",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2794,7 +2524,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rapier",
+              "name": "Old Sorcerer Coat",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2812,7 +2542,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Human Pine Resin",
+              "name": "Cursebite Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2830,7 +2560,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2884,7 +2614,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dark Gem",
+              "name": "Golden Bracelets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2920,7 +2650,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Firebomb x2",
+              "name": "Homeward Bone x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3136,7 +2866,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Large Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3172,7 +2902,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Sorcerer Hood",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3226,7 +2956,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dung Pie x3",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3298,7 +3028,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Alluring Skull x2",
+              "name": "Homing Crystal Soulmass",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3316,7 +3046,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Dung Pie x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3334,7 +3064,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3352,7 +3082,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3450,42 +3180,6 @@
             }
           },
           {
-            "name": "HWL: Fleshbite Ring+1 - fort roof, jump to other roof",
-            "id": 100176,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Fleshbite Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "HWL: Ring of the Evil Eye+2 - fort ground, far wall",
-            "id": 100177,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Ring of the Evil Eye+2",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
             "name": "HWL: Silver Eagle Kite Shield - fort mezzanine",
             "id": 100178,
             "crystal": null,
@@ -3532,7 +3226,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Iron Helm",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3550,7 +3244,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Outrider Knight Gauntlets",
+              "name": "Great Lightning Spear",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3568,7 +3262,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Soul Spear",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3586,7 +3280,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3604,7 +3298,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Hawkwood's Shield",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3622,7 +3316,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Barbed Straight Sword",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3640,7 +3334,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3661,7 +3355,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Drang Twinspears",
+              "name": "Large Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3755,7 +3449,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Stone Parma",
+              "name": "Great Magic Weapon",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3773,7 +3467,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x2",
+              "name": "Farron Coal",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3820,7 +3514,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Exile Greatsword",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3907,7 +3601,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Large Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3922,7 +3616,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Greatsword",
+              "name": "Hunter's Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3940,7 +3634,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lightning Stake",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3958,7 +3652,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Purple Moss Clump",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4012,7 +3706,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sunset Gauntlets",
+              "name": "Blessed Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4048,7 +3742,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Lightning Gem",
+              "name": "Drang Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4084,7 +3778,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Fading Soul",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4138,7 +3832,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Homeward Bone",
+              "name": "Executioner's Greatsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4156,7 +3850,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Blood Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4174,7 +3868,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rusted Coin x2",
+              "name": "Undead Hunter Charm x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4210,7 +3904,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard x2",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4264,7 +3958,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rusted Gold Coin",
+              "name": "Red Bug Pellet",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4300,7 +3994,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Hand Axe",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4318,7 +4012,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Large Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4336,7 +4030,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Hornet Ring",
+              "name": "Dragonslayer Greatshield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4372,7 +4066,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Brass Helm",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4390,7 +4084,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farron Coal",
+              "name": "Lightning Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4426,7 +4120,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Black Bow of Pharis",
+              "name": "Xanthous Overcoat",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4534,7 +4228,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lightning Gem",
+              "name": "Cornyx's Skirt",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4552,7 +4246,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4624,7 +4318,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Lightning Blade",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4732,7 +4426,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4858,7 +4552,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4876,7 +4570,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Drakeblood Greatsword",
+              "name": "Pharis's Hat",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4894,7 +4588,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Winged Knight Armor",
+              "name": "Shriving Stone",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5020,7 +4714,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Nameless Knight Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5038,7 +4732,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Brigand Hood",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5074,7 +4768,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Large Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5092,7 +4786,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Deserted Corpse",
+              "name": "Brigand Axe",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5128,7 +4822,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5200,7 +4894,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Dragonslayer Greataxe",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5226,7 +4920,7 @@
             }
           },
           {
-            "name": "US: Red and White Shield - chasm, hanging corpse",
+            "name": "US: Red and White Round Shield - chasm, hanging corpse",
             "id": 100269,
             "crystal": null,
             "access_rule": {
@@ -5236,7 +4930,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Kukri x5",
+              "name": "Longbow",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5308,61 +5002,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Horsehoof Ring",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "US: Life Ring+1 - tower on the way to village",
-            "id": 100274,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Life Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "US: Poisonbite Ring+1 - graveyard by white tree, near well",
-            "id": 100275,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Poisonbite Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "US: Covetous Silver Serpent Ring+2 - tower village, drop down from roof",
-            "id": 100276,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Covetous Silver Serpent Ring+2",
+              "name": "Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5452,7 +5092,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sunlight Straight Sword",
+              "name": "Saint's Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5470,7 +5110,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Drang Gauntlets",
+              "name": "Carthus Milkring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5506,7 +5146,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ring of Sacrifice",
+              "name": "Whip",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5542,7 +5182,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Great Lightning Spear",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5596,7 +5236,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Heavy Gem",
+              "name": "Lorian's Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5632,7 +5272,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ring of the Evil Eye",
+              "name": "Witchtree Branch",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5704,7 +5344,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sacred Oath",
+              "name": "Firelink Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5776,7 +5416,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Cleric Blue Robe",
+              "name": "Blessed Weapon",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5812,7 +5452,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Grave Key",
+              "name": "Untrue Dark Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5854,7 +5494,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Skull Ring",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5917,7 +5557,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dancer's Crown",
+              "name": "Painting Guardian's Curved Sword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5959,7 +5599,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Lorian's Greatsword",
+              "name": "Skull Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6001,7 +5641,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Slab",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6037,7 +5677,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6091,7 +5731,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6291,7 +5931,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Sacred Bloom Shield",
+              "name": "Divine Blessing",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6309,7 +5949,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Hand Axe",
+              "name": "Fallen Knight Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6363,7 +6003,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Lorian's Armor",
+              "name": "Darkmoon Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6381,7 +6021,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Morne's Ring",
+              "name": "Deep Soul",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6417,7 +6057,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Standard Arrow x8",
+              "name": "Ember x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6453,7 +6093,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Deep Soul",
+              "name": "Undead Hunter Charm x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6471,7 +6111,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Outrider Knight Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6543,7 +6183,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6597,7 +6237,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dancer's Armor",
+              "name": "White Hair Talisman",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6669,7 +6309,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Deep Gem",
+              "name": "Golden Crown",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6687,7 +6327,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Darkmoon Blade",
+              "name": "Anri's Straight Sword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6705,7 +6345,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Painting Guardian Hood",
+              "name": "Lorian's Greatsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6774,10 +6414,10 @@
               "type": "constant",
               "value": true
             },
-            "progress_type": 1,
+            "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Painting Guardian Gown",
+              "name": "Aldrich's Sapphire",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6795,7 +6435,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard x2",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6813,7 +6453,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of an Unknown Traveler",
+              "name": "Herald Trousers",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6849,7 +6489,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6867,7 +6507,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Young Dragon Ring",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6903,7 +6543,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6939,7 +6579,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Fire Gem",
+              "name": "Speckled Stoneplate Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7011,7 +6651,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7083,7 +6723,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lightning Urn",
+              "name": "Repair",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7101,7 +6741,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Profuse Sweat",
+              "name": "Yellow Bug Pellet x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7119,7 +6759,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Heal",
+              "name": "Sage's Coal",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7137,7 +6777,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Sage's Coal",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7155,7 +6795,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Chaos Gem",
+              "name": "Robe of Prayer",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7209,7 +6849,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7245,7 +6885,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7266,42 +6906,6 @@
               "name": "Pale Tongue",
               "player": 1,
               "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "RS: Chloranthy Ring+2 - road, drop across from carriage",
-            "id": 100376,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Chloranthy Ring+2",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "RS: Lingering Dragoncrest Ring+1 - water",
-            "id": 100377,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Lingering Dragoncrest Ring+1",
-              "player": 1,
-              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -7335,7 +6939,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Havel's Gauntlets",
+              "name": "Standard Arrow x8",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7389,7 +6993,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Herald Gloves",
+              "name": "Astora Straight Sword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7407,7 +7011,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7425,7 +7029,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Pharis's Hat",
+              "name": "Affinity",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7443,7 +7047,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Hollowslayer Greatsword",
+              "name": "Poison Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7479,7 +7083,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Black Flame",
+              "name": "Black Bow of Pharis",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7497,7 +7101,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7515,7 +7119,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rusted Coin",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7551,7 +7155,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Titanite Scale x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7650,7 +7254,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Great Chaos Fire Orb",
+              "name": "Xanthous Gloves",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7755,7 +7359,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sniper Crossbow",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7776,7 +7380,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Warmth",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7797,7 +7401,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Homing Soulmass",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7818,7 +7422,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Titanite Chunk x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7854,7 +7458,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sunlight Shield",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -7890,7 +7494,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard",
+              "name": "Titanite Shard x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8142,7 +7746,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of an Unknown Traveler",
+              "name": "Fading Soul",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8224,7 +7828,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite x2",
+              "name": "Bountiful Sunlight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8242,7 +7846,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Stone Parma",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8278,7 +7882,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sorcerer Hood",
+              "name": "Standard Arrow x8",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8296,7 +7900,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8332,7 +7936,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Demon's Fist",
+              "name": "Exile Greatsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8368,7 +7972,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8404,7 +8008,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
+              "name": "Iron Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8422,7 +8026,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Throwing Knife x8",
+              "name": "Deep Protection",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8512,7 +8116,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Shard x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8566,7 +8170,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Black Bug Pellet x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8602,7 +8206,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Large Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8620,7 +8224,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Green Blossom x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8674,7 +8278,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard x3",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8692,7 +8296,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Shard x2",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8710,7 +8314,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Shadow Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8782,7 +8386,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Fallen Knight Gauntlets",
+              "name": "Ring of Sacrifice",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8818,7 +8422,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Shard x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8836,7 +8440,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of an Unknown Traveler",
+              "name": "Large Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8890,7 +8494,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dragonslayer Gauntlets",
+              "name": "Herald Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8944,7 +8548,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Shard x2",
+              "name": "Large Soul of a Deserted Corpse",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8962,7 +8566,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Demon's Fist",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8998,7 +8602,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Blessed Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9034,7 +8638,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Whip",
+              "name": "Sunset Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9052,7 +8656,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Butcher Knife",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9088,7 +8692,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Reversal Ring",
+              "name": "Winged Knight Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9142,7 +8746,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
+              "name": "Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9160,43 +8764,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "CD: Ring of the Evil Eye+1 - by stairs to boss",
-            "id": 100477,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Ring of the Evil Eye+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "CD: Ring of Favor+2 - upper roofs, on buttress",
-            "id": 100478,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Ring of Favor+2",
+              "name": "Titanite Shard x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9304,7 +8872,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Fading Soul",
+              "name": "Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9322,7 +8890,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9358,7 +8926,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9394,7 +8962,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Standard Arrow x8",
+              "name": "Brass Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9412,7 +8980,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Exile Armor",
+              "name": "Club",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9448,7 +9016,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Golden Crown",
+              "name": "Rusted Gold Coin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9484,7 +9052,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Court Sorcerer Robe",
+              "name": "Warmth",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9502,7 +9070,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of an Unknown Traveler",
+              "name": "Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9574,7 +9142,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Firebomb x5",
+              "name": "Hawkwood's Shield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9610,7 +9178,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9664,7 +9232,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
+              "name": "Barbed Straight Sword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9694,7 +9262,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Court Sorcerer Robe",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9724,7 +9292,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9822,7 +9390,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fading Soul",
+              "name": "Throwing Knife x8",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9894,7 +9462,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rusted Coin",
+              "name": "Sniper Bolt x11",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9930,7 +9498,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard x2",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10074,7 +9642,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Brass Leggings",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10092,7 +9660,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of an Unknown Traveler",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10110,7 +9678,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Heal",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10200,7 +9768,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rime-blue Moss Clump",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10218,7 +9786,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10254,7 +9822,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Affinity",
+              "name": "Crystal Hail",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10272,7 +9840,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Brigand Axe",
+              "name": "Kukri x9",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10290,7 +9858,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of an Unknown Traveler",
+              "name": "Arbalest",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10326,7 +9894,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Yellow Bug Pellet x2",
+              "name": "Sharp Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10416,7 +9984,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10434,7 +10002,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Large Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10452,7 +10020,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Loincloth",
+              "name": "Dragon Torso Stone",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10470,7 +10038,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Crescent Moon Sword",
+              "name": "Budding Green Blossom",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10488,7 +10056,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10524,7 +10092,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Alva Helm",
+              "name": "Alva Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10560,7 +10128,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Kukri x9",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10650,7 +10218,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Smough's Helm",
+              "name": "Green Blossom x4",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10712,60 +10280,6 @@
             }
           },
           {
-            "name": "FK: Dark Stoneplate Ring+2 - keep ruins ritual island, behind wall",
-            "id": 100560,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Dark Stoneplate Ring+2",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FK: Magic Stoneplate Ring+1 - between right island and wall",
-            "id": 100561,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Magic Stoneplate Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "FK: Wolf Ring+1 - keep ruins bonfire island, outside building",
-            "id": 100562,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Wolf Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
             "name": "FK: Antiquated Dress - hidden cave",
             "id": 100563,
             "crystal": null,
@@ -10794,7 +10308,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Nameless Soldier",
+              "name": "Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10812,7 +10326,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Green Blossom x4",
+              "name": "Alluring Skull x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10848,7 +10362,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of an Unknown Traveler",
+              "name": "Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10866,7 +10380,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Golden Bracelets",
+              "name": "Antiquated Gloves",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10884,7 +10398,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Elite Knight Armor",
+              "name": "Fire Clutch Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10920,7 +10434,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Yellow Bug Pellet x3",
+              "name": "Large Titanite Shard x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10938,7 +10452,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Dragonslayer Greatshield",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10974,7 +10488,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Man-grub's Staff",
+              "name": "Havel's Greatshield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11010,7 +10524,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Charcoal Pine Resin",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11028,7 +10542,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Homeward Bone x2",
+              "name": "Reversal Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11100,7 +10614,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Nameless Soldier",
+              "name": "Dragon Tooth",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11154,7 +10668,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Charcoal Pine Resin",
+              "name": "Deep Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11172,7 +10686,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Budding Green Blossom",
+              "name": "Morne's Great Hammer",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11190,7 +10704,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Morne's Great Hammer",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11205,7 +10719,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk x2",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11220,7 +10734,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Lorian's Gauntlets",
+              "name": "Dragonslayer Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11250,7 +10764,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Purple Moss Clump x3",
+              "name": "Dancer's Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11386,7 +10900,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Poison Gem",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11440,7 +10954,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Witch's Locks",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11512,7 +11026,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dragonscale Waistcloth",
+              "name": "Rime-blue Moss Clump",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11548,7 +11062,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x2",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11674,7 +11188,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Refined Gem",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11710,7 +11224,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Drakeblood Gauntlets",
+              "name": "Shriving Stone",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11746,7 +11260,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Astora Straight Sword",
+              "name": "Maiden Hood",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11800,7 +11314,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of an Unknown Traveler",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11836,43 +11350,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "CC: Ring of Steel Protection+2 - atrium upper, drop onto pillar",
-            "id": 100619,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Ring of Steel Protection+2",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "CC: Thunder Stoneplate Ring+1 - crypt upper, among pots",
-            "id": 100620,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Thunder Stoneplate Ring+1",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11926,7 +11404,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11998,7 +11476,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of an Unknown Traveler",
+              "name": "Large Titanite Shard x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12016,7 +11494,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Slab",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12073,7 +11551,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Deep Protection",
+              "name": "Emit Force",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12145,7 +11623,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12181,7 +11659,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Great Deep Soul",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12199,7 +11677,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Black Firebomb x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12217,7 +11695,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Repair Powder x2",
+              "name": "Fading Soul",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12271,7 +11749,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of an Unknown Traveler",
+              "name": "Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12307,7 +11785,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Sunset Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12361,7 +11839,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Nameless Soldier",
+              "name": "Large Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12487,7 +11965,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12505,7 +11983,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lightning Gem",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12523,7 +12001,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Gundyr's Halberd",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12595,7 +12073,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Scale x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12613,7 +12091,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Arstor's Spear",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12631,43 +12109,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Firelink Leggings",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "SL: Bloodbite Ring+1 - behind ballista",
-            "id": 100662,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Bloodbite Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "SL: Flame Stoneplate Ring+2 - ruins main lower, illusory wall in far hall",
-            "id": 100663,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Flame Stoneplate Ring+2",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12685,7 +12127,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Fading Soul",
+              "name": "Large Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12703,7 +12145,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Repair",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12865,7 +12307,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Armor of the Sun",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12973,7 +12415,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12991,7 +12433,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Poison Arrow x18",
+              "name": "Hollowslayer Greatsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13009,7 +12451,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Nameless Soldier",
+              "name": "Large Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13116,7 +12558,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Magic Stoneplate Ring",
+              "name": "Large Soul of an Unknown Traveler",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13152,7 +12594,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Irithyll Rapier",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13242,7 +12684,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Greatlance",
+              "name": "Alva Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13386,7 +12828,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of an Unknown Traveler",
+              "name": "Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13422,7 +12864,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Undead Hunter Charm x3",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13458,7 +12900,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Onikiri and Ubadachi",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13476,7 +12918,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13512,7 +12954,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Gauntlets of Favor",
+              "name": "Simple Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13674,7 +13116,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Lloyd's Shield Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13764,7 +13206,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Great Magic Barrier",
+              "name": "Sunlight Straight Sword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13908,61 +13350,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "IBV: Chloranthy Ring+1 - plaza, behind altar",
-            "id": 100730,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Chloranthy Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "IBV: Covetous Gold Serpent Ring+1 - descent, drop after dark room",
-            "id": 100731,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Covetous Gold Serpent Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "IBV: Wood Grain Ring+2 - ascent, right after great hall",
-            "id": 100732,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Wood Grain Ring+2",
+              "name": "Eastern Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -13980,7 +13368,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14016,7 +13404,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14070,7 +13458,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Witch's Locks",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14106,7 +13494,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember x2",
+              "name": "Thunder Stoneplate Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14160,7 +13548,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dragonslayer Greataxe",
+              "name": "Leonhard's Garb",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14196,7 +13584,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Helm of Favor",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14214,7 +13602,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Smough's Gauntlets",
+              "name": "Human Pine Resin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14232,7 +13620,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sunset Helm",
+              "name": "Firebomb x5",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14352,7 +13740,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Fallen Knight Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14397,7 +13785,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Seek Guidance",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14512,7 +13900,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Old Sorcerer Coat",
+              "name": "Repair Powder x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14530,7 +13918,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Speckled Stoneplate Ring",
+              "name": "Leo Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14548,7 +13936,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14602,7 +13990,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Aldrich's Ruby",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14620,7 +14008,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite x2",
+              "name": "Smough's Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14638,7 +14026,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk x2",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14674,7 +14062,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Titanite Chunk x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14713,7 +14101,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Shadow Leggings",
+              "name": "Winged Knight Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14749,7 +14137,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite x2",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14785,7 +14173,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Fading Soul",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14803,7 +14191,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Untrue Dark Ring",
+              "name": "Charcoal Pine Resin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14857,7 +14245,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Xanthous Overcoat",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14911,7 +14299,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Twinkling Titanite x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -14947,7 +14335,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Repair Powder",
+              "name": "Purple Moss Clump",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15019,7 +14407,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Dragonscale Waistcloth",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15040,7 +14428,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Black Bug Pellet x2",
+              "name": "Firebomb x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15058,7 +14446,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Executioner's Greatsword",
+              "name": "Grave Key",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15166,7 +14554,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Blessed Gem",
+              "name": "Executioner Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15184,25 +14572,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Giant's Coal",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "ID: Covetous Silver Serpent Ring+1 - pit lift, middle platform",
-            "id": 100798,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Covetous Silver Serpent Ring+1",
+              "name": "Fading Soul",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15220,7 +14590,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Homeward Bone x2",
+              "name": "Bountiful Light",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15241,7 +14611,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Blessed Weapon",
+              "name": "Old Sage's Blindfold",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15277,7 +14647,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Cleric Trousers",
+              "name": "Armor of the Sun",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15313,7 +14683,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Homeward Bone x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15331,7 +14701,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15385,7 +14755,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Black Firebomb x3",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15403,7 +14773,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dragonscale Ring",
+              "name": "Mirrah Chain Gloves",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15421,7 +14791,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Fume Ultra Greatsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15514,7 +14884,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15532,7 +14902,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Firebomb x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15550,7 +14920,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Outrider Knight Helm",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15586,7 +14956,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Purple Moss Clump x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15604,7 +14974,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Heavy Soul Arrow",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15640,7 +15010,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15748,7 +15118,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Alva Gauntlets",
+              "name": "Dancer's Enchanted Swords",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15784,7 +15154,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Helm of Favor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15802,7 +15172,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Homeward Bone x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15856,7 +15226,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Dragon Tooth",
+              "name": "Homeward Bone x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15874,43 +15244,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Winged Knight Leggings",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "PC: Flame Stoneplate Ring+1 - chapel, drop from roof towards entrance",
-            "id": 100835,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Flame Stoneplate Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "PC: Magic Stoneplate Ring+2 - tower base",
-            "id": 100836,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Magic Stoneplate Ring+2",
+              "name": "Greatsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15946,7 +15280,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Crestfallen Knight",
+              "name": "Bellowing Dragoncrest Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -15982,7 +15316,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Large Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16072,7 +15406,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bountiful Light",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16090,7 +15424,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Weary Warrior",
+              "name": "Titanite Chunk x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16126,7 +15460,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Bursting Fireball",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16228,7 +15562,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Undead Hunter Charm x2",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16243,7 +15577,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Throwing Knife x6",
+              "name": "Kukri x5",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16315,7 +15649,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Arstor's Spear",
+              "name": "Lucerne",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16333,7 +15667,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Twinkling Titanite x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16477,7 +15811,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite x2",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16513,7 +15847,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Chunk x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16549,7 +15883,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Homeward Bone x2",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16567,7 +15901,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rusted Gold Coin",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16621,7 +15955,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dragonslayer Greatbow",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16657,7 +15991,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Gundyr's Helm",
+              "name": "Rusted Gold Coin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16693,7 +16027,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Dead Again",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16729,7 +16063,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Kukri x5",
+              "name": "Twinkling Titanite x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16783,7 +16117,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Sunset Shield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16820,42 +16154,6 @@
             "locked": false,
             "item": {
               "name": "Lloyd's Sword Ring",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "AL: Havel's Ring+2 - prison tower, rafters",
-            "id": 100887,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Havel's Ring+2",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "AL: Ring of Favor+1 - light cathedral, upstairs",
-            "id": 100888,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Ring of Favor+1",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -16999,7 +16297,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Carthus Milkring",
+              "name": "Great Magic Barrier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17014,10 +16312,10 @@
               "type": "constant",
               "value": true
             },
-            "progress_type": 1,
+            "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Shriving Stone",
+              "name": "Farron Flashsword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17065,7 +16363,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sunset Shield",
+              "name": "Twinkling Titanite x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17080,7 +16378,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Wolf Ring",
+              "name": "Ring of the Evil Eye",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17110,7 +16408,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk x2",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17125,7 +16423,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Farron Flashsword",
+              "name": "Human Pine Resin x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17179,7 +16477,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17404,7 +16702,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17455,7 +16753,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rusted Gold Coin",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17470,7 +16768,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Poisonbite Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17624,7 +16922,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17642,7 +16940,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Homing Crystal Soulmass",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17660,7 +16958,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Purple Moss Clump x2",
+              "name": "Heavy Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17678,7 +16976,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Seek Guidance",
+              "name": "Iron Flesh",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17732,7 +17030,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Weary Warrior",
+              "name": "Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17750,7 +17048,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -17876,7 +17174,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18020,7 +17318,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Bloodlust",
+              "name": "Darkmoon Blade",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18038,7 +17336,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Blood Gem",
+              "name": "Rime-blue Moss Clump x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18074,7 +17372,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Mirrah Chain Gloves",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18092,7 +17390,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Drakeblood Armor",
+              "name": "Brass Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18110,7 +17408,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Crestfallen Knight",
+              "name": "Large Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18128,7 +17426,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Pontiff's Right Eye",
+              "name": "Dragonscale Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18164,7 +17462,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Replenishment",
+              "name": "Pontiff's Right Eye",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18254,7 +17552,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Fading Soul",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18326,7 +17624,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Eastern Leggings",
+              "name": "Sniper Crossbow",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18344,7 +17642,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Large Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18362,7 +17660,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Spiked Shield",
+              "name": "Helm of Thorns",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18380,7 +17678,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Soul of a Crestfallen Knight",
+              "name": "Fading Soul",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18398,7 +17696,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18434,7 +17732,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18488,7 +17786,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farron Ring",
+              "name": "Lightning Stake",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18524,7 +17822,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Club",
+              "name": "Outrider Knight Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18542,7 +17840,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Thunder Stoneplate Ring",
+              "name": "Charcoal Pine Resin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18578,61 +17876,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Weary Warrior",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "LC: Life Ring+2 - dark room mid, out door opposite wyvern, drop down",
-            "id": 100979,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Life Ring+2",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "LC: Dark Stoneplate Ring+1 - wyvern room, balcony",
-            "id": 100980,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Dark Stoneplate Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "LC: Thunder Stoneplate Ring+2 - chapel, drop onto roof",
-            "id": 100981,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Thunder Stoneplate Ring+2",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18650,7 +17894,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Saint's Ring",
+              "name": "Herald Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18668,7 +17912,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Arbalest",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18686,7 +17930,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Weary Warrior",
+              "name": "Young Dragon Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18722,7 +17966,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Cornyx's Wrap",
+              "name": "Bloodlust",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18758,7 +18002,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18794,7 +18038,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Human Pine Resin x2",
+              "name": "Large Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18842,7 +18086,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Eastern Helm",
+              "name": "Throwing Knife x6",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18857,7 +18101,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Drang Twinspears",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18890,7 +18134,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Lightning Urn",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18926,7 +18170,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mirrah Trousers",
+              "name": "Great Farron Dart",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -18998,7 +18242,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Cornyx's Skirt",
+              "name": "Winged Knight Gauntlets",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19016,7 +18260,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Yellow Bug Pellet",
+              "name": "Outrider Knight Helm",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19096,7 +18340,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Flame Stoneplate Ring",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19132,7 +18376,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Nameless Soldier",
+              "name": "Blue Tearstone Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19150,7 +18394,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Weary Warrior",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19240,7 +18484,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Green Blossom x2",
+              "name": "Large Soul of a Nameless Soldier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19276,7 +18520,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Large Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19294,7 +18538,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rusted Coin x2",
+              "name": "Cornyx's Wrap",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19312,7 +18556,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Red and White Shield",
+              "name": "Red and White Round Shield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19366,7 +18610,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Bursting Fireball",
+              "name": "Rusted Coin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19384,7 +18628,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Witchtree Branch",
+              "name": "Repair Powder",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19402,43 +18646,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ember",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "CKG: Wood Grain Ring+1 - by first elevator bottom",
-            "id": 101023,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Wood Grain Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "CKG: Sage Ring+2 - balcony, drop onto rubble, jump back",
-            "id": 101024,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Sage Ring+2",
+              "name": "Repair Powder",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19522,7 +18730,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19627,7 +18835,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19663,7 +18871,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Twinkling Titanite x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19699,7 +18907,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Hunter's Ring",
+              "name": "Deep Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19717,7 +18925,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Crystal Hail",
+              "name": "Poison Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19735,7 +18943,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember x2",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19753,7 +18961,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19771,7 +18979,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Crestfallen Knight",
+              "name": "Pale Shade Trousers",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19789,7 +18997,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sharp Gem",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19861,7 +19069,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bellowing Dragoncrest Ring",
+              "name": "Large Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19897,7 +19105,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19915,7 +19123,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Aldrich's Sapphire",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19951,7 +19159,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Deep Gem",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -19969,7 +19177,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Poison Gem",
+              "name": "Onikiri and Ubadachi",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20023,7 +19231,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Demon's Greataxe",
+              "name": "Wolf Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20041,7 +19249,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Simple Gem",
+              "name": "Cleric Trousers",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20113,7 +19321,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Herald Trousers",
+              "name": "Heavy Soul Arrow",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20131,7 +19339,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "White Hair Talisman",
+              "name": "Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20149,7 +19357,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Leonhard's Garb",
+              "name": "Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20185,7 +19393,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Iron Flesh",
+              "name": "Refined Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20203,7 +19411,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Crestfallen Knight",
+              "name": "Poison Arrow x18",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20221,7 +19429,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20239,7 +19447,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20257,7 +19465,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Poison Mist",
+              "name": "Lightning Bolt x9",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20275,43 +19483,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "GA: Sage Ring+1 - rafters, second level down",
-            "id": 101071,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Sage Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "GA: Lingering Dragoncrest Ring+2 - dome, room behind spire",
-            "id": 101072,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Lingering Dragoncrest Ring+2",
+              "name": "Large Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20365,7 +19537,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Anri's Straight Sword",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20401,7 +19573,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Repair Powder",
+              "name": "Dancer's Crown",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20419,7 +19591,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20437,7 +19609,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Great Magic Weapon",
+              "name": "Sacred Bloom Shield",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20545,7 +19717,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Crestfallen Knight",
+              "name": "Knight's Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20563,7 +19735,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Robe of Prayer",
+              "name": "Hornet Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20707,7 +19879,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20743,7 +19915,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Lucerne",
+              "name": "Dragonslayer Greatbow",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20761,7 +19933,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Fire Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20779,7 +19951,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ring of Sacrifice",
+              "name": "Drakeblood Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20815,7 +19987,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Brigand Hood",
+              "name": "Greatlance",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20887,7 +20059,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20905,7 +20077,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Shotel",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20923,7 +20095,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Dragon Torso Stone",
+              "name": "Mirrah Trousers",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20941,7 +20113,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Slab",
+              "name": "Exile Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -20992,7 +20164,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Longbow",
+              "name": "Washing Pole",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21022,7 +20194,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Replenishment",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21052,7 +20224,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21106,7 +20278,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Aldrich's Ruby",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21124,7 +20296,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Green Blossom",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21142,7 +20314,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite x3",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21196,7 +20368,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Crestfallen Knight",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21232,7 +20404,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Divine Blessing",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21304,7 +20476,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Crystal Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21322,7 +20494,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Slab",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21368,43 +20540,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Firebomb x2",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "UG: Life Ring+3 - shrine, behind big throne",
-            "id": 101131,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Life Ring+3",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "UG: Ring of Steel Protection+1 - environs, behind bell tower",
-            "id": 101132,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Ring of Steel Protection+1",
+              "name": "Purple Moss Clump x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21588,7 +20724,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fire Clutch Ring",
+              "name": "Yellow Bug Pellet",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21663,7 +20799,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Emit Force",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21717,7 +20853,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lightning Bolt x9",
+              "name": "Crescent Moon Sword",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21735,7 +20871,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21753,7 +20889,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Slab",
+              "name": "Fallen Knight Armor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21771,7 +20907,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Pale Shade Trousers",
+              "name": "Chaos Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21789,7 +20925,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21825,7 +20961,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk x6",
+              "name": "Soul of a Weary Warrior",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21843,7 +20979,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk x2",
+              "name": "Twinkling Titanite x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21861,7 +20997,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Homeward Bone x2",
+              "name": "Demon's Greataxe",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21879,7 +21015,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Homeward Bone x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21897,7 +21033,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Crestfallen Knight",
+              "name": "Yellow Bug Pellet x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -21915,7 +21051,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Shotel",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22005,7 +21141,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Xanthous Gloves",
+              "name": "Heavy Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22023,7 +21159,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Knight's Ring",
+              "name": "Undead Legion Gauntlet",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22041,7 +21177,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22077,7 +21213,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Antiquated Gloves",
+              "name": "Lightning Blade",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22113,7 +21249,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Rime-blue Moss Clump x2",
+              "name": "Rapier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22131,7 +21267,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Yellow Bug Pellet",
+              "name": "Executioner Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22149,7 +21285,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul of a Weary Warrior",
+              "name": "Gundyr's Halberd",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22185,7 +21321,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22203,7 +21339,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite x2",
+              "name": "Painting Guardian Hood",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22239,7 +21375,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Drang Shoes",
+              "name": "Rusted Coin x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22257,7 +21393,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Firebomb x2",
+              "name": "Shadow Leggings",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22275,7 +21411,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Undead Legion Gauntlet",
+              "name": "Rusted Gold Coin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22329,7 +21465,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lightning Urn x3",
+              "name": "Morne's Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22347,7 +21483,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x2",
+              "name": "Ember",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22365,7 +21501,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Green Blossom",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22383,7 +21519,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Cursebite Ring",
+              "name": "Soul of a Crestfallen Knight",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22419,7 +21555,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite x3",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22437,7 +21573,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Sniper Bolt x11",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22473,43 +21609,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Titanite Slab",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "AP: Havel's Ring+1 - summit, after building",
-            "id": 101189,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Havel's Ring+1",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "AP: Covetous Gold Serpent Ring+2 - plaza",
-            "id": 101190,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": true,
-            "item": {
-              "name": "Covetous Gold Serpent Ring+2",
+              "name": "Poison Mist",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22545,7 +21645,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Herald Armor",
+              "name": "Black Flame",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22563,7 +21663,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale",
+              "name": "Magic Stoneplate Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22581,7 +21681,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Leo Ring",
+              "name": "Horsehoof Ring",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22599,7 +21699,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Chunk x2",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22617,7 +21717,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Titanite Chunk x2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22653,7 +21753,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Soul of a Crestfallen Knight",
+              "name": "Titanite Chunk x6",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22794,7 +21894,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Homeward Bone x2",
+              "name": "Lightning Urn x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22812,7 +21912,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Dancer's Enchanted Swords",
+              "name": "Twinkling Titanite x3",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22866,7 +21966,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Outrider Knight Leggings",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22920,7 +22020,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -22938,7 +22038,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Washing Pole",
+              "name": "Gauntlets of Favor",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -23013,7 +22113,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Maiden Hood",
+              "name": "Dark Gem",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -23058,7 +22158,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -23103,7 +22203,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -23210,7 +22310,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Ember",
+              "name": "Black Hand Hat",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -23294,7 +22394,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Bountiful Sunlight",
+              "name": "Great Chaos Fire Orb",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -23336,7 +22436,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Painting Guardian's Curved Sword",
+              "name": "Irithyll Rapier",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -23378,7 +22478,7 @@
             "progress_type": 3,
             "locked": false,
             "item": {
-              "name": "Soul Spear",
+              "name": "Sacred Oath",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -27030,8 +26130,8 @@
         "type": null,
         "max_count": 2
       },
-      "Red and White Shield": {
-        "name": "Red and White Shield",
+      "Red and White Round Shield": {
+        "name": "Red and White Round Shield",
         "id": 100237,
         "groups": [
           "Everything",
@@ -32516,7 +31616,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -32561,7 +31661,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -32606,7 +31706,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -32651,7 +31751,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -33326,7 +32426,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -33521,7 +32621,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -37107,7 +36207,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 6
       },
       "Crystal Gem": {
         "name": "Crystal Gem",
@@ -41715,7 +40815,6 @@
       "Blessed Weapon": 2,
       "Blood Gem": 2,
       "Bloodbite Ring": 2,
-      "Bloodbite Ring+1": 1,
       "Bloodlust": 2,
       "Bloodred Moss Clump": 4,
       "Bloodred Moss Clump x3": 2,
@@ -41769,8 +40868,6 @@
       "Charcoal Pine Resin": 6,
       "Charcoal Pine Resin x2": 2,
       "Chloranthy Ring": 2,
-      "Chloranthy Ring+1": 1,
-      "Chloranthy Ring+2": 1,
       "Cinders of a Lord - Abyss Watcher": 2,
       "Cinders of a Lord - Aldrich": 2,
       "Cinders of a Lord - Lothric Prince": 2,
@@ -41799,11 +40896,7 @@
       "Court Sorcerer Trousers": 2,
       "Court Sorcerer's Staff": 2,
       "Covetous Gold Serpent Ring": 2,
-      "Covetous Gold Serpent Ring+1": 1,
-      "Covetous Gold Serpent Ring+2": 1,
       "Covetous Silver Serpent Ring": 2,
-      "Covetous Silver Serpent Ring+1": 1,
-      "Covetous Silver Serpent Ring+2": 1,
       "Creighton's Steel Mask": 2,
       "Crescent Moon Sword": 2,
       "Crest Shield": 2,
@@ -41828,8 +40921,6 @@
       "Dark Gem": 4,
       "Dark Hand": 2,
       "Dark Stoneplate Ring": 2,
-      "Dark Stoneplate Ring+1": 1,
-      "Dark Stoneplate Ring+2": 1,
       "Darkdrift": 2,
       "Darkmoon Blade": 2,
       "Darkmoon Longbow": 2,
@@ -41842,7 +40933,6 @@
       "Deep Soul": 2,
       "Demon's Fist": 2,
       "Demon's Greataxe": 2,
-      "Demon's Scar": 1,
       "Divine Blessing": 10,
       "Divine Pillars of Light": 2,
       "Dorhys' Gnawing": 2,
@@ -41950,17 +41040,11 @@
       "Firelink Leggings": 2,
       "Firestorm": 2,
       "Flame Stoneplate Ring": 2,
-      "Flame Stoneplate Ring+1": 1,
-      "Flame Stoneplate Ring+2": 1,
       "Flash Sweat": 2,
       "Fleshbite Ring": 2,
-      "Fleshbite Ring+1": 1,
       "Flynn's Ring": 2,
       "Force": 2,
-      "Frayed Blade": 1,
-      "Friede's Great Scythe": 1,
       "Fume Ultra Greatsword": 2,
-      "Gael's Greatsword": 1,
       "Gauntlets of Favor": 2,
       "Gauntlets of Thorns": 2,
       "Giant's Coal": 2,
@@ -42015,8 +41099,6 @@
       "Havel's Helm": 2,
       "Havel's Leggings": 2,
       "Havel's Ring": 2,
-      "Havel's Ring+1": 1,
-      "Havel's Ring+2": 1,
       "Hawk Ring": 2,
       "Hawkwood's Shield": 2,
       "Heal": 2,
@@ -42086,9 +41168,6 @@
       "Leonhard's Gauntlets": 2,
       "Leonhard's Trousers": 2,
       "Life Ring": 2,
-      "Life Ring+1": 1,
-      "Life Ring+2": 1,
-      "Life Ring+3": 1,
       "Lifehunt Scythe": 2,
       "Lift Chamber Key": 2,
       "Lightning Blade": 2,
@@ -42104,8 +41183,6 @@
       "Lightning Urn x4": 2,
       "Lightning Urn x6": 2,
       "Lingering Dragoncrest Ring": 2,
-      "Lingering Dragoncrest Ring+1": 1,
-      "Lingering Dragoncrest Ring+2": 1,
       "Llewellyn Shield": 2,
       "Lloyd's Shield Ring": 2,
       "Lloyd's Sword Ring": 2,
@@ -42126,8 +41203,6 @@
       "Magic Clutch Ring": 2,
       "Magic Shield": 2,
       "Magic Stoneplate Ring": 2,
-      "Magic Stoneplate Ring+1": 1,
-      "Magic Stoneplate Ring+2": 1,
       "Magic Weapon": 2,
       "Maiden Gloves": 2,
       "Maiden Hood": 2,
@@ -42140,10 +41215,6 @@
       "Master's Gloves": 2,
       "Med Heal": 2,
       "Mendicant's Staff": 2,
-      "Millwood Knight Armor": 1,
-      "Millwood Knight Gauntlets": 1,
-      "Millwood Knight Helm": 1,
-      "Millwood Knight Leggings": 1,
       "Mirrah Chain Gloves": 2,
       "Mirrah Chain Leggings": 2,
       "Mirrah Chain Mail": 2,
@@ -42173,7 +41244,6 @@
       "Notched Whip": 2,
       "Old Cell Key": 2,
       "Old King's Great Hammer": 2,
-      "Old Moonlight": 1,
       "Old Sage's Blindfold": 2,
       "Old Sorcerer Boots": 2,
       "Old Sorcerer Coat": 2,
@@ -42210,7 +41280,6 @@
       "Poison Gem": 4,
       "Poison Mist": 2,
       "Poisonbite Ring": 2,
-      "Poisonbite Ring+1": 1,
       "Pontiff's Left Eye": 2,
       "Pontiff's Right Eye": 2,
       "Porcine Shield": 2,
@@ -42238,33 +41307,25 @@
       "Red Bug Pellet x3": 2,
       "Red Hilted Halberd": 2,
       "Red Tearstone Ring": 2,
-      "Red and White Shield": 2,
-      "Refined Gem": 7,
+      "Red and White Round Shield": 2,
+      "Refined Gem": 6,
       "Reinforced Club": 2,
       "Repair": 2,
       "Repair Powder": 8,
       "Repair Powder x2": 2,
       "Repair Powder x3": 2,
       "Repair Powder x4": 2,
-      "Repeating Crossbow": 1,
       "Replenishment": 2,
       "Reversal Ring": 2,
       "Ricard's Rapier": 2,
       "Rime-blue Moss Clump": 4,
       "Rime-blue Moss Clump x2": 2,
       "Ring of Favor": 2,
-      "Ring of Favor+1": 1,
-      "Ring of Favor+2": 1,
       "Ring of Sacrifice": 8,
       "Ring of Steel Protection": 2,
-      "Ring of Steel Protection+1": 1,
-      "Ring of Steel Protection+2": 1,
       "Ring of the Evil Eye": 2,
-      "Ring of the Evil Eye+1": 1,
-      "Ring of the Evil Eye+2": 1,
       "Ring of the Sun's First Born": 2,
       "Robe of Prayer": 2,
-      "Rose of Ariandel": 1,
       "Rotten Pine Resin x2": 2,
       "Rotten Pine Resin x4": 2,
       "Rusted Coin": 12,
@@ -42275,8 +41336,6 @@
       "Sacred Flame": 2,
       "Sacred Oath": 2,
       "Sage Ring": 2,
-      "Sage Ring+1": 1,
-      "Sage Ring+2": 1,
       "Sage's Big Hat": 2,
       "Sage's Coal": 2,
       "Sage's Crystal Staff": 2,
@@ -42288,7 +41347,6 @@
       "Scholar Ring": 2,
       "Seed of a Giant Tree": 2,
       "Seek Guidance": 2,
-      "Seething Chaos": 1,
       "Sellsword Armor": 2,
       "Sellsword Gauntlet": 2,
       "Sellsword Helm": 2,
@@ -42356,7 +41414,6 @@
       "Soul of the Rotted Greatwood": 2,
       "Soul of the Twin Princes": 2,
       "Speckled Stoneplate Ring": 2,
-      "Speckled Stoneplate Ring+1": 1,
       "Spider Shield": 2,
       "Spiked Shield": 2,
       "Spirit Tree Crest Shield": 2,
@@ -42388,8 +41445,6 @@
       "Throwing Knife x6": 2,
       "Throwing Knife x8": 2,
       "Thunder Stoneplate Ring": 2,
-      "Thunder Stoneplate Ring+1": 1,
-      "Thunder Stoneplate Ring+2": 1,
       "Titanite Chunk": 60,
       "Titanite Chunk x2": 10,
       "Titanite Chunk x6": 2,
@@ -42442,13 +41497,9 @@
       "Wolf Knight's Greatshield": 2,
       "Wolf Knight's Greatsword": 2,
       "Wolf Ring": 2,
-      "Wolf Ring+1": 1,
-      "Wolf Ring+2": 1,
       "Wolnir's Crown": 2,
       "Wolnir's Holy Sword": 2,
       "Wood Grain Ring": 2,
-      "Wood Grain Ring+1": 1,
-      "Wood Grain Ring+2": 1,
       "Wrath of the Gods": 2,
       "Xanthous Ashes": 2,
       "Xanthous Crown": 2,
@@ -42473,8 +41524,7 @@
   },
   "settings": {
     "1": {
-      "game": "Dark Souls III",
-      "accessibility": "items"
+      "game": "Dark Souls III"
     }
   },
   "game_info": {

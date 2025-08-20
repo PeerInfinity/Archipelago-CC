@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Landstalker - The Treasures of King Nole",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -10670,8 +10670,7 @@
   },
   "settings": {
     "1": {
-      "game": "Landstalker - The Treasures of King Nole",
-      "accessibility": "items"
+      "game": "Landstalker - The Treasures of King Nole"
     }
   },
   "game_info": {

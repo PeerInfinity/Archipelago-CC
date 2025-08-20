@@ -144,8 +144,8 @@ def generate_markdown_chart(chart_data: List[Tuple[str, str, int, float, float, 
         max_spheres_str = f"{max_spheres:g}"
         
         # Format custom exporter/gameLogic indicators
-        exporter_indicator = "✅" if has_custom_exporter else "❌"
-        game_logic_indicator = "✅" if has_custom_game_logic else "❌"
+        exporter_indicator = "✅" if has_custom_exporter else "⚫"
+        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
         
         md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached_str} | {max_spheres_str} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
     
@@ -158,8 +158,8 @@ def generate_markdown_chart(chart_data: List[Tuple[str, str, int, float, float, 
     md_content += "- **Sphere Reached:** The logical sphere the test reached before completion/failure\n"
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n"
-    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ❌ Uses generic exporter\n"
-    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ❌ Uses generic logic\n"
+    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
+    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n"
     md_content += "\n"
     md_content += "**Pass Criteria:** A test is marked as ✅ Passed only if:\n"
     md_content += "- Generation errors = 0 (no errors during world generation)\n"

@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Kirby's Dream Land 3",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -32719,8 +32719,7 @@
   },
   "settings": {
     "1": {
-      "game": "Kirby's Dream Land 3",
-      "accessibility": "items"
+      "game": "Kirby's Dream Land 3"
     }
   },
   "game_info": {

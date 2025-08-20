@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "MegaMan Battle Network 3",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -2664,10 +2664,7 @@
             "name": "Job: Help with rehab bonus",
             "id": 11735310,
             "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
+            "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2776,7 +2773,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Unlocker",
+              "name": "HoleMetr H",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -4357,7 +4354,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bubbler C",
+              "name": "Progressive Undernet Rank",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5186,7 +5183,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Unlocker",
+              "name": "Bubbler C",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5391,7 +5388,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Undernet Rank",
+              "name": "Unlocker",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5463,9 +5460,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "RegUP3",
+              "name": "Unlocker",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -6652,7 +6649,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "HoleMetr H",
+              "name": "CSciPass",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -7003,9 +7000,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "CSciPass",
+              "name": "RegUP3",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -10933,8 +10930,7 @@
   },
   "settings": {
     "1": {
-      "game": "MegaMan Battle Network 3",
-      "accessibility": "items"
+      "game": "MegaMan Battle Network 3"
     }
   },
   "game_info": {

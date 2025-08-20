@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Timespinner",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -4392,12 +4392,16 @@
                         "args": []
                       },
                       "if_false": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
+                        "type": "function_call",
+                        "function": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "logic"
+                          },
+                          "attr": "has_upwarddash"
                         },
-                        "attr": "has_upwarddash"
+                        "args": []
                       }
                     }
                   ]
@@ -4868,12 +4872,16 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "logic"
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "logic"
+                                },
+                                "attr": "has_keycard_A"
                               },
-                              "attr": "has_keycard_A"
+                              "args": []
                             },
                             {
                               "type": "not",
@@ -5131,8 +5139,42 @@
             "name": "The lab (upper) -> The lab (power off)",
             "connected_region": "The lab (power off)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "connect",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "The lab (upper)"
+                },
+                {
+                  "type": "constant",
+                  "value": "The lab (power off)"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "lock_key_amadeus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Lab Access Genza"
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "type": "Exit"
           },
@@ -6374,6 +6416,14 @@
           {
             "name": "Castle Ramparts -> Forest",
             "parent_region": "Castle Ramparts",
+            "connected_region": "Forest",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Space time continuum -> Forest",
+            "parent_region": "Space time continuum",
             "connected_region": "Forest",
             "reverse": null,
             "assumed": false,
@@ -7789,52 +7839,22 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
+                      "type": "not",
+                      "condition": {
                         "type": "attribute",
                         "object": {
                           "type": "name",
-                          "name": "logic"
+                          "name": "flooded"
                         },
-                        "attr": "has_doublejump"
-                      },
-                      "args": []
+                        "attr": "flood_maw"
+                      }
                     },
                     {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Gas Mask"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Talaria Attachment"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "logic"
-                                },
-                                "attr": "has_teleport"
-                              },
-                              "args": []
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Water Mask"
+                      }
                     }
                   ]
                 }
@@ -8571,34 +8591,29 @@
                       "value": 1337121
                     },
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "flooded"
-                        },
-                        "attr": "flood_maw"
-                      },
-                      "if_true": {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Water Mask"
-                        }
-                      },
-                      "if_false": {
-                        "type": "function_call",
-                        "function": {
+                      "type": "or",
+                      "conditions": [
+                        {
                           "type": "attribute",
                           "object": {
                             "type": "name",
-                            "name": "logic"
+                            "name": "flooded"
                           },
-                          "attr": "has_doublejump"
+                          "attr": "flood_maw"
                         },
-                        "args": []
-                      }
+                        {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "logic"
+                            },
+                            "attr": "has_doublejump"
+                          },
+                          "args": []
+                        }
+                      ]
                     }
                   ]
                 }
@@ -8638,47 +8653,19 @@
                       "value": 1337173
                     },
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
                         {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
+                          "type": "list",
+                          "value": [
                             {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Gas Mask"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Talaria Attachment"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "not",
-                              "condition": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "flooded"
-                                },
-                                "attr": "flood_maw"
-                              }
+                              "type": "constant",
+                              "value": "Gas Mask"
                             },
                             {
-                              "type": "item_check",
-                              "item": {
-                                "type": "constant",
-                                "value": "Water Mask"
-                              }
+                              "type": "constant",
+                              "value": "Talaria Attachment"
                             }
                           ]
                         }
@@ -8722,39 +8709,11 @@
                       "name": "EventId"
                     },
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": {
-                            "type": "constant",
-                            "value": "Gas Mask"
-                          }
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "not",
-                              "condition": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "flooded"
-                                },
-                                "attr": "flood_maw"
-                              }
-                            },
-                            {
-                              "type": "item_check",
-                              "item": {
-                                "type": "constant",
-                                "value": "Water Mask"
-                              }
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Gas Mask"
+                      }
                     }
                   ]
                 }
@@ -8794,47 +8753,19 @@
                       "value": 1337122
                     },
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
                         {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
+                          "type": "list",
+                          "value": [
                             {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Gas Mask"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Talaria Attachment"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "not",
-                              "condition": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "flooded"
-                                },
-                                "attr": "flood_maw"
-                              }
+                              "type": "constant",
+                              "value": "Gas Mask"
                             },
                             {
-                              "type": "item_check",
-                              "item": {
-                                "type": "constant",
-                                "value": "Water Mask"
-                              }
+                              "type": "constant",
+                              "value": "Talaria Attachment"
                             }
                           ]
                         }
@@ -9126,14 +9057,6 @@
           {
             "name": "Castle Keep -> Castle Ramparts",
             "parent_region": "Castle Keep",
-            "connected_region": "Castle Ramparts",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Space time continuum -> Castle Ramparts",
-            "parent_region": "Space time continuum",
             "connected_region": "Castle Ramparts",
             "reverse": null,
             "assumed": false,
@@ -11946,8 +11869,8 @@
             "type": "Exit"
           },
           {
-            "name": "Space time continuum -> Castle Ramparts",
-            "connected_region": "Castle Ramparts",
+            "name": "Space time continuum -> Forest",
+            "connected_region": "Forest",
             "access_rule": {
               "type": "helper",
               "name": "connect",
@@ -11962,7 +11885,7 @@
                 },
                 {
                   "type": "constant",
-                  "value": "Castle Ramparts"
+                  "value": "Forest"
                 },
                 {
                   "type": "function_call",
@@ -15547,8 +15470,7 @@
   },
   "settings": {
     "1": {
-      "game": "Timespinner",
-      "accessibility": "items"
+      "game": "Timespinner"
     }
   },
   "game_info": {

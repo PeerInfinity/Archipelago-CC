@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "A Hat in Time",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 2,
   "player_names": {
     "1": "Player1"
@@ -9947,8 +9947,7 @@
   },
   "settings": {
     "1": {
-      "game": "A Hat in Time",
-      "accessibility": "items"
+      "game": "A Hat in Time"
     }
   },
   "game_info": {

@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "The Legend of Zelda",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -16512,8 +16512,7 @@
   },
   "settings": {
     "1": {
-      "game": "The Legend of Zelda",
-      "accessibility": "items"
+      "game": "The Legend of Zelda"
     }
   },
   "game_info": {

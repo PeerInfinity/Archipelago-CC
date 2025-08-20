@@ -97,13 +97,6 @@
     "has_custom_game_logic": false,
     "world_directory": "civ_6"
   },
-  "Clique": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "clique"
-  },
   "DLCQuest": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -244,13 +237,6 @@
     "has_custom_game_logic": false,
     "world_directory": "mmbn3"
   },
-  "Minecraft": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "minecraft"
-  },
   "Muse Dash": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -278,6 +264,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "overcooked2"
+  },
+  "Paint": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "paint"
   },
   "Pokemon Emerald": {
     "exporter_path": null,
@@ -307,13 +300,6 @@
     "has_custom_game_logic": false,
     "world_directory": "ror2"
   },
-  "Rogue Legacy": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "rogue_legacy"
-  },
   "SMZ3": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -327,13 +313,6 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "shivers"
-  },
-  "Slay the Spire": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "spire"
   },
   "Starcraft 2": {
     "exporter_path": null,
@@ -355,6 +334,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "apsudoku"
+  },
+  "Super Mario Land 2": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "marioland2"
   },
   "Super Metroid": {
     "exporter_path": null,

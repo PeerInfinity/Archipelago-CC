@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Stardew Valley",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -256,6 +256,12 @@
             "connected_region": "Shipping",
             "access_rule": null,
             "type": "Exit"
+          },
+          {
+            "name": "Start Fishing",
+            "connected_region": "Fishing",
+            "access_rule": null,
+            "type": "Exit"
           }
         ],
         "locations": [
@@ -267,7 +273,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Taro Tuber",
+              "name": "Club Card",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -282,7 +288,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Mastery",
+              "name": "Progressive Trash Can",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -417,7 +423,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Sword",
+              "name": "Progressive Shed",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -432,7 +438,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mini-Obelisk Recipe",
+              "name": "Tulip Bulb",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -447,7 +453,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Resource Pack: 35 Calico Egg",
+              "name": "Friendship Bonus (2 <3)",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -552,7 +558,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Watering Can",
+              "name": "Kale Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -597,7 +603,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Horse: The Book",
+              "name": "Stardrop",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -642,7 +648,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Worm Bin",
+              "name": "Progressive Trash Can",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -672,7 +678,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Friendship Bonus (2 <3)",
+              "name": "Magic Rock Candy",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -702,7 +708,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Junimo Kart: Extra Life",
+              "name": "Progressive Mine Elevator",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -762,7 +768,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fishing Level",
+              "name": "Farming Mastery",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -777,7 +783,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Book of Mysteries",
+              "name": "Railroad Boulder Removed",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -822,7 +828,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Earth Obelisk",
+              "name": "Resource Pack: 40 Calico Egg",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -852,7 +858,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Mine Elevator",
+              "name": "Treehouse",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -867,7 +873,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "JotPK: Progressive Boots",
+              "name": "Rarecrow #4",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -1107,10 +1113,7 @@
           {
             "name": "Forest to Wizard Tower",
             "connected_region": "Wizard Tower",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
+            "access_rule": null,
             "type": "Exit"
           },
           {
@@ -1234,7 +1237,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant Stock Size",
+              "name": "Progressive Footwear",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1294,7 +1297,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Footwear",
+              "name": "Mini-Fridge",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1309,7 +1312,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant Stock Size",
+              "name": "Stable",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -1584,7 +1587,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Level",
+              "name": "Progressive Mine Elevator",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -1592,26 +1595,6 @@
             }
           }
         ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Leo's TreeHouse": {
-        "name": "Leo's TreeHouse",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Mountain to Leo TreeHouse",
-            "parent_region": "Mountain",
-            "connected_region": "Leo's TreeHouse",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -1886,7 +1869,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Trash Can",
+              "name": "Ancient Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -1946,7 +1929,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Foraging Level",
+              "name": "Progressive Pickaxe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -1991,7 +1974,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Level",
+              "name": "Foraging Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2205,12 +2188,6 @@
             "type": "Exit"
           },
           {
-            "name": "Start Fishing",
-            "connected_region": "Fishing",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
             "name": "Attend Luau",
             "connected_region": "Luau",
             "access_rule": null,
@@ -2265,7 +2242,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Stone Chest Recipe",
+              "name": "Progressive Watering Can",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2295,7 +2272,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Heavy Tapper Recipe",
+              "name": "Glittering Boulder Removed",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2347,7 +2324,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Level",
+              "name": "Island Farmhouse",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2439,7 +2416,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ancient Seeds",
+              "name": "Boat Repair",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2499,7 +2476,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Stardrop",
+              "name": "Resource Pack: 10000 Money",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -2586,7 +2563,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Level",
+              "name": "Fishing Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2656,7 +2633,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "JotPK: Progressive Gun",
+              "name": "Farming Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2755,51 +2732,6 @@
         ],
         "locations": [
           {
-            "name": "Coop Blueprint",
-            "id": 717401,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Progressive Trash Can",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Big Coop Blueprint",
-            "id": 717402,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Weather Report",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Deluxe Coop Blueprint",
-            "id": 717403,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Progressive Raccoon",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
             "name": "Barn Blueprint",
             "id": 717404,
             "crystal": null,
@@ -2845,14 +2777,14 @@
             }
           },
           {
-            "name": "Well Blueprint",
-            "id": 717407,
+            "name": "Coop Blueprint",
+            "id": 717401,
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Tulip Bulb",
+              "name": "Progressive Mine Elevator",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2860,16 +2792,46 @@
             }
           },
           {
-            "name": "Silo Blueprint",
-            "id": 717408,
+            "name": "Big Coop Blueprint",
+            "id": 717402,
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lupini: Three Trees",
+              "name": "Weather Report",
               "player": 1,
               "advancement": false,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Deluxe Coop Blueprint",
+            "id": 717403,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Progressive Raccoon",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fish Pond Blueprint",
+            "id": 717412,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Coffee Maker",
+              "player": 1,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -2882,7 +2844,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Level",
+              "name": "Progressive Coop",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2912,7 +2874,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Potato Seeds",
+              "name": "Dwarvish Translation Guide",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2920,14 +2882,29 @@
             }
           },
           {
-            "name": "Fish Pond Blueprint",
-            "id": 717412,
+            "name": "Silo Blueprint",
+            "id": 717408,
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rarecrow #6",
+              "name": "Lupini: Three Trees",
+              "player": 1,
+              "advancement": false,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Slime Hutch Blueprint",
+            "id": 717414,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Foraging Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2942,7 +2919,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Combat Level",
+              "name": "Progressive Club",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -2950,14 +2927,14 @@
             }
           },
           {
-            "name": "Slime Hutch Blueprint",
-            "id": 717414,
+            "name": "Well Blueprint",
+            "id": 717407,
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Mine Elevator",
+              "name": "Progressive Hoe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3002,7 +2979,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "JotPK: Progressive Ammo",
+              "name": "Progressive Hoe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3017,7 +2994,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rhubarb Seeds",
+              "name": "The Queen of Sauce",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3110,7 +3087,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Mine Elevator",
+              "name": "Junimo Kart: Extra Life",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3125,7 +3102,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Shed",
+              "name": "Keg",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3140,7 +3117,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Junimo Kart: Extra Life",
+              "name": "Farming Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3155,7 +3132,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Beach Bridge",
+              "name": "JotPK: Progressive Boots",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3185,7 +3162,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fish Pond",
+              "name": "Open Professor Snail Cave",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3200,7 +3177,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Magnet",
+              "name": "Livin' Off The Land",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3260,7 +3237,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ancient Seeds",
+              "name": "Progressive Dagger",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3275,7 +3252,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Raccoon",
+              "name": "Pumpkin Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3512,7 +3489,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Mine Elevator",
+              "name": "Farming Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3563,7 +3540,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Club",
+              "name": "Rarecrow #6",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3578,7 +3555,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Combat Level",
+              "name": "Progressive Pickaxe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3638,7 +3615,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Stable",
+              "name": "Golden Pumpkin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3689,7 +3666,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Foraging Level",
+              "name": "Progressive Raccoon",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3719,7 +3696,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Hopper Recipe",
+              "name": "Tomato Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3800,7 +3777,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Stardrop",
+              "name": "Crystalarium",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3896,7 +3873,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Footwear",
+              "name": "Resource Pack: 120 Calico Egg",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -3911,7 +3888,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Axe",
+              "name": "Apricot Sapling",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -3941,7 +3918,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Crystalarium",
+              "name": "Garden Pot",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4157,7 +4134,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Oil Maker",
+              "name": "Progressive Footwear",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4332,7 +4309,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Coffee Maker",
+              "name": "Progressive Watering Can",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -4386,7 +4363,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Foraging Level",
+              "name": "Parrot Express",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -4404,7 +4381,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Deluxe Fish Tank",
+              "name": "Power: Dwarvish Safety Manual",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4450,7 +4427,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Pickaxe",
+              "name": "Ancient Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -4468,7 +4445,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Junimo Kart: Extra Life",
+              "name": "Hopper Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -4576,7 +4553,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Raccoon Journal",
+              "name": "Power: Treasure Appraisal Guide",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4622,7 +4599,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant Stock Size",
+              "name": "Power: Raccoon Journal",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4640,7 +4617,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Resource Pack: 40 Calico Egg",
+              "name": "Loom",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4722,7 +4699,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Broccoli Seeds",
+              "name": "Mini-Obelisk Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -4843,7 +4820,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Sword",
+              "name": "Combat Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -4930,7 +4907,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant Stock Size",
+              "name": "Worm Bin",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -4986,7 +4963,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Pepper Seeds",
+              "name": "Monster Musk Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5022,7 +4999,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mr Qi's Plane Ride",
+              "name": "Farming Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5101,9 +5078,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Ol' Slitherlegs",
+              "name": "Traveling Merchant: Sunday",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -5116,7 +5093,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Trash Can",
+              "name": "Fishing Information Broadcasting Service",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5146,7 +5123,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Powdermelon Seeds",
+              "name": "Bus Repair",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5161,7 +5138,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Open Professor Snail Cave",
+              "name": "Stone Chest Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5176,7 +5153,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Pan",
+              "name": "Mango Sapling",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5206,7 +5183,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mining Level",
+              "name": "Progressive Dagger",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5221,7 +5198,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Resource Pack: 10000 Money",
+              "name": "Power: Horse: The Book",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5281,7 +5258,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Stardrop",
+              "name": "Magic Rock Candy",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5326,7 +5303,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bok Choy Seeds",
+              "name": "Mr Qi's Plane Ride",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5341,7 +5318,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Dagger",
+              "name": "Progressive Club",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5356,7 +5333,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Mapping Cave Systems",
+              "name": "Oil Maker",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5386,7 +5363,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Coop",
+              "name": "Beach Bridge",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5401,7 +5378,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Seed Maker",
+              "name": "Stardrop",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -5416,7 +5393,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Hoe",
+              "name": "JotPK: Progressive Ammo",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5536,7 +5513,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Apricot Sapling",
+              "name": "Rarecrow #5",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5722,7 +5699,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant: Tuesday",
+              "name": "Foraging Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -5755,79 +5732,6 @@
               "name": "Progressive Axe",
               "player": 1,
               "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Boat Tunnel": {
-        "name": "Boat Tunnel",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Fish Shop to Boat Tunnel",
-            "parent_region": "Willy's Fish Shop",
-            "connected_region": "Boat Tunnel",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Take the Boat to Ginger Island",
-            "connected_region": "Island South",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Repair Ticket Machine",
-            "id": 719201,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Progressive Dagger",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Repair Boat Hull",
-            "id": 719202,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Magic Rock Candy",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Repair Boat Anchor",
-            "id": 719203,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Sailor's Cap",
-              "player": 1,
-              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -6018,7 +5922,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Club",
+              "name": "JotPK: Progressive Gun",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6163,7 +6067,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Club",
+              "name": "Progressive Mine Elevator",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6199,7 +6103,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Dagger",
+              "name": "Foraging Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6214,7 +6118,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mill",
+              "name": "Heavy Tapper Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6229,7 +6133,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Iridium Snake Milk",
+              "name": "Traveling Merchant Stock Size",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6259,7 +6163,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Garden Pot",
+              "name": "Magic Rock Candy",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -6274,7 +6178,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Raccoon",
+              "name": "Foraging Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6307,16 +6211,16 @@
         "player": 1,
         "entrances": [
           {
-            "name": "Use Desert Obelisk",
-            "parent_region": "Wizard Tower",
+            "name": "Bus Stop to Desert",
+            "parent_region": "Bus Stop",
             "connected_region": "Desert",
             "reverse": null,
             "assumed": false,
             "type": "Entrance"
           },
           {
-            "name": "Bus Stop to Desert",
-            "parent_region": "Bus Stop",
+            "name": "Use Desert Obelisk",
+            "parent_region": "Wizard Tower",
             "connected_region": "Desert",
             "reverse": null,
             "assumed": false,
@@ -6358,7 +6262,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Blue Grass Starter Recipe",
+              "name": "Progressive Axe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6373,7 +6277,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fishing Mastery",
+              "name": "JotPK: Progressive Ammo",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6388,7 +6292,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Hyper Speed-Gro Recipe",
+              "name": "Fishing Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6494,7 +6398,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Boat Repair",
+              "name": "Progressive Pan",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -6781,1107 +6685,6 @@
         "provides_chest_count": true,
         "region_rules": []
       },
-      "Dangerous Skull Cavern": {
-        "name": "Dangerous Skull Cavern",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Enter the Dangerous Skull Cavern",
-            "parent_region": "Skull Cavern Floor 200",
-            "connected_region": "Dangerous Skull Cavern",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island South": {
-        "name": "Island South",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Use Island Obelisk",
-            "parent_region": "Wizard Tower",
-            "connected_region": "Island South",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Take the Boat to Ginger Island",
-            "parent_region": "Boat Tunnel",
-            "connected_region": "Island South",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Jungle to Docks",
-            "parent_region": "Island West",
-            "connected_region": "Island South",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Dig Site to Docks",
-            "parent_region": "Dig Site",
-            "connected_region": "Island South",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Volcano to Docks",
-            "parent_region": "Island North",
-            "connected_region": "Island South",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Island South to West",
-            "connected_region": "Island West",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Island South to North",
-            "connected_region": "Island North",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Island South to East",
-            "connected_region": "Island East",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          },
-          {
-            "name": "Island South to Southeast",
-            "connected_region": "Island Southeast",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Use Island Resort",
-            "connected_region": "Island Resort",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Docks to Volcano",
-            "connected_region": "Island North",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Docks to Dig Site",
-            "connected_region": "Dig Site",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Docks to Jungle",
-            "connected_region": "Island West",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Island West Turtle",
-            "id": 719205,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Progressive Footwear",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Island Resort",
-            "id": 719213,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Cherry Sapling",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island Resort": {
-        "name": "Island Resort",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Use Island Resort",
-            "parent_region": "Island South",
-            "connected_region": "Island Resort",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island West": {
-        "name": "Island West",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island South to West",
-            "parent_region": "Island South",
-            "connected_region": "Island West",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Volcano to Jungle",
-            "parent_region": "Island North",
-            "connected_region": "Island West",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Docks to Jungle",
-            "parent_region": "Island South",
-            "connected_region": "Island West",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Dig Site to Jungle",
-            "parent_region": "Dig Site",
-            "connected_region": "Island West",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Island West to Island Farmhouse",
-            "connected_region": "Island Farmhouse",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Island West to Gourmand Cave",
-            "connected_region": "Gourmand Frog Cave",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Island West to Crystal Cave",
-            "connected_region": "Colored Crystals Cave",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          },
-          {
-            "name": "Island West to Shipwreck",
-            "connected_region": "Shipwreck",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          },
-          {
-            "name": "Island West to Qi Walnut Room",
-            "connected_region": "Qi's Walnut Room",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Use Farm Obelisk",
-            "connected_region": "Farm",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Jungle to Docks",
-            "connected_region": "Island South",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Jungle to Dig Site",
-            "connected_region": "Dig Site",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Jungle to Volcano",
-            "connected_region": "Island North",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Grow Spring Crops on Island",
-            "connected_region": "Spring Farming",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Grow Summer Crops on Island",
-            "connected_region": "Summer Farming",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Grow Fall Crops on Island",
-            "connected_region": "Fall Farming",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Grow Winter Crops on Island",
-            "connected_region": "Winter Farming",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          },
-          {
-            "name": "Grow Indoor Crops on Island",
-            "connected_region": "Indoor Farming",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Island Farmhouse",
-            "id": 719206,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Progressive House",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Parrot Express",
-            "id": 719214,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Rarecrow #3",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "The Pirate's Wife",
-            "id": 717545,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Grape Starter",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island East": {
-        "name": "Island East",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island South to East",
-            "parent_region": "Island South",
-            "connected_region": "Island East",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Island East to Leo Hut",
-            "connected_region": "Leo's Hut",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          },
-          {
-            "name": "Island East to Island Shrine",
-            "connected_region": "Island Shrine",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          }
-        ],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island Shrine": {
-        "name": "Island Shrine",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island East to Island Shrine",
-            "parent_region": "Island East",
-            "connected_region": "Island Shrine",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island Southeast": {
-        "name": "Island Southeast",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island South to Southeast",
-            "parent_region": "Island South",
-            "connected_region": "Island Southeast",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Island Southeast to Pirate Cove",
-            "connected_region": "Pirate Cove",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          }
-        ],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island North": {
-        "name": "Island North",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island South to North",
-            "parent_region": "Island South",
-            "connected_region": "Island North",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Dig Site to Volcano",
-            "parent_region": "Dig Site",
-            "connected_region": "Island North",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Docks to Volcano",
-            "parent_region": "Island South",
-            "connected_region": "Island North",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Jungle to Volcano",
-            "parent_region": "Island West",
-            "connected_region": "Island North",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Talk to Island Trader",
-            "connected_region": "Island Trader",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Island North to Field Office",
-            "connected_region": "Field Office",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "type": "Exit"
-          },
-          {
-            "name": "Island North to Dig Site",
-            "connected_region": "Dig Site",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Island North to Volcano Entrance",
-            "connected_region": "Volcano Entrance",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Volcano to Dig Site",
-            "connected_region": "Dig Site",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Volcano to Jungle",
-            "connected_region": "Island West",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Volcano to Docks",
-            "connected_region": "Island South",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Dig Site Bridge",
-            "id": 719209,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Power: Way Of The Wind pt. 1",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Island Trader",
-            "id": 719210,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Melon Seeds",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Volcano Entrance": {
-        "name": "Volcano Entrance",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island North to Volcano Entrance",
-            "parent_region": "Island North",
-            "connected_region": "Volcano Entrance",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Climb to Volcano Floor 5",
-            "connected_region": "Volcano - Floor 5",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Volcano River to Secret Beach",
-            "connected_region": "Volcano Secret Beach",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Volcano Bridge",
-            "id": 719211,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Bucket Hat",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Volcano Secret Beach": {
-        "name": "Volcano Secret Beach",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Volcano River to Secret Beach",
-            "parent_region": "Volcano Entrance",
-            "connected_region": "Volcano Secret Beach",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Volcano - Floor 5": {
-        "name": "Volcano - Floor 5",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Climb to Volcano Floor 5",
-            "parent_region": "Volcano Entrance",
-            "connected_region": "Volcano - Floor 5",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Talk to Volcano Dwarf",
-            "connected_region": "Volcano Dwarf Shop",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Climb to Volcano Floor 10",
-            "connected_region": "Volcano - Floor 10",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Volcano Exit Shortcut",
-            "id": 719212,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Island Farmhouse",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Volcano Dwarf Shop": {
-        "name": "Volcano Dwarf Shop",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Talk to Volcano Dwarf",
-            "parent_region": "Volcano - Floor 5",
-            "connected_region": "Volcano Dwarf Shop",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Volcano - Floor 10": {
-        "name": "Volcano - Floor 10",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Climb to Volcano Floor 10",
-            "parent_region": "Volcano - Floor 5",
-            "connected_region": "Volcano - Floor 10",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [
-          {
-            "name": "Volcano Caldera Treasure",
-            "id": 717251,
-            "crystal": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Deluxe Scarecrow Recipe",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island Trader": {
-        "name": "Island Trader",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Talk to Island Trader",
-            "parent_region": "Island North",
-            "connected_region": "Island Trader",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Island Farmhouse": {
-        "name": "Island Farmhouse",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island West to Island Farmhouse",
-            "parent_region": "Island West",
-            "connected_region": "Island Farmhouse",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Island Cooking",
-            "connected_region": "Kitchen",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Island Mailbox",
-            "id": 719207,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Fiber Seeds Recipe",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Farm Obelisk",
-            "id": 719208,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Sunflower Seeds",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Gourmand Frog Cave": {
-        "name": "Gourmand Frog Cave",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island West to Gourmand Cave",
-            "parent_region": "Island West",
-            "connected_region": "Gourmand Frog Cave",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Colored Crystals Cave": {
-        "name": "Colored Crystals Cave",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island West to Crystal Cave",
-            "parent_region": "Island West",
-            "connected_region": "Colored Crystals Cave",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Shipwreck": {
-        "name": "Shipwreck",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island West to Shipwreck",
-            "parent_region": "Island West",
-            "connected_region": "Shipwreck",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Qi's Walnut Room": {
-        "name": "Qi's Walnut Room",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island West to Qi Walnut Room",
-            "parent_region": "Island West",
-            "connected_region": "Qi's Walnut Room",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Leo's Hut": {
-        "name": "Leo's Hut",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island East to Leo Hut",
-            "parent_region": "Island East",
-            "connected_region": "Leo's Hut",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [
-          {
-            "name": "Leo's Parrot",
-            "id": 719204,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Artichoke Seeds",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Pirate Cove": {
-        "name": "Pirate Cove",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island Southeast to Pirate Cove",
-            "parent_region": "Island Southeast",
-            "connected_region": "Pirate Cove",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Field Office": {
-        "name": "Field Office",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island North to Field Office",
-            "parent_region": "Island North",
-            "connected_region": "Field Office",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [
-          {
-            "name": "Complete Island Field Office",
-            "id": 719216,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Progressive Mine Elevator",
-              "player": 1,
-              "advancement": true,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Dig Site": {
-        "name": "Dig Site",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Island North to Dig Site",
-            "parent_region": "Island North",
-            "connected_region": "Dig Site",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Docks to Dig Site",
-            "parent_region": "Island South",
-            "connected_region": "Dig Site",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Volcano to Dig Site",
-            "parent_region": "Island North",
-            "connected_region": "Dig Site",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          },
-          {
-            "name": "Parrot Express Jungle to Dig Site",
-            "parent_region": "Island West",
-            "connected_region": "Dig Site",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [
-          {
-            "name": "Dig Site to Professor Snail Cave",
-            "connected_region": "Professor Snail Cave",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Dig Site to Volcano",
-            "connected_region": "Island North",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Dig Site to Docks",
-            "connected_region": "Island South",
-            "access_rule": null,
-            "type": "Exit"
-          },
-          {
-            "name": "Parrot Express Dig Site to Jungle",
-            "connected_region": "Island West",
-            "access_rule": null,
-            "type": "Exit"
-          }
-        ],
-        "locations": [
-          {
-            "name": "Open Professor Snail Cave",
-            "id": 719215,
-            "crystal": null,
-            "access_rule": null,
-            "progress_type": 1,
-            "locked": false,
-            "item": {
-              "name": "Power: Friendship 101",
-              "player": 1,
-              "advancement": false,
-              "priority": null,
-              "type": "None"
-            }
-          }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Professor Snail Cave": {
-        "name": "Professor Snail Cave",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Dig Site to Professor Snail Cave",
-            "parent_region": "Dig Site",
-            "connected_region": "Professor Snail Cave",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
       "Coop": {
         "name": "Coop",
         "type": "Region",
@@ -8002,7 +6805,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bridge Repair",
+              "name": "JotPK: Progressive Ammo",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8048,7 +6851,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Tomato Seeds",
+              "name": "Traveling Merchant: Wednesday",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8078,7 +6881,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Magic Rock Candy",
+              "name": "Resource Pack: 200 Calico Egg",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8157,7 +6960,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fairy Dust Recipe",
+              "name": "Ancient Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8203,7 +7006,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ancient Seeds",
+              "name": "Progressive Axe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8282,7 +7085,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Tub o' Flowers Recipe",
+              "name": "Progressive Sword",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8297,7 +7100,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Watering Can",
+              "name": "Deluxe Scarecrow Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8312,7 +7115,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "The Queen of Sauce",
+              "name": "Fish Pond",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8404,7 +7207,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Dwarvish Translation Guide",
+              "name": "Progressive Sword",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8559,7 +7362,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Railroad Boulder Removed",
+              "name": "Traveling Merchant Metal Detector",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8574,7 +7377,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Combat Level",
+              "name": "Progressive Dagger",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8681,7 +7484,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: The Alleyway Buffet",
+              "name": "Tapper",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8699,7 +7502,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Magic Rock Candy",
+              "name": "Seed Maker",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8869,7 +7672,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "JotPK: Progressive Ammo",
+              "name": "Rarecrow #1",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -8915,7 +7718,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Trap Bobber",
+              "name": "Power: Way Of The Wind pt. 2",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -8979,7 +7782,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Kale Seeds",
+              "name": "Progressive Watering Can",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9009,7 +7812,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Mine Elevator",
+              "name": "Combat Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9055,7 +7858,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Axe",
+              "name": "Progressive Mine Elevator",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9179,7 +7982,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Treasure Appraisal Guide",
+              "name": "Minecarts Repair",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9225,7 +8028,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "JotPK: Progressive Ammo",
+              "name": "Bridge Repair",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9411,7 +8214,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant: Monday",
+              "name": "Junimo Kart: Extra Life",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9429,7 +8232,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Parrot Express",
+              "name": "Progressive Club",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9444,7 +8247,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Cask",
+              "name": "Deluxe Fish Tank",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -9505,7 +8308,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Hops Starter",
+              "name": "Powdermelon Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9584,7 +8387,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Hoe",
+              "name": "Progressive Trash Can",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9703,7 +8506,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Watering Can",
+              "name": "Power: Book of Mysteries",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -9729,66 +8532,6 @@
             }
           }
         ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Dangerous Mines - Floor 20": {
-        "name": "Dangerous Mines - Floor 20",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Dig to the Dangerous Mines - Floor 20",
-            "parent_region": "The Mines - Floor 120",
-            "connected_region": "Dangerous Mines - Floor 20",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Dangerous Mines - Floor 60": {
-        "name": "Dangerous Mines - Floor 60",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Dig to the Dangerous Mines - Floor 60",
-            "parent_region": "The Mines - Floor 120",
-            "connected_region": "Dangerous Mines - Floor 60",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
-      },
-      "Dangerous Mines - Floor 100": {
-        "name": "Dangerous Mines - Floor 100",
-        "type": "Region",
-        "player": 1,
-        "entrances": [
-          {
-            "name": "Dig to the Dangerous Mines - Floor 100",
-            "parent_region": "The Mines - Floor 120",
-            "connected_region": "Dangerous Mines - Floor 100",
-            "reverse": null,
-            "assumed": false,
-            "type": "Entrance"
-          }
-        ],
-        "exits": [],
-        "locations": [],
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
@@ -10080,7 +8823,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Resource Pack: 100 Calico Egg",
+              "name": "Traveling Merchant Stock Size",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10095,7 +8838,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Resource Pack: 120 Calico Egg",
+              "name": "Traveling Merchant Stock Size",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10110,9 +8853,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Carrot Seeds",
+              "name": "Power: The Art O' Crabbing",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -10125,7 +8868,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "JotPK: Progressive Gun",
+              "name": "Traveling Merchant: Tuesday",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -10140,7 +8883,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Yam Seeds",
+              "name": "Hops Starter",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -10155,7 +8898,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rarecrow #1",
+              "name": "Progressive House",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -10333,7 +9076,7 @@
         "entrances": [
           {
             "name": "Start Fishing",
-            "parent_region": "Beach",
+            "parent_region": "Farm",
             "connected_region": "Fishing",
             "reverse": null,
             "assumed": false,
@@ -10395,7 +9138,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Deluxe Scarecrow",
+              "name": "Traveling Merchant Stock Size",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10425,7 +9168,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mango Sapling",
+              "name": "Combat Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -10485,7 +9228,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Dwarvish Safety Manual",
+              "name": "Power: The Alleyway Buffet",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10597,7 +9340,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: The Art O' Crabbing",
+              "name": "Trap Bobber",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10627,7 +9370,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant Metal Detector",
+              "name": "Strawberry Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -10657,7 +9400,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Magic Rock Candy",
+              "name": "Power: Mapping Cave Systems",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10672,7 +9415,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Resource Pack: 200 Calico Egg",
+              "name": "Resource Pack: 100 Calico Egg",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10717,7 +9460,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Golden Pumpkin",
+              "name": "Magic Rock Candy",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10851,7 +9594,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fishing Information Broadcasting Service",
+              "name": "Resource Pack: 35 Calico Egg",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10896,7 +9639,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rarecrow #5",
+              "name": "Mining Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -10956,7 +9699,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Loom",
+              "name": "Iridium Snake Milk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -10971,7 +9714,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Foraging Level",
+              "name": "Rarecrow #8",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11016,7 +9759,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Tent Kit",
+              "name": "Ostrich Incubator",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11106,7 +9849,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Sword",
+              "name": "Progressive Pan",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11165,7 +9908,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Magic Rock Candy",
+              "name": "Stardrop",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11225,7 +9968,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant: Wednesday",
+              "name": "Junimo Kart: Extra Life",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11270,7 +10013,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant: Sunday",
+              "name": "Farming Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11285,9 +10028,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Minecarts Repair",
+              "name": "Taro Tuber",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -11360,7 +10103,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Pan",
+              "name": "Farming Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11440,7 +10183,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Coffee Bean",
+              "name": "Mill",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11455,7 +10198,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Keg",
+              "name": "Magnet",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -11470,7 +10213,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Sword",
+              "name": "Progressive Raccoon",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11514,7 +10257,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Strawberry Seeds",
+              "name": "Mining Mastery",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11544,7 +10287,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Raccoon",
+              "name": "Yam Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11682,7 +10425,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mining Mastery",
+              "name": "Hyper Speed-Gro Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -11700,9 +10443,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Power: Way Of The Wind pt. 2",
+              "name": "Carrot Seeds",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -11718,7 +10461,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Hoe",
+              "name": "Bok Choy Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12000,7 +10743,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Livin' Off The Land",
+              "name": "Tent Kit",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12057,7 +10800,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Geode Crusher Recipe",
+              "name": "JotPK: Progressive Boots",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12093,9 +10836,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Club Card",
+              "name": "Deluxe Scarecrow",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -12132,7 +10875,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Monster Musk Recipe",
+              "name": "Pepper Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12168,7 +10911,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Traveling Merchant Stock Size",
+              "name": "Cask",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12226,7 +10969,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Pumpkin Seeds",
+              "name": "Broccoli Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12286,7 +11029,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "JotPK: Progressive Boots",
+              "name": "Progressive Sword",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12387,7 +11130,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Ostrich Incubator",
+              "name": "Magic Rock Candy",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12438,7 +11181,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Mini-Fridge",
+              "name": "Power: Ol' Slitherlegs",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12498,7 +11241,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Tapper",
+              "name": "Earth Obelisk",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -12531,7 +11274,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Combat Level",
+              "name": "Traveling Merchant: Monday",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12603,7 +11346,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Treehouse",
+              "name": "Fishing Mastery",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12654,7 +11397,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rarecrow #4",
+              "name": "Potato Seeds",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12771,7 +11514,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bus Repair",
+              "name": "Progressive Mine Elevator",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12807,7 +11550,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Level",
+              "name": "JotPK: Progressive Gun",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12903,7 +11646,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rarecrow #8",
+              "name": "Progressive Raccoon",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -12969,7 +11712,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Glittering Boulder Removed",
+              "name": "Fairy Dust Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -13020,7 +11763,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Foraging Level",
+              "name": "Progressive Hoe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -13035,7 +11778,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Farming Level",
+              "name": "Geode Crusher Recipe",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -13116,7 +11859,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Fishing Level",
+              "name": "Coffee Bean",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -13146,7 +11889,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Pickaxe",
+              "name": "Farming Level",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -13363,6 +12106,1259 @@
         "time_passes": true,
         "provides_chest_count": true,
         "region_rules": []
+      },
+      "Leo's TreeHouse": {
+        "name": "Leo's TreeHouse",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Mountain to Leo TreeHouse",
+            "parent_region": "Mountain",
+            "connected_region": "Leo's TreeHouse",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Boat Tunnel": {
+        "name": "Boat Tunnel",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Fish Shop to Boat Tunnel",
+            "parent_region": "Willy's Fish Shop",
+            "connected_region": "Boat Tunnel",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Take the Boat to Ginger Island",
+            "connected_region": "Island South",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [
+          {
+            "name": "Repair Ticket Machine",
+            "id": 719201,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Tub o' Flowers Recipe",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Repair Boat Hull",
+            "id": 719202,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Traveling Merchant Stock Size",
+              "player": 1,
+              "advancement": false,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Repair Boat Anchor",
+            "id": 719203,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Sailor's Cap",
+              "player": 1,
+              "advancement": false,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Dangerous Skull Cavern": {
+        "name": "Dangerous Skull Cavern",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Enter the Dangerous Skull Cavern",
+            "parent_region": "Skull Cavern Floor 200",
+            "connected_region": "Dangerous Skull Cavern",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island South": {
+        "name": "Island South",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Use Island Obelisk",
+            "parent_region": "Wizard Tower",
+            "connected_region": "Island South",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Take the Boat to Ginger Island",
+            "parent_region": "Boat Tunnel",
+            "connected_region": "Island South",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Jungle to Docks",
+            "parent_region": "Island West",
+            "connected_region": "Island South",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Volcano to Docks",
+            "parent_region": "Island North",
+            "connected_region": "Island South",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Dig Site to Docks",
+            "parent_region": "Dig Site",
+            "connected_region": "Island South",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Island South to West",
+            "connected_region": "Island West",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Island South to North",
+            "connected_region": "Island North",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Island South to East",
+            "connected_region": "Island East",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          },
+          {
+            "name": "Island South to Southeast",
+            "connected_region": "Island Southeast",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Use Island Resort",
+            "connected_region": "Island Resort",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Docks to Volcano",
+            "connected_region": "Island North",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Docks to Dig Site",
+            "connected_region": "Dig Site",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Docks to Jungle",
+            "connected_region": "Island West",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [
+          {
+            "name": "Island West Turtle",
+            "id": 719205,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Progressive Footwear",
+              "player": 1,
+              "advancement": false,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Island Resort",
+            "id": 719213,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Cherry Sapling",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island Resort": {
+        "name": "Island Resort",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Use Island Resort",
+            "parent_region": "Island South",
+            "connected_region": "Island Resort",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island West": {
+        "name": "Island West",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island South to West",
+            "parent_region": "Island South",
+            "connected_region": "Island West",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Docks to Jungle",
+            "parent_region": "Island South",
+            "connected_region": "Island West",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Volcano to Jungle",
+            "parent_region": "Island North",
+            "connected_region": "Island West",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Dig Site to Jungle",
+            "parent_region": "Dig Site",
+            "connected_region": "Island West",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Island West to Island Farmhouse",
+            "connected_region": "Island Farmhouse",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Island West to Gourmand Cave",
+            "connected_region": "Gourmand Frog Cave",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Island West to Crystal Cave",
+            "connected_region": "Colored Crystals Cave",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          },
+          {
+            "name": "Island West to Shipwreck",
+            "connected_region": "Shipwreck",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          },
+          {
+            "name": "Island West to Qi Walnut Room",
+            "connected_region": "Qi's Walnut Room",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Use Farm Obelisk",
+            "connected_region": "Farm",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Jungle to Docks",
+            "connected_region": "Island South",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Jungle to Dig Site",
+            "connected_region": "Dig Site",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Jungle to Volcano",
+            "connected_region": "Island North",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Grow Spring Crops on Island",
+            "connected_region": "Spring Farming",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Grow Summer Crops on Island",
+            "connected_region": "Summer Farming",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Grow Fall Crops on Island",
+            "connected_region": "Fall Farming",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Grow Winter Crops on Island",
+            "connected_region": "Winter Farming",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          },
+          {
+            "name": "Grow Indoor Crops on Island",
+            "connected_region": "Indoor Farming",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [
+          {
+            "name": "Island Farmhouse",
+            "id": 719206,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Blue Grass Starter Recipe",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Island Mailbox",
+            "id": 719207,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Combat Level",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Farm Obelisk",
+            "id": 719208,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Sunflower Seeds",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Parrot Express",
+            "id": 719214,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Rarecrow #3",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "The Pirate's Wife",
+            "id": 717545,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Grape Starter",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island East": {
+        "name": "Island East",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island South to East",
+            "parent_region": "Island South",
+            "connected_region": "Island East",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Island East to Leo Hut",
+            "connected_region": "Leo's Hut",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          },
+          {
+            "name": "Island East to Island Shrine",
+            "connected_region": "Island Shrine",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          }
+        ],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island Shrine": {
+        "name": "Island Shrine",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island East to Island Shrine",
+            "parent_region": "Island East",
+            "connected_region": "Island Shrine",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island Southeast": {
+        "name": "Island Southeast",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island South to Southeast",
+            "parent_region": "Island South",
+            "connected_region": "Island Southeast",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Island Southeast to Pirate Cove",
+            "connected_region": "Pirate Cove",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          }
+        ],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island North": {
+        "name": "Island North",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island South to North",
+            "parent_region": "Island South",
+            "connected_region": "Island North",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Docks to Volcano",
+            "parent_region": "Island South",
+            "connected_region": "Island North",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Jungle to Volcano",
+            "parent_region": "Island West",
+            "connected_region": "Island North",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Dig Site to Volcano",
+            "parent_region": "Dig Site",
+            "connected_region": "Island North",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Talk to Island Trader",
+            "connected_region": "Island Trader",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Island North to Field Office",
+            "connected_region": "Field Office",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "type": "Exit"
+          },
+          {
+            "name": "Island North to Dig Site",
+            "connected_region": "Dig Site",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Island North to Volcano Entrance",
+            "connected_region": "Volcano Entrance",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Volcano to Dig Site",
+            "connected_region": "Dig Site",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Volcano to Jungle",
+            "connected_region": "Island West",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Volcano to Docks",
+            "connected_region": "Island South",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dig Site Bridge",
+            "id": 719209,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Power: Way Of The Wind pt. 1",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Island Trader",
+            "id": 719210,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Volcano Entrance": {
+        "name": "Volcano Entrance",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island North to Volcano Entrance",
+            "parent_region": "Island North",
+            "connected_region": "Volcano Entrance",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Climb to Volcano Floor 5",
+            "connected_region": "Volcano - Floor 5",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Volcano River to Secret Beach",
+            "connected_region": "Volcano Secret Beach",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [
+          {
+            "name": "Volcano Bridge",
+            "id": 719211,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Bucket Hat",
+              "player": 1,
+              "advancement": false,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Volcano Secret Beach": {
+        "name": "Volcano Secret Beach",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Volcano River to Secret Beach",
+            "parent_region": "Volcano Entrance",
+            "connected_region": "Volcano Secret Beach",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Volcano - Floor 5": {
+        "name": "Volcano - Floor 5",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Climb to Volcano Floor 5",
+            "parent_region": "Volcano Entrance",
+            "connected_region": "Volcano - Floor 5",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Talk to Volcano Dwarf",
+            "connected_region": "Volcano Dwarf Shop",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Climb to Volcano Floor 10",
+            "connected_region": "Volcano - Floor 10",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [
+          {
+            "name": "Volcano Exit Shortcut",
+            "id": 719212,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Rhubarb Seeds",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Volcano Dwarf Shop": {
+        "name": "Volcano Dwarf Shop",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Talk to Volcano Dwarf",
+            "parent_region": "Volcano - Floor 5",
+            "connected_region": "Volcano Dwarf Shop",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Volcano - Floor 10": {
+        "name": "Volcano - Floor 10",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Climb to Volcano Floor 10",
+            "parent_region": "Volcano - Floor 5",
+            "connected_region": "Volcano - Floor 10",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [
+          {
+            "name": "Volcano Caldera Treasure",
+            "id": 717251,
+            "crystal": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Melon Seeds",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island Trader": {
+        "name": "Island Trader",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Talk to Island Trader",
+            "parent_region": "Island North",
+            "connected_region": "Island Trader",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Island Farmhouse": {
+        "name": "Island Farmhouse",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island West to Island Farmhouse",
+            "parent_region": "Island West",
+            "connected_region": "Island Farmhouse",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Island Cooking",
+            "connected_region": "Kitchen",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Gourmand Frog Cave": {
+        "name": "Gourmand Frog Cave",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island West to Gourmand Cave",
+            "parent_region": "Island West",
+            "connected_region": "Gourmand Frog Cave",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Colored Crystals Cave": {
+        "name": "Colored Crystals Cave",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island West to Crystal Cave",
+            "parent_region": "Island West",
+            "connected_region": "Colored Crystals Cave",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Shipwreck": {
+        "name": "Shipwreck",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island West to Shipwreck",
+            "parent_region": "Island West",
+            "connected_region": "Shipwreck",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Qi's Walnut Room": {
+        "name": "Qi's Walnut Room",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island West to Qi Walnut Room",
+            "parent_region": "Island West",
+            "connected_region": "Qi's Walnut Room",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Leo's Hut": {
+        "name": "Leo's Hut",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island East to Leo Hut",
+            "parent_region": "Island East",
+            "connected_region": "Leo's Hut",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [
+          {
+            "name": "Leo's Parrot",
+            "id": 719204,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Artichoke Seeds",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Pirate Cove": {
+        "name": "Pirate Cove",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island Southeast to Pirate Cove",
+            "parent_region": "Island Southeast",
+            "connected_region": "Pirate Cove",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Field Office": {
+        "name": "Field Office",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Island North to Field Office",
+            "parent_region": "Island North",
+            "connected_region": "Field Office",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [
+          {
+            "name": "Complete Island Field Office",
+            "id": 719216,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Fiber Seeds Recipe",
+              "player": 1,
+              "advancement": true,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Dig Site": {
+        "name": "Dig Site",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Parrot Express Docks to Dig Site",
+            "parent_region": "Island South",
+            "connected_region": "Dig Site",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Jungle to Dig Site",
+            "parent_region": "Island West",
+            "connected_region": "Dig Site",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Island North to Dig Site",
+            "parent_region": "Island North",
+            "connected_region": "Dig Site",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          },
+          {
+            "name": "Parrot Express Volcano to Dig Site",
+            "parent_region": "Island North",
+            "connected_region": "Dig Site",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [
+          {
+            "name": "Dig Site to Professor Snail Cave",
+            "connected_region": "Professor Snail Cave",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Dig Site to Volcano",
+            "connected_region": "Island North",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Dig Site to Docks",
+            "connected_region": "Island South",
+            "access_rule": null,
+            "type": "Exit"
+          },
+          {
+            "name": "Parrot Express Dig Site to Jungle",
+            "connected_region": "Island West",
+            "access_rule": null,
+            "type": "Exit"
+          }
+        ],
+        "locations": [
+          {
+            "name": "Open Professor Snail Cave",
+            "id": 719215,
+            "crystal": null,
+            "access_rule": null,
+            "progress_type": 1,
+            "locked": false,
+            "item": {
+              "name": "Power: Friendship 101",
+              "player": 1,
+              "advancement": false,
+              "priority": null,
+              "type": "None"
+            }
+          }
+        ],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Professor Snail Cave": {
+        "name": "Professor Snail Cave",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Dig Site to Professor Snail Cave",
+            "parent_region": "Dig Site",
+            "connected_region": "Professor Snail Cave",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Dangerous Mines - Floor 20": {
+        "name": "Dangerous Mines - Floor 20",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Dig to the Dangerous Mines - Floor 20",
+            "parent_region": "The Mines - Floor 120",
+            "connected_region": "Dangerous Mines - Floor 20",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Dangerous Mines - Floor 60": {
+        "name": "Dangerous Mines - Floor 60",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Dig to the Dangerous Mines - Floor 60",
+            "parent_region": "The Mines - Floor 120",
+            "connected_region": "Dangerous Mines - Floor 60",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
+      },
+      "Dangerous Mines - Floor 100": {
+        "name": "Dangerous Mines - Floor 100",
+        "type": "Region",
+        "player": 1,
+        "entrances": [
+          {
+            "name": "Dig to the Dangerous Mines - Floor 100",
+            "parent_region": "The Mines - Floor 120",
+            "connected_region": "Dangerous Mines - Floor 100",
+            "reverse": null,
+            "assumed": false,
+            "type": "Entrance"
+          }
+        ],
+        "exits": [],
+        "locations": [],
+        "time_passes": true,
+        "provides_chest_count": true,
+        "region_rules": []
       }
     }
   },
@@ -13484,6 +13480,7 @@
         "id": 717021,
         "groups": [
           "Community Reward",
+          "Desert Transportation",
           "Everything"
         ],
         "advancement": true,
@@ -14371,6 +14368,7 @@
         "name": "Desert Obelisk",
         "id": 717080,
         "groups": [
+          "Desert Transportation",
           "Everything",
           "Wizard Building"
         ],
@@ -14388,6 +14386,7 @@
         "groups": [
           "Everything",
           "Ginger Island",
+          "Island Transportation",
           "Wizard Building"
         ],
         "advancement": true,
@@ -14512,7 +14511,7 @@
         ],
         "advancement": true,
         "priority": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -17097,7 +17096,8 @@
         "id": 717260,
         "groups": [
           "Everything",
-          "Ginger Island"
+          "Ginger Island",
+          "Island Transportation"
         ],
         "advancement": true,
         "priority": false,
@@ -21272,6 +21272,21 @@
         "type": null,
         "max_count": 1
       },
+      "Pet Bowl": {
+        "name": "Pet Bowl",
+        "id": 717564,
+        "groups": [
+          "Building",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Burnt Trap": {
         "name": "Burnt Trap",
         "id": 721001,
@@ -25227,8 +25242,8 @@
         "name": "Mini-Obelisk",
         "id": 722211,
         "groups": [
+          "At Least Two",
           "Everything",
-          "Exactly Two",
           "Resource Pack"
         ],
         "advancement": false,
@@ -25419,8 +25434,8 @@
         "name": "Junimo Chest",
         "id": 722223,
         "groups": [
+          "At Least Two",
           "Everything",
-          "Exactly Two",
           "Resource Pack"
         ],
         "advancement": false,
@@ -28533,6 +28548,7 @@
   "item_groups": {
     "1": [
       "Arcade Machine Buffs",
+      "At Least Two",
       "Baby",
       "Base Resource",
       "Book Power",
@@ -28547,8 +28563,8 @@
       "Craftsanity",
       "Cropsanity",
       "Deprecated",
+      "Desert Transportation",
       "Everything",
-      "Exactly Two",
       "Fertilizer",
       "Festival",
       "Fishing Resource",
@@ -28557,6 +28573,7 @@
       "Friendship Pack",
       "Geode",
       "Ginger Island",
+      "Island Transportation",
       "Lost Book",
       "Magic Spell",
       "Maximum One",
@@ -28785,6 +28802,7 @@
       "Peach Sapling": 2,
       "Pearl": 2,
       "Pepper Seeds": 2,
+      "Pet Bowl": 1,
       "Pierre's Missing Stocklist": 2,
       "Pineapple Seeds": 2,
       "Pomegranate Sapling": 2,
@@ -28935,13 +28953,13 @@
   },
   "starting_items": {
     "1": [
-      "Spring"
+      "Spring",
+      "Pet Bowl"
     ]
   },
   "settings": {
     "1": {
-      "game": "Stardew Valley",
-      "accessibility": "items"
+      "game": "Stardew Valley"
     }
   },
   "game_info": {
