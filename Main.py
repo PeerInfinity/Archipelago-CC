@@ -85,6 +85,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
     start = time.perf_counter()
     # initialize the multiworld
     multiworld = MultiWorld(args.multi)
+    
+    # Set output directory for sphere logging
+    multiworld.temp_dir_for_spheres_log = args.outputpath
 
     logger = logging.getLogger()
     multiworld.set_seed(seed, args.race, str(args.outputname) if args.outputname else None)

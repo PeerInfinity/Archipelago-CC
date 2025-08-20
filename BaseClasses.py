@@ -1689,6 +1689,17 @@ class Spoiler:
 
     def create_playthrough(self, create_paths: bool = True) -> None:
         """Destructive to the multiworld while it is run, damage gets repaired afterwards."""
+
+        # Check if sphere logging is enabled and use enhanced version if so
+        try:
+            from settings import get_settings
+            settings = get_settings()
+            if settings.general_options.save_sphere_log:
+                from exporter.sphere_logger import create_playthrough_with_logging
+                return create_playthrough_with_logging(self, create_paths)
+        except (ImportError, AttributeError):
+            pass  # Fall through to original implementation
+
         from itertools import chain
         # get locations containing progress items
         multiworld = self.multiworld
