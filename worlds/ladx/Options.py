@@ -6,7 +6,6 @@ import logging
 from Options import Choice, Toggle, DefaultOnToggle, Range, FreeText, PerGameCommonOptions, OptionGroup, Removed
 from collections import defaultdict
 import Utils
-import sys
 
 DefaultOffToggle = Toggle
 
@@ -426,50 +425,11 @@ class TrendyGame(Choice):
     default = option_normal
 
 
-class GfxMod(FreeText, LADXROption):
+class GfxMod(DefaultOffToggle):
     """
-    Sets the sprite for link, among other things
-    The option should be the same name as a with sprite (and optional name) file in data/sprites/ladx
+    If enabled, the patcher will prompt the user for a modification file to change sprites in the game and optionally some text.
     """
     display_name = "GFX Modification"
-    ladxr_name = "gfxmod"
-    normal = ''
-    default = 'Link'
-
-    # When running pytest, __spriteDir was set to the wrong path, and gave a FileNotFoundError
-    #__spriteDir: str = Utils.local_path(os.path.join('data', 'sprites', 'ladx'))
-    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current script
-    BASE_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))  # Adjust according to your folder structure
-    __spriteDir: str = os.path.join(BASE_DIR, 'data', 'sprites', 'ladx')
-    __spriteFiles: typing.DefaultDict[str, typing.List[str]] = defaultdict(list)
-
-    extensions = [".bin", ".bdiff", ".png", ".bmp"]
-
-    for file in os.listdir(__spriteDir):
-        name, extension = os.path.splitext(file)
-        if extension in extensions:
-            __spriteFiles[name].append(file)
-
-    def __init__(self, value: str):
-        super().__init__(value)
-
-    def verify(self, world, player_name: str, plando_options) -> None:
-        if self.value == "Link" or self.value in GfxMod.__spriteFiles:
-            return
-        raise Exception(
-            f"LADX Sprite '{self.value}' not found. Possible sprites are: {['Link'] + list(GfxMod.__spriteFiles.keys())}")
-
-    def to_ladxr_option(self, all_options):
-        if self.value == -1 or self.value == "Link":
-            return None, None
-
-        assert self.value in GfxMod.__spriteFiles
-
-        if len(GfxMod.__spriteFiles[self.value]) > 1:
-            logger.warning(
-                f"{self.value} does not uniquely identify a file. Possible matches: {GfxMod.__spriteFiles[self.value]}. Using {GfxMod.__spriteFiles[self.value][0]}")
-
-        return self.ladxr_name, self.__spriteDir + "/" + GfxMod.__spriteFiles[self.value][0]
 
 
 class Palette(Choice):

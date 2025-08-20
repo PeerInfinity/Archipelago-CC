@@ -18,7 +18,7 @@ from .regions import create_regions
 from .options import PokemonRBOptions
 from .rom_addresses import rom_addresses
 from .text import encode_text
-from .rom import generate_output, get_base_rom_bytes, get_base_rom_path, RedDeltaPatch, BlueDeltaPatch
+from .rom import generate_output, PokemonRedProcedurePatch, PokemonBlueProcedurePatch
 from .pokemon import process_pokemon_data, process_move_data, verify_hm_moves
 from .encounters import process_pokemon_locations, process_trainer_data
 from .rules import set_rules
@@ -33,12 +33,12 @@ class PokemonSettings(settings.Group):
         """File names of the Pokemon Red and Blue roms"""
         description = "Pokemon Red (UE) ROM File"
         copy_to = "Pokemon Red (UE) [S][!].gb"
-        md5s = [RedDeltaPatch.hash]
+        md5s = [PokemonRedProcedurePatch.hash]
 
     class BlueRomFile(settings.UserFilePath):
         description = "Pokemon Blue (UE) ROM File"
         copy_to = "Pokemon Blue (UE) [S][!].gb"
-        md5s = [BlueDeltaPatch.hash]
+        md5s = [PokemonBlueProcedurePatch.hash]
 
     red_rom_file: RedRomFile = RedRomFile(RedRomFile.copy_to)
     blue_rom_file: BlueRomFile = BlueRomFile(BlueRomFile.copy_to)
@@ -112,22 +112,6 @@ class PokemonRedBlueWorld(World):
         self.trainersanity_table = []
         self.local_locs = []
         self.pc_item = None
-
-    @classmethod
-    def stage_assert_generate(cls, multiworld: MultiWorld):
-        # Import the skip_required_files flag
-        from settings import skip_required_files
-        
-        versions = set()
-        for player in multiworld.player_ids:
-            if multiworld.worlds[player].game == "Pokemon Red and Blue":
-                versions.add(multiworld.worlds[player].options.game_version.current_key)
-                
-        # Only check for ROM files if we're not skipping required files
-        if not skip_required_files:
-            for version in versions:
-                if not os.path.exists(get_base_rom_path(version)):
-                    raise FileNotFoundError(get_base_rom_path(version))
 
     @classmethod
     def stage_generate_early(cls, multiworld: MultiWorld):
@@ -337,7 +321,7 @@ class PokemonRedBlueWorld(World):
                             "Fuchsia Gym - Koga Prize", "Saffron Gym - Sabrina Prize",
                             "Cinnabar Gym - Blaine Prize", "Viridian Gym - Giovanni Prize"
                         ] if self.multiworld.get_location(loc, self.player).item is None]
-                    state = self.multiworld.get_all_state(False)
+                    state = self.multiworld.get_all_state(False, True, False)
                     # Give it two tries to place badges with wild Pokemon and learnsets as-is.
                     # If it can't, then try with all Pokemon collected, and we'll try to fix HM move availability after.
                     if attempt > 1:
@@ -411,7 +395,7 @@ class PokemonRedBlueWorld(World):
 
         # Delete evolution events for Pokémon that are not in logic in an all_state so that accessibility check does not
         # fail. Re-use test_state from previous final loop.
-        all_state = self.multiworld.get_all_state(False)
+        all_state = self.multiworld.get_all_state(False, True, False)
         evolutions_region = self.multiworld.get_region("Evolution", self.player)
         for location in evolutions_region.locations.copy():
             if not all_state.can_reach(location, player=self.player):
@@ -464,7 +448,7 @@ class PokemonRedBlueWorld(World):
 
         self.local_locs = locs
 
-        all_state = self.multiworld.get_all_state(False)
+        all_state = self.multiworld.get_all_state(False, True, False)
 
         reachable_mons = set()
         for mon in poke_data.pokemon_data:
@@ -531,6 +515,11 @@ class PokemonRedBlueWorld(World):
                 self.multiworld.itempool.append(loc.item)
                 loc.item = None
             loc.place_locked_item(self.pc_item)
+
+    def get_pre_fill_items(self) -> typing.List["Item"]:
+        pool = [self.create_item(mon) for mon in poke_data.pokemon_data]
+        pool.append(self.pc_item)
+        return pool
 
     @classmethod
     def stage_post_fill(cls, multiworld):
@@ -599,29 +588,9 @@ class PokemonRedBlueWorld(World):
         level_scaling(multiworld)
 
     def generate_output(self, output_directory: str):
-        # Check if ROM file exists based on game version
-        from settings import skip_required_files
-        
-        game_version = self.options.game_version.current_key
-        rom_file = get_base_rom_path(game_version)
-        
-        if not os.path.exists(rom_file):
-            import logging
-            pokemon_logger = logging.getLogger("Pokemon Red and Blue")
-            reason = "skip_required_files flag is set" if skip_required_files else "file not found"
-            pokemon_logger.warning("Pokemon %s ROM file not found at %s (%s). Skipping ROM generation for player %d.", 
-                                 game_version.title(), rom_file, reason, self.player)
-            # Set a placeholder ROM name to indicate ROM wasn't generated
-            self.rom_name = f"PKMN_{game_version.upper()}_ROM_NOT_GENERATED"
-            return
-            
         generate_output(self, output_directory)
 
     def modify_multidata(self, multidata: dict):
-        # If ROM generation was skipped, don't add the connect name
-        if hasattr(self, 'rom_name') and self.rom_name and self.rom_name.startswith('PKMN_') and self.rom_name.endswith('_ROM_NOT_GENERATED'):
-            return
-            
         rom_name = bytearray(f'AP{__version__.replace(".", "")[0:3]}_{self.player}_{self.multiworld.seed:11}\0',
                              'utf8')[:21]
         rom_name.extend([0] * (21 - len(rom_name)))

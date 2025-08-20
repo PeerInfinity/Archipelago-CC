@@ -7,7 +7,6 @@ import typing
 from typing import Optional, List, AbstractSet, Union  # remove when 3.8 support is dropped
 from collections import Counter, deque
 from string import printable
-import os
 
 logger = logging.getLogger("Ocarina of Time")
 
@@ -31,9 +30,8 @@ from .Patches import OoTContainer, patch_rom
 from .N64Patch import create_patch_file
 from .Cosmetics import patch_cosmetics
 
-from settings import get_settings
 from BaseClasses import MultiWorld, CollectionState, Tutorial, LocationProgressType
-from Options import Range, Toggle, VerifyKeys, Accessibility, PlandoConnections
+from Options import Range, Toggle, VerifyKeys, Accessibility, PlandoConnections, PlandoItems
 from Fill import fill_restrictive, fast_fill, FillError
 from worlds.generic.Rules import exclusion_rules, add_item_rule
 from worlds.AutoWorld import World, AutoLogicRegister, WebWorld
@@ -131,6 +129,7 @@ class OOTWeb(WebWorld):
 
     tutorials = [setup, setup_fr, setup_de]
     option_groups = oot_option_groups
+    game_info_languages = ["en", "de"]
 
 
 class OOTWorld(World):
@@ -203,11 +202,8 @@ class OOTWorld(World):
 
     @classmethod
     def stage_assert_generate(cls, multiworld: MultiWorld):
-        # Import the skip_required_files flag
-        from settings import skip_required_files
-        # Only check for ROM file if we're not skipping required files
-        if not skip_required_files:
-            rom = Rom(file=get_settings()['oot_options']['rom_file'])
+        oot_settings = OOTWorld.settings
+        rom = Rom(file=oot_settings.rom_file)
 
 
     # Option parsing, handling incompatible options, building useful-item table
@@ -223,6 +219,8 @@ class OOTWorld(World):
             elif isinstance(result, VerifyKeys):
                 option_value = result.value
             elif isinstance(result, PlandoConnections):
+                option_value = result.value
+            elif isinstance(result, PlandoItems):
                 option_value = result.value
             else:
                 option_value = result.current_key
@@ -1081,19 +1079,6 @@ class OOTWorld(World):
             self.hint_data_available.wait()
 
         with i_o_limiter:
-            # Check if ROM file exists
-            rom_file = get_settings()['oot_options']['rom_file']
-            if not os.path.exists(rom_file):
-                logger.warning("ROM file not found. Skipping ROM generation for player %d.", self.player)
-                # Initialize attributes needed by fill_slot_data with defaults
-                self.collectible_override_flags = {}
-                self.collectible_flag_offsets = {}
-                self.trap_appearances = {}
-                self.hint_rng = self.random
-                # Make sure to set this event so that fill_slot_data doesn't hang
-                self.collectible_flags_available.set()
-                return
-
             # Make traps appear as other random items
             trap_location_ids = [loc.address for loc in self.get_locations() if loc.item.trap]
             self.trap_appearances = {}
@@ -1104,7 +1089,8 @@ class OOTWorld(World):
             self.hint_rng = self.random
 
             outfile_name = self.multiworld.get_out_file_name_base(self.player)
-            rom = Rom(file=rom_file)
+            oot_settings = OOTWorld.settings
+            rom = Rom(file=oot_settings.rom_file)
             try:
                 if self.hints != 'none':
                     buildWorldGossipHints(self)
@@ -1338,10 +1324,20 @@ class OOTWorld(World):
             state.prog_items[self.player][alt_item_name] -= count
             if state.prog_items[self.player][alt_item_name] < 1:
                 del (state.prog_items[self.player][alt_item_name])
+            # invalidate caches, nothing can be trusted anymore now
+            state.child_reachable_regions[self.player] = set()
+            state.child_blocked_connections[self.player] = set()
+            state.adult_reachable_regions[self.player] = set()
+            state.adult_blocked_connections[self.player] = set()
             state._oot_stale[self.player] = True
             return True
         changed = super().remove(state, item)
         if changed:
+            # invalidate caches, nothing can be trusted anymore now
+            state.child_reachable_regions[self.player] = set()
+            state.child_blocked_connections[self.player] = set()
+            state.adult_reachable_regions[self.player] = set()
+            state.adult_blocked_connections[self.player] = set()
             state._oot_stale[self.player] = True
         return changed
 
