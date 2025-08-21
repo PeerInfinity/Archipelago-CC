@@ -1,18 +1,18 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-08-20 14:46:41
+**Generated:** 2025-08-21 11:53:28
 
-**Source Data Created:** 2025-08-20T09:20:48.301156
+**Source Data Created:** 2025-08-21T08:56:00.230682
 
-**Source Data Last Updated:** 2025-08-20T13:41:35.072524
+**Source Data Last Updated:** 2025-08-21T11:53:17.984463
 
 **Script Version:** 1.0.0
 
 ## Summary
 
-- **Total Games:** 77
-- **Passed:** 6 (7.8%)
-- **Failed:** 71 (92.2%)
+- **Total Games:** 76
+- **Passed:** 6 (7.9%)
+- **Failed:** 70 (92.1%)
 
 ## Test Results
 
@@ -59,7 +59,7 @@
 | Meritous | ❌ Failed | 32 | 0 | 7.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Muse Dash | ❌ Failed | 0 | 0.1 | 5.1 | 🟠 2.0% | ⚫ | ⚫ |
 | Noita | ✅ Passed | 0 | 0.1 | 0.1 | 🟢 Complete | ⚫ | ⚫ |
-| Ocarina Of Time | ❌ Failed | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Ocarina Of Time | ❌ Failed | 5642 | 0.1 | 22.1 | 🟠 0.5% | ⚫ | ⚫ |
 | Old School Runescape | ❌ Failed | 0 | 0.1 | 7.1 | 🟠 1.4% | ⚫ | ⚫ |
 | Overcooked 2 | ❌ Failed | 645 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Paint | ❌ Failed | 131 | 0.1 | 12.1 | 🟠 0.8% | ⚫ | ⚫ |
@@ -76,7 +76,6 @@
 | Starcraft 2 | ❌ Failed | 36 | 0 | 37.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Stardew Valley | ❌ Failed | 1436 | 0.1 | 39.1 | 🟠 0.3% | ⚫ | ⚫ |
 | Subnautica | ❌ Failed | 28 | 0 | 6.1 | 🔴 0.0% | ⚫ | ⚫ |
-| Sudoku | ❌ Failed | 1 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Super Mario 64 | ❌ Failed | 2 | 0.1 | 2.41 | 🟠 4.1% | ⚫ | ⚫ |
 | Super Mario Land 2 | ❌ Failed | 96 | 0.1 | 11.1 | 🟠 0.9% | ⚫ | ⚫ |
 | Super Mario World | ❌ Failed | 0 | 0.2 | 8.1 | 🟠 2.5% | ⚫ | ⚫ |

@@ -108,15 +108,46 @@ python scripts/test-all-templates.py --include-list "Adventure.yaml" "A Short Hi
 
 # Test a single template
 python scripts/test-all-templates.py --include-list "Adventure.yaml"
+
+# NEW: Partial execution modes
+# Only run generation (export) step, skip spoiler tests
+python scripts/test-all-templates.py --export-only
+
+# Only run spoiler tests, skip generation (requires existing rules files)
+python scripts/test-all-templates.py --spoiler-only
+
+# Start processing from a specific template file (alphabetically ordered)
+python scripts/test-all-templates.py --start-from "Adventure.yaml"
 ```
 
 **Prerequisites:**
 - **Virtual Environment**: The script will detect and warn if not activated. Generation may freeze without proper dependencies.
-- **HTTP Server**: Required for spoiler tests. The script will exit with a clear error if not running on `localhost:8000`.
+- **HTTP Server**: Required for spoiler tests (not needed for `--export-only`). The script will exit with a clear error if not running on `localhost:8000`.
+
+### New Execution Modes
+
+The script now supports partial execution and resumption options for more flexible testing workflows:
+
+**`--export-only`**: Only runs the generation (export) step, skipping all spoiler tests
+- **Use case**: Quickly generate rules files for multiple games without running time-consuming tests
+- **No HTTP server required**: Can run without the development server
+- **Fast bulk processing**: Ideal for generating data files for later analysis
+
+**`--spoiler-only`**: Only runs spoiler tests, skipping the generation step  
+- **Use case**: Re-test games after fixing JavaScript rule engine issues without regenerating data
+- **Requires existing files**: Rules and sphere log files must already exist from a previous run
+- **Efficient debugging**: Test logic fixes without waiting for generation
+
+**`--start-from`**: Begin processing from a specific template file, skipping all files before it alphabetically
+- **Use case**: Resume testing after interruption or start from a specific game
+- **Alphabetical ordering**: Files are processed in sorted order, so you can predict the sequence
+- **Recovery**: Perfect for continuing long test runs that were interrupted
 
 The automation script (`scripts/test-all-templates.py`) provides:
 
 - **Complete Pipeline Automation**: Runs Generate.py, spoiler tests, and analysis for each template
+- **Partial Execution Modes**: Use `--export-only` or `--spoiler-only` to run specific pipeline stages
+- **Resume from Point**: Use `--start-from` to continue processing from a specific template file  
 - **Comprehensive Metrics**: Captures error/warning counts, sphere progression, and pass/fail status
 - **Smart Filtering**: Automatically skips non-game templates by default, with options for custom skip/include lists
 - **Targeted Testing**: Use `--include-list` to test only specific templates, perfect for retesting after fixes

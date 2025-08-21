@@ -1,0 +1,246 @@
+#!/usr/bin/env python3
+"""
+Script to update frontend/presets/preset_files.json with test results data
+from template-test-results.json. This adds test result information to each
+game entry so the frontend can display test status.
+"""
+
+import argparse
+import json
+import os
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Any, List, Tuple
+
+
+def load_test_results(results_file: str) -> Dict[str, Any]:
+    """Load the template test results from JSON file."""
+    try:
+        with open(results_file, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading results file {results_file}: {e}")
+        return {}
+
+
+def load_preset_files(preset_files_path: str) -> Dict[str, Any]:
+    """Load the preset_files.json file."""
+    try:
+        with open(preset_files_path, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading preset files {preset_files_path}: {e}")
+        return {}
+
+
+def normalize_game_name(template_name: str) -> str:
+    """Convert template filename to lowercase directory name format."""
+    # Remove .yaml extension
+    game_name = template_name.replace('.yaml', '')
+    # Convert to lowercase and replace spaces with underscores
+    return game_name.lower().replace(' ', '_').replace('-', '_').replace('&', 'and').replace('!', '').replace("'", '')
+
+
+def extract_test_data_for_game(template_name: str, template_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Extract test result data for a single game."""
+    # Extract original pass/fail result
+    original_pass_fail = template_data.get('spoiler_test', {}).get('pass_fail', 'unknown')
+    
+    # Extract generation error count
+    gen_error_count = template_data.get('generation', {}).get('error_count', 0)
+    
+    # Extract sphere reached (where the test stopped or failed)
+    sphere_reached = template_data.get('spoiler_test', {}).get('sphere_reached', 0)
+    
+    # Extract max spheres (total spheres available)
+    max_spheres = template_data.get('spoiler_test', {}).get('total_spheres', 0)
+    
+    # Extract world info for custom exporter/gameLogic status
+    world_info = template_data.get('world_info', {})
+    has_custom_exporter = world_info.get('has_custom_exporter', False)
+    has_custom_game_logic = world_info.get('has_custom_game_logic', False)
+    
+    # Apply stricter pass criteria: must have 0 generation errors AND max_spheres > 0
+    if original_pass_fail.lower() == 'passed' and gen_error_count == 0 and max_spheres > 0:
+        pass_fail = 'passed'
+    elif original_pass_fail.lower() == 'failed':
+        pass_fail = 'failed'
+    else:
+        # Mark as failed if it doesn't meet strict criteria, even if spoiler test "passed"
+        pass_fail = 'failed'
+    
+    # Calculate progress percentage
+    progress_percent = 0.0
+    if max_spheres > 0:
+        progress_percent = (sphere_reached / max_spheres) * 100
+    
+    # Get timestamps
+    test_timestamp = template_data.get('timestamp', '')
+    generation_time = template_data.get('generation', {}).get('processing_time_seconds', 0)
+    spoiler_time = template_data.get('spoiler_test', {}).get('processing_time_seconds', 0)
+    
+    return {
+        'test_result': {
+            'status': pass_fail,
+            'generation_errors': gen_error_count,
+            'generation_warnings': template_data.get('generation', {}).get('warning_count', 0),
+            'sphere_reached': sphere_reached,
+            'max_spheres': max_spheres,
+            'progress_percent': round(progress_percent, 1),
+            'has_custom_exporter': has_custom_exporter,
+            'has_custom_game_logic': has_custom_game_logic,
+            'timestamp': test_timestamp,
+            'processing_time': {
+                'generation_seconds': generation_time,
+                'spoiler_test_seconds': spoiler_time,
+                'total_seconds': generation_time + spoiler_time
+            }
+        }
+    }
+
+
+def update_preset_files_with_test_data(preset_files: Dict[str, Any], test_results: Dict[str, Any]) -> Dict[str, Any]:
+    """Update preset_files with test result data, preserving original order."""
+    # Use the original preset_files to preserve order
+    updated_preset_files = preset_files
+    
+    if 'results' not in test_results:
+        print("No test results found in input data")
+        return updated_preset_files
+    
+    # Track which games were updated
+    updated_games = []
+    missing_games = []
+    
+    for template_name, template_data in test_results['results'].items():
+        # Convert template name to game directory format
+        game_dir = normalize_game_name(template_name)
+        
+        # Find the corresponding game in preset_files
+        if game_dir in updated_preset_files:
+            # Extract test data
+            test_data = extract_test_data_for_game(template_name, template_data)
+            
+            # Add test data to the game entry
+            updated_preset_files[game_dir].update(test_data)
+            updated_games.append(game_dir)
+            
+            print(f"Updated test data for: {updated_preset_files[game_dir].get('name', game_dir)} ({template_name})")
+        else:
+            missing_games.append(f"{game_dir} (from {template_name})")
+    
+    # Add metadata about the update
+    if 'metadata' not in updated_preset_files:
+        updated_preset_files['metadata'] = {}
+    
+    updated_preset_files['metadata'].update({
+        'test_data_updated': datetime.now().isoformat(),
+        'test_data_source': test_results.get('metadata', {}),
+        'games_with_test_data': len(updated_games),
+        'total_games': len(updated_preset_files) - 1  # Subtract 1 for metadata
+    })
+    
+    print(f"\nSummary:")
+    print(f"- Updated {len(updated_games)} games with test data")
+    print(f"- {len(missing_games)} games from test results not found in preset_files")
+    
+    if missing_games:
+        print(f"\nMissing games:")
+        for game in missing_games[:10]:  # Show first 10
+            print(f"  - {game}")
+        if len(missing_games) > 10:
+            print(f"  ... and {len(missing_games) - 10} more")
+    
+    return updated_preset_files
+
+
+def save_preset_files(preset_files: Dict[str, Any], output_path: str):
+    """Save the updated preset_files.json."""
+    try:
+        # Write updated file, preserving original order
+        with open(output_path, 'w') as f:
+            json.dump(preset_files, f, indent=2, sort_keys=False)
+        print(f"Updated preset_files.json saved to: {output_path}")
+        
+    except IOError as e:
+        print(f"Error saving preset files: {e}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Update preset_files.json with test results data from template-test-results.json'
+    )
+    parser.add_argument(
+        '--test-results',
+        type=str,
+        default='scripts/output/template-test-results.json',
+        help='Input test results JSON file (default: scripts/output/template-test-results.json)'
+    )
+    parser.add_argument(
+        '--preset-files',
+        type=str,
+        default='frontend/presets/preset_files.json',
+        help='Preset files JSON to update (default: frontend/presets/preset_files.json)'
+    )
+    parser.add_argument(
+        '--output',
+        type=str,
+        help='Output file path (default: overwrites --preset-files)'
+    )
+    parser.add_argument(
+        '--dry-run',
+        action='store_true',
+        help='Show what would be updated without making changes'
+    )
+    
+    args = parser.parse_args()
+    
+    # Determine project root and resolve paths
+    project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    test_results_path = os.path.join(project_root, args.test_results)
+    preset_files_path = os.path.join(project_root, args.preset_files)
+    output_path = args.output if args.output else preset_files_path
+    if args.output:
+        output_path = os.path.join(project_root, args.output)
+    
+    # Check if input files exist
+    if not os.path.exists(test_results_path):
+        print(f"Error: Test results file not found: {test_results_path}")
+        print("Please run test-all-templates.py first to generate the results file.")
+        return 1
+    
+    if not os.path.exists(preset_files_path):
+        print(f"Error: Preset files not found: {preset_files_path}")
+        return 1
+    
+    # Load input files
+    print(f"Loading test results from: {test_results_path}")
+    test_results = load_test_results(test_results_path)
+    
+    if not test_results:
+        print("Failed to load test results.")
+        return 1
+    
+    print(f"Loading preset files from: {preset_files_path}")
+    preset_files = load_preset_files(preset_files_path)
+    
+    if not preset_files:
+        print("Failed to load preset files.")
+        return 1
+    
+    # Update preset files with test data
+    print(f"\nUpdating preset files with test data...")
+    updated_preset_files = update_preset_files_with_test_data(preset_files, test_results)
+    
+    # Save or display results
+    if args.dry_run:
+        print(f"\nDry run complete. Would update: {output_path}")
+        print("Use --dry-run=false to actually save changes.")
+    else:
+        save_preset_files(updated_preset_files, output_path)
+    
+    return 0
+
+
+if __name__ == '__main__':
+    exit(main())
