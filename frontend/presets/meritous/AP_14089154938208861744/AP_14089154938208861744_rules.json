@@ -25,7 +25,25 @@
           {
             "name": "To Meridian",
             "connected_region": "Meridian",
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "group_check",
+                  "group": {
+                    "type": "constant",
+                    "value": "PSI Keys"
+                  }
+                },
+                {
+                  "type": "group_check",
+                  "group": {
+                    "type": "constant",
+                    "value": "Important Artifacts"
+                  }
+                }
+              ]
+            },
             "type": "Exit"
           }
         ],
@@ -503,7 +521,25 @@
           {
             "name": "To Ataraxia",
             "connected_region": "Ataraxia",
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "group_check",
+                  "group": {
+                    "type": "constant",
+                    "value": "PSI Keys"
+                  }
+                },
+                {
+                  "type": "group_check",
+                  "group": {
+                    "type": "constant",
+                    "value": "Important Artifacts"
+                  }
+                }
+              ]
+            },
             "type": "Exit"
           }
         ],
@@ -981,7 +1017,25 @@
           {
             "name": "To Merodach",
             "connected_region": "Merodach",
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "group_check",
+                  "group": {
+                    "type": "constant",
+                    "value": "PSI Keys"
+                  }
+                },
+                {
+                  "type": "group_check",
+                  "group": {
+                    "type": "constant",
+                    "value": "Important Artifacts"
+                  }
+                }
+              ]
+            },
             "type": "Exit"
           }
         ],
@@ -1459,13 +1513,37 @@
           {
             "name": "Back to the entrance",
             "connected_region": "Final Boss",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Cursed Seal"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "Back to the entrance with the Knife",
             "connected_region": "True Final Boss",
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "list",
+                  "value": [
+                    {
+                      "type": "constant",
+                      "value": "Cursed Seal"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Agate Knife"
+                    }
+                  ]
+                }
+              ]
+            },
             "type": "Exit"
           }
         ],
@@ -1961,7 +2039,13 @@
           {
             "name": "To Second Quarter",
             "connected_region": "Second Quarter",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Meridian Defeated"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -2025,7 +2109,13 @@
           {
             "name": "To Third Quarter",
             "connected_region": "Third Quarter",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Ataraxia Defeated"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -2089,7 +2179,13 @@
           {
             "name": "To Last Quarter",
             "connected_region": "Last Quarter",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Merodach Defeated"
+              }
+            },
             "type": "Exit"
           }
         ],

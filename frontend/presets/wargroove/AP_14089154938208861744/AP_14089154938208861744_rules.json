@@ -1584,15 +1584,30 @@
             "id": 53020,
             "crystal": null,
             "access_rule": {
-              "type": "or",
+              "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Merfolk"
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Merfolk"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Turtle"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1602,7 +1617,7 @@
                   "args": [
                     {
                       "type": "constant",
-                      "value": "Turtle"
+                      "value": "Harpoon Ship"
                     }
                   ]
                 }

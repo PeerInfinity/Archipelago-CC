@@ -33,9 +33,15 @@ def extract_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, flo
         return chart_data
     
     for template_name, template_data in results['results'].items():
-        # Extract game name (convert from template filename to readable name)
-        game_name = template_data.get('game_name', template_name.replace('.yaml', ''))
-        game_name = game_name.replace('_', ' ').title()
+        # Extract actual game name from world info, fallback to template name
+        world_info = template_data.get('world_info', {})
+        game_name = world_info.get('game_name_from_yaml')
+        
+        if not game_name:
+            # Fallback: try to get it from template name
+            game_name = template_name.replace('.yaml', '')
+            # Convert underscores to spaces and title case as last resort
+            game_name = game_name.replace('_', ' ').title()
         
         # Extract original pass/fail result
         original_pass_fail = template_data.get('spoiler_test', {}).get('pass_fail', 'unknown')

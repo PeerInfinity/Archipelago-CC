@@ -110,7 +110,13 @@
           {
             "name": "To Lobby From Outside",
             "connected_region": "Lobby",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Front Door"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -173,7 +179,43 @@
             "name": "Puzzle Solved Office Elevator",
             "id": 27110,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "can_reach_region",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Underground Lake"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "can_reach_region",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Office"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Key for Office Elevator"
+                  }
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -188,7 +230,43 @@
             "name": "Puzzle Solved Three Floor Elevator",
             "id": 27112,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "can_reach_region",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Maintenance Tunnels"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "can_reach_region",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Blue Maze"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Key for Three Floor Elevator"
+                  }
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -356,7 +434,13 @@
           {
             "name": "To Underground Lake From Underground Tunnels",
             "connected_region": "Underground Lake",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Underground Lake"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -408,7 +492,13 @@
           {
             "name": "To Underground Tunnels From Underground Lake",
             "connected_region": "Underground Tunnels",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Underground Lake"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -556,7 +646,13 @@
           {
             "name": "To Office Elevator From Underground Blue Tunnels",
             "connected_region": "Office Elevator",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Office Elevator"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -654,25 +750,61 @@
           {
             "name": "To Office Elevator From Office",
             "connected_region": "Office Elevator",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Office Elevator"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Workshop",
             "connected_region": "Workshop",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Workshop"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Lobby From Office",
             "connected_region": "Lobby",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Office"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Bedroom Elevator From Office",
             "connected_region": "Bedroom Elevator",
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "list",
+                  "value": [
+                    {
+                      "type": "constant",
+                      "value": "Key for Bedroom Elevator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Crawling"
+                    }
+                  ]
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
@@ -762,7 +894,25 @@
             "name": "Puzzle Solved Bedroom Elevator",
             "id": 27111,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "list",
+                  "value": [
+                    {
+                      "type": "constant",
+                      "value": "Key for Bedroom Elevator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Crawling"
+                    }
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -898,13 +1048,37 @@
           {
             "name": "To Office From Bedroom Elevator",
             "connected_region": "Office",
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "list",
+                  "value": [
+                    {
+                      "type": "constant",
+                      "value": "Key for Bedroom Elevator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Crawling"
+                    }
+                  ]
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
             "name": "To Bedroom",
             "connected_region": "Bedroom",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Bedroom"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -1045,13 +1219,25 @@
           {
             "name": "To Office From Lobby",
             "connected_region": "Office",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Office"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Library From Lobby",
             "connected_region": "Library",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Library"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -1069,25 +1255,69 @@
           {
             "name": "To Prehistoric From Lobby",
             "connected_region": "Prehistoric",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Prehistoric Room"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Egypt From Lobby",
             "connected_region": "Egypt",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Egypt Room"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Tar River From Lobby",
             "connected_region": "Tar River",
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Crawling"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "oil_capturable",
+                  "args": []
+                },
+                {
+                  "type": "state_method",
+                  "method": "can_reach_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Tar River"
+                    }
+                  ]
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
             "name": "To Outside From Lobby",
             "connected_region": "Outside",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Front Door"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -1111,7 +1341,117 @@
           {
             "name": "To Victory",
             "connected_region": "Victory",
-            "access_rule": null,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "binary_op",
+                              "left": {
+                                "type": "binary_op",
+                                "left": {
+                                  "type": "helper",
+                                  "name": "water_capturable",
+                                  "args": []
+                                },
+                                "op": "+",
+                                "right": {
+                                  "type": "helper",
+                                  "name": "wax_capturable",
+                                  "args": []
+                                }
+                              },
+                              "op": "+",
+                              "right": {
+                                "type": "helper",
+                                "name": "ash_capturable",
+                                "args": []
+                              }
+                            },
+                            "op": "+",
+                            "right": {
+                              "type": "helper",
+                              "name": "oil_capturable",
+                              "args": []
+                            }
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "helper",
+                            "name": "cloth_capturable",
+                            "args": []
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "helper",
+                          "name": "wood_capturable",
+                          "args": []
+                        }
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "helper",
+                        "name": "crystal_capturable",
+                        "args": []
+                      }
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "helper",
+                      "name": "sand_capturable",
+                      "args": []
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "helper",
+                    "name": "metal_capturable",
+                    "args": []
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "helper",
+                  "name": "lightning_capturable",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    }
+                  ]
+                }
+              },
+              "op": ">=",
+              "right": {
+                "type": "attribute",
+                "object": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    "attr": "options"
+                  },
+                  "attr": "ixupi_captures_needed"
+                },
+                "attr": "value"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -1120,7 +1460,13 @@
             "name": "Puzzle Solved Theater Door",
             "id": 27004,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Viewed Egyptian Hieroglyphics Explained"
+              }
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1153,7 +1499,28 @@
             "name": "Storage: Slide",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Lost Your Head"
+                  }
+                },
+                {
+                  "type": "state_method",
+                  "method": "can_reach_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Slide Room"
+                    }
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -1213,7 +1580,13 @@
           {
             "name": "To Lobby From Library",
             "connected_region": "Lobby",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Library"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -1418,13 +1791,25 @@
           {
             "name": "To Three Floor Elevator From Maintenance Tunnels",
             "connected_region": "Three Floor Elevator",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Three Floor Elevator"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Generator From Maintenance Tunnels",
             "connected_region": "Generator",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Generator Room"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -1669,7 +2054,13 @@
             "name": "Storage: Theater",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Viewed Theater Movie"
+              }
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -1761,13 +2152,25 @@
           {
             "name": "To Maintenance Tunnels From Theater Back Hallway",
             "connected_region": "Maintenance Tunnels",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Crawling"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Projector Room",
             "connected_region": "Projector Room",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Projector Room"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -1776,7 +2179,16 @@
             "name": "Puzzle Solved Clock Tower Door",
             "id": 27005,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Three Floor Elevator"
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2000,7 +2412,13 @@
             "name": "Storage: Clock Tower",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Set Time"
+              }
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -2206,19 +2624,37 @@
           {
             "name": "To Lobby From Prehistoric",
             "connected_region": "Lobby",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Prehistoric Room"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Greenhouse",
             "connected_region": "Greenhouse",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Greenhouse"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Ocean From Prehistoric",
             "connected_region": "Ocean",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Ocean Room"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -2366,7 +2802,13 @@
           {
             "name": "To Prehistoric From Ocean",
             "connected_region": "Prehistoric",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Ocean Room"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -2402,7 +2844,16 @@
             "name": "Puzzle Solved Atlantis",
             "id": 27007,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Office"
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2543,7 +2994,13 @@
             "name": "Puzzle Solved Maze Door",
             "id": 27009,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Viewed Theater Movie"
+              }
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2641,7 +3098,23 @@
           {
             "name": "To Lobby From Tar River",
             "connected_region": "Lobby",
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Crawling"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "oil_capturable",
+                  "args": []
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
@@ -2659,7 +3132,11 @@
             "name": "Storage: Tar River",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "oil_capturable",
+              "args": []
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -2727,19 +3204,40 @@
           {
             "name": "To Lobby From Egypt",
             "connected_region": "Lobby",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Egypt Room"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Burial From Egypt",
             "connected_region": "Burial",
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Egypt"
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
             "name": "To Blue Maze From Egypt",
             "connected_region": "Blue Maze",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Crawling"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -2757,7 +3255,13 @@
             "name": "Puzzle Solved Columns of RA",
             "id": 27010,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Viewed Egyptian Hieroglyphics Explained"
+              }
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2880,7 +3384,13 @@
           {
             "name": "To Shaman From Burial",
             "connected_region": "Shaman",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Shaman Room"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -3006,7 +3516,13 @@
           {
             "name": "To Burial From Shaman",
             "connected_region": "Burial",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Shaman Room"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -3039,7 +3555,16 @@
             "name": "Puzzle Solved Shaman Drums",
             "id": 27013,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Clock Tower"
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3140,7 +3665,13 @@
           {
             "name": "To Norse Stone From Gods Room",
             "connected_region": "Norse Stone",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Aligned Planets"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -3167,7 +3698,16 @@
             "name": "Puzzle Solved Red Door",
             "id": 27015,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Maintenance Tunnels"
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3312,7 +3852,16 @@
           {
             "name": "To Gods Room From Anansi",
             "connected_region": "Gods Room",
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Gods Room"
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
@@ -3339,7 +3888,13 @@
             "name": "Puzzle Solved Anansi Music Box",
             "id": 27019,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Set Song"
+              }
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3390,7 +3945,13 @@
             "name": "Storage: Anansi Music Box",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Set Song"
+              }
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -3571,7 +4132,13 @@
           {
             "name": "To Janitor Closet",
             "connected_region": "Janitor Closet",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Janitor Closet"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -3616,7 +4183,11 @@
           {
             "name": "To Water Capture From Janitor Closet",
             "connected_region": "Water Capture",
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "cloth_capturable",
+              "args": []
+            },
             "type": "Exit"
           },
           {
@@ -3634,7 +4205,11 @@
             "name": "Storage: Janitor Closet",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "cloth_capturable",
+              "args": []
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -3693,13 +4268,25 @@
           {
             "name": "To Orrery From UFO",
             "connected_region": "Orrery",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Viewed Fortune"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Inventions From UFO",
             "connected_region": "Inventions",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for UFO Room"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -3708,7 +4295,16 @@
             "name": "Puzzle Solved UFO Symbols",
             "id": 27018,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Library"
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3723,7 +4319,16 @@
             "name": "Storage: UFO",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Library"
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -3848,19 +4453,37 @@
           {
             "name": "To Egypt From Blue Maze",
             "connected_region": "Egypt",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Crawling"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Three Floor Elevator From Blue Maze Bottom",
             "connected_region": "Three Floor Elevator",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Three Floor Elevator"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Three Floor Elevator From Blue Maze Top",
             "connected_region": "Three Floor Elevator",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Three Floor Elevator"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -4117,13 +4740,25 @@
           {
             "name": "To UFO From Inventions",
             "connected_region": "UFO",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for UFO Room"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Torture From Inventions",
             "connected_region": "Torture",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Torture Room"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -4203,13 +4838,25 @@
           {
             "name": "To Inventions From Torture",
             "connected_region": "Inventions",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Torture Room"
+              }
+            },
             "type": "Exit"
           },
           {
             "name": "To Puzzle Room Mastermind From Torture",
             "connected_region": "Puzzle Room Mastermind",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Puzzle Room"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -4413,7 +5060,13 @@
           {
             "name": "To Torture",
             "connected_region": "Torture",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Key for Puzzle Room"
+              }
+            },
             "type": "Exit"
           },
           {
@@ -4569,7 +5222,11 @@
           {
             "name": "To Slide Room",
             "connected_region": "Slide Room",
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "all_skull_dials_set",
+              "args": []
+            },
             "type": "Exit"
           }
         ],
@@ -4596,7 +5253,11 @@
             "name": "Puzzle Solved Skull Dial Door",
             "id": 27023,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "all_skull_dials_set",
+              "args": []
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4639,7 +5300,13 @@
           {
             "name": "To Lobby From Slide Room",
             "connected_region": "Lobby",
-            "access_rule": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Lost Your Head"
+              }
+            },
             "type": "Exit"
           }
         ],
@@ -4676,7 +5343,11 @@
             "name": "Ixupi Captured Water",
             "id": 27040,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "water_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -4728,7 +5399,11 @@
             "name": "Ixupi Captured Wax",
             "id": 27041,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "wax_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -4772,7 +5447,11 @@
             "name": "Ixupi Captured Ash",
             "id": 27042,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "ash_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -4816,7 +5495,11 @@
             "name": "Ixupi Captured Oil",
             "id": 27043,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "oil_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -4868,7 +5551,11 @@
             "name": "Ixupi Captured Cloth",
             "id": 27044,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "cloth_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -4928,7 +5615,11 @@
             "name": "Ixupi Captured Wood",
             "id": 27045,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "wood_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -4972,7 +5663,11 @@
             "name": "Ixupi Captured Crystal",
             "id": 27046,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "crystal_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -5016,7 +5711,11 @@
             "name": "Ixupi Captured Sand",
             "id": 27047,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "sand_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {
@@ -5068,7 +5767,11 @@
             "name": "Ixupi Captured Metal",
             "id": 27048,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "metal_capturable",
+              "args": []
+            },
             "progress_type": 2,
             "locked": true,
             "item": {

@@ -586,7 +586,7 @@ async function loadModesConfiguration() {
         default: {
           moduleConfig: { path: './modules.json', enabled: true },
           rulesConfig: {
-            path: './presets/a_link_to_the_past/AP_14089154938208861744/AP_14089154938208861744_rules.json',
+            path: './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json',
             enabled: true,
           },
           layoutConfig: { path: './layout_presets.json', enabled: true },
@@ -605,7 +605,7 @@ async function loadModesConfiguration() {
       default: {
         moduleConfig: { path: './modules.json', enabled: true },
         rulesConfig: {
-          path: './presets/a_link_to_the_past/AP_14089154938208861744/AP_14089154938208861744_rules.json',
+          path: './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json',
           enabled: true,
         },
         layoutConfig: { path: './layout_presets.json', enabled: true },

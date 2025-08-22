@@ -47,7 +47,7 @@ The available modes are defined in `frontend/modes.json`. Common modes include:
 
 **Examples:**
 - `?rules=./presets/adventure/rules.json` - Load Adventure game rules
-- `?rules=./presets/a_link_to_the_past/AP_12345/rules.json` - Load specific ALTTP spoiler
+- `?rules=./presets/alttp/AP_12345/rules.json` - Load specific ALTTP spoiler
 - `?mode=test-spoilers&rules=./presets/adventure/rules.json` - Run spoiler tests with Adventure rules
 
 **Details:**

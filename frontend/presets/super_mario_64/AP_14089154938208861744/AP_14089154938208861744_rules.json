@@ -35,40 +35,15 @@
             "name": "Menu -> Whomp's Fortress",
             "connected_region": "Whomp's Fortress",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "randomized_entrances_s"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "Whomp's Fortress"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             },
             "type": "Exit"
           },
@@ -76,40 +51,15 @@
             "name": "Menu -> Jolly Roger Bay",
             "connected_region": "Jolly Roger Bay",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "randomized_entrances_s"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "Jolly Roger Bay"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             },
             "type": "Exit"
           },
@@ -117,40 +67,15 @@
             "name": "Menu -> Cool, Cool Mountain",
             "connected_region": "Cool, Cool Mountain",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "randomized_entrances_s"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "Cool, Cool Mountain"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             },
             "type": "Exit"
           },
@@ -158,40 +83,15 @@
             "name": "Menu -> Big Boo's Haunt",
             "connected_region": "Big Boo's Haunt",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "randomized_entrances_s"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "Big Boo's Haunt"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 12
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 12
+              }
             },
             "type": "Exit"
           },
@@ -199,40 +99,15 @@
             "name": "Menu -> The Princess's Secret Slide",
             "connected_region": "The Princess's Secret Slide",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "randomized_entrances_s"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "The Princess's Secret Slide"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             },
             "type": "Exit"
           },
@@ -240,40 +115,15 @@
             "name": "Menu -> Tower of the Wing Cap",
             "connected_region": "Tower of the Wing Cap",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "randomized_entrances_s"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "Tower of the Wing Cap"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 10
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 10
+              }
             },
             "type": "Exit"
           },
@@ -293,43 +143,25 @@
             "name": "Menu -> Basement",
             "connected_region": "Basement",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "name",
-                  "name": "world"
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Basement Key"
+                  }
                 },
                 {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "constant",
-                  "value": "Basement"
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": {
-                        "type": "constant",
-                        "value": "Basement Key"
-                      }
-                    },
-                    {
-                      "type": "item_check",
-                      "item": {
-                        "type": "constant",
-                        "value": "Progressive Key"
-                      },
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Progressive Key"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
                 }
               ]
             },
@@ -339,43 +171,25 @@
             "name": "Menu -> Second Floor",
             "connected_region": "Second Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "name",
-                  "name": "world"
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Second Floor Key"
+                  }
                 },
                 {
-                  "type": "constant",
-                  "value": "Menu"
-                },
-                {
-                  "type": "constant",
-                  "value": "Second Floor"
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": {
-                        "type": "constant",
-                        "value": "Second Floor Key"
-                      }
-                    },
-                    {
-                      "type": "item_check",
-                      "item": {
-                        "type": "constant",
-                        "value": "Progressive Key"
-                      },
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Progressive Key"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
               ]
             },
@@ -3143,29 +2957,11 @@
             "name": "Second Floor -> Third Floor",
             "connected_region": "Third Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Second Floor"
-                },
-                {
-                  "type": "constant",
-                  "value": "Third Floor"
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              }
             },
             "type": "Exit"
           }
@@ -4214,29 +4010,11 @@
             "name": "Third Floor -> Bowser in the Sky",
             "connected_region": "Bowser in the Sky",
             "access_rule": {
-              "type": "helper",
-              "name": "connect_regions",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
-                  "type": "constant",
-                  "value": "Third Floor"
-                },
-                {
-                  "type": "constant",
-                  "value": "Bowser in the Sky"
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Power Star"
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Power Star"
+              }
             },
             "type": "Exit"
           }

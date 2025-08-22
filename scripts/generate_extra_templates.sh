@@ -1,0 +1,18 @@
+#!/bin/bash
+
+python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 2
+python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 3
+python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 2
+python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 3
+python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 2
+python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 3
+python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 2
+python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 3
+
+python Generate.py --player_files_path "Players/presets/Multiworld" --seed 1
+python Generate.py --player_files_path "Players/presets/Multiworld" --seed 2
+python Generate.py --player_files_path "Players/presets/Multiworld" --seed 3

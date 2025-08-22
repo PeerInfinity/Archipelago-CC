@@ -1,5 +1,5 @@
 {
-  "a_link_to_the_past": {
+  "alttp": {
     "name": "A Link to the Past",
     "folders": {
       "AP_14089154938208861744": {
@@ -60,149 +60,11 @@
       "progress_percent": 37.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-08-21T08:56:13.418181",
+      "timestamp": "2025-08-22T09:56:43.549000",
       "processing_time": {
-        "generation_seconds": 2.64,
-        "spoiler_test_seconds": 8.98,
-        "total_seconds": 11.620000000000001
-      }
-    }
-  },
-  "a_hat_in_time": {
-    "name": "A Hat in Time",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Hat in Time"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      },
-      "AP_01043188731678011336": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Hat in Time"
-          }
-        ],
-        "files": [
-          "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json",
-          "AP_01043188731678011336_spheres_log.jsonl"
-        ]
-      },
-      "AP_84719271504320872445": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Hat in Time"
-          }
-        ],
-        "files": [
-          "AP_84719271504320872445.archipelago",
-          "AP_84719271504320872445_Spoiler.txt",
-          "AP_84719271504320872445_rules.json",
-          "AP_84719271504320872445_spheres_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 0,
-      "generation_warnings": 1,
-      "sphere_reached": 0.0,
-      "max_spheres": 5.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": true,
-      "has_custom_game_logic": true,
-      "timestamp": "2025-08-21T08:56:00.297351",
-      "processing_time": {
-        "generation_seconds": 2.19,
-        "spoiler_test_seconds": 10.77,
-        "total_seconds": 12.959999999999999
-      }
-    }
-  },
-  "a_short_hike": {
-    "name": "A Short Hike",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Short Hike"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      },
-      "AP_01043188731678011336": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Short Hike"
-          }
-        ],
-        "files": [
-          "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json",
-          "AP_01043188731678011336_spheres_log.jsonl"
-        ]
-      },
-      "AP_84719271504320872445": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Short Hike"
-          }
-        ],
-        "files": [
-          "AP_84719271504320872445.archipelago",
-          "AP_84719271504320872445_Spoiler.txt",
-          "AP_84719271504320872445_rules.json",
-          "AP_84719271504320872445_spheres_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "passed",
-      "generation_errors": 0,
-      "generation_warnings": 1,
-      "sphere_reached": 1.5,
-      "max_spheres": 1.5,
-      "progress_percent": 100.0,
-      "has_custom_exporter": true,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:56:25.176655",
-      "processing_time": {
-        "generation_seconds": 1.85,
-        "spoiler_test_seconds": 7.59,
-        "total_seconds": 9.44
+        "generation_seconds": 13.11,
+        "spoiler_test_seconds": 9.55,
+        "total_seconds": 22.66
       }
     }
   },
@@ -270,11 +132,149 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:56:34.752066",
+      "timestamp": "2025-08-22T09:57:18.030827",
       "processing_time": {
-        "generation_seconds": 1.99,
-        "spoiler_test_seconds": 10.23,
-        "total_seconds": 12.22
+        "generation_seconds": 2.39,
+        "spoiler_test_seconds": 7.68,
+        "total_seconds": 10.07
+      }
+    }
+  },
+  "shorthike": {
+    "name": "A Short Hike",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Short Hike"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Short Hike"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
+        ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Short Hike"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "passed",
+      "generation_errors": 0,
+      "generation_warnings": 1,
+      "sphere_reached": 1.5,
+      "max_spheres": 1.5,
+      "progress_percent": 100.0,
+      "has_custom_exporter": true,
+      "has_custom_game_logic": false,
+      "timestamp": "2025-08-22T09:57:06.365290",
+      "processing_time": {
+        "generation_seconds": 3.73,
+        "spoiler_test_seconds": 7.79,
+        "total_seconds": 11.52
+      }
+    }
+  },
+  "ahit": {
+    "name": "A Hat in Time",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Hat in Time"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Hat in Time"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
+        ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Hat in Time"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "failed",
+      "generation_errors": 0,
+      "generation_warnings": 1,
+      "sphere_reached": 0.0,
+      "max_spheres": 5.1,
+      "progress_percent": 0.0,
+      "has_custom_exporter": true,
+      "has_custom_game_logic": true,
+      "timestamp": "2025-08-22T09:56:27.022584",
+      "processing_time": {
+        "generation_seconds": 8.14,
+        "spoiler_test_seconds": 8.2,
+        "total_seconds": 16.34
       }
     }
   },
@@ -287,7 +287,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "A Link to the Past"
+            "game": "A Short Hike"
           },
           {
             "player": 2,
@@ -301,7 +301,8 @@
           "AP_14089154938208861744_P2_Player2.apadvn",
           "AP_14089154938208861744_P2_rules.json",
           "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json"
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
         ]
       },
       "AP_01043188731678011336": {
@@ -310,7 +311,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "A Link to the Past"
+            "game": "A Short Hike"
           },
           {
             "player": 2,
@@ -324,7 +325,8 @@
           "AP_01043188731678011336_P2_Player2.apadvn",
           "AP_01043188731678011336_P2_rules.json",
           "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json"
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
         ]
       },
       "AP_84719271504320872445": {
@@ -333,7 +335,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "A Link to the Past"
+            "game": "A Short Hike"
           },
           {
             "player": 2,
@@ -347,7 +349,8 @@
           "AP_84719271504320872445_P2_Player2.apadvn",
           "AP_84719271504320872445_P2_rules.json",
           "AP_84719271504320872445_Spoiler.txt",
-          "AP_84719271504320872445_rules.json"
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
         ]
       }
     }
@@ -374,18 +377,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 50,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.1,
       "max_spheres": 5.1,
-      "progress_percent": 0.0,
+      "progress_percent": 2.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:56:47.099792",
+      "timestamp": "2025-08-22T09:57:28.243424",
       "processing_time": {
-        "generation_seconds": 2.16,
-        "spoiler_test_seconds": 7.7,
-        "total_seconds": 9.86
+        "generation_seconds": 8.56,
+        "spoiler_test_seconds": 8.03,
+        "total_seconds": 16.59
       }
     }
   },
@@ -418,11 +421,11 @@
       "progress_percent": 12.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:56:57.089975",
+      "timestamp": "2025-08-22T09:57:44.982417",
       "processing_time": {
-        "generation_seconds": 1.95,
-        "spoiler_test_seconds": 7.67,
-        "total_seconds": 9.62
+        "generation_seconds": 3.96,
+        "spoiler_test_seconds": 7.94,
+        "total_seconds": 11.9
       }
     }
   },
@@ -448,18 +451,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 184,
+      "generation_errors": 0,
       "generation_warnings": 1,
       "sphere_reached": 0.1,
       "max_spheres": 5.1,
       "progress_percent": 2.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:57:06.844220",
+      "timestamp": "2025-08-22T09:57:57.029544",
       "processing_time": {
-        "generation_seconds": 4.58,
-        "spoiler_test_seconds": 17.41,
-        "total_seconds": 21.990000000000002
+        "generation_seconds": 21.61,
+        "spoiler_test_seconds": 15.29,
+        "total_seconds": 36.9
       }
     }
   },
@@ -492,15 +495,15 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:57:28.996006",
+      "timestamp": "2025-08-22T09:58:34.102886",
       "processing_time": {
-        "generation_seconds": 2.79,
-        "spoiler_test_seconds": 8.07,
-        "total_seconds": 10.86
+        "generation_seconds": 7.19,
+        "spoiler_test_seconds": 7.96,
+        "total_seconds": 15.15
       }
     }
   },
-  "bumper_stickers": {
+  "bumpstik": {
     "name": "Bumper Stickers",
     "folders": {
       "AP_14089154938208861744": {
@@ -522,22 +525,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 16,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.1,
       "max_spheres": 8.1,
-      "progress_percent": 0.0,
+      "progress_percent": 1.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:57:39.992445",
+      "timestamp": "2025-08-22T09:58:49.410905",
       "processing_time": {
-        "generation_seconds": 1.92,
-        "spoiler_test_seconds": 10.11,
-        "total_seconds": 12.03
+        "generation_seconds": 3.42,
+        "spoiler_test_seconds": 7.81,
+        "total_seconds": 11.23
       }
     }
   },
-  "castlevania_-_circle_of_the_moon": {
+  "cvcotm": {
     "name": "Castlevania - Circle of the Moon",
     "folders": {
       "AP_14089154938208861744": {
@@ -560,22 +563,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 77,
+      "generation_errors": 1,
       "generation_warnings": 1,
-      "sphere_reached": 0,
-      "max_spheres": 0,
+      "sphere_reached": 0.0,
+      "max_spheres": 3.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:57:52.165440",
+      "timestamp": "2025-08-22T09:59:00.803326",
       "processing_time": {
-        "generation_seconds": 1.92,
-        "spoiler_test_seconds": 0,
-        "total_seconds": 1.92
+        "generation_seconds": 3.96,
+        "spoiler_test_seconds": 7.87,
+        "total_seconds": 11.83
       }
     }
   },
-  "castlevania_64": {
+  "cv64": {
     "name": "Castlevania 64",
     "folders": {
       "AP_14089154938208861744": {
@@ -598,22 +601,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 80,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.1,
       "max_spheres": 4.1,
-      "progress_percent": 0.0,
+      "progress_percent": 2.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:57:54.099877",
+      "timestamp": "2025-08-22T09:59:12.798935",
       "processing_time": {
-        "generation_seconds": 2.13,
-        "spoiler_test_seconds": 12.75,
-        "total_seconds": 14.879999999999999
+        "generation_seconds": 6.15,
+        "spoiler_test_seconds": 8.05,
+        "total_seconds": 14.200000000000001
       }
     }
   },
-  "celeste_64": {
+  "celeste64": {
     "name": "Celeste 64",
     "folders": {
       "AP_14089154938208861744": {
@@ -642,11 +645,11 @@
       "progress_percent": 1.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:58:09.121778",
+      "timestamp": "2025-08-22T09:59:27.157730",
       "processing_time": {
-        "generation_seconds": 1.86,
-        "spoiler_test_seconds": 7.67,
-        "total_seconds": 9.53
+        "generation_seconds": 2.54,
+        "spoiler_test_seconds": 7.82,
+        "total_seconds": 10.36
       }
     }
   },
@@ -679,15 +682,15 @@
       "progress_percent": 2.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:58:18.783861",
+      "timestamp": "2025-08-22T09:59:37.666616",
       "processing_time": {
-        "generation_seconds": 1.87,
-        "spoiler_test_seconds": 9.88,
-        "total_seconds": 11.75
+        "generation_seconds": 2.19,
+        "spoiler_test_seconds": 7.83,
+        "total_seconds": 10.02
       }
     }
   },
-  "civilization_vi": {
+  "civ_6": {
     "name": "Civilization VI",
     "folders": {
       "AP_14089154938208861744": {
@@ -717,11 +720,11 @@
       "progress_percent": 1.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:58:30.669692",
+      "timestamp": "2025-08-22T09:59:47.834809",
       "processing_time": {
-        "generation_seconds": 1.94,
-        "spoiler_test_seconds": 7.64,
-        "total_seconds": 9.58
+        "generation_seconds": 4.4,
+        "spoiler_test_seconds": 7.84,
+        "total_seconds": 12.24
       }
     }
   },
@@ -754,11 +757,11 @@
       "progress_percent": 1.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:58:40.388159",
+      "timestamp": "2025-08-22T10:00:00.234587",
       "processing_time": {
-        "generation_seconds": 2.02,
-        "spoiler_test_seconds": 7.64,
-        "total_seconds": 9.66
+        "generation_seconds": 2.85,
+        "spoiler_test_seconds": 7.79,
+        "total_seconds": 10.64
       }
     }
   },
@@ -791,11 +794,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T08:58:50.185846",
+      "timestamp": "2025-08-22T10:00:11.034641",
       "processing_time": {
-        "generation_seconds": 2.17,
-        "spoiler_test_seconds": 48.89,
-        "total_seconds": 51.06
+        "generation_seconds": 8.95,
+        "spoiler_test_seconds": 48.19,
+        "total_seconds": 57.14
       }
     }
   },
@@ -828,15 +831,15 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T11:51:28.163779",
+      "timestamp": "2025-08-22T10:01:08.318248",
       "processing_time": {
-        "generation_seconds": 2.44,
-        "spoiler_test_seconds": 107.25,
-        "total_seconds": 109.69
+        "generation_seconds": 11.37,
+        "spoiler_test_seconds": 105.43,
+        "total_seconds": 116.80000000000001
       }
     }
   },
-  "dark_souls_iii": {
+  "dark_souls_3": {
     "name": "Dark Souls III",
     "folders": {
       "AP_14089154938208861744": {
@@ -858,18 +861,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 240,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.1,
       "max_spheres": 3.3,
-      "progress_percent": 0.0,
+      "progress_percent": 3.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:02:02.662547",
+      "timestamp": "2025-08-22T10:03:05.270081",
       "processing_time": {
-        "generation_seconds": 3.17,
-        "spoiler_test_seconds": 10.11,
-        "total_seconds": 13.28
+        "generation_seconds": 21.37,
+        "spoiler_test_seconds": 9.61,
+        "total_seconds": 30.98
       }
     }
   },
@@ -902,11 +905,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:02:16.119398",
+      "timestamp": "2025-08-22T10:03:36.407640",
       "processing_time": {
-        "generation_seconds": 2.46,
-        "spoiler_test_seconds": 8.84,
-        "total_seconds": 11.3
+        "generation_seconds": 6.43,
+        "spoiler_test_seconds": 7.84,
+        "total_seconds": 14.27
       }
     }
   },
@@ -940,11 +943,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:02:27.565655",
+      "timestamp": "2025-08-22T10:03:50.839247",
       "processing_time": {
-        "generation_seconds": 2.09,
-        "spoiler_test_seconds": 7.96,
-        "total_seconds": 10.05
+        "generation_seconds": 4.12,
+        "spoiler_test_seconds": 8.21,
+        "total_seconds": 12.330000000000002
       }
     }
   },
@@ -977,15 +980,15 @@
       "progress_percent": 1.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:02:37.756736",
+      "timestamp": "2025-08-22T10:04:03.323167",
       "processing_time": {
-        "generation_seconds": 1.96,
-        "spoiler_test_seconds": 7.66,
-        "total_seconds": 9.620000000000001
+        "generation_seconds": 3.56,
+        "spoiler_test_seconds": 7.84,
+        "total_seconds": 11.4
       }
     }
   },
-  "final_fantasy_mystic_quest": {
+  "ffmq": {
     "name": "Final Fantasy Mystic Quest",
     "folders": {
       "AP_14089154938208861744": {
@@ -1015,15 +1018,15 @@
       "progress_percent": 0.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:02:47.531865",
+      "timestamp": "2025-08-22T10:04:14.898978",
       "processing_time": {
-        "generation_seconds": 2.6,
-        "spoiler_test_seconds": 9.23,
-        "total_seconds": 11.83
+        "generation_seconds": 11.79,
+        "spoiler_test_seconds": 8.15,
+        "total_seconds": 19.939999999999998
       }
     }
   },
-  "final_fantasy": {
+  "ff1": {
     "name": "Final Fantasy",
     "folders": {
       "AP_14089154938208861744": {
@@ -1052,11 +1055,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:02:59.502318",
+      "timestamp": "2025-08-22T10:04:34.981037",
       "processing_time": {
-        "generation_seconds": 2.03,
-        "spoiler_test_seconds": 7.69,
-        "total_seconds": 9.72
+        "generation_seconds": 1.96,
+        "spoiler_test_seconds": 7.76,
+        "total_seconds": 9.719999999999999
       }
     }
   },
@@ -1089,15 +1092,15 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:03:09.349174",
+      "timestamp": "2025-08-22T10:04:44.841130",
       "processing_time": {
-        "generation_seconds": 2.26,
-        "spoiler_test_seconds": 106.44,
-        "total_seconds": 108.7
+        "generation_seconds": 12.29,
+        "spoiler_test_seconds": 105.78,
+        "total_seconds": 118.07
       }
     }
   },
-  "hollow_knight": {
+  "hk": {
     "name": "Hollow Knight",
     "folders": {
       "AP_14089154938208861744": {
@@ -1119,18 +1122,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 60,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.1,
+      "sphere_reached": 0.3,
       "max_spheres": 87.1,
-      "progress_percent": 0.1,
+      "progress_percent": 0.3,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:04:58.242560",
+      "timestamp": "2025-08-22T10:06:43.081670",
       "processing_time": {
-        "generation_seconds": 10.24,
-        "spoiler_test_seconds": 13.99,
-        "total_seconds": 24.23
+        "generation_seconds": 29.73,
+        "spoiler_test_seconds": 12.87,
+        "total_seconds": 42.6
       }
     }
   },
@@ -1163,11 +1166,11 @@
       "progress_percent": 2.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:05:22.657750",
+      "timestamp": "2025-08-22T10:07:25.864438",
       "processing_time": {
-        "generation_seconds": 2.07,
-        "spoiler_test_seconds": 7.78,
-        "total_seconds": 9.85
+        "generation_seconds": 4.34,
+        "spoiler_test_seconds": 7.8,
+        "total_seconds": 12.14
       }
     }
   },
@@ -1200,11 +1203,11 @@
       "progress_percent": 25.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:05:32.646808",
+      "timestamp": "2025-08-22T10:07:38.159717",
       "processing_time": {
-        "generation_seconds": 1.89,
-        "spoiler_test_seconds": 8.05,
-        "total_seconds": 9.940000000000001
+        "generation_seconds": 3.29,
+        "spoiler_test_seconds": 8.19,
+        "total_seconds": 11.48
       }
     }
   },
@@ -1237,15 +1240,15 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:05:42.736701",
+      "timestamp": "2025-08-22T10:07:49.809105",
       "processing_time": {
-        "generation_seconds": 3.17,
+        "generation_seconds": 7.68,
         "spoiler_test_seconds": 0,
-        "total_seconds": 3.17
+        "total_seconds": 7.68
       }
     }
   },
-  "kingdom_hearts_2": {
+  "kh2": {
     "name": "Kingdom Hearts 2",
     "folders": {
       "AP_14089154938208861744": {
@@ -1268,22 +1271,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 498,
+      "generation_errors": 0,
       "generation_warnings": 1,
       "sphere_reached": 0.1,
       "max_spheres": 12.1,
       "progress_percent": 0.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:05:45.918906",
+      "timestamp": "2025-08-22T10:07:57.512997",
       "processing_time": {
-        "generation_seconds": 3.02,
-        "spoiler_test_seconds": 94.28,
-        "total_seconds": 97.3
+        "generation_seconds": 14.7,
+        "spoiler_test_seconds": 8.3,
+        "total_seconds": 23.0
       }
     }
   },
-  "kingdom_hearts": {
+  "kh1": {
     "name": "Kingdom Hearts",
     "folders": {
       "AP_14089154938208861744": {
@@ -1312,15 +1315,15 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:07:23.388037",
+      "timestamp": "2025-08-22T10:08:20.673320",
       "processing_time": {
-        "generation_seconds": 2.52,
-        "spoiler_test_seconds": 7.9,
-        "total_seconds": 10.42
+        "generation_seconds": 8.27,
+        "spoiler_test_seconds": 8.17,
+        "total_seconds": 16.439999999999998
       }
     }
   },
-  "kirby's_dream_land_3": {
+  "kdl3": {
     "name": "Kirby's Dream Land 3",
     "folders": {
       "AP_14089154938208861744": {
@@ -1345,20 +1348,20 @@
       "status": "failed",
       "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0,
-      "max_spheres": 0,
+      "sphere_reached": 0.0,
+      "max_spheres": 11.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:07:33.964573",
+      "timestamp": "2025-08-22T10:08:37.284375",
       "processing_time": {
-        "generation_seconds": 2.65,
-        "spoiler_test_seconds": 0,
-        "total_seconds": 2.65
+        "generation_seconds": 12.54,
+        "spoiler_test_seconds": 9.52,
+        "total_seconds": 22.06
       }
     }
   },
-  "landstalker_-_the_treasures_of_king_nole": {
+  "landstalker": {
     "name": "Landstalker - The Treasures of King Nole",
     "folders": {
       "AP_14089154938208861744": {
@@ -1382,16 +1385,16 @@
       "status": "failed",
       "generation_errors": 49,
       "generation_warnings": 1,
-      "sphere_reached": 0,
-      "max_spheres": 0,
-      "progress_percent": 0.0,
+      "sphere_reached": 0.1,
+      "max_spheres": 9.1,
+      "progress_percent": 1.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:07:36.622893",
+      "timestamp": "2025-08-22T10:08:59.506790",
       "processing_time": {
-        "generation_seconds": 2.08,
-        "spoiler_test_seconds": 0,
-        "total_seconds": 2.08
+        "generation_seconds": 7.93,
+        "spoiler_test_seconds": 8.02,
+        "total_seconds": 15.95
       }
     }
   },
@@ -1424,11 +1427,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:07:38.720281",
+      "timestamp": "2025-08-22T10:09:15.613796",
       "processing_time": {
-        "generation_seconds": 2.35,
-        "spoiler_test_seconds": 8.92,
-        "total_seconds": 11.27
+        "generation_seconds": 3.99,
+        "spoiler_test_seconds": 9.04,
+        "total_seconds": 13.03
       }
     }
   },
@@ -1462,15 +1465,15 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:07:50.155151",
+      "timestamp": "2025-08-22T10:09:28.809154",
       "processing_time": {
-        "generation_seconds": 3.03,
-        "spoiler_test_seconds": 8.73,
-        "total_seconds": 11.76
+        "generation_seconds": 7.53,
+        "spoiler_test_seconds": 7.96,
+        "total_seconds": 15.49
       }
     }
   },
-  "lufia_ii_ancient_cave": {
+  "lufia2ac": {
     "name": "Lufia II Ancient Cave",
     "folders": {
       "AP_14089154938208861744": {
@@ -1492,22 +1495,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 35,
+      "generation_errors": 0,
       "generation_warnings": 3,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.1,
       "max_spheres": 4.1,
-      "progress_percent": 0.0,
+      "progress_percent": 2.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:08:02.074217",
+      "timestamp": "2025-08-22T10:09:44.463994",
       "processing_time": {
-        "generation_seconds": 1.99,
-        "spoiler_test_seconds": 7.8,
-        "total_seconds": 9.79
+        "generation_seconds": 2.53,
+        "spoiler_test_seconds": 7.93,
+        "total_seconds": 10.459999999999999
       }
     }
   },
-  "mario_&_luigi_superstar_saga": {
+  "mlss": {
     "name": "Mario & Luigi Superstar Saga",
     "folders": {
       "AP_14089154938208861744": {
@@ -1532,20 +1535,20 @@
       "status": "failed",
       "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0,
-      "max_spheres": 0,
-      "progress_percent": 0.0,
+      "sphere_reached": 0.1,
+      "max_spheres": 7.1,
+      "progress_percent": 1.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:08:12.028547",
+      "timestamp": "2025-08-22T10:09:55.084285",
       "processing_time": {
-        "generation_seconds": 2.36,
-        "spoiler_test_seconds": 0,
-        "total_seconds": 2.36
+        "generation_seconds": 8.13,
+        "spoiler_test_seconds": 8.55,
+        "total_seconds": 16.68
       }
     }
   },
-  "mega_man_2": {
+  "mm2": {
     "name": "Mega Man 2",
     "folders": {
       "AP_14089154938208861744": {
@@ -1575,15 +1578,15 @@
       "progress_percent": 1.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:08:14.402192",
+      "timestamp": "2025-08-22T10:10:11.912971",
       "processing_time": {
-        "generation_seconds": 1.94,
-        "spoiler_test_seconds": 7.6,
-        "total_seconds": 9.54
+        "generation_seconds": 2.79,
+        "spoiler_test_seconds": 7.83,
+        "total_seconds": 10.620000000000001
       }
     }
   },
-  "megaman_battle_network_3": {
+  "mmbn3": {
     "name": "MegaMan Battle Network 3",
     "folders": {
       "AP_14089154938208861744": {
@@ -1605,18 +1608,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 82,
+      "generation_errors": 0,
       "generation_warnings": 3,
       "sphere_reached": 0.2,
       "max_spheres": 5.1,
       "progress_percent": 3.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:08:24.094357",
+      "timestamp": "2025-08-22T10:10:22.686948",
       "processing_time": {
-        "generation_seconds": 2.0,
-        "spoiler_test_seconds": 8.78,
-        "total_seconds": 10.78
+        "generation_seconds": 6.17,
+        "spoiler_test_seconds": 8.49,
+        "total_seconds": 14.66
       }
     }
   },
@@ -1642,22 +1645,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 32,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 1.1,
       "max_spheres": 7.1,
-      "progress_percent": 0.0,
+      "progress_percent": 15.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:08:35.010084",
+      "timestamp": "2025-08-22T10:10:37.510658",
       "processing_time": {
-        "generation_seconds": 2.01,
-        "spoiler_test_seconds": 8.68,
-        "total_seconds": 10.69
+        "generation_seconds": 3.88,
+        "spoiler_test_seconds": 7.8,
+        "total_seconds": 11.68
       }
     }
   },
-  "muse_dash": {
+  "musedash": {
     "name": "Muse Dash",
     "folders": {
       "AP_14089154938208861744": {
@@ -1686,11 +1689,11 @@
       "progress_percent": 2.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:08:45.846953",
+      "timestamp": "2025-08-22T10:10:49.338695",
       "processing_time": {
-        "generation_seconds": 2.06,
-        "spoiler_test_seconds": 7.97,
-        "total_seconds": 10.03
+        "generation_seconds": 2.99,
+        "spoiler_test_seconds": 8.14,
+        "total_seconds": 11.13
       }
     }
   },
@@ -1723,11 +1726,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:08:56.030705",
+      "timestamp": "2025-08-22T10:11:00.625583",
       "processing_time": {
-        "generation_seconds": 1.97,
-        "spoiler_test_seconds": 8.27,
-        "total_seconds": 10.24
+        "generation_seconds": 4.8,
+        "spoiler_test_seconds": 7.83,
+        "total_seconds": 12.629999999999999
       }
     }
   },
@@ -1753,22 +1756,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 5642,
+      "generation_errors": 3118,
       "generation_warnings": 3,
       "sphere_reached": 0.1,
       "max_spheres": 22.1,
       "progress_percent": 0.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:09:06.452201",
+      "timestamp": "2025-08-22T10:11:13.461256",
       "processing_time": {
-        "generation_seconds": 5.83,
-        "spoiler_test_seconds": 81.6,
-        "total_seconds": 87.42999999999999
+        "generation_seconds": 16.87,
+        "spoiler_test_seconds": 80.74,
+        "total_seconds": 97.61
       }
     }
   },
-  "old_school_runescape": {
+  "osrs": {
     "name": "Old School Runescape",
     "folders": {
       "AP_14089154938208861744": {
@@ -1797,15 +1800,15 @@
       "progress_percent": 1.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:10:34.063008",
+      "timestamp": "2025-08-22T10:12:51.245490",
       "processing_time": {
-        "generation_seconds": 2.38,
-        "spoiler_test_seconds": 8.68,
-        "total_seconds": 11.059999999999999
+        "generation_seconds": 7.75,
+        "spoiler_test_seconds": 8.21,
+        "total_seconds": 15.96
       }
     }
   },
-  "overcooked!_2": {
+  "overcooked2": {
     "name": "Overcooked! 2",
     "folders": {
       "AP_14089154938208861744": {
@@ -1827,18 +1830,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 645,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0,
-      "max_spheres": 0,
+      "sphere_reached": 0.0,
+      "max_spheres": 17.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:10:45.266802",
+      "timestamp": "2025-08-22T10:13:07.370674",
       "processing_time": {
-        "generation_seconds": 2.27,
-        "spoiler_test_seconds": 0,
-        "total_seconds": 2.27
+        "generation_seconds": 4.99,
+        "spoiler_test_seconds": 7.86,
+        "total_seconds": 12.850000000000001
       }
     }
   },
@@ -1871,11 +1874,11 @@
       "progress_percent": 0.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:10:47.545159",
+      "timestamp": "2025-08-22T10:13:20.378886",
       "processing_time": {
-        "generation_seconds": 2.1,
-        "spoiler_test_seconds": 7.66,
-        "total_seconds": 9.76
+        "generation_seconds": 3.31,
+        "spoiler_test_seconds": 7.79,
+        "total_seconds": 11.1
       }
     }
   },
@@ -1902,22 +1905,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 162,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 3.1,
+      "sphere_reached": 4.1,
       "max_spheres": 15.1,
-      "progress_percent": 20.5,
+      "progress_percent": 27.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:10:57.468942",
+      "timestamp": "2025-08-22T10:13:31.643720",
       "processing_time": {
-        "generation_seconds": 4.37,
-        "spoiler_test_seconds": 8.63,
-        "total_seconds": 13.0
+        "generation_seconds": 43.37,
+        "spoiler_test_seconds": 8.67,
+        "total_seconds": 52.04
       }
     }
   },
-  "pokemon_red_and_blue": {
+  "pokemon_rb": {
     "name": "Pokemon Red and Blue",
     "folders": {
       "AP_14089154938208861744": {
@@ -1940,18 +1943,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 958,
+      "generation_errors": 646,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 1.3,
       "max_spheres": 10.1,
-      "progress_percent": 0.0,
+      "progress_percent": 12.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:11:10.634058",
+      "timestamp": "2025-08-22T10:14:23.860558",
       "processing_time": {
-        "generation_seconds": 5.26,
-        "spoiler_test_seconds": 8.47,
-        "total_seconds": 13.73
+        "generation_seconds": 83.84,
+        "spoiler_test_seconds": 11.32,
+        "total_seconds": 95.16
       }
     }
   },
@@ -1977,22 +1980,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 228,
+      "generation_errors": 0,
       "generation_warnings": 1,
       "sphere_reached": 0.0,
       "max_spheres": 10.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:11:24.503612",
+      "timestamp": "2025-08-22T10:15:59.186658",
       "processing_time": {
-        "generation_seconds": 2.02,
-        "spoiler_test_seconds": 7.95,
-        "total_seconds": 9.97
+        "generation_seconds": 3.71,
+        "spoiler_test_seconds": 7.94,
+        "total_seconds": 11.65
       }
     }
   },
-  "risk_of_rain_2": {
+  "ror2": {
     "name": "Risk of Rain 2",
     "folders": {
       "AP_14089154938208861744": {
@@ -2021,11 +2024,11 @@
       "progress_percent": 1.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:11:34.620812",
+      "timestamp": "2025-08-22T10:16:11.005067",
       "processing_time": {
-        "generation_seconds": 2.02,
+        "generation_seconds": 4.41,
         "spoiler_test_seconds": 7.92,
-        "total_seconds": 9.94
+        "total_seconds": 12.33
       }
     }
   },
@@ -2059,11 +2062,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:11:44.719335",
+      "timestamp": "2025-08-22T10:16:23.491966",
       "processing_time": {
-        "generation_seconds": 3.31,
-        "spoiler_test_seconds": 9.26,
-        "total_seconds": 12.57
+        "generation_seconds": 4.12,
+        "spoiler_test_seconds": 9.38,
+        "total_seconds": 13.5
       }
     }
   },
@@ -2096,11 +2099,11 @@
       "progress_percent": 2.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:11:57.430547",
+      "timestamp": "2025-08-22T10:16:37.164479",
       "processing_time": {
-        "generation_seconds": 1.87,
-        "spoiler_test_seconds": 7.66,
-        "total_seconds": 9.530000000000001
+        "generation_seconds": 2.69,
+        "spoiler_test_seconds": 7.84,
+        "total_seconds": 10.53
       }
     }
   },
@@ -2133,48 +2136,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:12:07.113245",
+      "timestamp": "2025-08-22T10:16:47.866228",
       "processing_time": {
-        "generation_seconds": 2.19,
-        "spoiler_test_seconds": 8.69,
-        "total_seconds": 10.879999999999999
-      }
-    }
-  },
-  "shapez": {
-    "name": "shapez",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "shapez"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 4,
-      "generation_warnings": 1,
-      "sphere_reached": 0.1,
-      "max_spheres": 5.1,
-      "progress_percent": 2.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:16:40.006511",
-      "processing_time": {
-        "generation_seconds": 2.78,
-        "spoiler_test_seconds": 7.87,
-        "total_seconds": 10.65
+        "generation_seconds": 6.06,
+        "spoiler_test_seconds": 8.88,
+        "total_seconds": 14.940000000000001
       }
     }
   },
@@ -2200,18 +2166,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 250,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.5,
       "max_spheres": 17.1,
-      "progress_percent": 0.0,
+      "progress_percent": 2.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:12:18.144066",
+      "timestamp": "2025-08-22T10:17:02.970857",
       "processing_time": {
-        "generation_seconds": 2.89,
-        "spoiler_test_seconds": 10.91,
-        "total_seconds": 13.8
+        "generation_seconds": 5.0,
+        "spoiler_test_seconds": 7.9,
+        "total_seconds": 12.9
       }
     }
   },
@@ -2244,15 +2210,15 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:12:32.112600",
+      "timestamp": "2025-08-22T10:17:16.054622",
       "processing_time": {
-        "generation_seconds": 2.3,
-        "spoiler_test_seconds": 7.86,
-        "total_seconds": 10.16
+        "generation_seconds": 5.79,
+        "spoiler_test_seconds": 7.89,
+        "total_seconds": 13.68
       }
     }
   },
-  "starcraft_2": {
+  "sc2": {
     "name": "Starcraft 2",
     "folders": {
       "AP_14089154938208861744": {
@@ -2274,18 +2240,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 36,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.3,
       "max_spheres": 37.1,
-      "progress_percent": 0.0,
+      "progress_percent": 0.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:12:42.446039",
+      "timestamp": "2025-08-22T10:17:29.908524",
       "processing_time": {
-        "generation_seconds": 3.07,
-        "spoiler_test_seconds": 9.49,
-        "total_seconds": 12.56
+        "generation_seconds": 14.4,
+        "spoiler_test_seconds": 9.59,
+        "total_seconds": 23.990000000000002
       }
     }
   },
@@ -2311,18 +2277,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 1436,
+      "generation_errors": 718,
       "generation_warnings": 1,
       "sphere_reached": 0.1,
       "max_spheres": 39.1,
       "progress_percent": 0.3,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:12:55.159970",
+      "timestamp": "2025-08-22T10:17:54.073941",
       "processing_time": {
-        "generation_seconds": 4.52,
-        "spoiler_test_seconds": 29.14,
-        "total_seconds": 33.66
+        "generation_seconds": 10.77,
+        "spoiler_test_seconds": 28.88,
+        "total_seconds": 39.65
       }
     }
   },
@@ -2348,18 +2314,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 28,
+      "generation_errors": 1,
       "generation_warnings": 1,
       "sphere_reached": 0.0,
       "max_spheres": 6.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:13:28.970542",
+      "timestamp": "2025-08-22T10:18:33.884295",
       "processing_time": {
-        "generation_seconds": 1.99,
+        "generation_seconds": 3.46,
         "spoiler_test_seconds": 8.03,
-        "total_seconds": 10.02
+        "total_seconds": 11.489999999999998
       }
     }
   },
@@ -2393,15 +2359,15 @@
       "progress_percent": 4.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:13:39.148351",
+      "timestamp": "2025-08-22T10:18:45.558748",
       "processing_time": {
-        "generation_seconds": 2.13,
-        "spoiler_test_seconds": 7.78,
-        "total_seconds": 9.91
+        "generation_seconds": 5.06,
+        "spoiler_test_seconds": 7.85,
+        "total_seconds": 12.91
       }
     }
   },
-  "super_mario_land_2": {
+  "marioland2": {
     "name": "Super Mario Land 2",
     "folders": {
       "AP_14089154938208861744": {
@@ -2424,18 +2390,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 96,
+      "generation_errors": 0,
       "generation_warnings": 1,
       "sphere_reached": 0.1,
       "max_spheres": 11.1,
       "progress_percent": 0.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:13:49.213570",
+      "timestamp": "2025-08-22T10:18:58.619749",
       "processing_time": {
-        "generation_seconds": 2.17,
-        "spoiler_test_seconds": 14.6,
-        "total_seconds": 16.77
+        "generation_seconds": 3.13,
+        "spoiler_test_seconds": 13.83,
+        "total_seconds": 16.96
       }
     }
   },
@@ -2468,15 +2434,15 @@
       "progress_percent": 2.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:14:06.143712",
+      "timestamp": "2025-08-22T10:19:15.744302",
       "processing_time": {
-        "generation_seconds": 2.18,
-        "spoiler_test_seconds": 7.6,
-        "total_seconds": 9.78
+        "generation_seconds": 8.76,
+        "spoiler_test_seconds": 7.81,
+        "total_seconds": 16.57
       }
     }
   },
-  "super_metroid": {
+  "sm": {
     "name": "Super Metroid",
     "folders": {
       "AP_14089154938208861744": {
@@ -2506,11 +2472,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:14:16.065987",
+      "timestamp": "2025-08-22T10:19:32.479419",
       "processing_time": {
-        "generation_seconds": 2.61,
-        "spoiler_test_seconds": 8.52,
-        "total_seconds": 11.129999999999999
+        "generation_seconds": 6.33,
+        "spoiler_test_seconds": 8.67,
+        "total_seconds": 15.0
       }
     }
   },
@@ -2536,18 +2502,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 18,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.1,
       "max_spheres": 4.1,
-      "progress_percent": 0.0,
+      "progress_percent": 2.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:14:27.346525",
+      "timestamp": "2025-08-22T10:19:47.643278",
       "processing_time": {
-        "generation_seconds": 2.29,
-        "spoiler_test_seconds": 8.64,
-        "total_seconds": 10.93
+        "generation_seconds": 6.97,
+        "spoiler_test_seconds": 8.03,
+        "total_seconds": 15.0
       }
     }
   },
@@ -2580,15 +2546,15 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:14:38.428086",
+      "timestamp": "2025-08-22T10:20:02.808191",
       "processing_time": {
-        "generation_seconds": 2.17,
-        "spoiler_test_seconds": 8.93,
-        "total_seconds": 11.1
+        "generation_seconds": 4.8,
+        "spoiler_test_seconds": 9.12,
+        "total_seconds": 13.919999999999998
       }
     }
   },
-  "the_legend_of_zelda": {
+  "tloz": {
     "name": "The Legend of Zelda",
     "folders": {
       "AP_14089154938208861744": {
@@ -2617,15 +2583,15 @@
       "progress_percent": 0.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:14:49.674484",
+      "timestamp": "2025-08-22T10:20:16.896048",
       "processing_time": {
-        "generation_seconds": 2.28,
-        "spoiler_test_seconds": 8.13,
-        "total_seconds": 10.41
+        "generation_seconds": 4.52,
+        "spoiler_test_seconds": 8.25,
+        "total_seconds": 12.77
       }
     }
   },
-  "the_messenger": {
+  "messenger": {
     "name": "The Messenger",
     "folders": {
       "AP_14089154938208861744": {
@@ -2647,22 +2613,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 2,
+      "generation_errors": 0,
       "generation_warnings": 1,
       "sphere_reached": 0.1,
       "max_spheres": 6.1,
       "progress_percent": 1.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:15:00.238446",
+      "timestamp": "2025-08-22T10:20:29.860243",
       "processing_time": {
-        "generation_seconds": 2.28,
-        "spoiler_test_seconds": 8.44,
-        "total_seconds": 10.719999999999999
+        "generation_seconds": 7.84,
+        "spoiler_test_seconds": 7.91,
+        "total_seconds": 15.75
       }
     }
   },
-  "the_wind_waker": {
+  "tww": {
     "name": "The Wind Waker",
     "folders": {
       "AP_14089154938208861744": {
@@ -2692,15 +2658,15 @@
       "progress_percent": 0.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:15:11.125813",
+      "timestamp": "2025-08-22T10:20:45.825608",
       "processing_time": {
-        "generation_seconds": 2.13,
-        "spoiler_test_seconds": 7.79,
-        "total_seconds": 9.92
+        "generation_seconds": 2.89,
+        "spoiler_test_seconds": 8.1,
+        "total_seconds": 10.99
       }
     }
   },
-  "the_witness": {
+  "witness": {
     "name": "The Witness",
     "folders": {
       "AP_14089154938208861744": {
@@ -2729,11 +2695,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:15:21.210382",
+      "timestamp": "2025-08-22T10:20:56.986419",
       "processing_time": {
-        "generation_seconds": 2.28,
-        "spoiler_test_seconds": 8.94,
-        "total_seconds": 11.219999999999999
+        "generation_seconds": 6.4,
+        "spoiler_test_seconds": 9.18,
+        "total_seconds": 15.58
       }
     }
   },
@@ -2759,18 +2725,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 6,
+      "generation_errors": 0,
       "generation_warnings": 1,
       "sphere_reached": 0.1,
       "max_spheres": 8.1,
       "progress_percent": 1.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:15:32.584042",
+      "timestamp": "2025-08-22T10:21:12.734194",
       "processing_time": {
-        "generation_seconds": 2.24,
-        "spoiler_test_seconds": 8.56,
-        "total_seconds": 10.8
+        "generation_seconds": 5.29,
+        "spoiler_test_seconds": 7.93,
+        "total_seconds": 13.219999999999999
       }
     }
   },
@@ -2803,11 +2769,11 @@
       "progress_percent": 75.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:15:43.528514",
+      "timestamp": "2025-08-22T10:21:26.104909",
       "processing_time": {
-        "generation_seconds": 2.08,
-        "spoiler_test_seconds": 7.6,
-        "total_seconds": 9.68
+        "generation_seconds": 2.8,
+        "spoiler_test_seconds": 7.76,
+        "total_seconds": 10.559999999999999
       }
     }
   },
@@ -2834,18 +2800,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 16,
+      "generation_errors": 0,
       "generation_warnings": 1,
-      "sphere_reached": 0.0,
+      "sphere_reached": 0.4,
       "max_spheres": 2.4,
-      "progress_percent": 0.0,
+      "progress_percent": 16.7,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:15:53.351122",
+      "timestamp": "2025-08-22T10:21:36.834337",
       "processing_time": {
-        "generation_seconds": 2.04,
-        "spoiler_test_seconds": 7.58,
-        "total_seconds": 9.620000000000001
+        "generation_seconds": 2.3,
+        "spoiler_test_seconds": 7.81,
+        "total_seconds": 10.11
       }
     }
   },
@@ -2878,11 +2844,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:16:03.111008",
+      "timestamp": "2025-08-22T10:21:47.104259",
       "processing_time": {
-        "generation_seconds": 1.89,
-        "spoiler_test_seconds": 8.38,
-        "total_seconds": 10.270000000000001
+        "generation_seconds": 2.41,
+        "spoiler_test_seconds": 7.82,
+        "total_seconds": 10.23
       }
     }
   },
@@ -2915,15 +2881,15 @@
       "progress_percent": 0.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:16:13.530075",
+      "timestamp": "2025-08-22T10:21:57.495652",
       "processing_time": {
-        "generation_seconds": 2.28,
-        "spoiler_test_seconds": 7.83,
-        "total_seconds": 10.11
+        "generation_seconds": 3.21,
+        "spoiler_test_seconds": 7.96,
+        "total_seconds": 11.17
       }
     }
   },
-  "yoshi's_island": {
+  "yoshisisland": {
     "name": "Yoshi's Island",
     "folders": {
       "AP_14089154938208861744": {
@@ -2945,22 +2911,22 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 54,
+      "generation_errors": 0,
       "generation_warnings": 3,
-      "sphere_reached": 0,
-      "max_spheres": 0,
+      "sphere_reached": 0.0,
+      "max_spheres": 12.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:16:23.808666",
+      "timestamp": "2025-08-22T10:22:08.833152",
       "processing_time": {
-        "generation_seconds": 2.24,
-        "spoiler_test_seconds": 0,
-        "total_seconds": 2.24
+        "generation_seconds": 5.02,
+        "spoiler_test_seconds": 7.88,
+        "total_seconds": 12.899999999999999
       }
     }
   },
-  "yu-gi-oh!_2006": {
+  "yugioh06": {
     "name": "Yu-Gi-Oh! 2006",
     "folders": {
       "AP_14089154938208861744": {
@@ -2983,18 +2949,18 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 102,
+      "generation_errors": 2,
       "generation_warnings": 1,
-      "sphere_reached": 0,
-      "max_spheres": 0,
-      "progress_percent": 0.0,
+      "sphere_reached": 0.1,
+      "max_spheres": 6.1,
+      "progress_percent": 1.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:16:26.064537",
+      "timestamp": "2025-08-22T10:22:21.889707",
       "processing_time": {
-        "generation_seconds": 2.86,
-        "spoiler_test_seconds": 0,
-        "total_seconds": 2.86
+        "generation_seconds": 19.24,
+        "spoiler_test_seconds": 8.33,
+        "total_seconds": 27.57
       }
     }
   },
@@ -3021,26 +2987,63 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 294,
+      "generation_errors": 147,
       "generation_warnings": 1,
       "sphere_reached": 0.0,
       "max_spheres": 4.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-08-21T09:16:28.937633",
+      "timestamp": "2025-08-22T10:22:49.619095",
       "processing_time": {
-        "generation_seconds": 2.99,
-        "spoiler_test_seconds": 7.92,
-        "total_seconds": 10.91
+        "generation_seconds": 7.28,
+        "spoiler_test_seconds": 7.94,
+        "total_seconds": 15.22
+      }
+    }
+  },
+  "shapez": {
+    "name": "shapez",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "shapez"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "failed",
+      "generation_errors": 0,
+      "generation_warnings": 1,
+      "sphere_reached": 0.1,
+      "max_spheres": 5.1,
+      "progress_percent": 2.0,
+      "has_custom_exporter": false,
+      "has_custom_game_logic": false,
+      "timestamp": "2025-08-22T10:23:05.001470",
+      "processing_time": {
+        "generation_seconds": 4.75,
+        "spoiler_test_seconds": 7.88,
+        "total_seconds": 12.629999999999999
       }
     }
   },
   "metadata": {
-    "test_data_updated": "2025-08-21T19:27:44.772957",
+    "test_data_updated": "2025-08-22T11:46:18.600844",
     "test_data_source": {
-      "created": "2025-08-21T08:56:00.230682",
-      "last_updated": "2025-08-21T11:53:17.984463",
+      "created": "2025-08-22T09:54:44.358796",
+      "last_updated": "2025-08-22T10:23:17.792159",
       "script_version": "1.0.0"
     },
     "games_with_test_data": 76,

@@ -26,58 +26,15 @@
             "name": "Placing belts",
             "connected_region": "Shape transportation",
             "access_rule": {
-              "type": "function_call",
-              "function": {
+              "type": "item_check",
+              "item": {
                 "type": "attribute",
                 "object": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "regions"
-                  },
-                  "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "REGIONS"
-                    },
-                    "attr": "menu"
-                  }
+                  "type": "name",
+                  "name": "ITEMS"
                 },
-                "attr": "connect"
-              },
-              "args": [
-                {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "regions"
-                  },
-                  "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "REGIONS"
-                    },
-                    "attr": "belt"
-                  }
-                },
-                {
-                  "type": "constant",
-                  "value": "Placing belts"
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "ITEMS"
-                    },
-                    "attr": "belt"
-                  }
-                }
-              ]
+                "attr": "belt"
+              }
             },
             "type": "Exit"
           },
@@ -133,254 +90,211 @@
             "name": "Placing any building",
             "connected_region": "Achievements with any placeable building",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "regions"
-                  },
-                  "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "REGIONS"
-                    },
-                    "attr": "menu"
-                  }
-                },
-                "attr": "connect"
-              },
+              "type": "state_method",
+              "method": "has_any",
               "args": [
                 {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "regions"
-                  },
-                  "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "REGIONS"
-                    },
-                    "attr": "any_building"
-                  }
-                },
-                {
-                  "type": "constant",
-                  "value": "Placing any building"
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
+                  "type": "list",
+                  "value": [
                     {
-                      "type": "list",
-                      "value": [
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "belt"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "balancer"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "comp_merger"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "comp_splitter"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "tunnel"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "tunnel_tier_ii"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "extractor"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "extractor_chain"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "cutter"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "cutter_quad"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "rotator"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "rotator_ccw"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "rotator_180"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "stacker"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "painter"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "painter_double"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "painter_quad"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "color_mixer"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "trash"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "belt_reader"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "storage"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "switch"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "item_filter"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "display"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ITEMS"
-                          },
-                          "attr": "wires"
-                        }
-                      ]
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "belt"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "balancer"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "comp_merger"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "comp_splitter"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "tunnel"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "tunnel_tier_ii"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "extractor"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "extractor_chain"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "cutter"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "cutter_quad"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "rotator"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "rotator_ccw"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "rotator_180"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "stacker"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "painter"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "painter_double"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "painter_quad"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "color_mixer"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "trash"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "belt_reader"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "storage"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "switch"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "item_filter"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "display"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "ITEMS"
+                      },
+                      "attr": "wires"
                     }
                   ]
                 }
@@ -769,7 +683,10 @@
           {
             "name": "Delivering unprocessed",
             "connected_region": "Shapesanity Full Uncolored",
-            "access_rule": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
             "type": "Exit"
           },
           {

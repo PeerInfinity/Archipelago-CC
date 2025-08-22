@@ -1,14 +1,14 @@
 {
   "schema_version": 3,
   "game_name": "Adventure",
-  "archipelago_version": "0.6.1",
+  "archipelago_version": "0.6.4",
   "generation_seed": 2,
   "player_names": {
     "1": "Player1",
     "2": "Player2"
   },
   "world_classes": {
-    "1": "ALTTPWorld",
+    "1": "ShortHikeWorld",
     "2": "AdventureWorld"
   },
   "plando_options": [
@@ -159,9 +159,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
-              "player": 2,
-              "advancement": false,
+              "name": "Golden Feather",
+              "player": 1,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -177,7 +177,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Arrows (10)",
+              "name": "Pickaxe",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -195,8 +195,8 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Freeincarnate",
-              "player": 2,
+              "name": "Running Shoes",
+              "player": 1,
               "advancement": false,
               "priority": null,
               "type": "None"
@@ -213,9 +213,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Piece of Heart",
+              "name": "Seashell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -231,9 +231,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rupees (20)",
+              "name": "Golden Feather",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -249,9 +249,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rupees (300)",
+              "name": "Stick",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -267,9 +267,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Lamp",
+              "name": "27 Coins",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -285,8 +285,8 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Slow Grundle",
-              "player": 2,
+              "name": "Compass",
+              "player": 1,
               "advancement": false,
               "priority": null,
               "type": "None"
@@ -303,9 +303,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bombs (3)",
+              "name": "Seashell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -321,7 +321,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Magic Powder",
+              "name": "Golden Feather",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -329,8 +329,8 @@
             }
           },
           {
-            "name": "Slay Yorgle",
-            "id": 118000209,
+            "name": "Slay Grundle",
+            "id": 118000210,
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -354,7 +354,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Piece of Heart",
+              "name": "Baseball Cap",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -403,9 +403,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Sanctuary Heart Container",
+              "name": "Seashell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -537,9 +537,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Shield",
+              "name": "13 Coins",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "priority": null,
               "type": "None"
             }
@@ -555,11 +555,11 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Sword",
+              "name": "Golden Feather",
               "player": 1,
               "advancement": true,
               "priority": null,
-              "type": "Sword"
+              "type": "None"
             }
           }
         ],
@@ -604,9 +604,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Golden Feather",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -653,16 +653,16 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Slow Yorgle",
-              "player": 2,
+              "name": "13 Coins",
+              "player": 1,
               "advancement": false,
               "priority": null,
               "type": "None"
             }
           },
           {
-            "name": "Slay Rhindle",
-            "id": 118000208,
+            "name": "Slay Yorgle",
+            "id": 118000209,
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -686,7 +686,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Bombs (3)",
+              "name": "33 Coins",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -767,7 +767,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Arrows (10)",
+              "name": "13 Coins",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -785,7 +785,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Progressive Mail",
+              "name": "7 Coins",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -803,7 +803,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Piece of Heart",
+              "name": "13 Coins",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -811,8 +811,8 @@
             }
           },
           {
-            "name": "Slay Grundle",
-            "id": 118000210,
+            "name": "Slay Rhindle",
+            "id": 118000208,
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -836,9 +836,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Stick",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -885,7 +885,7 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Rupees (20)",
+              "name": "21 Coins",
               "player": 1,
               "advancement": false,
               "priority": null,
@@ -954,9 +954,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Piece of Heart",
+              "name": "Motorboat Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -1003,9 +1003,9 @@
             "progress_type": 1,
             "locked": false,
             "item": {
-              "name": "Piece of Heart",
+              "name": "Golden Feather",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "priority": null,
               "type": "None"
             }
@@ -1047,7 +1047,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1061,7 +1061,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1075,7 +1075,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1089,7 +1089,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1103,7 +1103,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1145,7 +1145,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -1165,7 +1165,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 12
       },
       "Slow Yorgle": {
         "name": "Slow Yorgle",
@@ -1218,7 +1218,7 @@
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
         "max_count": 1
@@ -1236,6 +1236,20 @@
         "event": false,
         "type": null,
         "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -1249,13 +1263,13 @@
       "Black Key": 1,
       "Bridge": 1,
       "Chalice": 1,
-      "Freeincarnate": 14,
+      "Freeincarnate": 12,
       "Left Difficulty Switch": 1,
       "Magnet": 1,
       "Right Difficulty Switch": 1,
-      "Slow Grundle": 2,
+      "Slow Grundle": 1,
       "Slow Rhindle": 1,
-      "Slow Yorgle": 2,
+      "Slow Yorgle": 1,
       "Sword": 1,
       "Victory": 1,
       "White Key": 1,

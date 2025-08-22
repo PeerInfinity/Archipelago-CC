@@ -177,23 +177,23 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
     if (!rulesConfigToUse) {
       logger.info(
         moduleInfo.name,
-        '[StateManager Module] rulesConfig not in moduleSpecificConfig, fetching ./presets/a_link_to_the_past/AP_14089154938208861744/AP_14089154938208861744_rules.json...'
+        '[StateManager Module] rulesConfig not in moduleSpecificConfig, fetching ./presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json...'
       );
       const response = await fetch(
-        './presets/a_link_to_the_past/AP_14089154938208861744/AP_14089154938208861744_rules.json'
+        './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json'
       );
       if (!response.ok) {
         throw new Error(
-          `HTTP error fetching ./presets/a_link_to_the_past/AP_14089154938208861744/AP_14089154938208861744_rules.json! status: ${response.status}`
+          `HTTP error fetching ./presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json! status: ${response.status}`
         );
       }
       jsonData = await response.json(); // jsonData is used later for a direct comparison
       rulesConfigToUse = jsonData;
       sourceNameForTheseRules =
-        './presets/a_link_to_the_past/AP_14089154938208861744/AP_14089154938208861744_rules.json'; // If we fetch it, this is the definitive source
+        './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json'; // If we fetch it, this is the definitive source
       logger.info(
         moduleInfo.name,
-        '[StateManager Module] Successfully fetched and parsed ./presets/a_link_to_the_past/AP_14089154938208861744/AP_14089154938208861744_rules.json'
+        '[StateManager Module] Successfully fetched and parsed ./presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json'
       );
     } else {
       // rulesConfigToUse was provided directly by moduleSpecificConfig

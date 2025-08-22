@@ -147,7 +147,30 @@
           {
             "name": "Overworld -> Eastern Vault Fortress",
             "connected_region": "Eastern Vault Fortress",
-            "access_rule": null,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "laurels"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
@@ -218,7 +241,63 @@
           {
             "name": "Overworld -> Quarry",
             "connected_region": "Quarry",
-            "access_rule": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "name",
+                        "name": "fire_wand"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "name",
+                              "name": "grapple"
+                            },
+                            {
+                              "type": "name",
+                              "name": "laurels"
+                            },
+                            {
+                              "type": "name",
+                              "name": "gun"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "capability",
+                      "capability": "ladder_storage",
+                      "inferred": true,
+                      "description": "Requires ability to ladder storage"
+                    }
+                  ]
+                }
+              ]
+            },
             "type": "Exit"
           },
           {
@@ -396,10 +475,45 @@
             "id": 509342502,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Ability",
-              "inferred": true,
-              "description": "Requires having Ability"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "laurels"
+                  }
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
+                    }
+                  ]
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -466,6 +580,29 @@
                     "type": "name",
                     "name": "laurels"
                   }
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
+                    }
+                  ]
                 }
               ]
             },
@@ -546,11 +683,32 @@
             "id": 509342508,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "house_key"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "house_key"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                },
+                {
+                  "type": "helper",
+                  "name": "laurels_zip",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    }
+                  ]
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -567,11 +725,32 @@
             "id": 509342509,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "house_key"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "house_key"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                },
+                {
+                  "type": "helper",
+                  "name": "laurels_zip",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    }
+                  ]
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -642,11 +821,28 @@
             "id": 509342513,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "gun"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "gun"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -984,11 +1180,28 @@
             "id": 509342529,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "gun"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "gun"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -1005,11 +1218,39 @@
             "id": 509342530,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "laurels"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "laurels"
+                  }
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
+                    }
+                  ]
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -1568,11 +1809,51 @@
             "id": 509342560,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "laurels"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "laurels"
+                  }
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Sword",
+                          "inferred": true,
+                          "description": "Requires having Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "name",
+                            "name": "fire_wand"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -1809,11 +2090,39 @@
             "id": 509342696,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "laurels"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "laurels"
+                  }
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
+                    }
+                  ]
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -2049,11 +2358,28 @@
             "id": 509342581,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "gun"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "gun"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -2267,10 +2593,62 @@
             "id": 509342591,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Ability",
-              "inferred": true,
-              "description": "Requires having Ability"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "name",
+                        "name": "laurels"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Lantern",
+                          "inferred": true,
+                          "description": "Requires having Lantern"
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Sword",
+                              "inferred": true,
+                              "description": "Requires having Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "name",
+                                "name": "fire_wand"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    }
+                  ]
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -2474,25 +2852,36 @@
             "id": 509342437,
             "crystal": null,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "list",
-                  "value": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "name",
-                      "name": "grapple"
-                    },
-                    {
-                      "type": "name",
-                      "name": "ice_dagger"
-                    },
-                    {
-                      "type": "name",
-                      "name": "fire_wand"
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "name",
+                          "name": "grapple"
+                        },
+                        {
+                          "type": "name",
+                          "name": "ice_dagger"
+                        },
+                        {
+                          "type": "name",
+                          "name": "fire_wand"
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -2691,11 +3080,28 @@
             "id": 509342447,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "gun"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "gun"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -3792,20 +4198,31 @@
             "id": 509342698,
             "crystal": null,
             "access_rule": {
-              "type": "and",
+              "type": "or",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "name",
-                    "name": "laurels"
-                  }
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "name",
+                        "name": "laurels"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Ability",
+                  "item": "Ice_Grapple_Logic",
                   "inferred": true,
-                  "description": "Requires having Ability"
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -4081,11 +4498,28 @@
             "id": 509342641,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "gun"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "gun"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -4211,6 +4645,12 @@
                     "type": "constant",
                     "value": 2
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -4266,6 +4706,12 @@
                     "type": "constant",
                     "value": 2
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -4982,11 +5428,33 @@
             "id": 509342462,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "vault_key"
-              }
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "vault_key"
+                  }
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    }
+                  ]
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -5003,10 +5471,32 @@
             "id": 509342463,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sword",
-              "inferred": true,
-              "description": "Requires having Sword"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    }
+                  ]
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -5097,11 +5587,28 @@
             "id": 509342468,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "gun"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "gun"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -5576,11 +6083,28 @@
             "id": 509342612,
             "crystal": null,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "gun"
-              }
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "name",
+                    "name": "gun"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -5644,10 +6168,21 @@
             "name": "Quarry -> Rooted Ziggurat",
             "connected_region": "Rooted Ziggurat",
             "access_rule": {
-              "type": "item_check",
-              "item": "Ice_Grapple_Logic",
-              "inferred": true,
-              "description": "Requires having Ice Grapple Logic"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
+                }
+              ]
             },
             "type": "Exit"
           }
@@ -6505,7 +7040,41 @@
           {
             "name": "Swamp -> Cathedral",
             "connected_region": "Cathedral",
-            "access_rule": null,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "name",
+                        "name": "laurels"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                }
+              ]
+            },
             "type": "Exit"
           }
         ],
@@ -6518,17 +7087,40 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "name",
-                    "name": "fire_wand"
-                  }
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "name",
+                        "name": "fire_wand"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
+                    }
+                  ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sword",
-                  "inferred": true,
-                  "description": "Requires having Sword"
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "name",
+                        "name": "laurels"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    }
+                  ]
                 }
               ]
             },
