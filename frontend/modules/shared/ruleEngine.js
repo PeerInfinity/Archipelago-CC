@@ -328,7 +328,17 @@ export const evaluateRule = (rule, context, depth = 0) => {
             // Dynamically resolve the parent region from the context
             if (context.getStaticData && context.getStaticData().regions) {
               const regions = context.getStaticData().regions;
-              return regions[baseObject.parent_region_name];
+              
+              // Try direct lookup first
+              if (regions[baseObject.parent_region_name]) {
+                return regions[baseObject.parent_region_name];
+              }
+              
+              // Try player-specific lookup  
+              const playerId = context.playerId || context.getPlayerSlot?.() || '1';
+              if (regions[playerId] && regions[playerId][baseObject.parent_region_name]) {
+                return regions[playerId][baseObject.parent_region_name];
+              }
             }
             return undefined;
           }
@@ -583,7 +593,22 @@ export const evaluateRule = (rule, context, depth = 0) => {
             }
             break;
           case 'in':
-            if (Array.isArray(right) || typeof right === 'string') {
+            if (Array.isArray(right)) {
+              // Handle array comparison with deep equality for nested arrays
+              if (Array.isArray(left)) {
+                result = right.some(item => {
+                  if (Array.isArray(item)) {
+                    // Deep array comparison
+                    return item.length === left.length && 
+                           item.every((val, index) => val === left[index]);
+                  } else {
+                    return item === left;
+                  }
+                });
+              } else {
+                result = right.includes(left);
+              }
+            } else if (typeof right === 'string') {
               result = right.includes(left);
             } else if (right instanceof Set) {
               // Handle Set

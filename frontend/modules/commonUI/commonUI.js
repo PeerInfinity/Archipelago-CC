@@ -688,6 +688,69 @@ class CommonUI {
         break;
       }
 
+      case 'conditional': {
+        const conditionalDetails = document.createElement('div');
+        conditionalDetails.classList.add('logic-conditional-details');
+        conditionalDetails.style.marginLeft = '10px';
+
+        const testLabel = document.createElement('div');
+        testLabel.textContent = 'Test Condition:';
+        conditionalDetails.appendChild(testLabel);
+
+        const testNode = document.createElement('div');
+        testNode.style.marginLeft = '10px';
+        testNode.appendChild(
+          this.renderLogicTree(
+            rule.test,
+            useColorblind,
+            stateSnapshotInterface
+          )
+        );
+        conditionalDetails.appendChild(testNode);
+
+        const trueLabel = document.createElement('div');
+        trueLabel.textContent = 'If True:';
+        conditionalDetails.appendChild(trueLabel);
+
+        const trueNode = document.createElement('div');
+        trueNode.style.marginLeft = '10px';
+        trueNode.appendChild(
+          this.renderLogicTree(
+            rule.if_true,
+            useColorblind,
+            stateSnapshotInterface
+          )
+        );
+        conditionalDetails.appendChild(trueNode);
+
+        if (rule.if_false !== undefined) {
+          const falseLabel = document.createElement('div');
+          falseLabel.textContent = 'If False:';
+          conditionalDetails.appendChild(falseLabel);
+
+          if (rule.if_false === null) {
+            const falseNode = document.createElement('div');
+            falseNode.style.marginLeft = '10px';
+            falseNode.textContent = 'null (evaluates to false)';
+            conditionalDetails.appendChild(falseNode);
+          } else {
+            const falseNode = document.createElement('div');
+            falseNode.style.marginLeft = '10px';
+            falseNode.appendChild(
+              this.renderLogicTree(
+                rule.if_false,
+                useColorblind,
+                stateSnapshotInterface
+              )
+            );
+            conditionalDetails.appendChild(falseNode);
+          }
+        }
+
+        root.appendChild(conditionalDetails);
+        break;
+      }
+
       default:
         root.appendChild(document.createTextNode(' [unhandled rule type] '));
         // For debugging, output the complete rule
