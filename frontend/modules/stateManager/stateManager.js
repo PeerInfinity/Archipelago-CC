@@ -2550,9 +2550,14 @@ export class StateManager {
 
       case 'conditional':
         const testResult = this.evaluateRuleFromEngine(rule.test);
-        return testResult
-          ? this.evaluateRuleFromEngine(rule.if_true)
-          : this.evaluateRuleFromEngine(rule.if_false);
+        if (testResult) {
+          return this.evaluateRuleFromEngine(rule.if_true);
+        } else {
+          // Handle null if_false as true (no additional requirements)
+          return rule.if_false === null 
+            ? true 
+            : this.evaluateRuleFromEngine(rule.if_false);
+        }
 
       case 'comparison':
       case 'compare':

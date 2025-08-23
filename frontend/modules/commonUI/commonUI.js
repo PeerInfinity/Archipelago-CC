@@ -731,7 +731,7 @@ class CommonUI {
           if (rule.if_false === null) {
             const falseNode = document.createElement('div');
             falseNode.style.marginLeft = '10px';
-            falseNode.textContent = 'null (evaluates to false)';
+            falseNode.textContent = 'null (evaluates to true - no additional requirements)';
             conditionalDetails.appendChild(falseNode);
           } else {
             const falseNode = document.createElement('div');

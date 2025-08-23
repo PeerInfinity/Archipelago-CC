@@ -55,16 +55,16 @@
       "status": "failed",
       "generation_errors": 0,
       "generation_warnings": 3,
-      "sphere_reached": 12.4,
+      "sphere_reached": 14.2,
       "max_spheres": 22.1,
-      "progress_percent": 56.1,
+      "progress_percent": 64.3,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-08-23T08:05:58.742138",
+      "timestamp": "2025-08-23T09:12:20.216447",
       "processing_time": {
-        "generation_seconds": 12.26,
-        "spoiler_test_seconds": 19.01,
-        "total_seconds": 31.270000000000003
+        "generation_seconds": 12.18,
+        "spoiler_test_seconds": 24.48,
+        "total_seconds": 36.66
       }
     }
   },
@@ -3040,13 +3040,13 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2025-08-23T08:06:47.573974",
+    "test_data_updated": "2025-08-23T09:13:20.126419",
     "test_data_source": {
-      "average_time_per_template_seconds": 0.4,
-      "batch_processing_time_minutes": 0.5,
-      "batch_processing_time_seconds": 31.5,
+      "average_time_per_template_seconds": 0.5,
+      "batch_processing_time_minutes": 0.6,
+      "batch_processing_time_seconds": 36.8,
       "created": "2025-08-22T09:54:44.358796",
-      "last_updated": "2025-08-23T08:06:30.153371",
+      "last_updated": "2025-08-23T09:12:57.021579",
       "script_version": "1.0.0"
     },
     "games_with_test_data": 76,

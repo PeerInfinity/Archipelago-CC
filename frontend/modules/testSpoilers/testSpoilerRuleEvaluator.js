@@ -242,7 +242,7 @@ export class TestSpoilerRuleEvaluator {
                 this.log('info', `${indent}  Executing IF_FALSE branch:`);
                 this.analyzeRuleTree(rule.if_false, snapshotInterface, indent + '    ', depth + 1);
               } else if (rule.if_false === null) {
-                this.log('info', `${indent}  IF_FALSE branch is null (evaluates to false)`);
+                this.log('info', `${indent}  IF_FALSE branch is null (evaluates to true - no additional requirements)`);
               } else {
                 this.log('info', `${indent}  No IF_FALSE branch defined (evaluates to undefined)`);
               }
