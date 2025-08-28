@@ -2,7 +2,7 @@
 // Stateless state snapshot interface creation - thread-agnostic
 
 import { evaluateRule } from './ruleEngine.js';
-import { helperFunctions as alttpLogic } from './gameLogic/alttp/alttpLogic.js';
+import { getGameLogic } from './gameLogic/gameLogicRegistry.js';
 import { helperFunctions as genericLogic } from './gameLogic/generic/genericLogic.js';
 
 // Helper function for logging with fallback
@@ -17,6 +17,16 @@ function log(level, message, ...data) {
       consoleMethod(`[stateInterface] ${message}`, ...data);
     }
   }
+}
+
+// Helper function to get game-specific helper functions
+function getHelperFunctions(gameName) {
+  if (!gameName) {
+    return genericLogic; // Default to generic
+  }
+  
+  const gameLogic = getGameLogic(gameName);
+  return gameLogic.helperFunctions || genericLogic;
 }
 
 /**
@@ -123,6 +133,11 @@ export function createStateSnapshotInterface(
           return snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
         case 'location_collections':
           return snapshot?.settings?.location_collections;
+        case 'world':
+          // Return an object with player property for AHIT compatibility
+          return {
+            player: snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1'
+          };
         default:
           // Check for ALTTP location collections by name
           if (snapshot?.settings?.location_collections && 
@@ -134,11 +149,7 @@ export function createStateSnapshotInterface(
     },
     hasItem: (itemName) => {
       const gameName = snapshot?.game;
-      let selectedHelpers = genericLogic; // Default to generic
-
-      if (gameName === 'A Link to the Past') {
-        selectedHelpers = alttpLogic;
-      }
+      const selectedHelpers = getHelperFunctions(gameName);
 
       // Use dynamic helper selection for has functionality
       if (selectedHelpers && selectedHelpers.has) {
@@ -150,11 +161,7 @@ export function createStateSnapshotInterface(
     },
     countItem: (itemName) => {
       const gameName = snapshot?.game;
-      let selectedHelpers = genericLogic; // Default to generic
-
-      if (gameName === 'A Link to the Past') {
-        selectedHelpers = alttpLogic;
-      }
+      const selectedHelpers = getHelperFunctions(gameName);
 
       // Use dynamic helper selection for count functionality
       if (selectedHelpers && selectedHelpers.count) {
@@ -343,12 +350,7 @@ export function createStateSnapshotInterface(
     // Legacy helpers property removed - use executeHelper method instead
     executeHelper: (helperName, ...args) => {
       const gameName = snapshot?.game;
-      let selectedHelpers = genericLogic; // Default to generic
-
-      if (gameName === 'A Link to the Past') {
-        selectedHelpers = alttpLogic;
-      }
-      // Add other `else if` blocks for future complex games
+      const selectedHelpers = getHelperFunctions(gameName);
 
       if (selectedHelpers && selectedHelpers[helperName]) {
         // Call the agnostic helper, passing the snapshot as the state
@@ -387,35 +389,36 @@ export function createStateSnapshotInterface(
           return finalSnapshotInterface.isLocationAccessible(targetName);
       }
       
-      // For ALTTP, use agnostic helpers for all helper methods
-      if (snapshot?.game === 'A Link to the Past') {
-        // Map method names to helper names if needed
-        let helperName = methodName;
+      // Use game-specific agnostic helpers for all helper methods
+      const gameName = snapshot?.game;
+      const selectedHelpers = getHelperFunctions(gameName);
+      
+      // Map method names to helper names if needed
+      let helperName = methodName;
+      
+      // Check if this is a helper function in the game's logic
+      if (selectedHelpers[helperName]) {
+        // All agnostic helpers follow the same pattern: (state, world, itemName, staticData)
+        // For has_any, itemName should be an array
+        // For _has_specific_key_count, itemName should be a string like "Small Key (Palace),3"
+        // For most others, itemName is a single item name
         
-        // Check if this is a helper function in alttpLogic
-        if (alttpLogic[helperName]) {
-          // All agnostic helpers follow the same pattern: (state, world, itemName, staticData)
-          // For has_any, itemName should be an array
-          // For _has_specific_key_count, itemName should be a string like "Small Key (Palace),3"
-          // For most others, itemName is a single item name
-          
-          // Special handling for multi-argument methods that need to be formatted
-          let itemNameArg = args[0];
-          if (helperName === 'has_any' && args.length > 1) {
-            // If multiple args are passed, combine them into an array
-            itemNameArg = args;
-          } else if (helperName === '_has_specific_key_count') {
-            if (args.length > 1) {
-              // Combine key name and count into comma-separated string
-              itemNameArg = `${args[0]},${args[1]}`;
-            } else {
-              // Default to count=1 when only key name is provided
-              itemNameArg = `${args[0]},1`;
-            }
+        // Special handling for multi-argument methods that need to be formatted
+        let itemNameArg = args[0];
+        if (helperName === 'has_any' && args.length > 1) {
+          // If multiple args are passed, combine them into an array
+          itemNameArg = args;
+        } else if (helperName === '_has_specific_key_count') {
+          if (args.length > 1) {
+            // Combine key name and count into comma-separated string
+            itemNameArg = `${args[0]},${args[1]}`;
+          } else {
+            // Default to count=1 when only key name is provided
+            itemNameArg = `${args[0]},1`;
           }
-          
-          return alttpLogic[helperName](snapshot, 'world', itemNameArg, staticData);
         }
+        
+        return selectedHelpers[helperName](snapshot, 'world', itemNameArg, staticData);
       }
       
       // Legacy helper system removed - all games should use agnostic helpers
@@ -425,8 +428,11 @@ export function createStateSnapshotInterface(
   };
 
   // Add helper functions as direct properties for compatibility with spoiler tests
-  if (snapshot?.game === 'A Link to the Past') {
-    for (const [helperName, helperFunction] of Object.entries(alttpLogic)) {
+  const gameName = snapshot?.game;
+  const selectedHelpers = getHelperFunctions(gameName);
+  
+  if (selectedHelpers && selectedHelpers !== genericLogic) {
+    for (const [helperName, helperFunction] of Object.entries(selectedHelpers)) {
       finalSnapshotInterface[helperName] = (...args) => {
         return helperFunction(snapshot, 'world', args[0], staticData);
       };

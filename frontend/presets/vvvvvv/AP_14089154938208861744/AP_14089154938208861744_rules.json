@@ -85,6 +85,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -150,6 +153,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -215,6 +221,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -280,6 +289,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -563,6 +575,8 @@
             "connected_region": "Laboratory",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -656,6 +670,8 @@
             "connected_region": "The Tower",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -713,6 +729,8 @@
             "connected_region": "Space Station 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -824,6 +842,8 @@
             "connected_region": "Warp Zone",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],

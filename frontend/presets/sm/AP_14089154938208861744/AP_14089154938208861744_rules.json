@@ -78,6 +78,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -97,6 +100,8 @@
             "connected_region": "Landing Site",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -105,6 +110,8 @@
             "connected_region": "Landing Site",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -113,6 +120,8 @@
             "connected_region": "Landing Site",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -121,6 +130,8 @@
             "connected_region": "Landing Site",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -129,6 +140,8 @@
             "connected_region": "Landing Site",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -189,6 +202,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -247,6 +263,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -305,6 +324,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -314,6 +336,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -323,6 +348,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -332,6 +360,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -341,6 +372,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -350,6 +384,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -359,6 +396,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -368,6 +408,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -377,6 +420,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -386,6 +432,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -405,6 +454,8 @@
             "connected_region": "Blue Brinstar Elevator Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -413,6 +464,8 @@
             "connected_region": "Blue Brinstar Elevator Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -473,6 +526,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -531,6 +587,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -540,6 +599,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -549,6 +611,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -558,6 +623,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -567,6 +635,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -576,6 +647,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -585,6 +659,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -594,6 +671,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -664,6 +744,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -673,6 +756,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -682,6 +768,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -691,6 +780,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -710,6 +802,8 @@
             "connected_region": "Lower Mushrooms Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -718,6 +812,8 @@
             "connected_region": "Lower Mushrooms Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -726,6 +822,8 @@
             "connected_region": "Lower Mushrooms Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -786,6 +884,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -844,6 +945,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -853,6 +957,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -911,6 +1018,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -930,6 +1040,8 @@
             "connected_region": "Green Pirates Shaft Bottom Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -938,6 +1050,8 @@
             "connected_region": "Green Pirates Shaft Bottom Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -946,6 +1060,8 @@
             "connected_region": "Green Pirates Shaft Bottom Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1006,6 +1122,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1064,6 +1183,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1083,6 +1205,8 @@
             "connected_region": "Moat Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1091,6 +1215,8 @@
             "connected_region": "Moat Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1099,6 +1225,8 @@
             "connected_region": "Moat Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1159,6 +1287,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1217,6 +1348,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1236,6 +1370,8 @@
             "connected_region": "Moat Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1244,6 +1380,8 @@
             "connected_region": "Moat Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1304,6 +1442,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1362,6 +1503,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1371,6 +1515,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1390,6 +1537,8 @@
             "connected_region": "Keyhunter Room Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1398,6 +1547,8 @@
             "connected_region": "Keyhunter Room Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1406,6 +1557,8 @@
             "connected_region": "Keyhunter Room Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1466,6 +1619,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1524,6 +1680,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1582,6 +1741,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1640,6 +1802,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1659,6 +1824,8 @@
             "connected_region": "Morph Ball Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1667,6 +1834,8 @@
             "connected_region": "Morph Ball Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1727,6 +1896,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1736,6 +1908,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1794,6 +1969,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1813,6 +1991,8 @@
             "connected_region": "Green Brinstar Elevator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1821,6 +2001,8 @@
             "connected_region": "Green Brinstar Elevator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1829,6 +2011,8 @@
             "connected_region": "Green Brinstar Elevator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1889,6 +2073,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1947,6 +2134,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1956,6 +2146,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1965,6 +2158,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1974,6 +2170,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1983,6 +2182,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1992,6 +2194,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2050,6 +2255,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2069,6 +2277,8 @@
             "connected_region": "Big Pink",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2077,6 +2287,8 @@
             "connected_region": "Big Pink",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2137,6 +2349,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2195,6 +2410,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2204,6 +2422,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2213,6 +2434,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2222,6 +2446,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2231,6 +2458,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2240,6 +2470,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2249,6 +2482,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2258,6 +2494,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2267,6 +2506,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2286,6 +2528,8 @@
             "connected_region": "Green Hill Zone Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2294,6 +2538,8 @@
             "connected_region": "Green Hill Zone Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2302,6 +2548,8 @@
             "connected_region": "Green Hill Zone Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2362,6 +2610,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2420,6 +2671,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2429,6 +2683,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2487,6 +2744,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2506,6 +2766,8 @@
             "connected_region": "Noob Bridge Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2514,6 +2776,8 @@
             "connected_region": "Noob Bridge Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2574,6 +2838,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2632,6 +2899,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2651,6 +2921,8 @@
             "connected_region": "Etecoons Supers",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2711,6 +2983,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2720,6 +2995,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2739,6 +3017,8 @@
             "connected_region": "Etecoons Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2747,6 +3027,8 @@
             "connected_region": "Etecoons Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2807,6 +3089,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2865,6 +3150,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2874,6 +3162,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2883,6 +3174,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2902,6 +3196,8 @@
             "connected_region": "West Ocean Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2910,6 +3206,8 @@
             "connected_region": "West Ocean Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2918,6 +3216,8 @@
             "connected_region": "West Ocean Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2978,6 +3278,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2987,6 +3290,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3045,6 +3351,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3064,6 +3373,8 @@
             "connected_region": "Wrecked Ship Main",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3072,6 +3383,8 @@
             "connected_region": "Wrecked Ship Main",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3080,6 +3393,8 @@
             "connected_region": "Wrecked Ship Main",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3140,6 +3455,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3198,6 +3516,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3256,6 +3577,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3314,6 +3638,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3323,6 +3650,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3332,6 +3662,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3341,6 +3674,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3350,6 +3686,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3359,6 +3698,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3368,6 +3710,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3377,6 +3722,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3386,6 +3734,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3395,6 +3746,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3414,6 +3768,8 @@
             "connected_region": "Wrecked Ship Back",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3422,6 +3778,8 @@
             "connected_region": "Wrecked Ship Back",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3482,6 +3840,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3540,6 +3901,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3549,6 +3913,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3568,6 +3935,8 @@
             "connected_region": "Bowling",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3628,6 +3997,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3647,6 +4019,8 @@
             "connected_region": "Crab Maze Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3655,6 +4029,8 @@
             "connected_region": "Crab Maze Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3715,6 +4091,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3773,6 +4152,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3792,6 +4174,8 @@
             "connected_region": "PhantoonRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3800,6 +4184,8 @@
             "connected_region": "PhantoonRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3860,6 +4246,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3918,6 +4307,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3937,6 +4329,8 @@
             "connected_region": "PhantoonRoomIn",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3948,6 +4342,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4006,6 +4403,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4025,6 +4425,8 @@
             "connected_region": "Lava Dive Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4033,6 +4435,8 @@
             "connected_region": "Lava Dive Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4093,6 +4497,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4151,6 +4558,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4170,6 +4580,8 @@
             "connected_region": "LN Entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4178,6 +4590,8 @@
             "connected_region": "LN Entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4186,6 +4600,8 @@
             "connected_region": "LN Entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4194,6 +4610,8 @@
             "connected_region": "LN Entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4254,6 +4672,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4312,6 +4733,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4370,6 +4794,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4428,6 +4855,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4437,6 +4867,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4456,6 +4889,8 @@
             "connected_region": "LN Above GT",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4516,6 +4951,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4574,6 +5012,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4583,6 +5024,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4602,6 +5046,8 @@
             "connected_region": "Screw Attack Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4610,6 +5056,8 @@
             "connected_region": "Screw Attack Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4618,6 +5066,8 @@
             "connected_region": "Screw Attack Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4678,6 +5128,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4687,6 +5140,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4696,6 +5152,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4705,6 +5164,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4724,6 +5186,8 @@
             "connected_region": "Firefleas",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4732,6 +5196,8 @@
             "connected_region": "Firefleas",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4740,6 +5206,8 @@
             "connected_region": "Firefleas",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4748,6 +5216,8 @@
             "connected_region": "Firefleas",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4808,6 +5278,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4866,6 +5339,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4924,6 +5400,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4982,6 +5461,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5040,6 +5522,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5049,6 +5534,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5058,6 +5546,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5067,6 +5558,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5086,6 +5580,8 @@
             "connected_region": "Firefleas Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5146,6 +5642,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5155,6 +5654,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5174,6 +5676,8 @@
             "connected_region": "Ridley Zone",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5182,6 +5686,8 @@
             "connected_region": "Ridley Zone",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5190,6 +5696,8 @@
             "connected_region": "Ridley Zone",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5250,6 +5758,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5308,6 +5819,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5366,6 +5880,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5385,6 +5902,8 @@
             "connected_region": "Wasteland",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5445,6 +5964,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5454,6 +5976,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5473,6 +5998,8 @@
             "connected_region": "Three Muskateers Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5481,6 +6008,8 @@
             "connected_region": "Three Muskateers Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5541,6 +6070,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5599,6 +6131,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5618,6 +6153,8 @@
             "connected_region": "RidleyRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5626,6 +6163,8 @@
             "connected_region": "RidleyRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5686,6 +6225,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5744,6 +6286,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5763,6 +6308,8 @@
             "connected_region": "RidleyRoomIn",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5774,6 +6321,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5783,6 +6333,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5841,6 +6394,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5860,6 +6416,8 @@
             "connected_region": "Warehouse Zeela Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5868,6 +6426,8 @@
             "connected_region": "Warehouse Zeela Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5928,6 +6488,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5937,6 +6500,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5946,6 +6512,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6004,6 +6573,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6023,6 +6595,8 @@
             "connected_region": "KraidRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6031,6 +6605,8 @@
             "connected_region": "KraidRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6091,6 +6667,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6149,6 +6728,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6168,6 +6750,8 @@
             "connected_region": "KraidRoomIn",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6179,6 +6763,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6188,6 +6775,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6246,6 +6836,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6265,6 +6858,8 @@
             "connected_region": "Warehouse Entrance Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6273,6 +6868,8 @@
             "connected_region": "Warehouse Entrance Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6281,6 +6878,8 @@
             "connected_region": "Warehouse Entrance Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6341,6 +6940,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6399,6 +7001,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6457,6 +7062,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6476,6 +7084,8 @@
             "connected_region": "Warehouse Entrance Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6484,6 +7094,8 @@
             "connected_region": "Warehouse Entrance Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6544,6 +7156,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6602,6 +7217,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6621,6 +7239,8 @@
             "connected_region": "Business Center",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6629,6 +7249,8 @@
             "connected_region": "Business Center",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6637,6 +7259,8 @@
             "connected_region": "Business Center",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6645,6 +7269,8 @@
             "connected_region": "Business Center",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6653,6 +7279,8 @@
             "connected_region": "Business Center",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6661,6 +7289,8 @@
             "connected_region": "Business Center",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6721,6 +7351,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6779,6 +7412,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6837,6 +7473,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6895,6 +7534,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6953,6 +7595,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6962,6 +7607,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6971,6 +7619,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6980,6 +7631,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6989,6 +7643,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6998,6 +7655,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7017,6 +7677,8 @@
             "connected_region": "Single Chamber Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7025,6 +7687,8 @@
             "connected_region": "Single Chamber Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7085,6 +7749,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7143,6 +7810,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7162,6 +7832,8 @@
             "connected_region": "Cathedral",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7170,6 +7842,8 @@
             "connected_region": "Cathedral",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7230,6 +7904,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7288,6 +7965,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7297,6 +7977,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7316,6 +7999,8 @@
             "connected_region": "Kronic Boost Room Bottom Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7324,6 +8009,8 @@
             "connected_region": "Kronic Boost Room Bottom Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7332,6 +8019,8 @@
             "connected_region": "Kronic Boost Room Bottom Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7340,6 +8029,8 @@
             "connected_region": "Kronic Boost Room Bottom Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7400,6 +8091,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7458,6 +8152,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7516,6 +8213,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7574,6 +8274,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7593,6 +8296,8 @@
             "connected_region": "Crocomire Speedway Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7601,6 +8306,8 @@
             "connected_region": "Crocomire Speedway Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7609,6 +8316,8 @@
             "connected_region": "Crocomire Speedway Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7617,6 +8326,8 @@
             "connected_region": "Crocomire Speedway Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7625,6 +8336,8 @@
             "connected_region": "Crocomire Speedway Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7685,6 +8398,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7743,6 +8459,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7801,6 +8520,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7859,6 +8581,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7868,6 +8593,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7926,6 +8654,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7945,6 +8676,8 @@
             "connected_region": "Grapple Escape",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8005,6 +8738,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8063,6 +8799,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8072,6 +8811,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8091,6 +8833,8 @@
             "connected_region": "Bubble Mountain",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8099,6 +8843,8 @@
             "connected_region": "Bubble Mountain",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8107,6 +8853,8 @@
             "connected_region": "Bubble Mountain",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8115,6 +8863,8 @@
             "connected_region": "Bubble Mountain",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8175,6 +8925,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8233,6 +8986,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8291,6 +9047,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8349,6 +9108,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8358,6 +9120,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8367,6 +9132,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8376,6 +9144,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8385,6 +9156,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8404,6 +9178,8 @@
             "connected_region": "Bubble Mountain Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8412,6 +9188,8 @@
             "connected_region": "Bubble Mountain Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8420,6 +9198,8 @@
             "connected_region": "Bubble Mountain Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8428,6 +9208,8 @@
             "connected_region": "Bubble Mountain Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8488,6 +9270,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8546,6 +9331,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8604,6 +9392,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8662,6 +9453,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8671,6 +9465,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8680,6 +9477,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8689,6 +9489,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8698,6 +9501,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8707,6 +9513,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8716,6 +9525,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8725,6 +9537,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8744,6 +9559,8 @@
             "connected_region": "Bubble Mountain Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8752,6 +9569,8 @@
             "connected_region": "Bubble Mountain Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8760,6 +9579,8 @@
             "connected_region": "Bubble Mountain Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8768,6 +9589,8 @@
             "connected_region": "Bubble Mountain Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8776,6 +9599,8 @@
             "connected_region": "Bubble Mountain Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8836,6 +9661,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8894,6 +9722,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8952,6 +9783,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9010,6 +9844,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9068,6 +9905,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9087,6 +9927,8 @@
             "connected_region": "Crocomire Room Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9098,6 +9940,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9107,6 +9952,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9116,6 +9964,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9125,6 +9976,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9134,6 +9988,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9143,6 +10000,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9201,6 +10061,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9220,6 +10083,8 @@
             "connected_region": "Main Street Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9228,6 +10093,8 @@
             "connected_region": "Main Street Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9236,6 +10103,8 @@
             "connected_region": "Main Street Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9244,6 +10113,8 @@
             "connected_region": "Main Street Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9252,6 +10123,8 @@
             "connected_region": "Main Street Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9260,6 +10133,8 @@
             "connected_region": "Main Street Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9320,6 +10195,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9378,6 +10256,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9436,6 +10317,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9494,6 +10378,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9503,6 +10390,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9512,6 +10402,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9521,6 +10414,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9530,6 +10426,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9588,6 +10487,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9658,6 +10560,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9667,6 +10572,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9676,6 +10584,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9695,6 +10606,8 @@
             "connected_region": "Crab Hole Bottom Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9703,6 +10616,8 @@
             "connected_region": "Crab Hole Bottom Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9711,6 +10626,8 @@
             "connected_region": "Crab Hole Bottom Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9771,6 +10688,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9829,6 +10749,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9887,6 +10810,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9906,6 +10832,8 @@
             "connected_region": "Red Fish Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9914,6 +10842,8 @@
             "connected_region": "Red Fish Room Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9974,6 +10904,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10032,6 +10965,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10051,6 +10987,8 @@
             "connected_region": "Red Fish Room Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10059,6 +10997,8 @@
             "connected_region": "Red Fish Room Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10119,6 +11059,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10177,6 +11120,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10196,6 +11142,8 @@
             "connected_region": "Crab Shaft Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10204,6 +11152,8 @@
             "connected_region": "Crab Shaft Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10212,6 +11162,8 @@
             "connected_region": "Crab Shaft Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10272,6 +11224,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10330,6 +11285,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10388,6 +11346,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10407,6 +11368,8 @@
             "connected_region": "Watering Hole",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10415,6 +11378,8 @@
             "connected_region": "Watering Hole",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10475,6 +11440,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10533,6 +11501,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10552,6 +11523,8 @@
             "connected_region": "Watering Hole Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10612,6 +11585,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10621,6 +11597,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10630,6 +11609,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10649,6 +11631,8 @@
             "connected_region": "Beach",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10657,6 +11641,8 @@
             "connected_region": "Beach",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10717,6 +11703,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10775,6 +11764,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10784,6 +11776,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10803,6 +11798,8 @@
             "connected_region": "Crab Shaft Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10811,6 +11808,8 @@
             "connected_region": "Crab Shaft Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10871,6 +11870,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10929,6 +11931,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10948,6 +11953,8 @@
             "connected_region": "Aqueduct Top Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10956,6 +11963,8 @@
             "connected_region": "Aqueduct Top Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11016,6 +12025,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11074,6 +12086,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11093,6 +12108,8 @@
             "connected_region": "Aqueduct Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11101,6 +12118,8 @@
             "connected_region": "Aqueduct Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11109,6 +12128,8 @@
             "connected_region": "Aqueduct Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11117,6 +12138,8 @@
             "connected_region": "Aqueduct Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11177,6 +12200,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11235,6 +12261,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11293,6 +12322,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11351,6 +12383,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11409,6 +12444,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11418,6 +12456,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11437,6 +12478,8 @@
             "connected_region": "Aqueduct",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11497,6 +12540,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11506,6 +12552,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11515,6 +12564,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11534,6 +12586,8 @@
             "connected_region": "Post Botwoon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11542,6 +12596,8 @@
             "connected_region": "Post Botwoon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11602,6 +12658,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11660,6 +12719,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11718,6 +12780,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11727,6 +12792,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11746,6 +12814,8 @@
             "connected_region": "West Sand Hall Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11754,6 +12824,8 @@
             "connected_region": "West Sand Hall Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11814,6 +12886,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11872,6 +12947,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11930,6 +13008,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11988,6 +13069,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12007,6 +13091,8 @@
             "connected_region": "Left Sandpit",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12067,6 +13153,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12125,6 +13214,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12134,6 +13226,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12143,6 +13238,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12162,6 +13260,8 @@
             "connected_region": "Oasis Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12170,6 +13270,8 @@
             "connected_region": "Oasis Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12178,6 +13280,8 @@
             "connected_region": "Oasis Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12186,6 +13290,8 @@
             "connected_region": "Oasis Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12194,6 +13300,8 @@
             "connected_region": "Oasis Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12202,6 +13310,8 @@
             "connected_region": "Oasis Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12262,6 +13372,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12320,6 +13433,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12329,6 +13445,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12348,6 +13467,8 @@
             "connected_region": "Right Sandpit",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12408,6 +13529,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12417,6 +13541,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12426,6 +13553,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12445,6 +13575,8 @@
             "connected_region": "Le Coude Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12453,6 +13585,8 @@
             "connected_region": "Le Coude Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12513,6 +13647,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12571,6 +13708,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12590,6 +13730,8 @@
             "connected_region": "Toilet Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12598,6 +13740,8 @@
             "connected_region": "Toilet Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12606,6 +13750,8 @@
             "connected_region": "Toilet Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12666,6 +13812,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12724,6 +13873,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12782,6 +13934,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12791,6 +13946,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12810,6 +13968,8 @@
             "connected_region": "Colosseum Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12818,6 +13978,8 @@
             "connected_region": "Colosseum Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12826,6 +13988,8 @@
             "connected_region": "Colosseum Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12886,6 +14050,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12944,6 +14111,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12963,6 +14133,8 @@
             "connected_region": "Precious Room Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -12971,6 +14143,8 @@
             "connected_region": "Precious Room Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13031,6 +14205,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13089,6 +14266,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13098,6 +14278,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -13117,6 +14300,8 @@
             "connected_region": "DraygonRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13125,6 +14310,8 @@
             "connected_region": "DraygonRoomOut",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13185,6 +14372,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13243,6 +14433,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -13262,6 +14455,8 @@
             "connected_region": "DraygonRoomIn",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13270,6 +14465,8 @@
             "connected_region": "DraygonRoomIn",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13330,6 +14527,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13388,6 +14588,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -13407,6 +14610,8 @@
             "connected_region": "Draygon Room Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13467,6 +14672,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13476,6 +14684,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13485,6 +14696,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -13504,6 +14718,8 @@
             "connected_region": "Red Tower Top Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13512,6 +14728,8 @@
             "connected_region": "Red Tower Top Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13520,6 +14738,8 @@
             "connected_region": "Red Tower Top Left",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13580,6 +14800,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13638,6 +14861,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13696,6 +14922,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13705,6 +14934,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13763,6 +14995,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -13782,6 +15017,8 @@
             "connected_region": "Caterpillar Room Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13790,6 +15027,8 @@
             "connected_region": "Caterpillar Room Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13798,6 +15037,8 @@
             "connected_region": "Caterpillar Room Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13858,6 +15099,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -13916,6 +15160,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -13935,6 +15182,8 @@
             "connected_region": "Red Brinstar Elevator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13943,6 +15192,8 @@
             "connected_region": "Red Brinstar Elevator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -13951,6 +15202,8 @@
             "connected_region": "Red Brinstar Elevator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14011,6 +15264,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14069,6 +15325,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14078,6 +15337,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14087,6 +15349,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14096,6 +15361,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14154,6 +15422,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -14173,6 +15444,8 @@
             "connected_region": "East Tunnel Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -14181,6 +15454,8 @@
             "connected_region": "East Tunnel Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -14189,6 +15464,8 @@
             "connected_region": "East Tunnel Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -14197,6 +15474,8 @@
             "connected_region": "East Tunnel Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14257,6 +15536,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14315,6 +15597,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14373,6 +15658,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14382,6 +15670,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14440,6 +15731,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -14459,6 +15753,8 @@
             "connected_region": "East Tunnel Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -14467,6 +15763,8 @@
             "connected_region": "East Tunnel Top Right",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14527,6 +15825,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14585,6 +15886,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -14604,6 +15908,8 @@
             "connected_region": "Glass Tunnel Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -14612,6 +15918,8 @@
             "connected_region": "Glass Tunnel Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14672,6 +15980,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14730,6 +16041,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -14749,6 +16063,8 @@
             "connected_region": "Golden Four",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14760,6 +16076,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -14818,6 +16137,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -14837,6 +16159,8 @@
             "connected_region": "Energy Tank, Gauntlet",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -15035,6 +16359,8 @@
             "connected_region": "Bomb",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -15291,6 +16617,8 @@
             "connected_region": "Energy Tank, Terminator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -15299,6 +16627,8 @@
             "connected_region": "Energy Tank, Terminator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -15307,6 +16637,8 @@
             "connected_region": "Energy Tank, Terminator",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -15505,6 +16837,8 @@
             "connected_region": "Reserve Tank, Brinstar",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -15703,6 +17037,8 @@
             "connected_region": "Charge Beam",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -15901,6 +17237,8 @@
             "connected_region": "Morphing Ball",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16099,6 +17437,8 @@
             "connected_region": "Energy Tank, Brinstar Ceiling",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16297,6 +17637,8 @@
             "connected_region": "Energy Tank, Etecoons",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16495,6 +17837,8 @@
             "connected_region": "Energy Tank, Waterway",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16693,6 +18037,8 @@
             "connected_region": "Energy Tank, Brinstar Gate",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16891,6 +18237,8 @@
             "connected_region": "X-Ray Scope",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -17089,6 +18437,8 @@
             "connected_region": "Spazer",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -17287,6 +18637,8 @@
             "connected_region": "Energy Tank, Kraid",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -17485,6 +18837,8 @@
             "connected_region": "Kraid",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -17683,6 +19037,8 @@
             "connected_region": "Varia Suit",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -17881,6 +19237,8 @@
             "connected_region": "Ice Beam",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -18079,6 +19437,8 @@
             "connected_region": "Energy Tank, Crocomire",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -18277,6 +19637,8 @@
             "connected_region": "Hi-Jump Boots",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -18533,6 +19895,8 @@
             "connected_region": "Grapple Beam",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -18789,6 +20153,8 @@
             "connected_region": "Reserve Tank, Norfair",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -18797,6 +20163,8 @@
             "connected_region": "Reserve Tank, Norfair",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -18995,6 +20363,8 @@
             "connected_region": "Speed Booster",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19193,6 +20563,8 @@
             "connected_region": "Wave Beam",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19449,6 +20821,8 @@
             "connected_region": "Ridley",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19647,6 +21021,8 @@
             "connected_region": "Energy Tank, Ridley",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19845,6 +21221,8 @@
             "connected_region": "Screw Attack",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -20101,6 +21479,8 @@
             "connected_region": "Energy Tank, Firefleas",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -20357,6 +21737,8 @@
             "connected_region": "Reserve Tank, Wrecked Ship",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -20555,6 +21937,8 @@
             "connected_region": "Energy Tank, Wrecked Ship",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -20753,6 +22137,8 @@
             "connected_region": "Phantoon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -20951,6 +22337,8 @@
             "connected_region": "Right Super, Wrecked Ship",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21149,6 +22537,8 @@
             "connected_region": "Gravity Suit",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21347,6 +22737,8 @@
             "connected_region": "Energy Tank, Mama turtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -21355,6 +22747,8 @@
             "connected_region": "Energy Tank, Mama turtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21553,6 +22947,8 @@
             "connected_region": "Plasma Beam",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21809,6 +23205,8 @@
             "connected_region": "Reserve Tank, Maridia",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22007,6 +23405,8 @@
             "connected_region": "Spring Ball",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22263,6 +23663,8 @@
             "connected_region": "Energy Tank, Botwoon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22461,6 +23863,8 @@
             "connected_region": "Draygon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22659,6 +24063,8 @@
             "connected_region": "Space Jump",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22915,6 +24321,8 @@
             "connected_region": "Mother Brain",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -23113,6 +24521,8 @@
             "connected_region": "Spore Spawn",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -23311,6 +24721,8 @@
             "connected_region": "Botwoon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -23509,6 +24921,8 @@
             "connected_region": "Crocomire",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -23707,6 +25121,8 @@
             "connected_region": "Golden Torizo",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -23905,6 +25321,8 @@
             "connected_region": "Power Bomb (Crateria surface)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -24103,6 +25521,8 @@
             "connected_region": "Missile (outside Wrecked Ship bottom)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -24359,6 +25779,8 @@
             "connected_region": "Missile (outside Wrecked Ship top)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -24557,6 +25979,8 @@
             "connected_region": "Missile (outside Wrecked Ship middle)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -24755,6 +26179,8 @@
             "connected_region": "Missile (Crateria moat)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -24953,6 +26379,8 @@
             "connected_region": "Missile (Crateria bottom)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -25151,6 +26579,8 @@
             "connected_region": "Missile (Crateria gauntlet right)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -25159,6 +26589,8 @@
             "connected_region": "Missile (Crateria gauntlet right)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -25357,6 +26789,8 @@
             "connected_region": "Missile (Crateria gauntlet left)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -25365,6 +26799,8 @@
             "connected_region": "Missile (Crateria gauntlet left)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -25563,6 +26999,8 @@
             "connected_region": "Super Missile (Crateria)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -25761,6 +27199,8 @@
             "connected_region": "Missile (Crateria middle)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -25959,6 +27399,8 @@
             "connected_region": "Power Bomb (green Brinstar bottom)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -26157,6 +27599,8 @@
             "connected_region": "Super Missile (pink Brinstar)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -26413,6 +27857,8 @@
             "connected_region": "Missile (green Brinstar below super missile)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -26669,6 +28115,8 @@
             "connected_region": "Super Missile (green Brinstar top)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -26867,6 +28315,8 @@
             "connected_region": "Missile (green Brinstar behind missile)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -27065,6 +28515,8 @@
             "connected_region": "Missile (green Brinstar behind reserve tank)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -27263,6 +28715,8 @@
             "connected_region": "Missile (pink Brinstar top)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -27461,6 +28915,8 @@
             "connected_region": "Missile (pink Brinstar bottom)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -27659,6 +29115,8 @@
             "connected_region": "Power Bomb (pink Brinstar)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -27857,6 +29315,8 @@
             "connected_region": "Missile (green Brinstar pipe)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -28055,6 +29515,8 @@
             "connected_region": "Power Bomb (blue Brinstar)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -28063,6 +29525,8 @@
             "connected_region": "Power Bomb (blue Brinstar)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -28261,6 +29725,8 @@
             "connected_region": "Missile (blue Brinstar middle)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -28459,6 +29925,8 @@
             "connected_region": "Super Missile (green Brinstar bottom)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -28657,6 +30125,8 @@
             "connected_region": "Missile (blue Brinstar bottom)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -28855,6 +30325,8 @@
             "connected_region": "Missile (blue Brinstar top)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -29053,6 +30525,8 @@
             "connected_region": "Missile (blue Brinstar behind missile)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -29251,6 +30725,8 @@
             "connected_region": "Power Bomb (red Brinstar sidehopper room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -29449,6 +30925,8 @@
             "connected_region": "Power Bomb (red Brinstar spike room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -29647,6 +31125,8 @@
             "connected_region": "Missile (red Brinstar spike room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -29845,6 +31325,8 @@
             "connected_region": "Missile (Kraid)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -30043,6 +31525,8 @@
             "connected_region": "Missile (lava room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -30241,6 +31725,8 @@
             "connected_region": "Missile (below Ice Beam)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -30249,6 +31735,8 @@
             "connected_region": "Missile (below Ice Beam)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -30447,6 +31935,8 @@
             "connected_region": "Missile (above Crocomire)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -30645,6 +32135,8 @@
             "connected_region": "Missile (Hi-Jump Boots)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -30901,6 +32393,8 @@
             "connected_region": "Energy Tank (Hi-Jump Boots)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -31099,6 +32593,8 @@
             "connected_region": "Power Bomb (Crocomire)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -31297,6 +32793,8 @@
             "connected_region": "Missile (below Crocomire)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -31495,6 +32993,8 @@
             "connected_region": "Missile (Grapple Beam)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -31751,6 +33251,8 @@
             "connected_region": "Missile (Norfair Reserve Tank)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -31759,6 +33261,8 @@
             "connected_region": "Missile (Norfair Reserve Tank)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -31957,6 +33461,8 @@
             "connected_region": "Missile (bubble Norfair green door)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -31965,6 +33471,8 @@
             "connected_region": "Missile (bubble Norfair green door)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -32163,6 +33671,8 @@
             "connected_region": "Missile (bubble Norfair)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -32361,6 +33871,8 @@
             "connected_region": "Missile (Speed Booster)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -32617,6 +34129,8 @@
             "connected_region": "Missile (Wave Beam)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -32815,6 +34329,8 @@
             "connected_region": "Missile (Gold Torizo)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -33071,6 +34587,8 @@
             "connected_region": "Super Missile (Gold Torizo)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -33327,6 +34845,8 @@
             "connected_region": "Missile (Mickey Mouse room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -33525,6 +35045,8 @@
             "connected_region": "Missile (lower Norfair above fire flea room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -33723,6 +35245,8 @@
             "connected_region": "Power Bomb (lower Norfair above fire flea room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -33921,6 +35445,8 @@
             "connected_region": "Power Bomb (Power Bombs of shame)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -34119,6 +35645,8 @@
             "connected_region": "Missile (lower Norfair near Wave Beam)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -34317,6 +35845,8 @@
             "connected_region": "Missile (Wrecked Ship middle)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -34515,6 +36045,8 @@
             "connected_region": "Missile (Gravity Suit)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -34713,6 +36245,8 @@
             "connected_region": "Missile (Wrecked Ship top)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -34911,6 +36445,8 @@
             "connected_region": "Super Missile (Wrecked Ship left)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -35109,6 +36645,8 @@
             "connected_region": "Missile (green Maridia shinespark)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -35307,6 +36845,8 @@
             "connected_region": "Super Missile (green Maridia)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -35505,6 +37045,8 @@
             "connected_region": "Missile (green Maridia tatori)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -35513,6 +37055,8 @@
             "connected_region": "Missile (green Maridia tatori)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -35711,6 +37255,8 @@
             "connected_region": "Super Missile (yellow Maridia)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -35909,6 +37455,8 @@
             "connected_region": "Missile (yellow Maridia super missile)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -36107,6 +37655,8 @@
             "connected_region": "Missile (yellow Maridia false wall)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -36305,6 +37855,8 @@
             "connected_region": "Missile (left Maridia sand pit room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -36503,6 +38055,8 @@
             "connected_region": "Missile (right Maridia sand pit room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -36701,6 +38255,8 @@
             "connected_region": "Power Bomb (right Maridia sand pit room)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -36899,6 +38455,8 @@
             "connected_region": "Missile (pink Maridia)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -37097,6 +38655,8 @@
             "connected_region": "Super Missile (pink Maridia)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -37295,6 +38855,8 @@
             "connected_region": "Missile (Draygon)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -37495,6 +39057,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -37849,6 +39414,132 @@
         "trap": false,
         "event": false,
         "type": null,
+        "max_count": 1
+      },
+      "Kraid": {
+        "name": "Kraid",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ridley": {
+        "name": "Ridley",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Phantoon": {
+        "name": "Phantoon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Draygon": {
+        "name": "Draygon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Mother Brain": {
+        "name": "Mother Brain",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Spore Spawn": {
+        "name": "Spore Spawn",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Botwoon": {
+        "name": "Botwoon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Crocomire": {
+        "name": "Crocomire",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Golden Torizo": {
+        "name": "Golden Torizo",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
         "max_count": 1
       }
     }

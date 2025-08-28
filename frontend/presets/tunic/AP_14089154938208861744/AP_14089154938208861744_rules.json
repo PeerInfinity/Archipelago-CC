@@ -29,6 +29,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -48,6 +51,8 @@
             "connected_region": "Overworld",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -61,6 +66,9 @@
               "inferred": true,
               "description": "Requires having Ability"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -70,6 +78,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -81,6 +92,9 @@
               "inferred": true,
               "description": "Requires having Lantern"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -104,6 +118,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -133,6 +150,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -142,6 +162,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -171,6 +194,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -227,6 +253,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -236,6 +265,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -298,6 +330,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -307,6 +342,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -412,6 +450,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2150,6 +2191,8 @@
             "connected_region": "Overworld Holy Cross",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2730,6 +2773,8 @@
             "connected_region": "East Forest",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3379,6 +3424,8 @@
             "connected_region": "Dark Tomb",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3390,6 +3437,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3536,6 +3586,8 @@
             "connected_region": "Beneath the Well",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3811,6 +3863,8 @@
             "connected_region": "West Garden",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3819,6 +3873,8 @@
             "connected_region": "West Garden",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4320,6 +4376,8 @@
             "connected_region": "Ruined Atoll",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4331,6 +4389,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4396,6 +4457,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4795,6 +4859,8 @@
             "connected_region": "Frog's Domain",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5059,6 +5125,8 @@
             "connected_region": "Library",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5356,6 +5424,8 @@
             "connected_region": "Eastern Vault Fortress",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5364,6 +5434,8 @@
             "connected_region": "Eastern Vault Fortress",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5375,6 +5447,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5740,6 +5815,8 @@
             "connected_region": "Beneath the Vault",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5748,6 +5825,8 @@
             "connected_region": "Beneath the Vault",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5759,6 +5838,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5927,6 +6009,8 @@
             "connected_region": "Quarry Back",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5952,6 +6036,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5964,6 +6051,9 @@
                 "name": "laurels"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6132,6 +6222,8 @@
             "connected_region": "Quarry",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6140,6 +6232,8 @@
             "connected_region": "Quarry",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6151,6 +6245,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6162,6 +6259,9 @@
               "inferred": true,
               "description": "Requires having Mask"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6184,6 +6284,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6380,6 +6483,8 @@
             "connected_region": "Monastery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6388,6 +6493,8 @@
             "connected_region": "Monastery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6423,6 +6530,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6482,6 +6592,8 @@
             "connected_region": "Monastery Back",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6553,6 +6665,8 @@
             "connected_region": "Lower Quarry",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6578,6 +6692,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6778,6 +6895,8 @@
             "connected_region": "Rooted Ziggurat",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6786,6 +6905,8 @@
             "connected_region": "Rooted Ziggurat",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7033,6 +7154,8 @@
             "connected_region": "Swamp",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7075,6 +7198,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7609,6 +7735,8 @@
             "connected_region": "Cathedral",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7792,6 +7920,8 @@
             "connected_region": "Spirit Arena",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10199,6 +10329,20 @@
         "trap": false,
         "event": false,
         "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
         "max_count": 1
       }
     }

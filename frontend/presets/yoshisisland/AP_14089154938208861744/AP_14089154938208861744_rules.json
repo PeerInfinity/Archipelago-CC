@@ -29,6 +29,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -48,6 +51,8 @@
             "connected_region": "Overworld",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -59,6 +64,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -71,6 +79,9 @@
                 "value": "World 1 Gate"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -83,6 +94,9 @@
                 "value": "World 2 Gate"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -95,6 +109,9 @@
                 "value": "World 3 Gate"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -107,6 +124,9 @@
                 "value": "World 4 Gate"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -119,6 +139,9 @@
                 "value": "World 5 Gate"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -131,6 +154,9 @@
                 "value": "World 6 Gate"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -150,6 +176,8 @@
             "connected_region": "World 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -158,6 +186,8 @@
             "connected_region": "World 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -169,6 +199,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -178,6 +211,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -187,6 +223,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -196,6 +235,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -205,6 +247,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -214,6 +259,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -223,6 +271,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -232,6 +283,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -251,6 +305,8 @@
             "connected_region": "World 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -262,6 +318,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -271,6 +330,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -280,6 +342,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -289,6 +354,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -298,6 +366,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -307,6 +378,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -316,6 +390,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -325,6 +402,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -344,6 +424,8 @@
             "connected_region": "World 3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -355,6 +437,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -364,6 +449,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -373,6 +461,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -382,6 +473,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -391,6 +485,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -400,6 +497,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -409,6 +509,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -418,6 +521,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -437,6 +543,8 @@
             "connected_region": "World 4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -448,6 +556,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -457,6 +568,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -466,6 +580,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -475,6 +592,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -484,6 +604,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -493,6 +616,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -502,6 +628,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -511,6 +640,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -530,6 +662,8 @@
             "connected_region": "World 5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -541,6 +675,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -550,6 +687,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -559,6 +699,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -568,6 +711,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -577,6 +723,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -586,6 +735,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -595,6 +747,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -604,6 +759,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -623,6 +781,8 @@
             "connected_region": "World 6",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -634,6 +794,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -643,6 +806,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -652,6 +818,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -661,6 +830,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -670,6 +842,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -679,6 +854,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -688,6 +866,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -705,6 +886,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -724,6 +908,8 @@
             "connected_region": "1-1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -869,6 +1055,8 @@
             "connected_region": "1-2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1015,6 +1203,8 @@
             "connected_region": "1-3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1114,6 +1304,8 @@
             "connected_region": "1-4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1133,6 +1325,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1316,6 +1511,8 @@
             "connected_region": "Burt The Bashful's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1363,6 +1560,8 @@
             "connected_region": "1-5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1481,6 +1680,8 @@
             "connected_region": "1-6",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1676,6 +1877,8 @@
             "connected_region": "1-7",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1867,6 +2070,8 @@
             "connected_region": "1-8",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1886,6 +2091,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2036,6 +2244,8 @@
             "connected_region": "Salvo The Slime's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2083,6 +2293,8 @@
             "connected_region": "2-1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2233,6 +2445,8 @@
             "connected_region": "2-2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2455,6 +2669,8 @@
             "connected_region": "2-3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2581,6 +2797,8 @@
             "connected_region": "2-4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2600,6 +2818,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2774,6 +2995,8 @@
             "connected_region": "Bigger Boo's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2821,6 +3044,8 @@
             "connected_region": "2-5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2939,6 +3164,8 @@
             "connected_region": "2-6",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3099,6 +3326,8 @@
             "connected_region": "2-7",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3341,6 +3570,8 @@
             "connected_region": "2-8",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3360,6 +3591,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3569,6 +3803,8 @@
             "connected_region": "Roger The Ghost's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3616,6 +3852,8 @@
             "connected_region": "3-1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3717,6 +3955,8 @@
             "connected_region": "3-2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3875,6 +4115,8 @@
             "connected_region": "3-3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4045,6 +4287,8 @@
             "connected_region": "3-4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4064,6 +4308,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4211,6 +4458,8 @@
             "connected_region": "Prince Froggy's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4258,6 +4507,8 @@
             "connected_region": "3-5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4437,6 +4688,8 @@
             "connected_region": "3-6",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4647,6 +4900,8 @@
             "connected_region": "3-7",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4784,6 +5039,8 @@
             "connected_region": "3-8",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4803,6 +5060,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4971,6 +5231,8 @@
             "connected_region": "Naval Piranha's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5018,6 +5280,8 @@
             "connected_region": "4-1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5157,6 +5421,8 @@
             "connected_region": "4-2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5302,6 +5568,8 @@
             "connected_region": "4-3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5464,6 +5732,8 @@
             "connected_region": "4-4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5483,6 +5753,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5743,6 +6016,8 @@
             "connected_region": "Marching Milde's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5790,6 +6065,8 @@
             "connected_region": "4-5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5944,6 +6221,8 @@
             "connected_region": "4-6",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6211,6 +6490,8 @@
             "connected_region": "4-7",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6371,6 +6652,8 @@
             "connected_region": "4-8",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6390,6 +6673,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6560,6 +6846,8 @@
             "connected_region": "Hookbill The Koopa's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6607,6 +6895,8 @@
             "connected_region": "5-1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6764,6 +7054,8 @@
             "connected_region": "5-2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6877,6 +7169,8 @@
             "connected_region": "5-3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7142,6 +7436,8 @@
             "connected_region": "5-4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7161,6 +7457,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7367,6 +7666,8 @@
             "connected_region": "Sluggy The Unshaven's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7414,6 +7715,8 @@
             "connected_region": "5-5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7560,6 +7863,8 @@
             "connected_region": "5-6",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7673,6 +7978,8 @@
             "connected_region": "5-7",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7822,6 +8129,8 @@
             "connected_region": "5-8",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7841,6 +8150,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7991,6 +8303,8 @@
             "connected_region": "Raphael The Raven's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8038,6 +8352,8 @@
             "connected_region": "6-1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8196,6 +8512,8 @@
             "connected_region": "6-2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8323,6 +8641,8 @@
             "connected_region": "6-3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8416,6 +8736,8 @@
             "connected_region": "6-4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8435,6 +8757,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8687,6 +9012,8 @@
             "connected_region": "Tap-Tap The Red Nose's Boss Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8734,6 +9061,8 @@
             "connected_region": "6-5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8947,6 +9276,8 @@
             "connected_region": "6-6",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9165,6 +9496,8 @@
             "connected_region": "6-7",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9293,6 +9626,8 @@
             "connected_region": "6-8",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9312,6 +9647,9 @@
               },
               "args": []
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9482,6 +9820,8 @@
             "connected_region": "Bowser's Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10563,6 +10903,62 @@
         "trap": false,
         "event": false,
         "type": null,
+        "max_count": 1
+      },
+      "Boss Clear": {
+        "name": "Boss Clear",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 11
+      },
+      "Bandit Consumables": {
+        "name": "Bandit Consumables",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Bandit Watermelons": {
+        "name": "Bandit Watermelons",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Saved Baby Luigi": {
+        "name": "Saved Baby Luigi",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
         "max_count": 1
       }
     }

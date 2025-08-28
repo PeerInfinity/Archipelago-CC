@@ -106,8 +106,10 @@ class AHitGameExportHandler(BaseGameExportHandler):
                 "chapter_costs": {}
             }
 
-    def expand_helper(self, helper_name: str):
+    def expand_helper(self, helper_name: str, args: List[Any] = None):
         """Expand A Hat in Time specific helper functions."""
+        if args is None:
+            args = []
         
         # A Hat in Time helper function mappings
         helper_mappings = {
@@ -303,6 +305,18 @@ class AHitGameExportHandler(BaseGameExportHandler):
             }
         }
         
+        # Special handling for functions that require arguments
+        if helper_name == 'can_clear_required_act':
+            result = {
+                'type': 'generic_helper',
+                'name': 'can_clear_required_act',
+                'description': 'Checks if a specific act can be completed'
+            }
+            # Include args if provided
+            if args:
+                result['args'] = args
+            return result
+        
         # Return expanded helper if found, otherwise None to preserve as-is
         return helper_mappings.get(helper_name)
     
@@ -313,7 +327,7 @@ class AHitGameExportHandler(BaseGameExportHandler):
             
         # Handle helper functions
         if rule.get('type') == 'helper':
-            expanded = self.expand_helper(rule['name'])
+            expanded = self.expand_helper(rule['name'], rule.get('args', []))
             if expanded:
                 return expanded
             # If no specific mapping, preserve the helper node

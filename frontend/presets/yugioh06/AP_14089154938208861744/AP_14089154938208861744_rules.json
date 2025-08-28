@@ -29,6 +29,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -38,6 +41,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -47,6 +53,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -56,6 +65,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -75,6 +87,8 @@
             "connected_region": "Campaign",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -116,6 +130,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -155,6 +172,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -194,6 +214,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -233,6 +256,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -272,6 +298,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -311,6 +340,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -350,6 +382,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -389,6 +424,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -428,6 +466,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -467,6 +508,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -506,6 +550,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -545,6 +592,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -584,6 +634,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -623,6 +676,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -662,6 +718,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -701,6 +760,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -740,6 +802,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -779,6 +844,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -818,6 +886,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -857,6 +928,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -896,6 +970,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -935,6 +1012,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -980,6 +1060,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1025,6 +1108,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1070,6 +1156,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2612,6 +2701,8 @@
             "connected_region": "Challenges",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2659,6 +2750,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2704,6 +2798,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2749,6 +2846,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2784,6 +2884,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2819,6 +2922,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2864,6 +2970,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2899,6 +3008,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2944,6 +3056,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2996,6 +3111,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3031,6 +3149,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3050,6 +3171,8 @@
             "connected_region": "Card Shop",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3064,6 +3187,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3076,6 +3202,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3088,6 +3217,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3100,6 +3232,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3112,6 +3247,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3124,6 +3262,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3136,6 +3277,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3148,6 +3292,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3160,6 +3307,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3172,6 +3322,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3184,6 +3337,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3196,6 +3352,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3208,6 +3367,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3220,6 +3382,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3232,6 +3397,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3244,6 +3412,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3256,6 +3427,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3268,6 +3442,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3280,6 +3457,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3292,6 +3472,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3304,6 +3487,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3316,6 +3502,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3328,6 +3517,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3340,6 +3532,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3352,6 +3547,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3364,6 +3562,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3376,6 +3577,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3388,6 +3592,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3400,6 +3607,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3412,6 +3622,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3424,6 +3637,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3436,6 +3652,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3448,6 +3667,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3460,6 +3682,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3472,6 +3697,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3484,6 +3712,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3496,6 +3727,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3508,6 +3742,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3520,6 +3757,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3532,6 +3772,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3544,6 +3787,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3556,6 +3802,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3568,6 +3817,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3580,6 +3832,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3592,6 +3847,9 @@
                 "name": "unlock"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4682,6 +4940,8 @@
             "connected_region": "Structure Deck",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4937,6 +5197,8 @@
             "connected_region": "Kuriboh",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4976,6 +5238,8 @@
             "connected_region": "Scapegoat",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5015,6 +5279,8 @@
             "connected_region": "Skull Servant",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5054,6 +5320,8 @@
             "connected_region": "Watapon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5093,6 +5361,8 @@
             "connected_region": "White Magician Pikeru",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5132,6 +5402,8 @@
             "connected_region": "Battery Man C",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5189,6 +5461,8 @@
             "connected_region": "Ojama Yellow",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5228,6 +5502,8 @@
             "connected_region": "Goblin King",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5285,6 +5561,8 @@
             "connected_region": "Des Frog",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5342,6 +5620,8 @@
             "connected_region": "Water Dragon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5399,6 +5679,8 @@
             "connected_region": "Red-Eyes Darkness Dragon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5456,6 +5738,8 @@
             "connected_region": "Vampire Genesis",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5513,6 +5797,8 @@
             "connected_region": "Infernal Flame Emperor",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5552,6 +5838,8 @@
             "connected_region": "Ocean Dragon Lord - Neo-Daedalus",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5591,6 +5879,8 @@
             "connected_region": "Helios Duo Megiste",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5648,6 +5938,8 @@
             "connected_region": "Gilford the Legend",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5705,6 +5997,8 @@
             "connected_region": "Dark Eradicator Warlock",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5762,6 +6056,8 @@
             "connected_region": "Guardian Exode",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5801,6 +6097,8 @@
             "connected_region": "Goldd, Wu-Lord of Dark World",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5858,6 +6156,8 @@
             "connected_region": "Elemental Hero Erikshieler",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5915,6 +6215,8 @@
             "connected_region": "Raviel, Lord of Phantasms",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5972,6 +6274,8 @@
             "connected_region": "Horus the Black Flame Dragon LV8",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6029,6 +6333,8 @@
             "connected_region": "Stronghold",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6086,6 +6392,8 @@
             "connected_region": "Sacred Phoenix of Nephthys",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6143,6 +6451,8 @@
             "connected_region": "Cyber End Dragon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6200,6 +6510,8 @@
             "connected_region": "LEGEND OF B.E.W.D.",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6293,6 +6605,8 @@
             "connected_region": "METAL RAIDERS",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6710,6 +7024,8 @@
             "connected_region": "PHARAOH'S SERVANT",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6929,6 +7245,8 @@
             "connected_region": "PHARAONIC GUARDIAN",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7418,6 +7736,8 @@
             "connected_region": "SPELL RULER",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7817,6 +8137,8 @@
             "connected_region": "LABYRINTH OF NIGHTMARE",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8252,6 +8574,8 @@
             "connected_region": "LEGACY OF DARKNESS",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8669,6 +8993,8 @@
             "connected_region": "MAGICIAN'S FORCE",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9410,6 +9736,8 @@
             "connected_region": "DARK CRISIS",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9899,6 +10227,8 @@
             "connected_region": "INVASION OF CHAOS",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10388,6 +10718,8 @@
             "connected_region": "ANCIENT SANCTUARY",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10625,6 +10957,8 @@
             "connected_region": "SOUL OF THE DUELIST",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10916,6 +11250,8 @@
             "connected_region": "RISE OF DESTINY",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11099,6 +11435,8 @@
             "connected_region": "FLAMING ETERNITY",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11336,6 +11674,8 @@
             "connected_region": "THE LOST MILLENIUM",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11573,6 +11913,8 @@
             "connected_region": "CYBERNETIC REVOLUTION",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11756,6 +12098,8 @@
             "connected_region": "ELEMENTAL ENERGY",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12137,6 +12481,8 @@
             "connected_region": "SHADOW OF INFINITY",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12356,6 +12702,8 @@
             "connected_region": "GAME GIFT COLLECTION",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12809,6 +13157,8 @@
             "connected_region": "Special Gift Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13064,6 +13414,8 @@
             "connected_region": "Fairy Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13373,6 +13725,8 @@
             "connected_region": "Dragon Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13664,6 +14018,8 @@
             "connected_region": "Warrior Collection A",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -13793,6 +14149,8 @@
             "connected_region": "Warrior Collection B",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14228,6 +14586,8 @@
             "connected_region": "Fiend Collection A",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14447,6 +14807,8 @@
             "connected_region": "Fiend Collection B",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14882,6 +15244,8 @@
             "connected_region": "Machine Collection A",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -14993,6 +15357,8 @@
             "connected_region": "Machine Collection B",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -15320,6 +15686,8 @@
             "connected_region": "Spellcaster Collection A",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -15539,6 +15907,8 @@
             "connected_region": "Spellcaster Collection B",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16046,6 +16416,8 @@
             "connected_region": "Zombie Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16319,6 +16691,8 @@
             "connected_region": "Special Monsters A",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -16952,6 +17326,8 @@
             "connected_region": "Special Monsters B",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -17459,6 +17835,8 @@
             "connected_region": "Reverse Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -17786,6 +18164,8 @@
             "connected_region": "LP Recovery Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -18059,6 +18439,8 @@
             "connected_region": "Special Summon Collection A",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -18674,6 +19056,8 @@
             "connected_region": "Special Summon Collection B",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19181,6 +19565,8 @@
             "connected_region": "Special Summon Collection C",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19634,6 +20020,8 @@
             "connected_region": "Equipment Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19709,6 +20097,8 @@
             "connected_region": "Continuous Spell/Trap A",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -19946,6 +20336,8 @@
             "connected_region": "Continuous Spell/Trap B",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -20183,6 +20575,8 @@
             "connected_region": "Quick/Counter Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -20636,6 +21030,8 @@
             "connected_region": "Direct Damage Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21107,6 +21503,8 @@
             "connected_region": "Direct Attack Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21308,6 +21706,8 @@
             "connected_region": "Monster Destroy Collection",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21869,6 +22269,8 @@
             "connected_region": "LD12 All except Wind forbidden",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21926,6 +22328,8 @@
             "connected_region": "LD16 Effect Monsters forbidden",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -21983,6 +22387,8 @@
             "connected_region": "LD21 All except Dark forbidden",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22040,6 +22446,8 @@
             "connected_region": "LD23 Refer to Mar 05 Banlist",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22097,6 +22505,8 @@
             "connected_region": "LD24 Refer to Sept 04 Banlist",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22154,6 +22564,8 @@
             "connected_region": "LD37 All except Water forbidden",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22211,6 +22623,8 @@
             "connected_region": "LD38 Refer to Mar 04 Banlist",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22268,6 +22682,8 @@
             "connected_region": "TD13 Flip Summon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22325,6 +22741,8 @@
             "connected_region": "TD21 Victory D.",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -22382,6 +22800,8 @@
             "connected_region": "TD24 Victory in 5 Turns",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -25000,6 +25420,5788 @@
         "event": false,
         "type": null,
         "max_count": 1
+      },
+      "Ojama Delta Hurricane and required cards": {
+        "name": "Ojama Delta Hurricane and required cards",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Huge Revolution and its required cards": {
+        "name": "Huge Revolution and its required cards",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Perfectly Ultimate Great Moth and its required cards": {
+        "name": "Perfectly Ultimate Great Moth and its required cards",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Valkyrion the Magna Warrior and its pieces": {
+        "name": "Valkyrion the Magna Warrior and its pieces",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Sage and its required cards": {
+        "name": "Dark Sage and its required cards",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Destiny Board and its letters": {
+        "name": "Destiny Board and its letters",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "XYZ-Dragon Cannon fusions and their materials": {
+        "name": "XYZ-Dragon Cannon fusions and their materials",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "VWXYZ-Dragon Catapult Cannon and the fusion materials": {
+        "name": "VWXYZ-Dragon Catapult Cannon and the fusion materials",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Gate Guardian and its pieces": {
+        "name": "Gate Guardian and its pieces",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Scorpion Combination and its required cards": {
+        "name": "Dark Scorpion Combination and its required cards",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Can Exodia Win": {
+        "name": "Can Exodia Win",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Can Yata Lock": {
+        "name": "Can Yata Lock",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Can Stall with Monsters": {
+        "name": "Can Stall with Monsters",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Can Stall with ST": {
+        "name": "Can Stall with ST",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Can Last Turn Win": {
+        "name": "Can Last Turn Win",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Has Back-row removal": {
+        "name": "Has Back-row removal",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Luster Dragon": {
+        "name": "Luster Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Armed Dragon LV3": {
+        "name": "Armed Dragon LV3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Armed Dragon LV5": {
+        "name": "Armed Dragon LV5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Masked Dragon": {
+        "name": "Masked Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Twin-Headed Behemoth": {
+        "name": "Twin-Headed Behemoth",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Stamping Destruction": {
+        "name": "Stamping Destruction",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Nobleman of Crossout": {
+        "name": "Nobleman of Crossout",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Creature Swap": {
+        "name": "Creature Swap",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Reload": {
+        "name": "Reload",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Heavy Storm": {
+        "name": "Heavy Storm",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dust Tornado": {
+        "name": "Dust Tornado",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Mystical Space Typhoon": {
+        "name": "Mystical Space Typhoon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Tier 1 Beaten": {
+        "name": "Tier 1 Beaten",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Tier 2 Beaten": {
+        "name": "Tier 2 Beaten",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Quick-Finish": {
+        "name": "Quick-Finish",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 11
+      },
+      "Tier 3 Beaten": {
+        "name": "Tier 3 Beaten",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Tier 4 Beaten": {
+        "name": "Tier 4 Beaten",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Tier 5 Beaten": {
+        "name": "Tier 5 Beaten",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Goal": {
+        "name": "Goal",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Exodia": {
+        "name": "Exodia",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dark Magician": {
+        "name": "Dark Magician",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Polymerization": {
+        "name": "Polymerization",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Skull Servant": {
+        "name": "Skull Servant",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Petit Moth": {
+        "name": "Petit Moth",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Cocoon of Evolution": {
+        "name": "Cocoon of Evolution",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Time Wizard": {
+        "name": "Time Wizard",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Gate Guardian": {
+        "name": "Gate Guardian",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Kazejin": {
+        "name": "Kazejin",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Suijin": {
+        "name": "Suijin",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Sanga of the Thunder": {
+        "name": "Sanga of the Thunder",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Sangan": {
+        "name": "Sangan",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Castle of Dark Illusions": {
+        "name": "Castle of Dark Illusions",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Soul Release": {
+        "name": "Soul Release",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Magician of Faith": {
+        "name": "Magician of Faith",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Dark Elf": {
+        "name": "Dark Elf",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Summoned Skull": {
+        "name": "Summoned Skull",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "7 Colored Fish": {
+        "name": "7 Colored Fish",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Tribute to the Doomed": {
+        "name": "Tribute to the Doomed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Horn of Heaven": {
+        "name": "Horn of Heaven",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Magic Jammer": {
+        "name": "Magic Jammer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Seven Tools of the Bandit": {
+        "name": "Seven Tools of the Bandit",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Solemn Judgment": {
+        "name": "Solemn Judgment",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dream Clown": {
+        "name": "Dream Clown",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Beast of Talwar": {
+        "name": "Beast of Talwar",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Jinzo": {
+        "name": "Jinzo",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Gearfried the Iron Knight": {
+        "name": "Gearfried the Iron Knight",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Harpie's Brother": {
+        "name": "Harpie's Brother",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Gravity Bind": {
+        "name": "Gravity Bind",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Solemn Wishes": {
+        "name": "Solemn Wishes",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Kiseitai": {
+        "name": "Kiseitai",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Morphing Jar #2": {
+        "name": "Morphing Jar #2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "The Shallow Grave": {
+        "name": "The Shallow Grave",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Magic Drain": {
+        "name": "Magic Drain",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Don Zaloog": {
+        "name": "Don Zaloog",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Reasoning": {
+        "name": "Reasoning",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Snake Syndrome": {
+        "name": "Dark Snake Syndrome",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Helpoemer": {
+        "name": "Helpoemer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Newdoria": {
+        "name": "Newdoria",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Spirit Reaper": {
+        "name": "Spirit Reaper",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Yomi Ship": {
+        "name": "Yomi Ship",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Pyramid Turtle": {
+        "name": "Pyramid Turtle",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Master Kyonshee": {
+        "name": "Master Kyonshee",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Book of Life": {
+        "name": "Book of Life",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Call of the Mummy": {
+        "name": "Call of the Mummy",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Gravekeeper's Spy": {
+        "name": "Gravekeeper's Spy",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Gravekeeper's Guard": {
+        "name": "Gravekeeper's Guard",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "A Cat of Ill Omen": {
+        "name": "A Cat of Ill Omen",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Jowls of Dark Demise": {
+        "name": "Jowls of Dark Demise",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Non Aggression Area": {
+        "name": "Non Aggression Area",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Terraforming": {
+        "name": "Terraforming",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Des Lacooda": {
+        "name": "Des Lacooda",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Swarm of Locusts": {
+        "name": "Swarm of Locusts",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Swarm of Scarabs": {
+        "name": "Swarm of Scarabs",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Wandering Mummy": {
+        "name": "Wandering Mummy",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Royal Keeper": {
+        "name": "Royal Keeper",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Book of Moon": {
+        "name": "Book of Moon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Book of Taiyou": {
+        "name": "Book of Taiyou",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Raigeki Break": {
+        "name": "Raigeki Break",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ritual": {
+        "name": "Ritual",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 7
+      },
+      "Messenger of Peace": {
+        "name": "Messenger of Peace",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Megamorph": {
+        "name": "Megamorph",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Shining Angel": {
+        "name": "Shining Angel",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Mystic Tomato": {
+        "name": "Mystic Tomato",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Giant Rat": {
+        "name": "Giant Rat",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Mother Grizzly": {
+        "name": "Mother Grizzly",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "UFO Turtle": {
+        "name": "UFO Turtle",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Flying Kamakiri 1": {
+        "name": "Flying Kamakiri 1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Giant Germ": {
+        "name": "Giant Germ",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Nimble Momonga": {
+        "name": "Nimble Momonga",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Cyber Jar": {
+        "name": "Cyber Jar",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Spear Cretin": {
+        "name": "Spear Cretin",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Toon Mermaid": {
+        "name": "Toon Mermaid",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Toon Summoned Skull": {
+        "name": "Toon Summoned Skull",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Toon World": {
+        "name": "Toon World",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Rush Recklessly": {
+        "name": "Rush Recklessly",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "The Reliable Guardian": {
+        "name": "The Reliable Guardian",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Senju of the Thousand Hands": {
+        "name": "Senju of the Thousand Hands",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Sonic Bird": {
+        "name": "Sonic Bird",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Destiny Board": {
+        "name": "Destiny Board",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spirit Message 'I'": {
+        "name": "Spirit Message 'I'",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spirit Message 'N'": {
+        "name": "Spirit Message 'N'",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spirit Message 'A'": {
+        "name": "Spirit Message 'A'",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spirit Message 'L'": {
+        "name": "Spirit Message 'L'",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Fusion Gate": {
+        "name": "Fusion Gate",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Jowgen the Spiritualist": {
+        "name": "Jowgen the Spiritualist",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Fairy Box": {
+        "name": "Fairy Box",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Aqua Spirit": {
+        "name": "Aqua Spirit",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Rock Spirit": {
+        "name": "Rock Spirit",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spirit of Flames": {
+        "name": "Spirit of Flames",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Garuda the Wind Spirit": {
+        "name": "Garuda the Wind Spirit",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Hysteric Fairy": {
+        "name": "Hysteric Fairy",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Kycoo the Ghost Destroyer": {
+        "name": "Kycoo the Ghost Destroyer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Gemini Elf": {
+        "name": "Gemini Elf",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Amphibian Beast": {
+        "name": "Amphibian Beast",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Revival Jam": {
+        "name": "Revival Jam",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dancing Fairy": {
+        "name": "Dancing Fairy",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Cure Mermaid": {
+        "name": "Cure Mermaid",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "The Last Warrior from Another Planet": {
+        "name": "The Last Warrior from Another Planet",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "United We Stand": {
+        "name": "United We Stand",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Earthbound Spirit": {
+        "name": "Earthbound Spirit",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "The Masked Beast": {
+        "name": "The Masked Beast",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Last Turn": {
+        "name": "Last Turn",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Yata-Garasu": {
+        "name": "Yata-Garasu",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Opticlops": {
+        "name": "Opticlops",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dark Ruler Ha Des": {
+        "name": "Dark Ruler Ha Des",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Exiled Force": {
+        "name": "Exiled Force",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Injection Fairy Lily": {
+        "name": "Injection Fairy Lily",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spear Dragon": {
+        "name": "Spear Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Luster Dragon #2": {
+        "name": "Luster Dragon #2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Airknight Parshath": {
+        "name": "Airknight Parshath",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Freed the Matchless General": {
+        "name": "Freed the Matchless General",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Marauding Captain": {
+        "name": "Marauding Captain",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Reinforcement of the Army": {
+        "name": "Reinforcement of the Army",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Cave Dragon": {
+        "name": "Cave Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Troop Dragon": {
+        "name": "Troop Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Asura Priest": {
+        "name": "Asura Priest",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Fushi No Tori": {
+        "name": "Fushi No Tori",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Maharaghi": {
+        "name": "Maharaghi",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Susa Soldier": {
+        "name": "Susa Soldier",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Emergency Provisions": {
+        "name": "Emergency Provisions",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Huge Revolution": {
+        "name": "Huge Revolution",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Oppressed People": {
+        "name": "Oppressed People",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "United Resistance": {
+        "name": "United Resistance",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "People Running About": {
+        "name": "People Running About",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "X-Head Cannon": {
+        "name": "X-Head Cannon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Y-Dragon Head": {
+        "name": "Y-Dragon Head",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Z-Metal Tank": {
+        "name": "Z-Metal Tank",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "XY-Dragon Cannon": {
+        "name": "XY-Dragon Cannon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "XZ-Tank Cannon": {
+        "name": "XZ-Tank Cannon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "YZ-Tank Dragon": {
+        "name": "YZ-Tank Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "XYZ-Dragon Cannon": {
+        "name": "XYZ-Dragon Cannon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Cliff the Trap Remover": {
+        "name": "Cliff the Trap Remover",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Wave-Motion Cannon": {
+        "name": "Wave-Motion Cannon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Magical Merchant": {
+        "name": "Magical Merchant",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Poison of the Old Man": {
+        "name": "Poison of the Old Man",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Chaos Command Magician": {
+        "name": "Chaos Command Magician",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Skilled Dark Magician": {
+        "name": "Skilled Dark Magician",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Dark Blade": {
+        "name": "Dark Blade",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Great Angus": {
+        "name": "Great Angus",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Breaker the magical Warrior": {
+        "name": "Breaker the magical Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Old Vindictive Magician": {
+        "name": "Old Vindictive Magician",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Apprentice Magician": {
+        "name": "Apprentice Magician",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Burning Beast": {
+        "name": "Burning Beast",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Freezing Beast": {
+        "name": "Freezing Beast",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Pitch-Dark Dragon": {
+        "name": "Pitch-Dark Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Giant Orc": {
+        "name": "Giant Orc",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Second Goblin": {
+        "name": "Second Goblin",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Decayed Commander": {
+        "name": "Decayed Commander",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Zombie Tiger": {
+        "name": "Zombie Tiger",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Vampire Orchis": {
+        "name": "Vampire Orchis",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Des Dendle": {
+        "name": "Des Dendle",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Frontline Base": {
+        "name": "Frontline Base",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Formation Union": {
+        "name": "Formation Union",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Pitch-Black Power Stone": {
+        "name": "Pitch-Black Power Stone",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Magical Marionette": {
+        "name": "Magical Marionette",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Royal Magical Library": {
+        "name": "Royal Magical Library",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spell Shield Type-8": {
+        "name": "Spell Shield Type-8",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Tribute Doll": {
+        "name": "Tribute Doll",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Final Countdown": {
+        "name": "Final Countdown",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ojama Green": {
+        "name": "Ojama Green",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Scorpion Combination": {
+        "name": "Dark Scorpion Combination",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dark Scorpion - Chick the Yellow": {
+        "name": "Dark Scorpion - Chick the Yellow",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dark Scorpion - Meanae the Thorn": {
+        "name": "Dark Scorpion - Meanae the Thorn",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dark Scorpion - Gorg the Strong": {
+        "name": "Dark Scorpion - Gorg the Strong",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Tsukuyomi": {
+        "name": "Tsukuyomi",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Ojama Trio": {
+        "name": "Ojama Trio",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Kaiser Glider": {
+        "name": "Kaiser Glider",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "D.D. Warrior Lady": {
+        "name": "D.D. Warrior Lady",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Archfiend Soldier": {
+        "name": "Archfiend Soldier",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Skull Archfiend of Lightning": {
+        "name": "Skull Archfiend of Lightning",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Blindly Loyal Goblin": {
+        "name": "Blindly Loyal Goblin",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Gagagigo": {
+        "name": "Gagagigo",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Nin-Ken Dog": {
+        "name": "Nin-Ken Dog",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Zolga": {
+        "name": "Zolga",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Kelbek": {
+        "name": "Kelbek",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Mudora": {
+        "name": "Mudora",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Cestus of Dagla": {
+        "name": "Cestus of Dagla",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Vampire Lord": {
+        "name": "Vampire Lord",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Metallizing Parasite - Lunatite": {
+        "name": "Metallizing Parasite - Lunatite",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "D. D. Trainer": {
+        "name": "D. D. Trainer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Spell Reproduction": {
+        "name": "Spell Reproduction",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Contract with the Abyss": {
+        "name": "Contract with the Abyss",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Master - Zorc": {
+        "name": "Dark Master - Zorc",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ojama Delta Hurricane": {
+        "name": "Ojama Delta Hurricane",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ojama Yellow": {
+        "name": "Ojama Yellow",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ojama Black": {
+        "name": "Ojama Black",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Heart of the Underdog": {
+        "name": "Heart of the Underdog",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Chaos Emperor Dragon - Envoy of the End": {
+        "name": "Chaos Emperor Dragon - Envoy of the End",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Self-Destruct Button": {
+        "name": "Self-Destruct Button",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Manticore of Darkness": {
+        "name": "Manticore of Darkness",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dimension Fusion": {
+        "name": "Dimension Fusion",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Gigantes": {
+        "name": "Gigantes",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Inferno": {
+        "name": "Inferno",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Silpheed": {
+        "name": "Silpheed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Mad Dog of Darkness": {
+        "name": "Mad Dog of Darkness",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ryu Kokki": {
+        "name": "Ryu Kokki",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Berserk Gorilla": {
+        "name": "Berserk Gorilla",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Neo Bug": {
+        "name": "Neo Bug",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Driceratops": {
+        "name": "Dark Driceratops",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Hyper Hammerhead": {
+        "name": "Hyper Hammerhead",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Sea Serpent Warrior of Darkness": {
+        "name": "Sea Serpent Warrior of Darkness",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Giga Gagagigo": {
+        "name": "Giga Gagagigo",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Terrorking Salmon": {
+        "name": "Terrorking Salmon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Blazing Inpachi": {
+        "name": "Blazing Inpachi",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Stealth Bird": {
+        "name": "Stealth Bird",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Cursed Seal of the Forbidden Spell": {
+        "name": "Cursed Seal of the Forbidden Spell",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Stray Lambs": {
+        "name": "Stray Lambs",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Manju of the Ten Thousand Hands": {
+        "name": "Manju of the Ten Thousand Hands",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Monster Gate": {
+        "name": "Monster Gate",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Wall of Revealing Light": {
+        "name": "Wall of Revealing Light",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Mystik Wok": {
+        "name": "Mystik Wok",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "The Agent of Judgment - Saturn": {
+        "name": "The Agent of Judgment - Saturn",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Zaborg the Thunder Monarch": {
+        "name": "Zaborg the Thunder Monarch",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Regenerating Mummy": {
+        "name": "Regenerating Mummy",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "The End of Anubis": {
+        "name": "The End of Anubis",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Solar Flare Dragon": {
+        "name": "Solar Flare Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Level Limit - Area B": {
+        "name": "Level Limit - Area B",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "King of the Swamp": {
+        "name": "King of the Swamp",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Enemy Controller": {
+        "name": "Enemy Controller",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Enchanting Fitting Room": {
+        "name": "Enchanting Fitting Room",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Ninja Grandmaster Sasuke": {
+        "name": "Ninja Grandmaster Sasuke",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Mystic Swordsman LV2": {
+        "name": "Mystic Swordsman LV2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Mystic Swordsman LV4": {
+        "name": "Mystic Swordsman LV4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Enraged Muka Muka": {
+        "name": "Enraged Muka Muka",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Mobius the Frost Monarch": {
+        "name": "Mobius the Frost Monarch",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Horus the Black Flame Dragon LV6": {
+        "name": "Horus the Black Flame Dragon LV6",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Ultimate Baseball Kid": {
+        "name": "Ultimate Baseball Kid",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Element Dragon": {
+        "name": "Element Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Horus the Black Flame Dragon LV4": {
+        "name": "Horus the Black Flame Dragon LV4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Level Up!": {
+        "name": "Level Up!",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Howling Insect": {
+        "name": "Howling Insect",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Homunculus the Alchemic Being": {
+        "name": "Homunculus the Alchemic Being",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Thestalos the Firestorm Monarch": {
+        "name": "Thestalos the Firestorm Monarch",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Roc from the Valley of Haze": {
+        "name": "Roc from the Valley of Haze",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Harpie Lady 1": {
+        "name": "Harpie Lady 1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Silent Swordsman Lv3": {
+        "name": "Silent Swordsman Lv3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Mystic Swordsman LV6": {
+        "name": "Mystic Swordsman LV6",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Ultimate Insect Lv3": {
+        "name": "Ultimate Insect Lv3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Divine Wrath": {
+        "name": "Divine Wrath",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Serial Spell": {
+        "name": "Serial Spell",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Insect Knight": {
+        "name": "Insect Knight",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Chiron the Mage": {
+        "name": "Chiron the Mage",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Granmarg the Rock Monarch": {
+        "name": "Granmarg the Rock Monarch",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Silent Swordsman Lv5": {
+        "name": "Silent Swordsman Lv5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "The Dark - Hex-Sealed Fusion": {
+        "name": "The Dark - Hex-Sealed Fusion",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "The Earth - Hex-Sealed Fusion": {
+        "name": "The Earth - Hex-Sealed Fusion",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "The Light - Hex-Sealed Fusion": {
+        "name": "The Light - Hex-Sealed Fusion",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Ultimate Insect Lv5": {
+        "name": "Ultimate Insect Lv5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Blast Magician": {
+        "name": "Blast Magician",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Golem Sentry": {
+        "name": "Golem Sentry",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Rescue Cat": {
+        "name": "Rescue Cat",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Blade Rabbit": {
+        "name": "Blade Rabbit",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Megarock Dragon": {
+        "name": "Megarock Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "D.D. Survivor": {
+        "name": "D.D. Survivor",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Hieracosphinx": {
+        "name": "Hieracosphinx",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Elemental Hero Flame Wingman": {
+        "name": "Elemental Hero Flame Wingman",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Elemental Hero Avian": {
+        "name": "Elemental Hero Avian",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Elemental Hero Burstinatrix": {
+        "name": "Elemental Hero Burstinatrix",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Elemental Hero Clayman": {
+        "name": "Elemental Hero Clayman",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Elemental Hero Sparkman": {
+        "name": "Elemental Hero Sparkman",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Elemental Hero Thunder Giant": {
+        "name": "Elemental Hero Thunder Giant",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Aussa the Earth Charmer": {
+        "name": "Aussa the Earth Charmer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Brain Control": {
+        "name": "Brain Control",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Power Bond": {
+        "name": "Power Bond",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Cyber Dragon": {
+        "name": "Cyber Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Cyber Twin Dragon": {
+        "name": "Cyber Twin Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Cybernetic Magician": {
+        "name": "Cybernetic Magician",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Indomitable Fighter Lei Lei": {
+        "name": "Indomitable Fighter Lei Lei",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Protective Soul Ailin": {
+        "name": "Protective Soul Ailin",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Miracle Fusion": {
+        "name": "Miracle Fusion",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Elemental Hero Bubbleman": {
+        "name": "Elemental Hero Bubbleman",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Jerry Beans Man": {
+        "name": "Jerry Beans Man",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "V-Tiger Jet": {
+        "name": "V-Tiger Jet",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "W-Wing Catapult": {
+        "name": "W-Wing Catapult",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "VW-Tiger Catapult": {
+        "name": "VW-Tiger Catapult",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "VWXYZ-Dragon Catapult Cannon": {
+        "name": "VWXYZ-Dragon Catapult Cannon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Zure, Knight of Dark World": {
+        "name": "Zure, Knight of Dark World",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Brron, Mad King of Dark World": {
+        "name": "Brron, Mad King of Dark World",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Familiar-Possessed - Aussa": {
+        "name": "Familiar-Possessed - Aussa",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Familiar-Possessed - Eria": {
+        "name": "Familiar-Possessed - Eria",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Familiar-Possessed - Hiita": {
+        "name": "Familiar-Possessed - Hiita",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Familiar-Possessed - Wynn": {
+        "name": "Familiar-Possessed - Wynn",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Oxygeddon": {
+        "name": "Oxygeddon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Roll Out!": {
+        "name": "Roll Out!",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dark World Lightning": {
+        "name": "Dark World Lightning",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Elemental Hero Rampart Blaster": {
+        "name": "Elemental Hero Rampart Blaster",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Elemental Hero Shining Flare Wingman": {
+        "name": "Elemental Hero Shining Flare Wingman",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Elemental Hero Wildedge": {
+        "name": "Elemental Hero Wildedge",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Elemental Hero Wildheart": {
+        "name": "Elemental Hero Wildheart",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Elemental Hero Bladedge": {
+        "name": "Elemental Hero Bladedge",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Pot of Avarice": {
+        "name": "Pot of Avarice",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "B.E.S. Tetran": {
+        "name": "B.E.S. Tetran",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Hamon, Lord of Striking Thunder": {
+        "name": "Hamon, Lord of Striking Thunder",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Raviel, Lord of Phantasms": {
+        "name": "Raviel, Lord of Phantasms",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Uria, Lord of Searing Flames": {
+        "name": "Uria, Lord of Searing Flames",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Treeborn Frog": {
+        "name": "Treeborn Frog",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Saber Beetle": {
+        "name": "Saber Beetle",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Tenkabito Shien": {
+        "name": "Tenkabito Shien",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Princess Pikeru": {
+        "name": "Princess Pikeru",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Gokipon": {
+        "name": "Gokipon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Demise, King of Armageddon": {
+        "name": "Demise, King of Armageddon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Anteatereatingant": {
+        "name": "Anteatereatingant",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Valkyrion the Magna Warrior": {
+        "name": "Valkyrion the Magna Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Alpha the Magnet Warrior": {
+        "name": "Alpha the Magnet Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Beta the Magnet Warrior": {
+        "name": "Beta the Magnet Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Gamma the Magnet Warrior": {
+        "name": "Gamma the Magnet Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Magical Blast": {
+        "name": "Magical Blast",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dunames Dark Witch": {
+        "name": "Dunames Dark Witch",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Vorse Raider": {
+        "name": "Vorse Raider",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Exarion Universe": {
+        "name": "Exarion Universe",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Abyss Soldier": {
+        "name": "Abyss Soldier",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Slate Warrior": {
+        "name": "Slate Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Cyber-Tech Alligator": {
+        "name": "Cyber-Tech Alligator",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "D.D. Assailant": {
+        "name": "D.D. Assailant",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Goblin Zombie": {
+        "name": "Goblin Zombie",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Elemental Hero Madballman": {
+        "name": "Elemental Hero Madballman",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Mind Control": {
+        "name": "Mind Control",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Toon Dark Magician Girl": {
+        "name": "Toon Dark Magician Girl",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Great Spirit": {
+        "name": "Great Spirit",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Graceful Dice": {
+        "name": "Graceful Dice",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Negate Attack": {
+        "name": "Negate Attack",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Foolish Burial": {
+        "name": "Foolish Burial",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Card Destruction": {
+        "name": "Card Destruction",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Magic Ritual": {
+        "name": "Dark Magic Ritual",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Calamity of the Wicked": {
+        "name": "Calamity of the Wicked",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Scapegoat": {
+        "name": "Scapegoat",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Gil Garth": {
+        "name": "Gil Garth",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "La Jinn the Mystical Genie of the Lamp": {
+        "name": "La Jinn the Mystical Genie of the Lamp",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Inferno Hammer": {
+        "name": "Inferno Hammer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Cyber Harpie Lady": {
+        "name": "Cyber Harpie Lady",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dandylion": {
+        "name": "Dandylion",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Blade Knight": {
+        "name": "Blade Knight",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Curse of Vampire": {
+        "name": "Curse of Vampire",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Magician of Black Chaos": {
+        "name": "Magician of Black Chaos",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Marshmallon": {
+        "name": "Marshmallon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Goddess with the Third Eye": {
+        "name": "Goddess with the Third Eye",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Victory D.": {
+        "name": "Victory D.",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Luster Dragon #2Spear Dragon": {
+        "name": "Luster Dragon #2Spear Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dimensional Warrior": {
+        "name": "Dimensional Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Command Knight": {
+        "name": "Command Knight",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Holy Knight Ishzark": {
+        "name": "Holy Knight Ishzark",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Warrior Lady of the Wasteland": {
+        "name": "Warrior Lady of the Wasteland",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Toon Goblin Attack Force": {
+        "name": "Toon Goblin Attack Force",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Barox": {
+        "name": "Barox",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Versago the Destroyer": {
+        "name": "Versago the Destroyer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Skull Descovery Knight": {
+        "name": "Skull Descovery Knight",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Legendary Fiend": {
+        "name": "Legendary Fiend",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Cyber-Stein": {
+        "name": "Cyber-Stein",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Mechanicalchaser": {
+        "name": "Mechanicalchaser",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Green Gadget": {
+        "name": "Green Gadget",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Red Gadget": {
+        "name": "Red Gadget",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Yellow Gadget": {
+        "name": "Yellow Gadget",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Dark Sage": {
+        "name": "Dark Sage",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Cosmo Queen": {
+        "name": "Cosmo Queen",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Toon Gemini Elf": {
+        "name": "Toon Gemini Elf",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Toon Masked Sorcerer": {
+        "name": "Toon Masked Sorcerer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "The Tricky": {
+        "name": "The Tricky",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Summon Priest": {
+        "name": "Summon Priest",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Mythical Beast Cerberus": {
+        "name": "Mythical Beast Cerberus",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Armed Dragon LV3Armed Dragon LV5": {
+        "name": "Armed Dragon LV3Armed Dragon LV5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Elemental Hero Steam Healer": {
+        "name": "Elemental Hero Steam Healer",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Penguin Soldier": {
+        "name": "Penguin Soldier",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Morphing Jar": {
+        "name": "Morphing Jar",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Needle Worm": {
+        "name": "Needle Worm",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Perfectly Ultimate Great Moth": {
+        "name": "Perfectly Ultimate Great Moth",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Embodiment of Apophis": {
+        "name": "Embodiment of Apophis",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Dark Magic Curtain": {
+        "name": "Dark Magic Curtain",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Return from the Different Dimension": {
+        "name": "Return from the Different Dimension",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Magical Dimension": {
+        "name": "Magical Dimension",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Skull Zoma": {
+        "name": "Skull Zoma",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Metal Reflect SlimeLevel Up!": {
+        "name": "Metal Reflect SlimeLevel Up!",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Ultimate Offering": {
+        "name": "Ultimate Offering",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Metal Reflect Slime": {
+        "name": "Metal Reflect Slime",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Collapse": {
+        "name": "Collapse",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Offerings to the Doomed": {
+        "name": "Offerings to the Doomed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Shield Crash": {
+        "name": "Shield Crash",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Challenge Beaten": {
+        "name": "Challenge Beaten",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 10
       }
     }
   },

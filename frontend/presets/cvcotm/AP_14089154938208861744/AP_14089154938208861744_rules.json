@@ -54,6 +54,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -504,6 +507,8 @@
             "connected_region": "Abyss Stairway",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -515,6 +520,9 @@
               "type": "constant",
               "value": "Double or Roc Wing, regardless of Roc being nerfed or not."
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -571,6 +579,8 @@
             "connected_region": "Audience Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -589,6 +599,9 @@
                 "attr": "tackle"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -623,6 +636,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -686,6 +702,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -720,6 +739,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -736,6 +758,9 @@
                 "attr": "heavy_ring"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -745,6 +770,9 @@
               "type": "constant",
               "value": "Maiden Detonator unless the Iron Maidens start broken, in which case this will always return True."
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -754,6 +782,9 @@
               "type": "constant",
               "value": "Roc Wing, Double, AND Kick Boots if Roc is nerfed. Otherwise, just Roc."
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -763,6 +794,9 @@
               "type": "constant",
               "value": "The required number of Last Keys. If 0 keys are required, this should always return True."
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1516,6 +1550,8 @@
             "connected_region": "Machine Tower Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1527,6 +1563,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1741,6 +1780,8 @@
             "connected_region": "Machine Tower Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1749,6 +1790,8 @@
             "connected_region": "Machine Tower Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1849,6 +1892,8 @@
             "connected_region": "Eternal Corridor Pit",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1857,6 +1902,8 @@
             "connected_region": "Eternal Corridor Pit",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1868,6 +1915,9 @@
               "type": "constant",
               "value": "Maiden Detonator unless the Iron Maidens start broken, in which case this will always return True."
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1902,6 +1952,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1940,6 +1993,8 @@
             "connected_region": "Chapel Tower Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1948,6 +2003,8 @@
             "connected_region": "Chapel Tower Bottom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1959,6 +2016,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1968,6 +2028,9 @@
               "type": "constant",
               "value": "Roc Wing and Double OR Kick Boots if Roc is nerfed. Otherwise, just Roc."
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2002,6 +2065,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2284,6 +2350,8 @@
             "connected_region": "Chapel Tower Top",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2320,6 +2388,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2412,6 +2483,8 @@
             "connected_region": "Battle Arena",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2553,6 +2626,8 @@
             "connected_region": "Underground Gallery Upper",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2561,6 +2636,8 @@
             "connected_region": "Underground Gallery Upper",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2572,6 +2649,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2588,6 +2668,9 @@
                 "attr": "tackle"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2762,6 +2845,8 @@
             "connected_region": "Underground Gallery Lower",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2770,6 +2855,8 @@
             "connected_region": "Underground Gallery Lower",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2788,6 +2875,9 @@
                 "attr": "tackle"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2905,6 +2995,8 @@
             "connected_region": "Underground Warehouse Start",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2923,6 +3015,9 @@
                 "attr": "tackle"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2961,6 +3056,8 @@
             "connected_region": "Underground Warehouse Main",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3307,6 +3404,8 @@
             "connected_region": "Underground Waterway Start",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3318,6 +3417,9 @@
               "type": "constant",
               "value": "Cleansing unless it's ignored, in which case this will always return True."
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3356,6 +3458,8 @@
             "connected_region": "Underground Waterway Main",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3367,6 +3471,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3574,6 +3681,8 @@
             "connected_region": "Underground Waterway End",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3582,6 +3691,8 @@
             "connected_region": "Underground Waterway End",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3675,6 +3786,8 @@
             "connected_region": "Observation Tower",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3876,6 +3989,8 @@
             "connected_region": "Ceremonial Room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4480,6 +4595,20 @@
         "event": false,
         "type": null,
         "max_count": 3
+      },
+      "The Count Downed": {
+        "name": "The Count Downed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },

@@ -208,8 +208,12 @@ def get_world_directory_name_from_game_name(game_name: str) -> str:
 
 def normalize_game_name(template_name: str) -> str:
     """Convert template filename to world directory name format."""
-    # Remove .yaml extension to get the game name
-    game_name = template_name.replace('.yaml', '')
+    # Remove .yaml extension to get the game name (handle both .yaml and .yml)
+    game_name = template_name
+    if game_name.endswith('.yaml'):
+        game_name = game_name[:-5]
+    elif game_name.endswith('.yml'):
+        game_name = game_name[:-4]
     # Use the same logic as the exporter to find the world directory name
     return get_world_directory_name_from_game_name(game_name)
 
@@ -457,7 +461,9 @@ def test_template(template_file: str, templates_dir: str, project_root: str, wor
     # Step 1: Run Generate.py (skip if spoiler_only mode)
     if not spoiler_only:
         print(f"Running Generate.py for {template_name}...")
-        template_path = f"Templates/{template_name}"
+        # Ensure template name has .yaml extension for the file path
+        template_file = template_name if template_name.endswith(('.yaml', '.yml')) else f"{template_name}.yaml"
+        template_path = f"Templates/{template_file}"
         generate_cmd = [
             "python", "Generate.py", 
             "--weights_file_path", template_path,
@@ -707,11 +713,36 @@ def main():
     # Handle include list vs skip list logic
     if args.include_list is not None:
         # Include list mode: only test specified files
-        yaml_files = [f for f in all_yaml_files if f in args.include_list]
-        skipped_files = [f for f in all_yaml_files if f not in args.include_list]
+        # Allow matching with or without .yaml extension
+        yaml_files = []
+        for requested_file in args.include_list:
+            # Try exact match first
+            if requested_file in all_yaml_files:
+                yaml_files.append(requested_file)
+            # Try adding .yaml extension
+            elif not requested_file.endswith('.yaml') and f"{requested_file}.yaml" in all_yaml_files:
+                yaml_files.append(f"{requested_file}.yaml")
+            # Try removing .yaml extension and finding match
+            elif requested_file.endswith('.yaml'):
+                base_name = requested_file[:-5]
+                matching_file = next((f for f in all_yaml_files if f.startswith(base_name)), None)
+                if matching_file:
+                    yaml_files.append(matching_file)
+        
+        # Remove duplicates while preserving order
+        yaml_files = list(dict.fromkeys(yaml_files))
+        skipped_files = [f for f in all_yaml_files if f not in yaml_files]
         
         # Check if any requested files don't exist
-        missing_files = [f for f in args.include_list if f not in all_yaml_files]
+        found_files = set(yaml_files)
+        missing_files = []
+        for requested in args.include_list:
+            if requested not in found_files and f"{requested}.yaml" not in found_files:
+                # Check if we found it by removing .yaml
+                base_name = requested[:-5] if requested.endswith('.yaml') else requested
+                if not any(f.startswith(base_name) for f in found_files):
+                    missing_files.append(requested)
+        
         if missing_files:
             print(f"Warning: Requested files not found: {', '.join(missing_files)}")
         

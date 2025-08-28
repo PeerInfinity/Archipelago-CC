@@ -29,6 +29,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -48,6 +51,8 @@
             "connected_region": "Verse Cave right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -56,6 +61,8 @@
             "connected_region": "Verse Cave right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -67,6 +74,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -112,18 +122,8 @@
             "id": 698175,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -151,6 +151,8 @@
             "connected_region": "Verse Cave left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -159,6 +161,8 @@
             "connected_region": "Verse Cave left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -170,6 +174,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -179,6 +186,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -242,18 +252,8 @@
             "id": 698023,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -281,6 +281,8 @@
             "connected_region": "Home Waters",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -289,6 +291,8 @@
             "connected_region": "Home Waters",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -297,6 +301,8 @@
             "connected_region": "Home Waters",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -305,6 +311,8 @@
             "connected_region": "Home Waters",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -313,6 +321,8 @@
             "connected_region": "Home Waters",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -321,6 +331,8 @@
             "connected_region": "Home Waters",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -332,6 +344,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -341,6 +356,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -350,44 +368,33 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
             "name": "Home Waters to Home Waters, behind rock",
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
             "name": "Home Waters to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -397,18 +404,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
                   "type": "helper",
@@ -426,6 +423,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -525,18 +525,8 @@
             "id": 698065,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -564,6 +554,8 @@
             "connected_region": "Home Waters, Nautilus nest",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -585,6 +577,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -641,6 +636,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -649,6 +646,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -657,6 +656,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -665,6 +666,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -673,6 +676,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -681,6 +686,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -689,6 +696,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -697,6 +706,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -705,6 +716,8 @@
             "connected_region": "Home Waters, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -716,6 +729,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -728,6 +744,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -740,6 +759,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -752,6 +774,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -764,6 +789,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -776,6 +804,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -788,6 +819,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -800,6 +834,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -812,6 +849,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -850,6 +890,8 @@
             "connected_region": "Naija's Home",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -861,6 +903,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -898,18 +943,8 @@
             "id": 698120,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -937,6 +972,8 @@
             "connected_region": "Song Cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -948,6 +985,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1029,18 +1069,8 @@
             "id": 698074,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -1057,18 +1087,8 @@
             "id": 698075,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -1085,18 +1105,8 @@
             "id": 698160,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -1170,6 +1180,8 @@
             "connected_region": "Energy Temple first area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1178,6 +1190,8 @@
             "connected_region": "Energy Temple first area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1186,6 +1200,8 @@
             "connected_region": "Energy Temple first area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1194,6 +1210,8 @@
             "connected_region": "Energy Temple first area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1205,6 +1223,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1224,6 +1245,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1243,6 +1267,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1262,6 +1289,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1289,18 +1319,8 @@
             "id": 698027,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -1328,6 +1348,8 @@
             "connected_region": "Energy Temple second area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1336,6 +1358,8 @@
             "connected_region": "Energy Temple second area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1357,6 +1381,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1366,6 +1393,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1375,18 +1405,8 @@
             "id": 698028,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -1414,6 +1434,8 @@
             "connected_region": "Energy Temple third area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1425,6 +1447,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1434,18 +1459,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
                   "type": "helper",
@@ -1463,6 +1478,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1501,6 +1519,8 @@
             "connected_region": "Energy Temple fallen God room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1509,6 +1529,8 @@
             "connected_region": "Energy Temple fallen God room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1517,6 +1539,8 @@
             "connected_region": "Energy Temple fallen God room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1557,6 +1581,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1576,6 +1603,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1632,6 +1662,8 @@
             "connected_region": "Energy Temple blaster room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1689,6 +1721,8 @@
             "connected_region": "Energy Temple bottom entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1714,21 +1748,14 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1767,6 +1794,8 @@
             "connected_region": "Open Waters top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1775,6 +1804,8 @@
             "connected_region": "Open Waters top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1783,6 +1814,8 @@
             "connected_region": "Open Waters top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1791,6 +1824,8 @@
             "connected_region": "Open Waters top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1802,6 +1837,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1811,6 +1849,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1820,6 +1861,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1829,6 +1873,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1838,18 +1885,8 @@
             "id": 698001,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -1866,18 +1903,8 @@
             "id": 698002,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -1923,6 +1950,8 @@
             "connected_region": "Open Waters top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1931,6 +1960,8 @@
             "connected_region": "Open Waters top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1939,6 +1970,8 @@
             "connected_region": "Open Waters top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1947,6 +1980,8 @@
             "connected_region": "Open Waters top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1955,6 +1990,8 @@
             "connected_region": "Open Waters top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1963,6 +2000,8 @@
             "connected_region": "Open Waters top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1974,6 +2013,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1993,6 +2035,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2002,18 +2047,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
                   "type": "helper",
@@ -2035,6 +2070,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2044,6 +2082,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2053,6 +2094,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2062,6 +2106,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2081,6 +2128,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2090,18 +2140,8 @@
             "id": 698004,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -2201,6 +2241,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2209,6 +2251,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2217,6 +2261,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2225,6 +2271,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2233,6 +2281,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2241,6 +2291,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2249,6 +2301,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2257,6 +2311,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2265,6 +2321,8 @@
             "connected_region": "Open Waters top right area, turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2276,6 +2334,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2288,6 +2349,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2300,6 +2364,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2312,6 +2379,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2324,6 +2394,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2336,6 +2409,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2348,6 +2424,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2360,6 +2439,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2372,6 +2454,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2428,6 +2513,8 @@
             "connected_region": "Open Waters bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2436,6 +2523,8 @@
             "connected_region": "Open Waters bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2444,6 +2533,8 @@
             "connected_region": "Open Waters bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2452,6 +2543,8 @@
             "connected_region": "Open Waters bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2463,6 +2556,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2472,6 +2568,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2481,6 +2580,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2500,6 +2602,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2566,6 +2671,8 @@
             "connected_region": "Open Waters bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2574,6 +2681,8 @@
             "connected_region": "Open Waters bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2582,6 +2691,8 @@
             "connected_region": "Open Waters bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2590,6 +2701,8 @@
             "connected_region": "Open Waters bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2601,6 +2714,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2610,6 +2726,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2629,6 +2748,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2648,6 +2770,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2667,6 +2792,8 @@
             "connected_region": "Open Waters skeleton path",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2675,6 +2802,8 @@
             "connected_region": "Open Waters skeleton path",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2686,6 +2815,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2705,6 +2837,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2761,6 +2896,8 @@
             "connected_region": "Open Waters skeleton path spirit crystal",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2782,6 +2919,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2820,6 +2960,8 @@
             "connected_region": "Arnassi Ruins",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2828,6 +2970,8 @@
             "connected_region": "Arnassi Ruins",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2839,6 +2983,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2848,6 +2995,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2997,6 +3147,8 @@
             "connected_region": "Arnassi Ruins cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3005,6 +3157,8 @@
             "connected_region": "Arnassi Ruins cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3013,6 +3167,8 @@
             "connected_region": "Arnassi Ruins cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3024,6 +3180,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3043,6 +3202,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3100,6 +3262,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3138,6 +3303,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3146,6 +3313,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3154,6 +3323,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3162,6 +3333,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3170,6 +3343,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3178,6 +3353,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3186,6 +3363,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3194,6 +3373,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3202,6 +3383,8 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3223,6 +3406,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3235,6 +3421,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3247,6 +3436,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3259,6 +3451,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3271,6 +3466,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3283,6 +3481,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3295,6 +3496,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3307,6 +3511,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3319,6 +3526,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3357,6 +3567,8 @@
             "connected_region": "Arnassi Ruins, Crabbius Maximus lair",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3368,6 +3580,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3424,6 +3639,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3432,6 +3649,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3440,6 +3659,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3448,6 +3669,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3456,6 +3679,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3464,6 +3689,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3472,6 +3699,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3480,6 +3709,8 @@
             "connected_region": "Simon Says area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3494,6 +3725,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3506,6 +3740,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3518,6 +3755,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3530,6 +3770,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3542,6 +3785,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3554,6 +3800,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3566,6 +3815,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3578,6 +3830,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3634,6 +3889,8 @@
             "connected_region": "Mithalas City",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3642,6 +3899,8 @@
             "connected_region": "Mithalas City",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3650,6 +3909,8 @@
             "connected_region": "Mithalas City",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3658,6 +3919,8 @@
             "connected_region": "Mithalas City",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3669,6 +3932,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3688,6 +3954,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3707,6 +3976,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3726,6 +3998,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3735,6 +4010,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3935,6 +4213,8 @@
             "connected_region": "Mithalas City top path",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3943,6 +4223,8 @@
             "connected_region": "Mithalas City top path",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3954,6 +4236,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3992,6 +4277,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4112,6 +4400,8 @@
             "connected_region": "Mithalas City fish pass",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4133,6 +4423,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4199,6 +4492,8 @@
             "connected_region": "Mithalas castle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4207,6 +4502,8 @@
             "connected_region": "Mithalas castle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4215,6 +4512,8 @@
             "connected_region": "Mithalas castle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4223,6 +4522,8 @@
             "connected_region": "Mithalas castle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4231,6 +4532,8 @@
             "connected_region": "Mithalas castle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4242,6 +4545,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4261,6 +4567,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4280,6 +4589,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4299,6 +4611,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4318,25 +4633,21 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
             "name": "Mithalas castle to Mithalas Cathedral start",
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4393,6 +4704,8 @@
             "connected_region": "Mithalas castle, plant tube entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4414,6 +4727,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4433,6 +4749,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4452,6 +4771,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4508,6 +4830,8 @@
             "connected_region": "Mithalas castle spirit crystal",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4516,6 +4840,8 @@
             "connected_region": "Mithalas castle spirit crystal",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4537,6 +4863,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4575,6 +4904,8 @@
             "connected_region": "Mithalas Cathedral start",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4583,6 +4914,8 @@
             "connected_region": "Mithalas Cathedral start",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4604,6 +4937,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4623,6 +4959,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4689,6 +5028,8 @@
             "connected_region": "Mithalas Cathedral start urns",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4890,6 +5231,8 @@
             "connected_region": "Mithalas Cathedral end",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4898,6 +5241,8 @@
             "connected_region": "Mithalas Cathedral end",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4919,6 +5264,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4938,6 +5286,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4994,6 +5345,8 @@
             "connected_region": "Mithalas Cathedral underground",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5002,6 +5355,8 @@
             "connected_region": "Mithalas Cathedral underground",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5010,6 +5365,8 @@
             "connected_region": "Mithalas Cathedral underground",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5031,6 +5388,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5069,6 +5429,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5078,6 +5441,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5206,6 +5572,8 @@
             "connected_region": "Mithalas Cathedral, after Mithalan God",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5227,6 +5595,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5236,6 +5607,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5292,6 +5666,8 @@
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5300,6 +5676,8 @@
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5308,6 +5686,8 @@
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5329,6 +5709,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5338,18 +5721,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
                   "type": "helper",
@@ -5367,6 +5740,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5386,6 +5762,8 @@
             "connected_region": "Kelp Forest top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5394,6 +5772,8 @@
             "connected_region": "Kelp Forest top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5402,6 +5782,8 @@
             "connected_region": "Kelp Forest top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5410,6 +5792,8 @@
             "connected_region": "Kelp Forest top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5421,6 +5805,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5444,18 +5831,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
                   "type": "helper",
@@ -5487,6 +5864,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5496,6 +5876,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5505,6 +5888,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5607,6 +5993,8 @@
             "connected_region": "Kelp Forest top left area fish pass",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5628,6 +6016,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5684,6 +6075,8 @@
             "connected_region": "Kelp Forest top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5692,6 +6085,8 @@
             "connected_region": "Kelp Forest top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5700,6 +6095,8 @@
             "connected_region": "Kelp Forest top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5708,6 +6105,8 @@
             "connected_region": "Kelp Forest top right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5719,6 +6118,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5728,6 +6130,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5747,6 +6152,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5756,6 +6164,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5765,18 +6176,8 @@
             "id": 698048,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -5904,6 +6305,8 @@
             "connected_region": "Kelp Forest top right area fish pass",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5912,6 +6315,8 @@
             "connected_region": "Kelp Forest top right area fish pass",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5933,6 +6338,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5942,6 +6350,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5980,6 +6391,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5988,6 +6401,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5996,6 +6411,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6004,6 +6421,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6012,6 +6431,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6020,6 +6441,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6028,6 +6451,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6036,6 +6461,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6044,6 +6471,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6052,6 +6481,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6060,6 +6491,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6068,6 +6501,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6076,6 +6511,8 @@
             "connected_region": "Kelp Forest bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6087,6 +6524,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6125,6 +6565,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6134,6 +6577,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6143,6 +6589,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6162,6 +6611,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6174,6 +6626,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6186,6 +6641,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6198,6 +6656,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6210,6 +6671,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6222,6 +6686,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6234,6 +6701,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6246,6 +6716,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6258,6 +6731,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6296,6 +6772,8 @@
             "connected_region": "Kelp Forest bottom left area, spirit crystals",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6307,6 +6785,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6373,6 +6854,8 @@
             "connected_region": "Kelp Forest bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6381,6 +6864,8 @@
             "connected_region": "Kelp Forest bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6389,6 +6874,8 @@
             "connected_region": "Kelp Forest bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6397,6 +6884,8 @@
             "connected_region": "Kelp Forest bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6408,6 +6897,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6417,6 +6909,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6426,6 +6921,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6435,6 +6933,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6483,6 +6984,8 @@
             "connected_region": "Kelp Forest Drunian God room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6494,6 +6997,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6550,6 +7056,8 @@
             "connected_region": "Kelp Forest Drunian God room entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6558,6 +7066,8 @@
             "connected_region": "Kelp Forest Drunian God room entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6566,6 +7076,8 @@
             "connected_region": "Kelp Forest Drunian God room entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6587,6 +7099,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6596,6 +7111,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6615,6 +7133,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6653,6 +7174,8 @@
             "connected_region": "Sprite cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6661,6 +7184,8 @@
             "connected_region": "Sprite cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6672,6 +7197,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6691,6 +7219,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6729,6 +7260,8 @@
             "connected_region": "Sprite cave after the plant tube",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6750,6 +7283,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6806,6 +7342,8 @@
             "connected_region": "Mermog cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6814,6 +7352,8 @@
             "connected_region": "Mermog cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6825,6 +7365,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6863,6 +7406,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6901,6 +7447,8 @@
             "connected_region": "Mermog cave boss",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6941,6 +7489,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6997,6 +7548,8 @@
             "connected_region": "Kelp Forest fish cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7008,6 +7561,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7046,6 +7602,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7054,6 +7612,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7062,6 +7622,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7070,6 +7632,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7078,6 +7642,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7086,6 +7652,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7094,6 +7662,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7102,6 +7672,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7110,6 +7682,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7118,6 +7692,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7126,6 +7702,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7134,6 +7712,8 @@
             "connected_region": "The Veil top left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7145,6 +7725,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7164,6 +7747,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7173,6 +7759,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7182,6 +7771,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7194,6 +7786,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7206,6 +7801,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7218,6 +7816,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7230,6 +7831,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7242,6 +7846,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7254,6 +7861,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7266,6 +7876,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7278,6 +7891,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7308,32 +7924,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
@@ -7352,18 +7948,8 @@
             "id": 698076,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -7409,6 +7995,8 @@
             "connected_region": "The Veil top left area fish pass",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7430,6 +8018,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7468,6 +8059,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7476,6 +8069,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7484,6 +8079,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7492,6 +8089,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7500,6 +8099,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7508,6 +8109,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7516,6 +8119,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7524,6 +8129,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7532,6 +8139,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7540,6 +8149,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7548,6 +8159,8 @@
             "connected_region": "The Veil top right area, left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7559,6 +8172,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7578,6 +8194,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7590,6 +8209,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7602,6 +8224,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7614,6 +8239,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7626,6 +8254,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7638,6 +8269,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7650,6 +8284,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7662,6 +8299,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7674,6 +8314,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7740,6 +8383,8 @@
             "connected_region": "The Veil top right area, fish pass left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7748,6 +8393,8 @@
             "connected_region": "The Veil top right area, fish pass left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7756,6 +8403,8 @@
             "connected_region": "The Veil top right area, fish pass left of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7777,6 +8426,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7829,6 +8481,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7838,6 +8493,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7857,6 +8515,8 @@
             "connected_region": "The Veil top right area, right of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7865,6 +8525,8 @@
             "connected_region": "The Veil top right area, right of temple",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7876,6 +8538,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7885,6 +8550,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7951,6 +8619,8 @@
             "connected_region": "The Veil bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7959,6 +8629,8 @@
             "connected_region": "The Veil bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7967,6 +8639,8 @@
             "connected_region": "The Veil bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7975,6 +8649,8 @@
             "connected_region": "The Veil bottom left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7986,6 +8662,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7995,6 +8674,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8018,21 +8700,14 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8052,6 +8727,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8090,6 +8768,8 @@
             "connected_region": "The Veil bottom spirit crystal area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8098,6 +8778,8 @@
             "connected_region": "The Veil bottom spirit crystal area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8119,6 +8801,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8138,6 +8823,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8176,6 +8864,8 @@
             "connected_region": "The Veil bottom left area, in the sunken ship",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8201,21 +8891,14 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8254,6 +8937,8 @@
             "connected_region": "The Veil bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8262,6 +8947,8 @@
             "connected_region": "The Veil bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8270,6 +8957,8 @@
             "connected_region": "The Veil bottom right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8281,6 +8970,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8300,6 +8992,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8309,6 +9004,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8347,6 +9045,8 @@
             "connected_region": "Octopus Cave top entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8358,6 +9058,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8414,6 +9117,8 @@
             "connected_region": "Octopus Cave bottom entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8425,6 +9130,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8463,6 +9171,8 @@
             "connected_region": "The Veil top left area, turtle cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8471,6 +9181,8 @@
             "connected_region": "The Veil top left area, turtle cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8482,6 +9194,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8491,6 +9206,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8500,18 +9218,8 @@
             "id": 698184,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -8539,6 +9247,8 @@
             "connected_region": "The Veil top left area, turtle cave Bubble Cliff",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8550,6 +9260,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8616,6 +9329,8 @@
             "connected_region": "Sun Temple left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8624,6 +9339,8 @@
             "connected_region": "Sun Temple left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8635,6 +9352,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8644,6 +9364,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8754,6 +9477,8 @@
             "connected_region": "Sun Temple left area entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8762,6 +9487,8 @@
             "connected_region": "Sun Temple left area entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8770,6 +9497,8 @@
             "connected_region": "Sun Temple left area entrance",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8791,6 +9520,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8800,6 +9532,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8838,6 +9573,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8857,6 +9595,8 @@
             "connected_region": "Sun Temple right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8865,6 +9605,8 @@
             "connected_region": "Sun Temple right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8876,6 +9618,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -8885,18 +9630,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
                   "type": "helper",
@@ -8914,6 +9649,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9024,6 +9762,8 @@
             "connected_region": "Sun Temple before boss area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9032,6 +9772,8 @@
             "connected_region": "Sun Temple before boss area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9072,6 +9814,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9091,6 +9836,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9259,6 +10007,8 @@
             "connected_region": "Sun Temple boss area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9280,6 +10030,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9289,6 +10042,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9345,6 +10101,8 @@
             "connected_region": "Abyss left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9353,6 +10111,8 @@
             "connected_region": "Abyss left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9361,6 +10121,8 @@
             "connected_region": "Abyss left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9369,6 +10131,8 @@
             "connected_region": "Abyss left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9380,6 +10144,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9399,6 +10166,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9456,6 +10226,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9465,6 +10238,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9557,6 +10333,8 @@
             "connected_region": "Abyss left bottom area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9565,6 +10343,8 @@
             "connected_region": "Abyss left bottom area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9573,6 +10353,8 @@
             "connected_region": "Abyss left bottom area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9594,6 +10376,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9613,6 +10398,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9632,6 +10420,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9680,6 +10471,8 @@
             "connected_region": "Abyss right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9688,6 +10481,8 @@
             "connected_region": "Abyss right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9696,6 +10491,8 @@
             "connected_region": "Abyss right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9704,6 +10501,8 @@
             "connected_region": "Abyss right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9712,6 +10511,8 @@
             "connected_region": "Abyss right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9720,6 +10521,8 @@
             "connected_region": "Abyss right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9731,6 +10534,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9740,6 +10546,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9778,6 +10587,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9787,6 +10599,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9824,18 +10639,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 },
                 {
                   "type": "helper",
@@ -9853,6 +10658,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -9872,6 +10680,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9881,18 +10692,8 @@
             "id": 698110,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -9956,6 +10757,8 @@
             "connected_region": "Abyss right area, outside the whale",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9964,6 +10767,8 @@
             "connected_region": "Abyss right area, outside the whale",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10004,6 +10809,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10013,6 +10821,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10022,18 +10833,8 @@
             "id": 698109,
             "crystal": null,
             "access_rule": {
-              "type": "helper",
-              "name": "_has_bind_song",
-              "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              ]
+              "type": "item_check",
+              "item": "Bind Song"
             },
             "progress_type": 1,
             "locked": false,
@@ -10061,6 +10862,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10069,6 +10872,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10077,6 +10882,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10085,6 +10892,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10093,6 +10902,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10101,6 +10912,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10109,6 +10922,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10117,6 +10932,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10125,6 +10942,8 @@
             "connected_region": "Abyss right area, transturtle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10146,6 +10965,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10158,6 +10980,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10170,6 +10995,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10182,6 +11010,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10194,6 +11025,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10206,6 +11040,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10218,6 +11055,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10230,6 +11070,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10242,6 +11085,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10280,6 +11126,8 @@
             "connected_region": "Ice Cavern",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10288,6 +11136,8 @@
             "connected_region": "Ice Cavern",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10309,6 +11159,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10318,6 +11171,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10428,6 +11284,8 @@
             "connected_region": "Bubble Cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10436,6 +11294,8 @@
             "connected_region": "Bubble Cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10447,6 +11307,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10470,21 +11333,14 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10541,6 +11397,8 @@
             "connected_region": "Bubble Cave boss area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10552,6 +11410,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10608,6 +11469,8 @@
             "connected_region": "Abyss left area, King jellyfish cave",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10619,6 +11482,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10693,6 +11559,8 @@
             "connected_region": "Inside the whale",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10704,6 +11572,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10742,6 +11613,8 @@
             "connected_region": "Sunken City left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10750,6 +11623,8 @@
             "connected_region": "Sunken City left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10758,6 +11633,8 @@
             "connected_region": "Sunken City left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10769,6 +11646,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10788,6 +11668,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10807,6 +11690,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10858,21 +11744,14 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10892,6 +11771,8 @@
             "connected_region": "Sunken City right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -10900,6 +11781,8 @@
             "connected_region": "Sunken City right area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10921,6 +11804,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10930,6 +11816,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -10949,6 +11838,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -10968,6 +11860,8 @@
             "connected_region": "Sunken City boss area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11021,21 +11915,14 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11110,6 +11997,8 @@
             "connected_region": "Sunken City left area, bedroom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11131,6 +12020,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11169,6 +12061,8 @@
             "connected_region": "The Body center area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11177,6 +12071,8 @@
             "connected_region": "The Body center area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11185,6 +12081,8 @@
             "connected_region": "The Body center area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11193,6 +12091,8 @@
             "connected_region": "The Body center area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11201,6 +12101,8 @@
             "connected_region": "The Body center area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11222,6 +12124,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11241,6 +12146,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11250,6 +12158,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11269,6 +12180,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11288,6 +12202,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11354,6 +12271,8 @@
             "connected_region": "The Body left area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11365,6 +12284,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11475,6 +12397,8 @@
             "connected_region": "The Body right area, top path",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11486,6 +12410,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11524,6 +12451,8 @@
             "connected_region": "The Body right area, bottom path",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11535,6 +12464,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11591,6 +12523,8 @@
             "connected_region": "The Body bottom area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11599,6 +12533,8 @@
             "connected_region": "The Body bottom area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11620,6 +12556,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11639,6 +12578,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11713,6 +12655,8 @@
             "connected_region": "The Body, before final boss",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11721,6 +12665,8 @@
             "connected_region": "The Body, before final boss",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11742,6 +12688,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11761,6 +12710,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11812,21 +12764,14 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "_has_bind_song",
-                  "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -11846,6 +12791,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11854,6 +12801,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11862,6 +12811,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11870,6 +12821,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11878,6 +12831,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11886,6 +12841,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11894,6 +12851,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11902,6 +12861,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -11910,6 +12871,8 @@
             "connected_region": "The Body, final boss area turtle room",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -11931,6 +12894,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11943,6 +12909,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11955,6 +12924,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11967,6 +12939,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11979,6 +12954,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -11991,6 +12969,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12003,6 +12984,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12015,6 +12999,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -12027,6 +13014,9 @@
                 "name": "item_target"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12119,6 +13109,8 @@
             "connected_region": "The Body, final boss",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -12130,6 +13122,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -12168,6 +13163,8 @@
             "connected_region": "The Body, final boss area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],

@@ -156,6 +156,16 @@ function isBossDefeatCheck(rule, stateSnapshotInterface) {
 /**
  * Evaluates a rule against the provided state context (either StateManager or main thread snapshot).\n * @param {any} rule - The rule object (or primitive) to evaluate.\n * @param {object} context - Either the StateManager instance (or its interface) in the worker,\n *                           or the snapshot interface on the main thread.\n * @param {number} [depth=0] - Current recursion depth for debugging.\n * @returns {boolean|any} - The result of the rule evaluation.\n */
 export const evaluateRule = (rule, context, depth = 0) => {
+  // Prevent infinite recursion by limiting depth
+  if (depth > 100) {
+    log('error', '[evaluateRule] Maximum recursion depth exceeded', {
+      depth,
+      rule: rule?.type,
+      method: rule?.method
+    });
+    return false; // Return false for locations that would cause stack overflow
+  }
+
   // Ensure rule is an object
   if (typeof rule !== 'object' || rule === null) {
     // Handle primitive types directly if they sneak in (e.g., simple string/number requirement)
@@ -245,6 +255,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
             );
             result = undefined;
           }
+        } else {
+          result = undefined;
         }
         break;
       }
@@ -864,6 +876,67 @@ export const evaluateRule = (rule, context, depth = 0) => {
         result = evaluatedList.some((item) => item === undefined)
           ? undefined
           : evaluatedList;
+        break;
+      }
+
+      case 'all_of': {
+        // all_of evaluates an element_rule against all items from an iterator
+        if (!rule.element_rule) {
+          log('warn', '[evaluateRule] all_of rule missing element_rule', { rule });
+          result = undefined;
+          break;
+        }
+        
+        // Extract iterator information
+        let iterable;
+        if (rule.iterator_info && rule.iterator_info.iterator) {
+          // Get the iterator from the iterator_info
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+        } else if (rule.iterable) {
+          // Fallback for direct iterable field
+          iterable = evaluateRule(rule.iterable, context, depth + 1);
+        } else {
+          log('warn', '[evaluateRule] all_of rule missing iterator information', { rule });
+          result = undefined;
+          break;
+        }
+        
+        if (!Array.isArray(iterable)) {
+          log('warn', '[evaluateRule] all_of iterator is not an array', { rule, iterable });
+          result = false;
+          break;
+        }
+        
+        result = true;
+        for (const item of iterable) {
+          // For now, evaluate the element_rule directly
+          // TODO: In a full implementation, we'd need to bind the iterator variable
+          const itemResult = evaluateRule(rule.element_rule, context, depth + 1);
+          if (itemResult === false) {
+            result = false;
+            break;
+          }
+          if (itemResult === undefined) {
+            result = undefined;
+            break;
+          }
+        }
+        break;
+      }
+
+      case 'generator_expression': {
+        // generator_expression represents a Python generator expression
+        // It has an element and potentially filters/conditions
+        if (!rule.element) {
+          log('warn', '[evaluateRule] generator_expression rule missing element', { rule });
+          result = undefined;
+          break;
+        }
+        
+        // For now, evaluate the element directly
+        // This is a simplified implementation - real generator expressions would need
+        // proper iteration and filtering support
+        result = evaluateRule(rule.element, context, depth + 1);
         break;
       }
 

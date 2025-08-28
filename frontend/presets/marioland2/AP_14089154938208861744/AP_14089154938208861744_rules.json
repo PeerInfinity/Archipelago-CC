@@ -29,6 +29,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -38,6 +41,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -47,6 +53,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -56,6 +65,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -106,6 +118,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -115,6 +130,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -124,6 +142,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -133,6 +154,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -142,6 +166,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -202,6 +229,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -221,6 +251,8 @@
             "connected_region": "Mushroom Zone",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -278,6 +310,8 @@
             "connected_region": "Scenic Course",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -317,6 +351,8 @@
             "connected_region": "Tree Zone 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -330,6 +366,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -386,6 +425,8 @@
             "connected_region": "Tree Zone 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -399,6 +440,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -411,6 +455,9 @@
                 "value": "Tree Zone Secret"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -515,6 +562,8 @@
             "connected_region": "Tree Zone 3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -526,6 +575,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -574,6 +626,8 @@
             "connected_region": "Tree Zone 4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -587,6 +641,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -663,6 +720,8 @@
             "connected_region": "Tree Zone 5",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -730,6 +789,8 @@
             "connected_region": "Tree Zone Secret Course",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -769,6 +830,8 @@
             "connected_region": "Hippo Zone",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -818,6 +881,8 @@
             "connected_region": "Space Zone 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -832,6 +897,9 @@
                 "value": "Space Zone Secret"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -843,6 +911,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -937,6 +1008,8 @@
             "connected_region": "Space Zone Secret Course",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -976,6 +1049,8 @@
             "connected_region": "Space Zone 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1053,6 +1128,8 @@
             "connected_region": "Macro Zone 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1066,6 +1143,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1078,6 +1158,9 @@
                 "value": "Macro Zone Secret 1"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1182,6 +1265,8 @@
             "connected_region": "Macro Zone 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1195,6 +1280,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1271,6 +1359,8 @@
             "connected_region": "Macro Zone 3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1284,6 +1374,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1360,6 +1453,8 @@
             "connected_region": "Macro Zone 4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1368,6 +1463,8 @@
             "connected_region": "Macro Zone 4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1382,6 +1479,9 @@
                 "value": "Macro Zone Secret 2"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1448,6 +1548,8 @@
             "connected_region": "Macro Zone Secret Course",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1456,6 +1558,8 @@
             "connected_region": "Macro Zone Secret Course",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1470,6 +1574,9 @@
                 "value": "Macro Zone Secret 2"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1508,6 +1615,8 @@
             "connected_region": "Pumpkin Zone 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1521,6 +1630,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1597,6 +1709,8 @@
             "connected_region": "Pumpkin Zone 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1610,6 +1724,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1622,6 +1739,9 @@
                 "value": "Pumpkin Zone Secret 1"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1716,6 +1836,8 @@
             "connected_region": "Pumpkin Zone 3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1729,6 +1851,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1741,6 +1866,9 @@
                 "value": "Pumpkin Zone Secret 2"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1825,6 +1953,8 @@
             "connected_region": "Pumpkin Zone 4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1892,6 +2022,8 @@
             "connected_region": "Pumpkin Zone Secret Course 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1931,6 +2063,8 @@
             "connected_region": "Pumpkin Zone Secret Course 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1970,6 +2104,8 @@
             "connected_region": "Mario Zone 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1983,6 +2119,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2059,6 +2198,8 @@
             "connected_region": "Mario Zone 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2072,6 +2213,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2128,6 +2272,8 @@
             "connected_region": "Mario Zone 3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2141,6 +2287,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2197,6 +2346,8 @@
             "connected_region": "Mario Zone 4",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2264,6 +2415,8 @@
             "connected_region": "Turtle Zone 1",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2277,6 +2430,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2343,6 +2499,8 @@
             "connected_region": "Turtle Zone 2",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2356,6 +2514,9 @@
               "inferred": true,
               "description": "Requires having Level Progression"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2368,6 +2529,9 @@
                 "value": "Turtle Zone Secret"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2472,6 +2636,8 @@
             "connected_region": "Turtle Zone 3",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2539,6 +2705,8 @@
             "connected_region": "Turtle Zone Secret Course",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2588,6 +2756,8 @@
             "connected_region": "Mario's Castle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -41095,6 +41265,20 @@
         "trap": false,
         "event": false,
         "type": null,
+        "max_count": 1
+      },
+      "Wario Defeated": {
+        "name": "Wario Defeated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
         "max_count": 1
       }
     }

@@ -10,7 +10,7 @@ class BaseGameExportHandler:
             return rule
             
         if rule.get('type') == 'helper':
-            expanded = self.expand_helper(rule['name'])
+            expanded = self.expand_helper(rule['name'], rule.get('args', []))
             if expanded:
                 return self.expand_rule(expanded)
             
@@ -26,7 +26,7 @@ class BaseGameExportHandler:
             
         return rule
         
-    def expand_helper(self, helper_name: str) -> Dict[str, Any]:
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
         """Expand a helper function into basic rule conditions."""
         return None
     

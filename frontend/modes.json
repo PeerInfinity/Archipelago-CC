@@ -41,7 +41,7 @@
       "enabled": true
     },
     "rulesConfig": {
-      "path": "./presets/a_short_hike/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "path": "./presets/shorthike/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "enabled": true
     },
     "layoutConfig": {
@@ -59,7 +59,7 @@
       "enabled": true
     },
     "rulesConfig": {
-      "path": "./presets/a_hat_in_time/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "path": "./presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "enabled": true
     },
     "layoutConfig": {
@@ -165,7 +165,7 @@
       "enabled": true
     },
     "rulesConfig": {
-      "path": "./presets/a_hat_in_time/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "path": "./presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "enabled": true
     },
     "layoutConfig": {

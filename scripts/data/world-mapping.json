@@ -27,11 +27,18 @@
     "has_custom_game_logic": false,
     "world_directory": "adventure"
   },
-  "ArchipIDLE": {
-    "exporter_path": null,
+  "Aquaria": {
+    "exporter_path": "exporter/games/aquaria.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "world_directory": "aquaria"
+  },
+  "ArchipIDLE": {
+    "exporter_path": "exporter/games/archipidle.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "archipidle"
   },
   "Archipelago": {
@@ -42,23 +49,23 @@
     "world_directory": "generic"
   },
   "Blasphemous": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/blasphemous.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "blasphemous"
   },
   "Bomb Rush Cyberfunk": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "bomb_rush_cyberfunk"
   },
   "Bumper Stickers": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/bumpstik.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "bumpstik"
   },
@@ -125,6 +132,13 @@
     "has_custom_game_logic": false,
     "world_directory": "dark_souls_3"
   },
+  "Donkey Kong Country 3": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "dkc3"
+  },
   "Factorio": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -166,6 +180,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "hk"
+  },
+  "Hylics 2": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "hylics2"
   },
   "Inscryption": {
     "exporter_path": null,
@@ -237,6 +258,13 @@
     "has_custom_game_logic": false,
     "world_directory": "mmbn3"
   },
+  "Meritous": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "meritous"
+  },
   "Muse Dash": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -250,6 +278,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "noita"
+  },
+  "Ocarina of Time": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "oot"
   },
   "Old School Runescape": {
     "exporter_path": null,
@@ -307,12 +342,26 @@
     "has_custom_game_logic": false,
     "world_directory": "smz3"
   },
+  "Secret of Evermore": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "soe"
+  },
   "Shivers": {
     "exporter_path": null,
     "game_logic_path": null,
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "shivers"
+  },
+  "Sonic Adventure 2 Battle": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sa2b"
   },
   "Starcraft 2": {
     "exporter_path": null,
@@ -335,12 +384,26 @@
     "has_custom_game_logic": false,
     "world_directory": "apsudoku"
   },
+  "Super Mario 64": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sm64ex"
+  },
   "Super Mario Land 2": {
     "exporter_path": null,
     "game_logic_path": null,
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "marioland2"
+  },
+  "Super Mario World": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "smw"
   },
   "Super Metroid": {
     "exporter_path": null,
@@ -405,12 +468,26 @@
     "has_custom_game_logic": false,
     "world_directory": "undertale"
   },
+  "VVVVVV": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "v6"
+  },
   "Wargroove": {
     "exporter_path": null,
     "game_logic_path": null,
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "wargroove"
+  },
+  "Yacht Dice": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "yachtdice"
   },
   "Yoshi's Island": {
     "exporter_path": null,

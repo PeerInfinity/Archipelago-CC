@@ -178,3 +178,84 @@ class GenericGameExportHandler(BaseGameExportHandler):
             'args': args,
             'description': f"Requires {helper_name.replace('_', ' ')}"
         }
+    
+    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+        """
+        Return generic item data with classification flags.
+        Provides a fallback implementation for games without specific handlers.
+        """
+        from BaseClasses import ItemClassification
+        
+        item_data = {}
+        
+        # Get items from world.item_name_to_id if available
+        if hasattr(world, 'item_name_to_id'):
+            for item_name, item_id in world.item_name_to_id.items():
+                # Try to get classification from item class
+                is_advancement = False
+                is_useful = False
+                is_trap = False
+                
+                try:
+                    item_class = getattr(world, 'item_name_to_item', {}).get(item_name)
+                    if item_class and hasattr(item_class, 'classification'):
+                        classification = item_class.classification
+                        is_advancement = classification == ItemClassification.progression
+                        is_useful = classification == ItemClassification.useful
+                        is_trap = classification == ItemClassification.trap
+                except Exception as e:
+                    logger.debug(f"Could not determine classification for {item_name}: {e}")
+                    # Fallback: check item pool if available
+                    if hasattr(world, 'multiworld'):
+                        for item in world.multiworld.itempool:
+                            if item.player == world.player and item.name == item_name:
+                                is_advancement = item.classification == ItemClassification.progression
+                                is_useful = item.classification == ItemClassification.useful
+                                is_trap = item.classification == ItemClassification.trap
+                                break
+                
+                # Get groups if available
+                groups = []
+                if hasattr(world, 'item_name_groups'):
+                    groups = [
+                        group_name for group_name, items in world.item_name_groups.items()
+                        if item_name in items
+                    ]
+                
+                item_data[item_name] = {
+                    'name': item_name,
+                    'id': item_id,
+                    'groups': sorted(groups),
+                    'advancement': is_advancement,
+                    'priority': False,
+                    'useful': is_useful,
+                    'trap': is_trap,
+                    'event': False,  # Regular items are not events
+                    'type': None,
+                    'max_count': 1
+                }
+        
+        # Handle dynamically created event items by scanning locations
+        if hasattr(world, 'multiworld'):
+            for location in world.multiworld.get_locations(world.player):
+                if location.item and location.item.player == world.player:
+                    item_name = location.item.name
+                    # Check if this is an event item (no code/ID) that we haven't seen
+                    if (location.item.code is None and 
+                        item_name not in item_data and
+                        hasattr(location.item, 'classification')):
+                        
+                        item_data[item_name] = {
+                            'name': item_name,
+                            'id': None,
+                            'groups': ['Event'],
+                            'advancement': location.item.classification == ItemClassification.progression,
+                            'priority': False,
+                            'useful': location.item.classification == ItemClassification.useful,
+                            'trap': location.item.classification == ItemClassification.trap,
+                            'event': True,
+                            'type': 'Event',
+                            'max_count': 1
+                        }
+        
+        return item_data
