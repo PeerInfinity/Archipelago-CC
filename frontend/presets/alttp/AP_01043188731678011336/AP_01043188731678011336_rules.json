@@ -29386,6 +29386,7 @@
   "settings": {
     "1": {
       "game": "A Link to the Past",
+      "assume_bidirectional_exits": true,
       "dark_room_logic": "lamp",
       "retro_bow": false,
       "swordless": false,
@@ -29413,29 +29414,7 @@
         "Bombos"
       ],
       "misery_mire_medallion": "Bombos",
-      "turtle_rock_medallion": "Bombos",
-      "location_collections": {
-        "randomizer_room_chests": [
-          "Ganons Tower - Randomizer Room - Top Left",
-          "Ganons Tower - Randomizer Room - Top Right",
-          "Ganons Tower - Randomizer Room - Bottom Left",
-          "Ganons Tower - Randomizer Room - Bottom Right"
-        ],
-        "compass_room_chests": [
-          "Ganons Tower - Compass Room - Top Left",
-          "Ganons Tower - Compass Room - Top Right",
-          "Ganons Tower - Compass Room - Bottom Left",
-          "Ganons Tower - Compass Room - Bottom Right",
-          "Ganons Tower - Conveyor Star Pits Pot Key"
-        ],
-        "back_chests": [
-          "Ganons Tower - Bob's Chest",
-          "Ganons Tower - Big Chest",
-          "Ganons Tower - Big Key Room - Left",
-          "Ganons Tower - Big Key Room - Right",
-          "Ganons Tower - Big Key Chest"
-        ]
-      }
+      "turtle_rock_medallion": "Bombos"
     }
   },
   "game_info": {

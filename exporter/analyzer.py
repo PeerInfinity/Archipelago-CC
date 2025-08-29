@@ -105,7 +105,6 @@ def get_multiline_lambda_source(func):
             # "Un-parse" the found AST node back into a source string
             return astunparse.unparse(lambda_node).strip()
         else:
-            logging.warning(f"Could not find lambda AST node at {filename}:{start_line}")
             return inspect.getsource(func) # Fallback
 
     except Exception as e:

@@ -43,6 +43,11 @@
           "content": [
             {
               "type": "component",
+              "componentType": "regionGraphPanel",
+              "title": "Region Graph"
+            },
+            {
+              "type": "component",
               "componentType": "clientPanel",
               "title": "Console & Status"
             },

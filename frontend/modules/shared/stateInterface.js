@@ -351,10 +351,10 @@ export function createStateSnapshotInterface(
           // Special handling for item_name_in_location_names with 2 args
           return selectedHelpers[helperName](snapshot, args[1], args[0], staticData);
         } else {
-          return selectedHelpers[helperName](snapshot, 'world', args[0], staticData);
+          // Pass all arguments to the helper function
+          return selectedHelpers[helperName](snapshot, 'world', ...args, staticData);
         }
       }
-      
       return undefined; // Helper not found - all games should use agnostic helpers
     },
     evaluateRule: function (rule, contextName = null) {

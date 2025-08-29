@@ -27,6 +27,7 @@ const TEST_CASE_FILES = [
   './testCases/locationPanelTests.js',
   './testCases/exitPanelTests.js',
   './testCases/regionPanelTests.js',
+  './testCases/regionGraphPanelTests.js',
   './testCases/eventsPanelTests.js',
   './testCases/pathAnalyzerTests.js',
   //'./testCases/playerStatePanelTests.js',
