@@ -81,7 +81,7 @@ function handleRegionMove(data, propagationOptions) {
   // Handle the region move by calling moveToRegion on the UI instance
   if (data && data.sourceRegion && data.targetRegion && regionUIInstance) {
     log('info', `[${moduleId} Module] Processing region move from ${data.sourceRegion} to ${data.targetRegion}`);
-    regionUIInstance.moveToRegion(data.sourceRegion, data.targetRegion);
+    regionUIInstance.moveToRegion(data.sourceRegion, data.targetRegion, data.sourceUID);
   } else if (!regionUIInstance) {
     log('warn', `[${moduleId} Module] Cannot process region move - UI instance not available`);
   }

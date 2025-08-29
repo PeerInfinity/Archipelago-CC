@@ -600,8 +600,11 @@ def test_template(template_file: str, templates_dir: str, project_root: str, wor
             'note': 'Error reading file size'
         }
     
-    print(f"Completed {template_name}: Generation={'✓' if result['generation']['success'] else '✗'}, "
-          f"Test={'✓' if result['spoiler_test']['pass_fail'] == 'passed' else '✗'}")
+    print(f"Completed {template_name}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
+          f"Test={'[PASS]' if result['spoiler_test']['pass_fail'] == 'passed' else '[FAIL]'}, "
+          f"Gen Errors={result['generation']['error_count']}, "
+          f"Sphere Reached={result['spoiler_test']['sphere_reached']}, "
+          f"Max Spheres={result['spoiler_test']['total_spheres']}")
     
     return result
 
@@ -660,7 +663,7 @@ def main():
     deps_available = check_virtual_environment()
     
     if not deps_available:
-        print("❌ ERROR: Required dependencies not available!")
+        print("[ERROR] Required dependencies not available!")
         print("")
         print("Please activate your virtual environment first:")
         print("  Linux/Mac: source .venv/bin/activate")
@@ -670,7 +673,7 @@ def main():
         print("the getting-started guide first.")
         sys.exit(1)
     elif not venv_active:
-        print("⚠️  WARNING: Virtual environment not detected, but dependencies are available.")
+        print("[WARNING] Virtual environment not detected, but dependencies are available.")
         print("   For best results, activate your virtual environment:")
         print("   Linux/Mac: source .venv/bin/activate")
         print("   Windows:   .venv\\Scripts\\activate")
@@ -680,7 +683,7 @@ def main():
     
     # Check if HTTP server is running (required for spoiler tests, but not for export-only)
     if not args.export_only and not check_http_server():
-        print("❌ ERROR: HTTP development server not running!")
+        print("[ERROR] HTTP development server not running!")
         print("")
         print("The spoiler tests require a local development server.")
         print("Please start the server first:")

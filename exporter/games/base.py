@@ -112,6 +112,9 @@ class BaseGameExportHandler:
             mode_val = multiworld.mode[player]
             settings_dict['mode'] = getattr(mode_val, 'value', str(mode_val))
 
+        # Add assume_bidirectional_exits setting with default false
+        settings_dict['assume_bidirectional_exits'] = False
+
         return settings_dict
         
     def get_game_info(self, world) -> Dict[str, Any]:

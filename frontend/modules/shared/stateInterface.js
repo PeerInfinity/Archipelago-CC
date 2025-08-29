@@ -131,19 +131,12 @@ export function createStateSnapshotInterface(
           return staticData?.dungeons;
         case 'player':
           return snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
-        case 'location_collections':
-          return snapshot?.settings?.location_collections;
         case 'world':
           // Return an object with player property for AHIT compatibility
           return {
             player: snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1'
           };
         default:
-          // Check for ALTTP location collections by name
-          if (snapshot?.settings?.location_collections && 
-              snapshot.settings.location_collections[name]) {
-            return snapshot.settings.location_collections[name];
-          }
           return undefined;
       }
     },

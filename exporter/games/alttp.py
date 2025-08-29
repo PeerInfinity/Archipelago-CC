@@ -219,6 +219,9 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract ALTTP settings."""
         settings_dict = {'game': multiworld.game[player]}
+        
+        # Set assume_bidirectional_exits to true for ALTTP
+        settings_dict['assume_bidirectional_exits'] = True
 
         # Helper to safely extract option values
         def extract_option(option_name):
@@ -282,29 +285,6 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
              settings_dict['misery_mire_medallion'] = None
              settings_dict['turtle_rock_medallion'] = None
 
-        # Add ALTTP-specific location collections used in rule logic
-        settings_dict['location_collections'] = {
-            'randomizer_room_chests': [
-                'Ganons Tower - Randomizer Room - Top Left',
-                'Ganons Tower - Randomizer Room - Top Right', 
-                'Ganons Tower - Randomizer Room - Bottom Left',
-                'Ganons Tower - Randomizer Room - Bottom Right'
-            ],
-            'compass_room_chests': [
-                'Ganons Tower - Compass Room - Top Left',
-                'Ganons Tower - Compass Room - Top Right',
-                'Ganons Tower - Compass Room - Bottom Left',
-                'Ganons Tower - Compass Room - Bottom Right',
-                'Ganons Tower - Conveyor Star Pits Pot Key'
-            ],
-            'back_chests': [
-                'Ganons Tower - Bob\'s Chest',
-                'Ganons Tower - Big Chest', 
-                'Ganons Tower - Big Key Room - Left',
-                'Ganons Tower - Big Key Room - Right',
-                'Ganons Tower - Big Key Chest'
-            ]
-        }
 
         return settings_dict
 

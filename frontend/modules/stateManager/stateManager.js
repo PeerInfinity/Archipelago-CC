@@ -649,10 +649,6 @@ export class StateManager {
     this.settings = gameSettingsFromFile;
     this.settings.game = gameName; // Ensure game name is correctly set
     
-    // For ALTTP, ensure location_collections are available in settings
-    if (gameName === 'A Link to the Past' && gameSettingsFromFile.location_collections) {
-      this.settings.location_collections = gameSettingsFromFile.location_collections;
-    }
     
     log('info', `[StateManager] Loaded logic module for: "${gameName}"`);
 
@@ -2820,19 +2816,6 @@ export class StateManager {
         if (name === 'locations') return self.locations; // The flat array of all location objects
         if (name === 'items') return self.itemData; // Item definitions
         if (name === 'groups') return self.groupData; // Item group definitions
-
-        // ALTTP-specific location collections for complex rules (now exported from Python)
-        if (self.settings?.game === 'A Link to the Past' && self.settings?.location_collections) {
-          if (name === 'randomizer_room_chests') {
-            return self.settings.location_collections.randomizer_room_chests || [];
-          }
-          if (name === 'back_chests') {
-            return self.settings.location_collections.back_chests || [];
-          }
-          if (name === 'compass_room_chests') {
-            return self.settings.location_collections.compass_room_chests || [];
-          }
-        }
 
         // Fallback: if 'name' is a direct method or property on the helpers object
         if (

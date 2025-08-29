@@ -357,7 +357,7 @@ async function handleUserLocationCheckForStateManager(eventData) {
             if (originalOrder && originalOrder.length > 0) {
                 for (const locName of originalOrder) {
                     const loc = staticData.locations[locName];
-                    if (loc && !snapshot.flags.includes(loc.name)) {
+                    if (loc && !snapshot.checkedLocations.includes(loc.name)) {
                         const parentRegionName = loc.parent_region || loc.region;
                         const parentRegionReachable = snapshot.regionReachability?.[parentRegionName] === 'reachable' || snapshot.regionReachability?.[parentRegionName] === 'checked';
                         const ruleResult = loc.access_rule ? evaluateRule(loc.access_rule, snapshotInterface) : true;
@@ -369,7 +369,7 @@ async function handleUserLocationCheckForStateManager(eventData) {
                 }
             } else { // Fallback: iterate all locations if no original order
                 for (const loc of allLocations) {
-                    if (!snapshot.flags.includes(loc.name)) {
+                    if (!snapshot.checkedLocations.includes(loc.name)) {
                         const parentRegionName = loc.parent_region || loc.region;
                         const parentRegionReachable = snapshot.regionReachability?.[parentRegionName] === 'reachable' || snapshot.regionReachability?.[parentRegionName] === 'checked';
                         const ruleResult = loc.access_rule ? evaluateRule(loc.access_rule, snapshotInterface) : true;

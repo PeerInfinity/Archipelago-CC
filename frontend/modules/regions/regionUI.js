@@ -338,7 +338,7 @@ export class RegionUI {
           'info',
           `[RegionUI] Received user:regionMove from ${eventPayload.sourceRegion} to ${eventPayload.targetRegion}`
         );
-        this.moveToRegion(eventPayload.sourceRegion, eventPayload.targetRegion);
+        this.moveToRegion(eventPayload.sourceRegion, eventPayload.targetRegion, eventPayload.sourceUID);
       } else {
         log(
           'warn',
@@ -574,15 +574,20 @@ export class RegionUI {
     this.update(); // Update display after setting start region
   }
 
-  moveToRegion(oldRegionName, newRegionName) {
-    // 1. find the index of oldRegionName in visited array
-    const oldIndex = this.visitedRegions.findIndex(
-      (r) => r.name === oldRegionName
-    );
+  moveToRegion(oldRegionName, newRegionName, sourceUID) {
+    // 1. find the index of the specific region instance by UID (if provided) or by name (fallback)
+    let oldIndex;
+    if (sourceUID) {
+      oldIndex = this.visitedRegions.findIndex((r) => r.uid === sourceUID);
+    } else {
+      // Fallback to name-based lookup for backward compatibility
+      oldIndex = this.visitedRegions.findIndex((r) => r.name === oldRegionName);
+    }
+    
     if (oldIndex < 0) {
       log(
         'warn',
-        `Can't find oldRegionName ${oldRegionName} in visited. Not removing anything.`
+        `Can't find region ${oldRegionName} (UID: ${sourceUID}) in visited. Not removing anything.`
       );
       return;
     }
@@ -879,8 +884,20 @@ export class RegionUI {
           snapshot.regionReachability?.[name] === 'checked',
       }));
     } else {
+      // Check if path is too long - disable paths if path length > 2x total regions
+      const totalRegions = Object.keys(staticData.regions).length;
+      const pathTooLong = this.visitedRegions.length > (totalRegions * 2);
+      
+      // Auto-disable Show Paths checkbox if path is too long
+      const showPathsCheckbox = this.rootElement.querySelector('#show-paths');
+      if (pathTooLong && showPathsCheckbox) {
+        showPathsCheckbox.checked = false;
+        this.showPaths = false;
+      }
+      
       // When showAll is false, check showPaths to determine what to render
-      if (this.showPaths) {
+      // But if path is too long, force to show only last region
+      if (this.showPaths && !pathTooLong) {
         // Show full path
         regionsToRender = this.visitedRegions.map((vr) => ({
           name: vr.name,
@@ -1246,8 +1263,11 @@ export class RegionUI {
     let expanded =
       currentExpandedState !== undefined ? currentExpandedState : false;
 
+    // Find the visited entry by UID first (for specific instances), then fall back to name lookup
     const visitedEntry = this.visitedRegions.find(
-      (vr) => vr.name === regionName
+      (vr) => vr.uid === currentUid
+    ) || this.visitedRegions.find(
+      (vr) => vr.name === regionName && !currentUid
     );
 
     if (this.showAll) {
@@ -1256,7 +1276,8 @@ export class RegionUI {
       // UID and expanded state are passed in directly from regionsToRender for 'showAll' items.
     } else {
       // Not 'Show All', rely on visitedRegions for state if an entry exists
-      if (visitedEntry) {
+      if (visitedEntry && visitedEntry.uid === currentUid) {
+        // Only use visitedEntry state if it's the exact same instance (same UID)
         uid = visitedEntry.uid;
         expanded = visitedEntry.expanded;
       } else if (!uid) {
@@ -1306,9 +1327,9 @@ export class RegionUI {
     // Determine completion status (example logic)
     let totalLocations = regionStaticData.locations?.length || 0;
     let checkedLocationsCount = 0;
-    if (regionStaticData.locations && snapshot.flags) {
-      // Use snapshot.flags
-      const checkedSet = new Set(snapshot.flags);
+    if (regionStaticData.locations && snapshot.checkedLocations) {
+      // Use snapshot.checkedLocations
+      const checkedSet = new Set(snapshot.checkedLocations);
       checkedLocationsCount = regionStaticData.locations.filter((loc) =>
         checkedSet.has(loc.name)
       ).length;
@@ -1550,11 +1571,10 @@ export class RegionUI {
         moveBtn.addEventListener('click', () => {
           if (!moveBtn.disabled) {
             // Publish user:regionMove event to bottom direction (same as user:locationCheck)
-            log('info', `[RegionUI] Move button clicked - moduleDispatcher available: ${!!moduleDispatcher}`);
             if (moduleDispatcher) {
-              log('info', `[RegionUI] Publishing user:regionMove event for ${regionName} -> ${connectedRegionName}`);
               moduleDispatcher.publish('user:regionMove', {
                 sourceRegion: regionName,
+                sourceUID: uid, // Include the specific UID of the region instance
                 targetRegion: connectedRegionName,
                 exitName: exitDef.name
               }, 'bottom');
