@@ -949,7 +949,8 @@
   },
   "settings": {
     "1": {
-      "game": "ChecksFinder"
+      "game": "ChecksFinder",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

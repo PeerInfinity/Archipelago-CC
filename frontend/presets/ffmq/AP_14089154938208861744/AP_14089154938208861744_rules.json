@@ -29435,7 +29435,8 @@
   },
   "settings": {
     "1": {
-      "game": "Final Fantasy Mystic Quest"
+      "game": "Final Fantasy Mystic Quest",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

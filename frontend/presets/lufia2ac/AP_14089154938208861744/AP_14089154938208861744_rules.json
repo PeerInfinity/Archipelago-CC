@@ -6886,7 +6886,8 @@
   },
   "settings": {
     "1": {
-      "game": "Lufia II Ancient Cave"
+      "game": "Lufia II Ancient Cave",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

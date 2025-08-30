@@ -42787,7 +42787,8 @@
   },
   "settings": {
     "1": {
-      "game": "Starcraft 2"
+      "game": "Starcraft 2",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

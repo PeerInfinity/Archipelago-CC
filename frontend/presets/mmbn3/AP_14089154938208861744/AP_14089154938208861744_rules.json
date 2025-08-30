@@ -12228,7 +12228,8 @@
   },
   "settings": {
     "1": {
-      "game": "MegaMan Battle Network 3"
+      "game": "MegaMan Battle Network 3",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

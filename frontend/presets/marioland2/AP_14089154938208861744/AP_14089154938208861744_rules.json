@@ -41338,7 +41338,8 @@
   },
   "settings": {
     "1": {
-      "game": "Super Mario Land 2"
+      "game": "Super Mario Land 2",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

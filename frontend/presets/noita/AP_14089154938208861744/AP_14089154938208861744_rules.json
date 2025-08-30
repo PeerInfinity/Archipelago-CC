@@ -4356,7 +4356,8 @@
   },
   "settings": {
     "1": {
-      "game": "Noita"
+      "game": "Noita",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

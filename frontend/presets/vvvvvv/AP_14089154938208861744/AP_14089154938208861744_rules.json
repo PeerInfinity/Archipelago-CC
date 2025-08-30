@@ -1203,7 +1203,8 @@
   },
   "settings": {
     "1": {
-      "game": "VVVVVV"
+      "game": "VVVVVV",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

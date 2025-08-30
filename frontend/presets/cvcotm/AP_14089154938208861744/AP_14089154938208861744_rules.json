@@ -4670,7 +4670,8 @@
   },
   "settings": {
     "1": {
-      "game": "Castlevania - Circle of the Moon"
+      "game": "Castlevania - Circle of the Moon",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

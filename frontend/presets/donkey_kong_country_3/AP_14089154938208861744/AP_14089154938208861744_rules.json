@@ -6332,7 +6332,8 @@
   },
   "settings": {
     "1": {
-      "game": "Donkey Kong Country 3"
+      "game": "Donkey Kong Country 3",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

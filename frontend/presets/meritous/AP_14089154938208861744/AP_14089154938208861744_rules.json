@@ -2825,7 +2825,8 @@
   },
   "settings": {
     "1": {
-      "game": "Meritous"
+      "game": "Meritous",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -13697,7 +13697,8 @@
   },
   "settings": {
     "1": {
-      "game": "Super Mario World"
+      "game": "Super Mario World",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

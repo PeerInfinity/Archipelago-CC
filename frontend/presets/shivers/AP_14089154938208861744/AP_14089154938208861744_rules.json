@@ -8189,7 +8189,8 @@
   },
   "settings": {
     "1": {
-      "game": "Shivers"
+      "game": "Shivers",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

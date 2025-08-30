@@ -16193,7 +16193,8 @@
   },
   "settings": {
     "1": {
-      "game": "DOOM 1993"
+      "game": "DOOM 1993",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

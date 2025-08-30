@@ -20295,7 +20295,8 @@
   },
   "settings": {
     "1": {
-      "game": "SMZ3"
+      "game": "SMZ3",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

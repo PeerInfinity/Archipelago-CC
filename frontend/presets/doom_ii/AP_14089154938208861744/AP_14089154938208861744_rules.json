@@ -19242,7 +19242,8 @@
   },
   "settings": {
     "1": {
-      "game": "DOOM II"
+      "game": "DOOM II",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -26929,144 +26929,9 @@
         "type": null,
         "max_count": 1
       },
-      "Sunwarps": {
-        "name": "Sunwarps",
-        "id": 444582,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Artistic Doors": {
-        "name": "Artistic Doors",
-        "id": 444545,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Backside Doors": {
-        "name": "Backside Doors",
-        "id": 444473,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Crossroads - Tower Entrances": {
-        "name": "Crossroads - Tower Entrances",
-        "id": 444441,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Observant Doors": {
-        "name": "Observant Doors",
-        "id": 444467,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Orange Tower First Floor - Shortcuts": {
-        "name": "Orange Tower First Floor - Shortcuts",
-        "id": 444484,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Color Hunt Barriers": {
-        "name": "Color Hunt Barriers",
-        "id": 444458,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Colorful Doors": {
-        "name": "Colorful Doors",
-        "id": 444498,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fearless Doors": {
-        "name": "Fearless Doors",
-        "id": 444469,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Welcome Back Doors": {
-        "name": "Welcome Back Doors",
-        "id": 444492,
+      "Rhyme Room Doors": {
+        "name": "Rhyme Room Doors",
+        "id": 444418,
         "groups": [
           "Doors",
           "Everything"
@@ -27094,9 +26959,9 @@
         "type": null,
         "max_count": 1
       },
-      "Entrance to The Traveled": {
-        "name": "Entrance to The Traveled",
-        "id": 444434,
+      "Observant Doors": {
+        "name": "Observant Doors",
+        "id": 444467,
         "groups": [
           "Doors",
           "Everything"
@@ -27109,9 +26974,9 @@
         "type": null,
         "max_count": 1
       },
-      "Hallway Room Doors": {
-        "name": "Hallway Room Doors",
-        "id": 444460,
+      "Artistic Doors": {
+        "name": "Artistic Doors",
+        "id": 444545,
         "groups": [
           "Doors",
           "Everything"
@@ -27139,9 +27004,9 @@
         "type": null,
         "max_count": 1
       },
-      "Rhyme Room Doors": {
-        "name": "Rhyme Room Doors",
-        "id": 444418,
+      "Color Hunt Barriers": {
+        "name": "Color Hunt Barriers",
+        "id": 444458,
         "groups": [
           "Doors",
           "Everything"
@@ -27154,9 +27019,24 @@
         "type": null,
         "max_count": 1
       },
-      "Entrances to The Tenacious": {
-        "name": "Entrances to The Tenacious",
-        "id": 444427,
+      "Entrance to The Traveled": {
+        "name": "Entrance to The Traveled",
+        "id": 444434,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Orange Tower First Floor - Shortcuts": {
+        "name": "Orange Tower First Floor - Shortcuts",
+        "id": 444484,
         "groups": [
           "Doors",
           "Everything"
@@ -27184,6 +27064,51 @@
         "type": null,
         "max_count": 1
       },
+      "Fearless Doors": {
+        "name": "Fearless Doors",
+        "id": 444469,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Entrances to The Tenacious": {
+        "name": "Entrances to The Tenacious",
+        "id": 444427,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crossroads - Tower Entrances": {
+        "name": "Crossroads - Tower Entrances",
+        "id": 444441,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Symmetry Doors": {
         "name": "Symmetry Doors",
         "id": 444429,
@@ -27199,9 +27124,84 @@
         "type": null,
         "max_count": 1
       },
+      "Hallway Room Doors": {
+        "name": "Hallway Room Doors",
+        "id": 444460,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Colorful Doors": {
+        "name": "Colorful Doors",
+        "id": 444498,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Crossroads Doors": {
         "name": "Crossroads Doors",
         "id": 444444,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Welcome Back Doors": {
+        "name": "Welcome Back Doors",
+        "id": 444492,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Backside Doors": {
+        "name": "Backside Doors",
+        "id": 444473,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sunwarps": {
+        "name": "Sunwarps",
+        "id": 444582,
         "groups": [
           "Doors",
           "Everything"
@@ -28414,9 +28414,39 @@
         "type": null,
         "max_count": 1
       },
-      "Tenacious Entrance Panels": {
-        "name": "Tenacious Entrance Panels",
-        "id": 444593,
+      "Room Room Panels": {
+        "name": "Room Room Panels",
+        "id": 444675,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Backside Entrance Panels": {
+        "name": "Backside Entrance Panels",
+        "id": 444620,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Colorful Panels": {
+        "name": "Colorful Panels",
+        "id": 444629,
         "groups": [
           "Everything",
           "Panels"
@@ -28459,21 +28489,6 @@
         "type": null,
         "max_count": 1
       },
-      "Backside Entrance Panels": {
-        "name": "Backside Entrance Panels",
-        "id": 444620,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Symmetry Room Panels": {
         "name": "Symmetry Room Panels",
         "id": 444607,
@@ -28489,24 +28504,9 @@
         "type": null,
         "max_count": 1
       },
-      "Room Room Panels": {
-        "name": "Room Room Panels",
-        "id": 444675,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Colorful Panels": {
-        "name": "Colorful Panels",
-        "id": 444629,
+      "Tenacious Entrance Panels": {
+        "name": "Tenacious Entrance Panels",
+        "id": 444593,
         "groups": [
           "Everything",
           "Panels"
@@ -28653,51 +28653,9 @@
         "type": null,
         "max_count": 46
       },
-      "Progressive Pilgrimage": {
-        "name": "Progressive Pilgrimage",
-        "id": 444583,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Suits Area": {
-        "name": "Progressive Suits Area",
-        "id": 444602,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Progressive Hallway Room": {
         "name": "Progressive Hallway Room",
         "id": 444461,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Number Hunt": {
-        "name": "Progressive Number Hunt",
-        "id": 444654,
         "groups": [
           "Everything"
         ],
@@ -28723,9 +28681,65 @@
         "type": null,
         "max_count": 1
       },
+      "Progressive Number Hunt": {
+        "name": "Progressive Number Hunt",
+        "id": 444654,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Progressive Art Gallery": {
         "name": "Progressive Art Gallery",
         "id": 444563,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Symmetry Room": {
+        "name": "Progressive Symmetry Room",
+        "id": 444608,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Suits Area": {
+        "name": "Progressive Suits Area",
+        "id": 444602,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Pilgrimage": {
+        "name": "Progressive Pilgrimage",
+        "id": 444583,
         "groups": [
           "Everything"
         ],
@@ -28754,20 +28768,6 @@
       "Progressive Fearless": {
         "name": "Progressive Fearless",
         "id": 444470,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Symmetry Room": {
-        "name": "Progressive Symmetry Room",
-        "id": 444608,
         "groups": [
           "Everything"
         ],
@@ -28839,7 +28839,8 @@
   },
   "settings": {
     "1": {
-      "game": "Lingo"
+      "game": "Lingo",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -11039,7 +11039,8 @@
   },
   "settings": {
     "1": {
-      "game": "Yoshi's Island"
+      "game": "Yoshi's Island",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

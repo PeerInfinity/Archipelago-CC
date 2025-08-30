@@ -7735,7 +7735,8 @@
   },
   "settings": {
     "1": {
-      "game": "The Wind Waker"
+      "game": "The Wind Waker",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

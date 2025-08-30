@@ -3000,7 +3000,8 @@
   },
   "settings": {
     "1": {
-      "game": "Final Fantasy"
+      "game": "Final Fantasy",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

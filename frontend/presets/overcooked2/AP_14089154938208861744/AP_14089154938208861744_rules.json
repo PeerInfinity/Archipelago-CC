@@ -8373,7 +8373,8 @@
   },
   "settings": {
     "1": {
-      "game": "Overcooked! 2"
+      "game": "Overcooked! 2",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

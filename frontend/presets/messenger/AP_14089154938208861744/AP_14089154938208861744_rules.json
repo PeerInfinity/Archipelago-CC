@@ -14388,7 +14388,8 @@
   },
   "settings": {
     "1": {
-      "game": "The Messenger"
+      "game": "The Messenger",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

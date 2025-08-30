@@ -51519,7 +51519,8 @@
   },
   "settings": {
     "1": {
-      "game": "Links Awakening DX"
+      "game": "Links Awakening DX",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

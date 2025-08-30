@@ -31731,7 +31731,8 @@
   },
   "settings": {
     "1": {
-      "game": "Yu-Gi-Oh! 2006"
+      "game": "Yu-Gi-Oh! 2006",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

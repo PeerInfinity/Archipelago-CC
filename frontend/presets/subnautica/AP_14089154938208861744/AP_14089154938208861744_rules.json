@@ -4438,7 +4438,8 @@
   },
   "settings": {
     "1": {
-      "game": "Subnautica"
+      "game": "Subnautica",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

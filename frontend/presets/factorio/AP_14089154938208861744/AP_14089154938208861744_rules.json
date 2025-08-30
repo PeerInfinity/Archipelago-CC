@@ -9755,7 +9755,8 @@
   },
   "settings": {
     "1": {
-      "game": "Factorio"
+      "game": "Factorio",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

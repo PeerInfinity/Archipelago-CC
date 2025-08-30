@@ -40620,7 +40620,8 @@
   },
   "settings": {
     "1": {
-      "game": "Ocarina of Time"
+      "game": "Ocarina of Time",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -18421,7 +18421,8 @@
   },
   "settings": {
     "1": {
-      "game": "Kingdom Hearts"
+      "game": "Kingdom Hearts",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

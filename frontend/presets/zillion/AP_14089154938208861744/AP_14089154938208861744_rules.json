@@ -8452,7 +8452,8 @@
   },
   "settings": {
     "1": {
-      "game": "Zillion"
+      "game": "Zillion",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

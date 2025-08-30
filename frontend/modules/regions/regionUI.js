@@ -1254,16 +1254,6 @@ export class RegionUI {
     );
   }
 
-  _suffixIfDuplicate(regionName, uid) {
-    // count how many times regionName appears in visited, up to this uid
-    const countSoFar = this.visitedRegions.filter(
-      (r) => r.name === regionName && r.uid <= uid
-    ).length;
-    // if it's the first occurrence, return ''
-    // if it's the second, return ' (2)', etc.
-    return countSoFar > 1 ? ` (${countSoFar})` : '';
-  }
-
   /**
    * Toggles colorblind mode and updates the UI
    */
@@ -1364,72 +1354,6 @@ export class RegionUI {
     }
   }
   // --- END ADDED ---
-
-  /**
-   * Helper function to find which dungeon a region belongs to
-   * @param {string} regionName - The name of the region to search for
-   * @returns {Object|null} - The dungeon object that contains this region, or null if not found
-   */
-  findDungeonForRegion(regionName) {
-    const staticData = stateManager.getStaticData();
-    if (!staticData || !staticData.dungeons) {
-      return null;
-    }
-
-    // Search through all dungeons to find one that contains this region
-    for (const dungeonData of Object.values(staticData.dungeons)) {
-      if (dungeonData.regions && dungeonData.regions.includes(regionName)) {
-        return dungeonData;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Creates a clickable link to navigate to a specific dungeon
-   * @param {string} dungeonName - The name of the dungeon to link to
-   * @returns {HTMLElement} - The clickable dungeon link element
-   */
-  createDungeonLink(dungeonName) {
-    const link = document.createElement('a');
-    link.href = '#';
-    link.textContent = dungeonName;
-    link.classList.add('dungeon-link');
-    link.style.color = '#4CAF50';
-    link.style.textDecoration = 'none';
-    link.style.fontWeight = 'bold';
-
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation(); // Prevent event from bubbling to parent elements
-
-      log('info', `[RegionUI] Dungeon link clicked for: ${dungeonName}`);
-
-      // Publish panel activation first (like createRegionLink does)
-      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' }, 'regions');
-      log('info', `[RegionUI] Published ui:activatePanel for dungeonsPanel.`);
-
-      // Then publish navigation
-      eventBus.publish('ui:navigateToDungeon', {
-        dungeonName: dungeonName,
-        sourcePanel: 'regions',
-      }, 'regions');
-      log(
-        'info',
-        `[RegionUI] Published ui:navigateToDungeon for ${dungeonName}.`
-      );
-    });
-
-    // Add hover effect
-    link.addEventListener('mouseenter', () => {
-      link.style.textDecoration = 'underline';
-    });
-    link.addEventListener('mouseleave', () => {
-      link.style.textDecoration = 'none';
-    });
-
-    return link;
-  }
 }
 
 export default RegionUI;

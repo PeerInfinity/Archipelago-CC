@@ -11368,7 +11368,8 @@
   },
   "settings": {
     "1": {
-      "game": "Landstalker - The Treasures of King Nole"
+      "game": "Landstalker - The Treasures of King Nole",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -44723,7 +44723,8 @@
   },
   "settings": {
     "1": {
-      "game": "Dark Souls III"
+      "game": "Dark Souls III",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

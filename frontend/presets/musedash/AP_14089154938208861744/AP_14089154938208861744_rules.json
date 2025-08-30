@@ -12086,7 +12086,8 @@
   },
   "settings": {
     "1": {
-      "game": "Muse Dash"
+      "game": "Muse Dash",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

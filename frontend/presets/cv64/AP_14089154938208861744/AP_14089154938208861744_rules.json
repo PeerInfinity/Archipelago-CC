@@ -6862,7 +6862,8 @@
   },
   "settings": {
     "1": {
-      "game": "Castlevania 64"
+      "game": "Castlevania 64",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

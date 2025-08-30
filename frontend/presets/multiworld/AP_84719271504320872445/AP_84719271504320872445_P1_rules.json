@@ -31,6 +31,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -50,6 +53,8 @@
             "connected_region": "Hawk Peak",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3416,7 +3421,8 @@
   },
   "settings": {
     "1": {
-      "game": "A Short Hike"
+      "game": "A Short Hike",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

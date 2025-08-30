@@ -3870,7 +3870,8 @@
   },
   "settings": {
     "1": {
-      "game": "Faxanadu"
+      "game": "Faxanadu",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -3877,7 +3877,8 @@
   },
   "settings": {
     "1": {
-      "game": "Inscryption"
+      "game": "Inscryption",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

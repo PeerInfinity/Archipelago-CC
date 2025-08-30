@@ -10522,7 +10522,8 @@
   },
   "settings": {
     "1": {
-      "game": "TUNIC"
+      "game": "TUNIC",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

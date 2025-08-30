@@ -3331,7 +3331,8 @@
   },
   "settings": {
     "1": {
-      "game": "Undertale"
+      "game": "Undertale",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

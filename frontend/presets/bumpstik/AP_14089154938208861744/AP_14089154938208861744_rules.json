@@ -2398,7 +2398,8 @@
   },
   "settings": {
     "1": {
-      "game": "Bumper Stickers"
+      "game": "Bumper Stickers",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

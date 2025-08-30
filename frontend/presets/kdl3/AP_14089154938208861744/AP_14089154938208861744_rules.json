@@ -35829,7 +35829,8 @@
   },
   "settings": {
     "1": {
-      "game": "Kirby's Dream Land 3"
+      "game": "Kirby's Dream Land 3",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

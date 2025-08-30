@@ -19102,7 +19102,8 @@
   },
   "settings": {
     "1": {
-      "game": "The Legend of Zelda"
+      "game": "The Legend of Zelda",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

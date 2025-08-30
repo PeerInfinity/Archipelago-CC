@@ -30150,7 +30150,8 @@
   },
   "settings": {
     "1": {
-      "game": "Stardew Valley"
+      "game": "Stardew Valley",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

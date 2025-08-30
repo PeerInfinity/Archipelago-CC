@@ -20761,7 +20761,8 @@
   },
   "settings": {
     "1": {
-      "game": "Heretic"
+      "game": "Heretic",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

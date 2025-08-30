@@ -13277,7 +13277,8 @@
   },
   "settings": {
     "1": {
-      "game": "Terraria"
+      "game": "Terraria",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

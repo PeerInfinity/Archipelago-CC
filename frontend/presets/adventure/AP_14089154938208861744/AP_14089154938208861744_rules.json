@@ -1367,7 +1367,8 @@
   },
   "settings": {
     "1": {
-      "game": "Adventure"
+      "game": "Adventure",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

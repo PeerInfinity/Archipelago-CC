@@ -15139,7 +15139,8 @@
   },
   "settings": {
     "1": {
-      "game": "Jak and Daxter: The Precursor Legacy"
+      "game": "Jak and Daxter: The Precursor Legacy",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

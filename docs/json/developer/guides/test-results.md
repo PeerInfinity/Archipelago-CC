@@ -1,18 +1,18 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-08-27 17:32:40
+**Generated:** 2025-08-29 18:55:56
 
-**Source Data Created:** 2025-08-25T21:34:57.778596
+**Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-08-27T16:59:01.087866
+**Source Data Last Updated:** 2025-08-29T18:55:32.989598
 
 **Script Version:** 1.0.0
 
 ## Summary
 
-- **Total Games:** 77
-- **Passed:** 6 (7.8%)
-- **Failed:** 71 (92.2%)
+- **Total Games:** 76
+- **Passed:** 7 (9.2%)
+- **Failed:** 69 (90.8%)
 
 ## Test Results
 
@@ -22,9 +22,8 @@
 | A Link to the Past | ❌ Failed | 0 | 18.6 | 22.1 | 🟡 84.2% | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | 1.5 | 1.5 | 🟢 Complete | ✅ | ⚫ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
-| Aquaria | ❌ Failed | 0 | 0.1 | 5.1 | 🟠 2.0% | ⚫ | ⚫ |
-| ArchipIDLE | ❌ Failed | 0 | 0 | 3.2 | 🔴 0.0% | ✅ | ✅ |
-| Archipelago | ❌ Failed | 1 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
+| Aquaria | ❌ Failed | 0 | 0.1 | 5.1 | 🟠 2.0% | ✅ | ⚫ |
+| ArchipIDLE | ✅ Passed | 0 | 3.2 | 3.2 | 🟢 Complete | ✅ | ✅ |
 | Blasphemous | ❌ Failed | 0 | 0.1 | 5.1 | 🟠 2.0% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed | 0 | 0 | 9.1 | 🔴 0.0% | ✅ | ⚫ |
 | Bumper Stickers | ❌ Failed | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ⚫ |
@@ -60,7 +59,7 @@
 | Meritous | ❌ Failed | 0 | 1.1 | 7.1 | 🟡 15.5% | ⚫ | ⚫ |
 | Muse Dash | ❌ Failed | 0 | 0.1 | 5.1 | 🟠 2.0% | ⚫ | ⚫ |
 | Noita | ✅ Passed | 0 | 0.1 | 0.1 | 🟢 Complete | ⚫ | ⚫ |
-| Ocarina of Time | ❌ Failed | 2524 | 0.1 | 22.1 | 🟠 0.5% | ⚫ | ⚫ |
+| Ocarina of Time | ❌ Failed | 3118 | 0.1 | 22.1 | 🟠 0.5% | ⚫ | ⚫ |
 | Old School Runescape | ❌ Failed | 0 | 0.1 | 7.1 | 🟠 1.4% | ⚫ | ⚫ |
 | Overcooked! 2 | ❌ Failed | 0 | 0 | 17.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Paint | ❌ Failed | 131 | 0.1 | 12.1 | 🟠 0.8% | ⚫ | ⚫ |

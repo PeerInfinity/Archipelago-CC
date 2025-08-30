@@ -29,6 +29,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -48,6 +51,8 @@
             "connected_region": "Spaceship",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -59,6 +64,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -69,6 +77,9 @@
               "item": "Time Piece",
               "count": 5
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -79,6 +90,9 @@
               "item": "Time Piece",
               "count": 17
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -89,6 +103,9 @@
               "item": "Time Piece",
               "count": 13
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -99,6 +116,9 @@
               "item": "Time Piece",
               "count": 35
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -134,6 +154,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -169,6 +192,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -240,6 +266,8 @@
             "connected_region": "Time Rift - Gallery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -248,6 +276,8 @@
             "connected_region": "Time Rift - Gallery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -256,6 +286,8 @@
             "connected_region": "Time Rift - Gallery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -264,6 +296,8 @@
             "connected_region": "Time Rift - Gallery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -272,6 +306,8 @@
             "connected_region": "Time Rift - Gallery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -280,6 +316,8 @@
             "connected_region": "Time Rift - Gallery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -288,6 +326,8 @@
             "connected_region": "Time Rift - Gallery",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -337,6 +377,8 @@
             "connected_region": "Time Rift - The Lab",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -376,6 +418,8 @@
             "connected_region": "Mafia Town",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -387,6 +431,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -396,6 +443,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -405,6 +455,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -414,6 +467,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -423,6 +479,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -432,6 +491,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -441,6 +503,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -460,6 +525,8 @@
             "connected_region": "Welcome to Mafia Town",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -471,6 +538,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -490,6 +560,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -498,8 +571,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 6"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -508,8 +594,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -519,6 +618,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -528,6 +630,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -584,6 +689,8 @@
             "connected_region": "Barrel Battle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -592,6 +699,8 @@
             "connected_region": "Barrel Battle",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -603,6 +712,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -622,6 +734,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -630,8 +745,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 6"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -640,8 +768,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -651,6 +792,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -660,6 +804,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -698,6 +845,8 @@
             "connected_region": "She Came from Outer Space",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -709,6 +858,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -728,6 +880,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -736,8 +891,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 6"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -746,8 +914,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -757,6 +938,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -766,6 +950,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -804,6 +991,8 @@
             "connected_region": "Down with the Mafia!",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -812,6 +1001,8 @@
             "connected_region": "Down with the Mafia!",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -823,6 +1014,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -842,6 +1036,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -850,8 +1047,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 6"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -860,8 +1070,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -871,6 +1094,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -880,6 +1106,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1010,6 +1239,8 @@
             "connected_region": "Heating Up Mafia Town",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1021,6 +1252,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1029,8 +1263,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 6"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1039,8 +1286,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1126,6 +1386,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1182,6 +1445,8 @@
             "connected_region": "Cheating the Race",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1193,6 +1458,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1212,6 +1480,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1220,8 +1491,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 6"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1230,8 +1514,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1317,6 +1614,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1365,6 +1665,8 @@
             "connected_region": "The Golden Vault",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1373,6 +1675,8 @@
             "connected_region": "The Golden Vault",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1381,6 +1685,8 @@
             "connected_region": "The Golden Vault",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1392,6 +1698,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1411,6 +1720,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1419,8 +1731,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 6"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1429,8 +1754,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mafia Town - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1469,6 +1807,8 @@
             "connected_region": "Battle of the Birds",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1480,6 +1820,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1489,6 +1832,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1498,6 +1844,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1507,6 +1856,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1516,6 +1868,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1525,6 +1880,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1534,6 +1892,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1553,6 +1914,8 @@
             "connected_region": "Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1561,6 +1924,8 @@
             "connected_region": "Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -1569,6 +1934,8 @@
             "connected_region": "Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1580,6 +1947,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1589,6 +1959,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1598,6 +1971,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1617,6 +1993,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1676,6 +2055,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -1740,6 +2122,8 @@
             "connected_region": "Murder on the Owl Express",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -1753,15 +2137,38 @@
                 {
                   "type": "generic_helper",
                   "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed"
+                  "description": "Checks if a specific act can be completed",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Battle of the Birds - Act 3"
+                    }
+                  ]
                 },
                 {
                   "type": "generic_helper",
                   "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed"
+                  "description": "Checks if a specific act can be completed",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Battle of the Birds - Act 2"
+                    }
+                  ]
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -1847,6 +2254,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2003,6 +2413,8 @@
             "connected_region": "Picture Perfect",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2014,6 +2426,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2025,15 +2440,38 @@
                 {
                   "type": "generic_helper",
                   "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed"
+                  "description": "Checks if a specific act can be completed",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Battle of the Birds - Act 5"
+                    }
+                  ]
                 },
                 {
                   "type": "generic_helper",
                   "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed"
+                  "description": "Checks if a specific act can be completed",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Battle of the Birds - Act 4"
+                    }
+                  ]
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2108,6 +2546,8 @@
             "connected_region": "Train Rush",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2116,6 +2556,8 @@
             "connected_region": "Train Rush",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2124,6 +2566,8 @@
             "connected_region": "Train Rush",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2135,6 +2579,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2194,6 +2641,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2238,6 +2688,8 @@
             "connected_region": "The Big Parade",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2246,6 +2698,8 @@
             "connected_region": "The Big Parade",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2254,6 +2708,8 @@
             "connected_region": "The Big Parade",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2267,15 +2723,38 @@
                 {
                   "type": "generic_helper",
                   "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed"
+                  "description": "Checks if a specific act can be completed",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Battle of the Birds - Act 5"
+                    }
+                  ]
                 },
                 {
                   "type": "generic_helper",
                   "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed"
+                  "description": "Checks if a specific act can be completed",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Battle of the Birds - Act 4"
+                    }
+                  ]
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2285,6 +2764,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2294,6 +2776,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2332,6 +2817,8 @@
             "connected_region": "Award Ceremony",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2340,6 +2827,8 @@
             "connected_region": "Award Ceremony",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2348,6 +2837,8 @@
             "connected_region": "Award Ceremony",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2359,6 +2850,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2397,6 +2891,8 @@
             "connected_region": "Dead Bird Studio Basement",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2405,6 +2901,8 @@
             "connected_region": "Dead Bird Studio Basement",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2416,6 +2914,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2435,6 +2936,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -2468,6 +2972,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -2734,6 +3241,8 @@
             "connected_region": "Time Rift - Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2742,6 +3251,8 @@
             "connected_region": "Time Rift - Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2750,6 +3261,8 @@
             "connected_region": "Time Rift - Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2758,6 +3271,8 @@
             "connected_region": "Time Rift - Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2766,6 +3281,8 @@
             "connected_region": "Time Rift - Dead Bird Studio",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -2949,6 +3466,8 @@
             "connected_region": "Time Rift - The Owl Express",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2957,6 +3476,8 @@
             "connected_region": "Time Rift - The Owl Express",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2965,6 +3486,8 @@
             "connected_region": "Time Rift - The Owl Express",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2973,6 +3496,8 @@
             "connected_region": "Time Rift - The Owl Express",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -2981,6 +3506,8 @@
             "connected_region": "Time Rift - The Owl Express",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3020,6 +3547,8 @@
             "connected_region": "Time Rift - The Moon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3028,6 +3557,8 @@
             "connected_region": "Time Rift - The Moon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3036,6 +3567,8 @@
             "connected_region": "Time Rift - The Moon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3044,6 +3577,8 @@
             "connected_region": "Time Rift - The Moon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3052,6 +3587,8 @@
             "connected_region": "Time Rift - The Moon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3091,6 +3628,8 @@
             "connected_region": "Dead Bird Studio - Elevator Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3099,6 +3638,8 @@
             "connected_region": "Dead Bird Studio - Elevator Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3192,6 +3733,8 @@
             "connected_region": "Dead Bird Studio - Post Elevator Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3363,6 +3906,8 @@
             "connected_region": "Subcon Forest",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3374,6 +3919,9 @@
               "type": "constant",
               "value": false
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3386,6 +3934,9 @@
                 "value": "Snatcher's Contract - The Subcon Well"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3395,6 +3946,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3407,6 +3961,9 @@
                 "value": "Snatcher's Contract - Toilet of Doom"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3419,6 +3976,9 @@
                 "value": "Snatcher's Contract - Queen Vanessa's Manor"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3431,6 +3991,9 @@
                 "value": "Snatcher's Contract - Mail Delivery Service"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3450,6 +4013,8 @@
             "connected_region": "Contractual Obligations",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3458,6 +4023,8 @@
             "connected_region": "Contractual Obligations",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3469,6 +4036,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3477,8 +4047,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 2"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3498,6 +4081,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3506,8 +4092,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3541,6 +4140,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3615,6 +4217,8 @@
             "connected_region": "The Subcon Well",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3623,6 +4227,8 @@
             "connected_region": "The Subcon Well",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3634,6 +4240,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3642,8 +4251,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 2"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3663,6 +4285,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3671,8 +4296,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3706,6 +4344,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3828,6 +4469,8 @@
             "connected_region": "Toilet of Doom",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3839,6 +4482,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3847,8 +4493,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 2"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3868,6 +4527,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3876,8 +4538,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -3960,6 +4635,8 @@
             "connected_region": "Queen Vanessa's Manor",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -3968,6 +4645,8 @@
             "connected_region": "Queen Vanessa's Manor",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -3979,6 +4658,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -3987,8 +4669,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 2"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4008,6 +4703,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4016,8 +4714,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4051,6 +4762,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4161,6 +4875,8 @@
             "connected_region": "Mail Delivery Service",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4169,6 +4885,8 @@
             "connected_region": "Mail Delivery Service",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4180,6 +4898,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4188,8 +4909,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 2"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4209,6 +4943,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4217,8 +4954,21 @@
             "access_rule": {
               "type": "generic_helper",
               "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed"
+              "description": "Checks if a specific act can be completed",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "world"
+                },
+                {
+                  "type": "constant",
+                  "value": "Subcon Forest - Act 4"
+                }
+              ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4267,6 +5017,8 @@
             "connected_region": "Your Contract has Expired",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4278,6 +5030,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4287,6 +5042,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4372,6 +5130,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4391,6 +5152,8 @@
             "connected_region": "Alpine Skyline",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4408,6 +5171,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4417,6 +5183,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4436,6 +5205,8 @@
             "connected_region": "Alpine Free Roam",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4453,6 +5224,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4465,6 +5239,9 @@
                 "value": "Windmill Cleared"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4514,6 +5291,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4526,6 +5306,9 @@
                 "value": "Twilight Bell Cleared"
               }
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4611,6 +5394,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4649,6 +5435,8 @@
             "connected_region": "Alpine Skyline Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4660,6 +5448,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4698,6 +5489,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4713,6 +5507,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4728,6 +5525,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -4766,6 +5566,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -4923,6 +5726,8 @@
             "connected_region": "Alpine Skyline Area (TIHS)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -4931,6 +5736,8 @@
             "connected_region": "Alpine Skyline Area (TIHS)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -4942,6 +5749,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5202,6 +6012,8 @@
             "connected_region": "The Birdhouse",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5377,6 +6189,8 @@
             "connected_region": "The Lava Cake",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5506,6 +6320,8 @@
             "connected_region": "The Windmill",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5635,6 +6451,8 @@
             "connected_region": "The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5728,6 +6546,8 @@
             "connected_region": "The Illness has Spread",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5736,6 +6556,8 @@
             "connected_region": "The Illness has Spread",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5744,6 +6566,8 @@
             "connected_region": "The Illness has Spread",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5752,6 +6576,8 @@
             "connected_region": "The Illness has Spread",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5760,6 +6586,8 @@
             "connected_region": "The Illness has Spread",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5768,6 +6596,8 @@
             "connected_region": "The Illness has Spread",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5779,6 +6609,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -5798,6 +6631,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -5860,6 +6696,8 @@
             "connected_region": "Time Rift - Alpine Skyline",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -5868,6 +6706,8 @@
             "connected_region": "Time Rift - Alpine Skyline",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -5997,6 +6837,8 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6005,6 +6847,8 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6013,6 +6857,8 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6021,6 +6867,8 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6029,6 +6877,8 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6037,6 +6887,8 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6045,6 +6897,8 @@
             "connected_region": "Time Rift - The Twilight Bell",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6094,6 +6948,8 @@
             "connected_region": "Time Rift - Curly Tail Trail",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6143,6 +6999,8 @@
             "connected_region": "Mafia Town Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6151,6 +7009,8 @@
             "connected_region": "Mafia Town Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6159,6 +7019,8 @@
             "connected_region": "Mafia Town Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6167,6 +7029,8 @@
             "connected_region": "Mafia Town Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6175,6 +7039,8 @@
             "connected_region": "Mafia Town Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6183,6 +7049,8 @@
             "connected_region": "Mafia Town Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6194,6 +7062,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -6203,6 +7074,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -6717,6 +7591,8 @@
             "connected_region": "Mafia Town Area (HUMT)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -6725,6 +7601,8 @@
             "connected_region": "Mafia Town Area (HUMT)",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -6736,6 +7614,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -7615,6 +8496,8 @@
             "connected_region": "Time Rift - Mafia of Cooks",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7623,6 +8506,8 @@
             "connected_region": "Time Rift - Mafia of Cooks",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7631,6 +8516,8 @@
             "connected_region": "Time Rift - Mafia of Cooks",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7639,6 +8526,8 @@
             "connected_region": "Time Rift - Mafia of Cooks",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7647,6 +8536,8 @@
             "connected_region": "Time Rift - Mafia of Cooks",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7655,6 +8546,8 @@
             "connected_region": "Time Rift - Mafia of Cooks",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7802,6 +8695,8 @@
             "connected_region": "Time Rift - Sewers",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7810,6 +8705,8 @@
             "connected_region": "Time Rift - Sewers",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7849,6 +8746,8 @@
             "connected_region": "Time Rift - Bazaar",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7888,6 +8787,8 @@
             "connected_region": "Subcon Forest Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7896,6 +8797,8 @@
             "connected_region": "Subcon Forest Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7904,6 +8807,8 @@
             "connected_region": "Subcon Forest Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7912,6 +8817,8 @@
             "connected_region": "Subcon Forest Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -7920,6 +8827,8 @@
             "connected_region": "Subcon Forest Area",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -7932,6 +8841,9 @@
               "name": "has_paintings",
               "description": "Checks if player has enough painting unlocks"
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           },
           {
@@ -7941,6 +8853,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8737,6 +9652,8 @@
             "connected_region": "Subcon Forest Behind Boss Firewall",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8766,6 +9683,9 @@
                 }
               ]
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -8804,6 +9724,8 @@
             "connected_region": "Subcon Forest Boss Arena",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8812,6 +9734,8 @@
             "connected_region": "Subcon Forest Boss Arena",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8851,6 +9775,8 @@
             "connected_region": "Your Contract has Expired - Post Fight",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -8890,6 +9816,8 @@
             "connected_region": "Time Rift - Sleepy Subcon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -8898,6 +9826,8 @@
             "connected_region": "Time Rift - Sleepy Subcon",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9099,6 +10029,8 @@
             "connected_region": "Time Rift - Pipe",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9144,6 +10076,8 @@
             "connected_region": "Time Rift - Village",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9227,6 +10161,8 @@
             "connected_region": "Badge Seller",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9235,6 +10171,8 @@
             "connected_region": "Badge Seller",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9243,6 +10181,8 @@
             "connected_region": "Badge Seller",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9251,6 +10191,8 @@
             "connected_region": "Badge Seller",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9259,6 +10201,8 @@
             "connected_region": "Badge Seller",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9267,6 +10211,8 @@
             "connected_region": "Badge Seller",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           },
           {
@@ -9275,6 +10221,8 @@
             "connected_region": "Badge Seller",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9440,6 +10388,8 @@
             "connected_region": "Time's End",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -9451,6 +10401,9 @@
               "type": "constant",
               "value": true
             },
+            "reverse": null,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Exit"
           }
         ],
@@ -9470,6 +10423,8 @@
             "connected_region": "The Finale",
             "reverse": null,
             "assumed": false,
+            "randomization_type": 1,
+            "direction": null,
             "type": "Entrance"
           }
         ],
@@ -10495,7 +11450,8 @@
   },
   "settings": {
     "1": {
-      "game": "A Hat in Time"
+      "game": "A Hat in Time",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

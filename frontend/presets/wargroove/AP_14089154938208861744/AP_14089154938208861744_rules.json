@@ -3282,7 +3282,8 @@
   },
   "settings": {
     "1": {
-      "game": "Wargroove"
+      "game": "Wargroove",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

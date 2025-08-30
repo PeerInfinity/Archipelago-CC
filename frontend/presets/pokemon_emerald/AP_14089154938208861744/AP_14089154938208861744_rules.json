@@ -87301,7 +87301,8 @@
   },
   "settings": {
     "1": {
-      "game": "Pokemon Emerald"
+      "game": "Pokemon Emerald",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

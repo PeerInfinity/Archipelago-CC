@@ -7796,7 +7796,8 @@
   },
   "settings": {
     "1": {
-      "game": "ArchipIDLE"
+      "game": "ArchipIDLE",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

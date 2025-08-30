@@ -5664,7 +5664,8 @@
   },
   "settings": {
     "1": {
-      "game": "Civilization VI"
+      "game": "Civilization VI",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

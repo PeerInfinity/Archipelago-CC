@@ -2419,7 +2419,8 @@
   },
   "settings": {
     "1": {
-      "game": "Mega Man 2"
+      "game": "Mega Man 2",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

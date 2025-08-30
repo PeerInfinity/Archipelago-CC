@@ -20956,7 +20956,8 @@
   },
   "settings": {
     "1": {
-      "game": "Old School Runescape"
+      "game": "Old School Runescape",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

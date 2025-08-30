@@ -59414,7 +59414,8 @@
   },
   "settings": {
     "1": {
-      "game": "Pokemon Red and Blue"
+      "game": "Pokemon Red and Blue",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -4797,7 +4797,8 @@
   },
   "settings": {
     "1": {
-      "game": "Yacht Dice"
+      "game": "Yacht Dice",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

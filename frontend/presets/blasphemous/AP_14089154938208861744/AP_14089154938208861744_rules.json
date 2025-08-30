@@ -104516,7 +104516,8 @@
   },
   "settings": {
     "1": {
-      "game": "Blasphemous"
+      "game": "Blasphemous",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

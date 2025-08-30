@@ -13717,7 +13717,8 @@
   },
   "settings": {
     "1": {
-      "game": "Timespinner"
+      "game": "Timespinner",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

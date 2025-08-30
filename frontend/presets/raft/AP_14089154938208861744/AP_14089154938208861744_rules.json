@@ -9086,7 +9086,8 @@
   },
   "settings": {
     "1": {
-      "game": "Raft"
+      "game": "Raft",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

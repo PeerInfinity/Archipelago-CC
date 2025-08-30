@@ -27733,7 +27733,8 @@
   },
   "settings": {
     "1": {
-      "game": "Mario & Luigi Superstar Saga"
+      "game": "Mario & Luigi Superstar Saga",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

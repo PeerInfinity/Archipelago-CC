@@ -2154,58 +2154,70 @@ export class StateManager {
    * Helper method to execute a state method by name
    */
   executeStateMethod(method, ...args) {
-    // For consistency, we should check multiple places systematically
+    // Recursion protection: prevent getSnapshot from calling computeReachableRegions during helper execution
+    const wasInHelperExecution = this._inHelperExecution;
+    this._inHelperExecution = true;
 
-    // 1. Check if it's a direct method on stateManager
-    if (typeof this[method] === 'function') {
-      return this[method](...args);
-    }
+    try {
+      // For consistency, we should check multiple places systematically
 
-    // 2. Check special case for can_reach since it's commonly used
-    if (method === 'can_reach' && args.length >= 1) {
-      const targetName = args[0];
-      const targetType = args[1] || 'Region';
-      const player = args[2] || 1;
-      return this.can_reach(targetName, targetType, player);
-    }
-
-    // 3. Look in modern helperFunctions system
-    if (this.helperFunctions) {
-      // Try exact method name first
-      if (typeof this.helperFunctions[method] === 'function') {
-        const snapshot = this.getSnapshot();
-        const staticData = {
-          progressionMapping: this.progressionMapping,
-          groupData: this.groupData,
-          itemData: this.itemData,
-        };
-        return this.helperFunctions[method](snapshot, 'world', args[0], staticData);
+      // 1. Check if it's a direct method on stateManager
+      if (typeof this[method] === 'function') {
+        return this[method](...args);
       }
 
-    }
-
-    // 4. Legacy helpers system (fallback)
-    if (this.helpers) {
-      // Try exact method name first
-      if (typeof this.helpers[method] === 'function') {
-        return this.helpers[method](...args);
+      // 2. Check special case for can_reach since it's commonly used
+      if (method === 'can_reach' && args.length >= 1) {
+        const targetName = args[0];
+        const targetType = args[1] || 'Region';
+        const player = args[2] || 1;
+        return this.can_reach(targetName, targetType, player);
       }
 
-      // If method starts with underscore and no match found, try without underscore
-      if (
-        method.startsWith('_') &&
-        typeof this.helpers[method.substring(1)] === 'function'
-      ) {
-        return this.helpers[method.substring(1)](...args);
+      // 3. Look in modern helperFunctions system
+      if (this.helperFunctions) {
+        // Try exact method name first
+        if (typeof this.helperFunctions[method] === 'function') {
+          const snapshot = this.getSnapshot();
+          const staticData = {
+            progressionMapping: this.progressionMapping,
+            groupData: this.groupData,
+            itemData: this.itemData,
+          };
+          return this.helperFunctions[method](snapshot, 'world', args[0], staticData);
+        }
+
       }
 
-      // If method doesn't start with underscore, try with underscore
-      if (
-        !method.startsWith('_') &&
-        typeof this.helpers['_' + method] === 'function'
-      ) {
-        return this.helpers['_' + method](...args);
+      // 4. Legacy helpers system (fallback)
+      if (this.helpers) {
+        // Try exact method name first
+        if (typeof this.helpers[method] === 'function') {
+          return this.helpers[method](...args);
+        }
+
+        // If method starts with underscore and no match found, try without underscore
+        if (
+          method.startsWith('_') &&
+          typeof this.helpers[method.substring(1)] === 'function'
+        ) {
+          return this.helpers[method.substring(1)](...args);
+        }
+
+        // If method doesn't start with underscore, try with underscore
+        if (
+          !method.startsWith('_') &&
+          typeof this.helpers['_' + method] === 'function'
+        ) {
+          return this.helpers['_' + method](...args);
+        }
       }
+
+      // If no method found, return undefined
+      return undefined;
+    } finally {
+      // Restore the previous state
+      this._inHelperExecution = wasInHelperExecution;
     }
 
     // State methods are now handled through gameStateModule - no legacy state object
@@ -2897,7 +2909,8 @@ export class StateManager {
   }
 
   getSnapshot() {
-    if (!this.cacheValid) {
+    // Don't recompute reachability during helper execution to prevent circular recursion
+    if (!this.cacheValid && !this._inHelperExecution) {
       this._logDebug(
         '[StateManager getSnapshot] Cache invalid, recomputing reachability...'
       );

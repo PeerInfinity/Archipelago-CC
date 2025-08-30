@@ -17036,7 +17036,8 @@
   },
   "settings": {
     "1": {
-      "game": "The Witness"
+      "game": "The Witness",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

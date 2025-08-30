@@ -7931,7 +7931,8 @@
   },
   "settings": {
     "1": {
-      "game": "Secret of Evermore"
+      "game": "Secret of Evermore",
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {
