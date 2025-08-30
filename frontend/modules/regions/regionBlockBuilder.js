@@ -326,16 +326,38 @@ export class RegionBlockBuilder {
     const entrancesList = document.createElement('ul');
     entrancesList.classList.add('region-entrances-list');
     
+    // Check if bidirectional exits are assumed from game settings
+    const assumeBidirectional = staticData?.options?.assume_bidirectional_exits === true;
+    
     // Find all entrances to this region
     const entrances = [];
     for (const [sourceRegionName, sourceRegionData] of Object.entries(staticData.regions)) {
       if (sourceRegionData.exits) {
         for (const exit of sourceRegionData.exits) {
           if (exit.connected_region === regionName) {
+            // Check if there's a return path (bidirectional)
+            let returnExit = null;
+            let isBidirectional = assumeBidirectional;
+            
+            if (!assumeBidirectional && staticData.regions[regionName]?.exits) {
+              // Look for an exit from current region back to source
+              returnExit = staticData.regions[regionName].exits.find(
+                e => e.connected_region === sourceRegionName
+              );
+              isBidirectional = !!returnExit;
+            } else if (assumeBidirectional && staticData.regions[regionName]?.exits) {
+              // Even with assume_bidirectional, we need to find the return exit for move functionality
+              returnExit = staticData.regions[regionName].exits.find(
+                e => e.connected_region === sourceRegionName
+              );
+            }
+            
             entrances.push({
               sourceRegion: sourceRegionName,
               exitName: exit.name,
-              accessRule: exit.access_rule
+              accessRule: exit.access_rule,
+              isBidirectional: isBidirectional,
+              returnExit: returnExit
             });
           }
         }
@@ -349,16 +371,28 @@ export class RegionBlockBuilder {
       
       entrances.forEach((entrance) => {
         const li = document.createElement('li');
+        li.classList.add('entrance-item');
         
-        // Create clickable region link
+        // Create a wrapper div for the entire clickable area
+        const entranceWrapper = document.createElement('div');
+        entranceWrapper.classList.add('entrance-wrapper');
+        
+        // Create a header row for entrance info and status
+        const headerRow = document.createElement('div');
+        headerRow.style.display = 'flex';
+        headerRow.style.justifyContent = 'space-between';
+        headerRow.style.alignItems = 'center';
+        
+        // Create entrance info span
+        const entranceInfo = document.createElement('span');
         const regionLink = commonUI.createRegionLink(
           entrance.sourceRegion,
           useColorblind,
           snapshot
         );
-        li.appendChild(regionLink);
-        
-        li.appendChild(document.createTextNode(` - ${entrance.exitName}`));
+        entranceInfo.appendChild(regionLink);
+        entranceInfo.appendChild(document.createTextNode(` - ${entrance.exitName}`));
+        headerRow.appendChild(entranceInfo);
         
         // Evaluate entrance accessibility
         let entranceAccessible = true;
@@ -386,10 +420,127 @@ export class RegionBlockBuilder {
           
         const isTraversable = sourceRegionReachable && entranceAccessible;
         
-        // Apply classes based on accessibility
+        // Evaluate return exit accessibility if bidirectional
+        let returnExitAccessible = true;
+        if (entrance.isBidirectional && entrance.returnExit?.access_rule) {
+          try {
+            returnExitAccessible = evaluateRule(
+              entrance.returnExit.access_rule,
+              snapshotInterface
+            );
+          } catch (e) {
+            log(
+              'error',
+              `Error evaluating return exit rule for ${entrance.returnExit.name}:`,
+              e
+            );
+            returnExitAccessible = false;
+          }
+        }
+        
+        const isFullyTraversable = isTraversable && returnExitAccessible;
+        const isClickable = entrance.isBidirectional && isFullyTraversable;
+        
+        // Add status indicator
+        const statusIndicator = document.createElement('span');
+        statusIndicator.classList.add('entrance-status');
+        if (!entrance.isBidirectional) {
+          statusIndicator.textContent = 'One-way';
+          statusIndicator.classList.add('status-oneway');
+        } else if (isFullyTraversable) {
+          statusIndicator.textContent = 'Available';
+          statusIndicator.classList.add('status-available');
+        } else {
+          statusIndicator.textContent = 'Blocked';
+          statusIndicator.classList.add('status-blocked');
+        }
+        headerRow.appendChild(statusIndicator);
+        entranceWrapper.appendChild(headerRow);
+        
+        // Apply border color based on status
+        if (!entrance.isBidirectional) {
+          // Gray border for unidirectional entrances
+          entranceWrapper.style.borderColor = '#888';
+          entranceWrapper.style.backgroundColor = 'rgba(136, 136, 136, 0.1)';
+        } else if (isFullyTraversable) {
+          // Green border for bidirectional and traversable
+          entranceWrapper.style.borderColor = '#4CAF50';
+          entranceWrapper.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+        } else {
+          // Red border for bidirectional but blocked
+          entranceWrapper.style.borderColor = '#f44336';
+          entranceWrapper.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+        }
+        
+        // Style the wrapper
+        entranceWrapper.style.border = '2px solid';
+        entranceWrapper.style.borderRadius = '4px';
+        entranceWrapper.style.padding = '8px 12px';
+        entranceWrapper.style.margin = '4px 0';
+        entranceWrapper.style.cursor = isClickable ? 'pointer' : 'default';
+        entranceWrapper.style.display = 'block';
+        entranceWrapper.style.transition = 'all 0.2s ease';
+        
+        // Add hover effect and click handler for clickable entrances
+        if (isClickable) {
+          entranceWrapper.addEventListener('mouseenter', () => {
+            entranceWrapper.style.transform = 'translateX(4px)';
+            entranceWrapper.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+          });
+          entranceWrapper.addEventListener('mouseleave', () => {
+            entranceWrapper.style.transform = 'translateX(0)';
+            entranceWrapper.style.boxShadow = 'none';
+          });
+          
+          // Make entire wrapper clickable for bidirectional entrances
+          entranceWrapper.addEventListener('click', (e) => {
+            // Don't trigger if clicking on the region link
+            if (e.target.classList.contains('region-link')) {
+              return;
+            }
+            
+            // Check if "Show All Regions" is enabled
+            const showAllCheckbox = document.querySelector('#show-all-regions');
+            const showAllEnabled = showAllCheckbox && showAllCheckbox.checked;
+            
+            if (showAllEnabled) {
+              // In "Show All" mode, navigate to the source region
+              import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
+                eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
+                eventBus.publish('ui:navigateToRegion', {
+                  regionName: entrance.sourceRegion
+                }, 'regions');
+                log('info', `[Entrance Block] Navigating to region: ${entrance.sourceRegion} (Show All mode)`);
+              });
+            } else {
+              // Normal mode - execute region move to source region
+              // We need to get the UID for this region block
+              const regionBlock = entranceWrapper.closest('.region-block');
+              const uid = regionBlock ? regionBlock.dataset.uid : undefined;
+              
+              import('./index.js').then(({ moduleDispatcher }) => {
+                if (moduleDispatcher) {
+                  moduleDispatcher.publish('user:regionMove', {
+                    sourceRegion: regionName,
+                    sourceUID: uid,
+                    targetRegion: entrance.sourceRegion,
+                    exitName: entrance.returnExit ? entrance.returnExit.name : entrance.exitName
+                  }, 'bottom');
+                  log('info', `[Entrance Block] Moving from ${regionName} to ${entrance.sourceRegion}`);
+                } else {
+                  log('warn', 'moduleDispatcher not available for publishing user:regionMove');
+                }
+              });
+            }
+          });
+        }
+        
+        // Apply classes based on status
         li.classList.toggle('accessible', isTraversable);
         li.classList.toggle('inaccessible', !isTraversable);
+        li.classList.toggle('bidirectional', entrance.isBidirectional);
         
+        li.appendChild(entranceWrapper);
         entrancesList.appendChild(li);
       });
       
@@ -452,38 +603,128 @@ export class RegionBlockBuilder {
           loopStateSingleton.isExitDiscovered(regionName, exitDef.name);
 
         const li = document.createElement('li');
+        li.classList.add('exit-item');
         const exitNameDisplay =
           isLoopModeActive && !isExitDiscovered ? '???' : exitDef.name;
-        li.appendChild(document.createTextNode(`${exitNameDisplay} → `));
-        li.appendChild(
+        
+        // Create a wrapper div for the entire clickable area
+        const exitWrapper = document.createElement('div');
+        exitWrapper.classList.add('exit-wrapper');
+        
+        // Create a header row for exit info and status
+        const headerRow = document.createElement('div');
+        headerRow.style.display = 'flex';
+        headerRow.style.justifyContent = 'space-between';
+        headerRow.style.alignItems = 'center';
+        
+        // Create exit info span
+        const exitInfo = document.createElement('span');
+        exitInfo.appendChild(document.createTextNode(`${exitNameDisplay} → `));
+        exitInfo.appendChild(
           commonUI.createRegionLink(
             connectedRegionName,
             useColorblind,
             snapshot
           )
         );
+        headerRow.appendChild(exitInfo);
+        
+        // Add status indicator
+        const statusIndicator = document.createElement('span');
+        statusIndicator.classList.add('exit-status');
+        if (isTraversable) {
+          statusIndicator.textContent = 'Available';
+          statusIndicator.classList.add('status-available');
+        } else {
+          statusIndicator.textContent = 'Blocked';
+          statusIndicator.classList.add('status-blocked');
+        }
+        headerRow.appendChild(statusIndicator);
+        exitWrapper.appendChild(headerRow);
 
-        // Add move button
-        const moveBtn = this.createMoveButton(
-          regionName,
-          uid,
-          connectedRegionName,
-          exitDef.name,
-          isTraversable,
-          isLoopModeActive,
-          isExitDiscovered
-        );
-        li.appendChild(moveBtn);
-
-        // Apply classes
+        // Apply classes and styling
         li.classList.toggle('accessible', isTraversable);
         li.classList.toggle('inaccessible', !isTraversable);
         li.classList.toggle(
           'undiscovered',
           isLoopModeActive && !isExitDiscovered
         );
+        
+        // Apply border color based on status
+        if (isTraversable) {
+          exitWrapper.style.borderColor = '#4CAF50';
+          exitWrapper.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+        } else {
+          exitWrapper.style.borderColor = '#f44336';
+          exitWrapper.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+        }
+        
+        // Style the wrapper
+        exitWrapper.style.border = '2px solid';
+        exitWrapper.style.borderRadius = '4px';
+        exitWrapper.style.padding = '8px 12px';
+        exitWrapper.style.margin = '4px 0';
+        exitWrapper.style.cursor = isTraversable && connectedRegionName && (!isLoopModeActive || isExitDiscovered) ? 'pointer' : 'default';
+        exitWrapper.style.display = 'block';
+        exitWrapper.style.transition = 'all 0.2s ease';
+        
+        // Add hover effect for traversable exits
+        if (isTraversable && connectedRegionName && (!isLoopModeActive || isExitDiscovered)) {
+          exitWrapper.addEventListener('mouseenter', () => {
+            exitWrapper.style.transform = 'translateX(4px)';
+            exitWrapper.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+          });
+          exitWrapper.addEventListener('mouseleave', () => {
+            exitWrapper.style.transform = 'translateX(0)';
+            exitWrapper.style.boxShadow = 'none';
+          });
+          
+          // Make entire wrapper clickable
+          exitWrapper.addEventListener('click', (e) => {
+            // Don't trigger if clicking on the region link
+            if (e.target.classList.contains('region-link')) {
+              return;
+            }
+            
+            if (isTraversable && connectedRegionName) {
+              // Check if "Show All Regions" is enabled
+              const showAllCheckbox = document.querySelector('#show-all-regions');
+              const showAllEnabled = showAllCheckbox && showAllCheckbox.checked;
+              
+              if (showAllEnabled) {
+                // In "Show All" mode, navigate to the region instead of moving
+                import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
+                  // First activate the regions panel if not already active
+                  eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
+                  
+                  // Then navigate to the target region
+                  eventBus.publish('ui:navigateToRegion', {
+                    regionName: connectedRegionName
+                  }, 'regions');
+                  
+                  log('info', `[Exit Block] Navigating to region: ${connectedRegionName} (Show All mode)`);
+                });
+              } else {
+                // Normal mode - execute region move
+                import('./index.js').then(({ moduleDispatcher }) => {
+                  if (moduleDispatcher) {
+                    moduleDispatcher.publish('user:regionMove', {
+                      sourceRegion: regionName,
+                      sourceUID: uid,
+                      targetRegion: connectedRegionName,
+                      exitName: exitDef.name
+                    }, 'bottom');
+                    log('info', `[Exit Block] Moving from ${regionName} to ${connectedRegionName}`);
+                  } else {
+                    log('warn', 'moduleDispatcher not available for publishing user:regionMove');
+                  }
+                });
+              }
+            }
+          });
+        }
 
-        // Render logic tree for the exit rule
+        // Render logic tree for the exit rule inside the wrapper
         if (exitDef.access_rule) {
           const logicTreeElement = renderLogicTree(
             exitDef.access_rule,
@@ -491,11 +732,14 @@ export class RegionBlockBuilder {
             snapshotInterface
           );
           const ruleDiv = document.createElement('div');
-          ruleDiv.style.marginLeft = '1rem';
+          ruleDiv.style.marginTop = '8px';
+          ruleDiv.style.paddingTop = '8px';
+          ruleDiv.style.borderTop = '1px solid rgba(128, 128, 128, 0.3)';
           ruleDiv.innerHTML = `Rule: ${logicTreeElement.outerHTML}`;
-          li.appendChild(ruleDiv);
+          exitWrapper.appendChild(ruleDiv);
         }
 
+        li.appendChild(exitWrapper);
         exitsList.appendChild(li);
       });
     } else {
@@ -504,47 +748,6 @@ export class RegionBlockBuilder {
     contentEl.appendChild(exitsList);
   }
 
-  /**
-   * Creates a move button for exits
-   */
-  createMoveButton(
-    regionName,
-    uid,
-    connectedRegionName,
-    exitName,
-    isTraversable,
-    isLoopModeActive,
-    isExitDiscovered
-  ) {
-    const moveBtn = document.createElement('button');
-    moveBtn.classList.add('move-btn');
-    moveBtn.textContent = 'Move';
-    moveBtn.disabled =
-      !isTraversable ||
-      !connectedRegionName ||
-      (isLoopModeActive && !isExitDiscovered);
-    moveBtn.style.marginLeft = '10px';
-
-    moveBtn.addEventListener('click', () => {
-      if (!moveBtn.disabled) {
-        // Import moduleDispatcher from regionUI's module
-        import('./index.js').then(({ moduleDispatcher }) => {
-          if (moduleDispatcher) {
-            moduleDispatcher.publish('user:regionMove', {
-              sourceRegion: regionName,
-              sourceUID: uid,
-              targetRegion: connectedRegionName,
-              exitName: exitName
-            }, 'bottom');
-          } else {
-            log('warn', 'moduleDispatcher not available for publishing user:regionMove');
-          }
-        });
-      }
-    });
-
-    return moveBtn;
-  }
 
   /**
    * Adds locations list to the content element
@@ -595,35 +798,44 @@ export class RegionBlockBuilder {
           loopStateSingleton.isLocationDiscovered(locationDef.name);
 
         const li = document.createElement('li');
+        li.classList.add('location-item');
         const locationNameDisplay =
           isLoopModeActive && !isLocationDiscovered ? '???' : locationDef.name;
+        
+        // Create a wrapper div for the entire clickable area
+        const locationWrapper = document.createElement('div');
+        locationWrapper.classList.add('location-wrapper');
+        
+        // Create a header row for name and status
+        const headerRow = document.createElement('div');
+        headerRow.style.display = 'flex';
+        headerRow.style.justifyContent = 'space-between';
+        headerRow.style.alignItems = 'center';
         
         const locLink = document.createElement('span');
         locLink.textContent = locationNameDisplay;
         locLink.classList.add('location-link');
         locLink.dataset.location = locationDef.name;
         locLink.dataset.region = regionName;
-        li.appendChild(locLink);
+        headerRow.appendChild(locLink);
 
-        // Add check button
-        const checkBtn = this.createCheckButton(
-          locationDef,
-          regionName,
-          locAccessible,
-          locChecked,
-          isLoopModeActive,
-          isLocationDiscovered
-        );
-        li.appendChild(checkBtn);
-
+        // Add status indicator
+        const statusIndicator = document.createElement('span');
+        statusIndicator.classList.add('location-status');
         if (locChecked) {
-          const checkMark = document.createElement('span');
-          checkMark.classList.add('check-mark');
-          checkMark.textContent = ' ✓';
-          li.appendChild(checkMark);
+          statusIndicator.textContent = 'Checked';
+          statusIndicator.classList.add('status-checked');
+        } else if (locAccessible) {
+          statusIndicator.textContent = 'Available';
+          statusIndicator.classList.add('status-available');
+        } else {
+          statusIndicator.textContent = 'Locked';
+          statusIndicator.classList.add('status-locked');
         }
+        headerRow.appendChild(statusIndicator);
+        locationWrapper.appendChild(headerRow);
 
-        // Apply classes
+        // Apply classes and styling
         li.classList.toggle('accessible', locAccessible && !locChecked);
         li.classList.toggle('inaccessible', !locAccessible);
         li.classList.toggle('checked-location', locChecked);
@@ -631,8 +843,81 @@ export class RegionBlockBuilder {
           'undiscovered',
           isLoopModeActive && !isLocationDiscovered
         );
+        
+        // Apply border color based on status
+        if (locChecked) {
+          locationWrapper.style.borderColor = '#000';
+          locationWrapper.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+        } else if (locAccessible) {
+          locationWrapper.style.borderColor = '#4CAF50';
+          locationWrapper.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+        } else {
+          locationWrapper.style.borderColor = '#f44336';
+          locationWrapper.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+        }
+        
+        // Style the wrapper
+        locationWrapper.style.border = '2px solid';
+        locationWrapper.style.borderRadius = '4px';
+        locationWrapper.style.padding = '8px 12px';
+        locationWrapper.style.margin = '4px 0';
+        locationWrapper.style.cursor = locAccessible && !locChecked ? 'pointer' : 'default';
+        locationWrapper.style.display = 'block';
+        locationWrapper.style.transition = 'all 0.2s ease';
+        
+        // Add hover effect for clickable items
+        if (locAccessible && !locChecked) {
+          locationWrapper.addEventListener('mouseenter', () => {
+            locationWrapper.style.transform = 'translateX(4px)';
+            locationWrapper.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+          });
+          locationWrapper.addEventListener('mouseleave', () => {
+            locationWrapper.style.transform = 'translateX(0)';
+            locationWrapper.style.boxShadow = 'none';
+          });
+        }
+        
+        // Make entire wrapper clickable if location is accessible and not checked
+        if (locAccessible && !locChecked && (!isLoopModeActive || isLocationDiscovered)) {
+          locationWrapper.addEventListener('click', async () => {
+            try {
+              log(
+                'info',
+                `[LocationWrapper] Clicked on location: ${locationDef.name}, Region: ${regionName}`
+              );
 
-        // Render logic tree for the location rule
+              // Import moduleDispatcher from regionUI's module
+              const { moduleDispatcher } = await import('./index.js');
+              
+              const payload = {
+                locationName: locationDef.name,
+                regionName: locationDef.region || regionName,
+                originator: 'RegionPanelCheck',
+                originalDOMEvent: true,
+              };
+
+              if (moduleDispatcher) {
+                moduleDispatcher.publish('user:locationCheck', payload, {
+                  initialTarget: 'bottom',
+                });
+                log('info', 'Dispatched user:locationCheck', payload);
+              } else {
+                log(
+                  'error',
+                  'Dispatcher not available to handle location check.'
+                );
+              }
+            } catch (error) {
+              log(
+                'error',
+                `Error checking location ${locationDef.name}:`,
+                error
+              );
+            }
+          });
+        }
+        
+        // Render logic tree for the location rule inside the wrapper
         if (locationDef.access_rule) {
           const locationContextInterface = createStateSnapshotInterface(
             snapshot,
@@ -645,11 +930,14 @@ export class RegionBlockBuilder {
             locationContextInterface
           );
           const ruleDiv = document.createElement('div');
-          ruleDiv.style.marginLeft = '1rem';
+          ruleDiv.style.marginTop = '8px';
+          ruleDiv.style.paddingTop = '8px';
+          ruleDiv.style.borderTop = '1px solid rgba(128, 128, 128, 0.3)';
           ruleDiv.innerHTML = `Rule: ${logicTreeElement.outerHTML}`;
-          li.appendChild(ruleDiv);
+          locationWrapper.appendChild(ruleDiv);
         }
 
+        li.appendChild(locationWrapper);
         locationsList.appendChild(li);
       });
     } else {
@@ -658,65 +946,6 @@ export class RegionBlockBuilder {
     contentEl.appendChild(locationsList);
   }
 
-  /**
-   * Creates a check button for locations
-   */
-  createCheckButton(
-    locationDef,
-    regionName,
-    locAccessible,
-    locChecked,
-    isLoopModeActive,
-    isLocationDiscovered
-  ) {
-    const checkBtn = document.createElement('button');
-    checkBtn.classList.add('check-loc-btn');
-    checkBtn.textContent = 'Check';
-    checkBtn.style.display = locChecked ? 'none' : 'inline-block';
-    checkBtn.disabled = !locAccessible || locChecked;
-    if (isLoopModeActive && !isLocationDiscovered) checkBtn.disabled = true;
-
-    checkBtn.addEventListener('click', async () => {
-      if (locAccessible && !locChecked) {
-        try {
-          log(
-            'info',
-            `[CheckBtn] Clicked on location: ${locationDef.name}, Region: ${regionName}`
-          );
-
-          // Import moduleDispatcher from regionUI's module
-          const { moduleDispatcher } = await import('./index.js');
-          
-          const payload = {
-            locationName: locationDef.name,
-            regionName: locationDef.region || regionName,
-            originator: 'RegionPanelCheck',
-            originalDOMEvent: true,
-          };
-
-          if (moduleDispatcher) {
-            moduleDispatcher.publish('user:locationCheck', payload, {
-              initialTarget: 'bottom',
-            });
-            log('info', 'Dispatched user:locationCheck', payload);
-          } else {
-            log(
-              'error',
-              'Dispatcher not available to handle location check.'
-            );
-          }
-        } catch (error) {
-          log(
-            'error',
-            `Error checking location ${locationDef.name}:`,
-            error
-          );
-        }
-      }
-    });
-
-    return checkBtn;
-  }
 
   /**
    * Adds path analysis section to the content element

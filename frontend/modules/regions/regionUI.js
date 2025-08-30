@@ -613,6 +613,11 @@ export class RegionUI {
     const block = this.visitedRegions.find((r) => r.uid === uid);
     if (block) {
       block.expanded = !block.expanded;
+      // Also update showAllExpansionState if this is a "Show All" mode region
+      if (typeof uid === 'string' && uid.startsWith('all_')) {
+        const regionName = uid.substring(4);
+        this.showAllExpansionState.set(regionName, block.expanded);
+      }
     } else if (typeof uid === 'string' && uid.startsWith('all_')) {
       // Handle regions in "Show All" mode using separate tracking
       const regionName = uid.substring(4); // Extract region name from uid like "all_RegionName"
@@ -1112,14 +1117,17 @@ export class RegionUI {
     }
 
     // If Show All is now active (or was already active), ensure the target region is marked for expansion
-    // by adding/updating its entry in visitedRegions for consistent expansion handling.
+    // by adding/updating its entry in visitedRegions AND showAllExpansionState for consistent expansion handling.
     if (this.showAll) {
+      // Update the showAllExpansionState Map to ensure expansion persists across re-renders
+      this.showAllExpansionState.set(regionName, true);
+      forceRender = true; // Always re-render when navigating to ensure expansion is shown
+      
       const allUid = `all_${regionName}`;
       const existingEntry = this.visitedRegions.find((r) => r.uid === allUid);
       if (existingEntry) {
         if (!existingEntry.expanded) {
           existingEntry.expanded = true;
-          forceRender = true; // State changed, need to re-render
         }
       } else {
         this.visitedRegions.push({
@@ -1127,7 +1135,6 @@ export class RegionUI {
           expanded: true,
           uid: allUid,
         });
-        forceRender = true; // New entry, need to re-render
       }
     }
 

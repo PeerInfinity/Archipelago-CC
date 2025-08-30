@@ -185,15 +185,25 @@ export class RegionGraphUI {
         {
           selector: 'node.accessible',
           style: {
-            'background-color': '#4ecdc4',
-            'border-color': '#2a9d8f'
+            'border-color': '#52b845'
           }
         },
         {
-          selector: 'node.visited',
+          selector: 'node.all-accessible',
           style: {
-            'background-color': '#95e77e',
-            'border-color': '#52b845'
+            'background-color': '#4a7c59'
+          }
+        },
+        {
+          selector: 'node.mixed-locations',
+          style: {
+            'background-color': '#c9a227'
+          }
+        },
+        {
+          selector: 'node.all-inaccessible',
+          style: {
+            'background-color': '#a84444'
           }
         },
         {
@@ -202,6 +212,24 @@ export class RegionGraphUI {
             'background-color': '#000',
             'border-color': '#52b845',
             'border-width': 3
+          }
+        },
+        {
+          selector: 'node.visited',
+          style: {
+            'background-color': '#4ecdc4',
+            'border-color': '#2a9d8f'
+          }
+        },
+        {
+          selector: 'node.player',
+          style: {
+            'background-color': '#4169e1',
+            'border-color': '#ffffff',
+            'border-width': 3,
+            'width': 20,
+            'height': 20,
+            'z-index': 1000
           }
         },
         {
@@ -269,8 +297,8 @@ export class RegionGraphUI {
         {
           selector: 'edge.accessible',
           style: {
-            'line-color': '#4ecdc4',
-            'target-arrow-color': '#4ecdc4',
+            'line-color': '#52b845',
+            'target-arrow-color': '#52b845',
             'width': 3,
             'opacity': 0.8
           }
@@ -278,7 +306,7 @@ export class RegionGraphUI {
         {
           selector: 'edge.accessible.bidirectional',
           style: {
-            'source-arrow-color': '#4ecdc4'
+            'source-arrow-color': '#52b845'
           }
         },
         {
@@ -463,6 +491,35 @@ export class RegionGraphUI {
     }
   }
 
+  determineNodeInteriorColor(locationCounts, isReachable) {
+    // Black if all locations are checked OR if region has no locations
+    if (locationCounts.allChecked || locationCounts.total === 0) {
+      return 'completed';
+    }
+    
+    // Only apply interior colors if region is accessible and has unchecked locations
+    if (!isReachable || !locationCounts.hasUnchecked) {
+      return null; // Use default color
+    }
+    
+    // Green if all unchecked locations are accessible
+    if (locationCounts.hasAccessible && !locationCounts.hasInaccessible) {
+      return 'all-accessible';
+    }
+    
+    // Yellow if has both accessible and inaccessible unchecked locations
+    if (locationCounts.hasAccessible && locationCounts.hasInaccessible) {
+      return 'mixed-locations';
+    }
+    
+    // Red if all unchecked locations are inaccessible
+    if (!locationCounts.hasAccessible && locationCounts.hasInaccessible) {
+      return 'all-inaccessible';
+    }
+    
+    return null; // Default color
+  }
+
   calculateLocationCounts(regionName, regionData) {
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
@@ -513,7 +570,12 @@ export class RegionGraphUI {
       checked,
       accessible, 
       inaccessible,
-      total: locations.length
+      total: locations.length,
+      hasAccessible: accessible > 0,
+      hasInaccessible: inaccessible > 0,
+      hasUnchecked: (accessible + inaccessible) > 0,
+      allChecked: checked === locations.length && locations.length > 0,
+      hasLocations: locations.length > 0
     };
   }
 
@@ -774,10 +836,15 @@ export class RegionGraphUI {
     const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) return;
 
-    // Update node colors based on region accessibility and completion
+    // Update node colors based on region accessibility and location status
     this.cy.nodes().forEach(node => {
       const regionName = node.id();
       const regionData = staticData.regions[regionName];
+      
+      // Skip player node
+      if (node.hasClass('player')) {
+        return;
+      }
       
       const isReachable = snapshot.regionReachability?.[regionName] === true ||
                          snapshot.regionReachability?.[regionName] === 'reachable' ||
@@ -795,22 +862,26 @@ export class RegionGraphUI {
       node.data('label', fullLabel);
       node.data('locationCounts', locationCounts);
       
-      // Check if region is completed (all locations checked and region is accessible)
-      const isCompleted = isReachable && locationCounts.total > 0 && 
-                         locationCounts.checked === locationCounts.total;
-      const isEmptyCompleted = isReachable && locationCounts.total === 0;
+      // Clear all classes
+      node.removeClass('accessible visited inaccessible completed all-accessible mixed-locations all-inaccessible');
       
-      // Clear all accessibility classes
-      node.removeClass('accessible visited inaccessible completed');
-      
-      if (isCompleted || isEmptyCompleted) {
-        node.addClass('completed');
-      } else if (isVisited) {
-        node.addClass('visited');
-      } else if (isReachable) {
+      // Apply base accessibility class
+      if (isReachable) {
         node.addClass('accessible');
       } else {
         node.addClass('inaccessible');
+        return; // Don't apply interior colors for inaccessible regions
+      }
+      
+      // Apply visited class if applicable (for teal path marking in future)
+      if (isVisited) {
+        node.addClass('visited');
+      }
+      
+      // Determine and apply interior color based on location status
+      const interiorColorClass = this.determineNodeInteriorColor(locationCounts, isReachable);
+      if (interiorColorClass) {
+        node.addClass(interiorColorClass);
       }
     });
 
