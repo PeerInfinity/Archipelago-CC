@@ -213,6 +213,16 @@ class GenericGameExportHandler(BaseGameExportHandler):
                                 is_useful = item.classification == ItemClassification.useful
                                 is_trap = item.classification == ItemClassification.trap
                                 break
+                        
+                        # Additional fallback: check placed items in locations
+                        if not (is_advancement or is_useful or is_trap):
+                            for location in world.multiworld.get_locations(world.player):
+                                if (location.item and location.item.player == world.player and 
+                                    location.item.name == item_name and location.item.code is not None):
+                                    is_advancement = location.item.classification == ItemClassification.progression
+                                    is_useful = location.item.classification == ItemClassification.useful
+                                    is_trap = location.item.classification == ItemClassification.trap
+                                    break
                 
                 # Get groups if available
                 groups = []

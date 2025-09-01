@@ -2,6 +2,9 @@ from .base import BaseGameExportHandler
 from typing import Any, Dict, Optional, Set
 from worlds.adventure.Items import item_table, event_table
 from BaseClasses import ItemClassification
+import logging
+
+logger = logging.getLogger(__name__)
 
 class AdventureGameExportHandler(BaseGameExportHandler):
     """Validates helper names are known Adventure helpers"""
@@ -22,7 +25,7 @@ class AdventureGameExportHandler(BaseGameExportHandler):
             helper_name = rule.get('name')
             if helper_name and helper_name not in self.known_helpers:
                 # Log or raise an error for unknown helpers if needed during development
-                print(f"WARNING: Unknown Adventure helper found: {helper_name}")
+                logger.warning(f"Unknown Adventure helper found: {helper_name}")
             # Return the helper rule as-is (no expansion logic needed yet)
             return rule
             
@@ -49,16 +52,25 @@ class AdventureGameExportHandler(BaseGameExportHandler):
             if not groups:
                 groups = []
 
-            item_classification = getattr(item_data, 'classification', None)
+            try:
+                item_classification = getattr(item_data, 'classification', None)
+                is_advancement = item_classification == ItemClassification.progression if item_classification else False
+                is_useful = item_classification == ItemClassification.useful if item_classification else False
+                is_trap = item_classification == ItemClassification.trap if item_classification else False
+            except Exception as e:
+                logger.debug(f"Could not determine classification for {item_name}: {e}")
+                is_advancement = False
+                is_useful = False
+                is_trap = False
 
             adventure_items_data[item_name] = {
                 'name': item_name,
                 'id': getattr(item_data, 'id', None),
                 'groups': sorted(groups),
-                'advancement': item_classification == ItemClassification.progression if item_classification else False,
+                'advancement': is_advancement,
                 'priority': False,
-                'useful': item_classification == ItemClassification.useful if item_classification else False,
-                'trap': item_classification == ItemClassification.trap if item_classification else False,
+                'useful': is_useful,
+                'trap': is_trap,
                 'event': False,  # Regular items are not events
                 'type': None,
                 'max_count': 1
@@ -67,16 +79,25 @@ class AdventureGameExportHandler(BaseGameExportHandler):
         # Process event items from event_table (if any)
         for item_name, item_data in event_table.items():
             groups = ['Event']  # Event items belong to the Event group
-            item_classification = getattr(item_data, 'classification', None)
+            try:
+                item_classification = getattr(item_data, 'classification', None)
+                is_advancement = item_classification == ItemClassification.progression if item_classification else False
+                is_useful = item_classification == ItemClassification.useful if item_classification else False
+                is_trap = item_classification == ItemClassification.trap if item_classification else False
+            except Exception as e:
+                logger.debug(f"Could not determine classification for event item {item_name}: {e}")
+                is_advancement = False
+                is_useful = False
+                is_trap = False
 
             adventure_items_data[item_name] = {
                 'name': item_name,
                 'id': None,  # Event items have no ID
                 'groups': groups,
-                'advancement': item_classification == ItemClassification.progression if item_classification else False,
+                'advancement': is_advancement,
                 'priority': False,
-                'useful': item_classification == ItemClassification.useful if item_classification else False,
-                'trap': item_classification == ItemClassification.trap if item_classification else False,
+                'useful': is_useful,
+                'trap': is_trap,
                 'event': True,  # This is an event item
                 'type': 'Event',
                 'max_count': 1

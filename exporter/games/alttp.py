@@ -13,6 +13,21 @@ logger = logging.getLogger(__name__) # Add logger if needed later
 class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
+    # Items that are always events, regardless of their static item_code in item_table
+    # These items are placed as events during runtime even if they have item codes defined
+    # This list comes from the event_pairs in worlds/alttp/ItemPool.py:262-268 where these
+    # items are explicitly created as events and placed at event locations
+    ALWAYS_EVENT_ITEMS = {
+        'Activated Flute',  # Placed as event at 'Flute Activation Spot'
+        'Beat Agahnim 1',
+        'Beat Agahnim 2', 
+        'Get Frog',
+        'Return Smith',
+        'Pick Up Purple Chest',
+        'Open Floodgate',
+        'Capacity Upgrade Shop'
+    }
+    
     def __init__(self):
         # Define ALTTP-specific helpers that should NOT be expanded
         self.known_helpers = {
@@ -99,6 +114,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return ALTTP-specific item table data."""
         alttp_items_data = {}
+        
         # Use the imported item_table
         for item_name, item_data in item_table.items():
             # Get groups this item belongs to (logic moved from exporter.py)
@@ -113,19 +129,69 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
 
             item_classification = getattr(item_data, 'classification', None) # Get classification safely
             item_type = getattr(item_data, 'type', None) # Get type safely
+            
+            # Check if this item should be treated as an event
+            is_event_item = (item_type == 'Event') or (item_name in self.ALWAYS_EVENT_ITEMS)
+            
+            # If it's an event item, override the groups and set appropriate properties
+            if is_event_item:
+                if 'Event' not in groups:
+                    groups = ['Event'] + groups
+                item_id = None  # Event items have no ID
+                effective_type = 'Event'
+            else:
+                item_id = getattr(item_data, 'item_code', None)  # Use item_code for non-events
+                effective_type = item_type
 
             alttp_items_data[item_name] = {
                 'name': item_name,
-                'id': getattr(item_data, 'code', None), # Use code if available
+                'id': item_id,
                 'groups': sorted(groups),
                 'advancement': item_classification == ItemClassification.progression if item_classification else False,
                 'priority': False, # Default priority to False here
                 'useful': item_classification == ItemClassification.useful if item_classification else False,
                 'trap': item_classification == ItemClassification.trap if item_classification else False,
-                'event': item_type == 'Event' if item_type else False,
-                'type': item_type,
+                'event': is_event_item,
+                'type': effective_type,
                 'max_count': 1 # Default, overridden by get_item_max_counts if needed
             }
+
+        # Handle dynamically created event items that may not have type='Event' in item_table
+        # This matches how Python runtime identifies events: items placed at locations with item.code = None
+        if hasattr(world, 'multiworld'):
+            multiworld = world.multiworld
+            player = world.player
+            
+            for location in multiworld.get_locations(player):
+                if location.item and location.item.player == player:
+                    item_name = location.item.name
+                    # Check if this is an event item (no code/ID) that we haven't processed yet
+                    if location.item.code is None and item_name not in alttp_items_data:
+                        # This item is an event by runtime definition, even if not marked in item_table
+                        alttp_items_data[item_name] = {
+                            'name': item_name,
+                            'id': None,
+                            'groups': ['Event'],
+                            'advancement': location.item.classification == ItemClassification.progression,
+                            'priority': False,
+                            'useful': location.item.classification == ItemClassification.useful,
+                            'trap': location.item.classification == ItemClassification.trap,
+                            'event': True,
+                            'type': 'Event',
+                            'max_count': 1
+                        }
+                    elif location.item.code is None and item_name in alttp_items_data:
+                        # Update existing item to match runtime behavior if it's actually an event
+                        if not alttp_items_data[item_name]['event']:
+                            logger.info(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
+                            alttp_items_data[item_name]['event'] = True
+                            alttp_items_data[item_name]['type'] = 'Event'
+                            alttp_items_data[item_name]['id'] = None
+                            # Add to Event group if not already there
+                            if 'Event' not in alttp_items_data[item_name]['groups']:
+                                alttp_items_data[item_name]['groups'].append('Event')
+                                alttp_items_data[item_name]['groups'].sort()
+
         return alttp_items_data
 
     def get_item_max_counts(self, world) -> Dict[str, int]:
@@ -403,6 +469,22 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         }
         
         return collections.get(name)
+    
+    def get_effective_item_type(self, item_name: str, original_type: str) -> str:
+        """
+        Get the effective type for an item, considering ALTTP-specific event item rules.
+        
+        Args:
+            item_name: The name of the item
+            original_type: The original type from the item object
+            
+        Returns:
+            The effective type that should be used for export
+        """
+        if item_name in self.ALWAYS_EVENT_ITEMS or original_type == 'Event':
+            return 'Event'
+        
+        return original_type
 
     def get_collection_length(self, name):
         """

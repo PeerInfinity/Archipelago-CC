@@ -30,7 +30,7 @@ class AHitGameExportHandler(BaseGameExportHandler):
                     chapter_name = chapter_names.get(int(chapter_index), f'Chapter_{chapter_index}')
                     chapter_costs[chapter_name] = cost
                     
-                logger.info(f"A Hat in Time chapter costs: {chapter_costs}")
+                #logger.info(f"A Hat in Time chapter costs: {chapter_costs}")
                 return chapter_costs
             else:
                 logger.warning("World object has no chapter_timepiece_costs attribute")
@@ -67,7 +67,7 @@ class AHitGameExportHandler(BaseGameExportHandler):
                 return rule
                 
             cost = chapter_costs[chapter_name]
-            logger.info(f"Applying chapter cost {cost} to {exit_name}")
+            #logger.info(f"Applying chapter cost {cost} to {exit_name}")
             
             if cost == 0:
                 # Free access

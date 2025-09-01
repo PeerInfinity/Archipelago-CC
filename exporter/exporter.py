@@ -825,12 +825,16 @@ def process_regions(multiworld, player: int) -> tuple:
                             }
                             
                             if hasattr(location, 'item') and location.item:
+                                item_name = getattr(location.item, 'name', None)
+                                original_type = extract_type_value(getattr(location.item, 'type', None))
+                                effective_type = game_handler.get_effective_item_type(item_name, original_type) if game_handler and item_name else original_type
+                                
                                 location_data['item'] = {
-                                    'name': getattr(location.item, 'name', None),
+                                    'name': item_name,
                                     'player': getattr(location.item, 'player', None),
                                     'advancement': getattr(location.item, 'advancement', False),
                                     'priority': getattr(location.item, 'priority', None),
-                                    'type': extract_type_value(getattr(location.item, 'type', None))
+                                    'type': effective_type
                                 }
                             
                             region_data['locations'].append(location_data)

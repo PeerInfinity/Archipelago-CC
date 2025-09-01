@@ -46,6 +46,20 @@ class BaseGameExportHandler:
             A dict with the rule structure, or None if this function should not be handled specially
         """
         return None
+    
+    def get_effective_item_type(self, item_name: str, original_type: str) -> str:
+        """
+        Get the effective type for an item, considering game-specific event item rules.
+        
+        Args:
+            item_name: The name of the item
+            original_type: The original type from the item object
+            
+        Returns:
+            The effective type that should be used for export
+        """
+        # Default implementation: return the original type
+        return original_type
         
     def expand_count_check(self, items: List[str], count: int = 1) -> Dict[str, Any]:
         """Create a count check rule for one or more items."""
