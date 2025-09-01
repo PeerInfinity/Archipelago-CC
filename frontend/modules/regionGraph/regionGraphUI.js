@@ -78,8 +78,12 @@ export class RegionGraphUI {
             Show region in Regions panel
           </label>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="setPathToRegion" style="margin-right: 5px;">
-            Set path to region
+            <input type="checkbox" id="addToPath" style="margin-right: 5px;" checked>
+            Add to path
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="overwritePath" style="margin-right: 5px;">
+            Overwrite path
           </label>
         </div>
       </div>
@@ -248,33 +252,24 @@ export class RegionGraphUI {
           }
         },
         {
-          selector: 'node.visited',
-          style: {
-            'background-color': '#4ecdc4',
-            'border-color': '#2a9d8f'
-          }
-        },
-        {
           selector: 'node.in-path',
           style: {
-            'background-color': '#6c5ce7',
-            'border-color': '#5f3dc4',
-            'border-width': 2
+            'border-color': '#6c5ce7',
+            'border-width': 4
           }
         },
         {
           selector: 'node.path-single',
           style: {
-            'background-color': '#74b9ff',
-            'border-color': '#0984e3'
+            'border-color': '#6c5ce7',
+            'border-width': 4
           }
         },
         {
           selector: 'node.path-multiple',
           style: {
-            'background-color': '#a29bfe',
-            'border-color': '#6c5ce7',
-            'border-width': 3,
+            'border-color': '#a29bfe',
+            'border-width': 6,
             'font-weight': 'bold'
           }
         },
@@ -367,21 +362,6 @@ export class RegionGraphUI {
           }
         },
         {
-          selector: 'edge.traversed',
-          style: {
-            'line-color': '#95e77e',
-            'target-arrow-color': '#95e77e',
-            'width': 4,
-            'opacity': 1.0
-          }
-        },
-        {
-          selector: 'edge.traversed.bidirectional',
-          style: {
-            'source-arrow-color': '#95e77e'
-          }
-        },
-        {
           selector: 'edge.in-path',
           style: {
             'line-color': '#6c5ce7',
@@ -454,20 +434,33 @@ export class RegionGraphUI {
       const movePlayerOneStepCheckbox = this.controlPanel.querySelector('#movePlayerOneStep');
       const movePlayerDirectlyCheckbox = this.controlPanel.querySelector('#movePlayerDirectly');
       const showRegionCheckbox = this.controlPanel.querySelector('#showRegionInPanel');
-      const setPathCheckbox = this.controlPanel.querySelector('#setPathToRegion');
+      const addToPathCheckbox = this.controlPanel.querySelector('#addToPath');
+      const overwritePathCheckbox = this.controlPanel.querySelector('#overwritePath');
       
-      // Move player one step towards region (if enabled)
-      if (movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked) {
-        this.attemptMovePlayerOneStepToRegion(regionName);
-      }
-      
-      // Move player directly to region (if enabled)
-      if (movePlayerDirectlyCheckbox && movePlayerDirectlyCheckbox.checked) {
-        this.attemptMovePlayerDirectlyToRegion(regionName);
+      // Handle path modifications (Add to path or Overwrite path)
+      if (addToPathCheckbox && addToPathCheckbox.checked) {
+        this.addToPath(regionName, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
+      } else if (overwritePathCheckbox && overwritePathCheckbox.checked) {
+        this.overwritePath(regionName, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
+      } else {
+        // Neither path option is checked - handle move player options
+        // Move player one step towards region (if enabled)
+        if (movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked) {
+          this.attemptMovePlayerOneStepToRegion(regionName);
+        }
+        
+        // Move player directly to region (if enabled)
+        if (movePlayerDirectlyCheckbox && movePlayerDirectlyCheckbox.checked) {
+          this.attemptMovePlayerDirectlyToRegion(regionName);
+        }
       }
       
       // Show region in Regions panel (if enabled)
       if (showRegionCheckbox && showRegionCheckbox.checked) {
+        // Control "Show All Regions" based on path modification checkboxes
+        const shouldShowAll = !(addToPathCheckbox?.checked || overwritePathCheckbox?.checked);
+        this.setShowAllRegions(shouldShowAll);
+        
         // Activate the regions panel
         eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regionGraph');
         console.log(`[RegionGraphUI] Published ui:activatePanel for regionsPanel`);
@@ -475,11 +468,6 @@ export class RegionGraphUI {
         // Navigate to the region
         eventBus.publish('ui:navigateToRegion', { regionName: regionName }, 'regionGraph');
         console.log(`[RegionGraphUI] Published ui:navigateToRegion for ${regionName}`);
-      }
-      
-      // Set path to region (if enabled - not implemented yet)
-      if (setPathCheckbox && setPathCheckbox.checked) {
-        this.setPathToRegion(regionName);
       }
     });
 
@@ -514,6 +502,42 @@ export class RegionGraphUI {
     if (toggleButton) {
       toggleButton.addEventListener('click', () => {
         this.toggleControlPanel();
+      });
+    }
+    
+    // Make "Add to path" and "Overwrite path" mutually exclusive
+    const addToPathCheckbox = this.controlPanel.querySelector('#addToPath');
+    const overwritePathCheckbox = this.controlPanel.querySelector('#overwritePath');
+    
+    if (addToPathCheckbox && overwritePathCheckbox) {
+      addToPathCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          overwritePathCheckbox.checked = false;
+        }
+      });
+      
+      overwritePathCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          addToPathCheckbox.checked = false;
+        }
+      });
+    }
+    
+    // Make "Move player one step" and "Move player directly" mutually exclusive
+    const moveOneStepCheckbox = this.controlPanel.querySelector('#movePlayerOneStep');
+    const moveDirectlyCheckbox = this.controlPanel.querySelector('#movePlayerDirectly');
+    
+    if (moveOneStepCheckbox && moveDirectlyCheckbox) {
+      moveOneStepCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          moveDirectlyCheckbox.checked = false;
+        }
+      });
+      
+      moveDirectlyCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          moveOneStepCheckbox.checked = false;
+        }
       });
     }
   }
@@ -982,7 +1006,7 @@ export class RegionGraphUI {
       node.data('locationCounts', locationCounts);
       
       // Clear all classes
-      node.removeClass('accessible visited inaccessible completed all-accessible mixed-locations all-inaccessible');
+      node.removeClass('accessible inaccessible completed all-accessible mixed-locations all-inaccessible');
       
       // Apply base accessibility class
       if (isReachable) {
@@ -990,11 +1014,6 @@ export class RegionGraphUI {
       } else {
         node.addClass('inaccessible');
         return; // Don't apply interior colors for inaccessible regions
-      }
-      
-      // Apply visited class if applicable (for teal path marking in future)
-      if (isVisited) {
-        node.addClass('visited');
       }
       
       // Determine and apply interior color based on location status
@@ -1044,14 +1063,8 @@ export class RegionGraphUI {
         }
       }
       
-      // Check if regions have been visited (for traversed state)
-      const sourceVisited = snapshot.visitedRegions && 
-                           snapshot.visitedRegions.includes(sourceRegion);
-      const targetVisited = snapshot.visitedRegions && 
-                           snapshot.visitedRegions.includes(targetRegion);
-      
       // Clear all classes
-      edge.removeClass('accessible traversed inaccessible bidirectional');
+      edge.removeClass('accessible inaccessible bidirectional');
       
       // Add bidirectional class if applicable
       if (isBidirectional) {
@@ -1071,9 +1084,7 @@ export class RegionGraphUI {
         isTraversable = sourceReachable && forwardAccessible;
       }
       
-      if (sourceVisited && targetVisited && isTraversable) {
-        edge.addClass('traversed');
-      } else if (isTraversable) {
+      if (isTraversable) {
         edge.addClass('accessible');
       } else {
         edge.addClass('inaccessible');
@@ -1240,7 +1251,9 @@ export class RegionGraphUI {
           sourceRegion: currentPlayerRegion,
           sourceUID: undefined, // No specific UID for graph-based moves
           targetRegion: path.steps[1], // Next region in path
-          exitName: path.nextExit
+          exitName: path.nextExit,
+          updatePath: false,
+          source: 'regionGraph-oneStep'
         }, 'bottom');
         console.log(`[RegionGraphUI] Published user:regionMove via dispatcher from ${currentPlayerRegion} to ${path.steps[1]}`);
       } else {
@@ -1316,7 +1329,9 @@ export class RegionGraphUI {
           sourceRegion: finalSourceRegion,
           sourceUID: undefined, // No specific UID for graph-based moves
           targetRegion: targetRegion,
-          exitName: finalExitName
+          exitName: finalExitName,
+          updatePath: false,
+          source: 'regionGraph-direct'
         }, 'bottom');
         console.log(`[RegionGraphUI] Published direct user:regionMove via dispatcher from ${finalSourceRegion} to ${targetRegion}`);
       } else {
@@ -1332,43 +1347,162 @@ export class RegionGraphUI {
     }
   }
 
-  setPathToRegion(targetRegion) {
-    const currentPlayerRegion = this.getCurrentPlayerLocation();
+  addToPath(targetRegion, moveOnlyOneStep = false) {
+    // Get the current path from playerState
+    const playerState = getPlayerStateSingleton();
+    const currentPath = playerState.getPath();
     
-    if (!currentPlayerRegion) {
-      console.warn(`[RegionGraphUI] Cannot determine current player location for path setting`);
+    if (!currentPath || currentPath.length === 0) {
+      console.warn(`[RegionGraphUI] No current path to add to`);
+      this.updateStatus(`No existing path`);
       return;
     }
-
-    // Find path to target region
-    console.log(`[RegionGraphUI] Calculating path from ${currentPlayerRegion} to ${targetRegion}`);
-    const path = this.pathFinder.findPath(currentPlayerRegion, targetRegion);
+    
+    // Start from the last region in the current path
+    const startRegion = currentPath[currentPath.length - 1].region;
+    
+    if (startRegion === targetRegion) {
+      console.log(`[RegionGraphUI] Target region ${targetRegion} is already at end of path`);
+      return;
+    }
+    
+    // Find path from current end to target
+    console.log(`[RegionGraphUI] Finding path from ${startRegion} to ${targetRegion}`);
+    const path = this.pathFinder.findPath(startRegion, targetRegion);
     
     if (!path || path.length === 0) {
-      console.warn(`[RegionGraphUI] No accessible path found from ${currentPlayerRegion} to ${targetRegion}`);
-      this.updateStatus(`No path to ${targetRegion}`);
+      console.warn(`[RegionGraphUI] No accessible path found from ${startRegion} to ${targetRegion}`);
+      this.updateStatus(`No path from ${startRegion} to ${targetRegion}`);
       return;
     }
-
-    console.log(`[RegionGraphUI] Path to ${targetRegion}:`, path.steps);
     
-    // TODO: Implement path visualization and storage
-    // This could involve:
-    // 1. Highlighting the path on the graph
-    // 2. Storing the path for later execution
-    // 3. Creating a path execution UI
-    // 4. Publishing events for other modules to react to the path
+    // Disable "Show All Regions" before executing moves
+    this.setShowAllRegions(false);
     
-    // For now, just show the path in the status
-    if (path.length === 1) {
-      this.updateStatus(`Path set: Direct to ${targetRegion}`);
-    } else {
-      const pathString = path.steps.join(' → ');
-      this.updateStatus(`Path set: ${pathString} (${path.length} steps)`);
+    // Execute the path by sending user:regionMove events
+    // Skip the first region in the path (it's our starting point)
+    const stepsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
+    
+    console.log(`[RegionGraphUI] Adding to path: ${stepsToExecute.join(' → ')}`);
+    
+    // Build adjacency map for finding exits
+    const staticData = stateManager.getStaticData();
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const adjacencyMap = this.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
+    
+    stepsToExecute.forEach((stepRegion, index) => {
+      // Find the exit to use for this step
+      const sourceRegion = index === 0 ? startRegion : stepsToExecute[index - 1];
+      const exitName = this.pathFinder.findExitBetweenRegions(
+        sourceRegion,
+        stepRegion,
+        adjacencyMap
+      );
+      
+      // Manually update the path since we disabled automatic path updates
+      playerState.updatePath(stepRegion, exitName, sourceRegion);
+      
+      // Import and use moduleDispatcher to send the event
+      import('./index.js').then(({ moduleDispatcher }) => {
+        if (moduleDispatcher) {
+          moduleDispatcher.publish('user:regionMove', {
+            sourceRegion: sourceRegion,
+            targetRegion: stepRegion,
+            exitName: exitName,
+            updatePath: false,
+            source: 'regionGraph-addToPath'
+          }, 'bottom');
+          console.log(`[RegionGraphUI] Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
+        }
+      });
+    });
+    
+    this.updateStatus(`Added ${stepsToExecute.length} region(s) to path`);
+  }
+  
+  overwritePath(targetRegion, moveOnlyOneStep = false) {
+    // First, set player to Menu and reset the path
+    console.log(`[RegionGraphUI] Resetting player to Menu and clearing path`);
+    const playerState = getPlayerStateSingleton();
+    
+    // Set current region to Menu first
+    playerState.setCurrentRegion('Menu');
+    
+    // Then trim the path (this will reset path to just Menu)
+    playerState.trimPath('Menu', 1);
+    
+    // Disable "Show All Regions" before executing moves
+    this.setShowAllRegions(false);
+    
+    // Find path from Menu to target
+    const startRegion = 'Menu';
+    
+    if (startRegion === targetRegion) {
+      console.log(`[RegionGraphUI] Target region is Menu, path already reset`);
+      return;
     }
     
-    // Placeholder for future implementation
-    console.log(`[RegionGraphUI] TODO: Implement path visualization and execution for path:`, path);
+    console.log(`[RegionGraphUI] Finding path from ${startRegion} to ${targetRegion}`);
+    const path = this.pathFinder.findPath(startRegion, targetRegion);
+    
+    if (!path || path.length === 0) {
+      console.warn(`[RegionGraphUI] No accessible path found from ${startRegion} to ${targetRegion}`);
+      this.updateStatus(`No path from Menu to ${targetRegion}`);
+      return;
+    }
+    
+    // Execute the path by sending user:regionMove events
+    // Skip the first region in the path (Menu)
+    const stepsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
+    
+    console.log(`[RegionGraphUI] Creating new path: Menu → ${stepsToExecute.join(' → ')}`);
+    
+    // Build adjacency map for finding exits
+    const staticData = stateManager.getStaticData();
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const adjacencyMap = this.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
+    
+    stepsToExecute.forEach((stepRegion, index) => {
+      // Find the exit to use for this step
+      const sourceRegion = index === 0 ? startRegion : stepsToExecute[index - 1];
+      const exitName = this.pathFinder.findExitBetweenRegions(
+        sourceRegion,
+        stepRegion,
+        adjacencyMap
+      );
+      
+      // Manually update the path since we disabled automatic path updates
+      playerState.updatePath(stepRegion, exitName, sourceRegion);
+      
+      // Import and use moduleDispatcher to send the event
+      import('./index.js').then(({ moduleDispatcher }) => {
+        if (moduleDispatcher) {
+          moduleDispatcher.publish('user:regionMove', {
+            sourceRegion: sourceRegion,
+            targetRegion: stepRegion,
+            exitName: exitName,
+            updatePath: false,
+            source: 'regionGraph-overwritePath'
+          }, 'bottom');
+          console.log(`[RegionGraphUI] Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
+        }
+      });
+    });
+    
+    this.updateStatus(`Created path: Menu → ${targetRegion} (${stepsToExecute.length} steps)`);
+  }
+  
+  setShowAllRegions(enabled) {
+    // Find the "Show All Regions" checkbox in the Regions panel and set its state
+    const showAllCheckbox = document.querySelector('#show-all-regions');
+    if (showAllCheckbox && showAllCheckbox.checked !== enabled) {
+      showAllCheckbox.checked = enabled;
+      // Trigger change event to update the regions display
+      showAllCheckbox.dispatchEvent(new Event('change'));
+      console.log(`[RegionGraphUI] Set "Show All Regions" to ${enabled}`);
+    }
   }
 
   toggleControlPanel() {

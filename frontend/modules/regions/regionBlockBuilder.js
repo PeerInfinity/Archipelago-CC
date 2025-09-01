@@ -255,7 +255,7 @@ export class RegionBlockBuilder {
     );
 
     // Add path analysis section
-    this.addPathAnalysisSection(contentEl, regionName);
+    this.addPathAnalysisSection(contentEl, regionName, uid);
 
     return contentEl;
   }
@@ -721,6 +721,7 @@ export class RegionBlockBuilder {
                       sourceUID: uid,
                       targetRegion: connectedRegionName,
                       exitName: exitDef.name,
+                      updatePath: true,
                       source: 'regionBlockBuilder'
                     }, 'bottom');
                     log('info', `[Exit Block] Moving from ${currentRegion} to ${connectedRegionName} via ${exitDef.name} (exit click)`);
@@ -961,13 +962,14 @@ export class RegionBlockBuilder {
   /**
    * Adds path analysis section to the content element
    */
-  addPathAnalysisSection(contentEl, regionName) {
+  addPathAnalysisSection(contentEl, regionName, uid) {
     const pathsControlDiv = document.createElement('div');
     pathsControlDiv.classList.add('paths-control');
     pathsControlDiv.style.marginTop = '1rem';
     pathsControlDiv.innerHTML = `
       <div class="paths-buttons">
         <button class="analyze-paths-btn">Analyze Paths</button>
+        <button class="trim-path-btn">Trim Path</button>
         <span class="paths-count" style="display: none;"></span>
       </div>
     `;
@@ -978,7 +980,7 @@ export class RegionBlockBuilder {
     pathsContainer.style.display = 'none';
     contentEl.appendChild(pathsContainer);
 
-    // Setup the button using the PathAnalyzerUI instance
+    // Setup the analyze paths button using the PathAnalyzerUI instance
     const analyzePathsBtn = pathsControlDiv.querySelector('.analyze-paths-btn');
     const pathsCountSpan = pathsControlDiv.querySelector('.paths-count');
     if (analyzePathsBtn && pathsCountSpan && this.regionUI.pathAnalyzer) {
@@ -994,6 +996,12 @@ export class RegionBlockBuilder {
         'Could not set up path analysis button for region:',
         regionName
       );
+    }
+
+    // Setup the trim path button
+    const trimPathBtn = pathsControlDiv.querySelector('.trim-path-btn');
+    if (trimPathBtn) {
+      this.setupTrimPathButton(trimPathBtn, regionName, uid);
     }
   }
 
@@ -1027,6 +1035,60 @@ export class RegionBlockBuilder {
       (r) => r.name === regionName && r.uid <= uid
     ).length;
     return countSoFar > 1 ? ` (${countSoFar})` : '';
+  }
+
+  /**
+   * Sets up the trim path button event listener
+   */
+  setupTrimPathButton(trimPathBtn, regionName, uid) {
+    trimPathBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      log('info', `Trim path button clicked for region: ${regionName}, UID: ${uid}`);
+
+      // Import playerState singleton to perform the path trimming
+      import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
+        const playerState = getPlayerStateSingleton();
+        
+        // Find this region instance in the current path to determine instance number
+        const currentPath = playerState.getPath();
+        let instanceNumber = 1;
+        let found = false;
+        
+        for (let i = 0; i < currentPath.length; i++) {
+          if (currentPath[i].region === regionName) {
+            // Check if this matches our specific instance (by UID if available)
+            if (uid && this.regionUI && this.regionUI.visitedRegions) {
+              const visitedRegion = this.regionUI.visitedRegions.find(vr => vr.uid == uid);
+              if (visitedRegion && visitedRegion.instanceNumber) {
+                instanceNumber = visitedRegion.instanceNumber;
+                found = true;
+                break;
+              }
+            }
+            // If we can't match by UID, assume it's the last occurrence of this region in the path
+            instanceNumber = currentPath[i].instanceNumber;
+            found = true;
+          }
+        }
+        
+        if (!found) {
+          log('warn', `Could not find region ${regionName} in current path for trimming`);
+          return;
+        }
+
+        log('info', `Trimming path at ${regionName}, instance ${instanceNumber}`);
+        
+        // Set player to this region without updating path, then trim
+        playerState.setCurrentRegion(regionName);
+        playerState.trimPath(regionName, instanceNumber);
+        
+        log('info', `Path trimmed successfully to ${regionName}`);
+      }).catch(error => {
+        log('error', 'Error setting up trim path functionality:', error);
+      });
+    });
   }
 
   /**

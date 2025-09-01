@@ -113,15 +113,21 @@ function handleRegionMove(data, propagationOptions) {
     log('info', `[${moduleId} Module] Current region before processing: ${currentRegionBefore}`);
     
     if (data && data.targetRegion) {
-        // Update path with exit information BEFORE updating current region
-        // This allows updatePath to properly detect the current vs target region
-        playerState.updatePath(
-            data.targetRegion,
-            data.exitName || null,
-            data.sourceRegion || null
-        );
+        // Check if path should be updated (default: true)
+        const shouldUpdatePath = data.updatePath !== false;
+        log('info', `[${moduleId} Module] Path update enabled: ${shouldUpdatePath}`);
         
-        // Then update current region
+        if (shouldUpdatePath) {
+            // Update path with exit information BEFORE updating current region
+            // This allows updatePath to properly detect the current vs target region
+            playerState.updatePath(
+                data.targetRegion,
+                data.exitName || null,
+                data.sourceRegion || null
+            );
+        }
+        
+        // Always update current region
         playerState.setCurrentRegion(data.targetRegion);
     }
     
