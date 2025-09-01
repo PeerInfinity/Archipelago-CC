@@ -47,8 +47,25 @@ export class RegionBlockBuilder {
     useColorblind,
     currentUid,
     currentExpandedState,
-    staticData
+    staticData,
+    isSkipIndicator = false
   ) {
+    // Handle skip indicator specially
+    if (isSkipIndicator || currentUid === 'skip_indicator') {
+      const skipBlock = document.createElement('div');
+      skipBlock.classList.add('region-block', 'skip-indicator');
+      skipBlock.dataset.uid = 'skip_indicator';
+      skipBlock.style.textAlign = 'center';
+      skipBlock.style.fontStyle = 'italic';
+      skipBlock.style.color = '#888';
+      skipBlock.style.padding = '10px';
+      skipBlock.style.margin = '5px 0';
+      skipBlock.style.border = '1px dashed #666';
+      skipBlock.style.backgroundColor = 'rgba(128, 128, 128, 0.1)';
+      skipBlock.textContent = regionName; // This will be "... X regions skipped ..."
+      return skipBlock;
+    }
+
     // Determine expansion state and UID
     let uid = currentUid;
     let expanded =

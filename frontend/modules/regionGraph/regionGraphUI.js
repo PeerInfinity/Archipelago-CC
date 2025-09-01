@@ -125,7 +125,7 @@ export class RegionGraphUI {
               if (this.cytoscape && this.cytoscapeFcose && window.coseBase) {
                 console.log('[RegionGraphUI] All libraries loaded, registering FCose plugin');
                 try {
-                  this.cytoscape.use(this.cytoscapeFcose(window.coseBase));
+                  this.cytoscapeFcose(this.cytoscape);
                   console.log('[RegionGraphUI] FCose plugin registered successfully');
                 } catch (error) {
                   console.error('[RegionGraphUI] Error registering FCose plugin:', error);
@@ -962,31 +962,22 @@ export class RegionGraphUI {
     this.isLayoutRunning = true;
     this.updateStatus('Running layout...');
 
+    // Use the same COSE settings as the preset in layoutEditor
     const layoutOptions = {
-      name: 'fcose',
-      quality: 'proof',
+      name: 'cose',
       randomize: false,
       animate: true,
       animationDuration: 1000,
       fit: true,
-      padding: 70,
-      nodeDimensionsIncludeLabels: true,
-      uniformNodeDimensions: false,
-      packComponents: true,
-      
-      nodeRepulsion: 15000,
-      idealEdgeLength: 150,
-      edgeElasticity: 0.45,
-      nestingFactor: 0.1,
-      gravity: 0.25,
-      numIter: 2500,
-      tile: true,
-      tilingPaddingVertical: 20,
-      tilingPaddingHorizontal: 20,
-      gravityRangeCompound: 1.5,
-      gravityCompound: 1.0,
-      gravityRange: 3.8,
-      initialEnergyOnIncremental: 0.5
+      padding: 50,
+      nodeRepulsion: 400000,
+      nodeOverlap: 10,
+      idealEdgeLength: 100,
+      edgeElasticity: 100,
+      nestingFactor: 5,
+      gravity: 80,
+      numIter: 1000,
+      componentSpacing: 100
     };
 
     this.currentLayout = this.cy.layout(layoutOptions);

@@ -41,6 +41,8 @@ export class RegionUI {
      */
     this.visitedRegions = [];
     this.originalRegionOrder = [];
+    this.rulesLoadedHandlerCompleted = false;
+    this.renderDeferralAttempted = false;
 
     // A simple counter to give each visited region block a unique ID
     this.nextUID = 1;
@@ -136,6 +138,14 @@ export class RegionUI {
       log('info', '[RegionUI] Received stateManager:ready event.');
       // This event confirms StateManager is fully ready (static data and initial snapshot).
       // originalRegionOrder should have been populated by the 'stateManager:rulesLoaded' handler.
+      
+      // If rulesLoaded handler hasn't completed yet, defer this call
+      if (!this.rulesLoadedHandlerCompleted) {
+        log('info', '[RegionUI stateManager:ready] Deferring ready handler until rulesLoaded handler completes.');
+        // Use a short delay to allow rulesLoaded handler to complete
+        setTimeout(() => handleReady(), 10);
+        return;
+      }
 
       if (!this.isInitialized) {
         log(
@@ -261,6 +271,7 @@ export class RegionUI {
       this.showAllExpansionState.clear(); // Clear expansion states for "Show All" mode
       this.navigationTarget = null; // Clear any navigation target
       this.nextUID = 1; // Reset UID counter
+      this.rulesLoadedHandlerCompleted = false; // Reset flag at start of handler
       
       // Force clear the UI display immediately to remove any stale DOM content
       this.clear(); // This will clear the regions container and reset expansion states
@@ -297,6 +308,9 @@ export class RegionUI {
         log('info', '[RegionUI rulesLoaded] Triggering full display update after state reset.');
         this.update(); // this.update() calls renderAllRegions()
       }
+      
+      // Mark that rulesLoaded handler has completed
+      this.rulesLoadedHandlerCompleted = true;
     });
     // --- END ADDED ---
 
@@ -799,10 +813,6 @@ export class RegionUI {
     }
 
     if (!this.originalRegionOrder || this.originalRegionOrder.length === 0) {
-      log(
-        'warn',
-        '[RegionUI renderAllRegions] Original region order not yet available. Regions might appear unsorted or panel might wait for re-render.'
-      );
       // Fallback fetch, though ideally it's populated by stateManager:rulesLoaded
       const freshlyFetchedOrder = stateManager.getOriginalRegionOrder();
       if (freshlyFetchedOrder && freshlyFetchedOrder.length > 0) {
@@ -812,9 +822,26 @@ export class RegionUI {
           `[RegionUI renderAllRegions] Fallback fetch for originalRegionOrder succeeded: ${this.originalRegionOrder.length} items.`
         );
       } else {
-        // If still no order, might display loading or unsorted.
-        // this.regionsContainer.innerHTML = '<p>Preparing region order...</p>';
-        // return; // Or allow to proceed with default/name sort if acceptable.
+        // If still no order available, defer this render until ready (but only once)
+        if (!this.renderDeferralAttempted) {
+          this.renderDeferralAttempted = true;
+          log(
+            'debug',
+            '[RegionUI renderAllRegions] Original region order not yet available. Deferring render...'
+          );
+          // Schedule a retry after a short delay to allow initialization to complete
+          setTimeout(() => {
+            this.renderDeferralAttempted = false; // Reset flag for future deferrals
+            if (!this.originalRegionOrder || this.originalRegionOrder.length === 0) {
+              // If still no order after delay, proceed anyway (will use default sorting)
+              log('debug', '[RegionUI renderAllRegions] Proceeding with default sorting after delay.');
+            }
+            this.renderAllRegions();
+          }, 50);
+          return; // Exit early to prevent rendering without proper order
+        }
+        // If we've already attempted deferral, proceed with default sorting
+        log('debug', '[RegionUI renderAllRegions] Proceeding with default sorting (no deferral).');
       }
     }
 
@@ -940,31 +967,73 @@ export class RegionUI {
           snapshot.regionReachability?.[name] === 'checked',
       }));
     } else {
-      // Check if path is too long - disable paths if path length > 2x total regions
+      // Check if path is too long - show truncated view if path length > 2x total regions
       const totalRegions = Object.keys(staticData.regions).length;
       const pathTooLong = this.visitedRegions.length > (totalRegions * 2);
       
-      // Auto-disable Show Paths checkbox if path is too long
-      const showPathsCheckbox = this.rootElement.querySelector('#show-paths');
-      if (pathTooLong && showPathsCheckbox) {
-        showPathsCheckbox.checked = false;
-        this.showPaths = false;
-      }
-      
       // When showAll is false, check showPaths to determine what to render
-      // But if path is too long, force to show only last region
-      if (this.showPaths && !pathTooLong) {
-        // Show full path
-        regionsToRender = this.visitedRegions.map((vr) => ({
-          name: vr.name,
-          isVisited: true,
-          uid: vr.uid,
-          expanded: vr.name === this.navigationTarget || vr.expanded, // Expand if it's the navigation target or already expanded
-          isReachable:
-            snapshot.regionReachability?.[vr.name] === true ||
-            snapshot.regionReachability?.[vr.name] === 'reachable' ||
-            snapshot.regionReachability?.[vr.name] === 'checked',
-        }));
+      if (this.showPaths) {
+        if (pathTooLong) {
+          // Show first n and last n regions with skip indicator
+          const n = totalRegions;
+          const firstN = this.visitedRegions.slice(0, n);
+          const lastN = this.visitedRegions.slice(-n);
+          
+          // Create regions to render array
+          regionsToRender = [];
+          
+          // Add first n regions
+          regionsToRender.push(...firstN.map((vr) => ({
+            name: vr.name,
+            isVisited: true,
+            uid: vr.uid,
+            expanded: vr.name === this.navigationTarget || vr.expanded,
+            isReachable:
+              snapshot.regionReachability?.[vr.name] === true ||
+              snapshot.regionReachability?.[vr.name] === 'reachable' ||
+              snapshot.regionReachability?.[vr.name] === 'checked',
+          })));
+          
+          // Add skip indicator if there are skipped regions
+          const skippedCount = this.visitedRegions.length - (2 * n);
+          if (skippedCount > 0) {
+            regionsToRender.push({
+              name: `... ${skippedCount} regions skipped ...`,
+              isVisited: true,
+              uid: 'skip_indicator',
+              expanded: false,
+              isReachable: true,
+              isSkipIndicator: true,
+            });
+          }
+          
+          // Add last n regions (avoid duplicates if path is short)
+          const lastNFiltered = lastN.filter(vr => 
+            !firstN.some(firstRegion => firstRegion.uid === vr.uid)
+          );
+          regionsToRender.push(...lastNFiltered.map((vr) => ({
+            name: vr.name,
+            isVisited: true,
+            uid: vr.uid,
+            expanded: vr.name === this.navigationTarget || vr.expanded,
+            isReachable:
+              snapshot.regionReachability?.[vr.name] === true ||
+              snapshot.regionReachability?.[vr.name] === 'reachable' ||
+              snapshot.regionReachability?.[vr.name] === 'checked',
+          })));
+        } else {
+          // Show full path
+          regionsToRender = this.visitedRegions.map((vr) => ({
+            name: vr.name,
+            isVisited: true,
+            uid: vr.uid,
+            expanded: vr.name === this.navigationTarget || vr.expanded,
+            isReachable:
+              snapshot.regionReachability?.[vr.name] === true ||
+              snapshot.regionReachability?.[vr.name] === 'reachable' ||
+              snapshot.regionReachability?.[vr.name] === 'checked',
+          }));
+        }
       } else {
         // Show only last region, always expanded
         if (this.visitedRegions.length > 0) {
@@ -1071,6 +1140,36 @@ export class RegionUI {
 
     for (const regionInfo of regionsToRender) {
       const regionName = regionInfo.name;
+      
+      // Handle skip indicator specially
+      if (regionInfo.isSkipIndicator) {
+        const regionBlock = this.regionBlockBuilder.buildRegionBlock(
+          regionName,
+          null, // No region data needed for skip indicator
+          snapshot,
+          snapshotInterface,
+          regionInfo.isReachable,
+          useColorblind,
+          regionInfo.uid,
+          regionInfo.expanded,
+          staticData,
+          regionInfo.isSkipIndicator
+        );
+        
+        if (useAccessibilitySections) {
+          if (regionInfo.isReachable && availableContentContainer) {
+            availableFragment.appendChild(regionBlock);
+          } else if (!regionInfo.isReachable && unavailableContentContainer) {
+            unavailableFragment.appendChild(regionBlock);
+          }
+        } else {
+          if (generalSortedListContent) {
+            generalFragment.appendChild(regionBlock);
+          }
+        }
+        continue;
+      }
+      
       const regionData = staticData.regions[regionName];
       if (!regionData) {
         log(
@@ -1089,7 +1188,8 @@ export class RegionUI {
         useColorblind,
         regionInfo.uid,
         regionInfo.expanded,
-        staticData
+        staticData,
+        regionInfo.isSkipIndicator
       );
       if (!regionBlock) {
         if (regionName === 'Menu') {
