@@ -570,12 +570,45 @@ export class RegionGraphUI {
   setupEventHandlers() {
     this.cy.on('tap', 'node', (evt) => {
       const node = evt.target;
-      const regionName = node.id(); // Node ID is the region name
       
       // Skip if this is the player node
       if (node.hasClass('player')) {
         return;
       }
+      
+      // Handle location node clicks
+      if (node.hasClass('location-node')) {
+        const locationName = node.data('label');
+        const parentRegion = node.data('parentRegion');
+        
+        console.log(`[RegionGraphUI] Location node clicked: ${locationName} in ${parentRegion}`);
+        
+        // Use the same pattern as regionBlockBuilder.js
+        import('./index.js').then(({ moduleDispatcher }) => {
+          const payload = {
+            locationName: locationName,
+            regionName: parentRegion,
+            originator: 'RegionGraphCheck',
+            originalDOMEvent: true,
+          };
+
+          if (moduleDispatcher) {
+            moduleDispatcher.publish('user:locationCheck', payload, {
+              initialTarget: 'bottom',
+            });
+            console.log('[RegionGraphUI] Dispatched user:locationCheck', payload);
+          } else {
+            console.error('[RegionGraphUI] moduleDispatcher not available to handle location check.');
+          }
+        }).catch(error => {
+          console.error('[RegionGraphUI] Error importing moduleDispatcher:', error);
+        });
+        
+        return; // Don't process as region node
+      }
+      
+      // Handle region node clicks
+      const regionName = node.id(); // Node ID is the region name
       
       this.selectedNode = regionName;
       
@@ -1083,9 +1116,23 @@ export class RegionGraphUI {
       this.onStateUpdate({ snapshot });
     }
 
-    // Initialize player location
+    // Initialize player location with path data if available
     const currentPlayerRegion = this.getCurrentPlayerLocation();
     if (currentPlayerRegion) {
+      // Try to get initial path data
+      try {
+        const playerState = getPlayerStateSingleton();
+        if (playerState) {
+          const path = playerState.getPath();
+          if (path && path.length > 0) {
+            this.currentPath = path;
+            console.log(`[RegionGraphUI] Loaded initial path with ${path.length} regions`);
+          }
+        }
+      } catch (error) {
+        console.warn('[RegionGraphUI] Error getting initial path data:', error);
+      }
+      
       this.updatePlayerLocation(currentPlayerRegion);
     }
 
@@ -1412,6 +1459,12 @@ export class RegionGraphUI {
       
       // Highlight edges in the path
       this.highlightPathEdges();
+      
+      // Update player position now that we have path data
+      const currentPlayerRegion = this.getCurrentPlayerLocation();
+      if (currentPlayerRegion) {
+        this.updatePlayerLocation(currentPlayerRegion);
+      }
     }
   }
   
@@ -1451,22 +1504,90 @@ export class RegionGraphUI {
     
     // Get the position of the region node
     const regionPos = regionNode.position();
+    let playerPos = { x: regionPos.x + 30, y: regionPos.y - 30 }; // Default offset position
     
-    // Add player node at the region's position with a slight offset
+    // Check if player is at the end of the path and should be positioned at exit edge
+    // Always use default positioning for Menu region
+    if (regionName !== 'Menu' && this.currentPath && this.currentPath.length > 0) {
+      const lastPathEntry = this.currentPath[this.currentPath.length - 1];
+      
+      // If player's current region is the last region in path AND we have exit info
+      if (lastPathEntry.region === regionName && lastPathEntry.exitUsed) {
+        // Find the previous region in the path to determine the incoming edge
+        const previousRegion = this.currentPath.length > 1 ? 
+          this.currentPath[this.currentPath.length - 2].region : null;
+        
+        if (previousRegion) {
+          const exitEdgePos = this.getIncomingExitEdgePosition(regionName, previousRegion, lastPathEntry.exitUsed);
+          if (exitEdgePos) {
+            playerPos = exitEdgePos;
+            console.log(`[RegionGraphUI] Positioning player at incoming exit edge from ${previousRegion} via ${lastPathEntry.exitUsed}`);
+          }
+        }
+      }
+    }
+    
+    // Add player node at the calculated position
     this.cy.add({
       data: {
         id: 'player',
         label: 'Player'
       },
-      position: {
-        x: regionPos.x + 30,
-        y: regionPos.y - 30
-      },
+      position: playerPos,
       classes: 'player'
     });
     
     // Also highlight the current region
     this.highlightCurrentRegion(regionName);
+  }
+
+  getIncomingExitEdgePosition(targetRegionName, sourceRegionName, exitName) {
+    // Find the edge that corresponds to the incoming connection
+    const sourceNode = this.cy.getElementById(sourceRegionName);
+    const targetNode = this.cy.getElementById(targetRegionName);
+    
+    if (!sourceNode || sourceNode.length === 0 || !targetNode || targetNode.length === 0) {
+      return null;
+    }
+    
+    // Look for edges between these two regions (in either direction)
+    const allEdges = this.cy.edges();
+    
+    for (let i = 0; i < allEdges.length; i++) {
+      const edge = allEdges[i];
+      const edgeData = edge.data();
+      const edgeSource = edge.source().id();
+      const edgeTarget = edge.target().id();
+      
+      // Check if this edge connects our source and target regions
+      const isCorrectConnection = (edgeSource === sourceRegionName && edgeTarget === targetRegionName) ||
+                                  (edgeSource === targetRegionName && edgeTarget === sourceRegionName);
+      
+      if (isCorrectConnection) {
+        // Check if this edge corresponds to the exit we're looking for
+        const hasCorrectExitName = edgeData.exitName === exitName || 
+                                   edgeData.forwardExitName === exitName || 
+                                   edgeData.reverseExitName === exitName ||
+                                   (edgeData.label && edgeData.label.includes(exitName));
+        
+        if (hasCorrectExitName) {
+          const sourcePos = sourceNode.position();
+          const targetPos = targetNode.position();
+          
+          // Calculate a position along the edge, closer to the target (85% from source to target)
+          const t = 0.85;
+          const edgePos = {
+            x: sourcePos.x + (targetPos.x - sourcePos.x) * t,
+            y: sourcePos.y + (targetPos.y - sourcePos.y) * t
+          };
+          
+          return edgePos;
+        }
+      }
+    }
+    
+    // If we couldn't find the specific exit edge, return null to use default positioning
+    return null;
   }
 
   getCurrentPlayerLocation() {
@@ -1855,33 +1976,29 @@ export class RegionGraphUI {
     const prevZoom = this.currentZoomLevel;
     this.currentZoomLevel = zoom;
     
-    // Check manual overrides first
+    // Handle location node visibility (check manual overrides)
     if (this.locationsManuallyShown) {
       if (!this.locationsVisible) {
         this.showAllLocationNodes();
         this.locationsVisible = true;
       }
-      return;
-    }
-    
-    if (this.locationsManuallyHidden) {
+    } else if (this.locationsManuallyHidden) {
       if (this.locationsVisible) {
         this.hideAllLocationNodes();
         this.locationsVisible = false;
       }
-      return;
+    } else {
+      // Normal zoom-based visibility
+      if (zoom >= this.zoomLevels.showLocationNodes && !this.locationsVisible) {
+        this.showAllLocationNodes();
+        this.locationsVisible = true;
+      } else if (zoom < this.zoomLevels.showLocationNodes && this.locationsVisible) {
+        this.hideAllLocationNodes();
+        this.locationsVisible = false;
+      }
     }
     
-    // Check if we crossed the location visibility threshold
-    if (zoom >= this.zoomLevels.showLocationNodes && !this.locationsVisible) {
-      this.showAllLocationNodes();
-      this.locationsVisible = true;
-    } else if (zoom < this.zoomLevels.showLocationNodes && this.locationsVisible) {
-      this.hideAllLocationNodes();
-      this.locationsVisible = false;
-    }
-    
-    // Update label visibility based on zoom
+    // Always update label visibility based on zoom (regardless of manual overrides)
     this.updateLabelVisibility(zoom);
   }
 

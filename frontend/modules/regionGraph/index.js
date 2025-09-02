@@ -18,6 +18,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('ui:navigateToRegion');
   registrationApi.registerEventBusPublisher('user:regionMove');
+  registrationApi.registerEventBusPublisher('user:locationCheck');
   registrationApi.registerEventBusPublisher('regionGraph:nodeSelected');
 }
 
