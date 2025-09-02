@@ -22,6 +22,20 @@ export class RegionGraphUI {
     this.regionPathCounts = new Map();
     this.layoutEditor = null;
     
+    // Zoom-based visibility configuration
+    this.zoomLevels = {
+      hideAllLabels: 0.3,
+      showRegionNames: 0.5,
+      showRegionCounts: 0.8,
+      showRegionEdgeLabels: 1.0,
+      showLocationNodes: 1.5,
+      showLocationLabels: 2.0
+    };
+    this.currentZoomLevel = 1.0;
+    this.locationsVisible = false;
+    this.locationsManuallyHidden = false;
+    this.locationsManuallyShown = false;
+    
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('region-graph-panel-container', 'panel-container');
     this.rootElement.style.width = '100%';
@@ -289,7 +303,12 @@ export class RegionGraphUI {
             'target-arrow-shape': 'triangle',
             'curve-style': 'bezier',
             'z-index': 5,
-            'opacity': 0.6,
+            'opacity': 0.6
+          }
+        },
+        {
+          selector: 'edge[label]',
+          style: {
             'label': 'data(label)',
             'color': '#fff',
             'text-background-color': '#000',
@@ -374,6 +393,81 @@ export class RegionGraphUI {
           style: {
             'display': 'none'
           }
+        },
+        // Location node styles
+        {
+          selector: '.location-node',
+          style: {
+            'width': 30,
+            'height': 30,
+            'label': 'data(label)',
+            'color': '#fff',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'font-size': '8px',
+            'border-width': 2,
+            'text-wrap': 'wrap',
+            'text-max-width': '60px',
+            'z-index': 15
+          }
+        },
+        // Locations in accessible regions
+        {
+          selector: '.location-node.region-accessible.location-checked',
+          style: {
+            'background-color': '#000',
+            'border-color': '#52b845'
+          }
+        },
+        {
+          selector: '.location-node.region-accessible.location-accessible',
+          style: {
+            'background-color': '#3a7a30',  // Darker shade of green
+            'border-color': '#52b845'
+          }
+        },
+        {
+          selector: '.location-node.region-accessible.location-inaccessible',
+          style: {
+            'background-color': '#7a3030',  // Darker shade of red
+            'border-color': '#a84444'
+          }
+        },
+        // Locations in inaccessible regions
+        {
+          selector: '.location-node.region-inaccessible.location-accessible',
+          style: {
+            'background-color': '#8a701a',  // Darker shade of yellow
+            'border-color': '#c9a227'
+          }
+        },
+        {
+          selector: '.location-node.region-inaccessible.location-inaccessible',
+          style: {
+            'background-color': '#5e5e5e',  // Darker shade of gray
+            'border-color': '#8e8e8e',
+            'opacity': 0.8
+          }
+        },
+        {
+          selector: '.location-node.region-inaccessible.location-checked',
+          style: {
+            'background-color': '#000',
+            'border-color': '#a84444'
+          }
+        },
+        // Region-to-location edge styles
+        {
+          selector: '.region-location-edge',
+          style: {
+            'width': 2,
+            'line-color': '#666',
+            'line-style': 'dotted',
+            'opacity': 0.7,
+            'target-arrow-shape': 'none',
+            'z-index': 3,
+            'label': ''  // Explicitly set no label for location edges
+          }
         }
       ],
       
@@ -399,6 +493,7 @@ export class RegionGraphUI {
     this.setupControlPanel();
     this.setupEventHandlers();
     this.subscribeToEvents();
+    this.setupZoomBasedVisibility(); // Setup zoom-based visibility
     this.graphInitialized = false; // Track if data has been loaded
     
     this.updateStatus('Graph initialized, waiting for data...');
@@ -426,6 +521,17 @@ export class RegionGraphUI {
           <button id="exportPositions" style="margin: 2px; padding: 4px 8px;">Export Positions</button>
         </div>
         <div id="layoutEditorContainer"></div>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <div style="font-weight: bold; margin-bottom: 5px;">Location Visibility:</div>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="forceShowLocations" style="margin-right: 5px;">
+            Always show locations (override zoom)
+          </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="forceHideLocations" style="margin-right: 5px;">
+            Always hide locations (override zoom)
+          </label>
+        </div>
         <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">On Region Node Click:</div>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
@@ -532,6 +638,23 @@ export class RegionGraphUI {
       this.updateStatus('Layout complete');
     });
 
+    // Update location nodes when region nodes are dragged
+    this.cy.on('drag', 'node.region', (evt) => {
+      const regionNode = evt.target;
+      if (!regionNode.hasClass('player') && !regionNode.hasClass('location-node')) {
+        // Update positions during drag
+        this.updateLocationNodePositions(regionNode.id());
+      }
+    });
+    
+    // Also update on dragfree (end of drag) to ensure final positions are correct
+    this.cy.on('dragfree', 'node.region', (evt) => {
+      const regionNode = evt.target;
+      if (!regionNode.hasClass('player') && !regionNode.hasClass('location-node')) {
+        this.updateLocationNodePositions(regionNode.id());
+      }
+    });
+
     const resetButton = this.controlPanel.querySelector('#resetView');
     if (resetButton) {
       resetButton.addEventListener('click', () => {
@@ -557,6 +680,34 @@ export class RegionGraphUI {
     if (toggleButton) {
       toggleButton.addEventListener('click', () => {
         this.toggleControlPanel();
+      });
+    }
+    
+    // Handle location visibility override checkboxes
+    const forceShowLocationsCheckbox = this.controlPanel.querySelector('#forceShowLocations');
+    const forceHideLocationsCheckbox = this.controlPanel.querySelector('#forceHideLocations');
+    
+    if (forceShowLocationsCheckbox && forceHideLocationsCheckbox) {
+      forceShowLocationsCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          forceHideLocationsCheckbox.checked = false;
+          this.locationsManuallyShown = true;
+          this.locationsManuallyHidden = false;
+        } else {
+          this.locationsManuallyShown = false;
+        }
+        this.updateZoomBasedVisibility();
+      });
+      
+      forceHideLocationsCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          forceShowLocationsCheckbox.checked = false;
+          this.locationsManuallyHidden = true;
+          this.locationsManuallyShown = false;
+        } else {
+          this.locationsManuallyHidden = false;
+        }
+        this.updateZoomBasedVisibility();
       });
     }
     
@@ -806,7 +957,8 @@ export class RegionGraphUI {
           regionName: regionName,
           locationCounts: locationCounts
         },
-        position: this.nodePositions.get(regionName) || { x: Math.random() * 500, y: Math.random() * 500 }
+        position: this.nodePositions.get(regionName) || { x: Math.random() * 500, y: Math.random() * 500 },
+        classes: 'region'
       });
     }
 
@@ -1079,12 +1231,36 @@ export class RegionGraphUI {
     // Update node colors based on region accessibility and location status
     this.cy.nodes().forEach(node => {
       const regionName = node.id();
-      const regionData = staticData.regions[regionName];
       
       // Skip player node
       if (node.hasClass('player')) {
         return;
       }
+      
+      // Handle location nodes separately
+      if (node.hasClass('location-node')) {
+        const parentRegion = node.data('parentRegion');
+        const locationName = node.data('label');
+        const regionData = staticData.regions[parentRegion];
+        
+        if (regionData && regionData.locations) {
+          const location = regionData.locations.find(loc => loc.name === locationName);
+          if (location) {
+            const locationStatus = this.getLocationStatus(parentRegion, location);
+            const parentNode = this.cy.getElementById(parentRegion);
+            const regionIsAccessible = parentNode.hasClass('accessible');
+            const regionAccessClass = regionIsAccessible ? 'region-accessible' : 'region-inaccessible';
+            
+            // Update location node classes
+            node.removeClass('location-checked location-accessible location-inaccessible region-accessible region-inaccessible');
+            node.addClass(`${regionAccessClass} location-${locationStatus}`);
+          }
+        }
+        return;
+      }
+      
+      // Handle region nodes
+      const regionData = staticData.regions[regionName];
       
       const isReachable = snapshot.regionReachability?.[regionName] === true ||
                          snapshot.regionReachability?.[regionName] === 'reachable' ||
@@ -1654,6 +1830,378 @@ export class RegionGraphUI {
     if (this.cy) {
       this.cy.resize();
     }
+  }
+
+  // Zoom-based visibility methods
+  setupZoomBasedVisibility() {
+    // Initialize zoom tracking
+    this.currentZoomLevel = this.cy.zoom();
+    this.locationsVisible = false;
+    
+    // Listen to zoom/pan events
+    this.cy.on('zoom pan', () => {
+      this.updateZoomBasedVisibility();
+      this.updateLocationNodeZOrder();
+    });
+    
+    // Also update z-order when viewport changes
+    this.cy.on('viewport', () => {
+      this.updateLocationNodeZOrder();
+    });
+  }
+
+  updateZoomBasedVisibility() {
+    const zoom = this.cy.zoom();
+    const prevZoom = this.currentZoomLevel;
+    this.currentZoomLevel = zoom;
+    
+    // Check manual overrides first
+    if (this.locationsManuallyShown) {
+      if (!this.locationsVisible) {
+        this.showAllLocationNodes();
+        this.locationsVisible = true;
+      }
+      return;
+    }
+    
+    if (this.locationsManuallyHidden) {
+      if (this.locationsVisible) {
+        this.hideAllLocationNodes();
+        this.locationsVisible = false;
+      }
+      return;
+    }
+    
+    // Check if we crossed the location visibility threshold
+    if (zoom >= this.zoomLevels.showLocationNodes && !this.locationsVisible) {
+      this.showAllLocationNodes();
+      this.locationsVisible = true;
+    } else if (zoom < this.zoomLevels.showLocationNodes && this.locationsVisible) {
+      this.hideAllLocationNodes();
+      this.locationsVisible = false;
+    }
+    
+    // Update label visibility based on zoom
+    this.updateLabelVisibility(zoom);
+  }
+
+  updateLabelVisibility(zoom) {
+    // Update visibility of labels based on zoom level
+    if (zoom < this.zoomLevels.hideAllLabels) {
+      // Hide all labels
+      this.cy.style()
+        .selector('node').style('label', '')
+        .selector('edge').style('label', '')
+        .update();
+    } else if (zoom < this.zoomLevels.showRegionNames) {
+      // Still hide all labels
+      this.cy.style()
+        .selector('node').style('label', '')
+        .selector('edge').style('label', '')
+        .update();
+    } else if (zoom < this.zoomLevels.showRegionCounts) {
+      // Show only region names, no counts
+      this.cy.nodes().forEach(node => {
+        if (!node.hasClass('location-node') && !node.hasClass('player')) {
+          const regionName = node.data('regionName') || node.id();
+          node.data('label', regionName.replace(/_/g, ' '));
+        }
+      });
+      // Apply the labels and hide edge labels
+      this.cy.style()
+        .selector('node.region').style('label', 'data(label)')
+        .selector('.location-node').style('label', '')
+        .selector('edge').style('label', '')
+        .update();
+    } else if (zoom < this.zoomLevels.showRegionEdgeLabels) {
+      // Show region names with counts
+      this.cy.nodes().forEach(node => {
+        if (!node.hasClass('location-node') && !node.hasClass('player')) {
+          const regionName = node.data('regionName') || node.id();
+          const locationCounts = node.data('locationCounts');
+          if (locationCounts) {
+            const regionLabel = regionName.replace(/_/g, ' ');
+            const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+            node.data('label', `${regionLabel}\n${countLabel}`);
+          } else {
+            node.data('label', regionName.replace(/_/g, ' '));
+          }
+        }
+      });
+      // Apply the labels
+      this.cy.style()
+        .selector('node.region').style('label', 'data(label)')
+        .selector('.location-node').style('label', '')
+        .selector('edge').style('label', '')
+        .update();
+    } else if (zoom < this.zoomLevels.showLocationNodes) {
+      // Show region nodes with counts and edge labels
+      this.cy.nodes().forEach(node => {
+        if (!node.hasClass('location-node') && !node.hasClass('player')) {
+          const regionName = node.data('regionName') || node.id();
+          const locationCounts = node.data('locationCounts');
+          if (locationCounts) {
+            const regionLabel = regionName.replace(/_/g, ' ');
+            const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+            node.data('label', `${regionLabel}\n${countLabel}`);
+          } else {
+            node.data('label', regionName.replace(/_/g, ' '));
+          }
+        }
+      });
+      // Apply all labels except location nodes
+      this.cy.style()
+        .selector('node.region').style('label', 'data(label)')
+        .selector('node.player').style('label', 'data(label)')
+        .selector('.location-node').style('label', '')
+        .selector('edge[label]').style('label', 'data(label)')
+        .selector('.region-location-edge').style('label', '')
+        .update();
+    } else if (zoom < this.zoomLevels.showLocationLabels) {
+      // Show everything except location labels
+      this.cy.nodes().forEach(node => {
+        if (!node.hasClass('location-node') && !node.hasClass('player')) {
+          const regionName = node.data('regionName') || node.id();
+          const locationCounts = node.data('locationCounts');
+          if (locationCounts) {
+            const regionLabel = regionName.replace(/_/g, ' ');
+            const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+            node.data('label', `${regionLabel}\n${countLabel}`);
+          } else {
+            node.data('label', regionName.replace(/_/g, ' '));
+          }
+        }
+      });
+      // Apply all labels but hide location labels
+      this.cy.style()
+        .selector('node.region').style('label', 'data(label)')
+        .selector('node.player').style('label', 'data(label)')
+        .selector('.location-node').style('label', '')
+        .selector('edge[label]').style('label', 'data(label)')
+        .selector('.region-location-edge').style('label', '')
+        .update();
+    } else {
+      // Show everything including location labels
+      this.cy.nodes().forEach(node => {
+        if (!node.hasClass('location-node') && !node.hasClass('player')) {
+          const regionName = node.data('regionName') || node.id();
+          const locationCounts = node.data('locationCounts');
+          if (locationCounts) {
+            const regionLabel = regionName.replace(/_/g, ' ');
+            const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+            node.data('label', `${regionLabel}\n${countLabel}`);
+          } else {
+            node.data('label', regionName.replace(/_/g, ' '));
+          }
+        }
+      });
+      // Apply all labels
+      this.cy.style()
+        .selector('node.region').style('label', 'data(label)')
+        .selector('node.player').style('label', 'data(label)')
+        .selector('.location-node').style('label', 'data(label)')
+        .selector('edge[label]').style('label', 'data(label)')
+        .selector('.region-location-edge').style('label', '')
+        .update();
+    }
+  }
+
+  showAllLocationNodes() {
+    // Don't proceed if manually hidden
+    if (this.locationsManuallyHidden) return;
+    
+    const elementsToAdd = [];
+    
+    this.cy.nodes('.region').forEach(region => {
+      if (!region.hasClass('player') && !region.hasClass('location-node')) {
+        const elements = this.createLocationNodesForRegion(region.id());
+        elementsToAdd.push(...elements);
+      }
+    });
+    
+    // Batch add all location nodes
+    if (elementsToAdd.length > 0) {
+      this.cy.add(elementsToAdd);
+      
+      // Lock positions
+      this.cy.nodes('.location-node').lock();
+      
+      // Update z-order based on distance from viewport center
+      this.updateLocationNodeZOrder();
+    }
+  }
+
+  createLocationNodesForRegion(regionId) {
+    const region = this.cy.getElementById(regionId);
+    const staticData = stateManager.getStaticData();
+    const regionData = staticData?.regions?.[regionId];
+    
+    if (!regionData) return [];
+    
+    const locations = regionData.locations || [];
+    
+    if (locations.length === 0) return [];
+    
+    const elements = [];
+    const pos = region.position();
+    const radius = 80 + (Math.sqrt(locations.length) * 15);
+    
+    // Check if region is accessible
+    const regionIsAccessible = region.hasClass('accessible');
+    const regionAccessClass = regionIsAccessible ? 'region-accessible' : 'region-inaccessible';
+    
+    locations.forEach((location, i) => {
+      const angle = (2 * Math.PI * i) / locations.length - Math.PI/2;
+      const locationStatus = this.getLocationStatus(regionId, location);
+      
+      elements.push({
+        group: 'nodes',
+        data: {
+          id: `loc_${regionId}_${location.name}`,
+          label: location.name,
+          parentRegion: regionId,
+          isLocation: true,
+          locked: true
+        },
+        position: {
+          x: pos.x + radius * Math.cos(angle),
+          y: pos.y + radius * Math.sin(angle)
+        },
+        classes: `location-node ${regionAccessClass} location-${locationStatus}`
+      });
+      
+      elements.push({
+        group: 'edges',
+        data: {
+          id: `edge_${regionId}_${location.name}`,
+          source: regionId,
+          target: `loc_${regionId}_${location.name}`
+        },
+        classes: 'region-location-edge'
+      });
+    });
+    
+    return elements;
+  }
+
+  hideAllLocationNodes() {
+    this.cy.remove('.location-node');
+    this.cy.remove('.region-location-edge');
+  }
+
+  getLocationStatus(regionId, location) {
+    // Returns 'checked', 'accessible', or 'inaccessible'
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData();
+    
+    if (!snapshot || !staticData) return 'inaccessible';
+    
+    const checkedLocations = new Set(snapshot.checkedLocations || []);
+    
+    if (checkedLocations.has(location.name)) {
+      return 'checked';
+    }
+    
+    // Check if region is accessible first
+    const regionIsReachable = snapshot.regionReachability?.[regionId] === true ||
+                             snapshot.regionReachability?.[regionId] === 'reachable' ||
+                             snapshot.regionReachability?.[regionId] === 'checked';
+    
+    if (!regionIsReachable) {
+      return 'inaccessible';
+    }
+    
+    // Evaluate location accessibility using existing rule engine
+    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    let locationAccessible = true;
+    
+    if (location.access_rule) {
+      try {
+        locationAccessible = evaluateRule(location.access_rule, snapshotInterface);
+      } catch (e) {
+        console.warn(`[RegionGraphUI] Error evaluating location rule for ${location.name}:`, e);
+        locationAccessible = false;
+      }
+    }
+    
+    return locationAccessible ? 'accessible' : 'inaccessible';
+  }
+
+  updateLocationNodePositions(regionId) {
+    // Update location node positions when a region is moved
+    const region = this.cy.getElementById(regionId);
+    if (!region || region.length === 0) return;
+    
+    const pos = region.position();
+    const staticData = stateManager.getStaticData();
+    const regionData = staticData?.regions?.[regionId];
+    
+    if (!regionData) return;
+    
+    const locations = regionData.locations || [];
+    if (locations.length === 0) return;
+    
+    const radius = 80 + (Math.sqrt(locations.length) * 15);
+    
+    locations.forEach((location, i) => {
+      const angle = (2 * Math.PI * i) / locations.length - Math.PI/2;
+      const locationNode = this.cy.getElementById(`loc_${regionId}_${location.name}`);
+      
+      if (locationNode && locationNode.length > 0) {
+        // Unlock, update position, and re-lock
+        locationNode.unlock();
+        locationNode.position({
+          x: pos.x + radius * Math.cos(angle),
+          y: pos.y + radius * Math.sin(angle)
+        });
+        locationNode.lock();
+      }
+    });
+  }
+
+  updateLocationNodeZOrder() {
+    // Update z-index of location nodes based on distance from viewport center
+    if (!this.cy || !this.locationsVisible) return;
+    
+    const extent = this.cy.extent();
+    const centerX = (extent.x1 + extent.x2) / 2;
+    const centerY = (extent.y1 + extent.y2) / 2;
+    
+    // Calculate distance for each region and sort
+    const regionDistances = [];
+    this.cy.nodes('.region').forEach(region => {
+      if (!region.hasClass('player') && !region.hasClass('location-node')) {
+        const pos = region.position();
+        const distance = Math.sqrt(Math.pow(pos.x - centerX, 2) + Math.pow(pos.y - centerY, 2));
+        regionDistances.push({
+          regionId: region.id(),
+          distance: distance
+        });
+      }
+    });
+    
+    // Sort by distance (closest first)
+    regionDistances.sort((a, b) => a.distance - b.distance);
+    
+    // Update z-index for location nodes and edges
+    // Base z-index starts at 100 for furthest, increases for closer regions
+    const maxZIndex = 1000;
+    const minZIndex = 100;
+    const zIndexRange = maxZIndex - minZIndex;
+    
+    regionDistances.forEach((item, index) => {
+      const zIndex = maxZIndex - Math.floor((index / regionDistances.length) * zIndexRange);
+      
+      // Update all location nodes for this region
+      this.cy.nodes(`[parentRegion="${item.regionId}"]`).forEach(locationNode => {
+        locationNode.style('z-index', zIndex);
+      });
+      
+      // Update edges from this region to its locations
+      this.cy.edges(`[source="${item.regionId}"].region-location-edge`).forEach(edge => {
+        edge.style('z-index', zIndex - 1); // Edges slightly below their nodes
+      });
+    });
   }
 
   destroy() {
