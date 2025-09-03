@@ -5,6 +5,9 @@ import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { PathFinder } from './pathfinder.js';
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
+import { createUniversalLogger } from '../../app/core/universalLogger.js';
+
+const logger = createUniversalLogger('regionGraph');
 
 export class RegionGraphUI {
   constructor(container, componentState) {
@@ -44,7 +47,7 @@ export class RegionGraphUI {
     
     this.statusBar = document.createElement('div');
     this.statusBar.style.position = 'absolute';
-    this.statusBar.style.top = '5px';
+    this.statusBar.style.bottom = '5px';
     this.statusBar.style.left = '5px';
     this.statusBar.style.background = 'rgba(0, 0, 0, 0.7)';
     this.statusBar.style.color = 'white';
@@ -62,7 +65,7 @@ export class RegionGraphUI {
     this.controlPanel = document.createElement('div');
     this.controlPanel.style.position = 'absolute';
     this.controlPanel.style.top = '5px';
-    this.controlPanel.style.right = '5px';
+    this.controlPanel.style.left = '5px';
     this.controlPanel.style.background = 'rgba(0, 0, 0, 0.7)';
     this.controlPanel.style.padding = '5px';
     this.controlPanel.style.borderRadius = '3px';
@@ -84,13 +87,13 @@ export class RegionGraphUI {
     
     // Use event-driven initialization like Regions module
     const readyHandler = () => {
-      console.log('[RegionGraphUI] Received app:readyForUiDataLoad, starting initialization');
+      logger.info('Received app:readyForUiDataLoad, starting initialization');
       this.loadCytoscape();
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
     eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'regionGraph');
     
-    console.log('[RegionGraphUI] Constructor complete, waiting for app:readyForUiDataLoad event');
+    logger.debug('Constructor complete, waiting for app:readyForUiDataLoad event');
   }
 
   getRootElement() {
@@ -98,65 +101,65 @@ export class RegionGraphUI {
   }
 
   loadCytoscape() {
-    console.log('[RegionGraphUI] loadCytoscape called');
-    console.log('[RegionGraphUI] Checking libraries - cytoscape:', !!window.cytoscape, 'coseBase:', !!window.coseBase, 'cytoscapeFcose:', !!window.cytoscapeFcose);
+    logger.debug('loadCytoscape called');
+    logger.verbose('Checking libraries', { cytoscape: !!window.cytoscape, coseBase: !!window.coseBase, cytoscapeFcose: !!window.cytoscapeFcose });
     
     if (window.cytoscape && window.coseBase && window.cytoscapeFcose) {
-      console.log('[RegionGraphUI] All libraries already loaded, initializing graph');
+      logger.debug('All libraries already loaded, initializing graph');
       this.cytoscape = window.cytoscape;
       this.cytoscapeFcose = window.cytoscapeFcose;
       this.cytoscape.use(this.cytoscapeFcose(window.coseBase));
       this.initializeGraph();
     } else {
-      console.log('[RegionGraphUI] Loading libraries dynamically');
+      logger.debug('Loading libraries dynamically');
       // Load Cytoscape.js first
       const script1 = document.createElement('script');
       script1.src = './libs/cytoscape/cytoscape.min.js';
       script1.onerror = (error) => {
-        console.error('[RegionGraphUI] Error loading cytoscape.min.js:', error);
+        logger.error('Error loading cytoscape.min.js:', error);
         this.updateStatus('Error loading Cytoscape library');
       };
       script1.onload = () => {
-        console.log('[RegionGraphUI] Cytoscape.js loaded');
+        logger.debug('Cytoscape.js loaded');
         this.cytoscape = window.cytoscape;
         
         // Load layout-base dependency
         const script2 = document.createElement('script');
         script2.src = './libs/cytoscape/layout-base.js';
         script2.onload = () => {
-          console.log('[RegionGraphUI] layout-base.js loaded');
+          logger.debug('layout-base.js loaded');
           // Load cose-base dependency  
           const script3 = document.createElement('script');
           script3.src = './libs/cytoscape/cose-base.js';
           script3.onload = () => {
-            console.log('[RegionGraphUI] cose-base.js loaded, window.coseBase:', !!window.coseBase);
+            logger.debug('cose-base.js loaded', { coseBase: !!window.coseBase });
             // Load FCose plugin
             const script4 = document.createElement('script');
             script4.src = './libs/cytoscape/cytoscape-fcose.js';
             script4.onload = () => {
-              console.log('[RegionGraphUI] cytoscape-fcose.js loaded, window.cytoscapeFcose:', !!window.cytoscapeFcose);
+              logger.debug('cytoscape-fcose.js loaded', { cytoscapeFcose: !!window.cytoscapeFcose });
               this.cytoscapeFcose = window.cytoscapeFcose;
               if (this.cytoscape && this.cytoscapeFcose && window.coseBase) {
-                console.log('[RegionGraphUI] All libraries loaded, registering FCose plugin');
+                logger.debug('All libraries loaded, registering FCose plugin');
                 try {
                   this.cytoscapeFcose(this.cytoscape);
-                  console.log('[RegionGraphUI] FCose plugin registered successfully');
+                  logger.debug('FCose plugin registered successfully');
                 } catch (error) {
-                  console.error('[RegionGraphUI] Error registering FCose plugin:', error);
+                  logger.error('Error registering FCose plugin:', error);
                 }
               } else {
-                console.warn('[RegionGraphUI] Missing libraries:', 'cytoscape:', !!this.cytoscape, 'cytoscapeFcose:', !!this.cytoscapeFcose, 'coseBase:', !!window.coseBase);
+                logger.warn('Missing libraries', { cytoscape: !!this.cytoscape, cytoscapeFcose: !!this.cytoscapeFcose, coseBase: !!window.coseBase });
               }
-              console.log('[RegionGraphUI] Calling initializeGraph...');
+              logger.debug('Calling initializeGraph...');
               this.initializeGraph();
             };
-            script4.onerror = (error) => console.error('[RegionGraphUI] Error loading cytoscape-fcose.js:', error);
+            script4.onerror = (error) => logger.error('Error loading cytoscape-fcose.js:', error);
             document.head.appendChild(script4);
           };
-          script3.onerror = (error) => console.error('[RegionGraphUI] Error loading cose-base.js:', error);
+          script3.onerror = (error) => logger.error('Error loading cose-base.js:', error);
           document.head.appendChild(script3);
         };
-        script2.onerror = (error) => console.error('[RegionGraphUI] Error loading layout-base.js:', error);
+        script2.onerror = (error) => logger.error('Error loading layout-base.js:', error);
         document.head.appendChild(script2);
       };
       document.head.appendChild(script1);
@@ -164,15 +167,15 @@ export class RegionGraphUI {
   }
 
   initializeGraph() {
-    console.log('[RegionGraphUI] initializeGraph called');
+    logger.debug('initializeGraph called');
     try {
       if (!this.cytoscape) {
-        console.error('[RegionGraphUI] Cytoscape not loaded');
+        logger.error('Cytoscape not loaded');
         this.updateStatus('Error: Failed to load Cytoscape');
         return;
       }
 
-    console.log('[RegionGraphUI] Creating Cytoscape instance');
+    logger.debug('Creating Cytoscape instance');
     this.cy = this.cytoscape({
       container: this.graphContainer,
       
@@ -489,7 +492,7 @@ export class RegionGraphUI {
       }
     });
 
-    console.log('[RegionGraphUI] Cytoscape instance created successfully');
+    logger.debug('Cytoscape instance created successfully');
     this.setupControlPanel();
     this.setupEventHandlers();
     this.subscribeToEvents();
@@ -497,12 +500,12 @@ export class RegionGraphUI {
     this.graphInitialized = false; // Track if data has been loaded
     
     this.updateStatus('Graph initialized, waiting for data...');
-    console.log('[RegionGraphUI] Graph initialized, waiting for StateManager events');
+    logger.info('Graph initialized, waiting for StateManager events');
     
     // Check if data is already available (in case we missed the initial events)
     this.checkAndLoadInitialData();
     } catch (error) {
-      console.error('[RegionGraphUI] Error in initializeGraph:', error);
+      logger.error('Error in initializeGraph:', error);
       this.updateStatus('Error initializing graph: ' + error.message);
     }
   }
@@ -510,9 +513,9 @@ export class RegionGraphUI {
   setupControlPanel() {
     // Create hybrid control panel with both existing controls and layout editor
     this.controlPanel.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+      <div style="display: flex; align-items: center; margin-bottom: 5px;">
+        <button id="toggleControls" style="background: none; border: 1px solid #555; color: white; padding: 2px 6px; font-size: 10px; cursor: pointer; border-radius: 2px; margin-right: 8px;">−</button>
         <span style="font-weight: bold;">Controls</span>
-        <button id="toggleControls" style="background: none; border: 1px solid #555; color: white; padding: 2px 6px; font-size: 10px; cursor: pointer; border-radius: 2px;">−</button>
       </div>
       <div id="controlsContent">
         <div style="margin-bottom: 10px;">
@@ -581,7 +584,7 @@ export class RegionGraphUI {
         const locationName = node.data('label');
         const parentRegion = node.data('parentRegion');
         
-        console.log(`[RegionGraphUI] Location node clicked: ${locationName} in ${parentRegion}`);
+        logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
         
         // Use the same pattern as regionBlockBuilder.js
         import('./index.js').then(({ moduleDispatcher }) => {
@@ -596,12 +599,12 @@ export class RegionGraphUI {
             moduleDispatcher.publish('user:locationCheck', payload, {
               initialTarget: 'bottom',
             });
-            console.log('[RegionGraphUI] Dispatched user:locationCheck', payload);
+            logger.debug('Dispatched user:locationCheck', payload);
           } else {
-            console.error('[RegionGraphUI] moduleDispatcher not available to handle location check.');
+            logger.error('moduleDispatcher not available to handle location check.');
           }
         }).catch(error => {
-          console.error('[RegionGraphUI] Error importing moduleDispatcher:', error);
+          logger.error('Error importing moduleDispatcher:', error);
         });
         
         return; // Don't process as region node
@@ -612,7 +615,7 @@ export class RegionGraphUI {
       
       this.selectedNode = regionName;
       
-      console.log(`[RegionGraphUI] Node clicked: ${regionName}`);
+      logger.debug(`Node clicked: ${regionName}`);
       
       // Update visual selection
       this.cy.$('node').removeClass('selected');
@@ -657,18 +660,30 @@ export class RegionGraphUI {
         
         // Activate the regions panel
         eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regionGraph');
-        console.log(`[RegionGraphUI] Published ui:activatePanel for regionsPanel`);
+        logger.debug('Published ui:activatePanel for regionsPanel');
         
         // Navigate to the region
         eventBus.publish('ui:navigateToRegion', { regionName: regionName }, 'regionGraph');
-        console.log(`[RegionGraphUI] Published ui:navigateToRegion for ${regionName}`);
+        logger.debug(`Published ui:navigateToRegion for ${regionName}`);
       }
     });
 
     this.cy.on('layoutstop', () => {
       this.isLayoutRunning = false;
-      this.saveNodePositions();
-      this.updateStatus('Layout complete');
+      
+      // Wait for the animation to complete before saving positions and positioning player
+      // Animation duration is 1000ms as defined in runLayout
+      setTimeout(() => {
+        this.saveNodePositions();
+        this.updateStatus('Layout complete');
+        
+        // Position the player after layout animation is complete (for initial load)
+        if (this.initialPlayerRegion && !this.cy.getElementById('player').length) {
+          logger.debug(`Positioning player after layout animation at ${this.initialPlayerRegion}`);
+          this.updatePlayerLocation(this.initialPlayerRegion);
+          this.initialPlayerRegion = null; // Clear it so we don't reposition on subsequent layouts
+        }
+      }, 200); // Add small buffer to ensure animation is complete
     });
 
     // Update location nodes when region nodes are dragged
@@ -782,7 +797,7 @@ export class RegionGraphUI {
   }
 
   checkAndLoadInitialData() {
-    console.log('[RegionGraphUI] Checking if initial data is already available...');
+    logger.debug('Checking if initial data is already available...');
     
     // Small delay to ensure stateManager is fully initialized
     setTimeout(() => {
@@ -791,20 +806,20 @@ export class RegionGraphUI {
         const snapshot = stateManager.getLatestStateSnapshot();
         
         if (staticData && staticData.regions && snapshot && !this.graphInitialized) {
-          console.log('[RegionGraphUI] Data already available, loading graph immediately');
+          logger.debug('Data already available, loading graph immediately');
           this.loadGraphData();
         } else {
-          console.log('[RegionGraphUI] Data not yet available, will wait for events');
+          logger.debug('Data not yet available, will wait for events');
         }
       } catch (error) {
-        console.log('[RegionGraphUI] Error checking initial data:', error);
+        logger.debug('Error checking initial data:', error);
         // Not a problem, will wait for events
       }
     }, 100);
   }
   
   subscribeToEvents() {
-    console.log('[RegionGraphUI] Subscribing to events...');
+    logger.debug('Subscribing to events...');
     
     // Clear any existing subscriptions
     if (this.unsubscribeStateUpdate) this.unsubscribeStateUpdate();
@@ -826,7 +841,7 @@ export class RegionGraphUI {
     // Subscribe to rules loaded event (like Regions module)
     this.unsubscribeRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded', 
       (event) => {
-        console.log('[RegionGraphUI] Received stateManager:rulesLoaded, initializing graph data');
+        logger.info('Received stateManager:rulesLoaded, initializing graph data');
         if (this.cy) {
           this.loadGraphData();
         }
@@ -835,7 +850,7 @@ export class RegionGraphUI {
     // Subscribe to state ready event
     this.unsubscribeStateReady = eventBus.subscribe('stateManager:ready',
       () => {
-        console.log('[RegionGraphUI] Received stateManager:ready, ensuring graph is loaded');
+        logger.info('Received stateManager:ready, ensuring graph is loaded');
         if (this.cy && !this.graphInitialized) {
           this.loadGraphData();
         }
@@ -843,26 +858,25 @@ export class RegionGraphUI {
   }
 
   async loadGraphData() {
-    console.log('[RegionGraphUI] loadGraphData called');
+    logger.debug('loadGraphData called');
     try {
-      console.log('[RegionGraphUI] Getting state data...');
+      logger.debug('Getting state data...');
       const staticData = stateManager.getStaticData();
       const snapshot = stateManager.getLatestStateSnapshot();
       
-      console.log('[RegionGraphUI] staticData:', staticData);
-      console.log('[RegionGraphUI] snapshot:', snapshot);
+      logger.verbose('State data loaded', { staticData, snapshot });
       
       if (!staticData?.regions || !snapshot) {
-        console.warn('[RegionGraphUI] Missing data - staticData.regions:', !!staticData?.regions, 'snapshot:', !!snapshot);
+        logger.warn('Missing data', { hasRegions: !!staticData?.regions, hasSnapshot: !!snapshot });
         this.updateStatus('No region data available');
         return;
       }
 
-      console.log('[RegionGraphUI] Building graph from regions:', Object.keys(staticData.regions).length);
+      logger.info('Building graph from regions', { count: Object.keys(staticData.regions).length });
       this.buildGraphFromRegions(staticData.regions, staticData.exits);
       this.graphInitialized = true; // Mark as successfully loaded
     } catch (error) {
-      console.error('[RegionGraphUI] Error loading graph data:', error);
+      logger.error('Error loading graph data:', error);
       this.updateStatus('Error loading graph data');
     }
   }
@@ -929,7 +943,7 @@ export class RegionGraphUI {
           try {
             locationAccessible = evaluateRule(location.access_rule, snapshotInterface);
           } catch (e) {
-            console.warn(`[RegionGraphUI] Error evaluating location rule for ${location.name}:`, e);
+            logger.warn(`Error evaluating location rule for ${location.name}:`, e);
             locationAccessible = false;
           }
         }
@@ -956,9 +970,9 @@ export class RegionGraphUI {
   }
 
   buildGraphFromRegions(regions, exits) {
-    console.log('[RegionGraphUI] buildGraphFromRegions called with:', Object.keys(regions || {}).length, 'regions');
+    logger.debug('buildGraphFromRegions called', { regionCount: Object.keys(regions || {}).length });
     if (!regions || Object.keys(regions).length === 0) {
-      console.warn('[RegionGraphUI] No regions to display');
+      logger.warn('No regions to display');
       this.updateStatus('No regions to display');
       return;
     }
@@ -971,7 +985,7 @@ export class RegionGraphUI {
     // Check if bidirectional exits are assumed from game settings
     const staticData = stateManager.getStaticData();
     const assumeBidirectional = staticData?.options?.assume_bidirectional_exits === true;
-    console.log('[RegionGraphUI] assume_bidirectional_exits:', assumeBidirectional);
+    logger.debug('Exit configuration', { assumeBidirectional });
 
     // Create nodes for each region with location counts
     for (const [regionName, regionData] of Object.entries(regions)) {
@@ -1116,24 +1130,21 @@ export class RegionGraphUI {
       this.onStateUpdate({ snapshot });
     }
 
-    // Initialize player location with path data if available
-    const currentPlayerRegion = this.getCurrentPlayerLocation();
-    if (currentPlayerRegion) {
-      // Try to get initial path data
-      try {
-        const playerState = getPlayerStateSingleton();
-        if (playerState) {
-          const path = playerState.getPath();
-          if (path && path.length > 0) {
-            this.currentPath = path;
-            console.log(`[RegionGraphUI] Loaded initial path with ${path.length} regions`);
-          }
+    // Store the current player region for later positioning after layout
+    this.initialPlayerRegion = this.getCurrentPlayerLocation();
+    
+    // Try to get initial path data
+    try {
+      const playerState = getPlayerStateSingleton();
+      if (playerState) {
+        const path = playerState.getPath();
+        if (path && path.length > 0) {
+          this.currentPath = path;
+          logger.debug(`Loaded initial path with ${path.length} regions`);
         }
-      } catch (error) {
-        console.warn('[RegionGraphUI] Error getting initial path data:', error);
       }
-      
-      this.updatePlayerLocation(currentPlayerRegion);
+    } catch (error) {
+      logger.debug('Error getting initial path data:', error);
     }
 
     this.updateStatus(`Loaded ${elements.nodes.length} regions, ${elements.edges.length} connections`);
@@ -1141,7 +1152,7 @@ export class RegionGraphUI {
 
   runLayout(force = false) {
     if (this.isLayoutRunning) {
-      console.log('[RegionGraphUI] Layout already running');
+      logger.debug('Layout already running');
       return;
     }
 
@@ -1155,6 +1166,14 @@ export class RegionGraphUI {
         }
       });
       this.cy.fit(30);
+      
+      // Position the player if this is initial load and no layout will run
+      if (this.initialPlayerRegion && !this.cy.getElementById('player').length) {
+        logger.debug(`Positioning player with saved positions at ${this.initialPlayerRegion}`);
+        this.updatePlayerLocation(this.initialPlayerRegion);
+        this.initialPlayerRegion = null;
+      }
+      
       return;
     }
 
@@ -1246,7 +1265,7 @@ export class RegionGraphUI {
       }
     });
     
-    console.log(`[RegionGraphUI] Identified ${hubNodes.length} hub nodes with degree >= ${threshold}`);
+    logger.debug(`Identified ${hubNodes.length} hub nodes with degree >= ${threshold}`);
     return hubNodes;
   }
 
@@ -1258,7 +1277,7 @@ export class RegionGraphUI {
       const thresholdInput = this.controlPanel.querySelector('#hubThreshold');
       const threshold = parseInt(thresholdInput?.value || 8);
       const hubNodes = this.identifyHubNodes(threshold);
-      console.log(`[RegionGraphUI] Auto-applied hub detection: ${hubNodes.length} hubs found with threshold ${threshold}`);
+      logger.info(`Auto-applied hub detection: ${hubNodes.length} hubs found with threshold ${threshold}`);
     }
   }
 
@@ -1369,7 +1388,7 @@ export class RegionGraphUI {
         try {
           forwardAccessible = evaluateRule(forwardExitRule, snapshotInterface);
         } catch (e) {
-          console.warn(`[RegionGraphUI] Error evaluating forward exit rule for edge ${edge.id()}:`, e);
+          logger.warn(`Error evaluating forward exit rule for edge ${edge.id()}:`, e);
           forwardAccessible = false;
         }
       }
@@ -1378,7 +1397,7 @@ export class RegionGraphUI {
         try {
           reverseAccessible = evaluateRule(reverseExitRule, snapshotInterface);
         } catch (e) {
-          console.warn(`[RegionGraphUI] Error evaluating reverse exit rule for edge ${edge.id()}:`, e);
+          logger.warn(`Error evaluating reverse exit rule for edge ${edge.id()}:`, e);
           reverseAccessible = false;
         }
       }
@@ -1426,7 +1445,7 @@ export class RegionGraphUI {
   onPathUpdate(data) {
     if (!data || !data.path) return;
     
-    console.log(`[RegionGraphUI] Path updated with ${data.path.length} regions`);
+    logger.debug(`Path updated with ${data.path.length} regions`);
     
     // Store the path data
     this.currentPath = data.path;
@@ -1461,9 +1480,16 @@ export class RegionGraphUI {
       this.highlightPathEdges();
       
       // Update player position now that we have path data
-      const currentPlayerRegion = this.getCurrentPlayerLocation();
-      if (currentPlayerRegion) {
-        this.updatePlayerLocation(currentPlayerRegion);
+      // Only update immediately if no layout is running, otherwise it will be handled by layoutstop
+      if (!this.isLayoutRunning) {
+        const currentPlayerRegion = this.getCurrentPlayerLocation();
+        if (currentPlayerRegion) {
+          this.updatePlayerLocation(currentPlayerRegion);
+        }
+      } else {
+        // Store the region for positioning after layout completes
+        this.initialPlayerRegion = this.getCurrentPlayerLocation();
+        logger.debug('Deferring player positioning until layout completes');
       }
     }
   }
@@ -1490,7 +1516,7 @@ export class RegionGraphUI {
   updatePlayerLocation(regionName) {
     if (!this.cy) return;
     
-    console.log(`[RegionGraphUI] Updating player location to: ${regionName}`);
+    logger.debug(`Updating player location to: ${regionName}`, { currentPath: this.currentPath });
     
     // Remove existing player node
     this.cy.remove('#player');
@@ -1498,18 +1524,21 @@ export class RegionGraphUI {
     // Find the target region node
     const regionNode = this.cy.getElementById(regionName);
     if (!regionNode || regionNode.length === 0) {
-      console.warn(`[RegionGraphUI] Region node not found: ${regionName}`);
+      logger.warn(`Region node not found: ${regionName}`);
       return;
     }
     
     // Get the position of the region node
     const regionPos = regionNode.position();
+    logger.verbose(`${regionName} node position`, { regionPos });
     let playerPos = { x: regionPos.x + 30, y: regionPos.y - 30 }; // Default offset position
+    logger.verbose('Default player position', { playerPos });
     
     // Check if player is at the end of the path and should be positioned at exit edge
     // Always use default positioning for Menu region
     if (regionName !== 'Menu' && this.currentPath && this.currentPath.length > 0) {
       const lastPathEntry = this.currentPath[this.currentPath.length - 1];
+      logger.verbose('Last path entry', { lastPathEntry });
       
       // If player's current region is the last region in path AND we have exit info
       if (lastPathEntry.region === regionName && lastPathEntry.exitUsed) {
@@ -1517,15 +1546,25 @@ export class RegionGraphUI {
         const previousRegion = this.currentPath.length > 1 ? 
           this.currentPath[this.currentPath.length - 2].region : null;
         
+        logger.verbose(`Previous region in path: ${previousRegion}`);
+        
         if (previousRegion) {
           const exitEdgePos = this.getIncomingExitEdgePosition(regionName, previousRegion, lastPathEntry.exitUsed);
           if (exitEdgePos) {
             playerPos = exitEdgePos;
-            console.log(`[RegionGraphUI] Positioning player at incoming exit edge from ${previousRegion} via ${lastPathEntry.exitUsed}`);
+            logger.debug(`Positioning player at incoming exit edge from ${previousRegion} via ${lastPathEntry.exitUsed}`, { position: exitEdgePos });
+          } else {
+            logger.debug('Could not find exit edge position, using default');
           }
         }
+      } else {
+        logger.debug('Not at end of path or no exit info, using default positioning');
       }
+    } else {
+      logger.debug('Using default positioning (Menu region or no path data)');
     }
+    
+    logger.verbose('Final player position', { playerPos });
     
     // Add player node at the calculated position
     this.cy.add({
@@ -1595,7 +1634,7 @@ export class RegionGraphUI {
       const playerState = getPlayerStateSingleton();
       return playerState ? playerState.getCurrentRegion() : null;
     } catch (error) {
-      console.warn('[RegionGraphUI] Error getting player location:', error);
+      logger.warn('Error getting player location:', error);
       return null;
     }
   }
@@ -1604,21 +1643,21 @@ export class RegionGraphUI {
     const currentPlayerRegion = this.getCurrentPlayerLocation();
     
     if (!currentPlayerRegion) {
-      console.warn(`[RegionGraphUI] Cannot determine current player location`);
+      logger.warn('Cannot determine current player location');
       return;
     }
 
     if (currentPlayerRegion === targetRegion) {
-      console.log(`[RegionGraphUI] Player is already in target region: ${targetRegion}`);
+      logger.debug(`Player is already in target region: ${targetRegion}`);
       return;
     }
 
     // Find path to target region
-    console.log(`[RegionGraphUI] Finding path from ${currentPlayerRegion} to ${targetRegion}`);
+    logger.debug(`Finding path from ${currentPlayerRegion} to ${targetRegion}`);
     const path = this.pathFinder.findPath(currentPlayerRegion, targetRegion);
     
     if (!path || path.length === 0) {
-      console.warn(`[RegionGraphUI] No accessible path found from ${currentPlayerRegion} to ${targetRegion}`);
+      logger.warn(`No accessible path found from ${currentPlayerRegion} to ${targetRegion}`);
       // Show a brief status message
       this.updateStatus(`No path to ${targetRegion}`);
       setTimeout(() => {
@@ -1632,11 +1671,11 @@ export class RegionGraphUI {
     }
 
     if (!path.nextExit) {
-      console.warn(`[RegionGraphUI] Path found but no next exit determined`);
+      logger.warn('Path found but no next exit determined');
       return;
     }
 
-    console.log(`[RegionGraphUI] Moving player via path:`, path.steps, `using exit: ${path.nextExit}`);
+    logger.info('Moving player via path', { steps: path.steps, nextExit: path.nextExit });
     
     // Execute the first step of the path using moduleDispatcher
     import('./index.js').then(({ moduleDispatcher }) => {
@@ -1649,9 +1688,9 @@ export class RegionGraphUI {
           updatePath: false,
           source: 'regionGraph-oneStep'
         }, 'bottom');
-        console.log(`[RegionGraphUI] Published user:regionMove via dispatcher from ${currentPlayerRegion} to ${path.steps[1]}`);
+        logger.debug(`Published user:regionMove via dispatcher from ${currentPlayerRegion} to ${path.steps[1]}`);
       } else {
-        console.warn('[RegionGraphUI] moduleDispatcher not available for publishing user:regionMove');
+        logger.warn('moduleDispatcher not available for publishing user:regionMove');
       }
     });
     
@@ -1667,21 +1706,21 @@ export class RegionGraphUI {
     const currentPlayerRegion = this.getCurrentPlayerLocation();
     
     if (!currentPlayerRegion) {
-      console.warn(`[RegionGraphUI] Cannot determine current player location`);
+      logger.warn('Cannot determine current player location');
       return;
     }
 
     if (currentPlayerRegion === targetRegion) {
-      console.log(`[RegionGraphUI] Player is already in target region: ${targetRegion}`);
+      logger.debug(`Player is already in target region: ${targetRegion}`);
       return;
     }
 
     // Find path to target region
-    console.log(`[RegionGraphUI] Finding direct path from ${currentPlayerRegion} to ${targetRegion}`);
+    logger.debug(`Finding direct path from ${currentPlayerRegion} to ${targetRegion}`);
     const path = this.pathFinder.findPath(currentPlayerRegion, targetRegion);
     
     if (!path || path.length === 0) {
-      console.warn(`[RegionGraphUI] No accessible path found from ${currentPlayerRegion} to ${targetRegion}`);
+      logger.warn(`No accessible path found from ${currentPlayerRegion} to ${targetRegion}`);
       // Show a brief status message
       this.updateStatus(`No path to ${targetRegion}`);
       setTimeout(() => {
@@ -1710,11 +1749,11 @@ export class RegionGraphUI {
     );
 
     if (!finalExitName) {
-      console.warn(`[RegionGraphUI] Could not determine final exit name for direct move`);
+      logger.warn('Could not determine final exit name for direct move');
       return;
     }
 
-    console.log(`[RegionGraphUI] Moving player directly to ${targetRegion} via final exit: ${finalExitName}`);
+    logger.info(`Moving player directly to ${targetRegion} via final exit: ${finalExitName}`);
     
     // Execute the final step of the path directly
     import('./index.js').then(({ moduleDispatcher }) => {
@@ -1727,9 +1766,9 @@ export class RegionGraphUI {
           updatePath: false,
           source: 'regionGraph-direct'
         }, 'bottom');
-        console.log(`[RegionGraphUI] Published direct user:regionMove via dispatcher from ${finalSourceRegion} to ${targetRegion}`);
+        logger.debug(`Published direct user:regionMove via dispatcher from ${finalSourceRegion} to ${targetRegion}`);
       } else {
-        console.warn('[RegionGraphUI] moduleDispatcher not available for publishing user:regionMove');
+        logger.warn('moduleDispatcher not available for publishing user:regionMove');
       }
     });
     
@@ -1747,7 +1786,7 @@ export class RegionGraphUI {
     const currentPath = playerState.getPath();
     
     if (!currentPath || currentPath.length === 0) {
-      console.warn(`[RegionGraphUI] No current path to add to`);
+      logger.warn('No current path to add to');
       this.updateStatus(`No existing path`);
       return;
     }
@@ -1756,16 +1795,16 @@ export class RegionGraphUI {
     const startRegion = currentPath[currentPath.length - 1].region;
     
     if (startRegion === targetRegion) {
-      console.log(`[RegionGraphUI] Target region ${targetRegion} is already at end of path`);
+      logger.debug(`Target region ${targetRegion} is already at end of path`);
       return;
     }
     
     // Find path from current end to target
-    console.log(`[RegionGraphUI] Finding path from ${startRegion} to ${targetRegion}`);
+    logger.debug(`Finding path from ${startRegion} to ${targetRegion}`);
     const path = this.pathFinder.findPath(startRegion, targetRegion);
     
     if (!path || path.length === 0) {
-      console.warn(`[RegionGraphUI] No accessible path found from ${startRegion} to ${targetRegion}`);
+      logger.warn(`No accessible path found from ${startRegion} to ${targetRegion}`);
       this.updateStatus(`No path from ${startRegion} to ${targetRegion}`);
       return;
     }
@@ -1777,7 +1816,7 @@ export class RegionGraphUI {
     // Skip the first region in the path (it's our starting point)
     const stepsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
     
-    console.log(`[RegionGraphUI] Adding to path: ${stepsToExecute.join(' → ')}`);
+    logger.info(`Adding to path: ${stepsToExecute.join(' → ')}`);
     
     // Build adjacency map for finding exits
     const staticData = stateManager.getStaticData();
@@ -1807,7 +1846,7 @@ export class RegionGraphUI {
             updatePath: false,
             source: 'regionGraph-addToPath'
           }, 'bottom');
-          console.log(`[RegionGraphUI] Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
+          logger.debug(`Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
         }
       });
     });
@@ -1817,7 +1856,7 @@ export class RegionGraphUI {
   
   overwritePath(targetRegion, moveOnlyOneStep = false) {
     // First, set player to Menu and reset the path
-    console.log(`[RegionGraphUI] Resetting player to Menu and clearing path`);
+    logger.debug('Resetting player to Menu and clearing path');
     const playerState = getPlayerStateSingleton();
     
     // Set current region to Menu first
@@ -1833,15 +1872,15 @@ export class RegionGraphUI {
     const startRegion = 'Menu';
     
     if (startRegion === targetRegion) {
-      console.log(`[RegionGraphUI] Target region is Menu, path already reset`);
+      logger.debug('Target region is Menu, path already reset');
       return;
     }
     
-    console.log(`[RegionGraphUI] Finding path from ${startRegion} to ${targetRegion}`);
+    logger.debug(`Finding path from ${startRegion} to ${targetRegion}`);
     const path = this.pathFinder.findPath(startRegion, targetRegion);
     
     if (!path || path.length === 0) {
-      console.warn(`[RegionGraphUI] No accessible path found from ${startRegion} to ${targetRegion}`);
+      logger.warn(`No accessible path found from ${startRegion} to ${targetRegion}`);
       this.updateStatus(`No path from Menu to ${targetRegion}`);
       return;
     }
@@ -1850,7 +1889,7 @@ export class RegionGraphUI {
     // Skip the first region in the path (Menu)
     const stepsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
     
-    console.log(`[RegionGraphUI] Creating new path: Menu → ${stepsToExecute.join(' → ')}`);
+    logger.info(`Creating new path: Menu → ${stepsToExecute.join(' → ')}`);
     
     // Build adjacency map for finding exits
     const staticData = stateManager.getStaticData();
@@ -1880,7 +1919,7 @@ export class RegionGraphUI {
             updatePath: false,
             source: 'regionGraph-overwritePath'
           }, 'bottom');
-          console.log(`[RegionGraphUI] Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
+          logger.debug(`Published user:regionMove from ${sourceRegion} to ${stepRegion}`);
         }
       });
     });
@@ -1895,7 +1934,7 @@ export class RegionGraphUI {
       showAllCheckbox.checked = enabled;
       // Trigger change event to update the regions display
       showAllCheckbox.dispatchEvent(new Event('change'));
-      console.log(`[RegionGraphUI] Set "Show All Regions" to ${enabled}`);
+      logger.debug(`Set "Show All Regions" to ${enabled}`);
     }
   }
 
@@ -1927,22 +1966,22 @@ export class RegionGraphUI {
   }
 
   onPanelShow() {
-    console.log('[RegionGraphUI] Panel shown, cy:', !!this.cy);
+    logger.debug('Panel shown', { hasCytoscape: !!this.cy });
     if (this.cy) {
       this.cy.resize();
       this.cy.fit(30);
     } else {
-      console.log('[RegionGraphUI] Panel shown but no Cytoscape instance, checking if libraries are loaded...');
-      console.log('[RegionGraphUI] Library check - cytoscape:', !!window.cytoscape, 'coseBase:', !!window.coseBase, 'cytoscapeFcose:', !!window.cytoscapeFcose);
+      logger.debug('Panel shown but no Cytoscape instance, checking if libraries are loaded...');
+      logger.verbose('Library check', { cytoscape: !!window.cytoscape, coseBase: !!window.coseBase, cytoscapeFcose: !!window.cytoscapeFcose });
       // Try to initialize if libraries are now available but graph wasn't created yet
       if (window.cytoscape && window.coseBase && window.cytoscapeFcose) {
-        console.log('[RegionGraphUI] Libraries are loaded, initializing now...');
+        logger.debug('Libraries are loaded, initializing now...');
         this.cytoscape = window.cytoscape;
         this.cytoscapeFcose = window.cytoscapeFcose;
         this.cytoscape.use(this.cytoscapeFcose(window.coseBase));
         this.initializeGraph();
       } else {
-        console.log('[RegionGraphUI] Some libraries not loaded, waiting...');
+        logger.debug('Some libraries not loaded, waiting...');
       }
     }
   }
@@ -2236,7 +2275,7 @@ export class RegionGraphUI {
       try {
         locationAccessible = evaluateRule(location.access_rule, snapshotInterface);
       } catch (e) {
-        console.warn(`[RegionGraphUI] Error evaluating location rule for ${location.name}:`, e);
+        logger.warn(`Error evaluating location rule for ${location.name}:`, e);
         locationAccessible = false;
       }
     }

@@ -1,5 +1,8 @@
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createUniversalLogger } from '../../app/core/universalLogger.js';
+
+const logger = createUniversalLogger('regionGraph');
 
 /**
  * PathFinder - Utility for finding paths between regions
@@ -91,7 +94,7 @@ export class PathFinder {
           try {
             exitAccessible = evaluateRule(exit.access_rule, snapshotInterface);
           } catch (e) {
-            console.warn(`[PathFinder] Error evaluating exit rule for ${exit.name}:`, e);
+            logger.warn(`Error evaluating exit rule for ${exit.name}:`, e);
             exitAccessible = false;
           }
         }

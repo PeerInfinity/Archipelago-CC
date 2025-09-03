@@ -1,3 +1,7 @@
+import { createUniversalLogger } from '../../app/core/universalLogger.js';
+
+const logger = createUniversalLogger('regionGraph');
+
 export class RegionGraphLayoutEditor {
   constructor(cy, controlPanel) {
     this.cy = cy;
@@ -543,7 +547,7 @@ export class RegionGraphLayoutEditor {
       
     } catch (e) {
       this.showJsonError('Failed to apply layout: ' + e.message);
-      console.error('[RegionGraphLayoutEditor] Layout error:', e);
+      logger.error('Layout error:', e);
     }
   }
 

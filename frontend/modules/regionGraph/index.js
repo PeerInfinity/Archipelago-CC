@@ -1,4 +1,7 @@
 import { RegionGraphUI } from './regionGraphUI.js';
+import { createUniversalLogger } from '../../app/core/universalLogger.js';
+
+const logger = createUniversalLogger('regionGraph');
 
 export const moduleInfo = {
   name: 'Region Graph',
@@ -10,7 +13,7 @@ export let moduleDispatcher = null; // Export the dispatcher
 let moduleId = 'regionGraph'; // Store module ID
 
 export function register(registrationApi) {
-  console.log('[Region Graph Module] Registering...');
+  logger.info('Module registering...');
   
   registrationApi.registerPanelComponent('regionGraphPanel', RegionGraphUI);
   
@@ -23,7 +26,7 @@ export function register(registrationApi) {
 }
 
 export function initialize(mId, priorityIndex, initializationApi) {
-  console.log(`[Region Graph Module] Initializing with ID: ${mId}`);
+  logger.info(`Module initializing with ID: ${mId}`);
   
   // Store the dispatcher reference
   moduleDispatcher = initializationApi.getDispatcher();
@@ -31,5 +34,5 @@ export function initialize(mId, priorityIndex, initializationApi) {
 }
 
 export function postInitialize(initializationApi) {
-  console.log('[Region Graph Module] Post-initialization complete');
+  logger.info('Post-initialization complete');
 }
