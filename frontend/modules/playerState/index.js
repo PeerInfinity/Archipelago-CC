@@ -80,9 +80,9 @@ export async function register(registrationApi) {
         return playerState.getAllowLoops();
     });
     
-    registrationApi.registerPublicFunction(moduleId, 'addLocationCheck', (locationName) => {
+    registrationApi.registerPublicFunction(moduleId, 'addLocationCheck', (locationName, regionName) => {
         const playerState = getPlayerStateSingleton();
-        return playerState.addLocationCheck(locationName);
+        return playerState.addLocationCheck(locationName, regionName);
     });
     
     registrationApi.registerPublicFunction(moduleId, 'addCustomAction', (actionName, params) => {
@@ -195,7 +195,7 @@ function handleLocationCheck(data, propagationOptions) {
     
     const playerState = getPlayerStateSingleton();
     if (data && data.locationName) {
-        playerState.addLocationCheck(data.locationName);
+        playerState.addLocationCheck(data.locationName, data.regionName);
     }
     
     // Propagate event to the next module (up direction)

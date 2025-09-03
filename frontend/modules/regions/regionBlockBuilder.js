@@ -953,7 +953,7 @@ export class RegionBlockBuilder {
                 log('info', `Adding location ${locationDef.name} to path`);
                 const { getPlayerStateSingleton } = await import('../playerState/singleton.js');
                 const playerState = getPlayerStateSingleton();
-                playerState.addLocationCheck(locationDef.name);
+                playerState.addLocationCheck(locationDef.name, regionName);
                 log('info', `Added location ${locationDef.name} to player path`);
               } else {
                 // Original behavior - dispatch location check event

@@ -472,6 +472,16 @@ export class RegionGraphUI {
             'z-index': 3,
             'label': ''  // Explicitly set no label for location edges
           }
+        },
+        {
+          selector: 'edge.in-path.region-location-edge',
+          style: {
+            'line-color': '#6c5ce7',
+            'line-style': 'dotted',
+            'width': 4,
+            'opacity': 1.0,
+            'z-index': 10
+          }
         }
       ],
       
@@ -591,14 +601,37 @@ export class RegionGraphUI {
         
         logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
         
+        // Check which actions are enabled via checkboxes (same logic as region nodes)
+        const movePlayerOneStepCheckbox = this.controlPanel.querySelector('#movePlayerOneStep');
+        const movePlayerDirectlyCheckbox = this.controlPanel.querySelector('#movePlayerDirectly');
+        const showRegionCheckbox = this.controlPanel.querySelector('#showRegionInPanel');
+        const addToPathCheckbox = this.controlPanel.querySelector('#addToPath');
+        const overwritePathCheckbox = this.controlPanel.querySelector('#overwritePath');
+        
         // Check if we should add to path (use settings)
         settingsManager.getSetting('regionGraph.addLocationsToPath', false).then(shouldAddToPath => {
           if (shouldAddToPath) {
-            // Add location check to path
-            logger.debug(`Adding location ${locationName} to path`);
+            logger.debug(`Adding location ${locationName} to path in region ${parentRegion}`);
+            
+            // First, navigate to the region using the same logic as region node clicks
+            if (addToPathCheckbox && addToPathCheckbox.checked) {
+              this.addToPath(parentRegion, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
+            } else if (overwritePathCheckbox && overwritePathCheckbox.checked) {
+              this.overwritePath(parentRegion, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
+            } else {
+              // Neither path option is checked - handle move player options
+              if (movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked) {
+                this.attemptMovePlayerOneStepToRegion(parentRegion);
+              }
+              if (movePlayerDirectlyCheckbox && movePlayerDirectlyCheckbox.checked) {
+                this.attemptMovePlayerDirectlyToRegion(parentRegion);
+              }
+            }
+            
+            // Then add the location check to the path
             import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
               const playerState = getPlayerStateSingleton();
-              playerState.addLocationCheck(locationName);
+              playerState.addLocationCheck(locationName, parentRegion);
               logger.debug(`Added location ${locationName} to player path`);
               // The path update will automatically trigger highlightPathEdges via the event system
             }).catch(error => {
@@ -1570,6 +1603,11 @@ export class RegionGraphUI {
     // Update node labels to include path counts
     if (this.cy) {
       this.cy.nodes().forEach(node => {
+        // Skip location nodes and player nodes - only update region nodes
+        if (node.hasClass('location-node') || node.hasClass('player')) {
+          return;
+        }
+        
         const regionName = node.id();
         const count = this.regionPathCounts.get(regionName) || 0;
         
@@ -1635,15 +1673,22 @@ export class RegionGraphUI {
         }
       }
       
-      // Also highlight edges to checked locations in the path
-      for (const entry of fullPath) {
-        if (entry.type === 'locationCheck') {
-          // Find the location node edge - format is edge_{regionId}_{locationName}
-          const locationEdgeId = `edge_${entry.region}_${entry.locationName}`;
-          const locationEdge = this.cy.getElementById(locationEdgeId);
-          if (locationEdge && locationEdge.length > 0) {
-            locationEdge.addClass('in-path');
-            logger.debug(`Highlighted location edge in path: ${locationEdgeId}`);
+      // Also highlight edges to checked locations in the path (only if location nodes are visible)
+      if (this.locationsVisible) {
+        for (const entry of fullPath) {
+          if (entry.type === 'locationCheck') {
+            logger.debug(`Processing locationCheck entry: ${entry.locationName} in ${entry.region}`);
+            
+            // Find the location node edge - format is edge_{regionId}_{locationName}
+            const locationEdgeId = `edge_${entry.region}_${entry.locationName}`;
+            const locationEdge = this.cy.getElementById(locationEdgeId);
+            
+            if (locationEdge && locationEdge.length > 0) {
+              locationEdge.addClass('in-path');
+              logger.debug(`Successfully highlighted location edge in path: ${locationEdgeId}`);
+            } else {
+              logger.warn(`Could not find location edge with ID: ${locationEdgeId}`);
+            }
           }
         }
       }
@@ -2299,6 +2344,9 @@ export class RegionGraphUI {
         .selector('.region-location-edge').style('label', '')
         .update();
     }
+    
+    // Reapply path highlighting after any style updates that might have reset it
+    this.highlightPathEdges();
   }
 
   showAllLocationNodes() {

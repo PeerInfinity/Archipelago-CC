@@ -126,21 +126,35 @@ export class PlayerState {
     /**
      * Add a location check entry to the path
      * @param {string} locationName - Name of the location checked
+     * @param {string} regionName - Name of the region where the location exists
      */
-    addLocationCheck(locationName) {
-        if (!this.currentRegion || this.currentRegion === 'Menu') {
-            console.warn(`[PlayerState] Cannot add location check when not in a valid region`);
+    addLocationCheck(locationName, regionName = null) {
+        // Find the most recent regionMove entry in the path for instance number
+        let lastRegionMove = null;
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            if (this.path[i].type === 'regionMove') {
+                lastRegionMove = this.path[i];
+                break;
+            }
+        }
+        
+        if (!lastRegionMove) {
+            console.warn(`[PlayerState] Cannot add location check: no regionMove entries found in path`);
             return;
         }
         
-        // Get the current region's instance number
-        const currentInstanceNumber = this.regionInstanceCounts.get(this.currentRegion) || 1;
+        // Use the provided region name or fall back to the location's actual region
+        let locationRegion = regionName;
+        if (!locationRegion) {
+            console.warn(`[PlayerState] No region specified for location check: ${locationName}`);
+            return;
+        }
         
         this.path.push({
             type: 'locationCheck',
             locationName: locationName,
-            region: this.currentRegion,
-            instanceNumber: currentInstanceNumber
+            region: locationRegion,
+            instanceNumber: lastRegionMove.instanceNumber
         });
         
         // Emit path updated event
