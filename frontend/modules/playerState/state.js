@@ -188,6 +188,252 @@ export class PlayerState {
     }
     
     /**
+     * Insert a location check entry at a specific region instance
+     * @param {string} locationName - Name of the location to check
+     * @param {string} targetRegionName - Name of the region where the action should be inserted
+     * @param {number} targetInstanceNumber - Which instance of the region to insert after
+     * @param {string} locationRegionName - Name of the region where the location exists (optional)
+     */
+    insertLocationCheckAt(locationName, targetRegionName, targetInstanceNumber, locationRegionName = null) {
+        // Find the target regionMove entry
+        let foundCount = 0;
+        let insertIndex = -1;
+        
+        for (let i = 0; i < this.path.length; i++) {
+            const entry = this.path[i];
+            if (entry.type === 'regionMove' && entry.region === targetRegionName) {
+                foundCount++;
+                if (foundCount === targetInstanceNumber) {
+                    insertIndex = i;
+                    break;
+                }
+            }
+        }
+        
+        if (insertIndex === -1) {
+            console.warn(`[PlayerState] Target region ${targetRegionName} instance ${targetInstanceNumber} not found in path`);
+            return false;
+        }
+        
+        // Find the insertion point - after the target regionMove but before the next regionMove
+        let insertAfterIndex = insertIndex;
+        
+        // Look for existing non-regionMove entries after this regionMove to insert at the end
+        for (let i = insertIndex + 1; i < this.path.length; i++) {
+            const entry = this.path[i];
+            if (entry.type === 'regionMove') {
+                // Found the next region move, insert before it
+                break;
+            }
+            // This is a location check or custom action, keep looking
+            insertAfterIndex = i;
+        }
+        
+        // Use the provided region name or the target region
+        const finalRegionName = locationRegionName || targetRegionName;
+        
+        // Create the location check entry
+        const locationCheckEntry = {
+            type: 'locationCheck',
+            locationName: locationName,
+            region: finalRegionName,
+            instanceNumber: targetInstanceNumber
+        };
+        
+        // Insert the entry
+        this.path.splice(insertAfterIndex + 1, 0, locationCheckEntry);
+        
+        // Emit path updated event
+        this.emitPathUpdated();
+        
+        return true;
+    }
+    
+    /**
+     * Insert a custom action entry at a specific region instance
+     * @param {string} actionName - Name of the action
+     * @param {string} targetRegionName - Name of the region where the action should be inserted
+     * @param {number} targetInstanceNumber - Which instance of the region to insert after
+     * @param {Object} params - Additional parameters for the action
+     */
+    insertCustomActionAt(actionName, targetRegionName, targetInstanceNumber, params = {}) {
+        // Find the target regionMove entry
+        let foundCount = 0;
+        let insertIndex = -1;
+        
+        for (let i = 0; i < this.path.length; i++) {
+            const entry = this.path[i];
+            if (entry.type === 'regionMove' && entry.region === targetRegionName) {
+                foundCount++;
+                if (foundCount === targetInstanceNumber) {
+                    insertIndex = i;
+                    break;
+                }
+            }
+        }
+        
+        if (insertIndex === -1) {
+            console.warn(`[PlayerState] Target region ${targetRegionName} instance ${targetInstanceNumber} not found in path`);
+            return false;
+        }
+        
+        // Find the insertion point - after the target regionMove but before the next regionMove
+        let insertAfterIndex = insertIndex;
+        
+        // Look for existing non-regionMove entries after this regionMove to insert at the end
+        for (let i = insertIndex + 1; i < this.path.length; i++) {
+            const entry = this.path[i];
+            if (entry.type === 'regionMove') {
+                // Found the next region move, insert before it
+                break;
+            }
+            // This is a location check or custom action, keep looking
+            insertAfterIndex = i;
+        }
+        
+        // Create the custom action entry
+        const customActionEntry = {
+            type: 'customAction',
+            actionName: actionName,
+            params: params,
+            region: targetRegionName,
+            instanceNumber: targetInstanceNumber
+        };
+        
+        // Insert the entry
+        this.path.splice(insertAfterIndex + 1, 0, customActionEntry);
+        
+        // Emit path updated event
+        this.emitPathUpdated();
+        
+        return true;
+    }
+    
+    /**
+     * Remove a specific location check entry from the path
+     * @param {string} locationName - Name of the location to remove
+     * @param {string} targetRegionName - Name of the region where the action should be removed from
+     * @param {number} targetInstanceNumber - Which instance of the region to remove from
+     */
+    removeLocationCheckAt(locationName, targetRegionName, targetInstanceNumber) {
+        let removedCount = 0;
+        
+        // Find and remove all matching location check entries
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            const entry = this.path[i];
+            if (entry.type === 'locationCheck' && 
+                entry.locationName === locationName && 
+                entry.region === targetRegionName && 
+                entry.instanceNumber === targetInstanceNumber) {
+                this.path.splice(i, 1);
+                removedCount++;
+            }
+        }
+        
+        if (removedCount > 0) {
+            // Emit path updated event
+            this.emitPathUpdated();
+            return true;
+        }
+        
+        console.warn(`[PlayerState] Location check ${locationName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
+        return false;
+    }
+    
+    /**
+     * Remove a specific custom action entry from the path
+     * @param {string} actionName - Name of the action to remove
+     * @param {string} targetRegionName - Name of the region where the action should be removed from
+     * @param {number} targetInstanceNumber - Which instance of the region to remove from
+     */
+    removeCustomActionAt(actionName, targetRegionName, targetInstanceNumber) {
+        let removedCount = 0;
+        
+        // Find and remove all matching custom action entries
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            const entry = this.path[i];
+            if (entry.type === 'customAction' && 
+                entry.actionName === actionName && 
+                entry.region === targetRegionName && 
+                entry.instanceNumber === targetInstanceNumber) {
+                this.path.splice(i, 1);
+                removedCount++;
+            }
+        }
+        
+        if (removedCount > 0) {
+            // Emit path updated event
+            this.emitPathUpdated();
+            return true;
+        }
+        
+        console.warn(`[PlayerState] Custom action ${actionName} not found in ${targetRegionName} instance ${targetInstanceNumber}`);
+        return false;
+    }
+    
+    /**
+     * Remove all non-regionMove entries from a specific region instance
+     * @param {string} targetRegionName - Name of the region to clear actions from
+     * @param {number} targetInstanceNumber - Which instance of the region to clear
+     */
+    clearActionsAt(targetRegionName, targetInstanceNumber) {
+        let removedCount = 0;
+        
+        // Find and remove all non-regionMove entries for the specified region instance
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            const entry = this.path[i];
+            if (entry.type !== 'regionMove' && 
+                entry.region === targetRegionName && 
+                entry.instanceNumber === targetInstanceNumber) {
+                this.path.splice(i, 1);
+                removedCount++;
+            }
+        }
+        
+        if (removedCount > 0) {
+            // Emit path updated event
+            this.emitPathUpdated();
+            return true;
+        }
+        
+        console.warn(`[PlayerState] No actions found to clear in ${targetRegionName} instance ${targetInstanceNumber}`);
+        return false;
+    }
+    
+    /**
+     * Remove all actions of a specific type from the entire path
+     * @param {string} actionType - Type of action to remove ('locationCheck' or 'customAction')
+     * @param {string} specificName - Specific name to match (locationName for locationCheck, actionName for customAction) - optional
+     */
+    removeAllActionsOfType(actionType, specificName = null) {
+        let removedCount = 0;
+        
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            const entry = this.path[i];
+            let shouldRemove = false;
+            
+            if (actionType === 'locationCheck' && entry.type === 'locationCheck') {
+                shouldRemove = !specificName || entry.locationName === specificName;
+            } else if (actionType === 'customAction' && entry.type === 'customAction') {
+                shouldRemove = !specificName || entry.actionName === specificName;
+            }
+            
+            if (shouldRemove) {
+                this.path.splice(i, 1);
+                removedCount++;
+            }
+        }
+        
+        if (removedCount > 0) {
+            // Emit path updated event
+            this.emitPathUpdated();
+            return removedCount;
+        }
+        
+        return 0;
+    }
+
+    /**
      * Trim the path at a specific region instance
      * @param {string} regionName - Region to trim at (default: "Menu")
      * @param {number} instanceNumber - Which instance of the region (default: 1)

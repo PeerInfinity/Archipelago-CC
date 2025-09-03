@@ -80,6 +80,11 @@ export async function register(registrationApi) {
         return playerState.getAllowLoops();
     });
     
+    registrationApi.registerPublicFunction(moduleId, 'trimPath', (regionName, instanceNumber) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.trimPath(regionName, instanceNumber);
+    });
+    
     registrationApi.registerPublicFunction(moduleId, 'addLocationCheck', (locationName, regionName) => {
         const playerState = getPlayerStateSingleton();
         return playerState.addLocationCheck(locationName, regionName);
@@ -88,6 +93,36 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'addCustomAction', (actionName, params) => {
         const playerState = getPlayerStateSingleton();
         return playerState.addCustomAction(actionName, params);
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'insertLocationCheckAt', (locationName, targetRegionName, targetInstanceNumber, locationRegionName) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.insertLocationCheckAt(locationName, targetRegionName, targetInstanceNumber, locationRegionName);
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'insertCustomActionAt', (actionName, targetRegionName, targetInstanceNumber, params) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.insertCustomActionAt(actionName, targetRegionName, targetInstanceNumber, params);
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'removeLocationCheckAt', (locationName, targetRegionName, targetInstanceNumber) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.removeLocationCheckAt(locationName, targetRegionName, targetInstanceNumber);
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'removeCustomActionAt', (actionName, targetRegionName, targetInstanceNumber) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.removeCustomActionAt(actionName, targetRegionName, targetInstanceNumber);
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'clearActionsAt', (targetRegionName, targetInstanceNumber) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.clearActionsAt(targetRegionName, targetInstanceNumber);
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'removeAllActionsOfType', (actionType, specificName) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.removeAllActionsOfType(actionType, specificName);
     });
 }
 
