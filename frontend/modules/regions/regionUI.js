@@ -560,9 +560,12 @@ export class RegionUI {
     this.visitedRegions = [];
     this.nextUID = 1;
     
-    path.forEach((pathEntry, index) => {
+    // Filter for only regionMove entries
+    const regionMoves = path.filter(entry => entry.type === 'regionMove');
+    
+    regionMoves.forEach((pathEntry, index) => {
       const uid = this.nextUID++;
-      const isLastRegion = index === path.length - 1;
+      const isLastRegion = index === regionMoves.length - 1;
       
       // Only the last region (current region) should be expanded
       const expanded = isLastRegion;

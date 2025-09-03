@@ -1,4 +1,5 @@
 import eventBus from '../../app/core/eventBus.js';
+import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
@@ -557,6 +558,10 @@ export class RegionGraphUI {
             <input type="checkbox" id="overwritePath" style="margin-right: 5px;">
             Overwrite path
           </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="addLocationsToPath" style="margin-right: 5px;">
+            Add locations to path
+          </label>
         </div>
       </div>
     `;
@@ -586,25 +591,61 @@ export class RegionGraphUI {
         
         logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
         
-        // Use the same pattern as regionBlockBuilder.js
-        import('./index.js').then(({ moduleDispatcher }) => {
-          const payload = {
-            locationName: locationName,
-            regionName: parentRegion,
-            originator: 'RegionGraphCheck',
-            originalDOMEvent: true,
-          };
-
-          if (moduleDispatcher) {
-            moduleDispatcher.publish('user:locationCheck', payload, {
-              initialTarget: 'bottom',
+        // Check if we should add to path (use settings)
+        settingsManager.getSetting('regionGraph.addLocationsToPath', false).then(shouldAddToPath => {
+          if (shouldAddToPath) {
+            // Add location check to path
+            logger.debug(`Adding location ${locationName} to path`);
+            import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
+              const playerState = getPlayerStateSingleton();
+              playerState.addLocationCheck(locationName);
+              logger.debug(`Added location ${locationName} to player path`);
+              // The path update will automatically trigger highlightPathEdges via the event system
+            }).catch(error => {
+              logger.error('Error adding location to path:', error);
             });
-            logger.debug('Dispatched user:locationCheck', payload);
           } else {
-            logger.error('moduleDispatcher not available to handle location check.');
+            // Original behavior - dispatch location check event
+            import('./index.js').then(({ moduleDispatcher }) => {
+              const payload = {
+                locationName: locationName,
+                regionName: parentRegion,
+                originator: 'RegionGraphCheck',
+                originalDOMEvent: true,
+              };
+
+              if (moduleDispatcher) {
+                moduleDispatcher.publish('user:locationCheck', payload, {
+                  initialTarget: 'bottom',
+                });
+                logger.debug('Dispatched user:locationCheck', payload);
+              } else {
+                logger.error('moduleDispatcher not available to handle location check.');
+              }
+            }).catch(error => {
+              logger.error('Error importing moduleDispatcher:', error);
+            });
           }
         }).catch(error => {
-          logger.error('Error importing moduleDispatcher:', error);
+          logger.error('Error getting setting:', error);
+          // Fallback to original behavior
+          import('./index.js').then(({ moduleDispatcher }) => {
+            const payload = {
+              locationName: locationName,
+              regionName: parentRegion,
+              originator: 'RegionGraphCheck',
+              originalDOMEvent: true,
+            };
+
+            if (moduleDispatcher) {
+              moduleDispatcher.publish('user:locationCheck', payload, {
+                initialTarget: 'bottom',
+              });
+              logger.debug('Dispatched user:locationCheck', payload);
+            } else {
+              logger.error('moduleDispatcher not available to handle location check.');
+            }
+          });
         });
         
         return; // Don't process as region node
@@ -739,22 +780,26 @@ export class RegionGraphUI {
       forceShowLocationsCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
           forceHideLocationsCheckbox.checked = false;
+          this.saveCheckboxSetting('#forceHideLocations', 'regionGraph.forceHideLocations', false);
           this.locationsManuallyShown = true;
           this.locationsManuallyHidden = false;
         } else {
           this.locationsManuallyShown = false;
         }
+        this.saveCheckboxSetting('#forceShowLocations', 'regionGraph.forceShowLocations', e.target.checked);
         this.updateZoomBasedVisibility();
       });
       
       forceHideLocationsCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
           forceShowLocationsCheckbox.checked = false;
+          this.saveCheckboxSetting('#forceShowLocations', 'regionGraph.forceShowLocations', false);
           this.locationsManuallyHidden = true;
           this.locationsManuallyShown = false;
         } else {
           this.locationsManuallyHidden = false;
         }
+        this.saveCheckboxSetting('#forceHideLocations', 'regionGraph.forceHideLocations', e.target.checked);
         this.updateZoomBasedVisibility();
       });
     }
@@ -767,13 +812,17 @@ export class RegionGraphUI {
       addToPathCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
           overwritePathCheckbox.checked = false;
+          this.saveCheckboxSetting('#overwritePath', 'regionGraph.overwritePath', false);
         }
+        this.saveCheckboxSetting('#addToPath', 'regionGraph.addToPath', e.target.checked);
       });
       
       overwritePathCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
           addToPathCheckbox.checked = false;
+          this.saveCheckboxSetting('#addToPath', 'regionGraph.addToPath', false);
         }
+        this.saveCheckboxSetting('#overwritePath', 'regionGraph.overwritePath', e.target.checked);
       });
     }
     
@@ -785,19 +834,84 @@ export class RegionGraphUI {
       moveOneStepCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
           moveDirectlyCheckbox.checked = false;
+          this.saveCheckboxSetting('#movePlayerDirectly', 'regionGraph.movePlayerDirectly', false);
         }
+        this.saveCheckboxSetting('#movePlayerOneStep', 'regionGraph.movePlayerOneStep', e.target.checked);
       });
       
       moveDirectlyCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
           moveOneStepCheckbox.checked = false;
+          this.saveCheckboxSetting('#movePlayerOneStep', 'regionGraph.movePlayerOneStep', false);
         }
+        this.saveCheckboxSetting('#movePlayerDirectly', 'regionGraph.movePlayerDirectly', e.target.checked);
       });
+    }
+    
+    // Handle the "Show region in panel" checkbox
+    const showRegionInPanelCheckbox = this.controlPanel.querySelector('#showRegionInPanel');
+    if (showRegionInPanelCheckbox) {
+      showRegionInPanelCheckbox.addEventListener('change', (e) => {
+        this.saveCheckboxSetting('#showRegionInPanel', 'regionGraph.showRegionInPanel', e.target.checked);
+      });
+    }
+    
+    // Handle the "Add locations to path" checkbox
+    const addLocationsToPathCheckbox = this.controlPanel.querySelector('#addLocationsToPath');
+    if (addLocationsToPathCheckbox) {
+      addLocationsToPathCheckbox.addEventListener('change', (e) => {
+        this.saveCheckboxSetting('#addLocationsToPath', 'regionGraph.addLocationsToPath', e.target.checked);
+      });
+    }
+  }
+
+  async loadCheckboxSettings() {
+    // Load checkbox states from settings
+    const checkboxes = [
+      { id: '#forceShowLocations', setting: 'regionGraph.forceShowLocations', default: false },
+      { id: '#forceHideLocations', setting: 'regionGraph.forceHideLocations', default: false },
+      { id: '#movePlayerOneStep', setting: 'regionGraph.movePlayerOneStep', default: false },
+      { id: '#movePlayerDirectly', setting: 'regionGraph.movePlayerDirectly', default: true },
+      { id: '#showRegionInPanel', setting: 'regionGraph.showRegionInPanel', default: true },
+      { id: '#addToPath', setting: 'regionGraph.addToPath', default: true },
+      { id: '#overwritePath', setting: 'regionGraph.overwritePath', default: false },
+      { id: '#addLocationsToPath', setting: 'regionGraph.addLocationsToPath', default: false }
+    ];
+    
+    for (const checkbox of checkboxes) {
+      const element = this.controlPanel.querySelector(checkbox.id);
+      if (element) {
+        try {
+          const value = await settingsManager.getSetting(checkbox.setting, checkbox.default);
+          element.checked = value;
+        } catch (error) {
+          logger.warn(`Failed to load setting ${checkbox.setting}:`, error);
+          element.checked = checkbox.default;
+        }
+      }
+    }
+  }
+  
+  async saveCheckboxSetting(checkboxId, settingKey, value) {
+    try {
+      // Ensure the regionGraph settings section exists
+      const currentSettings = await settingsManager.getSettings();
+      if (!currentSettings.regionGraph) {
+        await settingsManager.updateSetting('regionGraph', {});
+      }
+      
+      // Now update the specific setting
+      await settingsManager.updateSetting(settingKey, value);
+    } catch (error) {
+      logger.warn(`Failed to save setting ${settingKey}:`, error);
     }
   }
 
   checkAndLoadInitialData() {
     logger.debug('Checking if initial data is already available...');
+    
+    // Load checkbox settings
+    this.loadCheckboxSettings();
     
     // Small delay to ensure stateManager is fully initialized
     setTimeout(() => {
@@ -1139,8 +1253,9 @@ export class RegionGraphUI {
       if (playerState) {
         const path = playerState.getPath();
         if (path && path.length > 0) {
-          this.currentPath = path;
-          logger.debug(`Loaded initial path with ${path.length} regions`);
+          // Filter for only regionMove entries
+          this.currentPath = path.filter(entry => entry.type === 'regionMove');
+          logger.debug(`Loaded initial path with ${this.currentPath.length} regions`);
         }
       }
     } catch (error) {
@@ -1445,11 +1560,12 @@ export class RegionGraphUI {
   onPathUpdate(data) {
     if (!data || !data.path) return;
     
-    logger.debug(`Path updated with ${data.path.length} regions`);
+    logger.debug(`Path updated with ${data.path.length} entries`);
     
-    // Store the path data
-    this.currentPath = data.path;
+    // Store the path data (filter for only regionMove entries)
+    this.currentPath = data.path.filter(entry => entry.type === 'regionMove');
     this.regionPathCounts = data.regionCounts || new Map();
+    logger.debug(`Filtered to ${this.currentPath.length} region moves`);
     
     // Update node labels to include path counts
     if (this.cy) {
@@ -1495,22 +1611,45 @@ export class RegionGraphUI {
   }
   
   highlightPathEdges() {
-    if (!this.cy || !this.currentPath || this.currentPath.length < 2) return;
+    if (!this.cy) return;
     
     // Remove existing path highlighting from edges
     this.cy.edges().removeClass('in-path');
     
-    // Highlight edges between consecutive regions in the path
-    for (let i = 0; i < this.currentPath.length - 1; i++) {
-      const source = this.currentPath[i].region;
-      const target = this.currentPath[i + 1].region;
+    // Get the full path including location checks from playerState
+    import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
+      const playerState = getPlayerStateSingleton();
+      const fullPath = playerState.getPath();
       
-      // Find edge between source and target (consider both directions)
-      const edge = this.cy.edges(`[source="${source}"][target="${target}"], [source="${target}"][target="${source}"]`);
-      if (edge && edge.length > 0) {
-        edge.addClass('in-path');
+      if (!fullPath || fullPath.length < 1) return;
+      
+      // Highlight edges between consecutive regions in the path (regionMove entries)
+      for (let i = 0; i < this.currentPath.length - 1; i++) {
+        const source = this.currentPath[i].region;
+        const target = this.currentPath[i + 1].region;
+        
+        // Find edge between source and target (consider both directions)
+        const edge = this.cy.edges(`[source="${source}"][target="${target}"], [source="${target}"][target="${source}"]`);
+        if (edge && edge.length > 0) {
+          edge.addClass('in-path');
+        }
       }
-    }
+      
+      // Also highlight edges to checked locations in the path
+      for (const entry of fullPath) {
+        if (entry.type === 'locationCheck') {
+          // Find the location node edge - format is edge_{regionId}_{locationName}
+          const locationEdgeId = `edge_${entry.region}_${entry.locationName}`;
+          const locationEdge = this.cy.getElementById(locationEdgeId);
+          if (locationEdge && locationEdge.length > 0) {
+            locationEdge.addClass('in-path');
+            logger.debug(`Highlighted location edge in path: ${locationEdgeId}`);
+          }
+        }
+      }
+    }).catch(error => {
+      logger.error('Error highlighting path edges:', error);
+    });
   }
 
   updatePlayerLocation(regionName) {

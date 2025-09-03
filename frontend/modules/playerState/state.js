@@ -7,10 +7,13 @@ export class PlayerState {
         this.eventBus = eventBus;
         this.currentRegion = 'Menu';
         
-        // Path data - array of visited regions with exit information
-        // Each entry: { region: string, exitUsed: string|null, instanceNumber: number }
+        // Path data - array of player actions/movements
+        // Entry types:
+        // - regionMove: { type: 'regionMove', region: string, exitUsed: string|null, instanceNumber: number }
+        // - locationCheck: { type: 'locationCheck', locationName: string, region: string, instanceNumber: number }
+        // - customAction: { type: 'customAction', actionName: string, params: object, region: string, instanceNumber: number }
         this.path = [
-            { region: 'Menu', exitUsed: null, instanceNumber: 1 }
+            { type: 'regionMove', region: 'Menu', exitUsed: null, instanceNumber: 1 }
         ];
         
         // Track instance counts for each region
@@ -72,21 +75,29 @@ export class PlayerState {
         if (!this.allowLoops) {
             const currentPathIndex = this.path.length - 1;
             if (currentPathIndex > 0) {
-                const previousRegion = this.path[currentPathIndex - 1];
-                if (previousRegion.region === targetRegion) {
-                    // Moving backward - get the current entry before popping
-                    const currentEntry = this.path[currentPathIndex];
+                // Find the previous regionMove entry
+                let previousRegionIndex = -1;
+                for (let i = currentPathIndex - 1; i >= 0; i--) {
+                    const entry = this.path[i];
+                    if (entry.type === 'regionMove') {
+                        previousRegionIndex = i;
+                        break;
+                    }
+                }
+                
+                if (previousRegionIndex >= 0 && this.path[previousRegionIndex].region === targetRegion) {
+                    // Moving backward - remove all entries from current position back to (but not including) the previous region
+                    const removedEntries = this.path.splice(previousRegionIndex + 1);
                     
-                    // Remove the current entry from the path
-                    this.path.pop();
-                    
-                    // Update instance counts for the removed entry
-                    if (currentEntry) {
-                        const currentCount = this.regionInstanceCounts.get(currentEntry.region) || 0;
-                        if (currentCount > 1) {
-                            this.regionInstanceCounts.set(currentEntry.region, currentCount - 1);
-                        } else {
-                            this.regionInstanceCounts.delete(currentEntry.region);
+                    // Update instance counts for removed regionMove entries
+                    for (const entry of removedEntries) {
+                        if (entry.type === 'regionMove') {
+                            const currentCount = this.regionInstanceCounts.get(entry.region) || 0;
+                            if (currentCount > 1) {
+                                this.regionInstanceCounts.set(entry.region, currentCount - 1);
+                            } else {
+                                this.regionInstanceCounts.delete(entry.region);
+                            }
                         }
                     }
                     
@@ -102,9 +113,60 @@ export class PlayerState {
         this.regionInstanceCounts.set(targetRegion, instanceCount);
         
         this.path.push({
+            type: 'regionMove',
             region: targetRegion,
             exitUsed: exitUsed,
             instanceNumber: instanceCount
+        });
+        
+        // Emit path updated event
+        this.emitPathUpdated();
+    }
+    
+    /**
+     * Add a location check entry to the path
+     * @param {string} locationName - Name of the location checked
+     */
+    addLocationCheck(locationName) {
+        if (!this.currentRegion || this.currentRegion === 'Menu') {
+            console.warn(`[PlayerState] Cannot add location check when not in a valid region`);
+            return;
+        }
+        
+        // Get the current region's instance number
+        const currentInstanceNumber = this.regionInstanceCounts.get(this.currentRegion) || 1;
+        
+        this.path.push({
+            type: 'locationCheck',
+            locationName: locationName,
+            region: this.currentRegion,
+            instanceNumber: currentInstanceNumber
+        });
+        
+        // Emit path updated event
+        this.emitPathUpdated();
+    }
+    
+    /**
+     * Add a custom action entry to the path
+     * @param {string} actionName - Name of the action
+     * @param {Object} params - Additional parameters for the action
+     */
+    addCustomAction(actionName, params = {}) {
+        if (!this.currentRegion || this.currentRegion === 'Menu') {
+            console.warn(`[PlayerState] Cannot add custom action when not in a valid region`);
+            return;
+        }
+        
+        // Get the current region's instance number
+        const currentInstanceNumber = this.regionInstanceCounts.get(this.currentRegion) || 1;
+        
+        this.path.push({
+            type: 'customAction',
+            actionName: actionName,
+            params: params,
+            region: this.currentRegion,
+            instanceNumber: currentInstanceNumber
         });
         
         // Emit path updated event
@@ -117,12 +179,14 @@ export class PlayerState {
      * @param {number} instanceNumber - Which instance of the region (default: 1)
      */
     trimPath(regionName = 'Menu', instanceNumber = 1) {
-        // Find the nth instance of the specified region
+        // Find the nth instance of the specified region (only counting regionMove entries)
         let foundCount = 0;
         let trimIndex = -1;
         
         for (let i = 0; i < this.path.length; i++) {
-            if (this.path[i].region === regionName) {
+            const entry = this.path[i];
+            // Count only regionMove entries
+            if (entry.type === 'regionMove' && entry.region === regionName) {
                 foundCount++;
                 if (foundCount === instanceNumber) {
                     trimIndex = i;
@@ -139,13 +203,16 @@ export class PlayerState {
         // Trim everything after the found index
         const removedEntries = this.path.splice(trimIndex + 1);
         
-        // Update instance counts for removed regions
+        // Update instance counts for removed regions (only count regionMove entries)
         for (const entry of removedEntries) {
-            const count = this.regionInstanceCounts.get(entry.region) || 0;
-            if (count > 1) {
-                this.regionInstanceCounts.set(entry.region, count - 1);
-            } else {
-                this.regionInstanceCounts.delete(entry.region);
+            // Only decrement counts for regionMove entries
+            if (entry.type === 'regionMove') {
+                const count = this.regionInstanceCounts.get(entry.region) || 0;
+                if (count > 1) {
+                    this.regionInstanceCounts.set(entry.region, count - 1);
+                } else {
+                    this.regionInstanceCounts.delete(entry.region);
+                }
             }
         }
         
@@ -218,7 +285,7 @@ export class PlayerState {
     reset() {
         this.currentRegion = 'Menu';
         this.path = [
-            { region: 'Menu', exitUsed: null, instanceNumber: 1 }
+            { type: 'regionMove', region: 'Menu', exitUsed: null, instanceNumber: 1 }
         ];
         this.regionInstanceCounts.clear();
         this.regionInstanceCounts.set('Menu', 1);

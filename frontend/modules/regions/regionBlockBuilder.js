@@ -5,6 +5,7 @@ import { renderLogicTree } from '../commonUI/index.js';
 import commonUI from '../commonUI/index.js';
 import loopStateSingleton from '../loops/loopStateSingleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -848,6 +849,35 @@ export class RegionBlockBuilder {
         locLink.dataset.region = regionName;
         headerRow.appendChild(locLink);
 
+        // Check if location is queued in the path (only if the setting is enabled)
+        settingsManager.getSetting('regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
+          if (addToPathEnabled) {
+            import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
+              try {
+                const playerState = getPlayerStateSingleton();
+                const fullPath = playerState.getPath();
+                const isQueued = fullPath.some(entry => 
+                  entry.type === 'locationCheck' && 
+                  entry.locationName === locationDef.name &&
+                  entry.region === regionName
+                );
+                
+                // Update status if queued (need to update after initial render)
+                if (isQueued && statusIndicator && !locChecked && locAccessible) {
+                  statusIndicator.textContent = 'Queued';
+                  statusIndicator.className = 'location-status status-queued';
+                }
+              } catch (error) {
+                // Ignore error
+              }
+            }).catch(() => {
+              // Ignore import error
+            });
+          }
+        }).catch(() => {
+          // Ignore settings error
+        });
+        
         // Add status indicator
         const statusIndicator = document.createElement('span');
         statusIndicator.classList.add('location-status');
@@ -915,26 +945,38 @@ export class RegionBlockBuilder {
                 `[LocationWrapper] Clicked on location: ${locationDef.name}, Region: ${regionName}`
               );
 
-              // Import moduleDispatcher from regionUI's module
-              const { moduleDispatcher } = await import('./index.js');
+              // Check if we should add to path (use same setting as regionGraph)
+              const shouldAddToPath = await settingsManager.getSetting('regionGraph.addLocationsToPath', false);
               
-              const payload = {
-                locationName: locationDef.name,
-                regionName: locationDef.region || regionName,
-                originator: 'RegionPanelCheck',
-                originalDOMEvent: true,
-              };
-
-              if (moduleDispatcher) {
-                moduleDispatcher.publish('user:locationCheck', payload, {
-                  initialTarget: 'bottom',
-                });
-                log('info', 'Dispatched user:locationCheck', payload);
+              if (shouldAddToPath) {
+                // Add location check to path
+                log('info', `Adding location ${locationDef.name} to path`);
+                const { getPlayerStateSingleton } = await import('../playerState/singleton.js');
+                const playerState = getPlayerStateSingleton();
+                playerState.addLocationCheck(locationDef.name);
+                log('info', `Added location ${locationDef.name} to player path`);
               } else {
-                log(
-                  'error',
-                  'Dispatcher not available to handle location check.'
-                );
+                // Original behavior - dispatch location check event
+                const { moduleDispatcher } = await import('./index.js');
+                
+                const payload = {
+                  locationName: locationDef.name,
+                  regionName: locationDef.region || regionName,
+                  originator: 'RegionPanelCheck',
+                  originalDOMEvent: true,
+                };
+
+                if (moduleDispatcher) {
+                  moduleDispatcher.publish('user:locationCheck', payload, {
+                    initialTarget: 'bottom',
+                  });
+                  log('info', 'Dispatched user:locationCheck', payload);
+                } else {
+                  log(
+                    'error',
+                    'Dispatcher not available to handle location check.'
+                  );
+                }
               }
             } catch (error) {
               log(
@@ -1074,7 +1116,9 @@ export class RegionBlockBuilder {
         let found = false;
         
         for (let i = 0; i < currentPath.length; i++) {
-          if (currentPath[i].region === regionName) {
+          const entry = currentPath[i];
+          // Only consider regionMove entries
+          if (entry.type === 'regionMove' && entry.region === regionName) {
             // Check if this matches our specific instance (by UID if available)
             if (uid && this.regionUI && this.regionUI.visitedRegions) {
               const visitedRegion = this.regionUI.visitedRegions.find(vr => vr.uid == uid);
@@ -1085,7 +1129,7 @@ export class RegionBlockBuilder {
               }
             }
             // If we can't match by UID, assume it's the last occurrence of this region in the path
-            instanceNumber = currentPath[i].instanceNumber;
+            instanceNumber = entry.instanceNumber;
             found = true;
           }
         }

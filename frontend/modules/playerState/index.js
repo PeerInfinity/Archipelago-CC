@@ -30,6 +30,20 @@ export async function register(registrationApi) {
         handleTrimPath,
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
     );
+    
+    registrationApi.registerDispatcherReceiver(
+        moduleId,
+        'user:locationCheck',
+        handleLocationCheck,
+        { direction: 'up', condition: 'unconditional', timing: 'immediate' }
+    );
+    
+    registrationApi.registerDispatcherReceiver(
+        moduleId,
+        'user:customAction',
+        handleCustomAction,
+        { direction: 'up', condition: 'unconditional', timing: 'immediate' }
+    );
 
     // Register event publishers
     registrationApi.registerEventBusPublisher('playerState:regionChanged');
@@ -64,6 +78,16 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'getAllowLoops', () => {
         const playerState = getPlayerStateSingleton();
         return playerState.getAllowLoops();
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'addLocationCheck', (locationName) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.addLocationCheck(locationName);
+    });
+    
+    registrationApi.registerPublicFunction(moduleId, 'addCustomAction', (actionName, params) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.addCustomAction(actionName, params);
     });
 }
 
@@ -163,5 +187,47 @@ function handleTrimPath(data, propagationOptions) {
         );
     } else {
         log('error', `[${moduleId} Module] Dispatcher not available for propagation of playerState:trimPath event`);
+    }
+}
+
+function handleLocationCheck(data, propagationOptions) {
+    log('info', `[${moduleId} Module] Received user:locationCheck event`, data);
+    
+    const playerState = getPlayerStateSingleton();
+    if (data && data.locationName) {
+        playerState.addLocationCheck(data.locationName);
+    }
+    
+    // Propagate event to the next module (up direction)
+    if (moduleDispatcher) {
+        moduleDispatcher.publishToNextModule(
+            moduleId,
+            'user:locationCheck',
+            data,
+            { direction: 'up' }
+        );
+    } else {
+        log('error', `[${moduleId} Module] Dispatcher not available for propagation of user:locationCheck event`);
+    }
+}
+
+function handleCustomAction(data, propagationOptions) {
+    log('info', `[${moduleId} Module] Received user:customAction event`, data);
+    
+    const playerState = getPlayerStateSingleton();
+    if (data && data.actionName) {
+        playerState.addCustomAction(data.actionName, data.params || {});
+    }
+    
+    // Propagate event to the next module (up direction)
+    if (moduleDispatcher) {
+        moduleDispatcher.publishToNextModule(
+            moduleId,
+            'user:customAction',
+            data,
+            { direction: 'up' }
+        );
+    } else {
+        log('error', `[${moduleId} Module] Dispatcher not available for propagation of user:customAction event`);
     }
 }
