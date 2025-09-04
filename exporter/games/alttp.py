@@ -45,8 +45,11 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_shoot_arrows',
             'can_use_bombs',
             'ganons_tower_bottom_boss_defeat',
+            'ganons_tower_middle_boss_defeat',
+            'ganons_tower_top_boss_defeat',
             'has_beam_sword',
             'has_crystals',
+            'has_crystals_for_ganon',
             'has_fire_source',
             'has_hearts',
             'has_melee_weapon',
@@ -119,6 +122,40 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         Specifically handles Ganon's Tower Big Key location rules that reference
         parent_region.dungeon.bosses['bottom'].can_defeat(state).
         """
+        # Check for the Ganon location (has complex crystal requirement)
+        if location_name == 'Ganon':
+            logger.info(f"Special handling for complex rule: {location_name}")
+            
+            # Ganon requires:
+            # 1. Moon Pearl
+            # 2. Beat Agahnim 2
+            # 3. Required number of crystals (from settings)
+            # 4. GanonDefeatRule
+            # Note: crystals_needed_for_ganon is handled in the frontend
+            return {
+                'type': 'and',
+                'conditions': [
+                    {
+                        'type': 'item_check',
+                        'item': {'type': 'constant', 'value': 'Moon Pearl'}
+                    },
+                    {
+                        'type': 'item_check',
+                        'item': {'type': 'constant', 'value': 'Beat Agahnim 2'}
+                    },
+                    {
+                        'type': 'helper',
+                        'name': 'has_crystals_for_ganon',
+                        'args': []
+                    },
+                    {
+                        'type': 'helper',
+                        'name': 'GanonDefeatRule',
+                        'args': []
+                    }
+                ]
+            }
+        
         # Check if this is one of the problematic Ganon's Tower Big Key locations
         if location_name in ['Ganons Tower - Big Key Room - Left', 
                              'Ganons Tower - Big Key Chest',
@@ -140,6 +177,66 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                     {
                         'type': 'helper',
                         'name': 'ganons_tower_bottom_boss_defeat',
+                        'args': []
+                    }
+                ]
+            }
+        
+        return None
+    
+    def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
+        """
+        Handle special complex exit rules that the analyzer can't process.
+        
+        Specifically handles Ganon's Tower exit rules that reference
+        parent_region.dungeon.bosses['middle'] or ['top'].can_defeat(state).
+        """
+        # Check for the Torch Rooms exit (requires middle boss defeat)
+        if exit_name == 'Ganons Tower Torch Rooms':
+            logger.info(f"Special handling for complex exit rule: {exit_name}")
+            
+            # This exit requires:
+            # 1. can_kill_most_things(8)
+            # 2. has_fire_source
+            # 3. Can defeat the middle boss (Lanmolas) in Ganon's Tower
+            return {
+                'type': 'and',
+                'conditions': [
+                    {
+                        'type': 'helper',
+                        'name': 'can_kill_most_things',
+                        'args': [{'type': 'constant', 'value': 8}]
+                    },
+                    {
+                        'type': 'helper',
+                        'name': 'has_fire_source',
+                        'args': []
+                    },
+                    {
+                        'type': 'helper',
+                        'name': 'ganons_tower_middle_boss_defeat',
+                        'args': []
+                    }
+                ]
+            }
+        
+        # Check for the Moldorm Gap exit (requires top boss defeat)
+        if exit_name == 'Ganons Tower Moldorm Gap':
+            logger.info(f"Special handling for complex exit rule: {exit_name}")
+            
+            # This exit requires:
+            # 1. Hookshot
+            # 2. Can defeat the top boss (Moldorm) in Ganon's Tower
+            return {
+                'type': 'and',
+                'conditions': [
+                    {
+                        'type': 'item_check',
+                        'item': {'type': 'constant', 'value': 'Hookshot'}
+                    },
+                    {
+                        'type': 'helper',
+                        'name': 'ganons_tower_top_boss_defeat',
                         'args': []
                     }
                 ]

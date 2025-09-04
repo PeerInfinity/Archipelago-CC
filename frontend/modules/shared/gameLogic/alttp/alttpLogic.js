@@ -647,6 +647,55 @@ export function ganons_tower_bottom_boss_defeat(state, world, itemName, staticDa
   return false;
 }
 
+export function ganons_tower_middle_boss_defeat(state, world, itemName, staticData) {
+  // The middle boss in Ganon's Tower is Lanmolas
+  // The defeat rule is: has_melee_weapon OR Fire Rod OR Ice Rod OR Cane of Somaria OR Cane of Byrna OR can_shoot_arrows
+  // This matches the defeat_rule in the exported dungeon data
+  
+  if (has_melee_weapon(state, world, itemName, staticData)) {
+    return true;
+  }
+  
+  if (has(state, 'Fire Rod', staticData)) {
+    return true;
+  }
+  
+  if (has(state, 'Ice Rod', staticData)) {
+    return true;
+  }
+  
+  if (has(state, 'Cane of Somaria', staticData)) {
+    return true;
+  }
+  
+  if (has(state, 'Cane of Byrna', staticData)) {
+    return true;
+  }
+  
+  if (can_shoot_arrows(state, world, itemName, staticData)) {
+    return true;
+  }
+  
+  return false;
+}
+
+export function ganons_tower_top_boss_defeat(state, world, itemName, staticData) {
+  // The top boss in Ganon's Tower is Moldorm
+  // The defeat rule is simply: has_melee_weapon
+  // This matches the defeat_rule in the exported dungeon data
+  
+  return has_melee_weapon(state, world, itemName, staticData);
+}
+
+export function has_crystals_for_ganon(state, world, itemName, staticData) {
+  // Check if player has required number of crystals for Ganon
+  // The required number comes from settings
+  const requiredCrystals = state.settings?.crystals_needed_for_ganon || 7;
+  
+  // Use the simpler has_crystals function that counts Crystal 1-7 directly
+  return has_crystals(state, world, requiredCrystals.toString(), staticData);
+}
+
 export function GanonDefeatRule(state, world, itemName, staticData) {
   const isSwordless = state.settings?.swordless ||
                      (state.flags && state.flags.includes('swordless'));
@@ -1008,6 +1057,9 @@ export const helperFunctions = {
   item_name_in_location_names,
   GanonDefeatRule,
   ganons_tower_bottom_boss_defeat,
+  ganons_tower_middle_boss_defeat,
+  ganons_tower_top_boss_defeat,
+  has_crystals_for_ganon,
   can_get_glitched_speed_dw,
   _has_specific_key_count,
   basement_key_rule,

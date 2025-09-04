@@ -24922,51 +24922,8 @@
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "subscript",
-                      "value": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "get_entrance"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Ganons Tower Torch Rooms"
-                                }
-                              ]
-                            },
-                            "attr": "parent_region"
-                          },
-                          "attr": "dungeon"
-                        },
-                        "attr": "bosses"
-                      },
-                      "index": {
-                        "type": "constant",
-                        "value": "middle"
-                      }
-                    },
-                    "attr": "can_defeat"
-                  },
+                  "type": "helper",
+                  "name": "ganons_tower_middle_boss_defeat",
                   "args": []
                 }
               ]
@@ -25197,51 +25154,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "subscript",
-                      "value": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "get_entrance"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Ganons Tower Moldorm Gap"
-                                }
-                              ]
-                            },
-                            "attr": "parent_region"
-                          },
-                          "attr": "dungeon"
-                        },
-                        "attr": "bosses"
-                      },
-                      "index": {
-                        "type": "constant",
-                        "value": "top"
-                      }
-                    },
-                    "attr": "can_defeat"
-                  },
+                  "type": "helper",
+                  "name": "ganons_tower_top_boss_defeat",
                   "args": []
                 }
               ]
@@ -25416,59 +25330,21 @@
                   }
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": {
-                        "type": "constant",
-                        "value": "Beat Agahnim 2"
-                      }
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "has_crystals",
-                          "args": [
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "subscript",
-                                  "value": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "worlds"
-                                  },
-                                  "index": {
-                                    "type": "name",
-                                    "name": "player"
-                                  }
-                                },
-                                "attr": "options"
-                              },
-                              "attr": "crystals_needed_for_ganon"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "helper",
-                          "name": "GanonDefeatRule",
-                          "args": []
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Beat Agahnim 2"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_crystals_for_ganon",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "GanonDefeatRule",
+                  "args": []
                 }
               ]
             },

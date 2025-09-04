@@ -773,13 +773,23 @@ def process_regions(multiworld, player: int) -> tuple:
                             expanded_rule = None
                             exit_name = getattr(exit, 'name', None)
                             if hasattr(exit, 'access_rule') and exit.access_rule:
-                                expanded_rule = safe_expand_rule(
-                                    game_handler,
-                                    exit.access_rule,
-                                    exit_name,
-                                    target_type='Exit',
-                                    world=world
-                                )
+                                # Try special handling first for complex exit rules
+                                if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
+                                    special_rule = game_handler.handle_complex_exit_rule(exit_name, exit.access_rule)
+                                    if special_rule:
+                                        logger.info(f"Got special exit rule for {exit_name}")
+                                        expanded_rule = game_handler.expand_rule(special_rule)
+                                        logger.info(f"Expanded exit rule for {exit_name}")
+                                
+                                # If no special handling, use normal analysis
+                                if expanded_rule is None:
+                                    expanded_rule = safe_expand_rule(
+                                        game_handler,
+                                        exit.access_rule,
+                                        exit_name,
+                                        target_type='Exit',
+                                        world=world
+                                    )
                             
                             # Get spoiler-aware exit data for all games with entrance randomization
                             game_name = multiworld.game[player]
