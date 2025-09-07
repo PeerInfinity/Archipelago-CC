@@ -621,7 +621,7 @@ async function loadModesConfiguration() {
   }
 }
 
-async function loadCombinedModeData() {
+async function loadCombinedModeData(urlParams) {
   log('info', '[Init] loadCombinedModeData started'); // ADDED FOR TRACING
   let baseCombinedData = {};
   const dataSources = {}; // To track the origin of each config piece
@@ -673,8 +673,85 @@ async function loadCombinedModeData() {
   baseCombinedData.modeName = G_currentActiveMode;
 
   // Check for URL parameter override for rules file
-  const urlParams = new URLSearchParams(window.location.search);
   let rulesOverride = urlParams.get('rules');
+  
+  // Check for game and seed parameters as an alternative way to specify rules
+  const gameParam = urlParams.get('game');
+  const seedParam = urlParams.get('seed') || '1'; // Default seed is 1
+  
+  // If game parameter is provided and no rules parameter, look up the rules file
+  if (gameParam && !rulesOverride) {
+    try {
+      // Load preset_files.json to find matching game and seed
+      const presetFiles = await fetchJson(
+        './presets/preset_files.json',
+        'Error loading preset_files.json for game/seed lookup'
+      );
+      
+      if (presetFiles) {
+        // Find the game entry (check both root keys and name fields)
+        let gameEntry = null;
+        let gameKey = null;
+        
+        // First check if gameParam matches a root key directly
+        if (presetFiles[gameParam]) {
+          gameEntry = presetFiles[gameParam];
+          gameKey = gameParam;
+        } else {
+          // Search through all entries to find matching name
+          for (const [key, entry] of Object.entries(presetFiles)) {
+            if (entry.name && entry.name.toLowerCase() === gameParam.toLowerCase()) {
+              gameEntry = entry;
+              gameKey = key;
+              break;
+            }
+          }
+        }
+        
+        if (gameEntry && gameEntry.folders) {
+          // Find the folder with matching seed number
+          let rulesFile = null;
+          
+          for (const [folderName, folderData] of Object.entries(gameEntry.folders)) {
+            if (folderData.seed && String(folderData.seed) === String(seedParam)) {
+              // Look for rules.json file in the files array
+              if (folderData.files && Array.isArray(folderData.files)) {
+                const rulesFileName = folderData.files.find(file => file.endsWith('_rules.json'));
+                if (rulesFileName) {
+                  rulesFile = `./presets/${gameKey}/${folderName}/${rulesFileName}`;
+                  break;
+                }
+              }
+            }
+          }
+          
+          if (rulesFile) {
+            rulesOverride = rulesFile;
+            logger.info(
+              'init',
+              `Rules file determined from game="${gameParam}" and seed="${seedParam}": ${rulesFile}`
+            );
+          } else {
+            logger.warn(
+              'init',
+              `No rules file found for game="${gameParam}" with seed="${seedParam}"`
+            );
+          }
+        } else {
+          logger.warn(
+            'init',
+            `Game "${gameParam}" not found in preset_files.json`
+          );
+        }
+      }
+    } catch (error) {
+      logger.error(
+        'init',
+        `Error loading preset_files.json for game/seed lookup:`,
+        error
+      );
+    }
+  }
   
   // If the rules parameter starts with "./frontend/", remove that prefix
   if (rulesOverride && rulesOverride.startsWith('./frontend/')) {
@@ -950,6 +1027,9 @@ function hideLoadingScreen() {
 async function main() {
   logger.info('init', 'Starting main initialization...');
 
+  // Get URL parameters early so they're available throughout the function
+  const urlParams = new URLSearchParams(window.location.search);
+
   // --- Make sure DOM is ready ---
   if (document.readyState === 'loading') {
     logger.info('init', 'Document is loading, deferring main execution.');
@@ -973,7 +1053,7 @@ async function main() {
   await loadModesConfiguration();
 
   // Load all data for the current mode (from localStorage or defaults)
-  await loadCombinedModeData();
+  await loadCombinedModeData(urlParams);
 
   // Initialize settings manager with mode-specific settings
   if (G_combinedModeData.userSettings) {
@@ -2192,6 +2272,25 @@ async function main() {
   eventBus.publish('app:activeModeDetermined', {
     activeMode: G_currentActiveMode,
   }, 'core');
+
+  // Check for panel URL parameter to activate a specific panel after everything is loaded
+  const panelParam = urlParams.get('panel');
+  if (panelParam) {
+    // Use a timeout to ensure all event handlers have processed and panels are ready
+    setTimeout(() => {
+      logger.info('init', `Activating panel from URL parameter: ${panelParam}`);
+      
+      // Try to activate the panel using panelManager
+      if (panelManagerInstance && typeof panelManagerInstance.activatePanel === 'function') {
+        panelManagerInstance.activatePanel(panelParam);
+        logger.info('init', `Panel activation request sent for: ${panelParam}`);
+      } else {
+        // Fallback: publish the activation event
+        logger.info('init', `Using event bus to activate panel: ${panelParam}`);
+        eventBus.publish('ui:activatePanel', { panelId: panelParam }, 'core');
+      }
+    }, 1500); // 1.5 second delay to ensure all initialization is complete
+  }
 
   // Attach a global listener for files:jsonLoaded to update rules in StateManager
   eventBus.subscribe('files:jsonLoaded', async (eventData) => {

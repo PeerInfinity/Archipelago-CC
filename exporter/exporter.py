@@ -294,10 +294,6 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         world = multiworld.worlds[player]
         game_handler = get_game_export_handler(game_name, world)
         
-        # Allow game-specific handlers to ensure all regions are properly added
-        if hasattr(game_handler, 'ensure_missing_regions_added'):
-            game_handler.ensure_missing_regions_added(multiworld, player)
-        
         # Process all regions and their connections
         # Also extract dungeons to separate structure
         regions_data, dungeons_data = process_regions(multiworld, player)

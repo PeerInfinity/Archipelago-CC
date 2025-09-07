@@ -9,45 +9,6 @@ logger = logging.getLogger(__name__)
 class AquariaGameExportHandler(BaseGameExportHandler):
     """Aquaria-specific expander for handling game-specific rules."""
     
-    def ensure_missing_regions_added(self, multiworld, player: int) -> None:
-        """
-        Ensure that all regions defined in AquariaRegions are added to the multiworld.
-        This fixes a bug where some regions were created but not added to multiworld.regions.
-        """
-        try:
-            # Get the AquariaRegions object from the world
-            if player not in multiworld.worlds:
-                return
-                
-            world = multiworld.worlds[player]
-            if not hasattr(world, 'regions'):
-                return
-                
-            regions_obj = world.regions
-            
-            # List of region attributes that should be in multiworld.regions
-            # These were found to be missing in the original code
-            missing_region_attrs = [
-                'home_water_behind_rocks',
-                'openwater_tr_urns', 
-                'mithalas_city_urns',
-                'mithalas_castle_urns'
-            ]
-            
-            # Get existing region names for quick lookup
-            existing_region_names = {r.name for r in multiworld.get_regions() if r.player == player}
-            
-            # Add any missing regions
-            for attr_name in missing_region_attrs:
-                if hasattr(regions_obj, attr_name):
-                    region = getattr(regions_obj, attr_name)
-                    if hasattr(region, 'name') and region.name not in existing_region_names:
-                        multiworld.regions.append(region)
-                        logger.debug(f"Added missing region {region.name} to multiworld for Aquaria player {player}")
-                        
-        except Exception as e:
-            logger.warning(f"Could not check for missing Aquaria regions: {e}")
-    
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
         """Expand Aquaria-specific helper functions."""
         if args is None:
