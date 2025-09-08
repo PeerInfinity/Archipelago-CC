@@ -9,10 +9,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "TEST_MODE=test playwright test",
-    "test:headed": "TEST_MODE=test playwright test --headed",
-    "test:debug": "TEST_MODE=test playwright test --debug",
-    "test:ui": "TEST_MODE=test playwright test --ui",
+    "test": "TEST_MODE=${npm_config_mode:-test} playwright test",
+    "test:headed": "TEST_MODE=${npm_config_mode:-test} playwright test --headed",
+    "test:debug": "TEST_MODE=${npm_config_mode:-test} playwright test --debug",
+    "test:ui": "TEST_MODE=${npm_config_mode:-test} playwright test --ui",
     "test:custom": "TEST_MODE=test-custom playwright test",
     "test:custom:headed": "TEST_MODE=test-custom playwright test --headed",
     "test:custom:debug": "TEST_MODE=test-custom playwright test --debug",

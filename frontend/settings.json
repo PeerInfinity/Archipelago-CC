@@ -155,7 +155,8 @@
     },
     "loops": {
       "defaultSpeed": 10,
-      "autoRestart": false
+      "autoRestart": false,
+      "loopModeEnabled": false
     }
   }
 }

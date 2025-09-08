@@ -18,6 +18,7 @@ import eventBus from './app/core/eventBus.js';
 import settingsManager from './app/core/settingsManager.js';
 import { centralRegistry } from './app/core/centralRegistry.js';
 import EventDispatcher from './app/core/eventDispatcher.js';
+import { loadAndMergeJsonFiles, getConfigPaths, hasMultiplePaths } from './utils/settingsMerger.js';
 
 // Make eventBus and centralRegistry globally available for cross-module communication
 window.eventBus = eventBus;
@@ -772,17 +773,19 @@ async function loadCombinedModeData(urlParams) {
         Object.prototype.hasOwnProperty.call(currentModeFileConfigs, configKey)
       ) {
         const configEntry = currentModeFileConfigs[configKey];
-        // Ensure it's an object with a 'path' and is 'enabled' (or enabled is not specified, defaulting to true)
+        // Ensure it's an object with a 'path' or 'paths' and is 'enabled' (or enabled is not specified, defaulting to true)
         if (
           configEntry &&
           typeof configEntry === 'object' &&
-          configEntry.path &&
+          (configEntry.path || configEntry.paths) &&
           (typeof configEntry.enabled === 'undefined' || configEntry.enabled)
         ) {
+          // Get paths to load (supports both single path and multiple paths)
+          let pathsToLoad = getConfigPaths(configEntry);
+          
           // Apply rules URL parameter override if this is rulesConfig
-          let effectivePath = configEntry.path;
           if (configKey === 'rulesConfig' && rulesOverride) {
-            effectivePath = rulesOverride;
+            pathsToLoad = [rulesOverride];
             logger.info(
               'init',
               `Rules file path overridden by URL parameter: ${rulesOverride}`
@@ -800,10 +803,25 @@ async function loadCombinedModeData(urlParams) {
               'init',
               `${configKey} for "${G_currentActiveMode}" is missing or invalid in baseCombinedData. Attempting to load from files.`
             );
-            const fetchedData = await fetchJson(
-              effectivePath,
-              `Error loading ${configKey} from file`
-            );
+            
+            let fetchedData = null;
+            
+            // Check if we have multiple paths to merge
+            if (pathsToLoad.length > 1) {
+              // Load and merge multiple files
+              fetchedData = await loadAndMergeJsonFiles(
+                pathsToLoad,
+                fetchJson,
+                (msg) => logger.info('init', msg)
+              );
+            } else if (pathsToLoad.length === 1) {
+              // Single file load (existing behavior)
+              fetchedData = await fetchJson(
+                pathsToLoad[0],
+                `Error loading ${configKey} from file`
+              );
+            }
+            
             if (fetchedData) {
               baseCombinedData[configKey] = fetchedData;
 
@@ -811,18 +829,20 @@ async function loadCombinedModeData(urlParams) {
                 source: rulesOverride && configKey === 'rulesConfig' ? 'urlOverride' : 'file',
                 timestamp: new Date().toISOString(),
                 details: rulesOverride && configKey === 'rulesConfig' 
-                  ? `Loaded from URL parameter override: ${effectivePath}`
-                  : `Loaded from file: ${effectivePath}`,
+                  ? `Loaded from URL parameter override: ${pathsToLoad[0]}`
+                  : pathsToLoad.length > 1
+                    ? `Merged from ${pathsToLoad.length} files: ${pathsToLoad.join(', ')}`
+                    : `Loaded from file: ${pathsToLoad[0]}`,
               };
 
               logger.info(
                 'init',
-                `Loaded ${configKey} for "${G_currentActiveMode}" from file: ${effectivePath}.`
+                `Loaded ${configKey} for "${G_currentActiveMode}" from ${pathsToLoad.length} file(s).`
               );
             } else {
               logger.warn(
                 'init',
-                `Failed to load ${configKey} from ${effectivePath}. It will be missing unless defaults are applied later.`
+                `Failed to load ${configKey} from ${pathsToLoad.join(', ')}. It will be missing unless defaults are applied later.`
               );
               // Ensure the key exists with null if fetch failed, to prevent re-attempts if not desired
               if (!baseCombinedData.hasOwnProperty(configKey)) {
@@ -830,7 +850,7 @@ async function loadCombinedModeData(urlParams) {
                 dataSources[configKey] = {
                   source: 'error',
                   timestamp: new Date().toISOString(),
-                  details: `Failed to load from file: ${effectivePath}`,
+                  details: `Failed to load from file(s): ${pathsToLoad.join(', ')}`,
                 };
               }
             }

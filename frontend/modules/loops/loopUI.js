@@ -428,6 +428,13 @@ export class LoopUI {
     
     this.buildInitialStructure();
     this.attachInternalListeners(); // Attach listeners for the newly built structure
+    
+    // Check if we should automatically enter loop mode based on settings
+    const loopModeEnabled = settingsManager.getSetting('moduleSettings.loops.loopModeEnabled', false);
+    if (loopModeEnabled && !this.isLoopModeActive) {
+      log('info', '[LoopUI] Auto-entering loop mode based on loopModeEnabled setting');
+      this.toggleLoopMode();
+    }
   }
 
   /**
@@ -1941,7 +1948,7 @@ export class LoopUI {
       // Simple header for Menu
       headerEl.innerHTML = `
         <span class="loop-region-name">Menu</span>
-        <button class="loop-collapse-btn">${isExpanded ? 'Collapse' : 'Expand'}</button>
+        <span class="loop-expand-indicator">${isExpanded ? '▼' : '▶'}</span>
       `;
     } else {
       // Calculate XP data for the region
@@ -1951,15 +1958,14 @@ export class LoopUI {
       headerEl.innerHTML = `
         <span class="loop-region-name">${regionName}</span>
         <span class="region-xp">Level ${xpData.level} (+${speedBonus}% efficiency)</span>
-        <button class="loop-collapse-btn">${isExpanded ? 'Collapse' : 'Expand'}</button>
+        <span class="loop-expand-indicator">${isExpanded ? '▼' : '▶'}</span>
       `;
     }
     
     regionBlock.appendChild(headerEl);
     
-    // Header click event for expanding/collapsing
+    // Header click event for expanding/collapsing - entire header is clickable
     headerEl.addEventListener('click', (e) => {
-      if (!e.target.classList.contains('loop-collapse-btn')) return;
       this.toggleRegionExpanded(regionName);
     });
     
@@ -2715,6 +2721,11 @@ export class LoopUI {
       } else {
         log('warn', '[LoopUI] PlayerState API still not available on mode toggle');
       }
+    }
+    
+    // If entering loop mode, expand the Menu region by default
+    if (this.isLoopModeActive) {
+      this.expandedRegions.add('Menu');
     }
 
     // --- Update THIS panel's UI elements ---

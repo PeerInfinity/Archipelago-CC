@@ -112,6 +112,11 @@ export function register(registrationApi) {
         default: false,
         label: 'Auto-Restart Queue',
       },
+      loopModeEnabled: {
+        type: 'boolean',
+        default: false,
+        label: 'Auto-Enter Loop Mode',
+      },
       // Add other loop-specific settings here
     },
   });

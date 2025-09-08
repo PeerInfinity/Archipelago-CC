@@ -39,30 +39,35 @@ export async function testInitialMenuNotProcessed(testController) {
     }
     testController.reportCondition('Loops panel found in DOM', true);
 
-    // 3. Click "Enter Loop Mode" button
-    const enterLoopModeBtn = await testController.pollForValue(
+    // 3. Check if loop mode is already active or click "Enter Loop Mode" button
+    const loopModeBtn = await testController.pollForValue(
       () => loopsPanelElement.querySelector('#loop-ui-toggle-loop-mode'),
-      'Enter Loop Mode button',
+      'Loop mode toggle button',
       5000,
       50
     );
-    if (!enterLoopModeBtn) {
-      throw new Error('Enter Loop Mode button not found');
+    if (!loopModeBtn) {
+      throw new Error('Loop mode toggle button not found');
     }
     
-    testController.log(`[${testRunId}] Clicking Enter Loop Mode button...`);
-    enterLoopModeBtn.click();
-    
-    // Wait for loop mode to activate
-    await testController.pollForCondition(
-      () => {
-        const btn = loopsPanelElement.querySelector('#loop-ui-toggle-loop-mode');
-        return btn && btn.textContent === 'Exit Loop Mode';
-      },
-      'Loop mode activated',
-      3000,
-      50
-    );
+    // Check if we need to enter loop mode
+    if (loopModeBtn.textContent === 'Enter Loop Mode') {
+      testController.log(`[${testRunId}] Clicking Enter Loop Mode button...`);
+      loopModeBtn.click();
+      
+      // Wait for loop mode to activate
+      await testController.pollForCondition(
+        () => {
+          const btn = loopsPanelElement.querySelector('#loop-ui-toggle-loop-mode');
+          return btn && btn.textContent === 'Exit Loop Mode';
+        },
+        'Loop mode activated',
+        3000,
+        50
+      );
+    } else {
+      testController.log(`[${testRunId}] Loop mode already active`);
+    }
     testController.reportCondition('Loop mode activated', true);
 
     // 4. Check that the initial Menu is displayed correctly
