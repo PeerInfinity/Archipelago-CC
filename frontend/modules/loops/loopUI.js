@@ -409,7 +409,7 @@ export class LoopUI {
   /**
    * Initialize the loop UI
    */
-  initialize() {
+  async initialize() {
     log('info', '[LoopUI] Initializing LoopUI panel content...'); // Added log
     
     // Get and set the playerState API
@@ -430,7 +430,8 @@ export class LoopUI {
     this.attachInternalListeners(); // Attach listeners for the newly built structure
     
     // Check if we should automatically enter loop mode based on settings
-    const loopModeEnabled = settingsManager.getSetting('moduleSettings.loops.loopModeEnabled', false);
+    const loopModeEnabled = await settingsManager.getSetting('moduleSettings.loops.loopModeEnabled', false);
+    log('info', `[LoopUI] loopModeEnabled setting value: ${loopModeEnabled}, isLoopModeActive: ${this.isLoopModeActive}`);
     if (loopModeEnabled && !this.isLoopModeActive) {
       log('info', '[LoopUI] Auto-entering loop mode based on loopModeEnabled setting');
       this.toggleLoopMode();

@@ -129,11 +129,34 @@ This project includes an end-to-end test suite using Playwright that validates t
     ```
 5.  The test runner will launch a headless browser, run through the application's internal test suite, and report the results to the console. For a more detailed, human-readable report, you can run `npm run test:analyze` after the test completes.
 
-#### Other Test Commands
+#### Test Commands and Parameters
 
--   `npm run test:headed`: Runs tests in a visible browser, which is useful for observing the test execution.
--   `npm run test:debug`: Runs tests in Playwright's debug mode for step-by-step execution.
--   `npm run test:ui`: Opens Playwright's interactive UI for managing and running tests.
+The test commands support parameters to customize test execution:
+
+-   `npm test`: Basic test run (defaults to mode=test)
+-   `npm test --mode=test-spoilers`: Run spoiler validation tests
+-   `npm test --mode=test-full --game=alttp`: Run full tests for a specific game
+-   `npm test --mode=test-spoilers --rules=./path/to/rules.json`: Test with specific rules file
+
+**Available Parameters:**
+-   `--mode`: Test mode (test, test-spoilers, test-full, test-regression, etc.)
+-   `--game`: Specific game to test (alttp, adventure, etc.)
+-   `--seed`: Seed number for testing
+-   `--rules`: Path to rules JSON file
+
+**Test Variants:**
+-   `npm run test:headed`: Runs tests in a visible browser (supports all parameters)
+-   `npm run test:debug`: Runs tests in Playwright's debug mode (supports all parameters)
+-   `npm run test:ui`: Opens Playwright's interactive UI (supports all parameters)
+
+**Examples:**
+```bash
+# Run spoiler tests with custom rules
+npm test --mode=test-spoilers --rules=./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json
+
+# Debug specific game tests with visible browser
+npm run test:headed --mode=test-full --game=alttp --seed=1
+```
 
 **Note on Cursor Editor:** If you are using the Cursor editor, there is a known issue where Playwright commands may fail on the first attempt. If `npm test` fails, simply run it a second time.
 

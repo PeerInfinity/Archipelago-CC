@@ -86,15 +86,34 @@ URL parameters are used extensively in the automated testing system:
 - **Playwright Tests:** The `tests/e2e/app.spec.js` file constructs URLs with appropriate parameters
 - **npm Scripts:** Test scripts in `package.json` use environment variables that map to URL parameters
 - **Test Modes:** Special modes like `test-spoilers` are designed specifically for automated testing
+- **Parameterized Testing:** All test commands support `--mode`, `--game`, `--seed`, and `--rules` parameters
 
-**Example npm Scripts:**
+**Example npm Commands:**
 ```bash
-# Run spoiler tests with default rules
-npm run test:spoilers
+# Basic test with default mode
+npm test
 
-# Run spoiler tests with Adventure rules override
-npm run test:spoilers:rules
+# Run spoiler tests with specific rules
+npm test --mode=test-spoilers --rules=./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json
+
+# Test specific game with all parameters
+npm test --mode=test-full --game=alttp --seed=12345 --rules=./custom_rules.json
+
+# Debug mode with visible browser
+npm run test:headed --mode=test-spoilers --game=adventure
+
+# Playwright UI with custom configuration
+npm run test:ui --mode=test-regression --rules=./test_rules.json
 ```
+
+**Environment Variables:**
+The npm scripts map parameters to environment variables:
+- `--mode` → `TEST_MODE`
+- `--game` → `TEST_GAME`
+- `--seed` → `TEST_SEED`
+- `--rules` → `RULES_OVERRIDE`
+
+These are then used by `app.spec.js` to construct the appropriate URL for testing.
 
 ## Debugging and Development
 

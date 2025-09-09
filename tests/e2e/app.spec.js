@@ -2,10 +2,18 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Application End-to-End Tests', () => {
   const testMode = process.env.TEST_MODE || 'test'; // Default to 'test' if not specified
+  const testGame = process.env.TEST_GAME; // Optional game parameter
+  const testSeed = process.env.TEST_SEED; // Optional seed parameter
   const rulesOverride = process.env.RULES_OVERRIDE; // Optional rules file override
   
-  // Build URL with optional rules parameter
+  // Build URL with all optional parameters
   let APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
+  if (testGame) {
+    APP_URL += `&game=${encodeURIComponent(testGame)}`;
+  }
+  if (testSeed) {
+    APP_URL += `&seed=${encodeURIComponent(testSeed)}`;
+  }
   if (rulesOverride) {
     APP_URL += `&rules=${encodeURIComponent(rulesOverride)}`;
   }
@@ -21,9 +29,16 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`BROWSER LOG (${msg.type()}): ${msg.text()}`);
     });
 
-    console.log(`PW DEBUG: Navigating to application using mode: ${testMode}`);
+    console.log(`PW DEBUG: Navigating to application with parameters:`);
+    console.log(`  - mode: ${testMode}`);
+    if (testGame) {
+      console.log(`  - game: ${testGame}`);
+    }
+    if (testSeed) {
+      console.log(`  - seed: ${testSeed}`);
+    }
     if (rulesOverride) {
-      console.log(`PW DEBUG: Using rules override: ${rulesOverride}`);
+      console.log(`  - rules: ${rulesOverride}`);
     }
     console.log(`PW DEBUG: URL: ${APP_URL}`);
     // Wait until network activity has ceased, giving SPA more time to initialize

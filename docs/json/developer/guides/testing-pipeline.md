@@ -65,7 +65,7 @@ The **Test Spoilers** panel in the web client is the user interface for this pip
 
 The entire pipeline can be run automatically from the command line using Playwright, which is the primary method for ensuring code quality.
 
--   **Test Mode:** Running `npm test` launches the web client with the `?mode=test` URL parameter.
+-   **Test Mode:** Running `npm test` launches the web client with URL parameters. You can specify `--mode`, `--game`, `--seed`, and `--rules` parameters to customize the test configuration.
 -   **Auto-Execution:** In "test" mode, the application automatically loads a predefined test configuration (`playwright_tests_config.json`).
 -   **`localStorage` Bridge:** Upon completion, the in-browser test writes a summary of the results to `localStorage`.
 -   **Validation:** The Playwright script (`tests/e2e/app.spec.js`) waits for this `localStorage` flag, reads the results, and asserts that all tests passed, reporting the final outcome to the command line.
@@ -273,34 +273,33 @@ If you skip the getting-started setup, you may encounter dependency errors or ot
    - `AP_[seed]_spheres_log.jsonl` (the expected progression)
    - `AP_[seed]_Spoiler.txt`
 
-4. **Run the Test:** Execute the spoiler validation using the `rules` URL parameter to specify your rules file:
+4. **Run the Test:** Execute the spoiler validation using URL parameters to specify your test configuration:
    
    **Basic Usage:**
    ```bash
-   # Test with your specific rules file using the rules parameter
-   RULES_OVERRIDE=./presets/a_hat_in_time/AP_14089154938208861744/AP_14089154938208861744_rules.json npm run test:spoilers
+   # Test with specific rules file
+   npm test --mode=test-spoilers --rules=./presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json
    
-   # Or use the pre-configured script for rules override
-   npm run test:spoilers:rules
+   # Shorter version with just mode and game
+   npm test --mode=test-spoilers --game=ahit
    ```
    
    **Available Test Variants:**
    ```bash
-   # Basic test with rules override
-   RULES_OVERRIDE=./presets/[game]/AP_[seed]/AP_[seed]_rules.json npm run test:spoilers
+   # Basic test with parameters
+   npm test --mode=test-spoilers --game=alttp
    
    # With visible browser (useful for debugging)
-   RULES_OVERRIDE=./presets/[game]/AP_[seed]/AP_[seed]_rules.json npm run test:spoilers:headed
+   npm run test:headed --mode=test-spoilers --game=alttp
    
    # With debug mode
-   RULES_OVERRIDE=./presets/[game]/AP_[seed]/AP_[seed]_rules.json npm run test:spoilers:debug
+   npm run test:debug --mode=test-spoilers --game=alttp
    
    # With Playwright UI
-   RULES_OVERRIDE=./presets/[game]/AP_[seed]/AP_[seed]_rules.json npm run test:spoilers:ui
+   npm run test:ui --mode=test-spoilers --game=alttp
    
-   # Using the pre-configured Adventure rules script
-   npm run test:spoilers:rules
-   npm run test:spoilers:rules:headed
+   # Test specific game with all parameters
+   npm test --mode=test-spoilers --game=adventure --seed=1
    ```
    
    **Advantages of URL Parameter Approach:**
@@ -324,7 +323,13 @@ If you skip the getting-started setup, you may encounter dependency errors or ot
    }
    ```
    
-   **Result Analysis:** After testing, run `npm run test:analyze` to generate a comprehensive, easier-to-read analysis saved to `playwright-analysis.txt`. This analysis includes:
+   **Result Analysis:** After testing, run `npm run test:analyze` to generate a comprehensive, easier-to-read analysis saved to `playwright-analysis.txt`.
+   
+   **Available Parameters:**
+   - `--mode`: Specifies the test mode (e.g., `test`, `test-spoilers`, `test-full`, `test-regression`)
+   - `--game`: Specifies the game to test (e.g., `alttp`, `adventure`, `a_hat_in_time`)
+   - `--seed`: Specifies the seed number for testing
+   - `--rules`: Path to the rules JSON file to use for testing This analysis includes:
    - Structured test failure details with clear error messages
    - Performance metrics and timing information
    - Organized error logs grouped by category

@@ -2221,11 +2221,14 @@ export class RegionGraphUI {
       }
     }
     
-    // Always update label visibility based on zoom (regardless of manual overrides)
+    // Update label visibility based on zoom and manual overrides
     this.updateLabelVisibility(zoom);
   }
 
   updateLabelVisibility(zoom) {
+    // Check if locations are manually shown - if so, show their labels at same zoom as region labels
+    const forceShowLocationLabels = this.locationsManuallyShown;
+    
     // Update visibility of labels based on zoom level
     if (zoom < this.zoomLevels.hideAllLabels) {
       // Hide all labels
@@ -2248,9 +2251,10 @@ export class RegionGraphUI {
         }
       });
       // Apply the labels and hide edge labels
+      // Show location labels if forced (at same zoom as region labels)
       this.cy.style()
         .selector('node.region').style('label', 'data(label)')
-        .selector('.location-node').style('label', '')
+        .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge').style('label', '')
         .update();
     } else if (zoom < this.zoomLevels.showRegionEdgeLabels) {
@@ -2269,9 +2273,10 @@ export class RegionGraphUI {
         }
       });
       // Apply the labels
+      // Show location labels if forced (at same zoom as region labels)
       this.cy.style()
         .selector('node.region').style('label', 'data(label)')
-        .selector('.location-node').style('label', '')
+        .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge').style('label', '')
         .update();
     } else if (zoom < this.zoomLevels.showLocationNodes) {
@@ -2289,11 +2294,12 @@ export class RegionGraphUI {
           }
         }
       });
-      // Apply all labels except location nodes
+      // Apply all labels except location nodes (unless forced)
+      // Show location labels if forced (at same zoom as region labels)
       this.cy.style()
         .selector('node.region').style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
-        .selector('.location-node').style('label', '')
+        .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge[label]').style('label', 'data(label)')
         .selector('.region-location-edge').style('label', '')
         .update();
@@ -2312,11 +2318,12 @@ export class RegionGraphUI {
           }
         }
       });
-      // Apply all labels but hide location labels
+      // Apply all labels but hide location labels (unless forced)
+      // Show location labels if forced (at same zoom as region labels)
       this.cy.style()
         .selector('node.region').style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
-        .selector('.location-node').style('label', '')
+        .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge[label]').style('label', 'data(label)')
         .selector('.region-location-edge').style('label', '')
         .update();

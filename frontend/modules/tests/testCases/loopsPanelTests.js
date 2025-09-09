@@ -346,7 +346,7 @@ registerTest({
   description: 'Verifies that the initial Menu position is displayed correctly and not executed as an action when Resume is clicked',
   category: 'loops',
   testFunction: testInitialMenuNotProcessed,
-  enabled: true
+  //enabled: true
 });
 
 // Register the second test

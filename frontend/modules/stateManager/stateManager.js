@@ -1323,6 +1323,7 @@ export class StateManager {
     this.indirectConnections.clear();
     if (!this.regions) return;
     Object.values(this.regions).forEach((region) => {
+      if (!region.exits) return;
       region.exits.forEach((exit) => {
         if (exit.rule) {
           const dependencies = this.findRegionDependencies(exit.rule);

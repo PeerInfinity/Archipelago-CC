@@ -3039,6 +3039,24 @@
       }
     }
   },
+  "mathadventure": {
+    "name": "MathProof2p2e4",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Mathematician",
+            "game": "MathProof2p2e4"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744_rules.json"
+        ]
+      }
+    }
+  },
   "metadata": {
     "test_data_updated": "2025-09-06T09:19:56.070360",
     "test_data_source": {
