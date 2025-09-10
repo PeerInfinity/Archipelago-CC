@@ -97,6 +97,13 @@
     "has_custom_game_logic": false,
     "world_directory": "checksfinder"
   },
+  "ChocolateChipCookies": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "bakingadventure"
+  },
   "Civilization VI": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -243,6 +250,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "mlss"
+  },
+  "MathProof2p2e4": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "mathadventure"
   },
   "Mega Man 2": {
     "exporter_path": null,
@@ -481,6 +495,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "wargroove"
+  },
+  "WebDevJourney": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "codingadventure"
   },
   "Yacht Dice": {
     "exporter_path": null,

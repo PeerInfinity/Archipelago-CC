@@ -28,30 +28,31 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
                 location = ChocolateChipCookiesLocation(player, location_name, location_data.id, region)
             region.locations.append(location)
     
-    # Create entrances and connections based on JSON structure
+    # Create entrances and connections - all two-way
     create_entrance(regions["Menu"], regions["Kitchen"], "StartBaking")
+    create_entrance(regions["Kitchen"], regions["Menu"], "BackToMenu")
     
     # Kitchen connections
     create_entrance(regions["Kitchen"], regions["Preparation"], "ToPreparation")
-    create_entrance(regions["Kitchen"], regions["WetIngredients"], "ToWetIngredients")
-    create_entrance(regions["Kitchen"], regions["DryIngredients"], "ToDryIngredients")
-    
-    # Preparation connections
     create_entrance(regions["Preparation"], regions["Kitchen"], "BackToKitchenFromPrep")
     
-    # WetIngredients connections
-    create_entrance(regions["WetIngredients"], regions["Combining"], "ToCombining")
+    create_entrance(regions["Kitchen"], regions["WetIngredients"], "ToWetIngredients")
+    create_entrance(regions["WetIngredients"], regions["Kitchen"], "BackToKitchenFromWet")
     
-    # DryIngredients connections
+    create_entrance(regions["Kitchen"], regions["DryIngredients"], "ToDryIngredients")
     create_entrance(regions["DryIngredients"], regions["Kitchen"], "BackToKitchenFromDry")
     
-    # Combining connections
+    # WetIngredients to Combining
+    create_entrance(regions["WetIngredients"], regions["Combining"], "ToCombining")
+    create_entrance(regions["Combining"], regions["WetIngredients"], "BackToWetIngredients")
+    
+    # Combining to Finishing
     create_entrance(regions["Combining"], regions["Finishing"], "ToFinishing")
+    create_entrance(regions["Finishing"], regions["Combining"], "BackToCombining")
     
-    # Finishing connections
+    # Finishing to Baking
     create_entrance(regions["Finishing"], regions["Baking"], "ToBaking")
-    
-    # No exits from Baking region (final region)
+    create_entrance(regions["Baking"], regions["Finishing"], "BackToFinishing")
 
 
 def create_entrance(source_region: Region, target_region: Region, entrance_name: str) -> None:

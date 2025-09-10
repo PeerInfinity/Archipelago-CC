@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.4  -  Seed: 1
+﻿Archipelago Version 0.6.4  -  Seed: 2
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -15,7 +15,7 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 No
+Randomize Items:                 Yes
 Proof Complexity:                Normal
 Hint Complexity:                 Basic
 Require All Proofs:              No
@@ -23,16 +23,16 @@ Require All Proofs:              No
 
 Locations:
 
-Definition of 2: df-2
-Definition of 3: df-3
-Definition of 4: df-4
-1 is Complex: ax-1cn
-2 is Complex: 2cn
-Equality Substitution Right: oveq2i
-Equality Substitution Left: oveq1i
-Addition Associativity: addassi
-Triple Equality Transitivity: 3eqtri
-Final Equality: eqtr4i
+Definition of 2: addassi
+Definition of 3: ax-1cn
+Definition of 4: oveq2i
+1 is Complex: 3eqtri
+2 is Complex: df-2
+Equality Substitution Right: df-3
+Equality Substitution Left: df-4
+Addition Associativity: eqtr4i
+Triple Equality Transitivity: 2cn
+Final Equality: oveq1i
 Theorem: 2+2=4: Victory
 
 Playthrough:
@@ -41,23 +41,25 @@ Playthrough:
 
 }
 1: {
-  1 is Complex: ax-1cn
-  2 is Complex: 2cn
-  Definition of 2: df-2
-  Definition of 3: df-3
-  Definition of 4: df-4
+  1 is Complex: 3eqtri
+  2 is Complex: df-2
+  Definition of 2: addassi
+  Definition of 3: ax-1cn
+  Definition of 4: oveq2i
 }
 2: {
-  Addition Associativity: addassi
-  Equality Substitution Left: oveq1i
-  Equality Substitution Right: oveq2i
+  Equality Substitution Right: df-3
+  Final Equality: oveq1i
 }
 3: {
-  Triple Equality Transitivity: 3eqtri
+  Equality Substitution Left: df-4
 }
 4: {
-  Final Equality: eqtr4i
+  Triple Equality Transitivity: 2cn
 }
 5: {
+  Addition Associativity: eqtr4i
+}
+6: {
   Theorem: 2+2=4: Victory
 }

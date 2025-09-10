@@ -11,11 +11,6 @@
           "content": [
             {
               "type": "component",
-              "componentType": "testsPanel",
-              "title": "Tests"
-            },
-            {
-              "type": "component",
               "componentType": "inventoryPanel",
               "title": "Inventory"
             },
@@ -28,6 +23,11 @@
               "type": "component",
               "componentType": "modulesPanel",
               "title": "Modules"
+            },
+            {
+              "type": "component",
+              "componentType": "testsPanel",
+              "title": "Tests"
             },
             {
               "type": "component",
@@ -115,11 +115,6 @@
           "content": [
             {
               "type": "component",
-              "componentType": "loopsPanel",
-              "title": "Loops"
-            },
-            {
-              "type": "component",
               "componentType": "regionsPanel",
               "title": "Regions"
             },
@@ -137,6 +132,11 @@
               "type": "component",
               "componentType": "dungeonsPanel",
               "title": "Dungeons"
+            },
+            {
+              "type": "component",
+              "componentType": "loopsPanel",
+              "title": "Loops"
             },
             {
               "type": "component",

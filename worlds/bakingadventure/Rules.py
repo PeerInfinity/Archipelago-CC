@@ -13,9 +13,8 @@ def set_rules(multiworld: MultiWorld, player: int) -> None:
     # ToPreparation: always accessible (constant true)
     # No rule needed - default is accessible
     
-    # ToWetIngredients: requires Preheated Oven
-    set_rule(multiworld.get_entrance("ToWetIngredients", player),
-             lambda state: state.has("Preheated Oven", player))
+    # ToWetIngredients: always accessible - no oven needed for mixing!
+    # No rule needed - default is accessible
     
     # ToDryIngredients: always accessible (constant true)
     # No rule needed - default is accessible
@@ -81,8 +80,9 @@ def set_rules(multiworld: MultiWorld, player: int) -> None:
     
     # Combining locations
     
-    # Gradually Mix Dry into Wet: always accessible (constant true)
-    # No rule needed
+    # Gradually Mix Dry into Wet: requires both wet and dry mixtures to be ready
+    # (Access to region already enforces this, but location should also check)
+    # No additional rule needed since entrance already requires both mixtures
     
     # Fold in Chocolate Chips: requires Basic Dough
     set_rule(multiworld.get_location("Fold in Chocolate Chips", player),
@@ -90,14 +90,15 @@ def set_rules(multiworld: MultiWorld, player: int) -> None:
     
     # Finishing locations
     
-    # Scoop Dough onto Sheets: requires Prepared Sheets
+    # Scoop Dough onto Sheets: requires Prepared Sheets AND Cookie Dough
     set_rule(multiworld.get_location("Scoop Dough onto Sheets", player),
-             lambda state: state.has("Prepared Sheets", player))
+             lambda state: state.has("Prepared Sheets", player) and state.has("Cookie Dough", player))
     
     # Baking locations
     
-    # Bake for 9-11 Minutes: always accessible (constant true)
-    # No rule needed
+    # Bake for 9-11 Minutes: requires Preheated Oven AND Shaped Cookies
+    set_rule(multiworld.get_location("Bake for 9-11 Minutes", player),
+             lambda state: state.has("Preheated Oven", player) and state.has("Shaped Cookies", player))
     
     # Cool on Wire Rack (Victory): requires Baked Cookies
     set_rule(multiworld.get_location("Cool on Wire Rack", player),

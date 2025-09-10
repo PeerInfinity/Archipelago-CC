@@ -1,18 +1,18 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-09-06 09:43:38
+**Generated:** 2025-09-09 18:31:38
 
 **Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-09-06T09:43:38.245082
+**Source Data Last Updated:** 2025-09-09T18:31:38.483677
 
 **Script Version:** 1.0.0
 
 ## Summary
 
-- **Total Games:** 76
-- **Passed:** 8 (10.5%)
-- **Failed:** 68 (89.5%)
+- **Total Games:** 79
+- **Passed:** 11 (13.9%)
+- **Failed:** 68 (86.1%)
 
 ## Test Results
 
@@ -31,6 +31,7 @@
 | Castlevania 64 | ❌ Failed | 0 | 0.1 | 4.1 | 🟠 2.4% | ⚫ | ⚫ |
 | Celeste 64 | ❌ Failed | 0 | 0.1 | 5.2 | 🟠 1.9% | ⚫ | ⚫ |
 | ChecksFinder | ❌ Failed | 0 | 0.1 | 4.5 | 🟠 2.2% | ⚫ | ⚫ |
+| ChocolateChipCookies | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ⚫ | ⚫ |
 | Civilization VI | ❌ Failed | 0 | 0.13 | 8.1 | 🟠 1.6% | ⚫ | ⚫ |
 | DLCQuest | ❌ Failed | 0 | 0.1 | 8.1 | 🟠 1.2% | ⚫ | ⚫ |
 | DOOM 1993 | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | ⚫ | ⚫ |
@@ -54,6 +55,7 @@
 | Links Awakening DX | ❌ Failed | 0 | 0 | 14.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Lufia II Ancient Cave | ❌ Failed | 0 | 0.1 | 4.1 | 🟠 2.4% | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ❌ Failed | 0 | 0.1 | 7.1 | 🟠 1.4% | ⚫ | ⚫ |
+| MathProof2p2e4 | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ⚫ | ⚫ |
 | Mega Man 2 | ❌ Failed | 0 | 0.1 | 9.1 | 🟠 1.1% | ⚫ | ⚫ |
 | MegaMan Battle Network 3 | ❌ Failed | 0 | 0.2 | 5.1 | 🟠 3.9% | ⚫ | ⚫ |
 | Meritous | ❌ Failed | 0 | 1.1 | 7.1 | 🟡 15.5% | ⚫ | ⚫ |
@@ -89,6 +91,7 @@
 | Undertale | ❌ Failed | 0 | 3.1 | 4.1 | 🟡 75.6% | ⚫ | ⚫ |
 | VVVVVV | ❌ Failed | 0 | 0.4 | 2.4 | 🟠 16.7% | ⚫ | ⚫ |
 | Wargroove | ❌ Failed | 0 | 0 | 9.1 | 🔴 0.0% | ⚫ | ⚫ |
+| WebDevJourney | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | ⚫ | ⚫ |
 | Yacht Dice | ❌ Failed | 0 | 0.1 | 17.1 | 🟠 0.6% | ⚫ | ⚫ |
 | Yoshi's Island | ❌ Failed | 0 | 0 | 12.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Yu-Gi-Oh! 2006 | ❌ Failed | 2 | 0.1 | 6.1 | 🟠 1.6% | ⚫ | ⚫ |

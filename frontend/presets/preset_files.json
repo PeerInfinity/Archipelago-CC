@@ -60,11 +60,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-09-06T07:12:36.565520",
+      "timestamp": "2025-09-06T09:39:37.371501",
       "processing_time": {
-        "generation_seconds": 11.89,
-        "spoiler_test_seconds": 32.6,
-        "total_seconds": 44.49
+        "generation_seconds": 14.03,
+        "spoiler_test_seconds": 41.26,
+        "total_seconds": 55.29
       }
     }
   },
@@ -132,11 +132,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-09-06T09:19:47.977297",
+      "timestamp": "2025-09-06T09:43:29.864533",
       "processing_time": {
-        "generation_seconds": 2.59,
-        "spoiler_test_seconds": 5.3,
-        "total_seconds": 7.89
+        "generation_seconds": 2.64,
+        "spoiler_test_seconds": 5.59,
+        "total_seconds": 8.23
       }
     }
   },
@@ -201,11 +201,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-09-06T07:12:27.136877",
+      "timestamp": "2025-09-06T09:39:26.394029",
       "processing_time": {
-        "generation_seconds": 3.75,
-        "spoiler_test_seconds": 5.38,
-        "total_seconds": 9.129999999999999
+        "generation_seconds": 4.1,
+        "spoiler_test_seconds": 6.52,
+        "total_seconds": 10.62
       }
     }
   },
@@ -270,11 +270,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-09-06T07:13:21.361366",
+      "timestamp": "2025-09-06T09:40:32.995549",
       "processing_time": {
-        "generation_seconds": 7.76,
-        "spoiler_test_seconds": 5.38,
-        "total_seconds": 13.14
+        "generation_seconds": 8.56,
+        "spoiler_test_seconds": 5.46,
+        "total_seconds": 14.02
       }
     }
   },
@@ -384,11 +384,11 @@
       "progress_percent": 21.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-09-06T07:13:34.821024",
+      "timestamp": "2025-09-06T09:40:47.360459",
       "processing_time": {
-        "generation_seconds": 8.84,
-        "spoiler_test_seconds": 5.53,
-        "total_seconds": 14.370000000000001
+        "generation_seconds": 9.34,
+        "spoiler_test_seconds": 5.84,
+        "total_seconds": 15.18
       }
     }
   },
@@ -421,11 +421,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-09-06T07:13:49.489255",
+      "timestamp": "2025-09-06T09:41:02.846153",
       "processing_time": {
-        "generation_seconds": 3.89,
-        "spoiler_test_seconds": 7.41,
-        "total_seconds": 11.3
+        "generation_seconds": 4.09,
+        "spoiler_test_seconds": 7.46,
+        "total_seconds": 11.55
       }
     }
   },
@@ -458,11 +458,11 @@
       "progress_percent": 2.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-09-06T07:14:01.096402",
+      "timestamp": "2025-09-06T09:41:14.700961",
       "processing_time": {
-        "generation_seconds": 20.89,
-        "spoiler_test_seconds": 30.74,
-        "total_seconds": 51.629999999999995
+        "generation_seconds": 23.23,
+        "spoiler_test_seconds": 33.95,
+        "total_seconds": 57.18000000000001
       }
     }
   },
@@ -495,11 +495,11 @@
       "progress_percent": 12.1,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-09-06T07:14:53.028201",
+      "timestamp": "2025-09-06T09:42:12.230138",
       "processing_time": {
-        "generation_seconds": 7.23,
-        "spoiler_test_seconds": 55.28,
-        "total_seconds": 62.510000000000005
+        "generation_seconds": 7.4,
+        "spoiler_test_seconds": 60.16,
+        "total_seconds": 67.56
       }
     }
   },
@@ -532,11 +532,11 @@
       "progress_percent": 1.2,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-09-06T07:15:56.334741",
+      "timestamp": "2025-09-06T09:43:20.627404",
       "processing_time": {
-        "generation_seconds": 3.53,
-        "spoiler_test_seconds": 5.36,
-        "total_seconds": 8.89
+        "generation_seconds": 3.57,
+        "spoiler_test_seconds": 5.34,
+        "total_seconds": 8.91
       }
     }
   },
@@ -3042,22 +3042,6 @@
   "mathadventure": {
     "name": "MathProof2p2e4",
     "folders": {
-      "AP_07758176404715800194": {
-        "seed": 0,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "MathProof2p2e4"
-          }
-        ],
-        "files": [
-          "AP_07758176404715800194.archipelago",
-          "AP_07758176404715800194_Spoiler.txt",
-          "AP_07758176404715800194_rules.json",
-          "AP_07758176404715800194_spheres_log.jsonl"
-        ]
-      },
       "AP_14089154938208861744": {
         "seed": 1,
         "games": [
@@ -3073,28 +3057,60 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "MathProof2p2e4"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
+        ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "MathProof2p2e4"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "passed",
+      "generation_errors": 0,
+      "generation_warnings": 0,
+      "sphere_reached": 5.1,
+      "max_spheres": 5.1,
+      "progress_percent": 100.0,
+      "has_custom_exporter": false,
+      "has_custom_game_logic": false,
+      "timestamp": "2025-09-09T18:30:46.035870",
+      "processing_time": {
+        "generation_seconds": 2.61,
+        "spoiler_test_seconds": 0.14,
+        "total_seconds": 2.75
       }
     }
   },
   "bakingadventure": {
     "name": "ChocolateChipCookies",
     "folders": {
-      "AP_07758176404715800194": {
-        "seed": 0,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "ChocolateChipCookies"
-          }
-        ],
-        "files": [
-          "AP_07758176404715800194.archipelago",
-          "AP_07758176404715800194_Spoiler.txt",
-          "AP_07758176404715800194_rules.json",
-          "AP_07758176404715800194_spheres_log.jsonl"
-        ]
-      },
       "AP_14089154938208861744": {
         "seed": 1,
         "games": [
@@ -3110,21 +3126,138 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "ChocolateChipCookies"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
+        ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "ChocolateChipCookies"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "passed",
+      "generation_errors": 0,
+      "generation_warnings": 0,
+      "sphere_reached": 9.1,
+      "max_spheres": 9.1,
+      "progress_percent": 100.0,
+      "has_custom_exporter": false,
+      "has_custom_game_logic": false,
+      "timestamp": "2025-09-09T18:30:49.087233",
+      "processing_time": {
+        "generation_seconds": 2.22,
+        "spoiler_test_seconds": 0.09,
+        "total_seconds": 2.31
+      }
+    }
+  },
+  "codingadventure": {
+    "name": "WebDevJourney",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "WebDevJourney"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "WebDevJourney"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
+        ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "WebDevJourney"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "passed",
+      "generation_errors": 0,
+      "generation_warnings": 0,
+      "sphere_reached": 13.1,
+      "max_spheres": 13.1,
+      "progress_percent": 100.0,
+      "has_custom_exporter": false,
+      "has_custom_game_logic": false,
+      "timestamp": "2025-09-09T18:31:34.779207",
+      "processing_time": {
+        "generation_seconds": 3.43,
+        "spoiler_test_seconds": 0.15,
+        "total_seconds": 3.58
       }
     }
   },
   "metadata": {
-    "test_data_updated": "2025-09-06T09:19:56.070360",
+    "test_data_updated": "2025-09-09T18:31:38.561252",
     "test_data_source": {
-      "average_time_per_template_seconds": 0.1,
+      "average_time_per_template_seconds": 0.0,
       "batch_processing_time_minutes": 0.1,
-      "batch_processing_time_seconds": 8.0,
+      "batch_processing_time_seconds": 3.7,
       "created": "2025-08-22T09:54:44.358796",
-      "last_updated": "2025-09-06T09:19:55.990993",
+      "last_updated": "2025-09-09T18:31:38.483677",
       "script_version": "1.0.0"
     },
-    "games_with_test_data": 76,
-    "total_games": 76,
+    "games_with_test_data": 79,
+    "total_games": 79,
     "games_without_test_data": 0
   }
 }

@@ -15,26 +15,26 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 Yes
+Randomize Items:                 No
 
 
 Locations:
 
-Gather Mixing Bowls: Creamed Mixture
-Get Electric Mixer: Flour Mixture
-Find Measuring Tools: Softened Butter
+Gather Mixing Bowls: Mixing Bowls
+Get Electric Mixer: Electric Mixer
+Find Measuring Tools: Measuring Tools
 Preheat Oven to 375F: Preheated Oven
-Line Baking Sheets: Butter Sugar Base
-Soften Butter: Mixing Bowls
-Cream Butter and Sugars: Basic Dough
-Add Eggs: Measured Flour
-Add Vanilla: Baked Cookies
-Measure Flour: Cookie Dough
-Add Baking Soda and Salt: Electric Mixer
-Gradually Mix Dry into Wet: Prepared Sheets
-Fold in Chocolate Chips: Measuring Tools
+Line Baking Sheets: Prepared Sheets
+Soften Butter: Softened Butter
+Cream Butter and Sugars: Butter Sugar Base
+Add Eggs: Egg Mixture
+Add Vanilla: Creamed Mixture
+Measure Flour: Measured Flour
+Add Baking Soda and Salt: Flour Mixture
+Gradually Mix Dry into Wet: Basic Dough
+Fold in Chocolate Chips: Cookie Dough
 Scoop Dough onto Sheets: Shaped Cookies
-Bake for 9-11 Minutes: Egg Mixture
+Bake for 9-11 Minutes: Baked Cookies
 Cool on Wire Rack: Victory
 
 Playthrough:
@@ -43,38 +43,36 @@ Playthrough:
 
 }
 1: {
-  Find Measuring Tools: Softened Butter
-  Gather Mixing Bowls: Creamed Mixture
-  Get Electric Mixer: Flour Mixture
-  Line Baking Sheets: Butter Sugar Base
+  Find Measuring Tools: Measuring Tools
+  Gather Mixing Bowls: Mixing Bowls
+  Get Electric Mixer: Electric Mixer
+  Line Baking Sheets: Prepared Sheets
   Preheat Oven to 375F: Preheated Oven
-  Soften Butter: Mixing Bowls
+  Soften Butter: Softened Butter
 }
 2: {
-  Add Eggs: Measured Flour
-  Gradually Mix Dry into Wet: Prepared Sheets
+  Cream Butter and Sugars: Butter Sugar Base
+  Measure Flour: Measured Flour
 }
 3: {
-  Add Baking Soda and Salt: Electric Mixer
+  Add Baking Soda and Salt: Flour Mixture
+  Add Eggs: Egg Mixture
 }
 4: {
-  Cream Butter and Sugars: Basic Dough
+  Add Vanilla: Creamed Mixture
 }
 5: {
-  Fold in Chocolate Chips: Measuring Tools
+  Gradually Mix Dry into Wet: Basic Dough
 }
 6: {
-  Measure Flour: Cookie Dough
+  Fold in Chocolate Chips: Cookie Dough
 }
 7: {
   Scoop Dough onto Sheets: Shaped Cookies
 }
 8: {
-  Bake for 9-11 Minutes: Egg Mixture
+  Bake for 9-11 Minutes: Baked Cookies
 }
 9: {
-  Add Vanilla: Baked Cookies
-}
-10: {
   Cool on Wire Rack: Victory
 }

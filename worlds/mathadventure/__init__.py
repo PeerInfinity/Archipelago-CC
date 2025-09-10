@@ -54,11 +54,8 @@ class MathProof2p2e4World(World):
         set_rules(self)
     
     def create_items(self) -> None:
-        # Check if randomization is disabled
-        if not self.options.randomize_items.value:
-            # Place items in their original locations
-            self._place_original_items()
-        else:
+        # Only create item pool if randomization is enabled
+        if self.options.randomize_items.value:
             # Create item pool for randomization
             item_pool = []
             for name, data in item_table.items():
@@ -70,7 +67,7 @@ class MathProof2p2e4World(World):
     
     def _place_original_items(self) -> None:
         """Place items in their canonical locations when randomization is disabled."""
-        # Original item placements based on the JSON
+        # Original item placements: location_name -> item_name
         original_placements = {
             "Definition of 2": "df-2",
             "Definition of 3": "df-3", 
@@ -93,6 +90,11 @@ class MathProof2p2e4World(World):
     def create_item(self, name: str) -> Item:
         data = item_table[name]
         return MathProofItem(name, data.classification, data.id, self.player)
+    
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
     
     def generate_basic(self) -> None:
         # Place Victory event at the goal location

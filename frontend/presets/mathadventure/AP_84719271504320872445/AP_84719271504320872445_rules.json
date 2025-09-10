@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "MathProof2p2e4",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 3,
   "player_names": {
     "1": "Player1"
   },
@@ -139,9 +139,9 @@
               "value": true
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "df-2",
+              "name": "df-3",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -157,9 +157,9 @@
               "value": true
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "df-3",
+              "name": "oveq1i",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -175,7 +175,7 @@
               "value": true
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
               "name": "df-4",
               "player": 1,
@@ -229,9 +229,9 @@
               "value": true
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "ax-1cn",
+              "name": "3eqtri",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -283,9 +283,9 @@
               "value": true
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "2cn",
+              "name": "addassi",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -355,9 +355,9 @@
               }
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "oveq2i",
+              "name": "ax-1cn",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -376,9 +376,9 @@
               }
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "oveq1i",
+              "name": "oveq2i",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -409,9 +409,9 @@
               ]
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "addassi",
+              "name": "eqtr4i",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -472,9 +472,9 @@
               ]
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "3eqtri",
+              "name": "df-2",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -505,9 +505,9 @@
               ]
             },
             "progress_type": 1,
-            "locked": true,
+            "locked": false,
             "item": {
-              "name": "eqtr4i",
+              "name": "2cn",
               "player": 1,
               "advancement": true,
               "priority": null,
@@ -564,7 +564,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "df-3": {
         "name": "df-3",
@@ -578,7 +578,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "df-4": {
         "name": "df-4",
@@ -592,7 +592,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "ax-1cn": {
         "name": "ax-1cn",
@@ -606,7 +606,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "2cn": {
         "name": "2cn",
@@ -620,7 +620,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "oveq2i": {
         "name": "oveq2i",
@@ -634,7 +634,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "oveq1i": {
         "name": "oveq1i",
@@ -648,7 +648,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "addassi": {
         "name": "addassi",
@@ -662,7 +662,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "3eqtri": {
         "name": "3eqtri",
@@ -676,7 +676,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "eqtr4i": {
         "name": "eqtr4i",
@@ -690,7 +690,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Victory": {
         "name": "Victory",
@@ -715,17 +715,17 @@
   },
   "itempool_counts": {
     "1": {
-      "2cn": 1,
-      "3eqtri": 1,
+      "2cn": 2,
+      "3eqtri": 2,
       "Victory": 1,
-      "addassi": 1,
-      "ax-1cn": 1,
-      "df-2": 1,
-      "df-3": 1,
-      "df-4": 1,
-      "eqtr4i": 1,
-      "oveq1i": 1,
-      "oveq2i": 1
+      "addassi": 2,
+      "ax-1cn": 2,
+      "df-2": 2,
+      "df-3": 2,
+      "df-4": 2,
+      "eqtr4i": 2,
+      "oveq1i": 2,
+      "oveq2i": 2
     }
   },
   "progression_mapping": {
