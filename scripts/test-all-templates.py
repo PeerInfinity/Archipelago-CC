@@ -818,8 +818,8 @@ def main():
         '--skip-list',
         type=str,
         nargs='*',
-        default=['Archipelago.yaml', 'Universal Tracker.yaml', 'Sudoku.yaml'],
-        help='List of template files to skip (default: Archipelago.yaml Universal Tracker.yaml Sudoku.yaml)'
+        default=['Archipelago.yaml', 'Universal Tracker.yaml', 'Final Fantasy.yaml', 'Sudoku.yaml'],
+        help='List of template files to skip (default: Archipelago.yaml Universal Tracker.yaml Final Fantasy.yaml Sudoku.yaml)'
     )
     parser.add_argument(
         '--include-list',

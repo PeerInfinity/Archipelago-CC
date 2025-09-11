@@ -145,8 +145,12 @@ def generate_markdown_chart(chart_data: List[Tuple[str, str, int, float, float, 
     # Summary statistics
     if chart_data:
         total_games = len(chart_data)
-        passed = sum(1 for _, pass_fail, _, _, _, _, _ in chart_data if pass_fail.lower() == 'passed')
-        failed = sum(1 for _, pass_fail, _, _, _, _, _ in chart_data if pass_fail.lower() == 'failed')
+        # Check if pass_fail starts with "Passed" or contains "passed" for seed ranges
+        passed = sum(1 for _, pass_fail, _, _, _, _, _ in chart_data 
+                    if 'passed' in pass_fail.lower())
+        # Check if pass_fail starts with "Failed" or contains "failed" for seed ranges  
+        failed = sum(1 for _, pass_fail, _, _, _, _, _ in chart_data 
+                    if 'failed' in pass_fail.lower())
         unknown = total_games - passed - failed
         
         md_content += "## Summary\n\n"
