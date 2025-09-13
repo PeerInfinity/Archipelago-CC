@@ -3,7 +3,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { PathAnalyzerUI } from '../pathAnalyzer/index.js';
 import commonUI from '../commonUI/index.js';
 import messageHandler from '../client/core/messageHandler.js';
-import loopStateSingleton from '../loops/loopStateSingleton.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
 import { debounce } from '../commonUI/index.js';
@@ -54,6 +54,7 @@ export class RegionUI {
     this.isInitialized = false; // Add flag
     this.colorblindSettings = false; // Add colorblind settings cache
     this.navigationTarget = null; // Add navigation target state
+    this.isDiscoveryModeActive = false; // Track discovery mode state
     
     // Separate tracking for "Show All" mode expansion states
     // Map of regionName -> boolean (expanded state)
@@ -232,8 +233,16 @@ export class RegionUI {
     // Subscribe to loop state changes (still relevant)
     subscribe('loop:stateChanged', debouncedUpdate);
     subscribe('loop:actionCompleted', debouncedUpdate);
-    subscribe('loop:discoveryChanged', debouncedUpdate);
-    subscribe('loop:modeChanged', debouncedUpdate);
+    subscribe('discovery:changed', debouncedUpdate);
+
+    // Subscribe to discovery mode changes
+    subscribe('discovery:modeChanged', (data) => {
+      if (data && typeof data.active === 'boolean') {
+        this.isDiscoveryModeActive = data.active;
+        log('info', `[RegionUI] Discovery mode changed: ${this.isDiscoveryModeActive}`);
+        debouncedUpdate();
+      }
+    });
 
     // Subscribe to settings changes
     const settingsHandler = ({ key, value }) => {

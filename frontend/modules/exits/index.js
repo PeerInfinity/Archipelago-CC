@@ -28,6 +28,9 @@ export function register(registrationApi) {
   // Register the panel component class constructor
   registrationApi.registerPanelComponent('exitsPanel', ExitUI);
 
+  // Register events that this module publishes
+  registrationApi.registerEventBusPublisher('user:exitClicked');
+
   // Register settings schema if needed
   // No specific settings schema for Exits registration.
 }
