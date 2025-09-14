@@ -151,9 +151,9 @@ export class PresetUI {
     `;
 
     // Process each game
-    Object.entries(this.presets).forEach(([gameId, gameData]) => {
+    Object.entries(this.presets).forEach(([gameDirectory, gameData]) => {
       // Skip metadata entry
-      if (gameId === 'metadata') return;
+      if (gameDirectory === 'metadata') return;
       
       // Create a section for each game
       html += `
@@ -161,12 +161,12 @@ export class PresetUI {
           <h4 class="game-name">${this.escapeHtml(gameData.name)}</h4>
       `;
 
-      if (gameId === 'multiworld') {
+      if (gameDirectory === 'multiworld') {
         // Special layout for multiworld - block format
         html += `</div>`; // Close the inline game-row
         html += `<div class="multiworld-container">`;
         html += `<div class="multiworld-seeds">`;
-        Object.entries(gameData.folders).forEach(([folderId, folderData]) => {
+        Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
           html += `<div class="multiworld-seed-block">`;
           html += `<span class="seed-number">Seed: ${this.escapeHtml(
             folderData.seed
@@ -176,8 +176,8 @@ export class PresetUI {
             html += `
               <div class="player-info">
                 <button class="preset-player-button"
-                        data-game="${this.escapeHtml(gameId)}"
-                        data-folder="${this.escapeHtml(folderId)}"
+                        data-game-directory="${this.escapeHtml(gameDirectory)}"
+                        data-seed-name="${this.escapeHtml(seedName)}"
                         data-player="${this.escapeHtml(playerGame.player)}"
                         title="Load Player ${this.escapeHtml(
                           playerGame.player
@@ -198,11 +198,11 @@ export class PresetUI {
       } else {
         // Standard layout for single-player games
         html += `<div class="game-presets">`;
-        Object.entries(gameData.folders).forEach(([folderId, folderData]) => {
+        Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
           html += `
             <button class="preset-button"
-                    data-game="${this.escapeHtml(gameId)}"
-                    data-folder="${this.escapeHtml(folderId)}"
+                    data-game-directory="${this.escapeHtml(gameDirectory)}"
+                    data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
                       folderData.description || `Seed ${folderData.seed}`
                     )}">
@@ -216,7 +216,7 @@ export class PresetUI {
       }
 
       // Close the game section (only for non-multiworld)
-      if (gameId !== 'multiworld') {
+      if (gameDirectory !== 'multiworld') {
         html += `
           </div>
         `;
@@ -470,24 +470,24 @@ export class PresetUI {
     );
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
-        const gameId = button.getAttribute('data-game');
-        const folderId = button.getAttribute('data-folder');
+        const gameDirectory = button.getAttribute('data-game-directory');
+        const seedName = button.getAttribute('data-seed-name');
         const playerId = button.getAttribute('data-player'); // Will be null for standard buttons
 
         if (playerId) {
-          log('info', 
-            `Loading preset ${folderId} from game ${gameId} for player ${playerId}`
+          log('info',
+            `Loading preset ${seedName} from game ${gameDirectory} for player ${playerId}`
           );
-          this.currentGame = gameId;
-          this.currentPreset = folderId;
+          this.currentGameDirectory = gameDirectory;
+          this.currentSeedName = seedName;
           this.currentPlayer = playerId; // Store current player
-          this.loadPreset(gameId, folderId, playerId);
+          this.loadPreset(gameDirectory, seedName, playerId);
         } else {
-          log('info', `Loading preset ${folderId} from game ${gameId}`);
-          this.currentGame = gameId;
-          this.currentPreset = folderId;
+          log('info', `Loading preset ${seedName} from game ${gameDirectory}`);
+          this.currentGameDirectory = gameDirectory;
+          this.currentSeedName = seedName;
           this.currentPlayer = null; // Clear current player
-          this.loadPreset(gameId, folderId); // No player ID for standard presets
+          this.loadPreset(gameDirectory, seedName); // No player ID for standard presets
         }
       });
     });
@@ -550,7 +550,7 @@ export class PresetUI {
     try {
       if (this.componentState) {
         this.componentState.currentRules = rulesData;
-        this.componentState.currentGameId = rulesData.game || 'unknown_game'; // Try to get game from JSON
+        this.componentState.currentGameName = rulesData.game_name || 'unknown_game'; // Try to get game name from JSON
         this.componentState.currentPlayerId = playerId;
       } else {
         log('warn', 
@@ -603,21 +603,21 @@ export class PresetUI {
     }
   }
 
-  loadPreset(gameId, folderId, playerId = null) {
-    this.currentGame = gameId;
-    this.currentPreset = folderId;
+  loadPreset(gameDirectory, seedName, playerId = null) {
+    this.currentGameDirectory = gameDirectory;
+    this.currentSeedName = seedName;
     this.currentPlayer = playerId;
 
     const container = this.presetsListContainer;
     if (!container) return;
 
     try {
-      const gameData = this.presets[gameId];
-      const folderData = gameData.folders[folderId];
+      const gameData = this.presets[gameDirectory];
+      const folderData = gameData.folders[seedName];
 
       // Build the HTML for the preset details
       let headerTitle = `${this.escapeHtml(gameData.name)} - Preset`;
-      if (playerId && gameId === 'multiworld') {
+      if (playerId && gameDirectory === 'multiworld') {
         const playerInfo = folderData.games.find((p) => p.player == playerId);
         if (playerInfo) {
           headerTitle = `Multiworld Seed ${this.escapeHtml(
@@ -646,7 +646,7 @@ export class PresetUI {
 
       // Add links for each file
       folderData.files.forEach((file) => {
-        const filePath = `./presets/${gameId}/${folderId}/${file}`;
+        const filePath = `./presets/${gameDirectory}/${seedName}/${file}`;
         html += `
           <a class="preset-file-link" href="${filePath}" target="_blank" data-file="${file}">${file}</a><br/>
         `;
@@ -680,14 +680,14 @@ export class PresetUI {
           // If this is a rules.json file, load it into the game
           if (file.endsWith('_rules.json')) {
             e.preventDefault(); // Prevent opening in a new tab
-            this.loadRulesFile(gameId, folderId, file, playerId);
+            this.loadRulesFile(gameDirectory, seedName, file, playerId);
           }
         });
       });
 
       // Automatically load the rules.json file for this preset/player
       let rulesFile = null;
-      if (playerId && gameId === 'multiworld') {
+      if (playerId && gameDirectory === 'multiworld') {
         rulesFile = folderData.files.find((file) =>
           file.endsWith(`_P${playerId}_rules.json`)
         );
@@ -727,7 +727,7 @@ export class PresetUI {
           );
         }
 
-        this.loadRulesFile(gameId, folderId, rulesFile, effectivePlayerId);
+        this.loadRulesFile(gameDirectory, seedName, rulesFile, effectivePlayerId);
       } else {
         log('warn', 
           'No suitable rules.json file found for automatic loading.'
@@ -764,8 +764,8 @@ export class PresetUI {
     }
   }
 
-  async loadRulesFile(gameId, folderId, rulesFile, playerId = '1') {
-    const fullPath = `./presets/${gameId}/${folderId}/${rulesFile}`;
+  async loadRulesFile(gameDirectory, seedName, rulesFile, playerId = '1') {
+    const fullPath = `./presets/${gameDirectory}/${seedName}/${rulesFile}`;
     log('info', `Loading rules file: ${fullPath}`);
     try {
       const response = await fetch(fullPath);
@@ -779,23 +779,23 @@ export class PresetUI {
       // Ensure componentState exists before trying to set properties on it
       if (this.componentState) {
         this.componentState.currentRules = rulesData;
-        this.componentState.currentGameId = gameId;
+        this.componentState.currentGameDirectory = gameDirectory;
         this.componentState.currentPlayerId = playerId; // Store the determined player ID
       } else {
         // If componentState is not available, these assignments would fail.
         // Log a warning, as this might indicate an issue with panel state management.
         log('warn', 
-          '[PresetUI] loadRulesFile: this.componentState is undefined. Cannot store currentRules, currentGameId, or currentPlayerId. This might be normal if the panel was just created and no state has been saved yet, or it could indicate an issue with GoldenLayout state persistence for this component.'
+          '[PresetUI] loadRulesFile: this.componentState is undefined. Cannot store currentRules, currentGameDirectory, or currentPlayerId. This might be normal if the panel was just created and no state has been saved yet, or it could indicate an issue with GoldenLayout state persistence for this component.'
         );
         // As a fallback, we can store these on the instance if needed for immediate use,
         // but they won't be persisted by GoldenLayout.
         // this.currentRules_fallback = rulesData;
-        // this.currentGameId_fallback = gameId;
+        // this.currentGameDirectory_fallback = gameDirectory;
         // this.currentPlayerId_fallback = playerId;
       }
 
-      log('info', 
-        `Rules loaded for ${gameId}, player ${playerId}. Publishing files:jsonLoaded.`
+      log('info',
+        `Rules loaded for ${gameDirectory}, player ${playerId}. Publishing files:jsonLoaded.`
       );
       eventBus.publish('files:jsonLoaded', {
         fileName: rulesFile,

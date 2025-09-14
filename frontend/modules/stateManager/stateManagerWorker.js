@@ -326,7 +326,7 @@ async function handleMessage(message) {
         self.postMessage({
           type: 'rulesLoadedConfirmation',
           initialSnapshot: initialSnapshot,
-          gameId: stateManagerInstance.gameId,
+          gameName: stateManagerInstance.rules?.game_name,
           playerId: playerId,
           newStaticData: workerStaticGameData, // Send the entire new static data object
         });
