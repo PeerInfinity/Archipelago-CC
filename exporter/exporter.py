@@ -56,7 +56,6 @@ def get_world_directory_name(game_name: str) -> str:
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
-                        logger.debug(f"Found world directory '{world_dir_name}' for game '{game_name}'")
                         return world_dir_name
                 
                 # Fallback pattern for single quotes
@@ -66,7 +65,6 @@ def get_world_directory_name(game_name: str) -> str:
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
-                        logger.debug(f"Found world directory '{world_dir_name}' for game '{game_name}' (ClassVar single quote)")
                         return world_dir_name
                 
                 # Fallback: look for simpler pattern: game = "Game Name"
@@ -76,7 +74,6 @@ def get_world_directory_name(game_name: str) -> str:
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
-                        logger.debug(f"Found world directory '{world_dir_name}' for game '{game_name}' (simple pattern)")
                         return world_dir_name
                 
                 # Fallback pattern for single quotes
@@ -86,14 +83,12 @@ def get_world_directory_name(game_name: str) -> str:
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
-                        logger.debug(f"Found world directory '{world_dir_name}' for game '{game_name}' (simple single quote)")
                         return world_dir_name
                         
             except (IOError, UnicodeDecodeError):
                 continue
         
         # If no matching world found, fall back to old logic
-        logger.debug(f"No world directory found for game '{game_name}', using fallback naming")
         return game_name.lower().replace(' ', '_').replace(':', '_')
         
     except Exception as e:
@@ -175,38 +170,6 @@ def make_serializable(obj):
     
     return obj
 
-def debug_export_data(data, prefix=""):
-    """
-    Recursively checks each field of the export data to find non-serializable parts.
-    Logs detailed information about which fields might be causing issues.
-    """
-    if isinstance(data, dict):
-        for key, value in data.items():
-            current_path = f"{prefix}.{key}" if prefix else str(key)
-            try:
-                # Try to serialize just this item
-                json.dumps({key: value})
-                # If it succeeded, go deeper
-                debug_export_data(value, current_path)
-            except (TypeError, OverflowError, ValueError) as e:
-                logger.error(f"Non-serializable field at {current_path}: {str(e)}")
-                # Try to diagnose deeper
-                debug_export_data(value, current_path)
-    elif isinstance(data, (list, tuple)):
-        for i, item in enumerate(data):
-            current_path = f"{prefix}[{i}]"
-            try:
-                json.dumps(item)
-                debug_export_data(item, current_path)
-            except (TypeError, OverflowError, ValueError) as e:
-                logger.error(f"Non-serializable item at {current_path}: {str(e)}")
-                debug_export_data(item, current_path)
-    else:
-        # For leaf nodes, just check if they're serializable
-        try:
-            json.dumps(data)
-        except (TypeError, OverflowError, ValueError) as e:
-            logger.error(f"Non-serializable value at {prefix}: {data} (type: {type(data)}) - {str(e)}")
 
 def write_field_by_field(export_data, filepath):
     """
@@ -225,7 +188,6 @@ def write_field_by_field(export_data, filepath):
                 json.dumps(serializable_field)
                 serializable_data[field] = serializable_field
                 fields_written.append(field)
-                logger.info(f"Successfully processed field: {field}")
             except Exception as e:
                 error_msg = f"Failed to process field {field}: {str(e)}"
                 logger.error(error_msg)
@@ -241,7 +203,6 @@ def write_field_by_field(export_data, filepath):
                             player_data = make_serializable(export_data[field][player_id])
                             json.dumps(player_data)  # Test serialization
                             serializable_data[field][player_id] = player_data
-                            logger.info(f"Added {field} data for player {player_id}")
                         except Exception as player_error:
                             error_msg = f"Failed to process {field} for player {player_id}: {str(player_error)}"
                             logger.error(error_msg)
@@ -252,7 +213,6 @@ def write_field_by_field(export_data, filepath):
     try:
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(serializable_data, f, indent=2)
-        logger.info(f"Wrote partial data ({', '.join(fields_written)}) to {filepath}")
         return True
     except Exception as e:
         error_msg = f"Failed to write even partial data: {str(e)}"
@@ -310,7 +270,6 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         itempool_counts = {}
         try:
             itempool_counts = game_handler.get_itempool_counts(world, multiworld, player)
-            logger.debug(f"Successfully calculated itempool counts for player {player}")
         except Exception as e:
             error_msg = f"Error calculating itempool counts for player {player}: {str(e)}"
             logger.error(error_msg)
@@ -356,13 +315,9 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
         # Start regions
         try:
-            logger.debug(f"Processing start regions for player {player}")
-            # world variable should already be defined from earlier in the loop
-            logger.debug(f"Using world object for player {player}")
 
             try:
                 menu_region = multiworld.get_region('Menu', player)
-                logger.debug(f"Got menu region for player {player}")
             except Exception as e:
                 logger.error(f"Error getting menu region: {str(e)}")
                 menu_region = None
@@ -372,12 +327,10 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 region for region in multiworld.get_regions() 
                 if region.player == player
             ]
-            logger.debug(f"Found {len(player_regions)} regions for player {player}")
 
             for region in player_regions:
                 try:
                     if hasattr(region, 'can_start_at') and callable(getattr(region, 'can_start_at')):
-                        logger.debug(f"Checking if can start at region: {region.name}")
                         try:
                             # Ensure world is passed to can_start_at if needed by the method
                             can_start = region.can_start_at(world) 
@@ -396,7 +349,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                         except Exception as e:
                             logger.error(f"Error checking can_start_at for region {region.name}: {str(e)}")
                     else:
-                        logger.debug(f"Region {region.name} does not have a callable can_start_at method.")
+                        pass  # Region doesn't have a callable can_start_at method
                 except Exception as e:
                     logger.error(f"Error processing region {getattr(region, 'name', 'Unknown')} in start regions loop: {str(e)}")
                     continue
@@ -405,7 +358,6 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 'default': ['Menu'], # Keep default as Menu
                 'available': available_regions
             }
-            logger.debug(f"Completed processing start regions for player {player}")
 
         except Exception as e:
             logger.error(f"Error in top-level start regions processing for player {player}: {str(e)}")
@@ -424,7 +376,6 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 item.name for item in starting_items_list if hasattr(item, 'name')
             ]
             export_data['starting_items'][player_str] = serializable_starting_items
-            logger.debug(f"Successfully processed {len(serializable_starting_items)} starting items for player {player}")
         except Exception as e:
             logger.error(f"Error processing starting items for player {player}: {str(e)}")
             export_data['starting_items'][player_str] = {'error': f"Failed to process starting items: {str(e)}"}
@@ -449,7 +400,6 @@ def process_regions(multiworld, player: int) -> tuple:
     Process complete region data including all available backend data.
     Returns (regions_data, dungeons_data) tuple with separate structures.
     """
-    logger.debug(f"Starting process_regions for player {player}")
     
     def safe_expand_rule(game_handler, rule_func,
                          rule_target_name: Optional[str] = None,
@@ -460,23 +410,18 @@ def process_regions(multiworld, player: int) -> tuple:
             if not rule_func:
                 return None
 
-            logger.debug(f"safe_expand_rule: Analyzing {target_type} '{rule_target_name or 'unknown'}' using runtime analyze_rule")
             # Directly call analyze_rule, which handles recursion internally for combined rules
             analysis_result = analyze_rule(rule_func=rule_func, game_handler=game_handler, player_context=player)
             
             if analysis_result and analysis_result.get('type') != 'error':
-                logger.debug(f"safe_expand_rule: Runtime analysis successful for '{rule_target_name or 'unknown'}'")
                 
                 # Set context for A Hat In Time telescope rule processing
                 if hasattr(game_handler, 'apply_chapter_costs_to_rule') and rule_target_name and rule_target_name.startswith("Telescope -> "):
-                    logger.debug(f"Applying A Hat In Time chapter costs to {rule_target_name}")
                     analysis_result = game_handler.apply_chapter_costs_to_rule(analysis_result, rule_target_name, world)
                 
                 expanded = game_handler.expand_rule(analysis_result)
-                logger.debug(f"Successfully expanded rule for {target_type} '{rule_target_name or 'unknown'}'")
                 return expanded
             else:
-                logger.debug(f"safe_expand_rule: Runtime analysis failed or returned error for '{rule_target_name or 'unknown'}'")
                 logger.warning(f"Failed to analyze or expand rule for {target_type} '{rule_target_name or 'unknown'}' using runtime analysis.")
                 return None # Return None on failure
                 
@@ -548,39 +493,32 @@ def process_regions(multiworld, player: int) -> tuple:
                     # Check if this entrance matches the entrance field
                     if entrance_field == entrance_name:
                         if direction == 'both':
-                            logger.debug(f"{game_name}: Found bidirectional spoiler entry for {entrance_name} -> {exit_field}")
                             return (2, exit_field, 'both')  # TWO_WAY
                         elif direction == 'entrance':
-                            logger.debug(f"{game_name}: Found one-way entrance spoiler entry for {entrance_name}")
                             return (1, None, 'entrance')  # ONE_WAY entrance
                         elif direction == 'exit':
-                            logger.debug(f"{game_name}: Found one-way exit spoiler entry for {entrance_name}")
                             return (1, None, 'exit')  # ONE_WAY exit
                     
                     # Check if this entrance matches the exit field
                     elif exit_field == entrance_name:
                         if direction == 'both':
-                            logger.debug(f"{game_name}: Found reverse bidirectional spoiler entry for {entrance_name} <- {entrance_field}")
                             return (2, entrance_field, 'both')  # TWO_WAY
                         elif direction == 'entrance':
                             # This entrance is the destination of an entrance->exit connection
                             # From the destination's perspective, it receives connections but doesn't provide direction info
-                            logger.debug(f"{game_name}: Found destination of entrance connection for {entrance_name} <- {entrance_field}")
                             return (1, None, 'entrance')  # ONE_WAY entrance destination
                         elif direction == 'exit':
                             # This entrance is the destination of an exit->entrance connection
                             # From the destination's perspective, it receives connections 
-                            logger.debug(f"{game_name}: Found destination of exit connection for {entrance_name} <- {entrance_field}")
                             return (1, None, 'exit')  # ONE_WAY exit destination
             
             # Fallback: Use the randomization_type from the entrance object itself
             randomization_type = getattr(entrance_or_exit, 'randomization_type', 1)
             if randomization_type == 2:
-                logger.debug(f"{game_name}: Found TWO_WAY entrance {entrance_name} from object, but no spoiler reverse data")
+                pass  # TWO_WAY entrance from object, but no spoiler reverse data
             return (randomization_type, None, None)
                 
         except Exception as e:
-            logger.debug(f"Error checking {game_name} spoiler data for {entrance_name}: {e}")
             return (getattr(entrance_or_exit, 'randomization_type', 1), None, None)
 
 
@@ -588,19 +526,15 @@ def process_regions(multiworld, player: int) -> tuple:
         regions_data = {}
         dungeons_data = {}  # structure to hold all dungeons
         
-        logger.debug(f"Getting game helpers for {multiworld.game[player]}")
         # Different games have different levels of rule analysis support
         # ALTTP has detailed helper expansion, while other games may preserve more helper nodes
         game_name = multiworld.game[player]
         game_handler = get_game_export_handler(game_name, multiworld.worlds[player])
-        logger.debug("Successfully got game helpers")
         
-        logger.debug("Getting player regions")
         player_regions = [
             region for region in multiworld.get_regions() 
             if region.player == player
         ]
-        logger.debug(f"Successfully found {len(player_regions)} regions")
 
         # Create a location name to ID mapping for this player
         location_name_to_id = {}
@@ -609,14 +543,12 @@ def process_regions(multiworld, player: int) -> tuple:
             if hasattr(world, 'location_id_to_name'):
                 # Create a reverse mapping from name to ID
                 location_name_to_id = {name: id for id, name in world.location_id_to_name.items()}
-                logger.debug(f"Created location_name_to_id mapping with {len(location_name_to_id)} entries")
 
         # First pass - collect all dungeon data
         for region in player_regions:
             if hasattr(region, 'dungeon') and region.dungeon:
                 dungeon_name = getattr(region.dungeon, 'name', None)
                 if dungeon_name and dungeon_name not in dungeons_data:
-                    logger.debug(f"Processing dungeon: {dungeon_name}")
                     dungeon_data = {
                         'name': dungeon_name,
                         'regions': [],
@@ -666,12 +598,10 @@ def process_regions(multiworld, player: int) -> tuple:
                         )
                     
                     dungeons_data[dungeon_name] = dungeon_data
-                    logger.debug(f"Successfully processed dungeon: {dungeon_name}")
 
         # Second pass - process all regions
         for region in player_regions:
             try:
-                logger.debug(f"Processing region: {region.name}")
                 region_data = {
                     'name': getattr(region, 'name', 'Unknown'),
                     'type': extract_type_value(getattr(region, 'type', 'Region')),
@@ -688,17 +618,14 @@ def process_regions(multiworld, player: int) -> tuple:
                 region_attributes = game_handler.get_region_attributes(region)
                 region_data.update(region_attributes)
                 
-                logger.debug("Successfully initialized region data")
 
                 # Store reference to dungeon instead of full dungeon data
                 if hasattr(region, 'dungeon') and region.dungeon:
                     dungeon_name = getattr(region.dungeon, 'name', None)
                     if dungeon_name:
                         region_data['dungeon'] = dungeon_name
-                        logger.debug(f"Added dungeon reference: {dungeon_name}")
 
                 # Process shop data
-                logger.debug("Processing shop data")
                 if hasattr(region, 'shop') and region.shop:
                     shop_inventory = []
                     if hasattr(region.shop, 'inventory'):
@@ -715,7 +642,6 @@ def process_regions(multiworld, player: int) -> tuple:
                                     inventory_item['replacement'] = item.replacement.name
                                     inventory_item['replacement_price'] = getattr(item, 'replacement_price', 0)
                                 shop_inventory.append(inventory_item)
-                                logger.debug(f"Successfully processed shop item: {inventory_item['item']}")
                             except Exception as e:
                                 logger.error(f"Error processing shop inventory item: {str(e)}")
 
@@ -726,10 +652,8 @@ def process_regions(multiworld, player: int) -> tuple:
                         'region_name': getattr(region.shop, 'region_name', None),
                         'location_name': getattr(region.shop, 'location_name', None)
                     }
-                    logger.debug("Successfully processed shop data")
 
                 # Process entrances
-                logger.debug("Processing entrances")
                 if hasattr(region, 'entrances'):
                     for entrance in region.entrances:
                         try:
@@ -762,12 +686,10 @@ def process_regions(multiworld, player: int) -> tuple:
                                 'type': getattr(entrance, 'type', 'Entrance'),
                             }
                             region_data['entrances'].append(entrance_data)
-                            logger.debug(f"Successfully processed entrance: {entrance_data['name']}")
                         except Exception as e:
                             logger.error(f"Error processing entrance {getattr(entrance, 'name', 'Unknown')}: {str(e)}")
 
                 # Process exits
-                logger.debug("Processing exits")
                 if hasattr(region, 'exits'):
                     for exit in region.exits:
                         try:
@@ -778,9 +700,7 @@ def process_regions(multiworld, player: int) -> tuple:
                                 if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
                                     special_rule = game_handler.handle_complex_exit_rule(exit_name, exit.access_rule)
                                     if special_rule:
-                                        logger.info(f"Got special exit rule for {exit_name}")
                                         expanded_rule = game_handler.expand_rule(special_rule)
-                                        logger.info(f"Expanded exit rule for {exit_name}")
                                 
                                 # If no special handling, use normal analysis
                                 if expanded_rule is None:
@@ -808,12 +728,10 @@ def process_regions(multiworld, player: int) -> tuple:
                                 'type': getattr(exit, 'type', 'Exit'),
                             }
                             region_data['exits'].append(exit_data)
-                            logger.debug(f"Successfully processed exit: {exit_data['name']}")
                         except Exception as e:
                             logger.error(f"Error processing exit {getattr(exit, 'name', 'Unknown')}: {str(e)}")
 
                 # Process locations
-                logger.debug("Processing locations")
                 if hasattr(region, 'locations'):
                     for location in region.locations:
                         try:
@@ -850,8 +768,6 @@ def process_regions(multiworld, player: int) -> tuple:
                                     world=world
                                 )
                             
-                            if location_name and "Big Key" in location_name:
-                                logger.info(f"Building location_data for {location_name}, access_rule_result: {access_rule_result}")
                             
                             location_data = {
                                 'name': location_name,
@@ -878,12 +794,10 @@ def process_regions(multiworld, player: int) -> tuple:
                                 }
                             
                             region_data['locations'].append(location_data)
-                            logger.debug(f"Successfully processed location: {location_data['name']}")
                         except Exception as e:
                             logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
 
                 # Process region rules
-                logger.debug("Processing region rules")
                 if hasattr(region, 'region_rules'):
                     for i, rule in enumerate(region.region_rules):
                         try:
@@ -898,19 +812,16 @@ def process_regions(multiworld, player: int) -> tuple:
                             )
                             if expanded_rule:
                                 region_data['region_rules'].append(expanded_rule)
-                                logger.debug(f"Successfully processed region rule {i+1}")
                         except Exception as e:
                             logger.error(f"Error processing region rule: {str(e)}")
 
                 regions_data[region.name] = region_data
-                logger.debug(f"Successfully completed processing region: {region.name}")
 
             except Exception as e:
                 logger.error(f"Error processing region {getattr(region, 'name', 'Unknown')}: {str(e)}")
                 logger.exception("Full traceback:")
                 continue
 
-        logger.debug(f"Successfully finished process_regions for player {player}")
         return regions_data, dungeons_data
 
     except Exception as e:
@@ -1006,7 +917,6 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 # ... and the item appears more than once in the pool...
                 if pool_count and pool_count > 1:
                     # ... then update max_count to match the pool count.
-                    logger.debug(f"Updating max_count for '{item_name}' from 1 to {pool_count} based on item pool count.")
                     item_data['max_count'] = pool_count
 
     return items_data

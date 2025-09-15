@@ -229,11 +229,129 @@ class CommonUI {
    * @returns {HTMLElement} - Formatted code element
    */
   async _formatHelperCode(code, stateSnapshotInterface) {
-    const container = document.createElement('div');
+    const container = document.createElement('pre');
+    container.style.margin = '0';
+    container.style.whiteSpace = 'pre-wrap';
+    container.style.wordWrap = 'break-word';
 
-    // For now, just display the code as-is
-    // TODO: Add item name highlighting and location links
-    container.textContent = code;
+    // Get snapshot and static data
+    const snapshot = stateSnapshotInterface?._snapshot || stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData();
+
+    if (!snapshot || !staticData?.items) {
+      container.textContent = code;
+      return container;
+    }
+
+    // Get all item names from static data
+    const itemNames = Object.keys(staticData.items);
+
+    // Check if showLocationItems is enabled
+    const showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
+
+    // Create a regex pattern to match item names in quotes
+    // Match items in single quotes, double quotes, or as identifiers
+    const itemPatterns = itemNames.map(name => {
+      // Escape special regex characters in item names
+      const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return escaped;
+    });
+
+    if (itemPatterns.length === 0) {
+      container.textContent = code;
+      return container;
+    }
+
+    // Create regex to match items in quotes or as identifiers
+    const itemRegex = new RegExp(
+      `(['"])(${itemPatterns.join('|')})\\1|\\b(${itemPatterns.join('|')})\\b`,
+      'g'
+    );
+
+    let lastIndex = 0;
+    let match;
+
+    while ((match = itemRegex.exec(code)) !== null) {
+      // Add text before the match
+      if (match.index > lastIndex) {
+        const textNode = document.createTextNode(code.substring(lastIndex, match.index));
+        container.appendChild(textNode);
+      }
+
+      // Get the matched item name (could be from group 2 or 3)
+      const itemName = match[2] || match[3];
+      const fullMatch = match[0];
+
+      // Check if this item has a count in inventory
+      const itemCount = snapshot.inventory?.[itemName] || 0;
+      const hasItem = itemCount > 0;
+
+      // Create a span for the item
+      const itemSpan = document.createElement('span');
+      itemSpan.textContent = fullMatch;
+      itemSpan.style.fontWeight = 'bold';
+
+      // Apply color based on whether player has the item
+      if (hasItem) {
+        itemSpan.style.color = '#00ff00'; // Green if player has item
+        itemSpan.title = `You have ${itemCount} ${itemName}`;
+      } else {
+        itemSpan.style.color = '#ff9999'; // Light red if player doesn't have item
+        itemSpan.title = `You need ${itemName}`;
+      }
+
+      container.appendChild(itemSpan);
+
+      // Add expandable location info if enabled and item not yet obtained
+      if (showLocationItems && !hasItem) {
+        const locationInfo = this._createItemLocationInfo(itemName, snapshot);
+        if (locationInfo) {
+          // Create an expand button
+          const expandBtn = document.createElement('button');
+          expandBtn.textContent = '[+]';
+          expandBtn.style.marginLeft = '4px';
+          expandBtn.style.fontSize = '10px';
+          expandBtn.style.padding = '0 2px';
+          expandBtn.style.cursor = 'pointer';
+          expandBtn.style.border = '1px solid #666';
+          expandBtn.style.backgroundColor = '#333';
+          expandBtn.style.color = '#ccc';
+          expandBtn.title = `Show where to find ${itemName}`;
+
+          // Create container for location info
+          const locationContainer = document.createElement('span');
+          locationContainer.style.display = 'none';
+          locationContainer.style.fontSize = '0.9em';
+          locationContainer.appendChild(locationInfo);
+
+          let isExpanded = false;
+          expandBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isExpanded = !isExpanded;
+            if (isExpanded) {
+              expandBtn.textContent = '[-]';
+              expandBtn.title = `Hide location info for ${itemName}`;
+              locationContainer.style.display = 'inline';
+            } else {
+              expandBtn.textContent = '[+]';
+              expandBtn.title = `Show where to find ${itemName}`;
+              locationContainer.style.display = 'none';
+            }
+          });
+
+          container.appendChild(expandBtn);
+          container.appendChild(locationContainer);
+        }
+      }
+
+      lastIndex = match.index + fullMatch.length;
+    }
+
+    // Add any remaining text after the last match
+    if (lastIndex < code.length) {
+      const textNode = document.createTextNode(code.substring(lastIndex));
+      container.appendChild(textNode);
+    }
 
     return container;
   }
@@ -366,14 +484,29 @@ class CommonUI {
 
         // Add location info if showLocationItems is enabled and we have a simple item name
         if (itemName && typeof itemName === 'string') {
+          // Create a placeholder for location info that will be filled async
+          const locationPlaceholder = document.createElement('span');
+          locationPlaceholder.classList.add('location-info-placeholder');
+          locationPlaceholder.dataset.itemName = itemName;
+          root.appendChild(locationPlaceholder);
+
           // Check if setting is enabled (async)
           settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false).then(showLocationItems => {
-            if (showLocationItems) {
-              // Extract snapshot from the stateSnapshotInterface if possible
-              const snapshot = stateSnapshotInterface?._snapshot || null;
-              const locationInfo = this._createItemLocationInfo(itemName, snapshot);
-              if (locationInfo && root.parentNode) {
-                root.appendChild(locationInfo);
+            if (showLocationItems && locationPlaceholder.parentNode) {
+              // Get the CURRENT snapshot at the time of rendering, not the one from closure
+              const currentSnapshot = stateSnapshotInterface?._snapshot || stateManager.getLatestStateSnapshot();
+              const locationInfo = this._createItemLocationInfo(itemName, currentSnapshot);
+              if (locationInfo) {
+                // Replace the placeholder with the actual location info
+                locationPlaceholder.replaceWith(locationInfo);
+              } else {
+                // Remove placeholder if no location info
+                locationPlaceholder.remove();
+              }
+            } else {
+              // Remove placeholder if setting is disabled
+              if (locationPlaceholder.parentNode) {
+                locationPlaceholder.remove();
               }
             }
           });
@@ -410,14 +543,29 @@ class CommonUI {
 
         // Add location info if showLocationItems is enabled and we have a simple item name
         if (itemName && typeof itemName === 'string') {
+          // Create a placeholder for location info that will be filled async
+          const locationPlaceholder = document.createElement('span');
+          locationPlaceholder.classList.add('location-info-placeholder');
+          locationPlaceholder.dataset.itemName = itemName;
+          root.appendChild(locationPlaceholder);
+
           // Check if setting is enabled (async)
           settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false).then(showLocationItems => {
-            if (showLocationItems) {
-              // Extract snapshot from the stateSnapshotInterface if possible
-              const snapshot = stateSnapshotInterface?._snapshot || null;
-              const locationInfo = this._createItemLocationInfo(itemName, snapshot);
-              if (locationInfo && root.parentNode) {
-                root.appendChild(locationInfo);
+            if (showLocationItems && locationPlaceholder.parentNode) {
+              // Get the CURRENT snapshot at the time of rendering, not the one from closure
+              const currentSnapshot = stateSnapshotInterface?._snapshot || stateManager.getLatestStateSnapshot();
+              const locationInfo = this._createItemLocationInfo(itemName, currentSnapshot);
+              if (locationInfo) {
+                // Replace the placeholder with the actual location info
+                locationPlaceholder.replaceWith(locationInfo);
+              } else {
+                // Remove placeholder if no location info
+                locationPlaceholder.remove();
+              }
+            } else {
+              // Remove placeholder if setting is disabled
+              if (locationPlaceholder.parentNode) {
+                locationPlaceholder.remove();
               }
             }
           });
@@ -576,14 +724,9 @@ class CommonUI {
                   // Create a container for the formatted code
                   codeContainer.innerHTML = '';
 
-                  // Process the code to add item formatting if showLocationItems is enabled
-                  const showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
-                  if (showLocationItems) {
-                    const formattedCode = await this._formatHelperCode(helperFunctionCode, stateSnapshotInterface);
-                    codeContainer.appendChild(formattedCode);
-                  } else {
-                    codeContainer.textContent = helperFunctionCode;
-                  }
+                  // Always format the code to highlight item names
+                  const formattedCode = await this._formatHelperCode(helperFunctionCode, stateSnapshotInterface);
+                  codeContainer.appendChild(formattedCode);
 
                   codeLoaded = true;
                 } else {
@@ -1237,25 +1380,32 @@ class CommonUI {
     link.dataset.region = regionName;
     link.title = `Click to view ${locationName} in the ${regionName} region`;
 
-    // Find the location data FROM THE SNAPSHOT
-    let locationData = null;
-    for (const loc of snapshot?.locations || []) {
-      if (loc.name === locationName && loc.region === regionName) {
-        locationData = loc;
-        break;
-      }
-    }
+    // Get location accessibility from locationReachability in the snapshot
+    const locationReachability = snapshot?.locationReachability?.[locationName];
+    const isLocationAccessible = locationReachability === 'reachable' || locationReachability === true;
 
-    // Determine if location is accessible and checked FROM THE SNAPSHOT
-    const isAccessible = locationData?.isAccessible === true;
+    // Check if location is checked
     const checkedLocations = new Set(snapshot?.checkedLocations || []);
     const isChecked = checkedLocations.has(locationName);
 
-    // Set appropriate class
+    // Check if the region is accessible
+    const regionStatus = snapshot?.regionReachability?.[regionName];
+    const isRegionAccessible = (
+      regionStatus === 'reachable' ||
+      regionStatus === 'checked' ||
+      regionStatus === true
+    );
+
+    // Location is only truly accessible if both location AND region are accessible
+    const isFullyAccessible = isLocationAccessible && isRegionAccessible;
+
+    // Set appropriate class based on accessibility state
     if (isChecked) {
       link.classList.add('checked-loc');
-    } else if (isAccessible) {
+    } else if (isFullyAccessible) {
       link.classList.add('accessible');
+    } else if (isLocationAccessible && !isRegionAccessible) {
+      link.classList.add('accessible-but-unreachable');
     } else {
       link.classList.add('inaccessible');
     }
@@ -1265,9 +1415,12 @@ class CommonUI {
       const symbolSpan = document.createElement('span');
       symbolSpan.classList.add('colorblind-symbol');
 
-      if (isAccessible) {
+      if (isFullyAccessible) {
         symbolSpan.textContent = ' ✓';
         symbolSpan.classList.add('accessible');
+      } else if (isLocationAccessible && !isRegionAccessible) {
+        symbolSpan.textContent = ' ⚠';
+        symbolSpan.classList.add('accessible-but-unreachable');
       } else {
         symbolSpan.textContent = ' ✗';
         symbolSpan.classList.add('inaccessible');

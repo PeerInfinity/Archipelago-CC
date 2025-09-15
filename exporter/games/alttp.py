@@ -136,7 +136,6 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                     arg.get('type') == 'attribute' and 
                     arg.get('attr') == 'crystals_needed_for_ganon'):
                     
-                    logger.info(f"Replacing complex has_crystals with has_crystals_for_ganon")
                     # Replace with the simpler helper
                     return {
                         'type': 'helper',
@@ -161,7 +160,6 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                 args = obj.get('args', [])
                 if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
                     region_name = args[0].get('value')
-                    logger.info(f"Replacing state.multiworld.get_region('{region_name}').can_reach() with region_check")
                     # Replace with a simpler region check
                     return {
                         'type': 'helper',
@@ -191,7 +189,6 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                             args = parent_obj.get('args', [])
                             if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
                                 location_name = args[0].get('value')
-                                logger.info(f"Replacing boss.can_defeat() for {location_name} with helper")
                                 # Replace with a helper that checks boss defeat
                                 return {
                                     'type': 'helper',
@@ -211,7 +208,6 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             rule['object'].get('type') == 'name' and
             rule['object'].get('name') == 'world'):
             
-            logger.info(f"Replacing world.can_take_damage with helper")
             # Replace with a helper that checks if damage is allowed
             return {
                 'type': 'helper',
