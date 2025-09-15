@@ -35,6 +35,7 @@ centralRegistry.registerEventBusPublisher('core', 'ui:activatePanel');
 centralRegistry.registerEventBusPublisher('core', 'settings:changed');
 
 import { GoldenLayout } from './libs/golden-layout/js/esm/golden-layout.js';
+import mobileLayoutManager from './app/core/mobileLayoutManager.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -1275,20 +1276,46 @@ async function main() {
   }
   // --- End Data Application and Event Publish ---
 
-  // --- Initialize Golden Layout ---
-  logger.info('INIT_STEP', 'Golden Layout initialization started');
-  const layoutContainer = document.getElementById('goldenlayout-container');
-  if (!layoutContainer) {
-    logger.error('init', 'Golden Layout container not found!');
-    return;
-  }
-  const goldenLayoutInstance = new GoldenLayout(layoutContainer);
-  goldenLayoutInstance.resizeWithContainerAutomatically = true;
+  // --- Detect Mobile and Initialize Appropriate Layout Manager ---
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-  // After all modules have registered their panel components with centralRegistry:
-  centralRegistry
-    .getAllPanelComponents()
-    .forEach((factoryDetails, componentType) => {
+  logger.info('init', `Device detection - Mobile: ${isMobile}, Touch: ${isTouchDevice}`);
+
+  let layoutManagerInstance = null;
+  let goldenLayoutInstance = null;
+
+  if (isMobile || isTouchDevice) {
+    // --- Initialize Mobile Layout Manager ---
+    logger.info('INIT_STEP', 'Mobile Layout Manager initialization started');
+
+    const layoutContainer = document.getElementById('goldenlayout-container');
+    if (!layoutContainer) {
+      logger.error('init', 'Layout container not found!');
+      return;
+    }
+
+    // Initialize mobile layout manager
+    mobileLayoutManager.initialize(layoutContainer);
+    layoutManagerInstance = mobileLayoutManager;
+
+    logger.info('INIT_STEP', 'Mobile Layout Manager initialized');
+  } else {
+    // --- Initialize Golden Layout for Desktop ---
+    logger.info('INIT_STEP', 'Golden Layout initialization started');
+    const layoutContainer = document.getElementById('goldenlayout-container');
+    if (!layoutContainer) {
+      logger.error('init', 'Golden Layout container not found!');
+      return;
+    }
+    goldenLayoutInstance = new GoldenLayout(layoutContainer);
+    goldenLayoutInstance.resizeWithContainerAutomatically = true;
+    layoutManagerInstance = goldenLayoutInstance;
+
+    // Register components with Golden Layout (Desktop only)
+    centralRegistry
+      .getAllPanelComponents()
+      .forEach((factoryDetails, componentType) => {
       if (typeof factoryDetails.componentClass === 'function') {
         // Wrap the direct class constructor in a factory function that Golden Layout expects,
         // which it will call with new internally, or expects us to call new.
@@ -1386,6 +1413,34 @@ async function main() {
         );
       }
     });
+  } // End of desktop-only Golden Layout setup
+
+  // Register components with Mobile Layout Manager if on mobile
+  if (isMobile || isTouchDevice) {
+    centralRegistry
+      .getAllPanelComponents()
+      .forEach((factoryDetails, componentType) => {
+        if (typeof factoryDetails.componentClass === 'function') {
+          // Get title from module info
+          const moduleInstance = importedModules.get(factoryDetails.moduleId);
+          const title = moduleInstance?.moduleInfo?.name ||
+                       moduleInstance?.moduleInfo?.title ||
+                       componentType;
+
+          // Register with mobile layout manager
+          mobileLayoutManager.registerPanel(
+            componentType,
+            factoryDetails.componentClass,
+            title
+          );
+
+          logger.debug(
+            'init',
+            `Registered mobile panel: ${componentType} from module ${factoryDetails.moduleId}`
+          );
+        }
+      });
+  }
 
   // Helper function to get module ID from componentType
   const getModuleIdFromComponentType = (componentType) => {
@@ -1499,8 +1554,10 @@ async function main() {
       .filter((item) => item !== null); // Remove null entries
   }
 
-  // --- Load Layout ---
+  // --- Load Layout (Desktop only) ---
   if (
+    !isMobile &&
+    !isTouchDevice &&
     G_combinedModeData.layoutConfig &&
     typeof G_combinedModeData.layoutConfig === 'object'
   ) {
@@ -1596,19 +1653,15 @@ async function main() {
         goldenLayoutInstance.on('started', () => {
           // Hide loading screen when Golden Layout starts
           hideLoadingScreen();
-          
-          // log('info',
-          //   '[Init DEBUG] GoldenLayout "started" EVENT HANDLER ENTERED (PanelManager init no longer solely relies on this)'
-          // );
-          // If this event DOES fire, PanelManager might be re-initialized if it wasn't fully ready before.
-          // This could be okay if PanelManager.initialize() is idempotent.
-          if (!panelManagerInstance.isInitialized) {
+
+          // Only initialize PanelManager for desktop mode
+          if (!isMobile && !isTouchDevice && !panelManagerInstance.isInitialized) {
             logger.info(
               'init',
               '"started" event: PanelManager not yet initialized, calling initialize.'
-            ); // Kept as info
+            );
             panelManagerInstance.initialize(goldenLayoutInstance, null);
-          } else {
+          } else if (!isMobile && !isTouchDevice) {
             // logger.debug('init',
             //   '"started" event: PanelManager already initialized.'
             // );
@@ -1691,7 +1744,7 @@ async function main() {
       );
       goldenLayoutInstance.loadLayout(getDefaultLayoutConfig()); // Fallback
     }
-  } else {
+  } else if (!isMobile && !isTouchDevice) {
     logger.warn(
       'init',
       'No valid layoutConfig found in G_combinedModeData. Attempting to use settings or default (old fallback path).'
@@ -1699,9 +1752,13 @@ async function main() {
     const activeLayoutId =
       (await settingsManager.getSetting('activeLayout')) || 'default';
     await loadLayoutConfiguration(goldenLayoutInstance, activeLayoutId, null); // Pass null for customConfig as it should come from G_combinedModeData
+  } else if (isMobile || isTouchDevice) {
+    // Mobile layout is already initialized, just hide loading screen
+    hideLoadingScreen();
+    logger.info('init', 'Mobile layout ready, skipping desktop layout configuration');
   }
 
-  logger.info('INIT_STEP', 'Golden Layout initialization completed');
+  logger.info('INIT_STEP', isMobile || isTouchDevice ? 'Mobile Layout initialization completed' : 'Golden Layout initialization completed');
 
   // --- Initialize Event Dispatcher ---
   logger.info('init', 'Initializing Event Dispatcher...');
