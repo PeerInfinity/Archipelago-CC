@@ -155,6 +155,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopState:newActionStarted');
   registrationApi.registerEventBusPublisher('loopState:exploreActionRepeated');
   registrationApi.registerEventBusPublisher('loopUI:modeChanged');
+  registrationApi.registerEventBusPublisher('loops:setLoopMode');
 }
 
 /**
