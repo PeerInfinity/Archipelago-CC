@@ -202,6 +202,13 @@
     "has_custom_game_logic": false,
     "world_directory": "inscryption"
   },
+  "Jigsaw": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "jigsaw"
+  },
   "Kingdom Hearts": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -278,6 +285,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "meritous"
+  },
+  "Metamath": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "metamath"
   },
   "Muse Dash": {
     "exporter_path": null,
