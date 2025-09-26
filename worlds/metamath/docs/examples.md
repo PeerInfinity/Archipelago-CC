@@ -28,10 +28,7 @@ Metamath:
   theorem: 2p2e4
   complexity: moderate
   starting_statements: 10
-  hint_frequency: 10
   auto_download_database: true
-  progression_balancing: 50
-  accessibility: full
 ```
 
 ### Advanced Multi-Theorem
@@ -39,18 +36,19 @@ Metamath:
 ```yaml
 # advanced.yaml
 name: LogicMaster
-description: Random theorem each time
+description: Random theorem each time with weighted selection
 game: Metamath
 
 Metamath:
   randomize_items: true
 
+  # Weighted random selection (relative weights, not percentages!)
   theorem:
-    2p2e4: 40    # 40% chance - Medium difficulty
-    1p1e2: 20    # 20% chance - Easy
-    3p3e6: 20    # 20% chance - Medium
-    pm5.32: 10   # 10% chance - Hard
-    pm2.21: 10   # 10% chance - Easy
+    2p2e4: 40    # Weight 40 (40% probability since total=100)
+    1p1e2: 20    # Weight 20 (20% probability)
+    3p3e6: 20    # Weight 20 (20% probability)
+    pm5.32: 10   # Weight 10 (10% probability)
+    pm2.21: 10   # Weight 10 (10% probability)
 
   complexity:
     simple: 25
@@ -61,8 +59,6 @@ Metamath:
     random: 50
     random-low: 25
     random-high: 25
-
-  hint_frequency: 15
 ```
 
 ### Challenge Mode
@@ -78,9 +74,6 @@ Metamath:
   theorem: pm5.32
   complexity: complex
   starting_statements: 0
-  hint_frequency: 0
-  progression_balancing: 0
-  accessibility: minimal
 ```
 
 ### Beginner Friendly
@@ -96,13 +89,29 @@ Metamath:
   theorem: 1p1e2
   complexity: simple
   starting_statements: 50
-  hint_frequency: 30
-  progression_balancing: 90
-  accessibility: full
+```
 
-  # Start with one statement already
-  start_inventory:
-    "Statement 1": 1
+### Weighted Selection with Non-100 Total
+
+```yaml
+# weighted-alternative.yaml
+name: WeightedExample
+description: Example showing weights don't need to sum to 100
+game: Metamath
+
+Metamath:
+  randomize_items: true
+
+  # These relative weights sum to 7, not 100!
+  # Actual probabilities calculated as weight/total:
+  # 2p2e4: 3/7 ≈ 43%, 1p1e2: 2/7 ≈ 29%, pm5.32: 2/7 ≈ 29%
+  theorem:
+    2p2e4: 3    # Weight 3
+    1p1e2: 2    # Weight 2
+    pm5.32: 2   # Weight 2
+
+  complexity: moderate
+  starting_statements: 10
 ```
 
 ## Example Theorems
@@ -113,8 +122,7 @@ Metamath:
 |---------|------------|-------|------------|
 | `1p1e2` | 1 + 1 = 2 | 2 | Very Easy |
 | `2p2e4` | 2 + 2 = 4 | 10 | Medium |
-| `3p3e6` | 3 + 3 = 6 | 10 | Medium |
-| `2p3e5` | 2 + 3 = 5 | ~10 | Medium |
+| `3p3e6` | 3 + 3 = 6 | 12 | Medium |
 | `4p4e8` | 4 + 4 = 8 | ~12 | Medium |
 
 ### Logic Proofs
@@ -122,8 +130,8 @@ Metamath:
 | Theorem | Description | Steps | Difficulty |
 |---------|------------|-------|------------|
 | `pm2.21` | ¬φ → (φ → ψ) | 2 | Easy |
-| `pm2.43` | ((φ → (φ → ψ)) → (φ → ψ)) | 3 | Easy |
-| `pm5.32` | Complex biconditional | 7 | Hard |
+| `pm2.43` | ((φ → (φ → ψ)) → (φ → ψ)) | 2 | Easy |
+| `pm5.32` | Complex biconditional | 9 | Hard |
 | `con3i` | Contraposition | 3 | Easy |
 | `syl` | Syllogism | 3 | Easy |
 
@@ -186,14 +194,12 @@ python Generate.py \
   --weights_file_path "mario_player.yaml"
 ```
 
-### Checking Your Proof
+### Tracking Your Progress
 
-In-game commands:
-```
-!hint Statement 10        # Where is the final theorem?
-!missing                  # What statements do I still need?
-!checked                  # What have I already proven?
-```
+Since there's no dedicated client yet, you'll need to manually track:
+- Which statements you've collected
+- Which locations are available based on dependencies
+- What items you still need to find
 
 ## Example Proof Walkthrough: 2 + 2 = 4
 
@@ -225,4 +231,4 @@ Here's how the proof unfolds in gameplay:
 2. **Standard choice**: `2p2e4` is the "Hello World" of Metamath
 3. **For groups**: Use different theorems to reduce competition
 4. **For racing**: Use the same theorem with minimal accessibility
-5. **For learning**: High starting_statements and hint_frequency help
+5. **For learning**: High starting_statements help

@@ -38,6 +38,9 @@ def pack_apworld(world_name: str):
             # Walk through all files in the world directory
             for path in world_dir.rglob("*"):
                 if path.is_file():
+                    # Skip __pycache__ directories and .pyc files
+                    if "__pycache__" in path.parts or path.suffix == ".pyc":
+                        continue
                     # Calculate relative path from world directory
                     relative_path = path.relative_to(worlds_dir)
                     zf.write(path, relative_path)

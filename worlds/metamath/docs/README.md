@@ -24,16 +24,18 @@ Metamath is a unique Archipelago world that transforms mathematical proofs into 
 
 1. **Installation**: Place the `metamath` folder in your Archipelago `worlds` directory
 2. **Generate**: Use a YAML configuration file to specify your theorem
-3. **Play**: Connect with other players and complete your proof!
+3. **Play**: Use general Archipelago tools to play (no dedicated client yet)
 
 ## Available Theorems
 
 Popular choices include:
 - `2p2e4` - Proof that 2 + 2 = 4 (10 steps)
 - `1p1e2` - Proof that 1 + 1 = 2 (2 steps)
-- `3p3e6` - Proof that 3 + 3 = 6 (10 steps)
-- `pm5.32` - A propositional logic theorem (7 steps)
-- Any theorem from the [Metamath database](https://us.metamath.org/)
+- `3p3e6` - Proof that 3 + 3 = 6 (12 steps)
+- `pm5.32` - A propositional logic theorem (9 steps)
+- Over 45,000 theorems from the [Metamath database](https://us.metamath.org/)
+
+See the [Database Overview](database.md) for a comprehensive catalog of available theorems organized by difficulty and mathematical area.
 
 ## Example YAML Configuration
 
@@ -44,20 +46,23 @@ game: Metamath
 Metamath:
   randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # The theorem to prove
-  complexity: moderate
+  complexity: moderate  # Random starting statements
   starting_statements: 10  # Percentage of statements pre-unlocked
-  hint_frequency: 10
   auto_download_database: true
-  progression_balancing: 50
-  accessibility: full
 ```
 
 ## Documentation
 
+### Getting Started
 - [Setup Guide](setup.md) - Detailed installation and configuration
-- [Gameplay Guide](gameplay.md) - How to play and strategies
 - [Settings Guide](settings.md) - All available options explained
+- [Gameplay Guide](gameplay.md) - How to play and strategies
+
+### Resources
+- [Database Overview](database.md) - Statistics, theorem catalog, and complexity analysis
 - [Examples](examples.md) - Sample configurations and walkthroughs
+
+### Development
 - [Developer Guide](developer.md) - Technical details and extending the world
 
 ## Credits

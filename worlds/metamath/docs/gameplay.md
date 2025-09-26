@@ -67,8 +67,8 @@ Tell your multiworld partners what you need:
 - "I need Statement 3 (df-4) to unlock 2 locations"
 - "Statement 8 (addassi) is blocking my progression"
 
-### 4. Use Hints
-Hint items like "Proof Hint" and "Logic Guide" are filler but can provide useful information in some implementations.
+### 4. Filler Items
+Items like "Proof Hint" and "Logic Guide" are filler items that don't affect progression but fill remaining item slots.
 
 ## Common Theorems and Their Difficulty
 
@@ -78,20 +78,16 @@ Hint items like "Proof Hint" and "Logic Guide" are filler but can provide useful
 
 ### Intermediate (5-15 steps)
 - `2p2e4` (2 + 2 = 4): 10 steps, good balance
-- `3p3e6` (3 + 3 = 6): 10 steps, similar to 2p2e4
-- `pm5.32`: 7 steps, propositional logic
+- `3p3e6` (3 + 3 = 6): 12 steps, similar to 2p2e4
+- `pm5.32`: 9 steps, propositional logic
 
 ### Advanced (15+ steps)
 - Complex theorems from algebra, analysis, or topology
 - Custom proofs from specialized areas
 
-## Understanding Your Tracker
+## Tracking Your Progress
 
-When using tracking tools:
-- **Green**: You have this statement
-- **Yellow**: Available to check (you have all dependencies)
-- **Red**: Missing dependencies
-- **Blue**: Contains a progression item
+Since there's no dedicated client yet, you'll need to track your progress manually or use general Archipelago tracking tools. Keep notes on which statements you've collected and which locations are available based on your current items.
 
 ## Mathematical Concepts
 

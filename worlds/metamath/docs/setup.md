@@ -35,7 +35,7 @@ Archipelago/
 The required Python libraries will be installed automatically when you first generate a game. If you want to install them manually:
 
 ```bash
-pip install metamath-py numpy
+pip install metamath-py
 ```
 
 ### 3. Metamath Database Setup
@@ -70,18 +70,11 @@ Metamath:
   # Core Settings
   randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # Which theorem to prove
-  complexity: moderate
-  starting_statements: 10
-
-  # Item Settings
-  hint_frequency: 10
+  complexity: moderate  # Random starting statements
+  starting_statements: 10  # Percentage to start with
 
   # Database Settings
   auto_download_database: true
-
-  # Standard Archipelago Settings
-  progression_balancing: 50
-  accessibility: full
 ```
 
 ### 2. Choose Your Theorem
@@ -95,11 +88,11 @@ theorem: 2p2e4
 # Method 2: URL to metamath.org
 theorem: https://us.metamath.org/mpeuni/2p2e4.html
 
-# Method 3: Weighted random selection
+# Method 3: Weighted random selection (using relative weights)
 theorem:
-  2p2e4: 50
-  1p1e2: 30
-  3p3e6: 20
+  2p2e4: 50  # Weight 50 (50% probability when total=100)
+  1p1e2: 30  # Weight 30 (30% probability when total=100)
+  3p3e6: 20  # Weight 20 (20% probability when total=100)
 ```
 
 ### 3. Adjust Difficulty
@@ -108,14 +101,12 @@ Control the challenge level:
 
 ```yaml
 # Easier settings
-complexity: simple
+complexity: simple  # Sequential starting statements
 starting_statements: 30  # Start with 30% of proof unlocked
-hint_frequency: 20  # More hints
 
 # Harder settings
-complexity: complex
+complexity: complex  # Random starting statements
 starting_statements: 0  # Start with nothing unlocked
-hint_frequency: 5  # Fewer hints
 ```
 
 ## Generating Your Game

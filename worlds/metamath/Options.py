@@ -21,10 +21,10 @@ class TheoremSelection(TextChoice):
 
 class ProofComplexity(Choice):
     """
-    Controls how complex the proof randomization can be.
-    Simple: Only basic statement reordering
-    Moderate: Some statements may require proving out of order
-    Complex: Full randomization with multi-world dependencies
+    Controls how starting statements are selected.
+    Simple: Starting statements are the first N statements in order
+    Moderate: Starting statements are randomized from throughout the proof
+    Complex: Starting statements are randomized from throughout the proof
     """
     display_name = "Proof Complexity"
     option_simple = 0
@@ -42,15 +42,6 @@ class StartingStatements(Range):
     range_end = 50
     default = 0
 
-class HintFrequency(Range):
-    """
-    Frequency of hint items in the item pool (percentage).
-    """
-    display_name = "Hint Frequency %"
-    range_start = 0
-    range_end = 30
-    default = 10
-
 class AutoDownloadDatabase(Toggle):
     """
     Automatically download the metamath database (set.mm) if it's not found locally.
@@ -65,7 +56,6 @@ class MetamathOptions(PerGameCommonOptions):
     theorem: TheoremSelection
     complexity: ProofComplexity
     starting_statements: StartingStatements
-    hint_frequency: HintFrequency
     auto_download_database: AutoDownloadDatabase
 
 metamath_option_groups = [
@@ -74,7 +64,6 @@ metamath_option_groups = [
         TheoremSelection,
         ProofComplexity,
         StartingStatements,
-        HintFrequency,
         AutoDownloadDatabase
     ])
 ]

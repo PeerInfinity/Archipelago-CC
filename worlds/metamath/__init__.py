@@ -70,8 +70,8 @@ class MetamathWorld(World):
 
         # Determine starting statements
         num_starting = max(1, int(self.num_statements * self.options.starting_statements.value / 100))
-        # For simple complexity, give the first few statements
-        # For complex, randomize which statements are given
+        # For simple complexity, give the first N statements in order
+        # For moderate/complex, randomize which statements are given
         if self.options.complexity.value == 0:  # Simple
             self.starting_statements = set(range(1, num_starting + 1))
         else:  # Moderate or Complex
@@ -208,7 +208,7 @@ class MetamathWorld(World):
                     )
                     items.append(item)
 
-        # Add hint/filler items based on settings
+        # Add filler items to match the number of locations
         num_locations = self.num_statements - len(self.starting_statements)
         num_items = len(items)
         num_fillers_needed = max(0, num_locations - num_items)

@@ -30,3 +30,8 @@ python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --see
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 1
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 2
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 3
+
+python scripts/pack_apworld.py metamath
+python scripts/pack_apworld.py mathadventure
+python scripts/pack_apworld.py bakingadventure
+python scripts/pack_apworld.py codingadventure
