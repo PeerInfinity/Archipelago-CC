@@ -1,18 +1,18 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-09-11 10:26:09
+**Generated:** 2025-09-25 17:23:51
 
 **Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-09-11T09:37:29.932079
+**Source Data Last Updated:** 2025-09-25T17:23:51.698694
 
 **Script Version:** 1.0.0
 
 ## Summary
 
-- **Total Games:** 78
-- **Passed:** 11 (14.1%)
-- **Failed:** 67 (85.9%)
+- **Total Games:** 79
+- **Passed:** 12 (15.2%)
+- **Failed:** 67 (84.8%)
 
 ## Test Results
 
@@ -58,6 +58,7 @@
 | Mega Man 2 | ❌ Failed seed 1 | 0 | 0.1 | 9.1 | 🟠 1.1% | ⚫ | ⚫ |
 | MegaMan Battle Network 3 | ❌ Failed seed 1 | 0 | 0.2 | 5.1 | 🟠 3.9% | ⚫ | ⚫ |
 | Meritous | ❌ Failed seed 1 | 0 | 1.1 | 7.1 | 🟡 15.5% | ⚫ | ⚫ |
+| Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Muse Dash | ❌ Failed seed 1 | 0 | 0.1 | 5.1 | 🟠 2.0% | ⚫ | ⚫ |
 | Noita | ✅ Passed seeds 1-10 | 0 | 0.1 | 0.1 | 🟢 Complete | ⚫ | ⚫ |
 | Ocarina of Time | ❌ Failed seed 1 | 2524 | 0.1 | 22.1 | 🟠 0.5% | ⚫ | ⚫ |
@@ -65,7 +66,7 @@
 | Overcooked! 2 | ❌ Failed seed 1 | 0 | 0 | 17.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Paint | ❌ Failed seed 1 | 131 | 0.1 | 12.1 | 🟠 0.8% | ⚫ | ⚫ |
 | Pokemon Emerald | ❌ Failed seed 1 | 0 | 4.1 | 15.1 | 🟡 27.2% | ⚫ | ⚫ |
-| Pokemon Red and Blue | ❌ Failed seed 1 | 646 | 0.6 | 10.1 | 🟠 5.9% | ⚫ | ⚫ |
+| Pokemon Red and Blue | ❌ Failed seed 1 | 646 | 1.3 | 10.1 | 🟡 12.9% | ⚫ | ⚫ |
 | Raft | ❌ Failed seed 1 | 0 | 0 | 10.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Risk of Rain 2 | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed seed 1 | 0 | 0 | 14.1 | 🔴 0.0% | ⚫ | ⚫ |

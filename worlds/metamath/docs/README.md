@@ -42,6 +42,7 @@ name: MathPlayer
 game: Metamath
 
 Metamath:
+  randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # The theorem to prove
   complexity: moderate
   starting_statements: 10  # Percentage of statements pre-unlocked

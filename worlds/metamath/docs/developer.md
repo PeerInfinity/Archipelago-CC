@@ -92,6 +92,7 @@ class ProofStructure:
 ### 5. Options (`Options.py`)
 
 Configuration options:
+- `randomize_items`: Enable/disable item randomization
 - `theorem`: Which theorem to prove
 - `complexity`: Randomization level
 - `starting_statements`: Percentage pre-unlocked

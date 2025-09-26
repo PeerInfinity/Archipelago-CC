@@ -24,6 +24,7 @@ requires:
   version: 0.6.4
 
 Metamath:
+  randomize_items: true
   theorem: 2p2e4
   complexity: moderate
   starting_statements: 10
@@ -42,6 +43,8 @@ description: Random theorem each time
 game: Metamath
 
 Metamath:
+  randomize_items: true
+
   theorem:
     2p2e4: 40    # 40% chance - Medium difficulty
     1p1e2: 20    # 20% chance - Easy
@@ -71,6 +74,7 @@ description: No help, pure logic
 game: Metamath
 
 Metamath:
+  randomize_items: true
   theorem: pm5.32
   complexity: complex
   starting_statements: 0
@@ -88,6 +92,7 @@ description: Learning the ropes
 game: Metamath
 
 Metamath:
+  randomize_items: true
   theorem: 1p1e2
   complexity: simple
   starting_statements: 50

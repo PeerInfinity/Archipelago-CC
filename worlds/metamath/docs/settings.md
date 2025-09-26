@@ -6,6 +6,21 @@ All available options for configuring your Metamath experience.
 
 ## Core Settings
 
+### randomize_items
+**Type**: Toggle
+**Default**: `true`
+
+Enable item randomization. When disabled, all items will remain in their original locations (proof statements will be at their corresponding theorem locations).
+
+```yaml
+randomize_items: true   # Normal randomized game
+randomize_items: false  # Items stay in original locations
+```
+
+When set to `false`, each statement item will be found at its own prove location, creating a linear proof progression. This is automatically set to `false` when using seed 1 for canonical placements.
+
+---
+
 ### theorem
 **Type**: Text Choice / Weighted Choice
 **Default**: `2p2e4`
@@ -276,6 +291,7 @@ item_links: []
 ### Easy Mode
 ```yaml
 Metamath:
+  randomize_items: true       # Normal randomization
   theorem: 1p1e2              # Simple 2-step proof
   complexity: simple          # Basic ordering
   starting_statements: 30     # Start with 30% unlocked
@@ -286,6 +302,7 @@ Metamath:
 ### Balanced
 ```yaml
 Metamath:
+  randomize_items: true       # Normal randomization
   theorem: 2p2e4              # Classic 10-step proof
   complexity: moderate        # Some reordering
   starting_statements: 10     # Start with 10%
@@ -296,6 +313,7 @@ Metamath:
 ### Challenge Mode
 ```yaml
 Metamath:
+  randomize_items: true       # Normal randomization
   theorem: pm5.32             # Complex logic proof
   complexity: complex         # Full randomization
   starting_statements: 0      # Start with nothing
@@ -307,6 +325,7 @@ Metamath:
 ### Multiworld Friendly
 ```yaml
 Metamath:
+  randomize_items: true      # Normal randomization
   theorem: 3p3e6
   complexity: moderate
   starting_statements: 15
@@ -315,6 +334,17 @@ Metamath:
     - "Statement 5"
     - "Statement 7"
   progression_balancing: 50
+```
+
+### Linear Proof Mode
+```yaml
+Metamath:
+  randomize_items: false     # Items stay at their proof locations
+  theorem: 2p2e4
+  complexity: simple
+  starting_statements: 20   # Start with 20% to avoid being stuck
+  hint_frequency: 10
+  progression_balancing: 0   # No rebalancing needed
 ```
 
 ## Tips for Settings

@@ -68,6 +68,7 @@ requires:
 
 Metamath:
   # Core Settings
+  randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # Which theorem to prove
   complexity: moderate
   starting_statements: 10
