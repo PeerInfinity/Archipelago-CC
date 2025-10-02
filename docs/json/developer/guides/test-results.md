@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-09-30 20:06:21
+**Generated:** 2025-10-01 20:53:54
 
 **Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-09-30T20:06:21.830821
+**Source Data Last Updated:** 2025-10-01T20:53:19.638231
 
 **Script Version:** 1.0.0
 
@@ -18,14 +18,14 @@
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|
-| A Hat in Time | ❌ Failed seed 1 | 0 | 0.1 | 5.1 | 🟠 2.0% | ✅ | ✅ |
+| A Hat in Time | ❌ Failed seed 1 | 0 | 0.2 | 5.1 | 🟠 3.9% | ✅ | ✅ |
 | A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 1.5 | 1.5 | 🟢 Complete | ✅ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
 | Aquaria | ❌ Failed seed 1 | 0 | 1.1 | 5.1 | 🟡 21.6% | ✅ | ⚫ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 3.2 | 3.2 | 🟢 Complete | ✅ | ✅ |
 | Blasphemous | ❌ Failed seed 1 | 0 | 0.1 | 5.1 | 🟠 2.0% | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ❌ Failed seed 1 | 0 | 1.1 | 9.1 | 🟡 12.1% | ✅ | ⚫ |
+| Bomb Rush Cyberfunk | ❌ Failed seed 1 | 0 | 0 | 9.1 | 🔴 0.0% | ✅ | ⚫ |
 | Bumper Stickers | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ❌ Failed seed 1 | 1 | 0 | 3.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Castlevania 64 | ❌ Failed seed 1 | 0 | 0.1 | 4.1 | 🟠 2.4% | ⚫ | ⚫ |
@@ -83,7 +83,7 @@
 | Super Metroid | ❌ Failed seed 1 | 0 | 0 | 8.1 | 🔴 0.0% | ⚫ | ⚫ |
 | TUNIC | ❌ Failed seed 1 | 0 | 0.1 | 4.1 | 🟠 2.4% | ⚫ | ⚫ |
 | Terraria | ❌ Failed seed 1 | 0 | 0 | 9.3 | 🔴 0.0% | ⚫ | ⚫ |
-| The Legend of Zelda | ❌ Failed seed 1 | 0 | 0.1 | 11.1 | 🟠 0.9% | ⚫ | ⚫ |
+| The Legend of Zelda | ❌ Failed seed 1 | 0 | 0.1 | 10.1 | 🟠 1.0% | ⚫ | ⚫ |
 | The Messenger | ❌ Failed seed 1 | 0 | 0.1 | 6.1 | 🟠 1.6% | ⚫ | ⚫ |
 | The Wind Waker | ❌ Failed seed 1 | 1 | 0.1 | 17.1 | 🟠 0.6% | ⚫ | ⚫ |
 | The Witness | ❌ Failed seed 1 | 1 | 0 | 9.1 | 🔴 0.0% | ⚫ | ⚫ |

@@ -414,8 +414,37 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
             if not rule_func:
                 return None
 
+            # Extract closure variables from the rule function
+            closure_vars = {}
+
+            # Add globals from the function (for module-level imports like ChapterIndex)
+            if hasattr(rule_func, '__globals__'):
+                # Only include specific useful globals, not all of them
+                useful_globals = ['ChapterIndex', 'HatType', 'Difficulty', 'HitType']
+                for var_name in useful_globals:
+                    if var_name in rule_func.__globals__:
+                        closure_vars[var_name] = rule_func.__globals__[var_name]
+
+            # Add closure variables
+            if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+                # Get variable names from the function's code
+                if hasattr(rule_func, '__code__'):
+                    freevars = rule_func.__code__.co_freevars
+                    for i, var_name in enumerate(freevars):
+                        if i < len(rule_func.__closure__):
+                            cell = rule_func.__closure__[i]
+                            try:
+                                closure_vars[var_name] = cell.cell_contents
+                            except ValueError:
+                                # Cell is empty
+                                pass
+
+            # Add world object to closure_vars if provided (may override closure value)
+            if world is not None:
+                closure_vars['world'] = world
+
             # Directly call analyze_rule, which handles recursion internally for combined rules
-            analysis_result = analyze_rule(rule_func=rule_func, game_handler=game_handler, player_context=player)
+            analysis_result = analyze_rule(rule_func=rule_func, closure_vars=closure_vars, game_handler=game_handler, player_context=player)
             
             if analysis_result and analysis_result.get('type') != 'error':
                 

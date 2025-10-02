@@ -147,6 +147,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Time Piece"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 8
                   }
                 }
               ]
@@ -181,6 +185,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Time Piece"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 17
                   }
                 }
               ]
@@ -222,6 +230,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Time Piece"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 12
                   }
                 },
                 {
@@ -229,6 +241,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Time Piece"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 17
                   }
                 }
               ]
@@ -6567,14 +6583,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6589,14 +6597,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6611,14 +6611,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6633,14 +6625,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6655,14 +6639,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -6696,14 +6672,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6718,14 +6686,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6740,14 +6700,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6762,14 +6714,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6784,14 +6728,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7171,14 +7107,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7193,14 +7121,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7215,14 +7135,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7237,14 +7149,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7259,14 +7163,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7281,14 +7177,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7673,14 +7561,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7695,14 +7575,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7717,14 +7589,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7739,14 +7603,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7761,14 +7617,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7783,14 +7631,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7824,14 +7664,6 @@
                     {
                       "type": "constant",
                       "value": "Location"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7846,14 +7678,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7868,14 +7692,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7890,14 +7706,6 @@
                     {
                       "type": "constant",
                       "value": "Region"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }

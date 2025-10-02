@@ -330,14 +330,85 @@ class RuleAnalyzer(ast.NodeVisitor):
         logging.debug(f"Could not resolve variable '{var_name}'")
         return None
 
+    def resolve_expression(self, expr_result):
+        """
+        Resolve a complex expression to its value.
+        Handles subscripts, attributes, and simple names.
+
+        Args:
+            expr_result: The result dict from visiting an expression node
+
+        Returns:
+            The resolved value, or None if it cannot be resolved
+        """
+        if not isinstance(expr_result, dict):
+            return None
+
+        expr_type = expr_result.get('type')
+
+        # Handle constant values
+        if expr_type == 'constant':
+            return expr_result.get('value')
+
+        # Handle simple variable names
+        if expr_type == 'name':
+            return self.resolve_variable(expr_result.get('name'))
+
+        # Handle subscript expressions like world.chapter_timepiece_costs[ChapterIndex.BIRDS]
+        if expr_type == 'subscript':
+            # First resolve the object being subscripted
+            obj_value = self.resolve_expression(expr_result.get('value'))
+            # Then resolve the index
+            index_value = self.resolve_expression(expr_result.get('index'))
+
+            if obj_value is not None and index_value is not None:
+                try:
+                    # Try to subscript the object with the index
+                    resolved = obj_value[index_value]
+                    logging.debug(f"Resolved subscript to value: {resolved}")
+                    return resolved
+                except (KeyError, IndexError, TypeError) as e:
+                    logging.debug(f"Could not resolve subscript: {e}")
+                    return None
+            return None
+
+        # Handle attribute access like world.player or ChapterIndex.BIRDS
+        if expr_type == 'attribute':
+            obj_result = expr_result.get('object')
+            attr_name = expr_result.get('attr')
+
+            if obj_result and attr_name:
+                # Resolve the object first
+                obj_value = self.resolve_expression(obj_result)
+
+                if obj_value is not None:
+                    try:
+                        # Try to get the attribute
+                        resolved = getattr(obj_value, attr_name)
+                        logging.debug(f"Resolved attribute {attr_name} to value: {resolved}")
+                        return resolved
+                    except AttributeError as e:
+                        logging.debug(f"Could not resolve attribute {attr_name}: {e}")
+                        return None
+            return None
+
+        logging.debug(f"Could not resolve expression of type '{expr_type}'")
+        return None
+
     def _is_state_or_player_arg(self, arg_node, arg_result):
         """
         Check if an argument is the 'state' or 'player' parameter.
         Returns: (is_state, is_player) tuple
         """
+        # Check for direct 'state' or 'player' names
         if isinstance(arg_node, ast.Name):
             name = arg_node.id
             return (name == 'state', name == 'player')
+
+        # Check for attribute access like 'world.player', 'self.player', etc.
+        if isinstance(arg_node, ast.Attribute) and arg_node.attr == 'player':
+            return (False, True)
+
         return (False, False)
 
     def _filter_special_args(self, args_with_nodes):
@@ -552,22 +623,20 @@ class RuleAnalyzer(ast.NodeVisitor):
                     if len(filtered_args) >= 2:
                         second_arg = filtered_args[1]
                         if isinstance(second_arg, dict):
-                            # Handle constant integer (like 15)
-                            if second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
-                                logging.debug(f"Found count parameter: {second_arg}")
+                            # Try to resolve the expression to a concrete value
+                            resolved_value = self.resolve_expression(second_arg)
+                            if resolved_value is not None and isinstance(resolved_value, int):
+                                # Successfully resolved to an integer value
+                                logging.debug(f"Resolved count parameter: {second_arg} -> {resolved_value}")
+                                result['count'] = {'type': 'constant', 'value': resolved_value}
+                            elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
+                                # Already a constant, use as-is
+                                logging.debug(f"Found constant count parameter: {second_arg}")
                                 result['count'] = second_arg
-                            # Handle variable name (like min_feathers)
-                            elif second_arg.get('type') == 'name' and second_arg.get('name'):
-                                var_name = second_arg.get('name')
-                                resolved_value = self.resolve_variable(var_name)
-                                if resolved_value is not None:
-                                    # Successfully resolved variable to a concrete value
-                                    logging.debug(f"Found variable count parameter: {second_arg} -> {resolved_value}")
-                                    result['count'] = {'type': 'constant', 'value': resolved_value}
-                                else:
-                                    # Could not resolve, keep as variable reference
-                                    logging.debug(f"Found unresolved variable count parameter: {second_arg}")
-                                    result['count'] = second_arg
+                            else:
+                                # Could not resolve to a constant value, keep as-is
+                                logging.debug(f"Found unresolved count parameter: {second_arg}")
+                                result['count'] = second_arg
                 elif method == 'has_group' and len(filtered_args) >= 1:
                     result = {'type': 'group_check', 'group': filtered_args[0]}
                 elif method == 'has_any' and len(filtered_args) >= 1 and isinstance(filtered_args[0], list):
