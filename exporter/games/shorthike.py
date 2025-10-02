@@ -124,3 +124,90 @@ class ShortHikeGameExportHandler(BaseGameExportHandler):
             rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
             
         return rule
+    
+    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+        """Return A Short Hike item definitions with classification flags."""
+        item_data = {}
+        
+        # Main progression items
+        progression_items = {
+            "Golden Feather": True,
+            "Bucket": True,
+            "Progressive Fishing Rod": True,
+            "Shovel": True,
+            "Shell Necklace": True,
+            "Wristwatch": True,
+            "Motorboat Key": True,
+            "Headband": True,
+            "Camping Permit": True,
+        }
+        
+        # Progression skip balancing items
+        skip_balancing_items = {
+            "Stick": True,
+            "Seashell": True,
+            "Toy Shovel": True,
+        }
+        
+        # Useful items
+        useful_items = {
+            "Silver Feather": True,
+            "Compass": True,
+            "Pickaxe": True,
+            "Fishing Journal": True,
+            "Running Shoes": True,
+            "Walkie Talkie": True,
+            "32 Coins": True,
+            "33 Coins": True,
+            "50 Coins": True,
+        }
+        
+        # Filler items
+        filler_items = {
+            "Bait": True,
+            "Medal": True,
+            "A Stormy View Map": True,
+            "The King Map": True,
+            "The Treasure of Sid Beach Map": True,
+            "In Her Shadow Map": True,
+            "Sunhat": True,
+            "Baseball Cap": True,
+            "Provincial Park Hat": True,
+            "7 Coins": True,
+            "13 Coins": True,
+            "15 Coins": True,
+            "18 Coins": True,
+            "21 Coins": True,
+            "25 Coins": True,
+            "27 Coins": True,
+        }
+        
+        # Add progression items
+        for item_name in progression_items:
+            item_data[item_name] = {
+                "classification": "progression",
+                "is_event": False
+            }
+        
+        # Add progression skip balancing items
+        for item_name in skip_balancing_items:
+            item_data[item_name] = {
+                "classification": "progression_skip_balancing",
+                "is_event": False
+            }
+        
+        # Add useful items
+        for item_name in useful_items:
+            item_data[item_name] = {
+                "classification": "useful",
+                "is_event": False
+            }
+        
+        # Add filler items
+        for item_name in filler_items:
+            item_data[item_name] = {
+                "classification": "filler",
+                "is_event": False
+            }
+        
+        return item_data

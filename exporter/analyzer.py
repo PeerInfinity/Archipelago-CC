@@ -392,6 +392,37 @@ class RuleAnalyzer(ast.NodeVisitor):
                         return None
             return None
 
+        # Handle binary operations like i+1, j*2, etc.
+        if expr_type == 'binary_op':
+            left_value = self.resolve_expression(expr_result.get('left'))
+            right_value = self.resolve_expression(expr_result.get('right'))
+            op = expr_result.get('op')
+            
+            if left_value is not None and right_value is not None and op:
+                try:
+                    # Perform the binary operation
+                    if op == '+':
+                        return left_value + right_value
+                    elif op == '-':
+                        return left_value - right_value
+                    elif op == '*':
+                        return left_value * right_value
+                    elif op == '/':
+                        return left_value / right_value
+                    elif op == '//':
+                        return left_value // right_value
+                    elif op == '%':
+                        return left_value % right_value
+                    elif op == '**':
+                        return left_value ** right_value
+                    else:
+                        logging.debug(f"Unsupported binary operation: {op}")
+                        return None
+                except Exception as e:
+                    logging.debug(f"Could not perform binary operation {op}: {e}")
+                    return None
+            return None
+
         logging.debug(f"Could not resolve expression of type '{expr_type}'")
         return None
 
@@ -528,6 +559,33 @@ class RuleAnalyzer(ast.NodeVisitor):
 
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
+            
+            # Resolve variable references in arguments (e.g., lambda defaults)
+            resolved_args = []
+            for arg in filtered_args:
+                if arg and arg.get('type') == 'name':
+                    # Skip 'world' - it should have been filtered already but double-check
+                    if arg['name'] == 'world':
+                        logging.debug(f"Skipping resolution of 'world' argument")
+                        continue
+                    
+                    # Try to resolve the variable
+                    resolved_value = self.resolve_variable(arg['name'])
+                    if resolved_value is not None:
+                        # Handle enum values - extract the numeric value
+                        if hasattr(resolved_value, 'value'):
+                            final_value = resolved_value.value
+                        else:
+                            final_value = resolved_value
+                        logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
+                        resolved_args.append({'type': 'constant', 'value': final_value})
+                    else:
+                        # Keep unresolved name as-is
+                        resolved_args.append(arg)
+                else:
+                    resolved_args.append(arg)
+            
+            filtered_args = resolved_args
 
             # Check for game-specific special function calls
             if self.game_handler and hasattr(self.game_handler, 'handle_special_function_call'):
@@ -614,6 +672,38 @@ class RuleAnalyzer(ast.NodeVisitor):
 
                 # Filter out state/player for final result
                 filtered_args = self._filter_special_args(args_with_nodes)
+                
+                # Resolve variable references in arguments (e.g., lambda defaults) 
+                # This is needed for methods like has_from_list that use lambda with defaults
+                resolved_args = []
+                for arg in filtered_args:
+                    if arg and arg.get('type') == 'name':
+                        # Try to resolve the variable
+                        resolved_value = self.resolve_variable(arg['name'])
+                        if resolved_value is not None:
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            logging.debug(f"Resolved state method argument variable '{arg['name']}' to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        else:
+                            # Keep unresolved name as-is
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'binary_op':
+                        # Try to resolve binary operations like i+1
+                        resolved_value = self.resolve_expression(arg)
+                        if resolved_value is not None:
+                            logging.debug(f"Resolved state method binary_op '{arg}' to {resolved_value}")
+                            resolved_args.append({'type': 'constant', 'value': resolved_value})
+                        else:
+                            # Keep unresolved expression as-is
+                            resolved_args.append(arg)
+                    else:
+                        resolved_args.append(arg)
+                
+                filtered_args = resolved_args
 
                 # Simplify handling based on method name
                 if method == 'has' and len(filtered_args) >= 1:
@@ -697,6 +787,21 @@ class RuleAnalyzer(ast.NodeVisitor):
             # Specifically log 'self'
             if name == 'self':
                 logging.debug("visit_Name: Detected 'self'")
+
+            # Check if this name is in closure vars and should be resolved to a constant
+            if name in self.closure_vars:
+                value = self.closure_vars[name]
+                # Only resolve simple values to constants (numbers, strings, bools)
+                if isinstance(value, (int, float, str, bool)):
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")
+                    return {'type': 'constant', 'value': value}
+            
+            # Also check function defaults for lambda parameters
+            if name not in self.closure_vars:
+                resolved_value = self.resolve_variable(name)
+                if resolved_value is not None and isinstance(resolved_value, (int, float, str, bool)):
+                    logging.debug(f"visit_Name: Resolved '{name}' from function defaults to constant value: {resolved_value}")
+                    return {'type': 'constant', 'value': resolved_value}
 
             # Use game handler to replace names if available
             if self.game_handler and hasattr(self.game_handler, 'replace_name'):

@@ -480,8 +480,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Cannon Unlock BoB"
               }
             },
             "reverse": null,
@@ -776,8 +776,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Cannon Unlock WF"
               }
             },
             "progress_type": 1,
@@ -955,16 +955,7 @@
             "name": "JRB: Blast to the Stone Pillar",
             "id": 3626018,
             "crystal": null,
-            "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "items"
-                }
-              ]
-            },
+            "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -982,8 +973,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Metal Cap"
               }
             },
             "progress_type": 1,
@@ -1175,8 +1166,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Cannon Unlock CCM"
               }
             },
             "progress_type": 1,
@@ -1412,8 +1403,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Vanish Cap"
               }
             },
             "progress_type": 1,
@@ -1949,16 +1940,7 @@
             "name": "HMC: Metal-Head Mario Can Move!",
             "id": 3626037,
             "crystal": null,
-            "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "items"
-                }
-              ]
-            },
+            "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2637,8 +2619,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Metal Cap"
               }
             },
             "progress_type": 1,
@@ -2673,16 +2655,7 @@
             "name": "DDD: Collect the Caps...",
             "id": 3626061,
             "crystal": null,
-            "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "items"
-                }
-              ]
-            },
+            "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2765,8 +2738,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Metal Cap"
               }
             },
             "progress_type": 1,
@@ -2845,8 +2818,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Vanish Cap"
               }
             },
             "progress_type": 1,
@@ -3229,8 +3202,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Vanish Cap"
               }
             },
             "progress_type": 1,
@@ -3652,8 +3625,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Cannon Unlock TTM"
               }
             },
             "progress_type": 1,
@@ -4744,8 +4717,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "name",
-                "name": "item"
+                "type": "constant",
+                "value": "Cannon Unlock RR"
               }
             },
             "progress_type": 1,
@@ -4844,16 +4817,7 @@
             "name": "Wing Mario Over the Rainbow Red Coins",
             "id": 3626154,
             "crystal": null,
-            "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "items"
-                }
-              ]
-            },
+            "access_rule": null,
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4868,16 +4832,7 @@
             "name": "Wing Mario Over the Rainbow 1Up Block",
             "id": 3626243,
             "crystal": null,
-            "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "items"
-                }
-              ]
-            },
+            "access_rule": null,
             "progress_type": 1,
             "locked": true,
             "item": {

@@ -1636,6 +1636,13 @@ export class StateManager {
     if (Array.isArray(this.startRegions)) {
       return this.startRegions;
     }
+    
+    // Handle object format with 'default' and 'available' properties
+    if (this.startRegions && typeof this.startRegions === 'object') {
+      if (this.startRegions.default && Array.isArray(this.startRegions.default)) {
+        return this.startRegions.default;
+      }
+    }
 
     // Log unexpected values for debugging
     if (this.startRegions !== null && this.startRegions !== undefined) {
@@ -2731,6 +2738,16 @@ export class StateManager {
       countItem: (itemName) => self._countItem(itemName),
       hasGroup: (groupName) => self._hasGroup(groupName),
       countGroup: (groupName) => self._countGroup(groupName),
+      getTotalItemCount: () => {
+        // Count total items across all item types in inventory
+        let totalCount = 0;
+        if (self.inventory) {
+          for (const itemName in self.inventory) {
+            totalCount += self.inventory[itemName] || 0;
+          }
+        }
+        return totalCount;
+      },
       // Flags check gameStateModule for ALTTP, state for others
       hasFlag: (flagName) =>
         self.checkedLocations.has(flagName) ||
@@ -3625,6 +3642,8 @@ export class StateManager {
       itempoolCounts: this.itempoolCounts,
       startRegions: this.startRegions,
       mode: this.mode,
+      // Game-specific information
+      game_info: this.gameInfo,
       // ID mappings
       locationNameToId: this.locationNameToId,
       itemNameToId: this.itemNameToId,

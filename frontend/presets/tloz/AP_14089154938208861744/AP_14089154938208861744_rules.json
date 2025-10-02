@@ -159,8 +159,8 @@
                       {
                         "type": "formatted_value",
                         "value": {
-                          "type": "name",
-                          "name": "l"
+                          "type": "constant",
+                          "value": 1
                         }
                       },
                       {
@@ -169,7 +169,7 @@
                       }
                     ],
                     "all_simple": true,
-                    "value": "Boss {l} Defeated"
+                    "value": "Boss 1 Defeated"
                   }
                 },
                 {
@@ -332,18 +332,9 @@
                   }
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "b"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "type": "helper",
+                  "name": "old_rule",
+                  "args": []
                 }
               ]
             },
@@ -424,8 +415,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -461,8 +452,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -540,8 +531,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -577,8 +568,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -656,8 +647,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -693,8 +684,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -772,8 +763,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -809,8 +800,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -863,8 +854,8 @@
                       {
                         "type": "formatted_value",
                         "value": {
-                          "type": "name",
-                          "name": "l"
+                          "type": "constant",
+                          "value": 2
                         }
                       },
                       {
@@ -873,7 +864,7 @@
                       }
                     ],
                     "all_simple": true,
-                    "value": "Boss {l} Defeated"
+                    "value": "Boss 2 Defeated"
                   }
                 },
                 {
@@ -916,8 +907,8 @@
                                   {
                                     "type": "binary_op",
                                     "left": {
-                                      "type": "name",
-                                      "name": "hearts"
+                                      "type": "constant",
+                                      "value": 1
                                     },
                                     "op": "/",
                                     "right": {
@@ -953,8 +944,8 @@
                                   {
                                     "type": "binary_op",
                                     "left": {
-                                      "type": "name",
-                                      "name": "hearts"
+                                      "type": "constant",
+                                      "value": 1
                                     },
                                     "op": "/",
                                     "right": {
@@ -1034,8 +1025,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1071,8 +1062,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1150,8 +1141,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1187,8 +1178,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1266,8 +1257,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1303,8 +1294,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1382,8 +1373,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1419,8 +1410,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1498,8 +1489,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1535,8 +1526,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1614,8 +1605,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1651,8 +1642,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1730,8 +1721,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1767,8 +1758,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1846,8 +1837,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1883,8 +1874,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 1
                                 },
                                 "op": "/",
                                 "right": {
@@ -1910,18 +1901,9 @@
                       }
                     },
                     {
-                      "type": "state_method",
-                      "method": "can_reach",
-                      "args": [
-                        {
-                          "type": "name",
-                          "name": "b"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Location"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "old_rule",
+                      "args": []
                     }
                   ]
                 }
@@ -2004,8 +1986,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2041,8 +2023,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2120,8 +2102,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2157,8 +2139,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2236,8 +2218,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2273,8 +2255,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2352,8 +2334,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2389,8 +2371,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2443,8 +2425,8 @@
                       {
                         "type": "formatted_value",
                         "value": {
-                          "type": "name",
-                          "name": "l"
+                          "type": "constant",
+                          "value": 3
                         }
                       },
                       {
@@ -2453,7 +2435,7 @@
                       }
                     ],
                     "all_simple": true,
-                    "value": "Boss {l} Defeated"
+                    "value": "Boss 3 Defeated"
                   }
                 },
                 {
@@ -2496,8 +2478,8 @@
                                   {
                                     "type": "binary_op",
                                     "left": {
-                                      "type": "name",
-                                      "name": "hearts"
+                                      "type": "constant",
+                                      "value": 2
                                     },
                                     "op": "/",
                                     "right": {
@@ -2533,8 +2515,8 @@
                                   {
                                     "type": "binary_op",
                                     "left": {
-                                      "type": "name",
-                                      "name": "hearts"
+                                      "type": "constant",
+                                      "value": 2
                                     },
                                     "op": "/",
                                     "right": {
@@ -2614,8 +2596,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2651,8 +2633,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2730,8 +2712,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2767,8 +2749,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2846,8 +2828,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2883,8 +2865,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2962,8 +2944,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -2999,8 +2981,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3078,8 +3060,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3115,8 +3097,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3194,8 +3176,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3231,8 +3213,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3310,8 +3292,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3347,8 +3329,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3426,8 +3408,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3463,8 +3445,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3542,8 +3524,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3579,8 +3561,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3658,8 +3640,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3695,8 +3677,8 @@
                               {
                                 "type": "binary_op",
                                 "left": {
-                                  "type": "name",
-                                  "name": "hearts"
+                                  "type": "constant",
+                                  "value": 2
                                 },
                                 "op": "/",
                                 "right": {
@@ -3722,18 +3704,9 @@
                       }
                     },
                     {
-                      "type": "state_method",
-                      "method": "can_reach",
-                      "args": [
-                        {
-                          "type": "name",
-                          "name": "b"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Location"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "old_rule",
+                      "args": []
                     }
                   ]
                 }
@@ -3872,8 +3845,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -3909,8 +3882,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -4058,8 +4031,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 3
                                             },
                                             "op": "/",
                                             "right": {
@@ -4095,8 +4068,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 3
                                             },
                                             "op": "/",
                                             "right": {
@@ -4236,8 +4209,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -4273,8 +4246,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -4444,8 +4417,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 3
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -4481,8 +4454,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 3
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -4553,8 +4526,8 @@
                           {
                             "type": "formatted_value",
                             "value": {
-                              "type": "name",
-                              "name": "l"
+                              "type": "constant",
+                              "value": 4
                             }
                           },
                           {
@@ -4563,7 +4536,7 @@
                           }
                         ],
                         "all_simple": true,
-                        "value": "Boss {l} Defeated"
+                        "value": "Boss 4 Defeated"
                       }
                     },
                     {
@@ -4684,8 +4657,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 3
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -4721,8 +4694,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 3
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -4866,8 +4839,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -4903,8 +4876,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -5042,8 +5015,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -5079,8 +5052,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -5218,8 +5191,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -5255,8 +5228,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -5404,8 +5377,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 3
                                             },
                                             "op": "/",
                                             "right": {
@@ -5441,8 +5414,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 3
                                             },
                                             "op": "/",
                                             "right": {
@@ -5582,8 +5555,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -5619,8 +5592,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 3
                                         },
                                         "op": "/",
                                         "right": {
@@ -5646,18 +5619,9 @@
                               }
                             },
                             {
-                              "type": "state_method",
-                              "method": "can_reach",
-                              "args": [
-                                {
-                                  "type": "name",
-                                  "name": "b"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Location"
-                                }
-                              ]
+                              "type": "helper",
+                              "name": "old_rule",
+                              "args": []
                             }
                           ]
                         }
@@ -5788,8 +5752,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -5825,8 +5789,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -5952,8 +5916,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -5989,8 +5953,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -6116,8 +6080,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -6153,8 +6117,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -6290,8 +6254,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 4
                                             },
                                             "op": "/",
                                             "right": {
@@ -6327,8 +6291,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 4
                                             },
                                             "op": "/",
                                             "right": {
@@ -6387,8 +6351,8 @@
                       {
                         "type": "formatted_value",
                         "value": {
-                          "type": "name",
-                          "name": "l"
+                          "type": "constant",
+                          "value": 5
                         }
                       },
                       {
@@ -6397,7 +6361,7 @@
                       }
                     ],
                     "all_simple": true,
-                    "value": "Boss {l} Defeated"
+                    "value": "Boss 5 Defeated"
                   }
                 },
                 {
@@ -6494,8 +6458,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 4
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -6531,8 +6495,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 4
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -6662,8 +6626,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -6699,8 +6663,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -6826,8 +6790,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -6863,8 +6827,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -6990,8 +6954,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -7027,8 +6991,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -7188,8 +7152,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 4
                                             },
                                             "op": "/",
                                             "right": {
@@ -7225,8 +7189,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 4
                                             },
                                             "op": "/",
                                             "right": {
@@ -7354,8 +7318,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -7391,8 +7355,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -7552,8 +7516,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 4
                                             },
                                             "op": "/",
                                             "right": {
@@ -7589,8 +7553,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 4
                                             },
                                             "op": "/",
                                             "right": {
@@ -7718,8 +7682,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -7755,8 +7719,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -7882,8 +7846,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -7919,8 +7883,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -8046,8 +8010,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -8083,8 +8047,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -8210,8 +8174,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -8247,8 +8211,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -8374,8 +8338,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -8411,8 +8375,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 4
                                         },
                                         "op": "/",
                                         "right": {
@@ -8438,18 +8402,9 @@
                               }
                             },
                             {
-                              "type": "state_method",
-                              "method": "can_reach",
-                              "args": [
-                                {
-                                  "type": "name",
-                                  "name": "b"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Location"
-                                }
-                              ]
+                              "type": "helper",
+                              "name": "old_rule",
+                              "args": []
                             }
                           ]
                         }
@@ -8580,8 +8535,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -8617,8 +8572,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -8744,8 +8699,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -8781,8 +8736,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -8908,8 +8863,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -8945,8 +8900,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -9094,8 +9049,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 5
                                             },
                                             "op": "/",
                                             "right": {
@@ -9131,8 +9086,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 5
                                             },
                                             "op": "/",
                                             "right": {
@@ -9191,8 +9146,8 @@
                       {
                         "type": "formatted_value",
                         "value": {
-                          "type": "name",
-                          "name": "l"
+                          "type": "constant",
+                          "value": 6
                         }
                       },
                       {
@@ -9201,7 +9156,7 @@
                       }
                     ],
                     "all_simple": true,
-                    "value": "Boss {l} Defeated"
+                    "value": "Boss 6 Defeated"
                   }
                 },
                 {
@@ -9310,8 +9265,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 5
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -9347,8 +9302,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 5
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -9478,8 +9433,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -9515,8 +9470,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -9642,8 +9597,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -9679,8 +9634,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -9806,8 +9761,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -9843,8 +9798,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -9970,8 +9925,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10007,8 +9962,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10134,8 +10089,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10171,8 +10126,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10298,8 +10253,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10335,8 +10290,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10462,8 +10417,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10499,8 +10454,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10626,8 +10581,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10663,8 +10618,8 @@
                                       {
                                         "type": "binary_op",
                                         "left": {
-                                          "type": "name",
-                                          "name": "hearts"
+                                          "type": "constant",
+                                          "value": 5
                                         },
                                         "op": "/",
                                         "right": {
@@ -10690,18 +10645,9 @@
                               }
                             },
                             {
-                              "type": "state_method",
-                              "method": "can_reach",
-                              "args": [
-                                {
-                                  "type": "name",
-                                  "name": "b"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Location"
-                                }
-                              ]
+                              "type": "helper",
+                              "name": "old_rule",
+                              "args": []
                             }
                           ]
                         }
@@ -10852,8 +10798,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -10889,8 +10835,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -11040,8 +10986,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -11077,8 +11023,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -11218,8 +11164,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -11255,8 +11201,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -11404,8 +11350,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -11441,8 +11387,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -11503,8 +11449,8 @@
                       {
                         "type": "formatted_value",
                         "value": {
-                          "type": "name",
-                          "name": "l"
+                          "type": "constant",
+                          "value": 7
                         }
                       },
                       {
@@ -11513,7 +11459,7 @@
                       }
                     ],
                     "all_simple": true,
-                    "value": "Boss {l} Defeated"
+                    "value": "Boss 7 Defeated"
                   }
                 },
                 {
@@ -11620,8 +11566,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 6
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -11657,8 +11603,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 6
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -11800,8 +11746,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -11837,8 +11783,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -11986,8 +11932,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -12023,8 +11969,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -12164,8 +12110,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12201,8 +12147,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12340,8 +12286,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12377,8 +12323,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12516,8 +12462,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12553,8 +12499,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12692,8 +12638,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12729,8 +12675,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12868,8 +12814,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -12905,8 +12851,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -13054,8 +13000,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -13091,8 +13037,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -13242,8 +13188,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -13279,8 +13225,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -13430,8 +13376,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -13467,8 +13413,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -13608,8 +13554,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -13645,8 +13591,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -13784,8 +13730,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -13821,8 +13767,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -13960,8 +13906,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -13997,8 +13943,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -14146,8 +14092,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -14183,8 +14129,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 6
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -14324,8 +14270,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -14361,8 +14307,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 6
                                             },
                                             "op": "/",
                                             "right": {
@@ -14388,18 +14334,9 @@
                                   }
                                 },
                                 {
-                                  "type": "state_method",
-                                  "method": "can_reach",
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "b"
-                                    },
-                                    {
-                                      "type": "constant",
-                                      "value": "Location"
-                                    }
-                                  ]
+                                  "type": "helper",
+                                  "name": "old_rule",
+                                  "args": []
                                 }
                               ]
                             }
@@ -14586,8 +14523,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 7
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -14623,8 +14560,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 7
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -14766,8 +14703,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -14803,8 +14740,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -14942,8 +14879,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -14979,8 +14916,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -15118,8 +15055,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -15155,8 +15092,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -15316,8 +15253,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -15353,8 +15290,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -15415,8 +15352,8 @@
                       {
                         "type": "formatted_value",
                         "value": {
-                          "type": "name",
-                          "name": "l"
+                          "type": "constant",
+                          "value": 8
                         }
                       },
                       {
@@ -15425,7 +15362,7 @@
                       }
                     ],
                     "all_simple": true,
-                    "value": "Boss {l} Defeated"
+                    "value": "Boss 8 Defeated"
                   }
                 },
                 {
@@ -15544,8 +15481,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 7
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -15581,8 +15518,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 7
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -15724,8 +15661,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -15761,8 +15698,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -15900,8 +15837,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -15937,8 +15874,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -16110,8 +16047,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -16147,8 +16084,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -16322,8 +16259,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -16359,8 +16296,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -16500,8 +16437,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -16537,8 +16474,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -16676,8 +16613,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -16713,8 +16650,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -16896,8 +16833,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 7
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -16933,8 +16870,8 @@
                                                   {
                                                     "type": "binary_op",
                                                     "left": {
-                                                      "type": "name",
-                                                      "name": "hearts"
+                                                      "type": "constant",
+                                                      "value": 7
                                                     },
                                                     "op": "/",
                                                     "right": {
@@ -17076,8 +17013,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17113,8 +17050,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17286,8 +17223,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -17323,8 +17260,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 7
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -17464,8 +17401,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17501,8 +17438,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17640,8 +17577,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17677,8 +17614,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17816,8 +17753,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17853,8 +17790,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -17992,8 +17929,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -18029,8 +17966,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 7
                                             },
                                             "op": "/",
                                             "right": {
@@ -18056,18 +17993,9 @@
                                   }
                                 },
                                 {
-                                  "type": "state_method",
-                                  "method": "can_reach",
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "b"
-                                    },
-                                    {
-                                      "type": "constant",
-                                      "value": "Location"
-                                    }
-                                  ]
+                                  "type": "helper",
+                                  "name": "old_rule",
+                                  "args": []
                                 }
                               ]
                             }
@@ -18226,8 +18154,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18263,8 +18191,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18418,8 +18346,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18455,8 +18383,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18610,8 +18538,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18647,8 +18575,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18802,8 +18730,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18839,8 +18767,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -18994,8 +18922,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19031,8 +18959,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19186,8 +19114,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19223,8 +19151,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19378,8 +19306,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19415,8 +19343,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19570,8 +19498,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19607,8 +19535,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19762,8 +19690,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19799,8 +19727,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19954,8 +19882,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -19991,8 +19919,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20146,8 +20074,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20183,8 +20111,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20338,8 +20266,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20375,8 +20303,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20530,8 +20458,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20567,8 +20495,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20722,8 +20650,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20759,8 +20687,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20914,8 +20842,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -20951,8 +20879,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21106,8 +21034,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21143,8 +21071,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21298,8 +21226,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21335,8 +21263,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21490,8 +21418,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21527,8 +21455,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21682,8 +21610,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21719,8 +21647,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21874,8 +21802,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -21911,8 +21839,8 @@
                                           {
                                             "type": "binary_op",
                                             "left": {
-                                              "type": "name",
-                                              "name": "hearts"
+                                              "type": "constant",
+                                              "value": 8
                                             },
                                             "op": "/",
                                             "right": {
@@ -22088,8 +22016,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 8
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -22125,8 +22053,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 8
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -22292,8 +22220,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 8
                                                 },
                                                 "op": "/",
                                                 "right": {
@@ -22329,8 +22257,8 @@
                                               {
                                                 "type": "binary_op",
                                                 "left": {
-                                                  "type": "name",
-                                                  "name": "hearts"
+                                                  "type": "constant",
+                                                  "value": 8
                                                 },
                                                 "op": "/",
                                                 "right": {

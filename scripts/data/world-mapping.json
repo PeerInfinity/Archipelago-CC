@@ -70,93 +70,93 @@
     "world_directory": "bumpstik"
   },
   "Castlevania - Circle of the Moon": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/cvcotm.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "cvcotm"
   },
   "Castlevania 64": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/cv64.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "cv64"
   },
   "Celeste 64": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/celeste64.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "celeste64"
   },
   "ChecksFinder": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/checksfinder.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "checksfinder"
   },
   "ChocolateChipCookies": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/bakingadventure.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "bakingadventure"
   },
   "Civilization VI": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/civ_6.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "civ_6"
   },
   "DLCQuest": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/dlcquest.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "dlcquest"
   },
   "DOOM 1993": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/doom_1993.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "doom_1993"
   },
   "DOOM II": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/doom_ii.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "doom_ii"
   },
   "Dark Souls III": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/dark_souls_3.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "dark_souls_3"
   },
   "Donkey Kong Country 3": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/dkc3.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "dkc3"
   },
   "Factorio": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/factorio.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "factorio"
   },
   "Faxanadu": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/faxanadu.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "faxanadu"
   },
@@ -168,9 +168,9 @@
     "world_directory": "ff1"
   },
   "Final Fantasy Mystic Quest": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/ffmq.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "ffmq"
   },
@@ -182,44 +182,44 @@
     "world_directory": "heretic"
   },
   "Hollow Knight": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/hk.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/hk/hkLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "hk"
   },
   "Hylics 2": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/hylics2.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "hylics2"
   },
   "Inscryption": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/inscryption.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "inscryption"
   },
   "Kingdom Hearts": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/kh1.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "kh1"
   },
   "Kingdom Hearts 2": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/kh2.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "kh2"
   },
   "Kirby's Dream Land 3": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/kdl3.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "kdl3"
   },

@@ -21593,8 +21593,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -21602,8 +21602,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -21825,8 +21827,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -21834,8 +21836,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -21980,8 +21984,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -21989,8 +21993,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -22055,8 +22061,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -22064,8 +22070,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -22156,8 +22164,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -22165,8 +22173,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -22376,8 +22386,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -22385,8 +22395,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -23422,8 +23434,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -23431,8 +23443,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -23615,8 +23629,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -23624,8 +23638,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -23827,8 +23843,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -23836,8 +23852,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -24817,8 +24835,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -24826,8 +24844,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -24904,8 +24924,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -24913,8 +24933,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -24993,8 +25015,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -25002,8 +25024,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -25103,8 +25127,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -25112,8 +25136,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -25266,8 +25292,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -25275,8 +25301,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -25444,8 +25472,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -25453,8 +25481,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -25612,8 +25642,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -25621,8 +25651,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -25939,8 +25971,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -25948,8 +25980,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -26095,8 +26129,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -26104,8 +26138,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -26344,8 +26380,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -26353,8 +26389,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -26443,8 +26481,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -26452,8 +26490,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -26542,8 +26582,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -26551,8 +26591,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -26744,8 +26786,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -26753,8 +26795,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -27967,8 +28011,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -27976,8 +28020,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -28281,8 +28327,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -28290,8 +28336,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -29195,8 +29243,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -29204,8 +29252,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -31806,8 +31856,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -31815,8 +31865,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -31893,8 +31945,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -31902,8 +31954,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -31970,8 +32024,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -31979,8 +32033,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -32337,8 +32393,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -32346,8 +32402,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -32367,8 +32425,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -32376,8 +32434,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -32397,8 +32457,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -32406,8 +32466,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -32541,8 +32603,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -32550,8 +32612,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -32687,8 +32751,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -32696,8 +32760,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -33307,8 +33373,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -33316,8 +33382,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -33475,8 +33543,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -33484,8 +33552,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -33715,8 +33785,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -33724,8 +33794,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -33834,8 +33906,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -33843,8 +33915,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -33934,8 +34008,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -33943,8 +34017,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -34143,8 +34219,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -34152,8 +34228,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -34173,8 +34251,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -34182,8 +34260,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -34260,8 +34340,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -34269,8 +34349,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -34443,8 +34525,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -34452,8 +34534,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -35028,8 +35112,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -35037,8 +35121,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -35227,8 +35313,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -35236,8 +35322,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -35409,8 +35497,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -35418,8 +35506,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -35498,8 +35588,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -35507,8 +35597,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -35666,8 +35758,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -35675,8 +35767,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -35753,8 +35847,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -35762,8 +35856,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -35840,8 +35936,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -35849,8 +35945,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -37205,8 +37303,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -37214,8 +37312,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -37292,8 +37392,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -37301,8 +37401,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -37376,8 +37478,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -37385,8 +37487,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -37460,8 +37564,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -37469,8 +37573,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -37607,8 +37713,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -37616,8 +37722,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -37637,8 +37745,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -37646,8 +37754,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -37922,8 +38032,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -37931,8 +38041,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -37952,8 +38064,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -37961,8 +38073,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -38232,8 +38346,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -38241,8 +38355,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -38262,8 +38378,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -38271,8 +38387,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -38349,8 +38467,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -38358,8 +38476,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -38379,8 +38499,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -38388,8 +38508,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -38476,8 +38598,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -38485,8 +38607,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -38506,8 +38630,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -38515,8 +38639,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -38603,8 +38729,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -38612,8 +38738,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -38724,8 +38852,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -38733,8 +38861,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -38845,8 +38975,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -38854,8 +38984,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -38887,8 +39019,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -38896,8 +39028,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -38917,8 +39051,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM05 Flash"
                   }
                 },
                 {
@@ -38926,8 +39060,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Knuckle Badge"
+                      ]
                     }
                   ]
                 }
@@ -39614,8 +39750,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -39623,8 +39759,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -39767,8 +39905,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -39776,8 +39914,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -39945,8 +40085,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -39954,8 +40094,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -39975,8 +40117,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -39984,8 +40126,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -40198,8 +40342,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -40207,8 +40351,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -40478,8 +40624,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -40487,8 +40633,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -40508,8 +40656,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -40517,8 +40665,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -41286,8 +41436,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -41295,8 +41445,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -41493,8 +41645,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -41502,8 +41654,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -41915,8 +42069,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -41924,8 +42078,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -42200,8 +42356,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -42209,8 +42365,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -42230,8 +42388,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -42239,8 +42397,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -42952,8 +43112,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -42961,8 +43121,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -43211,8 +43373,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -43220,8 +43382,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -43341,8 +43505,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM04 Strength"
                   }
                 },
                 {
@@ -43350,8 +43514,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Heat Badge"
+                      ]
                     }
                   ]
                 }
@@ -44190,8 +44356,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -44199,8 +44365,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -44307,8 +44475,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -44316,8 +44484,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -44337,8 +44507,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -44346,8 +44516,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -45932,8 +46104,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -45941,8 +46113,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -46065,8 +46239,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -46074,8 +46248,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -46168,8 +46344,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -46177,8 +46353,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -46564,8 +46742,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -46573,8 +46751,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -46694,8 +46874,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -46703,8 +46883,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -46801,8 +46983,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM06 Rock Smash"
                   }
                 },
                 {
@@ -46810,8 +46992,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Dynamo Badge"
+                      ]
                     }
                   ]
                 }
@@ -46988,8 +47172,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -46997,8 +47181,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -47345,8 +47531,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -47354,8 +47540,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -47768,8 +47956,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -47777,8 +47965,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -47852,8 +48042,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -47861,8 +48051,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -48035,8 +48227,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -48044,8 +48236,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -48350,8 +48544,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -48359,8 +48553,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -48586,8 +48782,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -48595,8 +48791,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -49092,8 +49290,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -49101,8 +49299,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -49252,8 +49452,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -49261,8 +49461,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -49358,8 +49560,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -49367,8 +49569,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -49794,8 +49998,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -49803,8 +50007,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -50013,8 +50219,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -50022,8 +50228,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -50043,8 +50251,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -50052,8 +50260,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -50178,8 +50388,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -50187,8 +50397,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -50420,8 +50632,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -50429,8 +50641,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -50450,8 +50664,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -50459,8 +50673,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -50813,8 +51029,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -50822,8 +51038,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -51173,8 +51391,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -51182,8 +51400,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -51375,8 +51595,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -51384,8 +51604,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -51749,8 +51971,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -51758,8 +51980,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -51946,8 +52170,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM01 Cut"
                   }
                 },
                 {
@@ -51955,8 +52179,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Stone Badge"
+                      ]
                     }
                   ]
                 }
@@ -51976,8 +52202,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -51985,8 +52211,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -52006,8 +52234,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -52015,8 +52243,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -52400,8 +52630,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52409,8 +52639,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52430,8 +52662,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52439,8 +52671,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52460,8 +52694,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52469,8 +52703,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52490,8 +52726,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52499,8 +52735,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52520,8 +52758,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52529,8 +52767,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52550,8 +52790,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52559,8 +52799,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52580,8 +52822,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52589,8 +52831,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52610,8 +52854,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52619,8 +52863,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52699,8 +52945,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52708,8 +52954,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52795,8 +53043,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52804,8 +53052,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52872,8 +53122,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52881,8 +53131,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -52968,8 +53220,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -52977,8 +53229,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -53064,8 +53318,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -53073,8 +53327,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -53163,8 +53419,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -53172,8 +53428,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -54172,8 +54430,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -54181,8 +54439,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -54202,8 +54462,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -54211,8 +54471,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -54301,8 +54563,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -54310,8 +54572,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -54378,8 +54642,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -54387,8 +54651,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -54484,8 +54750,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -54493,8 +54759,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -54514,8 +54782,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -54523,8 +54791,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -54971,8 +55241,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -54980,8 +55250,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55001,8 +55273,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55010,8 +55282,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55031,8 +55305,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55040,8 +55314,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55061,8 +55337,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55070,8 +55346,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55091,8 +55369,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55100,8 +55378,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55229,8 +55509,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55238,8 +55518,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55798,8 +56080,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55807,8 +56089,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55828,8 +56112,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55837,8 +56121,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -55858,8 +56144,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -55867,8 +56153,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -56943,8 +57231,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -56952,8 +57240,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -59179,8 +59469,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -59188,8 +59478,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -59737,8 +60029,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -59746,8 +60038,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -61171,8 +61465,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM02 Fly"
                   }
                 },
                 {
@@ -61180,8 +61474,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Feather Badge"
+                      ]
                     }
                   ]
                 }
@@ -62163,8 +62459,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -62172,8 +62468,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -62193,8 +62491,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -62202,8 +62500,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -64833,8 +65133,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -64842,8 +65142,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -64875,8 +65177,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -64884,8 +65186,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -65558,8 +65862,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -65567,8 +65871,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -70996,8 +71302,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -71005,8 +71311,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -73333,8 +73641,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -73342,8 +73650,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -73363,8 +73673,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -73372,8 +73682,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -73393,8 +73705,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -73402,8 +73714,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -73423,8 +73737,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -73432,8 +73746,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -74825,8 +75141,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM08 Dive"
                   }
                 },
                 {
@@ -74834,8 +75150,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Mind Badge"
+                      ]
                     }
                   ]
                 }
@@ -75008,8 +75326,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -75017,8 +75335,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -75224,8 +75544,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -75233,8 +75553,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -75409,8 +75731,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -75418,8 +75740,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -76608,8 +76932,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -76617,8 +76941,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -76638,8 +76964,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -76647,8 +76973,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -76668,8 +76996,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -76677,8 +77005,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }
@@ -77160,8 +77490,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM07 Waterfall"
                   }
                 },
                 {
@@ -77169,8 +77499,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Rain Badge"
+                      ]
                     }
                   ]
                 }
@@ -77267,8 +77599,8 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "name",
-                    "name": "hm"
+                    "type": "constant",
+                    "value": "HM03 Surf"
                   }
                 },
                 {
@@ -77276,8 +77608,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "badges"
+                      "type": "constant",
+                      "value": [
+                        "Balance Badge"
+                      ]
                     }
                   ]
                 }

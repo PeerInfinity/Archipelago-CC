@@ -222,3 +222,17 @@ class BaseGameExportHandler:
         """
         # Base implementation does nothing
         pass
+    
+    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Post-process the exported data after all standard processing is complete.
+        This is called at the end of the export process to allow game-specific modifications.
+
+        Args:
+            data: The complete export data dictionary
+
+        Returns:
+            The modified export data dictionary
+        """
+        # Base implementation returns data unchanged
+        return data

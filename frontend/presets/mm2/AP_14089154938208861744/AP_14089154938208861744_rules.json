@@ -45,8 +45,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "items"
+                      "type": "constant",
+                      "value": [
+                        "Heat Man Access Codes"
+                      ]
                     }
                   ]
                 }
@@ -65,8 +67,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Air Man Access Codes"
+                  ]
                 }
               ]
             },
@@ -83,8 +87,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Wood Man Access Codes"
+                  ]
                 }
               ]
             },
@@ -101,8 +107,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Bubble Man Access Codes"
+                  ]
                 }
               ]
             },
@@ -133,8 +141,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "items"
+                      "type": "constant",
+                      "value": [
+                        "Quick Man Access Codes"
+                      ]
                     }
                   ]
                 }
@@ -153,8 +163,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Flash Man Access Codes"
+                  ]
                 }
               ]
             },
@@ -171,8 +183,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Metal Man Access Codes"
+                  ]
                 }
               ]
             },
@@ -189,8 +203,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Crash Man Access Codes"
+                  ]
                 }
               ]
             },
@@ -207,8 +223,12 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Item 1 - Propeller",
+                    "Item 2 - Rocket",
+                    "Item 3 - Bouncy"
+                  ]
                 }
               ]
             },
@@ -1129,8 +1149,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Wily Stage 1 - Completed"
+                  ]
                 }
               ]
             },
@@ -1225,8 +1247,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Wily Stage 2 - Completed"
+                  ]
                 }
               ]
             },
@@ -1389,8 +1413,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Wily Stage 3 - Completed"
+                  ]
                 }
               ]
             },
@@ -1492,8 +1518,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Wily Stage 4 - Completed"
+                  ]
                 }
               ]
             },
@@ -1527,8 +1555,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "weps"
+                      "type": "constant",
+                      "value": [
+                        "Crash Bomber"
+                      ]
                     }
                   ]
                 }
@@ -1567,8 +1597,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "weps"
+                      "type": "constant",
+                      "value": [
+                        "Crash Bomber"
+                      ]
                     }
                   ]
                 }
@@ -1650,8 +1682,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "name",
-                  "name": "items"
+                  "type": "constant",
+                  "value": [
+                    "Wily Stage 5 - Completed"
+                  ]
                 }
               ]
             },
@@ -1734,8 +1768,10 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "name",
-                  "name": "weps"
+                  "type": "constant",
+                  "value": [
+                    "Bubble Lead"
+                  ]
                 }
               ]
             },

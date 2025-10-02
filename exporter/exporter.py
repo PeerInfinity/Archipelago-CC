@@ -319,12 +319,32 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
         # Start regions
         try:
-
+            # Try to get Menu region first (common default)
+            default_start_region = 'Menu'
             try:
                 menu_region = multiworld.get_region('Menu', player)
             except Exception as e:
-                logger.error(f"Error getting menu region: {str(e)}")
+                # Menu region doesn't exist, need to find actual starting region
+                logger.debug(f"Menu region not found for player {player}, looking for actual starting region")
                 menu_region = None
+                
+                # Find the actual starting region
+                player_regions = [
+                    region for region in multiworld.get_regions() 
+                    if region.player == player
+                ]
+                
+                # For single-region games, use that region as the starting region
+                if len(player_regions) == 1:
+                    default_start_region = player_regions[0].name
+                    logger.debug(f"Using single region '{default_start_region}' as starting region for player {player}")
+                else:
+                    # Look for regions with no entrances (typically starting regions)
+                    for region in player_regions:
+                        if not region.entrances:
+                            default_start_region = region.name
+                            logger.debug(f"Found region '{default_start_region}' with no entrances as starting region for player {player}")
+                            break
 
             available_regions = []
             player_regions = [
@@ -359,7 +379,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                     continue
 
             export_data['start_regions'][player_str] = {
-                'default': ['Menu'], # Keep default as Menu
+                'default': [default_start_region],
                 'available': available_regions
             }
 
@@ -396,6 +416,18 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
     #    except Exception as e:
     #        logger.error(f"Error processing debug spoiler entrances: {str(e)}")
     #        export_data['debug_spoiler_entrances'] = {'error': f"Failed to process spoiler entrances: {str(e)}"}
+    
+    # Apply game-specific post-processing for each player
+    # This is done after all standard processing to allow for cross-player analysis if needed
+    for player in multiworld.player_ids:
+        game_name = multiworld.game[player]
+        world = multiworld.worlds[player]
+        game_handler = get_game_export_handler(game_name, world)
+        if game_handler and hasattr(game_handler, 'post_process_data'):
+            try:
+                export_data = game_handler.post_process_data(export_data)
+            except Exception as e:
+                logger.warning(f"Error in post_process_data for {game_name}: {e}")
 
     return export_data
 
@@ -413,6 +445,12 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
         try:
             if not rule_func:
                 return None
+            
+            # Check if game handler has an override for rule analysis (e.g., Blasphemous)
+            if game_handler and hasattr(game_handler, 'override_rule_analysis'):
+                override_result = game_handler.override_rule_analysis(rule_func, rule_target_name)
+                if override_result:
+                    return override_result
 
             # Extract closure variables from the rule function
             closure_vars = {}
@@ -565,6 +603,10 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
         if not game_handler:
             game_handler = get_game_export_handler(game_name, multiworld.worlds[player])
         
+        # Allow game handler to postprocess regions before extraction
+        if game_handler and hasattr(game_handler, 'postprocess_regions'):
+            game_handler.postprocess_regions(multiworld, player)
+        
         player_regions = [
             region for region in multiworld.get_regions() 
             if region.player == player
@@ -701,6 +743,10 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                                     target_type='Entrance',
                                     world=world
                                 )
+                                
+                                # Post-process the entrance rule if the game handler supports it
+                                if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
+                                    expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)
                             
                             # Get spoiler-aware entrance data for all games with entrance randomization
                             game_name = multiworld.game[player]
@@ -748,6 +794,10 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                                         target_type='Exit',
                                         world=world
                                     )
+                                    
+                                    # Post-process the exit rule if the game handler supports it
+                                    if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
+                                        expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)
                             
                             # Get spoiler-aware exit data for all games with entrance randomization
                             game_name = multiworld.game[player]

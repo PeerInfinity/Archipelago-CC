@@ -9,6 +9,41 @@ logger = logging.getLogger(__name__)
 class AquariaGameExportHandler(BaseGameExportHandler):
     """Aquaria-specific expander for handling game-specific rules."""
     
+    def postprocess_regions(self, multiworld, player):
+        """
+        Fix missing regions that aren't added to multiworld.regions in Aquaria.
+        
+        Some regions in Aquaria are created but not added to multiworld.regions,
+        causing them to be missing from the export. This function finds and adds them.
+        """
+        if not hasattr(multiworld, 'worlds') or player not in multiworld.worlds:
+            return
+            
+        world = multiworld.worlds[player]
+        if not hasattr(world, 'regions'):
+            return
+            
+        # List of region attributes that should be added if they exist
+        missing_region_attrs = [
+            'first_secret',
+            'energy_temple_idol',
+            'energy_temple_after_boss',
+            'frozen_veil',
+            'sunken_city_la',
+            'sunken_city_r_crates'
+        ]
+        
+        regions_added = []
+        for attr_name in missing_region_attrs:
+            if hasattr(world.regions, attr_name):
+                region = getattr(world.regions, attr_name)
+                if region and region not in multiworld.regions:
+                    multiworld.regions.append(region)
+                    regions_added.append(region.name)
+        
+        if regions_added:
+            logger.info(f"Added {len(regions_added)} missing Aquaria regions to multiworld: {', '.join(regions_added)}")
+    
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
         """Expand Aquaria-specific helper functions."""
         if args is None:

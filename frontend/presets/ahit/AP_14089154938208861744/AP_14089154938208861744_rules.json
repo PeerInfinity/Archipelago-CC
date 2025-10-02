@@ -291,8 +291,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 1
                 }
               ]
             },
@@ -1087,8 +1087,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 1
                 }
               ]
             },
@@ -1129,8 +1129,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 2
                 }
               ]
             },
@@ -1423,8 +1423,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 4
                 }
               ]
             },
@@ -1983,8 +1983,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 1
                 }
               ]
             },
@@ -2276,8 +2276,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -2313,8 +2313,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -4600,8 +4600,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -4637,8 +4637,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -4674,8 +4674,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5263,8 +5263,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -5447,8 +5447,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 1
                     }
                   ]
                 }
@@ -5571,8 +5571,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -6395,8 +6395,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -6452,8 +6452,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 2
                 }
               ]
             },
@@ -6806,8 +6806,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 1
                 }
               ]
             },
@@ -6938,8 +6938,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 2
                 }
               ]
             },
@@ -7291,8 +7291,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 2
                 }
               ]
             },
@@ -7315,8 +7315,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 2
                 }
               ]
             },
@@ -7403,8 +7403,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 1
                     }
                   ]
                 }
@@ -8266,8 +8266,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 1
                 }
               ]
             },
@@ -8543,8 +8543,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -8585,8 +8585,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 1
                 }
               ]
             },
@@ -8609,8 +8609,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 1
                 }
               ]
             },
@@ -8633,8 +8633,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -8657,8 +8657,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -8699,8 +8699,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -8777,8 +8777,8 @@
               "name": "can_use_hat",
               "args": [
                 {
-                  "type": "name",
-                  "name": "h"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -9674,8 +9674,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 3
                     }
                   ]
                 }
@@ -9708,8 +9708,8 @@
                   "name": "can_use_hat",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "h"
+                      "type": "constant",
+                      "value": 3
                     }
                   ]
                 }

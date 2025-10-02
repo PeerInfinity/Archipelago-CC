@@ -8853,8 +8853,8 @@
                         "value": "Bike Voucher"
                       },
                       {
-                        "type": "name",
-                        "name": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     ]
                   }
@@ -52316,8 +52316,8 @@
                         "value": "Gold Teeth"
                       },
                       {
-                        "type": "name",
-                        "name": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     ]
                   }
