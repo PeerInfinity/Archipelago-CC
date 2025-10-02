@@ -243,14 +243,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -269,14 +261,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -295,14 +279,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -525,14 +501,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -551,14 +519,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -577,14 +537,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -603,14 +555,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -772,14 +716,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1002,14 +938,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1028,14 +956,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1054,14 +974,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1080,14 +992,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1176,14 +1080,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1202,14 +1098,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1397,14 +1285,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1483,14 +1363,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1509,14 +1381,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1535,14 +1399,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1561,14 +1417,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1632,14 +1480,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1703,14 +1543,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1784,14 +1616,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1810,14 +1634,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1916,14 +1732,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1942,14 +1750,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2013,14 +1813,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2045,14 +1837,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -2078,14 +1862,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -2130,14 +1906,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2450,14 +2218,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2476,14 +2236,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2502,14 +2254,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2580,14 +2324,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2651,14 +2387,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2732,14 +2460,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -3034,14 +2754,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -3067,14 +2779,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -3273,14 +2977,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -3306,14 +3002,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -3343,14 +3031,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -3376,14 +3056,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -3431,14 +3103,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -3464,14 +3128,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -3501,14 +3157,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -3534,14 +3182,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -3568,14 +3208,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -3618,14 +3250,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -3777,14 +3401,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -3810,14 +3426,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -3898,14 +3506,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -3930,14 +3530,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -3993,14 +3585,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4064,14 +3648,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4216,14 +3792,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4284,14 +3852,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4352,14 +3912,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4629,14 +4181,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -4662,14 +4206,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -4696,14 +4232,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -4729,14 +4257,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -4763,14 +4283,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4795,14 +4307,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4888,14 +4392,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -4921,14 +4417,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -5052,14 +4540,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5102,14 +4582,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -5135,14 +4607,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -5210,14 +4674,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5236,14 +4692,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5262,14 +4710,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5312,14 +4752,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -5345,14 +4777,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -5422,14 +4846,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5601,14 +5017,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5651,14 +5059,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -5684,14 +5084,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -5771,14 +5163,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5797,14 +5181,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5829,14 +5205,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -5862,14 +5230,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -5952,14 +5312,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -5985,14 +5337,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -6013,14 +5357,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -6210,14 +5546,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -6394,14 +5722,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -6420,14 +5740,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -6449,14 +5761,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -6777,14 +6081,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6810,14 +6106,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -6841,14 +6129,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6874,14 +6154,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -6944,14 +6216,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -6977,14 +6241,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7011,14 +6267,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -7077,14 +6325,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7110,14 +6350,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7141,14 +6373,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7174,14 +6398,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7208,14 +6424,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7241,14 +6449,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7309,14 +6509,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7342,14 +6534,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7373,14 +6557,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7406,14 +6582,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7674,14 +6842,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -7785,14 +6945,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -7886,14 +7038,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -8115,14 +7259,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -8147,14 +7283,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -8180,14 +7308,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -8345,14 +7465,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -8507,14 +7619,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -8540,14 +7644,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -8739,14 +7835,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -8772,14 +7860,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -8867,14 +7947,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -8900,14 +7972,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -9049,14 +8113,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -9153,14 +8209,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -9186,14 +8234,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -9263,14 +8303,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -9356,14 +8388,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -9425,14 +8449,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -9601,14 +8617,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -9634,14 +8642,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -9726,14 +8726,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -9762,14 +8754,6 @@
                               "value": "s"
                             }
                           }
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "spot"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -9798,14 +8782,6 @@
                                   "value": "s"
                                 }
                               }
-                            },
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "spot"
-                              },
-                              "attr": "player"
                             }
                           ]
                         },
@@ -9831,14 +8807,6 @@
                                   "value": "s"
                                 }
                               }
-                            },
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "spot"
-                              },
-                              "attr": "player"
                             }
                           ]
                         }
@@ -9866,14 +8834,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -9952,14 +8912,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -10075,14 +9027,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -10108,14 +9052,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -10188,14 +9124,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -10221,14 +9149,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -10297,14 +9217,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -10330,14 +9242,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -10408,14 +9312,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -10576,14 +9472,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -10609,14 +9497,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -10661,14 +9541,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -10736,14 +9608,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -10765,14 +9629,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -10850,14 +9706,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -10879,14 +9727,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -10912,14 +9752,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -10943,14 +9775,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -10976,14 +9800,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -11030,14 +9846,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -11063,14 +9871,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -11097,14 +9897,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -11130,14 +9922,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -11195,14 +9979,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -11254,14 +10030,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -11280,14 +10048,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -11339,14 +10099,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -11368,14 +10120,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -11401,14 +10145,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -11506,14 +10242,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -11683,14 +10411,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -11716,14 +10436,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -11780,14 +10492,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -11813,14 +10517,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -11841,14 +10537,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -11924,14 +10612,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -12023,14 +10703,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -12330,14 +11002,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -12453,14 +11117,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12486,14 +11142,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12517,14 +11165,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12550,14 +11190,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12581,14 +11213,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12614,14 +11238,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12645,14 +11261,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12678,14 +11286,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12762,14 +11362,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12795,14 +11387,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12826,14 +11410,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12859,14 +11435,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12933,14 +11501,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12966,14 +11526,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12997,14 +11549,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13030,14 +11574,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13091,14 +11627,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -13132,14 +11660,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13165,14 +11685,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13253,14 +11765,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13286,14 +11790,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13323,14 +11819,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13356,14 +11844,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13483,14 +11963,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13516,14 +11988,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13658,14 +12122,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -13690,14 +12146,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -13765,14 +12213,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -14018,14 +12458,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -14659,14 +13091,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -14692,14 +13116,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -14863,14 +13279,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -14896,14 +13304,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -14927,14 +13327,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -14960,14 +13352,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -15036,14 +13420,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -15069,14 +13445,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -15142,14 +13510,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -15900,14 +14260,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -15933,14 +14285,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -15964,14 +14308,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -16042,14 +14378,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -16075,14 +14403,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -16207,14 +14527,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -16336,14 +14648,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -16369,14 +14673,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -16705,14 +15001,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -16734,14 +15022,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -16991,14 +15271,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17024,14 +15296,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17055,14 +15319,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17088,14 +15344,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17119,14 +15367,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17152,14 +15392,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17183,14 +15415,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17216,14 +15440,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17247,14 +15463,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17280,14 +15488,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17314,14 +15514,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17347,14 +15539,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17384,14 +15568,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17417,14 +15593,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17454,14 +15622,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17487,14 +15647,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17524,14 +15676,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -17557,14 +15701,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -17654,14 +15790,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -17798,14 +15926,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -17847,14 +15967,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -17916,14 +16028,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -17966,14 +16070,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -18047,14 +16143,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18080,14 +16168,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18108,14 +16188,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -18199,14 +16271,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18232,14 +16296,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18263,14 +16319,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18296,14 +16344,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18399,14 +16439,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18432,14 +16464,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18463,14 +16487,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18496,14 +16512,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18560,14 +16568,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18593,14 +16593,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18621,14 +16613,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -18737,14 +16721,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18770,14 +16746,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18801,14 +16769,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18834,14 +16794,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18868,14 +16820,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18901,14 +16845,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18938,14 +16874,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18971,14 +16899,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19061,14 +16981,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19094,14 +17006,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19122,14 +17026,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -19213,14 +17109,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19246,14 +17134,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19368,14 +17248,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -19397,14 +17269,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19430,14 +17294,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19560,14 +17416,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19593,14 +17441,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19647,14 +17487,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19680,14 +17512,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19711,14 +17535,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19744,14 +17560,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19820,14 +17628,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19853,14 +17653,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19884,14 +17676,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19917,14 +17701,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -19948,14 +17724,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -19981,14 +17749,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20035,14 +17795,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20068,14 +17820,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20099,14 +17843,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20135,14 +17871,6 @@
                               "value": "s"
                             }
                           }
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "spot"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -20168,14 +17896,6 @@
                               "value": "s"
                             }
                           }
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "spot"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -20204,14 +17924,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20237,14 +17949,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20274,14 +17978,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20307,14 +18003,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20486,14 +18174,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20519,14 +18199,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20605,14 +18277,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20638,14 +18302,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20666,14 +18322,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -20765,14 +18413,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20798,14 +18438,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20829,14 +18461,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -20862,14 +18486,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -20913,14 +18529,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -21017,14 +18625,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21050,14 +18650,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21128,14 +18720,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21161,14 +18745,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21192,14 +18768,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21225,14 +18793,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21256,14 +18816,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21292,14 +18844,6 @@
                               "value": "s"
                             }
                           }
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "spot"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -21325,14 +18869,6 @@
                               "value": "s"
                             }
                           }
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "spot"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -21403,14 +18939,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21436,14 +18964,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21531,14 +19051,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21564,14 +19076,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21703,14 +19207,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21736,14 +19232,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21776,14 +19264,6 @@
                       "value": "Sand Coin"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -21854,14 +19334,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -21887,14 +19359,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21948,14 +19412,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -21977,14 +19433,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -22010,14 +19458,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -22149,14 +19589,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -22193,14 +19625,6 @@
                           "value": "Sand Coin"
                         }
                       ]
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -22211,14 +19635,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -22245,14 +19661,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -22498,14 +19906,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -22798,14 +20198,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -22992,14 +20384,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -23155,14 +20539,6 @@
                       "value": "Sand Coin"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -23226,14 +20602,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -23259,14 +20627,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23296,14 +20656,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -23329,14 +20681,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23366,14 +20710,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -23399,14 +20735,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23484,14 +20812,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -23653,14 +20973,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -23686,14 +20998,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23723,14 +21027,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -23756,14 +21052,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23955,14 +21243,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -23981,14 +21261,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -24052,14 +21324,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -24204,14 +21468,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -24237,14 +21493,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -24274,14 +21522,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -24307,14 +21547,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -24362,14 +21594,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -24395,14 +21619,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -24432,14 +21648,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -24465,14 +21673,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -24810,14 +22010,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -24846,14 +22038,6 @@
                               "value": "s"
                             }
                           }
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "spot"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -24879,14 +22063,6 @@
                               "value": "s"
                             }
                           }
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "spot"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -24918,14 +22094,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -24951,14 +22119,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -25028,14 +22188,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25107,14 +22259,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25157,14 +22301,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25206,14 +22342,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25253,14 +22381,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25613,14 +22733,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25703,14 +22815,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -26070,14 +23174,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -26102,14 +23198,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -26575,14 +23663,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -26692,14 +23772,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -26718,14 +23790,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -26744,14 +23808,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -26811,14 +23867,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -26844,14 +23892,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26881,14 +23921,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -26914,14 +23946,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26951,14 +23975,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -26984,14 +24000,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -27021,14 +24029,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -27054,14 +24054,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -27091,14 +24083,6 @@
                     {
                       "type": "name",
                       "name": "access"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -27124,14 +24108,6 @@
                           "value": "s"
                         }
                       }
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "spot"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -27204,14 +24180,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -27236,14 +24204,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -27268,14 +24228,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -27300,14 +24252,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -27332,14 +24276,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -27448,14 +24384,6 @@
                 {
                   "type": "name",
                   "name": "access"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "spot"
-                  },
-                  "attr": "player"
                 }
               ]
             },

@@ -115,14 +115,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -153,14 +145,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -199,14 +183,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -237,14 +213,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -283,14 +251,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -321,14 +281,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -367,14 +319,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -405,14 +349,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -451,14 +387,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -489,14 +417,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -535,14 +455,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -573,14 +485,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -619,14 +523,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -657,14 +553,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -703,14 +591,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -741,14 +621,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -787,14 +659,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -825,14 +689,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -871,14 +727,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -909,14 +757,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -955,14 +795,6 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
                         "name": "opp"
                       },
                       "attr": "difficulty"
@@ -993,14 +825,6 @@
                   "type": "helper",
                   "name": "yugioh06_difficulty",
                   "args": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
-                    },
                     {
                       "type": "attribute",
                       "object": {

@@ -70,6 +70,10 @@
                   "name": "ItemName"
                 },
                 "attr": "progressive_boat"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "reverse": null,
@@ -92,6 +96,10 @@
                       "name": "ItemName"
                     },
                     "attr": "dk_coin"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 30
                   }
                 },
                 {
@@ -103,6 +111,10 @@
                       "name": "ItemName"
                     },
                     "attr": "progressive_boat"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 3
                   }
                 }
               ]
@@ -195,6 +207,10 @@
                   "name": "ItemName"
                 },
                 "attr": "progressive_boat"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
               }
             },
             "reverse": null,
@@ -648,14 +664,6 @@
                 {
                   "type": "constant",
                   "value": "Location"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -896,14 +904,6 @@
                 {
                   "type": "constant",
                   "value": "Location"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1280,6 +1280,38 @@
                   "name": "ItemName"
                 },
                 "attr": "bonus_coin"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "options"
+                    },
+                    "attr": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "name",
+                    "name": "i"
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             },
             "reverse": null,
@@ -1299,6 +1331,38 @@
                   "name": "ItemName"
                 },
                 "attr": "bonus_coin"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "options"
+                    },
+                    "attr": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "name",
+                    "name": "i"
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             },
             "reverse": null,
@@ -1318,6 +1382,38 @@
                   "name": "ItemName"
                 },
                 "attr": "bonus_coin"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "options"
+                    },
+                    "attr": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "name",
+                    "name": "i"
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             },
             "reverse": null,
@@ -1337,6 +1433,38 @@
                   "name": "ItemName"
                 },
                 "attr": "bonus_coin"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "options"
+                    },
+                    "attr": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "name",
+                    "name": "i"
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             },
             "reverse": null,
@@ -1356,6 +1484,38 @@
                   "name": "ItemName"
                 },
                 "attr": "bonus_coin"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "options"
+                    },
+                    "attr": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "name",
+                    "name": "i"
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             },
             "reverse": null,
@@ -1375,6 +1535,10 @@
                   "name": "ItemName"
                 },
                 "attr": "krematoa_cog"
+              },
+              "count": {
+                "type": "constant",
+                "value": 5
               }
             },
             "reverse": null,

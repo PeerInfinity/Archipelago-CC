@@ -373,6 +373,10 @@
                     "item": {
                       "type": "name",
                       "name": "gold_hexagon"
+                    },
+                    "count": {
+                      "type": "constant",
+                      "value": 20
                     }
                   },
                   "if_false": {

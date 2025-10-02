@@ -21604,14 +21604,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -21844,14 +21836,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -22007,14 +21991,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -22090,14 +22066,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -22199,14 +22167,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -22427,14 +22387,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23481,14 +23433,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23682,14 +23626,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23902,14 +23838,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -24900,14 +24828,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -24995,14 +24915,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -25092,14 +25004,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -25210,14 +25114,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -25381,14 +25277,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -25567,14 +25455,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -25743,14 +25623,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26078,14 +25950,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26242,14 +26106,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26499,14 +26355,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26606,14 +26454,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26713,14 +26553,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26923,14 +26755,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -28154,14 +27978,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -28476,14 +28292,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -29398,14 +29206,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32017,14 +31817,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32112,14 +31904,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32197,14 +31981,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32572,14 +32348,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32610,14 +32378,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32648,14 +32408,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32800,14 +32552,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -32954,14 +32698,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -33582,14 +33318,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -33758,14 +33486,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -34006,14 +33726,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -34133,14 +33845,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -34241,14 +33945,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -34458,14 +34154,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -34496,14 +34184,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -34591,14 +34271,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -34782,14 +34454,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -35375,14 +35039,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -35582,14 +35238,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -35772,14 +35420,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -35869,14 +35509,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -36045,14 +35677,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -36140,14 +35764,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -36235,14 +35851,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -37608,14 +37216,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -37703,14 +37303,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -37795,14 +37387,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -37887,14 +37471,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38042,14 +37618,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38080,14 +37648,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38373,14 +37933,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38411,14 +37963,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38699,14 +38243,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38737,14 +38273,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38832,14 +38360,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38870,14 +38390,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -38975,14 +38487,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -39013,14 +38517,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -39118,14 +38614,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -39247,14 +38735,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -39376,14 +38856,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -39426,14 +38898,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -39464,14 +38928,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -40169,14 +39625,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -40330,14 +39778,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -40516,14 +39956,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -40554,14 +39986,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -40785,14 +40209,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -41073,14 +40489,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -41111,14 +40519,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -41897,14 +41297,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -42112,14 +41504,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -42542,14 +41926,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -42589,14 +41965,6 @@
                     {
                       "type": "constant",
                       "value": "Entrance"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -42611,14 +41979,6 @@
                     {
                       "type": "constant",
                       "value": "Entrance"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -42851,14 +42211,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -42889,14 +42241,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -43619,14 +42963,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -43886,14 +43222,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -44024,14 +43352,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -44881,14 +44201,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -45006,14 +44318,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -45044,14 +44348,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -46647,14 +45943,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -46788,14 +46076,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -46899,14 +46179,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -47303,14 +46575,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -47441,14 +46705,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -47556,14 +46812,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -47751,14 +46999,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -48116,14 +47356,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -48547,14 +47779,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -48639,14 +47863,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -48830,14 +48046,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -49153,14 +48361,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -49397,14 +48597,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -49911,14 +49103,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -50079,14 +49263,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -50193,14 +49369,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -50637,14 +49805,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -50864,14 +50024,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -50902,14 +50054,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -51045,14 +50189,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -51295,14 +50431,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -51333,14 +50461,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -51704,14 +50824,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52072,14 +51184,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52282,14 +51386,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52664,14 +51760,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52869,14 +51957,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52907,14 +51987,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52945,14 +52017,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53347,14 +52411,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53385,14 +52441,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53423,14 +52471,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53461,14 +52501,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53499,14 +52531,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53537,14 +52561,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53575,14 +52591,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53613,14 +52621,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53710,14 +52710,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53814,14 +52806,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -53899,14 +52883,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -54003,14 +52979,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -54107,14 +53075,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -54214,14 +53174,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -55231,14 +54183,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -55269,14 +54213,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -55376,14 +54312,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -55461,14 +54389,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -55575,14 +54495,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -55613,14 +54525,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56078,14 +54982,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56116,14 +55012,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56154,14 +55042,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56192,14 +55072,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56230,14 +55102,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56376,14 +55240,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56953,14 +55809,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -56991,14 +55839,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -57029,14 +55869,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -58122,14 +56954,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -60366,14 +59190,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -60932,14 +59748,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -62374,14 +61182,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -63374,14 +62174,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -63412,14 +62204,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -63897,14 +62681,6 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
                     "type": "attribute",
                     "object": {
                       "type": "attribute",
@@ -63935,14 +62711,6 @@
                 {
                   "type": "constant",
                   "value": "Badge"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 },
                 {
                   "type": "attribute",
@@ -66076,14 +64844,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -66126,14 +64886,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -66161,14 +64913,6 @@
                     {
                       "type": "constant",
                       "value": "Entrance"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -66203,14 +64947,6 @@
                     {
                       "type": "constant",
                       "value": "Entrance"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -66833,14 +65569,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -72279,14 +71007,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -74624,14 +73344,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -74662,14 +73374,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -74700,14 +73404,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -74738,14 +73434,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -76148,14 +74836,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -76339,14 +75019,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -76563,14 +75235,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -76756,14 +75420,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -77963,14 +76619,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -78001,14 +76649,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -78039,14 +76679,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -78539,14 +77171,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -78654,14 +77278,6 @@
                     {
                       "type": "name",
                       "name": "badges"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -78917,14 +77533,6 @@
                 {
                   "type": "constant",
                   "value": "Badge"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 },
                 {
                   "type": "attribute",

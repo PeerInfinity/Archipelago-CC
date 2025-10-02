@@ -47,6 +47,22 @@
                   "name": "iname"
                 },
                 "attr": "special_one"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "s1s_per_warp"
+                },
+                "op": "*",
+                "right": {
+                  "type": "name",
+                  "name": "warp_num"
+                }
               }
             },
             "reverse": null,
@@ -66,6 +82,22 @@
                   "name": "iname"
                 },
                 "attr": "special_one"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "s1s_per_warp"
+                },
+                "op": "*",
+                "right": {
+                  "type": "name",
+                  "name": "warp_num"
+                }
               }
             },
             "reverse": null,
@@ -85,6 +117,22 @@
                   "name": "iname"
                 },
                 "attr": "special_one"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "s1s_per_warp"
+                },
+                "op": "*",
+                "right": {
+                  "type": "name",
+                  "name": "warp_num"
+                }
               }
             },
             "reverse": null,
@@ -104,6 +152,22 @@
                   "name": "iname"
                 },
                 "attr": "special_one"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "s1s_per_warp"
+                },
+                "op": "*",
+                "right": {
+                  "type": "name",
+                  "name": "warp_num"
+                }
               }
             },
             "reverse": null,
@@ -123,6 +187,22 @@
                   "name": "iname"
                 },
                 "attr": "special_one"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "s1s_per_warp"
+                },
+                "op": "*",
+                "right": {
+                  "type": "name",
+                  "name": "warp_num"
+                }
               }
             },
             "reverse": null,
@@ -142,6 +222,22 @@
                   "name": "iname"
                 },
                 "attr": "special_one"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "s1s_per_warp"
+                },
+                "op": "*",
+                "right": {
+                  "type": "name",
+                  "name": "warp_num"
+                }
               }
             },
             "reverse": null,
@@ -161,6 +257,22 @@
                   "name": "iname"
                 },
                 "attr": "special_one"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "s1s_per_warp"
+                },
+                "op": "*",
+                "right": {
+                  "type": "name",
+                  "name": "warp_num"
+                }
               }
             },
             "reverse": null,
@@ -3502,6 +3614,10 @@
                       "name": "iname"
                     },
                     "attr": "magical_nitro"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 },
                 {
@@ -3513,6 +3629,10 @@
                       "name": "iname"
                     },
                     "attr": "mandragora"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -3549,14 +3669,6 @@
                       "attr": "mandragora"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },

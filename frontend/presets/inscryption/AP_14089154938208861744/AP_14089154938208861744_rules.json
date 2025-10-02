@@ -465,14 +465,6 @@
                       "value": "Squirrel Totem Head"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -506,14 +498,6 @@
                       "value": "Squirrel Totem Head"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -588,14 +572,6 @@
                       "value": "Pile Of Meat"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -669,6 +645,10 @@
                   "attr": "world"
                 },
                 "attr": "required_epitaph_pieces_name"
+              },
+              "count": {
+                "type": "constant",
+                "value": 9
               }
             },
             "progress_type": 1,
@@ -744,14 +724,6 @@
                       "value": "Pile Of Meat"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -785,14 +757,6 @@
                       "value": "Pile Of Meat"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -826,14 +790,6 @@
                       "value": "Pile Of Meat"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1215,14 +1171,6 @@
                       "value": "Pile Of Meat"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2574,6 +2522,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
                   }
                 },
                 {
@@ -2612,6 +2564,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 },
                 {
@@ -2650,6 +2606,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 3
                   }
                 },
                 {
@@ -2688,6 +2648,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 4
                   }
                 },
                 {
@@ -2726,6 +2690,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 5
                   }
                 },
                 {

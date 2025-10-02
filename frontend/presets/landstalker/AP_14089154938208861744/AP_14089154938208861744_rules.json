@@ -3190,14 +3190,6 @@
               "name": "_landstalker_has_health",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
-                },
-                {
                   "type": "constant",
                   "value": 15
                 }

@@ -6454,6 +6454,10 @@
                   "name": "ItemName"
                 },
                 "attr": "emblem"
+              },
+              "count": {
+                "type": "constant",
+                "value": 7
               }
             },
             "reverse": null,
@@ -6628,6 +6632,10 @@
                   "name": "ItemName"
                 },
                 "attr": "emblem"
+              },
+              "count": {
+                "type": "constant",
+                "value": 30
               }
             },
             "reverse": null,
@@ -6856,6 +6864,10 @@
                   "name": "ItemName"
                 },
                 "attr": "emblem"
+              },
+              "count": {
+                "type": "constant",
+                "value": 68
               }
             },
             "reverse": null,

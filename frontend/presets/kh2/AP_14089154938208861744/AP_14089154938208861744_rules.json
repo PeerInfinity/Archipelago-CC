@@ -15209,6 +15209,10 @@
                   "name": "ItemName"
                 },
                 "attr": "LuckyEmblem"
+              },
+              "count": {
+                "type": "constant",
+                "value": 35
               }
             },
             "progress_type": 1,

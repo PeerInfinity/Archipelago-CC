@@ -1339,6 +1339,10 @@ def main():
             incremental_merged = merge_results(existing_results, results, templates_tested_so_far, update_metadata)
             save_results(incremental_merged, results_file)
 
+            # Run post-processing after each test if requested
+            if args.post_process:
+                run_post_processing_scripts(project_root, results_file)
+
         except KeyboardInterrupt:
             print("\nInterrupted by user. Saving current results...")
             templates_tested_so_far = list(results['results'].keys())
@@ -1442,8 +1446,9 @@ def main():
             errors = len(yaml_files) - passed - failed
             print(f"Single Seed Test Summary: {passed} passed, {failed} failed, {errors} errors")
     
-    # Run post-processing scripts if requested
-    if args.post_process:
+    # Run post-processing scripts if requested (only if not already run after each test)
+    # This ensures post-processing runs at least once, even if no tests were run
+    if args.post_process and len(yaml_files) == 0:
         run_post_processing_scripts(project_root, results_file)
 
 

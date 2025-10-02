@@ -1,18 +1,18 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-10-01 20:53:54
+**Generated:** 2025-10-01 21:19:59
 
 **Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-10-01T20:53:19.638231
+**Source Data Last Updated:** 2025-10-01T21:19:59.219122
 
 **Script Version:** 1.0.0
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 12 (15.2%)
-- **Failed:** 67 (84.8%)
+- **Passed:** 13 (16.5%)
+- **Failed:** 66 (83.5%)
 
 ## Test Results
 
@@ -26,7 +26,7 @@
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 3.2 | 3.2 | 🟢 Complete | ✅ | ✅ |
 | Blasphemous | ❌ Failed seed 1 | 0 | 0.1 | 5.1 | 🟠 2.0% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed seed 1 | 0 | 0 | 9.1 | 🔴 0.0% | ✅ | ⚫ |
-| Bumper Stickers | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ⚫ |
+| Bumper Stickers | ✅ Passed seeds 1 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ❌ Failed seed 1 | 1 | 0 | 3.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Castlevania 64 | ❌ Failed seed 1 | 0 | 0.1 | 4.1 | 🟠 2.4% | ⚫ | ⚫ |
 | Celeste 64 | ❌ Failed seed 1 | 0 | 0.1 | 5.2 | 🟠 1.9% | ⚫ | ⚫ |
@@ -83,7 +83,7 @@
 | Super Metroid | ❌ Failed seed 1 | 0 | 0 | 8.1 | 🔴 0.0% | ⚫ | ⚫ |
 | TUNIC | ❌ Failed seed 1 | 0 | 0.1 | 4.1 | 🟠 2.4% | ⚫ | ⚫ |
 | Terraria | ❌ Failed seed 1 | 0 | 0 | 9.3 | 🔴 0.0% | ⚫ | ⚫ |
-| The Legend of Zelda | ❌ Failed seed 1 | 0 | 0.1 | 10.1 | 🟠 1.0% | ⚫ | ⚫ |
+| The Legend of Zelda | ❌ Failed seed 1 | 0 | 0.1 | 11.1 | 🟠 0.9% | ⚫ | ⚫ |
 | The Messenger | ❌ Failed seed 1 | 0 | 0.1 | 6.1 | 🟠 1.6% | ⚫ | ⚫ |
 | The Wind Waker | ❌ Failed seed 1 | 1 | 0.1 | 17.1 | 🟠 0.6% | ⚫ | ⚫ |
 | The Witness | ❌ Failed seed 1 | 1 | 0 | 9.1 | 🔴 0.0% | ⚫ | ⚫ |

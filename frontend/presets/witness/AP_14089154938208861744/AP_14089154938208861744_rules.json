@@ -483,16 +483,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -574,16 +565,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -625,16 +607,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -676,16 +649,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -992,16 +956,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -1142,16 +1097,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -1351,16 +1297,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -2531,16 +2468,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -2823,16 +2751,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -4333,16 +4252,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -4381,16 +4291,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -4432,16 +4333,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -4483,16 +4375,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -4795,16 +4678,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -4840,16 +4714,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -5016,16 +4881,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -5125,16 +4981,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -9498,16 +9345,7 @@
               "if_true": {
                 "type": "state_method",
                 "method": "update_reachable_regions",
-                "args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "player"
-                  }
-                ]
+                "args": []
               },
               "if_false": null
             },
@@ -12654,14 +12492,6 @@
                       "value": "+1 Laser (Unredirected)"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 },
                 {
                   "type": "name",

@@ -157,6 +157,10 @@
               "item": {
                 "type": "constant",
                 "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 7
               }
             },
             "reverse": null,
@@ -386,6 +390,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Power Star"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 13
                   }
                 }
               ]
@@ -426,6 +434,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Power Star"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 44
                   }
                 }
               ]
@@ -744,14 +756,6 @@
                 {
                   "type": "constant",
                   "value": "Region"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -958,14 +962,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1809,6 +1805,10 @@
               "item": {
                 "type": "constant",
                 "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 26
               }
             },
             "reverse": null,
@@ -1839,6 +1839,10 @@
                   "item": {
                     "type": "constant",
                     "value": "Power Star"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 26
                   }
                 },
                 {
@@ -1952,14 +1956,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2684,14 +2680,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -2716,14 +2704,6 @@
                 {
                   "type": "constant",
                   "value": "Location"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -3117,6 +3097,10 @@
               "item": {
                 "type": "constant",
                 "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 44
               }
             },
             "reverse": null,
@@ -4234,6 +4218,10 @@
               "item": {
                 "type": "constant",
                 "value": "Power Star"
+              },
+              "count": {
+                "type": "constant",
+                "value": 61
               }
             },
             "reverse": null,
@@ -4863,14 +4851,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4895,14 +4875,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },

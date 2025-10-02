@@ -3134,14 +3134,6 @@
                     "attr": "ERA_FUTURE"
                   },
                   "attr": "value"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },

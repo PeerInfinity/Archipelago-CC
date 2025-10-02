@@ -66,6 +66,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "reverse": null,
@@ -174,6 +186,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -195,6 +219,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -216,6 +252,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -237,6 +285,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -258,6 +318,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -279,6 +351,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -300,6 +384,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -321,6 +417,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -342,6 +450,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -363,6 +483,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -384,6 +516,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -405,6 +549,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -426,6 +582,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -447,6 +615,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -468,6 +648,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -489,6 +681,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -510,6 +714,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -531,6 +747,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -552,6 +780,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -573,6 +813,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -612,6 +864,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -633,6 +897,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -654,6 +930,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -675,6 +963,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -696,6 +996,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -717,6 +1029,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -738,6 +1062,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -759,6 +1095,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -780,6 +1128,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -801,6 +1161,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -822,6 +1194,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -843,6 +1227,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,
@@ -905,6 +1301,18 @@
               "item": {
                 "type": "constant",
                 "value": "Progressive chest access"
+              },
+              "count": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "s"
+                },
+                "op": "-",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "progress_type": 1,

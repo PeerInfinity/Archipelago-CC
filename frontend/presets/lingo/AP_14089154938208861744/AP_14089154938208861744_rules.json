@@ -26930,9 +26930,9 @@
         "type": null,
         "max_count": 1
       },
-      "Symmetry Doors": {
-        "name": "Symmetry Doors",
-        "id": 444429,
+      "Colorful Doors": {
+        "name": "Colorful Doors",
+        "id": 444498,
         "groups": [
           "Doors",
           "Everything"
@@ -26945,9 +26945,24 @@
         "type": null,
         "max_count": 1
       },
-      "Hallway Room Doors": {
-        "name": "Hallway Room Doors",
-        "id": 444460,
+      "Directional Gallery Doors": {
+        "name": "Directional Gallery Doors",
+        "id": 444531,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Welcome Back Doors": {
+        "name": "Welcome Back Doors",
+        "id": 444492,
         "groups": [
           "Doors",
           "Everything"
@@ -26975,51 +26990,6 @@
         "type": null,
         "max_count": 1
       },
-      "Hedge Maze Doors": {
-        "name": "Hedge Maze Doors",
-        "id": 444431,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Colorful Doors": {
-        "name": "Colorful Doors",
-        "id": 444498,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fearless Doors": {
-        "name": "Fearless Doors",
-        "id": 444469,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Entrance to The Traveled": {
         "name": "Entrance to The Traveled",
         "id": 444434,
@@ -27035,9 +27005,54 @@
         "type": null,
         "max_count": 1
       },
-      "Artistic Doors": {
-        "name": "Artistic Doors",
-        "id": 444545,
+      "Color Hunt Barriers": {
+        "name": "Color Hunt Barriers",
+        "id": 444458,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crossroads - Tower Entrances": {
+        "name": "Crossroads - Tower Entrances",
+        "id": 444441,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hedge Maze Doors": {
+        "name": "Hedge Maze Doors",
+        "id": 444431,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rhyme Room Doors": {
+        "name": "Rhyme Room Doors",
+        "id": 444418,
         "groups": [
           "Doors",
           "Everything"
@@ -27065,9 +27080,9 @@
         "type": null,
         "max_count": 1
       },
-      "Dead End Area Access": {
-        "name": "Dead End Area Access",
-        "id": 444420,
+      "Hallway Room Doors": {
+        "name": "Hallway Room Doors",
+        "id": 444460,
         "groups": [
           "Doors",
           "Everything"
@@ -27080,9 +27095,9 @@
         "type": null,
         "max_count": 1
       },
-      "Crossroads - Tower Entrances": {
-        "name": "Crossroads - Tower Entrances",
-        "id": 444441,
+      "Crossroads Doors": {
+        "name": "Crossroads Doors",
+        "id": 444444,
         "groups": [
           "Doors",
           "Everything"
@@ -27125,36 +27140,6 @@
         "type": null,
         "max_count": 1
       },
-      "Directional Gallery Doors": {
-        "name": "Directional Gallery Doors",
-        "id": 444531,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rhyme Room Doors": {
-        "name": "Rhyme Room Doors",
-        "id": 444418,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Entrances to The Tenacious": {
         "name": "Entrances to The Tenacious",
         "id": 444427,
@@ -27170,9 +27155,9 @@
         "type": null,
         "max_count": 1
       },
-      "Welcome Back Doors": {
-        "name": "Welcome Back Doors",
-        "id": 444492,
+      "Symmetry Doors": {
+        "name": "Symmetry Doors",
+        "id": 444429,
         "groups": [
           "Doors",
           "Everything"
@@ -27185,9 +27170,9 @@
         "type": null,
         "max_count": 1
       },
-      "Color Hunt Barriers": {
-        "name": "Color Hunt Barriers",
-        "id": 444458,
+      "Fearless Doors": {
+        "name": "Fearless Doors",
+        "id": 444469,
         "groups": [
           "Doors",
           "Everything"
@@ -27200,9 +27185,24 @@
         "type": null,
         "max_count": 1
       },
-      "Crossroads Doors": {
-        "name": "Crossroads Doors",
-        "id": 444444,
+      "Dead End Area Access": {
+        "name": "Dead End Area Access",
+        "id": 444420,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Artistic Doors": {
+        "name": "Artistic Doors",
+        "id": 444545,
         "groups": [
           "Doors",
           "Everything"
@@ -28415,21 +28415,6 @@
         "type": null,
         "max_count": 1
       },
-      "Hallway Room Panels": {
-        "name": "Hallway Room Panels",
-        "id": 444668,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Room Room Panels": {
         "name": "Room Room Panels",
         "id": 444675,
@@ -28460,9 +28445,9 @@
         "type": null,
         "max_count": 1
       },
-      "Backside Entrance Panels": {
-        "name": "Backside Entrance Panels",
-        "id": 444620,
+      "Colorful Panels": {
+        "name": "Colorful Panels",
+        "id": 444629,
         "groups": [
           "Everything",
           "Panels"
@@ -28505,9 +28490,24 @@
         "type": null,
         "max_count": 1
       },
-      "Colorful Panels": {
-        "name": "Colorful Panels",
-        "id": 444629,
+      "Backside Entrance Panels": {
+        "name": "Backside Entrance Panels",
+        "id": 444620,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hallway Room Panels": {
+        "name": "Hallway Room Panels",
+        "id": 444668,
         "groups": [
           "Everything",
           "Panels"
@@ -28654,79 +28654,9 @@
         "type": null,
         "max_count": 46
       },
-      "Progressive Hallway Room": {
-        "name": "Progressive Hallway Room",
-        "id": 444461,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Symmetry Room": {
-        "name": "Progressive Symmetry Room",
-        "id": 444608,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Progressive Fearless": {
         "name": "Progressive Fearless",
         "id": 444470,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Colorful": {
-        "name": "Progressive Colorful",
-        "id": 444580,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Suits Area": {
-        "name": "Progressive Suits Area",
-        "id": 444602,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Pilgrimage": {
-        "name": "Progressive Pilgrimage",
-        "id": 444583,
         "groups": [
           "Everything"
         ],
@@ -28752,9 +28682,37 @@
         "type": null,
         "max_count": 1
       },
-      "Progressive Number Hunt": {
-        "name": "Progressive Number Hunt",
-        "id": 444654,
+      "Progressive Symmetry Room": {
+        "name": "Progressive Symmetry Room",
+        "id": 444608,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Pilgrimage": {
+        "name": "Progressive Pilgrimage",
+        "id": 444583,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Colorful": {
+        "name": "Progressive Colorful",
+        "id": 444580,
         "groups": [
           "Everything"
         ],
@@ -28769,6 +28727,48 @@
       "Progressive Art Gallery": {
         "name": "Progressive Art Gallery",
         "id": 444563,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Hallway Room": {
+        "name": "Progressive Hallway Room",
+        "id": 444461,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Number Hunt": {
+        "name": "Progressive Number Hunt",
+        "id": 444654,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Suits Area": {
+        "name": "Progressive Suits Area",
+        "id": 444602,
         "groups": [
           "Everything"
         ],

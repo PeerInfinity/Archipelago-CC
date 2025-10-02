@@ -4466,14 +4466,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -4495,14 +4487,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S25[NE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -4513,14 +4497,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S02[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -5142,14 +5118,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5215,14 +5183,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5288,14 +5248,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -5480,14 +5432,6 @@
                     {
                       "type": "constant",
                       "value": "D01BZ06S01[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -5636,14 +5580,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -7591,14 +7527,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S01[SW]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7624,14 +7552,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z01S08[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -7644,14 +7564,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S02[]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -7937,14 +7849,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S01[SW]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -7970,14 +7874,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z01S08[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -7990,14 +7886,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S02[]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -8221,14 +8109,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S01[SW]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -8254,14 +8134,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z01S08[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -8274,14 +8146,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S02[]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -8421,14 +8285,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S01[SW]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -8454,14 +8310,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z01S08[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -8474,14 +8322,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z01S02[]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -9822,14 +9662,6 @@
                         {
                           "type": "constant",
                           "value": "D01Z03S06[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -9840,14 +9672,6 @@
                         {
                           "type": "constant",
                           "value": "D08Z02S01[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -10710,14 +10534,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S10[SE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -10728,14 +10544,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z04S09[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12127,14 +11935,6 @@
                         {
                           "type": "constant",
                           "value": "D01Z04S19[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -12145,14 +11945,6 @@
                         {
                           "type": "constant",
                           "value": "D01Z04S12[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -12198,14 +11990,6 @@
                         {
                           "type": "constant",
                           "value": "D01Z04S19[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -12216,14 +12000,6 @@
                         {
                           "type": "constant",
                           "value": "D01Z04S12[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -12272,14 +12048,6 @@
                         {
                           "type": "constant",
                           "value": "D01Z04S19[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -12290,14 +12058,6 @@
                         {
                           "type": "constant",
                           "value": "D01Z04S12[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -12881,14 +12641,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S10[SE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -12899,14 +12651,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z04S09[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -12987,14 +12731,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S10[SE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13005,14 +12741,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z04S09[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13649,14 +13377,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -13678,14 +13398,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S25[NE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13696,14 +13408,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S02[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13771,14 +13475,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -13800,14 +13496,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S25[NE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13818,14 +13506,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S02[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -13893,14 +13573,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -13922,14 +13594,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S25[NE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -13940,14 +13604,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S02[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -14035,14 +13691,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -14462,14 +14110,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -15288,14 +14928,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -15412,14 +15044,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -18820,14 +18444,6 @@
                     {
                       "type": "constant",
                       "value": "D20Z01S04[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18838,14 +18454,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S23[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -18944,14 +18552,6 @@
                     {
                       "type": "constant",
                       "value": "D20Z01S04[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -18962,14 +18562,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z05S23[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -23078,14 +22670,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -23596,14 +23180,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -23833,14 +23409,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -24040,14 +23608,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25186,14 +24746,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -25698,14 +25250,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z06S01[Santos]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -25716,14 +25260,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S18[NW]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -25734,14 +25270,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z02S03[NE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -26937,14 +26465,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -27010,14 +26530,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -28236,14 +27748,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S02[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28254,14 +27758,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S15[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28272,14 +27768,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S19[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28290,14 +27778,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S10[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28308,14 +27788,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S22[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -28410,14 +27882,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S02[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28428,14 +27892,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S15[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28446,14 +27902,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S19[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28464,14 +27912,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S10[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28482,14 +27922,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S22[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -28584,14 +28016,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S02[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28602,14 +28026,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S15[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28620,14 +28036,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S19[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28638,14 +28046,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S10[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -28656,14 +28056,6 @@
                     {
                       "type": "constant",
                       "value": "D02Z03S22[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -29685,14 +29077,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z03S09[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -29703,14 +29087,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z03S21[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -29756,14 +29132,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z03S09[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -29774,14 +29142,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z03S21[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -29830,14 +29190,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z03S09[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -29848,14 +29200,6 @@
                         {
                           "type": "constant",
                           "value": "D02Z03S21[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -34307,14 +33651,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z06S01[Santos]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -34328,14 +33664,6 @@
                         {
                           "type": "constant",
                           "value": "D20Z01S06[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -34346,14 +33674,6 @@
                         {
                           "type": "constant",
                           "value": "D20Z01S04[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -34369,14 +33689,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z01S04[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -34387,14 +33699,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z02S10[N]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -34631,14 +33935,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z06S01[Santos]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -34652,14 +33948,6 @@
                         {
                           "type": "constant",
                           "value": "D20Z01S06[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -34670,14 +33958,6 @@
                         {
                           "type": "constant",
                           "value": "D20Z01S04[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -34693,14 +33973,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z01S04[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -34711,14 +33983,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z02S10[N]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -35581,14 +34845,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -36220,14 +35476,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -37710,14 +36958,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -37868,14 +37108,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -37999,14 +37231,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -40976,14 +40200,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z03S11[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -40994,14 +40210,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z03S16[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -41076,14 +40284,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z03S11[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -41094,14 +40294,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z03S16[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -41179,14 +40371,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z03S11[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -41197,14 +40381,6 @@
                         {
                           "type": "constant",
                           "value": "D03Z03S16[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -41675,14 +40851,6 @@
                     {
                       "type": "constant",
                       "value": "D08Z03S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -41693,14 +40861,6 @@
                     {
                       "type": "constant",
                       "value": "D08Z02S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -42894,14 +42054,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -43235,14 +42387,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z06S01[Santos]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -43253,14 +42397,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S02[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -43274,14 +42410,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z01S03[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -43292,14 +42420,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z01S01[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -43310,14 +42430,6 @@
                         {
                           "type": "constant",
                           "value": "D06Z01S18[-Cherubs]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -44222,14 +43334,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S11[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -44240,14 +43344,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S09[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -44258,14 +43354,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S23[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -44276,14 +43364,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S04[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -46247,14 +45327,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -46363,14 +45435,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -46443,14 +45507,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -47788,14 +46844,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -48066,14 +47114,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -50623,14 +49663,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -50835,14 +49867,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S11[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -50853,14 +49877,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S09[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -50871,14 +49887,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S23[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -50889,14 +49897,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S04[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -51031,14 +50031,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S11[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -51049,14 +50041,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S09[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -51067,14 +50051,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S23[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -51085,14 +50061,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S04[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -51930,14 +50898,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S22[Sword]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -51948,14 +50908,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S20[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -51966,14 +50918,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S06[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -51984,14 +50928,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S01[-Cherubs]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52450,14 +51386,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S22[Sword]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -52468,14 +51396,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S20[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -52486,14 +51406,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S06[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -52504,14 +51416,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S01[-Cherubs]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -52663,14 +51567,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S22[Sword]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -52681,14 +51577,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S20[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -52699,14 +51587,6 @@
                     {
                       "type": "constant",
                       "value": "D04Z02S06[N]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -52717,14 +51597,6 @@
                     {
                       "type": "constant",
                       "value": "D06Z01S01[-Cherubs]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -54960,14 +53832,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z02S15[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -54978,14 +53842,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z02S21[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -55031,14 +53887,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z02S15[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -55049,14 +53897,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z02S21[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -55105,14 +53945,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z02S15[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -55123,14 +53955,6 @@
                         {
                           "type": "constant",
                           "value": "D04Z02S21[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -55807,14 +54631,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -58146,14 +56962,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -58310,14 +57118,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -59162,14 +57962,6 @@
                         {
                           "type": "constant",
                           "value": "D05Z02S06[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -59180,14 +57972,6 @@
                         {
                           "type": "constant",
                           "value": "D05Z01S21[SW]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -59233,14 +58017,6 @@
                         {
                           "type": "constant",
                           "value": "D05Z02S06[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -59251,14 +58027,6 @@
                         {
                           "type": "constant",
                           "value": "D05Z01S21[SW]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -59307,14 +58075,6 @@
                         {
                           "type": "constant",
                           "value": "D05Z02S06[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -59325,14 +58085,6 @@
                         {
                           "type": "constant",
                           "value": "D05Z01S21[SW]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -59474,14 +58226,6 @@
                     {
                       "type": "constant",
                       "value": "D05Z02S06[SE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -59492,14 +58236,6 @@
                     {
                       "type": "constant",
                       "value": "D05Z01S21[-Cherubs]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -60678,14 +59414,6 @@
                     {
                       "type": "constant",
                       "value": "D05Z02S06[SE]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -60696,14 +59424,6 @@
                     {
                       "type": "constant",
                       "value": "D05Z01S21[-Cherubs]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -65633,14 +64353,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -65767,14 +64479,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -65871,14 +64575,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -66242,14 +64938,6 @@
                     {
                       "type": "constant",
                       "value": "D01Z06S01[Santos]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -66260,14 +64948,6 @@
                     {
                       "type": "constant",
                       "value": "D09Z01S09[Cell24]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -66281,14 +64961,6 @@
                         {
                           "type": "constant",
                           "value": "D09Z01S11[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -66299,14 +64971,6 @@
                         {
                           "type": "constant",
                           "value": "D06Z01S13[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -66598,14 +65262,6 @@
                         {
                           "type": "constant",
                           "value": "D06Z01S19[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -66616,14 +65272,6 @@
                         {
                           "type": "constant",
                           "value": "D07Z01S01[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -66669,14 +65317,6 @@
                         {
                           "type": "constant",
                           "value": "D06Z01S19[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -66687,14 +65327,6 @@
                         {
                           "type": "constant",
                           "value": "D07Z01S01[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -66743,14 +65375,6 @@
                         {
                           "type": "constant",
                           "value": "D06Z01S19[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -66761,14 +65385,6 @@
                         {
                           "type": "constant",
                           "value": "D07Z01S01[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -67296,14 +65912,6 @@
                         {
                           "type": "constant",
                           "value": "D08Z01S02[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -67314,14 +65922,6 @@
                         {
                           "type": "constant",
                           "value": "D08Z03S02[NW]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -67367,14 +65967,6 @@
                         {
                           "type": "constant",
                           "value": "D08Z01S02[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -67385,14 +65977,6 @@
                         {
                           "type": "constant",
                           "value": "D08Z03S02[NW]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -67441,14 +66025,6 @@
                         {
                           "type": "constant",
                           "value": "D08Z01S02[NE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -67459,14 +66035,6 @@
                         {
                           "type": "constant",
                           "value": "D08Z03S02[NW]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -67635,14 +66203,6 @@
                     {
                       "type": "constant",
                       "value": "D08Z03S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -67653,14 +66213,6 @@
                     {
                       "type": "constant",
                       "value": "D08Z02S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -67731,14 +66283,6 @@
                     {
                       "type": "constant",
                       "value": "D08Z03S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -67749,14 +66293,6 @@
                     {
                       "type": "constant",
                       "value": "D08Z02S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -67834,14 +66370,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -68271,14 +66799,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -68554,14 +67074,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -69454,14 +67966,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -69776,14 +68280,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -70852,14 +69348,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -70878,14 +69366,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -71348,14 +69828,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -71936,14 +70408,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -71962,14 +70426,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -72432,14 +70888,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -73032,14 +71480,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -73058,14 +71498,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -73528,14 +71960,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -74065,14 +72489,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -74091,14 +72507,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -74534,14 +72942,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -75136,14 +73536,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -75162,14 +73554,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -75599,14 +73983,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -76232,14 +74608,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -76258,14 +74626,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -76662,14 +75022,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -77264,14 +75616,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -77290,14 +75634,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -77727,14 +76063,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -78329,14 +76657,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -78355,14 +76675,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -78798,14 +77110,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -79434,14 +77738,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -79460,14 +77756,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -79930,14 +78218,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -80518,14 +78798,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -80544,14 +78816,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -81014,14 +79278,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -81855,14 +80111,6 @@
                         {
                           "type": "constant",
                           "value": "D09Z01S05[SE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -81873,14 +80121,6 @@
                         {
                           "type": "constant",
                           "value": "D09Z01S08[S]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -82220,14 +80460,6 @@
                         {
                           "type": "constant",
                           "value": "D09Z01S05[SE]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -82238,14 +80470,6 @@
                         {
                           "type": "constant",
                           "value": "D09Z01S08[S]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -82314,14 +80538,6 @@
                     {
                       "type": "constant",
                       "value": "D09Z01S13[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -82332,14 +80548,6 @@
                     {
                       "type": "constant",
                       "value": "D09Z01S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -82350,14 +80558,6 @@
                     {
                       "type": "constant",
                       "value": "D09Z01S08[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -82393,14 +80593,6 @@
                     {
                       "type": "constant",
                       "value": "D09Z01S13[E]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -82411,14 +80603,6 @@
                     {
                       "type": "constant",
                       "value": "D09Z01S03[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -82429,14 +80613,6 @@
                     {
                       "type": "constant",
                       "value": "D09Z01S08[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -82469,14 +80645,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -82495,14 +80663,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -82692,14 +80852,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -82775,14 +80927,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -84700,14 +82844,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -85191,14 +83327,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -86337,14 +84465,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -86417,14 +84537,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -86443,14 +84555,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -86952,14 +85056,6 @@
                     {
                       "type": "constant",
                       "value": "D17Z01S05[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -86970,14 +85066,6 @@
                     {
                       "type": "constant",
                       "value": "D17BZ02S01[FrontR]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -87553,14 +85641,6 @@
                     {
                       "type": "constant",
                       "value": "D17Z01S05[S]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 },
@@ -87571,14 +85651,6 @@
                     {
                       "type": "constant",
                       "value": "D17BZ02S01[FrontR]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -87859,14 +85931,6 @@
                         {
                           "type": "constant",
                           "value": "D17Z01S05[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -87877,14 +85941,6 @@
                         {
                           "type": "constant",
                           "value": "D17Z01S03[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -87930,14 +85986,6 @@
                         {
                           "type": "constant",
                           "value": "D17Z01S05[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -87948,14 +85996,6 @@
                         {
                           "type": "constant",
                           "value": "D17Z01S03[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -88004,14 +86044,6 @@
                         {
                           "type": "constant",
                           "value": "D17Z01S05[E]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     },
@@ -88022,14 +86054,6 @@
                         {
                           "type": "constant",
                           "value": "D17Z01S03[W]"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -88223,14 +86247,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -88433,14 +86449,6 @@
                 {
                   "type": "name",
                   "name": "req"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -90812,14 +88820,6 @@
                     {
                       "type": "constant",
                       "value": "D20Z02S07[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -90866,14 +88866,6 @@
                     {
                       "type": "constant",
                       "value": "D20Z02S07[W]"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }

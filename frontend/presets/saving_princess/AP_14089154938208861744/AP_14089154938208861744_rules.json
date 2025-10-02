@@ -218,6 +218,10 @@
                       "item": {
                         "type": "name",
                         "name": "ITEM_RELOAD_SPEED"
+                      },
+                      "count": {
+                        "type": "constant",
+                        "value": 4
                       }
                     },
                     {
@@ -240,14 +244,6 @@
                               "name": "ITEM_WEAPON_VOLT"
                             }
                           ]
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "player"
                         }
                       ]
                     }
@@ -327,6 +323,10 @@
                   "item": {
                     "type": "name",
                     "name": "ITEM_RELOAD_SPEED"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -367,6 +367,10 @@
                   "item": {
                     "type": "name",
                     "name": "ITEM_RELOAD_SPEED"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -487,6 +491,10 @@
                   "item": {
                     "type": "name",
                     "name": "ITEM_RELOAD_SPEED"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -548,6 +556,10 @@
                   "item": {
                     "type": "name",
                     "name": "ITEM_RELOAD_SPEED"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -681,14 +693,6 @@
                             "name": "EP_ITEM_SNAKE_GONE"
                           }
                         ]
-                      },
-                      {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "player"
                       }
                     ]
                   },
@@ -700,6 +704,10 @@
                         "item": {
                           "type": "name",
                           "name": "ITEM_MAX_HEALTH"
+                        },
+                        "count": {
+                          "type": "constant",
+                          "value": 2
                         }
                       },
                       {
@@ -707,6 +715,10 @@
                         "item": {
                           "type": "name",
                           "name": "ITEM_MAX_AMMO"
+                        },
+                        "count": {
+                          "type": "constant",
+                          "value": 2
                         }
                       },
                       {
@@ -714,6 +726,10 @@
                         "item": {
                           "type": "name",
                           "name": "ITEM_RELOAD_SPEED"
+                        },
+                        "count": {
+                          "type": "constant",
+                          "value": 4
                         }
                       },
                       {
@@ -743,14 +759,6 @@
                                 "name": "ITEM_WEAPON_VOLT"
                               }
                             ]
-                          },
-                          {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "world"
-                            },
-                            "attr": "player"
                           }
                         ]
                       }
@@ -785,14 +793,6 @@
                             "name": "EVENT_ITEM_SNAKE_GONE"
                           }
                         ]
-                      },
-                      {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "player"
                       }
                     ]
                   },
@@ -804,6 +804,10 @@
                         "item": {
                           "type": "name",
                           "name": "ITEM_MAX_HEALTH"
+                        },
+                        "count": {
+                          "type": "constant",
+                          "value": 2
                         }
                       },
                       {
@@ -811,6 +815,10 @@
                         "item": {
                           "type": "name",
                           "name": "ITEM_MAX_AMMO"
+                        },
+                        "count": {
+                          "type": "constant",
+                          "value": 2
                         }
                       },
                       {
@@ -818,6 +826,10 @@
                         "item": {
                           "type": "name",
                           "name": "ITEM_RELOAD_SPEED"
+                        },
+                        "count": {
+                          "type": "constant",
+                          "value": 4
                         }
                       },
                       {
@@ -847,14 +859,6 @@
                                 "name": "ITEM_WEAPON_VOLT"
                               }
                             ]
-                          },
-                          {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "world"
-                            },
-                            "attr": "player"
                           }
                         ]
                       }
@@ -1001,6 +1005,10 @@
                   "item": {
                     "type": "name",
                     "name": "ITEM_RELOAD_SPEED"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 4
                   }
                 },
                 {
@@ -1023,14 +1031,6 @@
                           "name": "ITEM_WEAPON_VOLT"
                         }
                       ]
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -1108,6 +1108,10 @@
                   "item": {
                     "type": "name",
                     "name": "ITEM_RELOAD_SPEED"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -1148,6 +1152,10 @@
                   "item": {
                     "type": "name",
                     "name": "ITEM_RELOAD_SPEED"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -1410,14 +1418,6 @@
                       "name": "ITEM_WEAPON_VOLT"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1455,14 +1455,6 @@
                       "name": "ITEM_WEAPON_VOLT"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1493,39 +1485,9 @@
   },
   "items": {
     "1": {
-      "Ice Spreadshot": {
-        "name": "Ice Spreadshot",
-        "id": 91630179862864,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Active Camouflage": {
-        "name": "Active Camouflage",
-        "id": 91630179862878,
-        "groups": [
-          "Everything",
-          "Filler"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Swamp Key": {
-        "name": "Swamp Key",
-        "id": 91630179862874,
+      "Cave Key": {
+        "name": "Cave Key",
+        "id": 91630179862871,
         "groups": [
           "Everything",
           "Keys"
@@ -1538,15 +1500,16 @@
         "type": null,
         "max_count": 2
       },
-      "System Power": {
-        "name": "System Power",
-        "id": 91630179862875,
+      "Special Extension": {
+        "name": "Special Extension",
+        "id": 91630179862869,
         "groups": [
-          "Everything"
+          "Everything",
+          "Upgrades"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -1567,6 +1530,36 @@
         "type": null,
         "max_count": 12
       },
+      "Active Camouflage": {
+        "name": "Active Camouflage",
+        "id": 91630179862878,
+        "groups": [
+          "Everything",
+          "Filler"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Arctic Key": {
+        "name": "Arctic Key",
+        "id": 91630179862873,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
       "Faster Reload": {
         "name": "Faster Reload",
         "id": 91630179862868,
@@ -1582,9 +1575,24 @@
         "type": null,
         "max_count": 12
       },
-      "Shake Trap": {
-        "name": "Shake Trap",
-        "id": 91630179862880,
+      "Powered Blaster": {
+        "name": "Powered Blaster",
+        "id": 91630179862862,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ice Trap": {
+        "name": "Ice Trap",
+        "id": 91630179862879,
         "groups": [
           "Everything",
           "Traps"
@@ -1592,54 +1600,25 @@
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 4
       },
-      "Special Extension": {
-        "name": "Special Extension",
-        "id": 91630179862869,
+      "Ninja Trap": {
+        "name": "Ninja Trap",
+        "id": 91630179862881,
         "groups": [
           "Everything",
-          "Upgrades"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Quick-fire Mode": {
-        "name": "Quick-fire Mode",
-        "id": 91630179862877,
-        "groups": [
-          "Everything",
-          "Filler"
+          "Traps"
         ],
         "advancement": false,
         "priority": false,
         "useful": false,
-        "trap": false,
+        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Jacket": {
-        "name": "Jacket",
-        "id": 91630179862870,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
+        "max_count": 4
       },
       "Life Extension": {
         "name": "Life Extension",
@@ -1656,9 +1635,9 @@
         "type": null,
         "max_count": 12
       },
-      "Arctic Key": {
-        "name": "Arctic Key",
-        "id": 91630179862873,
+      "Volcanic Key": {
+        "name": "Volcanic Key",
+        "id": 91630179862872,
         "groups": [
           "Everything",
           "Keys"
@@ -1666,6 +1645,20 @@
         "advancement": true,
         "priority": false,
         "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Jacket": {
+        "name": "Jacket",
+        "id": 91630179862870,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -1686,9 +1679,38 @@
         "type": null,
         "max_count": 2
       },
-      "Powered Blaster": {
-        "name": "Powered Blaster",
-        "id": 91630179862862,
+      "Quick-fire Mode": {
+        "name": "Quick-fire Mode",
+        "id": 91630179862877,
+        "groups": [
+          "Everything",
+          "Filler"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "System Power": {
+        "name": "System Power",
+        "id": 91630179862875,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ice Spreadshot": {
+        "name": "Ice Spreadshot",
+        "id": 91630179862864,
         "groups": [
           "Everything",
           "Weapons"
@@ -1700,21 +1722,6 @@
         "event": false,
         "type": null,
         "max_count": 2
-      },
-      "Ninja Trap": {
-        "name": "Ninja Trap",
-        "id": 91630179862881,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 4
       },
       "Flamethrower": {
         "name": "Flamethrower",
@@ -1731,24 +1738,24 @@
         "type": null,
         "max_count": 2
       },
-      "Volcanic Key": {
-        "name": "Volcanic Key",
-        "id": 91630179862872,
+      "Shake Trap": {
+        "name": "Shake Trap",
+        "id": 91630179862880,
         "groups": [
           "Everything",
-          "Keys"
+          "Traps"
         ],
-        "advancement": true,
+        "advancement": false,
         "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
-      "Cave Key": {
-        "name": "Cave Key",
-        "id": 91630179862871,
+      "Swamp Key": {
+        "name": "Swamp Key",
+        "id": 91630179862874,
         "groups": [
           "Everything",
           "Keys"
@@ -1775,21 +1782,6 @@
         "event": false,
         "type": null,
         "max_count": 6
-      },
-      "Ice Trap": {
-        "name": "Ice Trap",
-        "id": 91630179862879,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 4
       },
       "PRINCESS": {
         "name": "PRINCESS",

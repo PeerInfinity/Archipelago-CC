@@ -47,14 +47,6 @@
                     {
                       "type": "name",
                       "name": "items"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -75,14 +67,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -101,14 +85,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -127,14 +103,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -167,14 +135,6 @@
                     {
                       "type": "name",
                       "name": "items"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -195,14 +155,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -221,14 +173,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -247,14 +191,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -273,14 +209,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -675,14 +603,6 @@
                       "attr": "item_3"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -863,14 +783,6 @@
                       "attr": "item_3"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1007,14 +919,6 @@
                       "attr": "item_2"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1056,14 +960,6 @@
                       "attr": "item_2"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1190,14 +1086,6 @@
                       "attr": "item_3"
                     }
                   ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1243,14 +1131,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1347,14 +1227,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1519,14 +1391,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1630,14 +1494,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1673,14 +1529,6 @@
                     {
                       "type": "name",
                       "name": "weps"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -1721,14 +1569,6 @@
                     {
                       "type": "name",
                       "name": "weps"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "player"
                     }
                   ]
                 }
@@ -1812,14 +1652,6 @@
                 {
                   "type": "name",
                   "name": "items"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
                 }
               ]
             },
@@ -1904,14 +1736,6 @@
                 {
                   "type": "name",
                   "name": "weps"
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "player"
                 }
               ]
             },
