@@ -296,7 +296,7 @@ Load a rules file in the main application to begin your adventure.`;
                     return { type: 'error', message: 'Move where? Specify an exit.' };
                 }
                 // Check if target is a valid exit
-                const exitMatch = availableExits.find(exit => 
+                const exitMatch = availableExits.find(exit =>
                     exit.toLowerCase().includes(target) || target.includes(exit.toLowerCase())
                 );
                 if (exitMatch) {
@@ -391,16 +391,29 @@ Load a rules file in the main application to begin your adventure.`;
     }
 
     handleRegionMove(exitName) {
-        logger.debug(`Handling region move: ${exitName}`);
-        
-        if (!this.isExitAccessible(exitName)) {
-            return `The path to ${exitName} is blocked.`;
+        // Find the actual exit (case-insensitive)
+        const regionInfo = this.getCurrentRegionInfo();
+
+        const exitNameLower = exitName.toLowerCase();
+        const actualExit = regionInfo?.data?.exits?.find(ex => ex.name.toLowerCase() === exitNameLower);
+
+        if (!actualExit) {
+            console.error(`[textAdventureStandalone] No exit found matching "${exitName}". Available: ${regionInfo?.data?.exits?.map(e => e.name).join(', ')}`);
+            return `Unrecognized exit: ${exitName}`;
+        }
+
+        const actualExitName = actualExit.name; // Use the actual cased name
+
+        if (!this.isExitAccessible(actualExitName)) {
+            // Check for custom inaccessible message
+            const customMessage = this.getCustomMessage('exits', actualExitName, 'inaccessibleMessage');
+            return customMessage || `The path to ${actualExitName} is blocked.`;
         }
 
         // Get destination region
-        const destinationRegion = this.getExitDestination(exitName);
+        const destinationRegion = this.getExitDestination(actualExitName);
         if (!destinationRegion) {
-            return `Cannot determine where ${exitName} leads.`;
+            return `Cannot determine where ${actualExitName} leads.`;
         }
 
         // Get current region before updating
@@ -411,19 +424,37 @@ Load a rules file in the main application to begin your adventure.`;
 
         // Publish region move via dispatcher
         this.moduleDispatcher.publish('user:regionMove', {
-            exitName: exitName,
+            exitName: actualExitName,
             targetRegion: destinationRegion,
             sourceRegion: sourceRegion,
             sourceModule: 'textAdventureStandalone'
         }, 'bottom');
 
-        return `You travel through ${exitName}.`;
+        // Check for custom move message
+        const customMessage = this.getCustomMessage('exits', actualExitName, 'moveMessage');
+        return customMessage || `You travel through ${actualExitName}.`;
     }
 
     handleLocationCheck(locationName) {
-        if (!this.isLocationAccessible(locationName)) {
+        // Find the actual location (case-insensitive)
+        const staticData = this.stateManager.getStaticData();
+        const locationNameLower = locationName.toLowerCase();
+        const actualLocationName = staticData?.locations ?
+            Object.keys(staticData.locations).find(name => name.toLowerCase() === locationNameLower) : null;
+
+        if (!actualLocationName) {
             return {
-                message: `You cannot reach ${locationName} from here.`,
+                message: `Unrecognized location: ${locationName}`,
+                shouldRedisplayRegion: true,
+                wasSuccessful: false
+            };
+        }
+
+        if (!this.isLocationAccessible(actualLocationName)) {
+            // Check for custom inaccessible message
+            const customMessage = this.getCustomMessage('locations', actualLocationName, 'inaccessibleMessage');
+            return {
+                message: customMessage || `You cannot reach ${actualLocationName} from here.`,
                 shouldRedisplayRegion: true,
                 wasSuccessful: false
             };
@@ -431,9 +462,11 @@ Load a rules file in the main application to begin your adventure.`;
 
         // Check if already checked
         const snapshot = this.stateManager.getLatestStateSnapshot();
-        if (snapshot && snapshot.checkedLocations && snapshot.checkedLocations.includes(locationName)) {
+        if (snapshot && snapshot.checkedLocations && snapshot.checkedLocations.includes(actualLocationName)) {
+            // Check for custom already checked message
+            const customMessage = this.getCustomMessage('locations', actualLocationName, 'alreadyCheckedMessage');
             return {
-                message: `You have already searched ${locationName}.`,
+                message: customMessage || `You have already searched ${actualLocationName}.`,
                 shouldRedisplayRegion: true,
                 wasSuccessful: false
             };
@@ -444,16 +477,22 @@ Load a rules file in the main application to begin your adventure.`;
         const currentRegion = this.playerState ? this.playerState.getCurrentRegion() : null;
 
         this.moduleDispatcher.publish('user:locationCheck', {
-            locationName: locationName,
+            locationName: actualLocationName,
             regionName: currentRegion,
             sourceModule: 'textAdventureStandalone'
         }, 'bottom');
 
         // Get the item that would be found
-        const itemFound = this.getItemAtLocation(locationName);
-        
+        const itemFound = this.getItemAtLocation(actualLocationName);
+
+        // Check for custom check message
+        const customMessage = this.getCustomMessage('locations', actualLocationName, 'checkMessage');
+        const message = customMessage ?
+            customMessage.replace('{item}', itemFound) :
+            `You search ${actualLocationName} and find: ${itemFound}!`;
+
         return {
-            message: `You search ${locationName} and find: ${itemFound}!`,
+            message: message,
             shouldRedisplayRegion: true,
             wasSuccessful: true
         };
@@ -575,8 +614,10 @@ Load a rules file in the main application to begin your adventure.`;
     isExitAccessible(exitName) {
         const regionInfo = this.getCurrentRegionInfo();
         if (!regionInfo || !regionInfo.data.exits) return false;
-        
-        const exitDef = regionInfo.data.exits.find(exit => exit.name === exitName);
+
+        // Case-insensitive exit name matching
+        const exitNameLower = exitName.toLowerCase();
+        const exitDef = regionInfo.data.exits.find(exit => exit.name.toLowerCase() === exitNameLower);
         if (!exitDef) return false;
         
         const snapshot = this.stateManager.getLatestStateSnapshot();
@@ -620,12 +661,34 @@ Load a rules file in the main application to begin your adventure.`;
     getExitDestination(exitName) {
         const regionInfo = this.getCurrentRegionInfo();
         if (regionInfo && regionInfo.data.exits) {
-            const exit = regionInfo.data.exits.find(ex => ex.name === exitName);
+            // Case-insensitive exit name matching
+            const exitNameLower = exitName.toLowerCase();
+            const exit = regionInfo.data.exits.find(ex => ex.name.toLowerCase() === exitNameLower);
             if (exit) {
                 return exit.connected_region;
             }
         }
         return null;
+    }
+
+    /**
+     * Get custom message from custom data
+     * @param {string} category - Category (e.g., 'exits', 'locations', 'regions')
+     * @param {string} name - Name of the item
+     * @param {string} messageType - Type of message (e.g., 'moveMessage', 'checkMessage')
+     * @returns {string|null} Custom message or null if not found
+     */
+    getCustomMessage(category, name, messageType) {
+        if (!this.customData || !this.customData[category]) {
+            return null;
+        }
+
+        const item = this.customData[category][name];
+        if (!item || !item[messageType]) {
+            return null;
+        }
+
+        return item[messageType];
     }
 
     displayCurrentRegion() {

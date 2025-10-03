@@ -1,11 +1,12 @@
 // Core adapter logic for event bridging between main app and iframes
-import { 
-    MessageTypes, 
-    createMessage, 
-    validateMessage, 
+import {
+    MessageTypes,
+    createMessage,
+    validateMessage,
     safePostMessage,
-    createErrorMessage 
+    createErrorMessage
 } from './communicationProtocol.js';
+import { getPlayerStateSingleton } from '../playerState/singleton.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -113,32 +114,67 @@ export class IframeAdapterCore {
      * @param {Window} iframeWindow - Iframe window reference
      */
     registerIframe(iframeId, iframeWindow) {
-        this.iframes.set(iframeId, {
-            window: iframeWindow,
-            subscriptions: {
-                eventBus: new Set(),
-                dispatcher: new Set()
-            },
-            lastHeartbeat: Date.now(),
-            connected: true
-        });
-        
-        this.eventBusSubscriptions.set(iframeId, new Set());
-        this.dispatcherSubscriptions.set(iframeId, new Set());
-        
-        log('info', `Iframe registered: ${iframeId}`);
-        
-        // Register iframe-specific publisher for common events that iframes might publish
-        if (this.registerDynamicPublisher) {
-            const publisherId = `${iframeId}`;
-            // Register for common events that iframes typically publish
-            this.registerDynamicPublisher(publisherId, 'playerState:regionChanged');
-            log('debug', `Registered dynamic publisher ${publisherId} for iframe events`);
+        // Check if already registered to prevent duplicate registration
+        const alreadyRegistered = this.iframes.has(iframeId);
+
+        if (alreadyRegistered) {
+            log('debug', `Iframe ${iframeId} already registered, updating connection status`);
+            // Update the existing iframe entry
+            const existingEntry = this.iframes.get(iframeId);
+            existingEntry.connected = true;
+            existingEntry.lastHeartbeat = Date.now();
+            existingEntry.window = iframeWindow;
+        } else {
+            // First time registration
+            this.iframes.set(iframeId, {
+                window: iframeWindow,
+                subscriptions: {
+                    eventBus: new Set(),
+                    dispatcher: new Set()
+                },
+                lastHeartbeat: Date.now(),
+                connected: true
+            });
+
+            this.eventBusSubscriptions.set(iframeId, new Set());
+            this.dispatcherSubscriptions.set(iframeId, new Set());
+
+            log('info', `Iframe registered: ${iframeId}`);
+
+            // Register iframe-specific publisher for common events that iframes might publish
+            if (this.registerDynamicPublisher) {
+                const publisherId = `${iframeId}`;
+                // Register for common events that iframes typically publish
+                this.registerDynamicPublisher(publisherId, 'playerState:regionChanged');
+                log('debug', `Registered dynamic publisher ${publisherId} for iframe events`);
+            }
         }
-        
-        // Publish connection event
+
+        // Always publish connection event and send region sync (even for re-registration)
         if (this.eventBus) {
             this.eventBus.publish('iframe:connected', { iframeId }, 'iframeAdapter');
+
+            // Only send initial region sync if this is the first registration
+            if (!alreadyRegistered) {
+                // Send current region to newly connected iframe so it can initialize its state
+                // Use setTimeout to ensure iframe has finished setting up its event subscriptions
+                setTimeout(() => {
+                    const playerState = getPlayerStateSingleton();
+                    console.log('[iframeAdapter] playerState:', playerState);
+                    const currentRegion = playerState?.getCurrentRegion();
+                    console.log('[iframeAdapter] currentRegion:', currentRegion);
+                    if (currentRegion) {
+                        console.log(`[iframeAdapter] Sending current region to iframe: ${currentRegion}`);
+                        // Publish region changed event so iframe can sync
+                        this.eventBus.publish('playerState:regionChanged', {
+                            oldRegion: null,
+                            newRegion: currentRegion
+                        }, 'iframeAdapter');
+                    } else {
+                        console.log('[iframeAdapter] No current region to send to iframe');
+                    }
+                }, 500); // Increased delay to ensure iframe subscriptions are ready
+            }
         }
     }
 
@@ -248,16 +284,43 @@ export class IframeAdapterCore {
     handleSubscribeEventBus(message, source) {
         const { iframeId, data } = message;
         const { eventName } = data;
-        
+
         if (!this.iframes.has(iframeId)) {
             this.sendErrorToIframe(source, iframeId, 'NOT_REGISTERED', 'Iframe not registered');
             return;
         }
-        
+
         // Add to subscriptions
         this.eventBusSubscriptions.get(iframeId).add(eventName);
-        
+
+        // If this is the first iframe subscribing to this event, subscribe the adapter to it
+        this.ensureEventBusSubscription(eventName);
+
         log('debug', `Iframe ${iframeId} subscribed to eventBus event: ${eventName}`);
+    }
+
+    /**
+     * Ensure adapter is subscribed to eventBus event so it can forward to iframes
+     * @param {string} eventName - Event name to subscribe to
+     */
+    ensureEventBusSubscription(eventName) {
+        // Track which events we're already subscribed to
+        if (!this._adapterEventBusSubscriptions) {
+            this._adapterEventBusSubscriptions = new Set();
+        }
+
+        // Only subscribe once per event
+        if (this._adapterEventBusSubscriptions.has(eventName)) {
+            return;
+        }
+
+        // Subscribe to the event and forward to interested iframes
+        this.eventBus.subscribe(eventName, (eventData) => {
+            this.handleEventBusEvent(eventName, eventData);
+        }, 'iframeAdapter');
+
+        this._adapterEventBusSubscriptions.add(eventName);
+        log('debug', `IframeAdapter subscribed to eventBus event: ${eventName}`);
     }
 
     /**
@@ -268,16 +331,43 @@ export class IframeAdapterCore {
     handleSubscribeEventDispatcher(message, source) {
         const { iframeId, data } = message;
         const { eventName } = data;
-        
+
         if (!this.iframes.has(iframeId)) {
             this.sendErrorToIframe(source, iframeId, 'NOT_REGISTERED', 'Iframe not registered');
             return;
         }
-        
+
         // Add to subscriptions
         this.dispatcherSubscriptions.get(iframeId).add(eventName);
-        
+
+        // If this is the first iframe subscribing to this event, subscribe the adapter to it
+        this.ensureDispatcherSubscription(eventName);
+
         log('debug', `Iframe ${iframeId} subscribed to dispatcher event: ${eventName}`);
+    }
+
+    /**
+     * Ensure adapter is subscribed to dispatcher event so it can forward to iframes
+     * @param {string} eventName - Event name to subscribe to
+     */
+    ensureDispatcherSubscription(eventName) {
+        // Track which events we're already subscribed to
+        if (!this._adapterDispatcherSubscriptions) {
+            this._adapterDispatcherSubscriptions = new Set();
+        }
+
+        // Only subscribe once per event
+        if (this._adapterDispatcherSubscriptions.has(eventName)) {
+            return;
+        }
+
+        // Subscribe to the dispatcher event and forward to interested iframes
+        this.dispatcher.subscribe(eventName, (eventData, propagationOptions) => {
+            this.handleDispatcherEvent(eventData, propagationOptions);
+        });
+
+        this._adapterDispatcherSubscriptions.add(eventName);
+        log('debug', `IframeAdapter subscribed to dispatcher event: ${eventName}`);
     }
 
     /**

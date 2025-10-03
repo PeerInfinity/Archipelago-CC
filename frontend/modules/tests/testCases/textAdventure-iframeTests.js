@@ -89,7 +89,10 @@ async function loadAdventureRulesAndSetupIframe(testController, targetRegion = '
   
   const iframeConnected = await iframeConnectedPromise;
   testController.reportCondition('Iframe connected to adapter', !!iframeConnected);
-  
+
+  // Note: The iframe adapter automatically sends the current region to newly connected iframes,
+  // so we don't need to manually sync it here anymore
+
   // Step 6: Wait for iframe UI to be ready
   await testController.pollForCondition(
     () => {
@@ -113,10 +116,10 @@ async function loadAdventureRulesAndSetupIframe(testController, targetRegion = '
 
   // Step 7: Verify player positioning using playerStateSingleton
   const playerState = getPlayerStateSingleton();
-  const currentRegion = playerState.getCurrentRegion();
-  testController.log(`Final player positioned in region: ${currentRegion}`);
+  const finalRegion = playerState.getCurrentRegion();
+  testController.log(`Final player positioned in region: ${finalRegion}`);
   testController.reportCondition(`Player positioned in ${targetRegion} region`,
-    currentRegion === targetRegion);
+    finalRegion === targetRegion);
 }
 
 // Helper function to get iframe elements
@@ -272,8 +275,12 @@ export async function textAdventureIframeMovementCommandTest(testController) {
           const hasUserInput = elements.textArea.textContent.includes('> move GameStart');
           testController.reportCondition('User input echoed in iframe display', hasUserInput);
 
+          // Debug: Show what's actually in the iframe
+          console.log('[TEST DEBUG] Iframe text after move command:', elements.textArea.textContent);
+
           const regionChangeMessageAppeared = (
             elements.textArea.textContent.includes('You travel through GameStart') ||
+            elements.textArea.textContent.includes('You take your first brave steps') ||
             elements.textArea.textContent.includes('vast overworld') ||
             elements.textArea.textContent.includes('You are now in Overworld')
           );
