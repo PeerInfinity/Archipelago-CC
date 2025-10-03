@@ -10627,7 +10627,8 @@
     "1": {
       "game": "A Hat in Time",
       "assume_bidirectional_exits": false,
-      "HatItems": false
+      "HatItems": false,
+      "UmbrellaLogic": false
     }
   },
   "game_info": {
@@ -10659,6 +10660,98 @@
           1,
           0,
           3
+        ]
+      },
+      "relic_groups": {
+        "Burger": [
+          "Relic (Burger Patty)",
+          "Relic (Burger Cushion)"
+        ],
+        "Train": [
+          "Relic (Train)",
+          "Relic (Mountain Set)"
+        ],
+        "UFO": [
+          "Relic (Cow)",
+          "Relic (Cool Cow)",
+          "Relic (UFO)",
+          "Relic (Tin-foil Hat Cow)"
+        ],
+        "Crayon": [
+          "Relic (Green Crayon)",
+          "Relic (Blue Crayon)",
+          "Relic (Red Crayon)",
+          "Relic (Crayon Box)"
+        ],
+        "Cake": [
+          "Relic (Chocolate Cake Slice)",
+          "Relic (Chocolate Cake)",
+          "Relic (Cake Stand)",
+          "Relic (Shortcake)"
+        ],
+        "Necklace": [
+          "Relic (Necklace Bust)",
+          "Relic (Necklace)"
+        ],
+        "Everything": [
+          "Compass Badge",
+          "Sprint Hat",
+          "Relic (Necklace Bust)",
+          "Random Cosmetic",
+          "Relic (Red Crayon)",
+          "Relic (Green Crayon)",
+          "Relic (Cow)",
+          "Metro Ticket - Green",
+          "Parade Trap",
+          "Zipline Unlock - The Windmill Path",
+          "Time Stop Hat",
+          "Zipline Unlock - The Twilight Bell Path",
+          "Hover Badge",
+          "Relic (Chocolate Cake)",
+          "Relic (Mountain Set)",
+          "Projectile Badge",
+          "Snatcher's Contract - The Subcon Well",
+          "Laser Trap",
+          "Snatcher's Contract - Mail Delivery Service",
+          "Relic (Cool Cow)",
+          "Brewing Hat",
+          "Snatcher's Contract - Toilet of Doom",
+          "Progressive Painting Unlock",
+          "Time Piece",
+          "Metro Ticket - Yellow",
+          "Snatcher's Contract - Queen Vanessa's Manor",
+          "Yarn",
+          "No Bonk Badge",
+          "Scooter Badge",
+          "Relic (Train)",
+          "25 Pons",
+          "Umbrella",
+          "Zipline Unlock - The Birdhouse Path",
+          "Ice Hat",
+          "Fast Hatter Badge",
+          "Badge Pin",
+          "100 Pons",
+          "Relic (UFO)",
+          "Relic (Crayon Box)",
+          "Zipline Unlock - The Lava Cake Path",
+          "Relic (Cake Stand)",
+          "Relic (Necklace)",
+          "50 Pons",
+          "Relic (Chocolate Cake Slice)",
+          "Relic (Shortcake)",
+          "Baby Trap",
+          "Item Magnet Badge",
+          "Relic (Blue Crayon)",
+          "Relic (Tin-foil Hat Cow)",
+          "Relic (Burger Patty)",
+          "Dweller Mask",
+          "One-Hit Hero Badge",
+          "Metro Ticket - Pink",
+          "Health Pon",
+          "Camera Badge",
+          "Metro Ticket - Blue",
+          "Hookshot Badge",
+          "Relic (Burger Cushion)"
         ]
       }
     }

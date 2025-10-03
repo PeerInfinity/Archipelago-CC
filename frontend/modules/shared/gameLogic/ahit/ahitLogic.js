@@ -397,12 +397,52 @@ export function can_use_hookshot(state, world, itemName, staticData) {
  * @returns {boolean}
  */
 export function can_hit(state, world, umbrellaOnly, staticData) {
-  if (umbrellaOnly) {
-    return has(state, 'Umbrella', staticData);
+  // Check if UmbrellaLogic option is enabled
+  const umbrellaLogic = staticData?.settings?.['1']?.UmbrellaLogic;
+
+  // If UmbrellaLogic is disabled, hitting is always allowed
+  if (umbrellaLogic === false) {
+    return true;
   }
-  
-  // Can hit with umbrella or diving
-  return has(state, 'Umbrella', staticData) || has(state, 'Dive', staticData);
+
+  // Check if player has Umbrella
+  if (has(state, 'Umbrella', staticData)) {
+    return true;
+  }
+
+  // If not umbrella_only, check if player can use Brewing Hat (HatType.BREWING = 1)
+  if (!umbrellaOnly) {
+    return can_use_hat(state, world, 1, staticData);
+  }
+
+  return false;
+}
+
+/**
+ * Check if player has all items in a relic combo group
+ * @param {Object} state - Canonical state object
+ * @param {Object} world - World/settings object
+ * @param {string} relicGroup - The relic group name (e.g., "UFO", "Crayon")
+ * @param {Object} staticData - Static game data
+ * @returns {boolean}
+ */
+export function has_relic_combo(state, world, relicGroup, staticData) {
+  // Get the relic group from staticData
+  const relicGroups = staticData?.game_info?.['1']?.relic_groups;
+  if (!relicGroups || !relicGroups[relicGroup]) {
+    return false;
+  }
+
+  const itemsInGroup = relicGroups[relicGroup];
+
+  // Check if player has all items in the group
+  for (const itemName of itemsInGroup) {
+    if (!has(state, itemName, staticData)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // State module for managing A Hat in Time specific state
@@ -542,13 +582,14 @@ export const helperFunctions = {
   // Core inventory functions
   has,
   count,
-  
+
   // A Hat in Time specific helpers
   has_paintings,
   painting_logic,
   get_difficulty,
   can_clear_required_act,
-  
+  has_relic_combo,
+
   // Movement and abilities
   can_use_hat,
   can_use_hookshot,

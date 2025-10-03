@@ -133,8 +133,8 @@ def make_serializable(obj):
         
         return serialized_dict
     
-    # Handle lists, tuples, and sets
-    if isinstance(obj, (list, tuple, set)):
+    # Handle lists, tuples, sets, and frozensets
+    if isinstance(obj, (list, tuple, set, frozenset)):
         return [make_serializable(i) for i in obj]
     
     # Handle objects with __dict__ attribute (custom classes)

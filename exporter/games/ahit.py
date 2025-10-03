@@ -10,7 +10,7 @@ class AHitGameExportHandler(BaseGameExportHandler):
     """A Hat in Time specific rule expander with game-specific helper functions."""
 
     def get_settings_data(self, world, multiworld, player):
-        """Extract A Hat in Time settings including HatItems option."""
+        """Extract A Hat in Time settings including HatItems and UmbrellaLogic options."""
         # Get base settings
         settings = super().get_settings_data(world, multiworld, player)
 
@@ -23,6 +23,15 @@ class AHitGameExportHandler(BaseGameExportHandler):
         except Exception as e:
             logger.error(f"Error extracting HatItems option: {e}")
             settings['HatItems'] = False
+
+        try:
+            if hasattr(world, 'options') and hasattr(world.options, 'UmbrellaLogic'):
+                settings['UmbrellaLogic'] = bool(world.options.UmbrellaLogic.value)
+            else:
+                settings['UmbrellaLogic'] = False  # Default value
+        except Exception as e:
+            logger.error(f"Error extracting UmbrellaLogic option: {e}")
+            settings['UmbrellaLogic'] = False
 
         return settings
 
@@ -117,8 +126,31 @@ class AHitGameExportHandler(BaseGameExportHandler):
             logger.error(f"Error extracting hat costs: {e}")
             return {}
 
+    def get_relic_groups(self, world):
+        """Extract A Hat in Time relic groups (item_name_groups)."""
+        try:
+            relic_groups = {}
+            if hasattr(world, 'item_name_groups'):
+                # Convert sets/frozensets to lists for JSON serialization
+                for group_name, items in world.item_name_groups.items():
+                    if isinstance(items, (set, frozenset)):
+                        relic_groups[group_name] = list(items)
+                    elif isinstance(items, list):
+                        relic_groups[group_name] = items
+                    else:
+                        # Attempt to convert to list
+                        try:
+                            relic_groups[group_name] = list(items)
+                        except:
+                            logger.warning(f"Could not convert relic group {group_name} to list: {type(items)}")
+                            relic_groups[group_name] = []
+            return relic_groups
+        except Exception as e:
+            logger.error(f"Error extracting relic groups: {e}")
+            return {}
+
     def get_game_info(self, world):
-        """Get A Hat in Time specific game information including chapter costs."""
+        """Get A Hat in Time specific game information including chapter costs and relic groups."""
         try:
             game_info = {
                 "name": "A Hat in Time",
@@ -126,7 +158,8 @@ class AHitGameExportHandler(BaseGameExportHandler):
                     "version": "1.0"
                 },
                 "chapter_costs": self.get_chapter_costs(world),
-                "hat_info": self.get_hat_costs(world)
+                "hat_info": self.get_hat_costs(world),
+                "relic_groups": self.get_relic_groups(world)
             }
             return game_info
         except Exception as e:
@@ -135,7 +168,8 @@ class AHitGameExportHandler(BaseGameExportHandler):
                 "name": "A Hat in Time",
                 "rule_format": {"version": "1.0"},
                 "chapter_costs": {},
-                "hat_info": {}
+                "hat_info": {},
+                "relic_groups": {}
             }
 
     def expand_helper(self, helper_name: str, args: List[Any] = None):

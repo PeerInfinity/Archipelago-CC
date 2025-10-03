@@ -28,9 +28,15 @@ class AquariaGameExportHandler(BaseGameExportHandler):
             'first_secret',
             'energy_temple_idol',
             'energy_temple_after_boss',
-            'frozen_veil',
-            'sunken_city_la',
-            'sunken_city_r_crates'
+            'energy_temple_4',
+            'frozen_feil',  # Note: typo in Python source (feil instead of veil)
+            'sunken_city_l_crates',  # Note: renamed to avoid duplicate with sunken_city_l
+            'sunken_city_r_crates',
+            # These 4 regions were previously added via Python code changes, but we're reverting those
+            'home_water_behind_rocks',
+            'openwater_tr_urns',
+            'mithalas_city_urns',
+            'mithalas_castle_urns'
         ]
         
         regions_added = []
@@ -38,12 +44,30 @@ class AquariaGameExportHandler(BaseGameExportHandler):
             if hasattr(world.regions, attr_name):
                 region = getattr(world.regions, attr_name)
                 if region and region not in multiworld.regions:
+                    # Special case: sunken_city_l_crates has duplicate name with sunken_city_l
+                    # Rename it to avoid collision
+                    if attr_name == 'sunken_city_l_crates' and region.name == "Sunken City left area":
+                        region.name = "Sunken City left area crates"
+
                     multiworld.regions.append(region)
                     regions_added.append(region.name)
-        
+
+        # Store the names of dynamically added regions for later marking
+        self.dynamically_added_regions = set(regions_added)
+
         if regions_added:
             logger.info(f"Added {len(regions_added)} missing Aquaria regions to multiworld: {', '.join(regions_added)}")
     
+    def get_region_attributes(self, region) -> Dict[str, Any]:
+        """Add game-specific region attributes."""
+        attributes = {}
+
+        # Mark regions that were dynamically added after sphere calculation
+        if hasattr(self, 'dynamically_added_regions') and region.name in self.dynamically_added_regions:
+            attributes['dynamically_added'] = True
+
+        return attributes
+
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
         """Expand Aquaria-specific helper functions."""
         if args is None:

@@ -1183,7 +1183,6 @@ class AquariaRegions:
         self.multiworld.regions.append(self.verse_cave_r)
         self.multiworld.regions.append(self.verse_cave_l)
         self.multiworld.regions.append(self.home_water)
-        self.multiworld.regions.append(self.home_water_behind_rocks)
         self.multiworld.regions.append(self.home_water_nautilus)
         self.multiworld.regions.append(self.home_water_transturtle)
         self.multiworld.regions.append(self.naija_home)
@@ -1202,7 +1201,6 @@ class AquariaRegions:
         self.multiworld.regions.append(self.openwater_tl)
         self.multiworld.regions.append(self.openwater_tr)
         self.multiworld.regions.append(self.openwater_tr_turtle)
-        self.multiworld.regions.append(self.openwater_tr_urns)
         self.multiworld.regions.append(self.openwater_bl)
         self.multiworld.regions.append(self.openwater_br)
         self.multiworld.regions.append(self.skeleton_path)
@@ -1218,11 +1216,9 @@ class AquariaRegions:
         Add every region around Mithalas to the `world`
         """
         self.multiworld.regions.append(self.mithalas_city)
-        self.multiworld.regions.append(self.mithalas_city_urns)
         self.multiworld.regions.append(self.mithalas_city_top_path)
         self.multiworld.regions.append(self.mithalas_city_fishpass)
         self.multiworld.regions.append(self.mithalas_castle)
-        self.multiworld.regions.append(self.mithalas_castle_urns)
         self.multiworld.regions.append(self.mithalas_castle_tube)
         self.multiworld.regions.append(self.mithalas_castle_sc)
         self.multiworld.regions.append(self.cathedral_top_start)

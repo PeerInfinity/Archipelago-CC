@@ -2517,8 +2517,8 @@
                 {
                   "type": "constant",
                   "value": [
-                    "+1 Laser (Unredirected)",
-                    "Desert Laser Redirection"
+                    "Desert Laser Redirection",
+                    "+1 Laser (Unredirected)"
                   ]
                 }
               ]
@@ -5219,8 +5219,8 @@
                   "type": "constant",
                   "value": [
                     "Shapers",
-                    "Colored Squares",
-                    "Black/White Squares"
+                    "Black/White Squares",
+                    "Colored Squares"
                   ]
                 }
               ]
@@ -5267,9 +5267,9 @@
                 {
                   "type": "constant",
                   "value": [
-                    "Colored Squares",
                     "Shapers",
-                    "Black/White Squares"
+                    "Black/White Squares",
+                    "Colored Squares"
                   ]
                 }
               ]
@@ -6571,8 +6571,8 @@
                   "type": "constant",
                   "value": [
                     "Colored Squares",
-                    "Rotated Shapers",
-                    "Black/White Squares"
+                    "Black/White Squares",
+                    "Rotated Shapers"
                   ]
                 }
               ]
@@ -8947,8 +8947,8 @@
                 {
                   "type": "constant",
                   "value": [
-                    "Shapers",
-                    "Negative Shapers"
+                    "Negative Shapers",
+                    "Shapers"
                   ]
                 }
               ]
@@ -9223,8 +9223,8 @@
                 {
                   "type": "constant",
                   "value": [
-                    "Shapers",
-                    "Negative Shapers"
+                    "Negative Shapers",
+                    "Shapers"
                   ]
                 }
               ]
@@ -9281,8 +9281,8 @@
                 {
                   "type": "constant",
                   "value": [
-                    "Shapers",
-                    "Negative Shapers"
+                    "Negative Shapers",
+                    "Shapers"
                   ]
                 }
               ]
@@ -9828,8 +9828,8 @@
                 {
                   "type": "constant",
                   "value": [
-                    "Shapers",
-                    "Negative Shapers"
+                    "Negative Shapers",
+                    "Shapers"
                   ]
                 }
               ]
@@ -9876,9 +9876,9 @@
                 {
                   "type": "constant",
                   "value": [
+                    "Negative Shapers",
                     "Shapers",
-                    "Rotated Shapers",
-                    "Negative Shapers"
+                    "Rotated Shapers"
                   ]
                 }
               ]
@@ -9921,9 +9921,9 @@
                 {
                   "type": "constant",
                   "value": [
+                    "Negative Shapers",
                     "Shapers",
-                    "Rotated Shapers",
-                    "Negative Shapers"
+                    "Rotated Shapers"
                   ]
                 }
               ]
@@ -9964,9 +9964,9 @@
                 {
                   "type": "constant",
                   "value": [
+                    "Negative Shapers",
                     "Shapers",
-                    "Rotated Shapers",
-                    "Negative Shapers"
+                    "Rotated Shapers"
                   ]
                 }
               ]
@@ -10839,8 +10839,8 @@
                   "type": "constant",
                   "value": {
                     "Progressive Stars": 2,
-                    "Black/White Squares": 1,
-                    "Colored Squares": 1
+                    "Colored Squares": 1,
+                    "Black/White Squares": 1
                   }
                 }
               ]
@@ -10888,9 +10888,9 @@
                   "type": "constant",
                   "value": {
                     "Progressive Stars": 2,
-                    "Rotated Shapers": 1,
                     "Shapers": 1,
-                    "Negative Shapers": 1
+                    "Negative Shapers": 1,
+                    "Rotated Shapers": 1
                   }
                 }
               ]
@@ -10911,9 +10911,9 @@
                   "type": "constant",
                   "value": {
                     "Progressive Stars": 2,
-                    "Rotated Shapers": 1,
                     "Shapers": 1,
-                    "Negative Shapers": 1
+                    "Negative Shapers": 1,
+                    "Rotated Shapers": 1
                   }
                 }
               ]
@@ -10949,9 +10949,9 @@
                   "type": "constant",
                   "value": {
                     "Progressive Stars": 2,
-                    "Rotated Shapers": 1,
                     "Shapers": 1,
-                    "Negative Shapers": 1
+                    "Negative Shapers": 1,
+                    "Rotated Shapers": 1
                   }
                 }
               ]
@@ -11726,8 +11726,8 @@
                   "value": [
                     "Black/White Squares",
                     "Progressive Dots",
-                    "Progressive Symmetry",
-                    "Progressive Stars"
+                    "Progressive Stars",
+                    "Progressive Symmetry"
                   ]
                 }
               ]
@@ -11863,8 +11863,8 @@
                   "value": {
                     "Progressive Symmetry": 2,
                     "Progressive Stars": 2,
-                    "Colored Squares": 1,
-                    "Shapers": 1
+                    "Shapers": 1,
+                    "Colored Squares": 1
                   }
                 }
               ]
@@ -11994,8 +11994,8 @@
                   "value": {
                     "Progressive Symmetry": 2,
                     "Progressive Stars": 2,
-                    "Colored Squares": 1,
-                    "Shapers": 1
+                    "Shapers": 1,
+                    "Colored Squares": 1
                   }
                 }
               ]
@@ -12173,10 +12173,10 @@
                   "type": "constant",
                   "value": {
                     "Progressive Stars": 2,
-                    "Colored Squares": 1,
-                    "Rotated Shapers": 1,
-                    "Black/White Squares": 1,
                     "Shapers": 1,
+                    "Colored Squares": 1,
+                    "Black/White Squares": 1,
+                    "Rotated Shapers": 1,
                     "Progressive Dots": 1
                   }
                 }
@@ -12612,8 +12612,8 @@
                 {
                   "type": "constant",
                   "value": [
-                    "Colored Squares",
                     "Shapers",
+                    "Colored Squares",
                     "Progressive Dots",
                     "Progressive Stars"
                   ]
@@ -12741,8 +12741,8 @@
                   "type": "constant",
                   "value": {
                     "Progressive Dots": 2,
-                    "Progressive Symmetry": 1,
-                    "Progressive Stars": 1
+                    "Progressive Stars": 1,
+                    "Progressive Symmetry": 1
                   }
                 }
               ]
@@ -12771,8 +12771,8 @@
                     "Shapers",
                     "Black/White Squares",
                     "Progressive Dots",
-                    "Progressive Symmetry",
-                    "Progressive Stars"
+                    "Progressive Stars",
+                    "Progressive Symmetry"
                   ]
                 }
               ]

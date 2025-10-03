@@ -1,28 +1,28 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-10-03 09:20:25
+**Generated:** 2025-10-03 13:11:48
 
-**Source Data Created:** 2025-10-02T21:56:40.007216
+**Source Data Created:** 2025-10-03T10:25:29.544295
 
-**Source Data Last Updated:** 2025-10-03T09:20:25.908647
+**Source Data Last Updated:** 2025-10-03T13:11:48.814391
 
 **Script Version:** 1.0.0
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 22 (27.8%)
-- **Failed:** 57 (72.2%)
+- **Passed:** 24 (30.4%)
+- **Failed:** 55 (69.6%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|
-| A Hat in Time | ❌ Failed | 0 | 1.6 | 5.1 | 🟡 31.4% | ✅ | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | 1.5 | 1.5 | 🟢 Complete | ✅ | ⚫ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
-| Aquaria | ❌ Failed | 0 | 1.1 | 5.1 | 🟡 21.6% | ✅ | ⚫ |
+| Aquaria | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | 0 | 3.2 | 3.2 | 🟢 Complete | ✅ | ✅ |
 | Blasphemous | ❌ Failed | 0 | 0.1 | 5.1 | 🟠 2.0% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed | 0 | 0 | 9.1 | 🔴 0.0% | ✅ | ⚫ |
@@ -66,7 +66,7 @@
 | Overcooked! 2 | ❌ Failed | 0 | 0 | 17.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Paint | ❌ Failed | 130 | 0.1 | 12.1 | 🟠 0.8% | ⚫ | ⚫ |
 | Pokemon Emerald | ❌ Failed | 0 | 4.1 | 15.1 | 🟡 27.2% | ⚫ | ⚫ |
-| Pokemon Red and Blue | ❌ Failed | 646 | 1.3 | 10.1 | 🟡 12.9% | ⚫ | ⚫ |
+| Pokemon Red and Blue | ❌ Failed | 646 | 1.2 | 10.1 | 🟡 11.9% | ⚫ | ⚫ |
 | Raft | ❌ Failed | 0 | 0 | 10.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Risk of Rain 2 | ❌ Failed | 0 | 1.1 | 8.1 | 🟡 13.6% | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | 0 | 0 | 14.1 | 🔴 0.0% | ⚫ | ⚫ |

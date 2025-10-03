@@ -10,6 +10,7 @@ import { alttpStateModule } from './alttp/alttpLogic.js';
 import * as genericLogic from './generic/genericLogic.js';
 import * as ahitLogic from './ahit/ahitLogic.js';
 import { ahitStateModule } from './ahit/ahitLogic.js';
+import * as aquariaLogic from './aquaria/aquariaLogic.js';
 import * as archipidleLogic from './archipidle/archipidleLogic.js';
 import { archipidleStateModule } from './archipidle/archipidleLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
@@ -44,6 +45,12 @@ const GAME_REGISTRY = {
     helperFunctions: ahitLogic.helperFunctions,
     worldClasses: ['HatInTimeWorld'],
     aliases: ['A Hat in Time', 'AHIT']
+  },
+  'Aquaria': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: aquariaLogic.helperFunctions,
+    worldClasses: ['AquariaWorld'],
+    aliases: ['Aquaria']
   },
   'ArchipIDLE': {
     logicModule: archipidleLogic.archipidleStateModule,

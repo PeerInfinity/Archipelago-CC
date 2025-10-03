@@ -214,8 +214,207 @@ export const helperFunctions = {
     return this.has(state, prayerName, staticData);
   },
 
-  // Rosary bead helpers  
+  // Rosary bead helpers
   has_bead(state, beadName, staticData) {
     return this.has(state, beadName, staticData);
+  },
+
+  /**
+   * Count available flasks (requires reaching specific regions)
+   */
+  flasks(state, staticData) {
+    const doors = [
+      "D01Z05S05[SW]",
+      "D02Z02S04[W]",
+      "D03Z02S08[W]",
+      "D03Z03S04[SW]",
+      "D04Z02S13[W]",
+      "D05Z01S08[NW]",
+      "D20Z01S07[NE]"
+    ];
+
+    // Check if any flask region is reachable
+    const hasFlaskRegion = doors.some(door =>
+      state?.regions?.includes(door) || false
+    );
+
+    return hasFlaskRegion ? (state?.inventory?.["Empty Bile Vessel"] || 0) : 0;
+  },
+
+  /**
+   * Count quicksilver (requires reaching D01Z05S01[W])
+   */
+  quicksilver(state, staticData) {
+    const canReach = state?.regions?.includes("D01Z05S01[W]") || false;
+    return canReach ? (state?.inventory?.["Quicksilver"] || 0) : 0;
+  },
+
+  /**
+   * Check if player has boss-beating strength
+   * Based on life, sword, fervour, flasks, and quicksilver upgrades
+   *
+   * Helper function signature: (state, worldOrBossName, bossNameOrStaticData, staticData)
+   * - When called with 1 arg from rules: (state, 'world', "warden", staticData)
+   * - worldOrBossName will be 'world' (unused)
+   * - bossNameOrStaticData will be the actual boss name
+   */
+  has_boss_strength(state, worldOrBossName, bossNameOrStaticData, staticData) {
+    // The boss name is in the third parameter when called from the rule engine
+    const bossName = bossNameOrStaticData;
+
+    if (!bossName) {
+      return false; // No boss specified
+    }
+
+    const life = state?.inventory?.["Life Upgrade"] || 0;
+    const sword = state?.inventory?.["Mea Culpa Upgrade"] || 0;
+    const fervour = state?.inventory?.["Fervour Upgrade"] || 0;
+    const flasks = this.flasks(state, staticData);
+    const quicksilver = this.quicksilver(state, staticData);
+
+    // Calculate player strength (normalized 0-1 scale)
+    const playerStrength = (
+      Math.min(6, life) * 0.25 / 6 +
+      Math.min(7, sword) * 0.25 / 7 +
+      Math.min(6, fervour) * 0.20 / 6 +
+      Math.min(8, flasks) * 0.15 / 8 +
+      Math.min(5, quicksilver) * 0.15 / 5
+    );
+
+    // Boss strength thresholds
+    const bosses = {
+      "warden": -0.10,
+      "ten-piedad": 0.05,
+      "charred-visage": 0.20,
+      "tres-angustias": 0.15,
+      "esdras": 0.25,
+      "melquiades": 0.25,
+      "exposito": 0.30,
+      "quirce": 0.35,
+      "crisanta": 0.50,
+      "isidora": 0.70,
+      "sierpes": 0.70,
+      "amanecida": 0.60,
+      "laudes": 0.60,
+      "perpetua": -0.05,
+      "legionary": 0.20
+    };
+
+    const bossStrength = bosses[bossName];
+    if (bossStrength === undefined) {
+      return false; // Unknown boss
+    }
+
+    // Default difficulty adjustment (assume normal difficulty = 1)
+    // Without difficulty setting, use normal: bossStrength + 0 (no adjustment)
+    const difficulty = staticData?.settings?.[state.player]?.difficulty ?? 1;
+    const adjustment = difficulty >= 2 ? -0.10 : (difficulty >= 1 ? 0 : 0.10);
+
+    return playerStrength >= (bossStrength + adjustment);
+  },
+
+  /**
+   * Count Amanecida rooms defeated
+   */
+  amanecida_rooms(state, staticData) {
+    let total = 0;
+    if (this.can_beat_graveyard_boss(state, staticData)) total++;
+    if (this.can_beat_jondo_boss(state, staticData)) total++;
+    if (this.can_beat_patio_boss(state, staticData)) total++;
+    if (this.can_beat_wall_boss(state, staticData)) total++;
+    return total;
+  },
+
+  /**
+   * Count chalice rooms accessible
+   */
+  chalice_rooms(state, staticData) {
+    const doorGroups = [
+      ["D03Z01S02[E]", "D01Z05S02[W]", "D20Z01S03[N]"],
+      ["D05Z01S11[SE]", "D05Z02S02[NW]"],
+      ["D09Z01S09[E]", "D09Z01S10[W]", "D09Z01S08[SE]", "D09Z01S02[SW]"]
+    ];
+
+    let total = 0;
+    for (const subDoors of doorGroups) {
+      for (const door of subDoors) {
+        if (state?.regions?.includes(door)) {
+          total++;
+          break; // Only count one door per group
+        }
+      }
+    }
+    return total;
+  },
+
+  /**
+   * Boss defeat helpers - delegate to has_boss_strength
+   */
+  can_beat_brotherhood_boss(state, staticData) {
+    return this.has_boss_strength(state, "warden", staticData);
+  },
+
+  can_beat_mercy_boss(state, staticData) {
+    return this.has_boss_strength(state, "ten-piedad", staticData);
+  },
+
+  can_beat_convent_boss(state, staticData) {
+    return this.has_boss_strength(state, "charred-visage", staticData);
+  },
+
+  can_beat_grievance_boss(state, staticData) {
+    return this.has_boss_strength(state, "tres-angustias", staticData);
+  },
+
+  can_beat_bridge_boss(state, staticData) {
+    return this.has_boss_strength(state, "esdras", staticData);
+  },
+
+  can_beat_mothers_boss(state, staticData) {
+    return this.has_boss_strength(state, "melquiades", staticData);
+  },
+
+  can_beat_canvases_boss(state, staticData) {
+    return this.has_boss_strength(state, "exposito", staticData);
+  },
+
+  can_beat_prison_boss(state, staticData) {
+    return this.has_boss_strength(state, "quirce", staticData);
+  },
+
+  can_beat_rooftops_boss(state, staticData) {
+    return this.has_boss_strength(state, "crisanta", staticData);
+  },
+
+  can_beat_ossuary_boss(state, staticData) {
+    return this.has_boss_strength(state, "isidora", staticData);
+  },
+
+  can_beat_mourning_boss(state, staticData) {
+    return this.has_boss_strength(state, "sierpes", staticData);
+  },
+
+  can_beat_graveyard_boss(state, staticData) {
+    return this.has_boss_strength(state, "amanecida", staticData);
+  },
+
+  can_beat_jondo_boss(state, staticData) {
+    return this.has_boss_strength(state, "amanecida", staticData);
+  },
+
+  can_beat_patio_boss(state, staticData) {
+    return this.has_boss_strength(state, "amanecida", staticData);
+  },
+
+  can_beat_wall_boss(state, staticData) {
+    return this.has_boss_strength(state, "amanecida", staticData);
+  },
+
+  can_beat_hall_boss(state, staticData) {
+    return this.has_boss_strength(state, "laudes", staticData);
+  },
+
+  canBeatBrotherhoodBoss(state, staticData) {
+    return this.can_beat_brotherhood_boss(state, staticData);
   },
 };

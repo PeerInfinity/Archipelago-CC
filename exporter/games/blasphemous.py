@@ -224,7 +224,7 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         """Postprocess rules to handle Blasphemous-specific runtime lambda issues."""
         if not rule:
             return rule
-            
+
         # Handle all_of rules with unresolved iterators
         if rule.get('type') == 'all_of' and rule.get('iterator_info'):
             iterator_info = rule.get('iterator_info', {})
@@ -232,18 +232,62 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
                 # This is a runtime-generated lambda that we can't fully reconstruct
                 # Return a placeholder that the frontend can handle
                 return {'type': 'constant', 'value': True}
-        
-        # Handle any_of rules with unresolved iterators  
+
+        # Handle any_of rules with unresolved iterators
         if rule.get('type') == 'any_of' and rule.get('iterator_info'):
             iterator_info = rule.get('iterator_info', {})
             if iterator_info.get('iterator', {}).get('name') == 'clauses':
                 # This is also a runtime-generated lambda
                 return {'type': 'constant', 'value': True}
-                
+
         # Handle helper calls that reference self
         if rule.get('type') == 'helper' and 'self' in rule.get('name', ''):
             return self._expand_self_helper(rule)
-            
+
+        # Handle function_call nodes that call methods on self
+        if rule.get('type') == 'function_call':
+            func = rule.get('function', {})
+            if func.get('type') == 'attribute':
+                obj = func.get('object', {})
+                if obj.get('type') == 'name' and obj.get('name') == 'self':
+                    # This is a call to self.method_name(args...)
+                    method_name = func.get('attr')
+                    # Preserve arguments, filtering out the 'state' parameter (first arg)
+                    args = rule.get('args', [])
+                    # The first argument is typically 'state', skip it
+                    # Keep all subsequent arguments (like boss names, etc.)
+                    filtered_args = []
+                    for i, arg in enumerate(args):
+                        # Skip first arg if it's a name reference to 'state'
+                        if i == 0 and arg.get('type') == 'name' and arg.get('name') == 'state':
+                            continue
+                        filtered_args.append(arg)
+
+                    result = {'type': 'helper', 'name': method_name}
+                    if filtered_args:
+                        result['args'] = filtered_args
+                    return result
+
+        # Recursively process nested rules
+        if rule.get('type') in ['and', 'or']:
+            conditions = rule.get('conditions', [])
+            rule['conditions'] = [self.postprocess_rule(cond) for cond in conditions]
+        elif rule.get('type') == 'not':
+            if 'condition' in rule:
+                rule['condition'] = self.postprocess_rule(rule['condition'])
+            if 'operand' in rule:
+                rule['operand'] = self.postprocess_rule(rule['operand'])
+        elif rule.get('type') == 'compare':
+            # Recursively process left and right sides of comparisons
+            if 'left' in rule:
+                rule['left'] = self.postprocess_rule(rule['left'])
+            if 'right' in rule:
+                rule['right'] = self.postprocess_rule(rule['right'])
+        elif rule.get('type') == 'generator_expression':
+            # Process the element of generator expressions
+            if 'element' in rule:
+                rule['element'] = self.postprocess_rule(rule['element'])
+
         return rule
     
     def _reconstruct_runtime_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
