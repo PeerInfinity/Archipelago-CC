@@ -110,7 +110,7 @@ export function can_light_torches(snapshot, staticData, itemName) {
 export function can_melt_things(snapshot, staticData, itemName) {
   return has(snapshot, staticData, 'Fire Rod') || 
          (has(snapshot, staticData, 'Bombos') && 
-          (has_sword(state, world, itemName, staticData) || snapshot.settings?.swordless));
+          (has_sword(snapshot, staticData, itemName) || snapshot.settings?.swordless));
 }
 
 export function can_fly(snapshot, staticData, itemName) {
@@ -146,26 +146,26 @@ export function can_kill_most_things(snapshot, staticData, itemName) {
   
   if (enemyShuffle) {
     // Enemizer mode - need everything
-    return has_melee_weapon(state, world, itemName, staticData) &&
+    return has_melee_weapon(snapshot, staticData, itemName) &&
            has(snapshot, staticData, 'Cane of Somaria') &&
            has(snapshot, staticData, 'Cane of Byrna') &&
-           can_extend_magic(state, world, itemName, staticData) &&
-           can_shoot_arrows(state, world, '0', staticData) &&
+           can_extend_magic(snapshot, staticData, itemName) &&
+           can_shoot_arrows(snapshot, staticData, '0', staticData) &&
            has(snapshot, staticData, 'Fire Rod') &&
-           can_use_bombs(state, world, (enemies * 4).toString(), staticData);
+           can_use_bombs(snapshot, staticData, (enemies * 4).toString(), staticData);
   } else {
     // Normal enemy logic - any of these work
-    if (has_melee_weapon(state, world, itemName, staticData)) return true;
+    if (has_melee_weapon(snapshot, staticData, itemName)) return true;
     if (has(snapshot, staticData, 'Cane of Somaria')) return true;
     if (has(snapshot, staticData, 'Cane of Byrna') && 
-        (enemies < 6 || can_extend_magic(state, world, itemName, staticData))) return true;
-    if (can_shoot_arrows(state, world, '0', staticData)) return true;
+        (enemies < 6 || can_extend_magic(snapshot, staticData, itemName))) return true;
+    if (can_shoot_arrows(snapshot, staticData, '0', staticData)) return true;
     if (has(snapshot, staticData, 'Fire Rod')) return true;
     
     // Bombs work on easy/default enemy health
     const enemyHealth = snapshot.settings?.enemy_health || 'default';
     if ((enemyHealth === 'easy' || enemyHealth === 'default') &&
-        can_use_bombs(state, world, (enemies * 4).toString(), staticData)) {
+        can_use_bombs(snapshot, staticData, (enemies * 4).toString(), staticData)) {
       return true;
     }
     
@@ -183,19 +183,19 @@ export function can_defeat_ganon(snapshot, staticData, itemName) {
     return true;
   }
   
-  return can_shoot_silver_arrows(state, world, itemName, staticData) && 
+  return can_shoot_silver_arrows(snapshot, staticData, itemName) && 
          (has(snapshot, staticData, 'Lamp') || 
-          (has(snapshot, staticData, 'Fire Rod') && can_extend_magic(state, world, itemName, staticData))) &&
-         (has_beam_sword(state, world, itemName, staticData) || 
+          (has(snapshot, staticData, 'Fire Rod') && can_extend_magic(snapshot, staticData, itemName))) &&
+         (has_beam_sword(snapshot, staticData, itemName) || 
           (has(snapshot, staticData, 'Hammer') && 
            (snapshot.settings?.game_mode === 'swordless' || snapshot.settings?.swordless)));
 }
 
-export function can_defeat_boss(state, world, locationName, bossType, staticData) {
+export function can_defeat_boss(snapshot, staticData, locationName, bossType) {
   // For Desert Palace and most other bosses, just need to be able to kill things
   // The specific requirements are already checked in the location's access rules
   // This is a simplified version - the actual boss defeat is handled by the dungeon's rules
-  return can_kill_most_things(state, world, 1, staticData);
+  return can_kill_most_things(snapshot, staticData, "1");
 }
 
 export function can_take_damage(snapshot, staticData, itemName) {
@@ -238,13 +238,13 @@ export function can_use_bombs(snapshot, staticData, itemName) {
 }
 
 export function can_bomb_or_bonk(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Pegasus Boots') || can_use_bombs(state, world, '1', staticData);
+  return has(snapshot, staticData, 'Pegasus Boots') || can_use_bombs(snapshot, staticData, '1', staticData);
 }
 
 export function can_activate_crystal_switch(snapshot, staticData, itemName) {
-  return has_melee_weapon(state, world, itemName, staticData) ||
-         can_use_bombs(state, world, '1', staticData) ||
-         can_shoot_arrows(state, world, '0', staticData) ||
+  return has_melee_weapon(snapshot, staticData, itemName) ||
+         can_use_bombs(snapshot, staticData, '1', staticData) ||
+         can_shoot_arrows(snapshot, staticData, '0', staticData) ||
          has(snapshot, staticData, 'Hookshot') ||
          has(snapshot, staticData, 'Cane of Somaria') ||
          has(snapshot, staticData, 'Cane of Byrna') ||
@@ -313,12 +313,12 @@ export function can_get_good_bee(snapshot, staticData, itemName) {
   return (has(snapshot, staticData, 'Bug Catching Net') && 
           bottleCount > 0 && 
           (has(snapshot, staticData, 'Pegasus Boots') || 
-           (has_sword(state, world, itemName, staticData) && has(snapshot, staticData, 'Quake'))));
+           (has_sword(snapshot, staticData, itemName) && has(snapshot, staticData, 'Quake'))));
 }
 
 export function can_retrieve_tablet(snapshot, staticData, itemName) {
   return has(snapshot, staticData, 'Book of Mudora') && 
-         (has_beam_sword(state, world, itemName, staticData) ||
+         (has_beam_sword(snapshot, staticData, itemName) ||
           (snapshot.settings?.swordless && has(snapshot, staticData, 'Hammer')));
 }
 
@@ -348,7 +348,7 @@ export function has_hearts(snapshot, staticData, itemName) {
 }
 
 export function can_heart_skip(snapshot, staticData, itemName) {
-  return is_invincible(state, world, itemName, staticData);
+  return is_invincible(snapshot, staticData, itemName);
 }
 
 export function has_fire_source(snapshot, staticData, itemName) {
@@ -385,7 +385,7 @@ export function has_beam_sword(snapshot, staticData, itemName) {
 }
 
 export function has_melee_weapon(snapshot, staticData, itemName) {
-  return has_sword(state, world, itemName, staticData) || 
+  return has_sword(snapshot, staticData, itemName) || 
          has(snapshot, staticData, 'Hammer');
 }
 
@@ -417,14 +417,14 @@ export function bottle_count(snapshot, staticData, itemName) {
 
 export function can_bomb_clip(snapshot, staticData, itemName) {
   // Need bombs, boots, and to not be bunny
-  return can_use_bombs(state, world, '1', staticData) &&
+  return can_use_bombs(snapshot, staticData, '1', staticData) &&
          has(snapshot, staticData, 'Pegasus Boots') &&
-         is_not_bunny(state, world, itemName, staticData);
+         is_not_bunny(snapshot, staticData, itemName);
 }
 
 export function can_spin_speed(snapshot, staticData, itemName) {
   return has(snapshot, staticData, 'Pegasus Boots') && 
-         has_sword(state, world, itemName, staticData) && 
+         has_sword(snapshot, staticData, itemName) && 
          snapshot.settings?.mode === 'minor_glitches';
 }
 
@@ -477,10 +477,10 @@ export function can_shoot_arrows(snapshot, staticData, itemName) {
   
   if (retroBow) {
     // In retro bow mode, need to buy arrows from shops
-    return can_buy(state, 'Single Arrow', staticData);
+    return can_buy(snapshot, staticData, 'Single Arrow');
   } else {
     // Normal mode - need arrow capacity
-    return can_hold_arrows(state, world, count_param.toString(), staticData);
+    return can_hold_arrows(snapshot, staticData, count_param.toString());
   }
 }
 
@@ -567,7 +567,7 @@ export function tr_big_key_chest_keys_needed(snapshot, staticData, itemName) {
   // This function handles the key requirements for the TR Big Chest
   // Based on the Python function in worlds/alttp/Rules.py
 
-  const item = location_item_name(state, world, 'Turtle Rock - Big Key Chest', staticData);
+  const item = location_item_name(snapshot, staticData, 'Turtle Rock - Big Key Chest', staticData);
 
   if (!item) {
     // If we can't determine the item, use the default (6 keys)
@@ -618,7 +618,7 @@ export function item_name_in_location_names(snapshot, staticData, itemName) {
     const [locationName, locationPlayer] = locationPair;
     if (typeof locationName !== 'string') continue;
     
-    const itemAtLocation = location_item_name(state, {}, locationName, staticData);
+    const itemAtLocation = location_item_name(snapshot, staticData, locationName);
     if (itemAtLocation && Array.isArray(itemAtLocation)) {
       const [foundItem, foundPlayer] = itemAtLocation;
       // Check if this is the item we're looking for and it belongs to the right player
@@ -638,7 +638,7 @@ export function has_crystals_for_ganon(snapshot, staticData, itemName) {
   const requiredCrystals = snapshot.settings?.crystals_needed_for_ganon || 7;
   
   // Use the simpler has_crystals function that counts Crystal 1-7 directly
-  return has_crystals(state, world, requiredCrystals.toString(), staticData);
+  return has_crystals(snapshot, staticData, requiredCrystals.toString(), staticData);
 }
 
 export function GanonDefeatRule(snapshot, staticData, itemName) {
@@ -648,13 +648,13 @@ export function GanonDefeatRule(snapshot, staticData, itemName) {
   if (isSwordless) {
     // Swordless mode requirements
     return has(snapshot, staticData, 'Hammer') &&
-           has_fire_source(state, world, itemName, staticData) &&
+           has_fire_source(snapshot, staticData, itemName) &&
            has(snapshot, staticData, 'Silver Bow') &&
-           can_shoot_arrows(state, world, '0', staticData);
+           can_shoot_arrows(snapshot, staticData, '0', staticData);
   } else {
     // Normal mode requirements
-    const hasBeamSword = has_beam_sword(state, world, itemName, staticData);
-    const hasFireSource = has_fire_source(state, world, itemName, staticData);
+    const hasBeamSword = has_beam_sword(snapshot, staticData, itemName);
+    const hasFireSource = has_fire_source(snapshot, staticData, itemName);
     
     if (!hasBeamSword || !hasFireSource) {
       return false;
@@ -670,13 +670,13 @@ export function GanonDefeatRule(snapshot, staticData, itemName) {
       // With glitches, more options available
       return has(snapshot, staticData, 'Tempered Sword') ||
              has(snapshot, staticData, 'Golden Sword') ||
-             (has(snapshot, staticData, 'Silver Bow') && can_shoot_arrows(state, world, '0', staticData)) ||
+             (has(snapshot, staticData, 'Silver Bow') && can_shoot_arrows(snapshot, staticData, '0', staticData)) ||
              has(snapshot, staticData, 'Lamp') ||
-             can_extend_magic(state, world, '12', staticData);
+             can_extend_magic(snapshot, staticData, '12', staticData);
     } else {
       // No glitches (default) - need silver arrows
       return has(snapshot, staticData, 'Silver Bow') &&
-             can_shoot_arrows(state, world, '0', staticData);
+             can_shoot_arrows(snapshot, staticData, '0', staticData);
     }
   }
 }
@@ -686,7 +686,7 @@ export function can_get_glitched_speed_dw(snapshot, staticData, itemName) {
     return false;
   }
   
-  if (!has(snapshot, staticData, 'Hookshot') && !has_sword(state, world, itemName, staticData)) {
+  if (!has(snapshot, staticData, 'Hookshot') && !has_sword(snapshot, staticData, itemName)) {
     return false;
   }
   
@@ -730,10 +730,10 @@ export function can_extend_magic_complex(snapshot, staticData, itemName) {
     basemagic = 16;
   }
   
-  if (can_buy_unlimited(state, world, 'Green Potion', staticData) ||
-      can_buy_unlimited(state, world, 'Blue Potion', staticData)) {
+  if (can_buy_unlimited(snapshot, staticData, 'Green Potion', staticData) ||
+      can_buy_unlimited(snapshot, staticData, 'Blue Potion', staticData)) {
     
-    const bottles = bottle_count(snapshot, staticData, world, itemName, staticData);
+    const bottles = bottle_count(snapshot, staticData, itemName);
     const functionality = snapshot.settings?.item_functionality || 'normal';
     
     if (functionality === 'hard' && !fullrefill) {
@@ -800,7 +800,7 @@ export function countGroup(snapshot, staticData, itemName) {
 export function has_crystals_count(snapshot, staticData, itemName) {
   // Alternative crystal counting that uses group data
   const requiredCount = parseInt(itemName, 10) || 7;
-  const crystalCount = countGroup(state, world, 'Crystals', staticData);
+  const crystalCount = countGroup(snapshot, staticData, 'Crystals', staticData);
   return crystalCount >= requiredCount;
 }
 
@@ -816,8 +816,8 @@ export function can_get_bottle(snapshot, staticData, itemName) {
   // Check if player can obtain any bottle
   // This is a simplified version - full implementation would check specific bottle locations
   return count(snapshot, staticData, 'Bottle') > 0 ||
-         can_reach_region(state, world, 'Bottle Merchant', staticData) ||
-         can_reach_region(state, world, 'Magic Shop', staticData);
+         can_reach_region(snapshot, staticData, 'Bottle Merchant', staticData) ||
+         can_reach_region(snapshot, staticData, 'Magic Shop', staticData);
 }
 
 export function zip(snapshot, staticData, itemName) {
@@ -868,7 +868,7 @@ export function len(snapshot, staticData, itemName) {
 
 export function can_bomb_things(snapshot, staticData, itemName) {
   // Alias for can_use_bombs for rule compatibility
-  return can_use_bombs(state, world, itemName, staticData);
+  return can_use_bombs(snapshot, staticData, itemName, staticData);
 }
 
 export function can_pass_curtains(snapshot, staticData, itemName) {
@@ -878,13 +878,13 @@ export function can_pass_curtains(snapshot, staticData, itemName) {
 
 export function can_see_in_dark(snapshot, staticData, itemName) {
   // Alias for can_pass_curtains
-  return can_pass_curtains(state, world, itemName, staticData);
+  return can_pass_curtains(snapshot, staticData, itemName);
 }
 
 export function can_pass_rocks(snapshot, staticData, itemName) {
   // Rocks can be lifted or bombed
-  return can_lift_rocks(state, world, itemName, staticData) || 
-         can_use_bombs(state, world, '1', staticData);
+  return can_lift_rocks(snapshot, staticData, itemName) || 
+         can_use_bombs(snapshot, staticData, '1', staticData);
 }
 
 export function can_swim(snapshot, staticData, itemName) {
@@ -916,7 +916,7 @@ export function can_reach_dark_world(snapshot, staticData, itemName) {
     // Need access to dark world portals or magic mirror
     return has(snapshot, staticData, 'Moon Pearl') &&
            (has(snapshot, staticData, 'Magic Mirror') || 
-            can_reach_region(state, world, 'Dark World', staticData));
+            can_reach_region(snapshot, staticData, 'Dark World', staticData));
   }
 }
 
