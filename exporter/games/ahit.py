@@ -131,16 +131,16 @@ class AHitGameExportHandler(BaseGameExportHandler):
         try:
             relic_groups = {}
             if hasattr(world, 'item_name_groups'):
-                # Convert sets/frozensets to lists for JSON serialization
+                # Convert sets/frozensets to sorted lists for JSON serialization
                 for group_name, items in world.item_name_groups.items():
                     if isinstance(items, (set, frozenset)):
-                        relic_groups[group_name] = list(items)
+                        relic_groups[group_name] = sorted(list(items))
                     elif isinstance(items, list):
-                        relic_groups[group_name] = items
+                        relic_groups[group_name] = sorted(items)
                     else:
                         # Attempt to convert to list
                         try:
-                            relic_groups[group_name] = list(items)
+                            relic_groups[group_name] = sorted(list(items))
                         except:
                             logger.warning(f"Could not convert relic group {group_name} to list: {type(items)}")
                             relic_groups[group_name] = []

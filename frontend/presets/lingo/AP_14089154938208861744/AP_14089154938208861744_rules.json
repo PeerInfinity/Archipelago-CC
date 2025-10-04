@@ -543,7 +543,20 @@
             "name": "Starting Room - HI",
             "id": 444400,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Starting Room - HI",
+                    444400,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -558,7 +571,20 @@
             "name": "Starting Room - HIDDEN",
             "id": 444401,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Starting Room - HIDDEN",
+                    444401,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -774,7 +800,20 @@
             "name": "Hidden Room - DEAD END",
             "id": 444406,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hidden Room - DEAD END",
+                    444406,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -789,7 +828,20 @@
             "name": "Hidden Room - OPEN",
             "id": 444407,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hidden Room - OPEN",
+                    444407,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -888,7 +940,20 @@
             "name": "The Seeker - Achievement",
             "id": 444409,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Seeker - Achievement",
+                    444409,
+                    "rooms={'Hidden Room'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1006,7 +1071,20 @@
             "name": "Second Room - Good Luck",
             "id": 445203,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Second Room - Good Luck",
+                    445203,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1456,7 +1534,20 @@
             "name": "Hub Room - ORDER",
             "id": 444432,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - ORDER",
+                    444432,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1471,7 +1562,20 @@
             "name": "Hub Room - SLAUGHTER",
             "id": 444433,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - SLAUGHTER",
+                    444433,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1486,7 +1590,20 @@
             "name": "Hub Room - TRACE",
             "id": 444436,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - TRACE",
+                    444436,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1501,7 +1618,20 @@
             "name": "Hub Room - RAT",
             "id": 444437,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - RAT",
+                    444437,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1516,7 +1646,20 @@
             "name": "Hub Room - OPEN",
             "id": 444438,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - OPEN",
+                    444438,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1531,7 +1674,20 @@
             "name": "Hub Room - LOST",
             "id": 444440,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - LOST",
+                    444440,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1722,7 +1878,20 @@
             "name": "Pilgrim Antechamber - PILGRIM",
             "id": 444447,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Pilgrim Antechamber - PILGRIM",
+                    444447,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1737,7 +1906,20 @@
             "name": "Pilgrim Room - HOT CRUST",
             "id": 445205,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Pilgrim Room - HOT CRUST",
+                    445205,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -1811,7 +1993,20 @@
             "name": "Pilgrim Room - THIS",
             "id": 444449,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Pilgrim Room - THIS",
+                    444449,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2236,7 +2431,20 @@
             "name": "Crossroads - DECAY",
             "id": 444462,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - DECAY",
+                    444462,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2251,7 +2459,20 @@
             "name": "Crossroads - NOPE",
             "id": 444463,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - NOPE",
+                    444463,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2266,7 +2487,20 @@
             "name": "Crossroads - WE ROT",
             "id": 444465,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - WE ROT",
+                    444465,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2281,7 +2515,20 @@
             "name": "Crossroads - BEND HI",
             "id": 444469,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - BEND HI",
+                    444469,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2296,7 +2543,20 @@
             "name": "Crossroads - THE EYES",
             "id": 444470,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - THE EYES",
+                    444470,
+                    "rooms={'Crossroads'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2311,7 +2571,20 @@
             "name": "Crossroads - TURN/RUNT",
             "id": 445206,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - TURN/RUNT",
+                    445206,
+                    "rooms={'Orange Tower Fourth Floor'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2326,7 +2599,20 @@
             "name": "Crossroads - WORDS, SWORD",
             "id": 445207,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - WORDS, SWORD",
+                    445207,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2400,7 +2686,20 @@
             "name": "Crossroads - LOST Pair",
             "id": 445208,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - LOST Pair",
+                    445208,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2499,7 +2798,20 @@
             "name": "Amen Name Area - AMEN, NAME",
             "id": 445209,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Amen Name Area - AMEN, NAME",
+                    445209,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2761,7 +3073,20 @@
             "name": "The Tenacious - Achievement",
             "id": 444491,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Tenacious - Achievement",
+                    444491,
+                    "rooms={'Hub Room', 'Outside The Agreeable', 'Crossroads', 'Dread Hallway'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2776,7 +3101,20 @@
             "name": "The Tenacious - Palindromes",
             "id": 445210,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Tenacious - Palindromes",
+                    445210,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2791,7 +3129,20 @@
             "name": "The Tenacious - White Palindromes",
             "id": 445211,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Tenacious - White Palindromes",
+                    445211,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2887,7 +3238,20 @@
             "name": "Symmetry Room - NEAR, FAR",
             "id": 445204,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Symmetry Room - NEAR, FAR",
+                    445204,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -2986,7 +3350,20 @@
             "name": "Symmetry Room - WARTS, STRAW",
             "id": 445212,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Symmetry Room - WARTS, STRAW",
+                    445212,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3085,7 +3462,20 @@
             "name": "Symmetry Room - LEAF, FEEL",
             "id": 445213,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Symmetry Room - LEAF, FEEL",
+                    445213,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3427,7 +3817,20 @@
             "name": "Outside The Agreeable - MASSACRED",
             "id": 444496,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - MASSACRED",
+                    444496,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3442,7 +3845,20 @@
             "name": "Outside The Agreeable - BLACK",
             "id": 444497,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - BLACK",
+                    444497,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3457,7 +3873,20 @@
             "name": "Outside The Agreeable - CLOSE",
             "id": 444498,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - CLOSE",
+                    444498,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3472,7 +3901,20 @@
             "name": "Outside The Agreeable - RIGHT",
             "id": 444501,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - RIGHT",
+                    444501,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3590,7 +4032,20 @@
             "name": "Outside The Agreeable - Lookout Panels",
             "id": 445271,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - Lookout Panels",
+                    445271,
+                    "rooms={'Suits Area', 'Elements Area', 'Orange Tower Fifth Floor', 'Outside The Bold'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3689,7 +4144,20 @@
             "name": "Dread Hallway - DREAD",
             "id": 444516,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Dread Hallway - DREAD",
+                    444516,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3788,7 +4256,20 @@
             "name": "The Agreeable - Achievement",
             "id": 444517,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Agreeable - Achievement",
+                    444517,
+                    "rooms={'Outside The Agreeable'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -3803,7 +4284,20 @@
             "name": "The Agreeable - BYE",
             "id": 444518,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Agreeable - BYE",
+                    444518,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4106,7 +4600,20 @@
             "name": "Hedge Maze - DOWN",
             "id": 444530,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hedge Maze - DOWN",
+                    444530,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4121,7 +4628,20 @@
             "name": "Hedge Maze - Hide and Seek",
             "id": 445215,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hedge Maze - Hide and Seek",
+                    445215,
+                    "rooms={'Outside The Agreeable'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4214,7 +4734,20 @@
             "name": "The Perceptive - Achievement",
             "id": 444546,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Perceptive - Achievement",
+                    444546,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4229,7 +4762,20 @@
             "name": "The Perceptive - GAZE",
             "id": 444547,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Perceptive - GAZE",
+                    444547,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4318,7 +4864,20 @@
             "name": "The Fearless - First Floor Puzzles",
             "id": 445216,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Fearless - First Floor Puzzles",
+                    445216,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4356,7 +4915,20 @@
             "name": "The Fearless - Second Floor Puzzles",
             "id": 445217,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Fearless - Second Floor Puzzles",
+                    445217,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4394,7 +4966,20 @@
             "name": "The Fearless - Achievement",
             "id": 444560,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Fearless - Achievement",
+                    444560,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4537,7 +5122,20 @@
             "name": "The Observant - Achievement",
             "id": 444565,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Observant - Achievement",
+                    444565,
+                    "rooms={'The Observant'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4552,7 +5150,20 @@
             "name": "The Observant - SIX",
             "id": 444569,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Observant - SIX",
+                    444569,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4567,7 +5178,20 @@
             "name": "The Observant - FOUR (1), FOUR (2)",
             "id": 445218,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Observant - FOUR (1), FOUR (2)",
+                    445218,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4718,7 +5342,20 @@
             "name": "The Incomparable - Achievement",
             "id": 444585,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Incomparable - Achievement",
+                    444585,
+                    "rooms={'Eight Room', 'Courtyard', 'Elements Area'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -4733,7 +5370,20 @@
             "name": "Giant Sevens",
             "id": 445219,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Giant Sevens",
+                    445219,
+                    "rooms={'Courtyard', 'Elements Area'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5106,7 +5756,20 @@
             "name": "Orange Tower First Floor - SECRET",
             "id": 444602,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower First Floor - SECRET",
+                    444602,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5121,7 +5784,20 @@
             "name": "Orange Tower First Floor - DADS + ALE",
             "id": 444603,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower First Floor - DADS + ALE",
+                    444603,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5136,7 +5812,20 @@
             "name": "Orange Tower First Floor - Salt Pepper Door",
             "id": 445220,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower First Floor - Salt Pepper Door",
+                    445220,
+                    "rooms={'Directional Gallery'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5551,7 +6240,20 @@
             "name": "Orange Tower Third Floor - DEER + WREN",
             "id": 444606,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Third Floor - DEER + WREN",
+                    444606,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5566,7 +6268,20 @@
             "name": "Color Barriers - RED and YELLOW",
             "id": 445221,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - RED and YELLOW",
+                    445221,
+                    "rooms={'Color Hunt', 'Directional Gallery'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5888,7 +6603,20 @@
             "name": "Orange Tower Fourth Floor - LEARNS + UNSEW",
             "id": 444609,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fourth Floor - LEARNS + UNSEW",
+                    444609,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5903,7 +6631,20 @@
             "name": "Orange Tower Fourth Floor - HOT CRUSTS",
             "id": 444610,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fourth Floor - HOT CRUSTS",
+                    444610,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -5918,7 +6659,20 @@
             "name": "Orange Tower Fourth Floor - IRK HORN",
             "id": 444611,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fourth Floor - IRK HORN",
+                    444611,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -6224,7 +6978,20 @@
             "name": "Orange Tower Fifth Floor - DRAWL + RUNS",
             "id": 444615,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fifth Floor - DRAWL + RUNS",
+                    444615,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -6239,7 +7006,20 @@
             "name": "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
             "id": 445222,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
+                    445222,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -6543,7 +7323,20 @@
             "name": "The End (Solved)",
             "id": null,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The End (Solved)",
+                    null,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": true,
             "item": {
@@ -7917,7 +8710,20 @@
             "name": "Courtyard - FIRST, SECOND, THIRD, FOURTH",
             "id": 445224,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Courtyard - FIRST, SECOND, THIRD, FOURTH",
+                    445224,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8013,7 +8819,20 @@
             "name": "The Colorful - White",
             "id": 445225,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - White",
+                    445225,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8112,7 +8931,20 @@
             "name": "The Colorful - Black",
             "id": 445226,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Black",
+                    445226,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8211,7 +9043,20 @@
             "name": "The Colorful - Red",
             "id": 445227,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Red",
+                    445227,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8310,7 +9155,20 @@
             "name": "The Colorful - Yellow",
             "id": 445228,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Yellow",
+                    445228,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8409,7 +9267,20 @@
             "name": "The Colorful - Blue",
             "id": 445229,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Blue",
+                    445229,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8508,7 +9379,20 @@
             "name": "The Colorful - Purple",
             "id": 445230,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Purple",
+                    445230,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8607,7 +9491,20 @@
             "name": "The Colorful - Orange",
             "id": 445231,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Orange",
+                    445231,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8706,7 +9603,20 @@
             "name": "The Colorful - Green",
             "id": 445232,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Green",
+                    445232,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8805,7 +9715,20 @@
             "name": "The Colorful - Brown",
             "id": 445233,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Brown",
+                    445233,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -8904,7 +9827,20 @@
             "name": "The Colorful - Gray",
             "id": 445234,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Gray",
+                    445234,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9000,7 +9936,20 @@
             "name": "The Colorful - Achievement",
             "id": 444652,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Achievement",
+                    444652,
+                    "rooms={'The Colorful (Gray"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9224,7 +10173,20 @@
             "name": "Welcome Back Area - WELCOME BACK",
             "id": 444653,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Welcome Back Area - WELCOME BACK",
+                    444653,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9239,7 +10201,20 @@
             "name": "Welcome Back Area - CLOCKWISE",
             "id": 444655,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Welcome Back Area - CLOCKWISE",
+                    444655,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9367,7 +10342,20 @@
             "name": "Owl Hallway - STRAYS",
             "id": 444656,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Owl Hallway - STRAYS",
+                    444656,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9382,7 +10370,20 @@
             "name": "Owl Hallway - READS + RUST",
             "id": 444657,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Owl Hallway - READS + RUST",
+                    444657,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9732,7 +10733,20 @@
             "name": "Outside The Initiated - UNCOVER",
             "id": 444664,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Initiated - UNCOVER",
+                    444664,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9747,7 +10761,20 @@
             "name": "Outside The Initiated - OXEN",
             "id": 444665,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Initiated - OXEN",
+                    444665,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9762,7 +10789,20 @@
             "name": "Color Barriers - BLUE and YELLOW",
             "id": 445235,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - BLUE and YELLOW",
+                    445235,
+                    "rooms={'Color Hunt', 'Directional Gallery'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9777,7 +10817,20 @@
             "name": "Color Barriers - RED and BLUE",
             "id": 445236,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - RED and BLUE",
+                    445236,
+                    "rooms={'Orange Tower Third Floor', 'Color Hunt'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9792,7 +10845,20 @@
             "name": "Color Barriers - GREEN, ORANGE and PURPLE",
             "id": 445237,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - GREEN, ORANGE and PURPLE",
+                    445237,
+                    "rooms={'Directional Gallery', 'Orange Tower Third Floor', 'Courtyard', 'Outside The Initiated', 'Outside The Agreeable', 'Color Hunt'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9830,7 +10896,20 @@
             "name": "The Initiated - Achievement",
             "id": 444676,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Initiated - Achievement",
+                    444676,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -9913,7 +10992,20 @@
             "name": "The Optimistic - Achievement",
             "id": 444667,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Optimistic - Achievement",
+                    444667,
+                    "rooms={'Yellow Backside Area', 'The Observant', 'The Bearer', 'Directional Gallery'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10012,7 +11104,20 @@
             "name": "The Traveled - Achievement",
             "id": 444693,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Traveled - Achievement",
+                    444693,
+                    "rooms={'Hub Room'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10027,7 +11132,20 @@
             "name": "The Traveled - HELLO",
             "id": 444698,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Traveled - HELLO",
+                    444698,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10524,7 +11642,20 @@
             "name": "Outside The Bold - UNOPEN",
             "id": 444711,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Bold - UNOPEN",
+                    444711,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10539,7 +11670,20 @@
             "name": "Outside The Bold - BEGIN",
             "id": 444712,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Bold - BEGIN",
+                    444712,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10577,7 +11721,20 @@
             "name": "The Bold - Achievement",
             "id": 444725,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Bold - Achievement",
+                    444725,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10882,7 +12039,20 @@
             "name": "Outside The Undeterred - ART + ART",
             "id": 444743,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - ART + ART",
+                    444743,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10897,7 +12067,20 @@
             "name": "Outside The Undeterred - PEN",
             "id": 444744,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - PEN",
+                    444744,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10912,7 +12095,20 @@
             "name": "Outside The Undeterred - RAINY",
             "id": 444750,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - RAINY",
+                    444750,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10927,7 +12123,20 @@
             "name": "Outside The Undeterred - ZERO",
             "id": 444751,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - ZERO",
+                    444751,
+                    "rooms={'Knight Night Exit', 'Outside The Bold', 'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'Art Gallery', 'Elements Area', 'The Eyes They See', 'The Traveled', 'Directional Gallery', 'Amen Name Area', 'Orange Tower Fifth Floor', 'Outside The Initiated', 'Number Hunt', 'Crossroads', 'Yellow Backside Area', 'Dead End Area', 'Hot Crusts Area', 'Rhyme Room (Cross"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10942,7 +12151,20 @@
             "name": "Outside The Undeterred - ONE",
             "id": 444752,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - ONE",
+                    444752,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10957,7 +12179,20 @@
             "name": "Twos",
             "id": 445238,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Twos",
+                    445238,
+                    "rooms={'Outside The Undeterred'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10972,7 +12207,20 @@
             "name": "Threes",
             "id": 445239,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Threes",
+                    445239,
+                    "rooms={'Outside The Undeterred'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -10987,7 +12235,20 @@
             "name": "Fours",
             "id": 445240,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Fours",
+                    445240,
+                    "rooms={'Hub Room', 'The Traveled', 'Outside The Undeterred', 'Dead End Area'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11025,7 +12286,20 @@
             "name": "The Undeterred - Achievement",
             "id": 444759,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Undeterred - Achievement",
+                    444759,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11184,7 +12458,20 @@
             "name": "Fives",
             "id": 445241,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Fives",
+                    445241,
+                    "rooms={'The Traveled', 'Directional Gallery', 'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'Dead End Area'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11199,7 +12486,20 @@
             "name": "Sixes",
             "id": 445242,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Sixes",
+                    445242,
+                    "rooms={'The Traveled', 'Directional Gallery', 'Outside The Bold', 'Hub Room', 'Outside The Agreeable', 'Number Hunt', 'Outside The Undeterred', 'Dead End Area', 'The Bearer (South"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11214,7 +12514,20 @@
             "name": "Sevens",
             "id": 445243,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Sevens",
+                    445243,
+                    "rooms={'Knight Night Exit', 'Outside The Bold', 'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'The Traveled', 'Directional Gallery', 'Outside The Initiated', 'Number Hunt', 'Dead End Area', 'The Bearer (South"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11229,7 +12542,20 @@
             "name": "Eights",
             "id": 445244,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Eights",
+                    445244,
+                    "rooms={'Knight Night Exit', 'Outside The Bold', 'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'Art Gallery', 'The Eyes They See', 'The Traveled', 'Directional Gallery', 'Outside The Initiated', 'Number Hunt', 'Crossroads', 'Dead End Area', 'Hot Crusts Area', 'The Bearer (South"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11244,7 +12570,20 @@
             "name": "Nines",
             "id": 445245,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Nines",
+                    445245,
+                    "rooms={'Knight Night Exit', 'Outside The Bold', 'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'Art Gallery', 'Elements Area', 'The Eyes They See', 'The Traveled', 'Directional Gallery', 'Amen Name Area', 'Orange Tower Fifth Floor', 'Outside The Initiated', 'Number Hunt', 'Crossroads', 'Yellow Backside Area', 'Dead End Area', 'Hot Crusts Area', 'Rhyme Room (Cross"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11555,7 +12894,20 @@
             "name": "Directional Gallery - 834283054",
             "id": 444792,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - 834283054",
+                    444792,
+                    "rooms={'Hub Room', 'Outside The Agreeable', 'The Traveled', 'Number Hunt', 'Directional Gallery', 'Outside The Undeterred', 'Dead End Area'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11570,7 +12922,20 @@
             "name": "Directional Gallery - PARANOID",
             "id": 444793,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - PARANOID",
+                    444793,
+                    "rooms={'Hub Room', 'Outside The Agreeable', 'The Traveled', 'Number Hunt', 'Directional Gallery', 'Outside The Undeterred', 'Dead End Area'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11585,7 +12950,20 @@
             "name": "Directional Gallery - WADED + WEE",
             "id": 444795,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - WADED + WEE",
+                    444795,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11600,7 +12978,20 @@
             "name": "Directional Gallery - TURN, LEARN",
             "id": 445246,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - TURN, LEARN",
+                    445246,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11741,7 +13132,20 @@
             "name": "Color Hunt - EXIT",
             "id": 444806,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - EXIT",
+                    444806,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11756,7 +13160,20 @@
             "name": "Color Hunt - RED",
             "id": 444808,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - RED",
+                    444808,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11771,7 +13188,20 @@
             "name": "Color Hunt - BLUE",
             "id": 444809,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - BLUE",
+                    444809,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11786,7 +13216,20 @@
             "name": "Color Hunt - YELLOW",
             "id": 444810,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - YELLOW",
+                    444810,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11801,7 +13244,20 @@
             "name": "Color Hunt - GREEN",
             "id": 444811,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - GREEN",
+                    444811,
+                    "rooms={'Outside The Initiated', 'Color Hunt', 'Directional Gallery'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11816,7 +13272,20 @@
             "name": "Color Hunt - PURPLE",
             "id": 444812,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - PURPLE",
+                    444812,
+                    "rooms={'Orange Tower Third Floor', 'Outside The Initiated', 'Color Hunt'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11831,7 +13300,20 @@
             "name": "Color Hunt - ORANGE",
             "id": 444813,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - ORANGE",
+                    444813,
+                    "rooms={'Orange Tower Third Floor', 'Color Hunt', 'Directional Gallery'}, doors=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -11895,7 +13377,20 @@
             "name": "Champion's Rest - YOU",
             "id": 444814,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Champion's Rest - YOU",
+                    444814,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -12129,7 +13624,20 @@
             "name": "The Bearer - Achievement",
             "id": 444819,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - Achievement",
+                    444819,
+                    "rooms={'Cross Tower (South"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -12144,7 +13652,20 @@
             "name": "The Bearer - MIDDLE",
             "id": 444820,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - MIDDLE",
+                    444820,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -12159,7 +13680,20 @@
             "name": "The Bearer - FARTHER",
             "id": 444821,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - FARTHER",
+                    444821,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -12773,7 +14307,20 @@
             "name": "The Bearer - SHORTCUT",
             "id": 445247,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - SHORTCUT",
+                    445247,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -14958,7 +16505,20 @@
             "name": "The Steady - Achievement",
             "id": 444859,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Steady - Achievement",
+                    444859,
+                    "rooms={'The Steady (Blueberry"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -15335,7 +16895,20 @@
             "name": "Knight Night Room - TRUSTED",
             "id": 445248,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Knight Night Room - TRUSTED",
+                    445248,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -15752,7 +17325,20 @@
             "name": "The Artistic - Achievement",
             "id": 444885,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Achievement",
+                    444885,
+                    "rooms={'The Artistic (Lattice"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -15767,7 +17353,20 @@
             "name": "The Artistic - Smiley and Panda",
             "id": 445249,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Smiley and Panda",
+                    445249,
+                    "rooms={'The Artistic (Panda"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -15908,7 +17507,20 @@
             "name": "The Artistic - Panda and Lattice",
             "id": 445250,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Panda and Lattice",
+                    445250,
+                    "rooms={'The Artistic (Lattice"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -16064,7 +17676,20 @@
             "name": "The Artistic - Lattice and Apple",
             "id": 445251,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Lattice and Apple",
+                    445251,
+                    "rooms={'The Artistic (Apple"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -16205,7 +17830,20 @@
             "name": "The Artistic - Apple and Smiley",
             "id": 445252,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Apple and Smiley",
+                    445252,
+                    "rooms={'The Artistic (Smiley"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -16265,7 +17903,20 @@
             "name": "The Discerning - Achievement",
             "id": 444920,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Discerning - Achievement",
+                    444920,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -16393,7 +18044,20 @@
             "name": "The Eyes They See - NEAR",
             "id": 444937,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Eyes They See - NEAR",
+                    444937,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -16633,7 +18297,20 @@
             "name": "Outside The Wondrous - SHRINK",
             "id": 444940,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Wondrous - SHRINK",
+                    444940,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17110,7 +18787,20 @@
             "name": "The Wondrous - Achievement",
             "id": 444947,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Wondrous - Achievement",
+                    444947,
+                    "rooms={'The Wondrous (Chandelier"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17328,7 +19018,20 @@
             "name": "Hallway Room (1) - OUT",
             "id": 444505,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room (1) - OUT",
+                    444505,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17343,7 +19046,20 @@
             "name": "Hallway Room - First Room",
             "id": 445214,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - First Room",
+                    445214,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17439,7 +19155,20 @@
             "name": "Hallway Room - Second Room",
             "id": 445253,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - Second Room",
+                    445253,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17525,7 +19254,20 @@
             "name": "Hallway Room - Third Room",
             "id": 445254,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - Third Room",
+                    445254,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17621,7 +19363,20 @@
             "name": "Hallway Room - Fourth Room",
             "id": 445255,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - Fourth Room",
+                    445255,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17749,7 +19504,20 @@
             "name": "Elements Area - UNDISTRACTED",
             "id": 444961,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Elements Area - UNDISTRACTED",
+                    444961,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17880,7 +19648,20 @@
             "name": "Outside The Wanderer - WANDERLUST",
             "id": 444966,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Wanderer - WANDERLUST",
+                    444966,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -17918,7 +19699,20 @@
             "name": "The Wanderer - Achievement",
             "id": 444967,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Wanderer - Achievement",
+                    444967,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18195,7 +19989,20 @@
             "name": "Art Gallery - ORDER",
             "id": 444981,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - ORDER",
+                    444981,
+                    "rooms={'Art Gallery (Fourth Floor"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18256,7 +20063,20 @@
             "name": "Art Gallery - First Floor Puzzles",
             "id": 445256,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - First Floor Puzzles",
+                    445256,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18317,7 +20137,20 @@
             "name": "Art Gallery - Second Floor Puzzles",
             "id": 445257,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - Second Floor Puzzles",
+                    445257,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18378,7 +20211,20 @@
             "name": "Art Gallery - Third Floor Puzzles",
             "id": 445258,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - Third Floor Puzzles",
+                    445258,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18439,7 +20285,20 @@
             "name": "Art Gallery - Fourth Floor Puzzles",
             "id": 445259,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - Fourth Floor Puzzles",
+                    445259,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18573,7 +20432,20 @@
             "name": "Rhyme Room (Smiley) - Puzzles Toward Target",
             "id": 445260,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room (Smiley) - Puzzles Toward Target",
+                    445260,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18694,7 +20566,20 @@
             "name": "Rhyme Room (Cross) - Exit Puzzles",
             "id": 445261,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room (Cross) - Exit Puzzles",
+                    445261,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18825,7 +20710,20 @@
             "name": "Rhyme Room - Circle/Smiley Wall",
             "id": 445262,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Circle/Smiley Wall",
+                    445262,
+                    "rooms={'Rhyme Room (Smiley"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -18994,7 +20892,20 @@
             "name": "Rhyme Room - Circle/Looped Square Wall",
             "id": 445263,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Circle/Looped Square Wall",
+                    445263,
+                    "rooms={'Rhyme Room (Circle"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19009,7 +20920,20 @@
             "name": "Rhyme Room - Cross/Looped Square Wall",
             "id": 445264,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Cross/Looped Square Wall",
+                    445264,
+                    "rooms={'Rhyme Room (Cross"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19024,7 +20948,20 @@
             "name": "Rhyme Room - Target/Looped Square Wall",
             "id": 445265,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Target/Looped Square Wall",
+                    445265,
+                    "rooms={'Rhyme Room (Target"
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19145,7 +21082,20 @@
             "name": "Rhyme Room (Target) - Puzzles Toward Cross",
             "id": 445266,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room (Target) - Puzzles Toward Cross",
+                    445266,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19231,7 +21181,20 @@
             "name": "Room Room - BASE",
             "id": 445076,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Room Room - BASE",
+                    445076,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19442,7 +21405,20 @@
             "name": "Outside The Wise - KITTEN, CAT",
             "id": 445267,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Outside The Wise - KITTEN, CAT",
+                    445267,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19480,7 +21456,20 @@
             "name": "The Wise - Achievement",
             "id": 445086,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "The Wise - Achievement",
+                    445086,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19773,7 +21762,20 @@
             "name": "Challenge Room - WELCOME",
             "id": 445176,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Challenge Room - WELCOME",
+                    445176,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -19788,7 +21790,20 @@
             "name": "Challenge Room - Achievement",
             "id": 445178,
             "crystal": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "lingo_can_use_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Challenge Room - Achievement",
+                    445178,
+                    "rooms=set("
+                  ]
+                }
+              ]
+            },
             "progress_type": 1,
             "locked": false,
             "item": {
@@ -22139,144 +24154,9 @@
         "type": null,
         "max_count": 1
       },
-      "Dead End Area Access": {
-        "name": "Dead End Area Access",
-        "id": 444420,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Orange Tower First Floor - Shortcuts": {
-        "name": "Orange Tower First Floor - Shortcuts",
-        "id": 444484,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hallway Room Doors": {
-        "name": "Hallway Room Doors",
-        "id": 444460,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Colorful Doors": {
-        "name": "Colorful Doors",
-        "id": 444498,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hedge Maze Doors": {
-        "name": "Hedge Maze Doors",
-        "id": 444431,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Observant Doors": {
-        "name": "Observant Doors",
-        "id": 444467,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Directional Gallery Doors": {
-        "name": "Directional Gallery Doors",
-        "id": 444531,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Welcome Back Doors": {
         "name": "Welcome Back Doors",
         "id": 444492,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rhyme Room Doors": {
-        "name": "Rhyme Room Doors",
-        "id": 444418,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Entrance to The Traveled": {
-        "name": "Entrance to The Traveled",
-        "id": 444434,
         "groups": [
           "Doors",
           "Everything"
@@ -22304,39 +24184,9 @@
         "type": null,
         "max_count": 1
       },
-      "Crossroads Doors": {
-        "name": "Crossroads Doors",
-        "id": 444444,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Artistic Doors": {
         "name": "Artistic Doors",
         "id": 444545,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Entrances to The Tenacious": {
-        "name": "Entrances to The Tenacious",
-        "id": 444427,
         "groups": [
           "Doors",
           "Everything"
@@ -22394,9 +24244,174 @@
         "type": null,
         "max_count": 1
       },
+      "Directional Gallery Doors": {
+        "name": "Directional Gallery Doors",
+        "id": 444531,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rhyme Room Doors": {
+        "name": "Rhyme Room Doors",
+        "id": 444418,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Backside Doors": {
         "name": "Backside Doors",
         "id": 444473,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Colorful Doors": {
+        "name": "Colorful Doors",
+        "id": 444498,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hedge Maze Doors": {
+        "name": "Hedge Maze Doors",
+        "id": 444431,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Orange Tower First Floor - Shortcuts": {
+        "name": "Orange Tower First Floor - Shortcuts",
+        "id": 444484,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hallway Room Doors": {
+        "name": "Hallway Room Doors",
+        "id": 444460,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Observant Doors": {
+        "name": "Observant Doors",
+        "id": 444467,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dead End Area Access": {
+        "name": "Dead End Area Access",
+        "id": 444420,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Entrance to The Traveled": {
+        "name": "Entrance to The Traveled",
+        "id": 444434,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Entrances to The Tenacious": {
+        "name": "Entrances to The Tenacious",
+        "id": 444427,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crossroads Doors": {
+        "name": "Crossroads Doors",
+        "id": 444444,
         "groups": [
           "Doors",
           "Everything"
@@ -23624,6 +25639,51 @@
         "type": null,
         "max_count": 1
       },
+      "Room Room Panels": {
+        "name": "Room Room Panels",
+        "id": 444675,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Color Hunt Panels": {
+        "name": "Color Hunt Panels",
+        "id": 444657,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Backside Entrance Panels": {
+        "name": "Backside Entrance Panels",
+        "id": 444620,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Symmetry Room Panels": {
         "name": "Symmetry Room Panels",
         "id": 444607,
@@ -23669,54 +25729,9 @@
         "type": null,
         "max_count": 1
       },
-      "Backside Entrance Panels": {
-        "name": "Backside Entrance Panels",
-        "id": 444620,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Colorful Panels": {
         "name": "Colorful Panels",
         "id": 444629,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Room Room Panels": {
-        "name": "Room Room Panels",
-        "id": 444675,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Color Hunt Panels": {
-        "name": "Color Hunt Panels",
-        "id": 444657,
         "groups": [
           "Everything",
           "Panels"
@@ -23863,37 +25878,37 @@
         "type": null,
         "max_count": 46
       },
+      "Progressive Art Gallery": {
+        "name": "Progressive Art Gallery",
+        "id": 444563,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Orange Tower": {
+        "name": "Progressive Orange Tower",
+        "id": 444482,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Progressive Pilgrimage": {
         "name": "Progressive Pilgrimage",
         "id": 444583,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Colorful": {
-        "name": "Progressive Colorful",
-        "id": 444580,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Hallway Room": {
-        "name": "Progressive Hallway Room",
-        "id": 444461,
         "groups": [
           "Everything"
         ],
@@ -23919,9 +25934,23 @@
         "type": null,
         "max_count": 1
       },
-      "Progressive Suits Area": {
-        "name": "Progressive Suits Area",
-        "id": 444602,
+      "Progressive Hallway Room": {
+        "name": "Progressive Hallway Room",
+        "id": 444461,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Colorful": {
+        "name": "Progressive Colorful",
+        "id": 444580,
         "groups": [
           "Everything"
         ],
@@ -23961,23 +25990,9 @@
         "type": null,
         "max_count": 1
       },
-      "Progressive Orange Tower": {
-        "name": "Progressive Orange Tower",
-        "id": 444482,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Art Gallery": {
-        "name": "Progressive Art Gallery",
-        "id": 444563,
+      "Progressive Suits Area": {
+        "name": "Progressive Suits Area",
+        "id": 444602,
         "groups": [
           "Everything"
         ],

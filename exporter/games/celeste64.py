@@ -61,7 +61,7 @@ class Celeste64GameExportHandler(BaseGameExportHandler):
         Convert the region logic mapping from tuple keys to string keys for JSON.
         """
         result = {}
-        for region_tuple, requirements in logic_dict.items():
+        for region_tuple, requirements in sorted(logic_dict.items()):
             # Convert tuple (from_region, to_region) to string key "from_region,to_region"
             key = f"{region_tuple[0]},{region_tuple[1]}"
             result[key] = requirements

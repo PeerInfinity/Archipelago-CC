@@ -3146,6 +3146,85 @@
     ]
   },
   "region_standard_moves_logic": {
+    "Badeline Island,Badeline Tower Upper": [
+      [
+        "Air Dash"
+      ],
+      [
+        "Ground Dash"
+      ]
+    ],
+    "Badeline Tower Lower,Badeline Tower Upper": [
+      [
+        "CANNOT ACCESS"
+      ]
+    ],
+    "Badeline Tower Lower,Granny Island": [
+      [
+        "CANNOT ACCESS"
+      ]
+    ],
+    "Badeline Tower Lower,North-East Feathers Island": [
+      [
+        "Air Dash",
+        "Breakable Blocks",
+        "Feathers"
+      ]
+    ],
+    "Badeline Tower Lower,South-East House Island": [
+      [
+        "CANNOT ACCESS"
+      ]
+    ],
+    "Badeline Tower Upper,Badeline Island": [
+      [
+        "Air Dash",
+        "Climb",
+        "Double Dash Refills",
+        "Feathers",
+        "Traffic Blocks",
+        "Breakable Blocks"
+      ]
+    ],
+    "Badeline Tower Upper,Granny Island": [
+      [
+        "Dash Refills"
+      ]
+    ],
+    "Badeline Tower Upper,North-East Feathers Island": [
+      [
+        "Air Dash"
+      ],
+      [
+        "Ground Dash"
+      ]
+    ],
+    "Badeline Tower Upper,South-East House Island": [
+      [
+        "Air Dash"
+      ],
+      [
+        "Ground Dash"
+      ]
+    ],
+    "Forsaken City,Badeline Island": [
+      [
+        "Badeline Island Checkpoint"
+      ]
+    ],
+    "Forsaken City,Badeline Tower Upper": [
+      [
+        "Badeline Tower Checkpoint"
+      ]
+    ],
+    "Forsaken City,Freeway Island": [
+      [
+        "Freeway Checkpoint"
+      ],
+      [
+        "Freeway Feather Checkpoint"
+      ]
+    ],
     "Forsaken City,Granny Island": [
       [
         "Granny Checkpoint"
@@ -3157,14 +3236,6 @@
         "Climb Sign Checkpoint"
       ]
     ],
-    "Forsaken City,Freeway Island": [
-      [
-        "Freeway Checkpoint"
-      ],
-      [
-        "Freeway Feather Checkpoint"
-      ]
-    ],
     "Forsaken City,North-East Feathers Island": [
       [
         "Feather Maze Checkpoint"
@@ -3173,55 +3244,6 @@
     "Forsaken City,South-East House Island": [
       [
         "Double Dash House Checkpoint"
-      ]
-    ],
-    "Forsaken City,Badeline Tower Upper": [
-      [
-        "Badeline Tower Checkpoint"
-      ]
-    ],
-    "Forsaken City,Badeline Island": [
-      [
-        "Badeline Island Checkpoint"
-      ]
-    ],
-    "Intro Islands,Granny Island": [
-      [
-        "Ground Dash"
-      ],
-      [
-        "Air Dash"
-      ],
-      [
-        "Skid Jump"
-      ],
-      [
-        "Climb"
-      ]
-    ],
-    "Granny Island,Freeway Island": [
-      [
-        "Air Dash",
-        "Dash Refills"
-      ]
-    ],
-    "Granny Island,North-West Girders Island": [
-      [
-        "Traffic Blocks"
-      ]
-    ],
-    "Granny Island,Badeline Tower Lower": [
-      [
-        "Air Dash",
-        "Climb",
-        "Dash Refills"
-      ]
-    ],
-    "Granny Island,South-East House Island": [
-      [
-        "Air Dash",
-        "Climb",
-        "Double Dash Refills"
       ]
     ],
     "Freeway Island,Granny Island": [
@@ -3243,14 +3265,43 @@
         "CANNOT ACCESS"
       ]
     ],
-    "North-West Girders Island,Freeway Island": [
+    "Granny Island,Badeline Tower Lower": [
+      [
+        "Air Dash",
+        "Climb",
+        "Dash Refills"
+      ]
+    ],
+    "Granny Island,Freeway Island": [
+      [
+        "Air Dash",
+        "Dash Refills"
+      ]
+    ],
+    "Granny Island,North-West Girders Island": [
       [
         "Traffic Blocks"
       ]
     ],
-    "North-East Feathers Island,Freeway Island": [
+    "Granny Island,South-East House Island": [
       [
-        "Feathers"
+        "Air Dash",
+        "Climb",
+        "Double Dash Refills"
+      ]
+    ],
+    "Intro Islands,Granny Island": [
+      [
+        "Ground Dash"
+      ],
+      [
+        "Air Dash"
+      ],
+      [
+        "Skid Jump"
+      ],
+      [
+        "Climb"
       ]
     ],
     "North-East Feathers Island,Badeline Tower Lower": [
@@ -3265,11 +3316,14 @@
         "Feathers"
       ]
     ],
-    "South-East House Island,Granny Island": [
+    "North-East Feathers Island,Freeway Island": [
       [
-        "Air Dash",
-        "Traffic Blocks",
-        "Double Dash Refills"
+        "Feathers"
+      ]
+    ],
+    "North-West Girders Island,Freeway Island": [
+      [
+        "Traffic Blocks"
       ]
     ],
     "South-East House Island,Badeline Tower Lower": [
@@ -3278,59 +3332,15 @@
         "Double Dash Refills"
       ]
     ],
-    "Badeline Tower Lower,South-East House Island": [
-      [
-        "CANNOT ACCESS"
-      ]
-    ],
-    "Badeline Tower Lower,North-East Feathers Island": [
+    "South-East House Island,Granny Island": [
       [
         "Air Dash",
-        "Breakable Blocks",
-        "Feathers"
-      ]
-    ],
-    "Badeline Tower Lower,Granny Island": [
-      [
-        "CANNOT ACCESS"
-      ]
-    ],
-    "Badeline Tower Lower,Badeline Tower Upper": [
-      [
-        "CANNOT ACCESS"
-      ]
-    ],
-    "Badeline Tower Upper,Badeline Island": [
-      [
-        "Air Dash",
-        "Climb",
-        "Double Dash Refills",
-        "Feathers",
         "Traffic Blocks",
-        "Breakable Blocks"
+        "Double Dash Refills"
       ]
-    ],
-    "Badeline Tower Upper,South-East House Island": [
-      [
-        "Air Dash"
-      ],
-      [
-        "Ground Dash"
-      ]
-    ],
-    "Badeline Tower Upper,North-East Feathers Island": [
-      [
-        "Air Dash"
-      ],
-      [
-        "Ground Dash"
-      ]
-    ],
-    "Badeline Tower Upper,Granny Island": [
-      [
-        "Dash Refills"
-      ]
-    ],
+    ]
+  },
+  "region_hard_moves_logic": {
     "Badeline Island,Badeline Tower Upper": [
       [
         "Air Dash"
@@ -3338,9 +3348,51 @@
       [
         "Ground Dash"
       ]
-    ]
-  },
-  "region_hard_moves_logic": {
+    ],
+    "Badeline Tower Upper,Badeline Island": [
+      [
+        "Air Dash",
+        "Climb",
+        "Feathers",
+        "Traffic Blocks"
+      ],
+      [
+        "Air Dash",
+        "Climb",
+        "Feathers",
+        "Skid Jump"
+      ],
+      [
+        "Air Dash",
+        "Climb",
+        "Ground Dash",
+        "Traffic Blocks"
+      ],
+      [
+        "Air Dash",
+        "Climb",
+        "Ground Dash",
+        "Skid Jump"
+      ]
+    ],
+    "Forsaken City,Badeline Island": [
+      [
+        "Badeline Island Checkpoint"
+      ]
+    ],
+    "Forsaken City,Badeline Tower Upper": [
+      [
+        "Badeline Tower Checkpoint"
+      ]
+    ],
+    "Forsaken City,Freeway Island": [
+      [
+        "Freeway Checkpoint"
+      ],
+      [
+        "Freeway Feather Checkpoint"
+      ]
+    ],
     "Forsaken City,Granny Island": [
       [
         "Granny Checkpoint"
@@ -3350,14 +3402,6 @@
       ],
       [
         "Climb Sign Checkpoint"
-      ]
-    ],
-    "Forsaken City,Freeway Island": [
-      [
-        "Freeway Checkpoint"
-      ],
-      [
-        "Freeway Feather Checkpoint"
       ]
     ],
     "Forsaken City,North-East Feathers Island": [
@@ -3370,19 +3414,10 @@
         "Double Dash House Checkpoint"
       ]
     ],
-    "Forsaken City,Badeline Tower Upper": [
+    "Freeway Island,North-West Girders Island": [
       [
-        "Badeline Tower Checkpoint"
-      ]
-    ],
-    "Forsaken City,Badeline Island": [
-      [
-        "Badeline Island Checkpoint"
-      ]
-    ],
-    "Granny Island,North-West Girders Island": [
-      [
-        "Traffic Blocks"
+        "Air Dash",
+        "Ground Dash"
       ]
     ],
     "Granny Island,Badeline Tower Lower": [
@@ -3393,6 +3428,11 @@
         "Ground Dash"
       ]
     ],
+    "Granny Island,North-West Girders Island": [
+      [
+        "Traffic Blocks"
+      ]
+    ],
     "Granny Island,South-East House Island": [
       [
         "Air Dash",
@@ -3400,35 +3440,6 @@
       ],
       [
         "Ground Dash"
-      ]
-    ],
-    "Freeway Island,North-West Girders Island": [
-      [
-        "Air Dash",
-        "Ground Dash"
-      ]
-    ],
-    "North-West Girders Island,Freeway Island": [
-      [
-        "Traffic Blocks"
-      ],
-      [
-        "Air Dash",
-        "Ground Dash"
-      ]
-    ],
-    "North-East Feathers Island,Freeway Island": [
-      [
-        "Feathers"
-      ],
-      [
-        "Air Dash"
-      ],
-      [
-        "Ground Dash"
-      ],
-      [
-        "Skid Jump"
       ]
     ],
     "North-East Feathers Island,Badeline Tower Lower": [
@@ -3447,9 +3458,27 @@
         "Feathers"
       ]
     ],
-    "South-East House Island,Granny Island": [
+    "North-East Feathers Island,Freeway Island": [
+      [
+        "Feathers"
+      ],
+      [
+        "Air Dash"
+      ],
+      [
+        "Ground Dash"
+      ],
+      [
+        "Skid Jump"
+      ]
+    ],
+    "North-West Girders Island,Freeway Island": [
       [
         "Traffic Blocks"
+      ],
+      [
+        "Air Dash",
+        "Ground Dash"
       ]
     ],
     "South-East House Island,Badeline Tower Lower": [
@@ -3460,38 +3489,9 @@
         "Ground Dash"
       ]
     ],
-    "Badeline Tower Upper,Badeline Island": [
+    "South-East House Island,Granny Island": [
       [
-        "Air Dash",
-        "Climb",
-        "Feathers",
         "Traffic Blocks"
-      ],
-      [
-        "Air Dash",
-        "Climb",
-        "Feathers",
-        "Skid Jump"
-      ],
-      [
-        "Air Dash",
-        "Climb",
-        "Ground Dash",
-        "Traffic Blocks"
-      ],
-      [
-        "Air Dash",
-        "Climb",
-        "Ground Dash",
-        "Skid Jump"
-      ]
-    ],
-    "Badeline Island,Badeline Tower Upper": [
-      [
-        "Air Dash"
-      ],
-      [
-        "Ground Dash"
       ]
     ]
   }

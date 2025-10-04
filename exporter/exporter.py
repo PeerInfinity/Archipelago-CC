@@ -135,7 +135,11 @@ def make_serializable(obj):
     
     # Handle lists, tuples, sets, and frozensets
     if isinstance(obj, (list, tuple, set, frozenset)):
-        return [make_serializable(i) for i in obj]
+        result = [make_serializable(i) for i in obj]
+        # Sort sets and frozensets for consistent ordering
+        if isinstance(obj, (set, frozenset)):
+            return sorted(result)
+        return result
     
     # Handle objects with __dict__ attribute (custom classes)
     if hasattr(obj, '__dict__'):
@@ -1299,7 +1303,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         if len(unique_games) > 1:
             combined_game_name = "Multiworld"
         elif len(unique_games) == 1:
-            combined_game_name = list(unique_games)[0]
+            combined_game_name = sorted(unique_games)[0]
         else:
             combined_game_name = "Unknown"
     

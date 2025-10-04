@@ -60,11 +60,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:47:44.323228",
+      "timestamp": "2025-10-04T08:29:04.348295",
       "processing_time": {
-        "generation_seconds": 12.32,
-        "spoiler_test_seconds": 23.31,
-        "total_seconds": 35.629999999999995
+        "generation_seconds": 13.08,
+        "spoiler_test_seconds": 26.32,
+        "total_seconds": 39.4
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -166,11 +174,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:48:29.062385",
+      "timestamp": "2025-10-04T08:29:54.429176",
       "processing_time": {
-        "generation_seconds": 2.43,
-        "spoiler_test_seconds": 5.22,
-        "total_seconds": 7.65
+        "generation_seconds": 2.42,
+        "spoiler_test_seconds": 4.9,
+        "total_seconds": 7.32
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -235,11 +251,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:48:20.174192",
+      "timestamp": "2025-10-04T08:29:43.981579",
       "processing_time": {
-        "generation_seconds": 3.68,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 8.67
+        "generation_seconds": 3.67,
+        "spoiler_test_seconds": 6.54,
+        "total_seconds": 10.21
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -304,11 +328,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:47:20.571383",
+      "timestamp": "2025-10-04T08:28:37.546430",
       "processing_time": {
-        "generation_seconds": 7.94,
-        "spoiler_test_seconds": 15.5,
-        "total_seconds": 23.44
+        "generation_seconds": 10.01,
+        "spoiler_test_seconds": 16.49,
+        "total_seconds": 26.5
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -418,11 +450,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:48:36.933235",
+      "timestamp": "2025-10-04T08:30:01.977420",
       "processing_time": {
-        "generation_seconds": 8.99,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 13.98
+        "generation_seconds": 8.9,
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 13.83
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -455,11 +495,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:48:51.119447",
+      "timestamp": "2025-10-04T08:30:16.036498",
       "processing_time": {
-        "generation_seconds": 3.95,
-        "spoiler_test_seconds": 6.09,
-        "total_seconds": 10.04
+        "generation_seconds": 3.85,
+        "spoiler_test_seconds": 7.41,
+        "total_seconds": 11.26
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -492,11 +540,19 @@
       "progress_percent": 2.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:49:01.375310",
+      "timestamp": "2025-10-04T08:30:27.574197",
       "processing_time": {
-        "generation_seconds": 16.37,
-        "spoiler_test_seconds": 54.74,
-        "total_seconds": 71.11
+        "generation_seconds": 16.3,
+        "spoiler_test_seconds": 57.22,
+        "total_seconds": 73.52
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -529,11 +585,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:50:12.720392",
+      "timestamp": "2025-10-04T08:31:41.338107",
       "processing_time": {
-        "generation_seconds": 7.09,
-        "spoiler_test_seconds": 5.0,
-        "total_seconds": 12.09
+        "generation_seconds": 6.98,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 11.93
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -598,11 +662,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:50:25.037745",
+      "timestamp": "2025-10-04T08:31:53.514097",
       "processing_time": {
-        "generation_seconds": 3.64,
-        "spoiler_test_seconds": 7.11,
-        "total_seconds": 10.75
+        "generation_seconds": 3.41,
+        "spoiler_test_seconds": 7.01,
+        "total_seconds": 10.42
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -636,11 +708,19 @@
       "progress_percent": 6.5,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:50:36.013208",
+      "timestamp": "2025-10-04T08:32:04.179280",
       "processing_time": {
-        "generation_seconds": 3.91,
-        "spoiler_test_seconds": 5.05,
-        "total_seconds": 8.96
+        "generation_seconds": 5.25,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 10.2
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -674,11 +754,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:50:45.220193",
+      "timestamp": "2025-10-04T08:32:14.638159",
       "processing_time": {
-        "generation_seconds": 6.49,
-        "spoiler_test_seconds": 4.97,
-        "total_seconds": 11.46
+        "generation_seconds": 5.99,
+        "spoiler_test_seconds": 4.89,
+        "total_seconds": 10.879999999999999
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -711,11 +799,19 @@
       "progress_percent": 1.9,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:50:56.890031",
+      "timestamp": "2025-10-04T08:32:25.746980",
       "processing_time": {
-        "generation_seconds": 2.56,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 7.550000000000001
+        "generation_seconds": 2.49,
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 7.41
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -748,11 +844,19 @@
       "progress_percent": 2.2,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:51:04.658763",
+      "timestamp": "2025-10-04T08:32:33.387186",
       "processing_time": {
-        "generation_seconds": 2.25,
-        "spoiler_test_seconds": 4.95,
-        "total_seconds": 7.2
+        "generation_seconds": 2.22,
+        "spoiler_test_seconds": 6.43,
+        "total_seconds": 8.65
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -781,16 +885,24 @@
       "status": "failed",
       "generation_errors": 0,
       "generation_warnings": 0,
-      "sphere_reached": 7.4,
+      "sphere_reached": 0.13,
       "max_spheres": 8.1,
-      "progress_percent": 91.4,
+      "progress_percent": 1.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:51:19.700510",
+      "timestamp": "2025-10-04T08:32:50.021074",
       "processing_time": {
-        "generation_seconds": 4.44,
-        "spoiler_test_seconds": 8.89,
-        "total_seconds": 13.330000000000002
+        "generation_seconds": 4.53,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 9.48
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -823,11 +935,19 @@
       "progress_percent": 1.2,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:51:33.254764",
+      "timestamp": "2025-10-04T08:32:59.747992",
       "processing_time": {
-        "generation_seconds": 2.9,
-        "spoiler_test_seconds": 4.98,
-        "total_seconds": 7.880000000000001
+        "generation_seconds": 2.77,
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 7.6899999999999995
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -892,11 +1012,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:51:41.369464",
+      "timestamp": "2025-10-04T08:33:07.691177",
       "processing_time": {
-        "generation_seconds": 9.33,
-        "spoiler_test_seconds": 40.39,
-        "total_seconds": 49.72
+        "generation_seconds": 10.33,
+        "spoiler_test_seconds": 41.35,
+        "total_seconds": 51.68
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -929,11 +1057,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:52:31.311149",
+      "timestamp": "2025-10-04T08:33:59.613010",
       "processing_time": {
-        "generation_seconds": 11.04,
-        "spoiler_test_seconds": 94.47,
-        "total_seconds": 105.50999999999999
+        "generation_seconds": 11.35,
+        "spoiler_test_seconds": 116.32,
+        "total_seconds": 127.66999999999999
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -966,11 +1102,19 @@
       "progress_percent": 6.1,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:54:17.051601",
+      "timestamp": "2025-10-04T08:36:07.539572",
       "processing_time": {
-        "generation_seconds": 21.2,
-        "spoiler_test_seconds": 6.61,
-        "total_seconds": 27.81
+        "generation_seconds": 20.4,
+        "spoiler_test_seconds": 6.45,
+        "total_seconds": 26.849999999999998
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1003,11 +1147,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:54:45.123185",
+      "timestamp": "2025-10-04T08:36:34.643965",
       "processing_time": {
-        "generation_seconds": 6.44,
-        "spoiler_test_seconds": 7.84,
-        "total_seconds": 14.280000000000001
+        "generation_seconds": 8.22,
+        "spoiler_test_seconds": 8.16,
+        "total_seconds": 16.380000000000003
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1041,11 +1193,19 @@
       "progress_percent": 0.8,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:54:59.657905",
+      "timestamp": "2025-10-04T08:36:51.262312",
       "processing_time": {
-        "generation_seconds": 4.32,
-        "spoiler_test_seconds": 5.22,
-        "total_seconds": 9.54
+        "generation_seconds": 3.88,
+        "spoiler_test_seconds": 4.9,
+        "total_seconds": 8.780000000000001
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1094,11 +1254,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:55:09.435789",
+      "timestamp": "2025-10-04T08:37:00.274614",
       "processing_time": {
         "generation_seconds": 3.57,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 8.56
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 8.5
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1132,11 +1300,19 @@
       "progress_percent": 0.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:55:18.230908",
+      "timestamp": "2025-10-04T08:37:09.013037",
       "processing_time": {
-        "generation_seconds": 11.66,
-        "spoiler_test_seconds": 5.06,
-        "total_seconds": 16.72
+        "generation_seconds": 13.36,
+        "spoiler_test_seconds": 4.97,
+        "total_seconds": 18.33
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1238,11 +1414,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:55:35.181130",
+      "timestamp": "2025-10-04T08:37:27.581125",
       "processing_time": {
-        "generation_seconds": 11.97,
-        "spoiler_test_seconds": 92.18,
-        "total_seconds": 104.15
+        "generation_seconds": 11.47,
+        "spoiler_test_seconds": 93.92,
+        "total_seconds": 105.39
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -1275,11 +1459,19 @@
       "progress_percent": 0.1,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:57:19.582196",
+      "timestamp": "2025-10-04T08:39:13.238190",
       "processing_time": {
-        "generation_seconds": 27.93,
-        "spoiler_test_seconds": 14.12,
-        "total_seconds": 42.05
+        "generation_seconds": 28.34,
+        "spoiler_test_seconds": 14.26,
+        "total_seconds": 42.6
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1312,11 +1504,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:58:01.869422",
+      "timestamp": "2025-10-04T08:39:56.082317",
       "processing_time": {
-        "generation_seconds": 4.31,
-        "spoiler_test_seconds": 4.95,
-        "total_seconds": 9.26
+        "generation_seconds": 5.96,
+        "spoiler_test_seconds": 4.97,
+        "total_seconds": 10.93
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1341,19 +1541,27 @@
       }
     },
     "test_result": {
-      "status": "passed",
+      "status": "failed",
       "generation_errors": 0,
       "generation_warnings": 0,
-      "sphere_reached": 8.1,
+      "sphere_reached": 2.1,
       "max_spheres": 8.1,
-      "progress_percent": 100.0,
+      "progress_percent": 25.9,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:58:11.347617",
+      "timestamp": "2025-10-04T08:40:07.238658",
       "processing_time": {
-        "generation_seconds": 3.34,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 8.36
+        "generation_seconds": 3.17,
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 8.09
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1383,14 +1591,22 @@
       "generation_warnings": 0,
       "sphere_reached": 0,
       "max_spheres": 0,
-      "progress_percent": 0.0,
+      "progress_percent": 0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:58:19.940379",
+      "timestamp": "2025-10-04T08:40:15.581846",
       "processing_time": {
-        "generation_seconds": 7.68,
+        "generation_seconds": 7.26,
         "spoiler_test_seconds": 0,
-        "total_seconds": 7.68
+        "total_seconds": 7.26
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1424,11 +1640,19 @@
       "progress_percent": 0.8,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:58:27.713859",
+      "timestamp": "2025-10-04T08:40:22.956484",
       "processing_time": {
-        "generation_seconds": 14.35,
-        "spoiler_test_seconds": 5.03,
-        "total_seconds": 19.38
+        "generation_seconds": 15.8,
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 20.72
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1461,11 +1685,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-03T12:58:47.342638",
+      "timestamp": "2025-10-04T08:40:43.911012",
       "processing_time": {
-        "generation_seconds": 8.61,
-        "spoiler_test_seconds": 5.05,
-        "total_seconds": 13.66
+        "generation_seconds": 7.99,
+        "spoiler_test_seconds": 4.9,
+        "total_seconds": 12.89
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1499,11 +1731,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:59:01.248369",
+      "timestamp": "2025-10-04T08:40:57.056025",
       "processing_time": {
-        "generation_seconds": 12.86,
-        "spoiler_test_seconds": 6.15,
-        "total_seconds": 19.009999999999998
+        "generation_seconds": 13.77,
+        "spoiler_test_seconds": 5.95,
+        "total_seconds": 19.72
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1536,11 +1776,19 @@
       "progress_percent": 1.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:59:20.495685",
+      "timestamp": "2025-10-04T08:41:17.011639",
       "processing_time": {
-        "generation_seconds": 7.65,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 12.66
+        "generation_seconds": 7.39,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 12.34
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1566,18 +1814,26 @@
     },
     "test_result": {
       "status": "failed",
-      "generation_errors": 465,
+      "generation_errors": 0,
       "generation_warnings": 0,
       "sphere_reached": 0.0,
       "max_spheres": 4.1,
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:59:33.381294",
+      "timestamp": "2025-10-04T08:41:29.592573",
       "processing_time": {
-        "generation_seconds": 4.2,
-        "spoiler_test_seconds": 5.37,
-        "total_seconds": 9.57
+        "generation_seconds": 3.88,
+        "spoiler_test_seconds": 5.64,
+        "total_seconds": 9.52
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1611,11 +1867,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:59:43.200168",
+      "timestamp": "2025-10-04T08:41:39.381412",
       "processing_time": {
-        "generation_seconds": 7.48,
-        "spoiler_test_seconds": 5.12,
-        "total_seconds": 12.600000000000001
+        "generation_seconds": 8.95,
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 13.87
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1648,11 +1912,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:59:56.046842",
+      "timestamp": "2025-10-04T08:41:53.491854",
       "processing_time": {
-        "generation_seconds": 2.54,
-        "spoiler_test_seconds": 5.0,
-        "total_seconds": 7.54
+        "generation_seconds": 2.5,
+        "spoiler_test_seconds": 4.88,
+        "total_seconds": 7.38
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1686,11 +1958,19 @@
       "progress_percent": 1.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:00:03.809323",
+      "timestamp": "2025-10-04T08:42:01.101787",
       "processing_time": {
-        "generation_seconds": 7.91,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 12.92
+        "generation_seconds": 7.67,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 12.620000000000001
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1724,11 +2004,19 @@
       "progress_percent": 1.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:00:24.339608",
+      "timestamp": "2025-10-04T08:42:22.947370",
       "processing_time": {
-        "generation_seconds": 2.88,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 7.89
+        "generation_seconds": 2.61,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 7.5600000000000005
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1761,11 +2049,19 @@
       "progress_percent": 3.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:00:32.457667",
+      "timestamp": "2025-10-04T08:42:30.749258",
       "processing_time": {
-        "generation_seconds": 6.17,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 11.16
+        "generation_seconds": 6.05,
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 10.98
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1798,11 +2094,19 @@
       "progress_percent": 15.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:00:43.858263",
+      "timestamp": "2025-10-04T08:42:41.974542",
       "processing_time": {
-        "generation_seconds": 3.87,
-        "spoiler_test_seconds": 4.98,
-        "total_seconds": 8.850000000000001
+        "generation_seconds": 3.84,
+        "spoiler_test_seconds": 6.51,
+        "total_seconds": 10.35
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1835,11 +2139,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:01:06.068648",
+      "timestamp": "2025-10-04T08:43:05.047379",
       "processing_time": {
-        "generation_seconds": 2.98,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 8.0
+        "generation_seconds": 2.87,
+        "spoiler_test_seconds": 4.91,
+        "total_seconds": 7.78
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1872,11 +2184,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:01:14.280370",
+      "timestamp": "2025-10-04T08:43:13.059651",
       "processing_time": {
-        "generation_seconds": 4.62,
-        "spoiler_test_seconds": 5.31,
-        "total_seconds": 9.93
+        "generation_seconds": 4.72,
+        "spoiler_test_seconds": 6.43,
+        "total_seconds": 11.149999999999999
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -1909,11 +2229,19 @@
       "progress_percent": 0.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:01:24.504715",
+      "timestamp": "2025-10-04T08:43:24.501876",
       "processing_time": {
-        "generation_seconds": 17.19,
-        "spoiler_test_seconds": 72.4,
-        "total_seconds": 89.59
+        "generation_seconds": 15.86,
+        "spoiler_test_seconds": 74.56,
+        "total_seconds": 90.42
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1946,11 +2274,19 @@
       "progress_percent": 1.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:02:54.347886",
+      "timestamp": "2025-10-04T08:44:55.171542",
       "processing_time": {
-        "generation_seconds": 7.86,
-        "spoiler_test_seconds": 5.09,
-        "total_seconds": 12.95
+        "generation_seconds": 7.68,
+        "spoiler_test_seconds": 6.51,
+        "total_seconds": 14.19
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -1983,11 +2319,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:03:07.533874",
+      "timestamp": "2025-10-04T08:45:09.609831",
       "processing_time": {
-        "generation_seconds": 5.19,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 10.21
+        "generation_seconds": 5.05,
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 9.98
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2020,11 +2364,19 @@
       "progress_percent": 0.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:03:17.975469",
+      "timestamp": "2025-10-04T08:45:19.831188",
       "processing_time": {
         "generation_seconds": 3.22,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 8.23
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 8.14
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2058,11 +2410,19 @@
       "progress_percent": 27.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:03:26.453454",
+      "timestamp": "2025-10-04T08:45:28.241259",
       "processing_time": {
-        "generation_seconds": 43.54,
-        "spoiler_test_seconds": 5.12,
-        "total_seconds": 48.66
+        "generation_seconds": 44.58,
+        "spoiler_test_seconds": 5.05,
+        "total_seconds": 49.629999999999995
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2096,11 +2456,19 @@
       "progress_percent": 11.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:04:15.381519",
+      "timestamp": "2025-10-04T08:46:18.138110",
       "processing_time": {
-        "generation_seconds": 82.88,
-        "spoiler_test_seconds": 7.32,
-        "total_seconds": 90.19999999999999
+        "generation_seconds": 82.39,
+        "spoiler_test_seconds": 7.26,
+        "total_seconds": 89.65
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2133,11 +2501,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:05:45.821963",
+      "timestamp": "2025-10-04T08:47:48.030275",
       "processing_time": {
-        "generation_seconds": 3.68,
-        "spoiler_test_seconds": 5.24,
-        "total_seconds": 8.92
+        "generation_seconds": 3.63,
+        "spoiler_test_seconds": 6.34,
+        "total_seconds": 9.969999999999999
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2162,19 +2538,27 @@
       }
     },
     "test_result": {
-      "status": "failed",
+      "status": "passed",
       "generation_errors": 0,
       "generation_warnings": 0,
-      "sphere_reached": 1.1,
+      "sphere_reached": 8.1,
       "max_spheres": 8.1,
-      "progress_percent": 13.6,
+      "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:05:54.989272",
+      "timestamp": "2025-10-04T08:47:58.239836",
       "processing_time": {
-        "generation_seconds": 4.38,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 9.370000000000001
+        "generation_seconds": 4.33,
+        "spoiler_test_seconds": 4.91,
+        "total_seconds": 9.24
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2208,11 +2592,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:06:04.586479",
+      "timestamp": "2025-10-04T08:48:07.703586",
       "processing_time": {
-        "generation_seconds": 4.09,
+        "generation_seconds": 4.17,
         "spoiler_test_seconds": 5.79,
-        "total_seconds": 9.879999999999999
+        "total_seconds": 9.96
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2245,11 +2637,19 @@
       "progress_percent": 60.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:06:14.710303",
+      "timestamp": "2025-10-04T08:48:17.906587",
       "processing_time": {
-        "generation_seconds": 2.6,
-        "spoiler_test_seconds": 5.15,
-        "total_seconds": 7.75
+        "generation_seconds": 2.58,
+        "spoiler_test_seconds": 4.91,
+        "total_seconds": 7.49
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2282,11 +2682,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:06:22.696290",
+      "timestamp": "2025-10-04T08:48:27.093201",
       "processing_time": {
-        "generation_seconds": 5.98,
-        "spoiler_test_seconds": 5.77,
-        "total_seconds": 11.75
+        "generation_seconds": 5.86,
+        "spoiler_test_seconds": 5.54,
+        "total_seconds": 11.4
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2319,11 +2727,19 @@
       "progress_percent": 2.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:06:34.685552",
+      "timestamp": "2025-10-04T08:48:38.735625",
       "processing_time": {
-        "generation_seconds": 4.88,
-        "spoiler_test_seconds": 5.06,
-        "total_seconds": 9.94
+        "generation_seconds": 5.01,
+        "spoiler_test_seconds": 4.99,
+        "total_seconds": 10.0
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2356,11 +2772,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:06:44.880047",
+      "timestamp": "2025-10-04T08:48:49.013762",
       "processing_time": {
-        "generation_seconds": 6.06,
-        "spoiler_test_seconds": 13.02,
-        "total_seconds": 19.08
+        "generation_seconds": 5.58,
+        "spoiler_test_seconds": 14.45,
+        "total_seconds": 20.03
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2393,11 +2817,19 @@
       "progress_percent": 0.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:07:04.208932",
+      "timestamp": "2025-10-04T08:49:09.289164",
       "processing_time": {
-        "generation_seconds": 13.96,
-        "spoiler_test_seconds": 5.05,
-        "total_seconds": 19.01
+        "generation_seconds": 13.77,
+        "spoiler_test_seconds": 4.96,
+        "total_seconds": 18.73
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2430,11 +2862,19 @@
       "progress_percent": 0.3,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:07:23.473947",
+      "timestamp": "2025-10-04T08:49:28.279033",
       "processing_time": {
-        "generation_seconds": 10.7,
-        "spoiler_test_seconds": 23.53,
-        "total_seconds": 34.230000000000004
+        "generation_seconds": 11.69,
+        "spoiler_test_seconds": 22.29,
+        "total_seconds": 33.98
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2467,11 +2907,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:07:57.933460",
+      "timestamp": "2025-10-04T08:50:02.501785",
       "processing_time": {
-        "generation_seconds": 3.45,
-        "spoiler_test_seconds": 5.04,
-        "total_seconds": 8.49
+        "generation_seconds": 3.36,
+        "spoiler_test_seconds": 6.37,
+        "total_seconds": 9.73
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2505,11 +2953,19 @@
       "progress_percent": 4.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:08:06.662116",
+      "timestamp": "2025-10-04T08:50:12.496184",
       "processing_time": {
-        "generation_seconds": 5.07,
-        "spoiler_test_seconds": 4.96,
-        "total_seconds": 10.030000000000001
+        "generation_seconds": 5.06,
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 9.989999999999998
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2543,11 +2999,19 @@
       "progress_percent": 0.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:08:16.913428",
+      "timestamp": "2025-10-04T08:50:22.726109",
       "processing_time": {
-        "generation_seconds": 3.14,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 8.16
+        "generation_seconds": 3.09,
+        "spoiler_test_seconds": 5.0,
+        "total_seconds": 8.09
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2580,11 +3044,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:08:25.331506",
+      "timestamp": "2025-10-04T08:50:31.062126",
       "processing_time": {
-        "generation_seconds": 8.85,
-        "spoiler_test_seconds": 5.03,
-        "total_seconds": 13.879999999999999
+        "generation_seconds": 8.6,
+        "spoiler_test_seconds": 6.55,
+        "total_seconds": 15.149999999999999
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 1,
+        "first_failure_seed": null,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2618,11 +3090,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:08:39.438777",
+      "timestamp": "2025-10-04T08:50:46.449857",
       "processing_time": {
-        "generation_seconds": 6.24,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 11.25
+        "generation_seconds": 6.22,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 11.17
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2655,11 +3135,19 @@
       "progress_percent": 2.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:08:50.937723",
+      "timestamp": "2025-10-04T08:50:57.871263",
       "processing_time": {
-        "generation_seconds": 6.98,
-        "spoiler_test_seconds": 5.09,
-        "total_seconds": 12.07
+        "generation_seconds": 6.99,
+        "spoiler_test_seconds": 4.94,
+        "total_seconds": 11.93
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2692,11 +3180,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:09:03.252815",
+      "timestamp": "2025-10-04T08:51:10.047445",
       "processing_time": {
-        "generation_seconds": 4.83,
-        "spoiler_test_seconds": 5.84,
-        "total_seconds": 10.67
+        "generation_seconds": 6.38,
+        "spoiler_test_seconds": 5.7,
+        "total_seconds": 12.08
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2725,15 +3221,23 @@
       "generation_errors": 0,
       "generation_warnings": 2,
       "sphere_reached": 0.1,
-      "max_spheres": 11.1,
-      "progress_percent": 0.9,
+      "max_spheres": 10.1,
+      "progress_percent": 1.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:09:14.160548",
+      "timestamp": "2025-10-04T08:51:22.362519",
       "processing_time": {
-        "generation_seconds": 4.61,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 9.620000000000001
+        "generation_seconds": 4.6,
+        "spoiler_test_seconds": 4.94,
+        "total_seconds": 9.54
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2766,11 +3270,19 @@
       "progress_percent": 1.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:09:24.020135",
+      "timestamp": "2025-10-04T08:51:32.148955",
       "processing_time": {
-        "generation_seconds": 7.18,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 12.2
+        "generation_seconds": 7.03,
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 11.96
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2804,11 +3316,19 @@
       "progress_percent": 0.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:09:36.462757",
+      "timestamp": "2025-10-04T08:51:44.354508",
       "processing_time": {
-        "generation_seconds": 2.87,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 7.88
+        "generation_seconds": 2.85,
+        "spoiler_test_seconds": 6.35,
+        "total_seconds": 9.2
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2841,11 +3361,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:09:44.590884",
+      "timestamp": "2025-10-04T08:51:53.809754",
       "processing_time": {
-        "generation_seconds": 6.48,
-        "spoiler_test_seconds": 5.94,
-        "total_seconds": 12.420000000000002
+        "generation_seconds": 6.15,
+        "spoiler_test_seconds": 5.84,
+        "total_seconds": 11.99
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2878,11 +3406,19 @@
       "progress_percent": 1.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:09:57.249271",
+      "timestamp": "2025-10-04T08:52:06.051013",
       "processing_time": {
-        "generation_seconds": 5.31,
-        "spoiler_test_seconds": 5.07,
-        "total_seconds": 10.379999999999999
+        "generation_seconds": 5.14,
+        "spoiler_test_seconds": 4.99,
+        "total_seconds": 10.129999999999999
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2915,11 +3451,19 @@
       "progress_percent": 75.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:10:07.857968",
+      "timestamp": "2025-10-04T08:52:16.415345",
       "processing_time": {
-        "generation_seconds": 2.82,
-        "spoiler_test_seconds": 5.0,
-        "total_seconds": 7.82
+        "generation_seconds": 2.71,
+        "spoiler_test_seconds": 6.41,
+        "total_seconds": 9.120000000000001
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2953,11 +3497,19 @@
       "progress_percent": 16.7,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:10:15.921364",
+      "timestamp": "2025-10-04T08:52:25.771359",
       "processing_time": {
         "generation_seconds": 2.34,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 7.359999999999999
+        "spoiler_test_seconds": 4.97,
+        "total_seconds": 7.31
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -2990,11 +3542,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:10:23.531955",
+      "timestamp": "2025-10-04T08:52:33.319566",
       "processing_time": {
-        "generation_seconds": 2.59,
-        "spoiler_test_seconds": 5.09,
-        "total_seconds": 7.68
+        "generation_seconds": 2.38,
+        "spoiler_test_seconds": 4.91,
+        "total_seconds": 7.29
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -3027,11 +3587,19 @@
       "progress_percent": 0.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:10:41.367242",
+      "timestamp": "2025-10-04T08:52:49.277350",
       "processing_time": {
-        "generation_seconds": 3.43,
-        "spoiler_test_seconds": 5.29,
-        "total_seconds": 8.72
+        "generation_seconds": 3.21,
+        "spoiler_test_seconds": 6.52,
+        "total_seconds": 9.73
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -3064,11 +3632,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:10:50.435849",
+      "timestamp": "2025-10-04T08:52:59.240772",
       "processing_time": {
-        "generation_seconds": 5.27,
-        "spoiler_test_seconds": 5.12,
-        "total_seconds": 10.39
+        "generation_seconds": 4.85,
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 9.78
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -3102,11 +3678,19 @@
       "progress_percent": 1.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:11:01.068485",
+      "timestamp": "2025-10-04T08:53:09.264968",
       "processing_time": {
-        "generation_seconds": 20.09,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 25.11
+        "generation_seconds": 18.92,
+        "spoiler_test_seconds": 6.35,
+        "total_seconds": 25.270000000000003
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -3140,11 +3724,19 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:11:26.436091",
+      "timestamp": "2025-10-04T08:53:34.784987",
       "processing_time": {
-        "generation_seconds": 7.17,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 12.19
+        "generation_seconds": 7.19,
+        "spoiler_test_seconds": 5.09,
+        "total_seconds": 12.280000000000001
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -3177,11 +3769,19 @@
       "progress_percent": 2.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:11:38.882011",
+      "timestamp": "2025-10-04T08:53:47.318766",
       "processing_time": {
-        "generation_seconds": 4.79,
-        "spoiler_test_seconds": 5.0,
-        "total_seconds": 9.79
+        "generation_seconds": 4.65,
+        "spoiler_test_seconds": 4.95,
+        "total_seconds": 9.600000000000001
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   },
@@ -3246,11 +3846,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:00:16.956319",
+      "timestamp": "2025-10-04T08:42:13.960975",
       "processing_time": {
-        "generation_seconds": 2.17,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 7.16
+        "generation_seconds": 3.75,
+        "spoiler_test_seconds": 5.03,
+        "total_seconds": 8.780000000000001
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -3354,11 +3962,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T12:51:12.079069",
+      "timestamp": "2025-10-04T08:32:42.276045",
       "processing_time": {
-        "generation_seconds": 2.36,
-        "spoiler_test_seconds": 5.05,
-        "total_seconds": 7.41
+        "generation_seconds": 2.59,
+        "spoiler_test_seconds": 4.93,
+        "total_seconds": 7.52
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -3423,19 +4039,30 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:10:31.459151",
+      "timestamp": "2025-10-04T08:52:40.852380",
       "processing_time": {
-        "generation_seconds": 3.31,
-        "spoiler_test_seconds": 6.33,
-        "total_seconds": 9.64
+        "generation_seconds": 3.19,
+        "spoiler_test_seconds": 5.0,
+        "total_seconds": 8.19
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
   "metadata": {
-    "test_data_updated": "2025-10-03T13:11:48.886474",
+    "test_data_updated": "2025-10-04T08:53:57.140525",
     "test_data_source": {
-      "created": "2025-10-03T10:25:29.544295",
-      "last_updated": "2025-10-03T13:11:48.814391",
+      "average_time_per_template_seconds": 59.8,
+      "batch_processing_time_minutes": 78.8,
+      "batch_processing_time_seconds": 4726.4,
+      "created": "2025-08-22T09:54:44.358796",
+      "last_updated": "2025-10-04T08:53:57.054949",
       "script_version": "1.0.0"
     },
     "games_with_test_data": 79,
@@ -3503,11 +4130,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-03T13:00:52.938221",
+      "timestamp": "2025-10-04T08:42:52.573626",
       "processing_time": {
-        "generation_seconds": 7.9,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 12.91
+        "generation_seconds": 7.41,
+        "spoiler_test_seconds": 4.85,
+        "total_seconds": 12.26
+      },
+      "seed_range_info": {
+        "seed_range": "1-10",
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "consecutive_passes_before_failure": 10,
+        "first_failure_seed": null,
+        "total_seeds_tested": 10
       }
     }
   },
