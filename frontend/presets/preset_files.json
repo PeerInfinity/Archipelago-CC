@@ -328,19 +328,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T08:28:37.546430",
+      "timestamp": "2025-10-04T12:57:37.142458",
       "processing_time": {
-        "generation_seconds": 10.01,
-        "spoiler_test_seconds": 16.49,
-        "total_seconds": 26.5
+        "generation_seconds": 8.14,
+        "spoiler_test_seconds": 15.72,
+        "total_seconds": 23.86
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -450,19 +450,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T08:30:01.977420",
+      "timestamp": "2025-10-04T09:47:54.616734",
       "processing_time": {
-        "generation_seconds": 8.9,
-        "spoiler_test_seconds": 4.93,
-        "total_seconds": 13.83
+        "generation_seconds": 8.89,
+        "spoiler_test_seconds": 5.03,
+        "total_seconds": 13.920000000000002
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -662,19 +662,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:31:53.514097",
+      "timestamp": "2025-10-04T09:50:18.537065",
       "processing_time": {
-        "generation_seconds": 3.41,
-        "spoiler_test_seconds": 7.01,
-        "total_seconds": 10.42
+        "generation_seconds": 4.72,
+        "spoiler_test_seconds": 7.04,
+        "total_seconds": 11.76
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -746,27 +746,27 @@
       }
     },
     "test_result": {
-      "status": "passed",
+      "status": "failed",
       "generation_errors": 0,
       "generation_warnings": 0,
-      "sphere_reached": 4.1,
+      "sphere_reached": 1.5,
       "max_spheres": 4.1,
-      "progress_percent": 100.0,
+      "progress_percent": 36.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:32:14.638159",
+      "timestamp": "2025-10-04T12:34:11.174013",
       "processing_time": {
-        "generation_seconds": 5.99,
+        "generation_seconds": 6.13,
         "spoiler_test_seconds": 4.89,
-        "total_seconds": 10.879999999999999
+        "total_seconds": 11.02
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
-        "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "seed_range": "1-10",
+        "seeds_passed": 9,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 9,
+        "first_failure_seed": 10,
+        "total_seeds_tested": 10
       }
     }
   },
@@ -1147,19 +1147,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:36:34.643965",
+      "timestamp": "2025-10-04T09:53:57.088022",
       "processing_time": {
-        "generation_seconds": 8.22,
-        "spoiler_test_seconds": 8.16,
-        "total_seconds": 16.380000000000003
+        "generation_seconds": 7.9,
+        "spoiler_test_seconds": 7.79,
+        "total_seconds": 15.690000000000001
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -1254,19 +1254,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:37:00.274614",
+      "timestamp": "2025-10-04T09:56:29.535858",
       "processing_time": {
-        "generation_seconds": 3.57,
-        "spoiler_test_seconds": 4.93,
-        "total_seconds": 8.5
+        "generation_seconds": 3.47,
+        "spoiler_test_seconds": 4.89,
+        "total_seconds": 8.36
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -1300,11 +1300,11 @@
       "progress_percent": 0.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:37:09.013037",
+      "timestamp": "2025-10-04T09:44:01.313586",
       "processing_time": {
-        "generation_seconds": 13.36,
-        "spoiler_test_seconds": 4.97,
-        "total_seconds": 18.33
+        "generation_seconds": 11.59,
+        "spoiler_test_seconds": 6.6,
+        "total_seconds": 18.189999999999998
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1313,43 +1313,6 @@
         "consecutive_passes_before_failure": 0,
         "first_failure_seed": 1,
         "total_seeds_tested": 1
-      }
-    }
-  },
-  "ff1": {
-    "name": "Final Fantasy",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Final Fantasy"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 1,
-      "generation_warnings": 0,
-      "sphere_reached": 0.1,
-      "max_spheres": 0.1,
-      "progress_percent": 100.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-09-04T20:41:32.517612",
-      "processing_time": {
-        "generation_seconds": 1.87,
-        "spoiler_test_seconds": 5.2,
-        "total_seconds": 7.07
       }
     }
   },
@@ -1504,19 +1467,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:39:56.082317",
+      "timestamp": "2025-10-04T09:57:58.955918",
       "processing_time": {
-        "generation_seconds": 5.96,
-        "spoiler_test_seconds": 4.97,
-        "total_seconds": 10.93
+        "generation_seconds": 4.42,
+        "spoiler_test_seconds": 4.89,
+        "total_seconds": 9.309999999999999
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -1912,19 +1875,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:41:53.491854",
+      "timestamp": "2025-10-04T09:59:37.629363",
       "processing_time": {
-        "generation_seconds": 2.5,
-        "spoiler_test_seconds": 4.88,
-        "total_seconds": 7.38
+        "generation_seconds": 2.83,
+        "spoiler_test_seconds": 5.16,
+        "total_seconds": 7.99
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -2139,19 +2102,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:43:05.047379",
+      "timestamp": "2025-10-04T10:00:56.000437",
       "processing_time": {
-        "generation_seconds": 2.87,
-        "spoiler_test_seconds": 4.91,
-        "total_seconds": 7.78
+        "generation_seconds": 3.01,
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 7.93
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -2546,19 +2509,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:47:58.239836",
+      "timestamp": "2025-10-04T10:02:20.139262",
       "processing_time": {
-        "generation_seconds": 4.33,
-        "spoiler_test_seconds": 4.91,
-        "total_seconds": 9.24
+        "generation_seconds": 5.8,
+        "spoiler_test_seconds": 4.96,
+        "total_seconds": 10.76
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -2772,19 +2735,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:48:49.013762",
+      "timestamp": "2025-10-04T10:03:58.011775",
       "processing_time": {
-        "generation_seconds": 5.58,
-        "spoiler_test_seconds": 14.45,
-        "total_seconds": 20.03
+        "generation_seconds": 7.06,
+        "spoiler_test_seconds": 12.82,
+        "total_seconds": 19.88
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -3044,19 +3007,19 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T08:50:31.062126",
+      "timestamp": "2025-10-04T10:07:13.249380",
       "processing_time": {
-        "generation_seconds": 8.6,
-        "spoiler_test_seconds": 6.55,
-        "total_seconds": 15.149999999999999
+        "generation_seconds": 8.53,
+        "spoiler_test_seconds": 6.36,
+        "total_seconds": 14.89
       },
       "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 1,
+        "seed_range": "1-10",
+        "seeds_passed": 10,
         "seeds_failed": 0,
-        "consecutive_passes_before_failure": 1,
+        "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
-        "total_seeds_tested": 1
+        "total_seeds_tested": 10
       }
     }
   },
@@ -4056,18 +4019,18 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2025-10-04T08:53:57.140525",
+    "test_data_updated": "2025-10-04T13:12:50.177758",
     "test_data_source": {
-      "average_time_per_template_seconds": 59.8,
-      "batch_processing_time_minutes": 78.8,
-      "batch_processing_time_seconds": 4726.4,
+      "average_time_per_template_seconds": 19.2,
+      "batch_processing_time_minutes": 25.3,
+      "batch_processing_time_seconds": 1519.6,
       "created": "2025-08-22T09:54:44.358796",
-      "last_updated": "2025-10-04T08:53:57.054949",
+      "last_updated": "2025-10-04T13:01:15.128699",
       "script_version": "1.0.0"
     },
     "games_with_test_data": 79,
-    "total_games": 81,
-    "games_without_test_data": 2
+    "total_games": 79,
+    "games_without_test_data": 0
   },
   "metamath": {
     "name": "Metamath",
@@ -4143,51 +4106,6 @@
         "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
         "total_seeds_tested": 10
-      }
-    }
-  },
-  "dkc3": {
-    "name": "Donkey Kong Country 3",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Donkey Kong Country 3"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 0,
-      "generation_warnings": 2,
-      "sphere_reached": 0.0,
-      "max_spheres": 3.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-01T21:02:36.239884",
-      "processing_time": {
-        "generation_seconds": 6.39,
-        "spoiler_test_seconds": 4.91,
-        "total_seconds": 11.3
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
       }
     }
   }

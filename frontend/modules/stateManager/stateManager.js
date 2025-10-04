@@ -2992,7 +2992,6 @@ export class StateManager {
     // REFACTOR: Duplication removed - using single source of truth for all fields
     const snapshot = {
       inventory: inventorySnapshot,
-      settings: { ...this.settings },
       // All games now use gameStateModule flags
       flags: this.gameStateModule?.flags || [],
       checkedLocations: Array.from(this.checkedLocations || []),

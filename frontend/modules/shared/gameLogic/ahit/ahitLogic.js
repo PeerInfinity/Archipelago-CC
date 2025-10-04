@@ -254,7 +254,13 @@ export function can_clear_required_act(snapshot, staticData, actEntrance) {
  * @param {number} hatType - HatType enum value
  * @returns {number} Total yarn cost needed
  */
-function get_hat_cost(staticData, hatType) {
+/**
+ * Get the yarn cost for a specific hat based on craft order
+ * @param {Object} staticData - Static game data
+ * @param {number} hatType - The hat type to check cost for
+ * @returns {number} Total yarn cost
+ */
+export function get_hat_cost(staticData, hatType) {
   if (!staticData || !staticData.game_info || !staticData.game_info['1'] || !staticData.game_info['1'].hat_info) {
     return 0;
   }
@@ -404,6 +410,72 @@ export function can_hit(snapshot, staticData, umbrellaOnly) {
   }
 
   return false;
+}
+
+/**
+ * Check if player can clear Alpine Skyline
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {any} itemName - Not used for this helper
+ * @returns {boolean}
+ */
+export function can_clear_alpine(snapshot, staticData, itemName) {
+  return has(snapshot, staticData, 'Birdhouse Cleared') &&
+         has(snapshot, staticData, 'Lava Cake Cleared') &&
+         has(snapshot, staticData, 'Windmill Cleared') &&
+         has(snapshot, staticData, 'Twilight Bell Cleared');
+}
+
+/**
+ * Check if player can clear Nyakuza Metro
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {any} itemName - Not used for this helper
+ * @returns {boolean}
+ */
+export function can_clear_metro(snapshot, staticData, itemName) {
+  return has(snapshot, staticData, 'Nyakuza Intro Cleared') &&
+         has(snapshot, staticData, 'Yellow Overpass Station Cleared') &&
+         has(snapshot, staticData, 'Yellow Overpass Manhole Cleared') &&
+         has(snapshot, staticData, 'Green Clean Station Cleared') &&
+         has(snapshot, staticData, 'Green Clean Manhole Cleared') &&
+         has(snapshot, staticData, 'Bluefin Tunnel Cleared') &&
+         has(snapshot, staticData, 'Pink Paw Station Cleared') &&
+         has(snapshot, staticData, 'Pink Paw Manhole Cleared');
+}
+
+/**
+ * Check if zipline logic is enabled (Alpine Skyline ziplines are shuffled)
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {any} itemName - Not used for this helper
+ * @returns {boolean}
+ */
+export function zipline_logic(snapshot, staticData, itemName) {
+  const settings = staticData?.settings?.[1];
+  return settings?.ShuffleAlpineZiplines ?? false;
+}
+
+/**
+ * Get the count of relics in a specific relic group
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {string} relicGroup - The relic group name
+ * @returns {number} Count of relics in the group
+ */
+export function get_relic_count(snapshot, staticData, relicGroup) {
+  if (!staticData?.groupData?.[relicGroup]) {
+    return 0;
+  }
+
+  const groupItems = staticData.groupData[relicGroup];
+  let totalCount = 0;
+
+  for (const itemName of groupItems) {
+    totalCount += count(snapshot, staticData, itemName);
+  }
+
+  return totalCount;
 }
 
 /**
@@ -575,8 +647,13 @@ export const helperFunctions = {
   has_paintings,
   painting_logic,
   get_difficulty,
+  zipline_logic,
   can_clear_required_act,
+  can_clear_alpine,
+  can_clear_metro,
   has_relic_combo,
+  get_relic_count,
+  get_hat_cost,
 
   // Movement and abilities
   can_use_hat,

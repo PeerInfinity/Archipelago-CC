@@ -1,24 +1,24 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-10-04 10:09:34
+**Generated:** 2025-10-04 13:01:15
 
 **Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-10-04T10:09:34.942391
+**Source Data Last Updated:** 2025-10-04T13:01:15.019535
 
 **Script Version:** 1.0.0
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 22 (27.8%)
-- **Failed:** 57 (72.2%)
+- **Passed:** 23 (29.1%)
+- **Failed:** 56 (70.9%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|
-| A Hat in Time | ❌ Failed seed 4 | 0 | 3.6 | 6.1 | 🟡 59.0% | ✅ | ✅ |
+| A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 1.5 | 1.5 | 🟢 Complete | ✅ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
