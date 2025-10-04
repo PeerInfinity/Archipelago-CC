@@ -145,9 +145,9 @@ export function createStateSnapshotInterface(
 
       // Use dynamic helper selection for has functionality
       if (selectedHelpers && selectedHelpers.has) {
-        return selectedHelpers.has(snapshot, itemName, staticData);
+        return selectedHelpers.has(snapshot, staticData, itemName);
       }
-      
+
       // Legacy implementation fallback
       return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
     },
@@ -156,9 +156,9 @@ export function createStateSnapshotInterface(
 
       // Use dynamic helper selection for count functionality
       if (selectedHelpers && selectedHelpers.count) {
-        return selectedHelpers.count(snapshot, itemName, staticData);
+        return selectedHelpers.count(snapshot, staticData, itemName);
       }
-      
+
       // Legacy implementation fallback
       return snapshot?.inventory?.[itemName] || 0;
     },
