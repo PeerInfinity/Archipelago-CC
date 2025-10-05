@@ -34,6 +34,8 @@ from .inscryption import InscryptionGameExportHandler
 from .kh1 import KH1GameExportHandler
 from .kh2 import KH2GameExportHandler
 from .kdl3 import KDL3GameExportHandler
+from .lingo import LingoGameExportHandler
+from .saving_princess import SavingPrincessGameExportHandler
 
 # Register game-specific helper expanders
 GAME_HANDLERS: Dict[str, Type[BaseGameExportHandler]] = {
@@ -67,7 +69,9 @@ GAME_HANDLERS: Dict[str, Type[BaseGameExportHandler]] = {
     'Kingdom Hearts': KH1GameExportHandler,
     'Kingdom Hearts 2': KH2GameExportHandler,
     "Kirby's Dream Land 3": KDL3GameExportHandler,
+    'Lingo': LingoGameExportHandler,
     'Metamath': MetamathGameExportHandler,
+    'Saving Princess': SavingPrincessGameExportHandler,
 }
 
 def get_game_export_handler(game_name: str, world=None) -> BaseGameExportHandler:

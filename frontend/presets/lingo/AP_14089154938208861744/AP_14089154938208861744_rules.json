@@ -3082,7 +3082,7 @@
                   "value": [
                     "The Tenacious - Achievement",
                     444491,
-                    "AccessRequirements(rooms={'Hub Room', 'Crossroads', 'Dread Hallway', 'Outside The Agreeable'}, doors=set(), colors={'black', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Crossroads', 'Dread Hallway', 'Hub Room', 'Outside The Agreeable'}, doors=set(), colors={'black', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -4041,7 +4041,7 @@
                   "value": [
                     "Outside The Agreeable - Lookout Panels",
                     445271,
-                    "AccessRequirements(rooms={'Suits Area', 'Orange Tower Fifth Floor', 'Outside The Bold', 'Elements Area'}, doors=set(), colors={'blue', 'red', 'purple', 'green'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Elements Area', 'Orange Tower Fifth Floor', 'Outside The Bold', 'Suits Area'}, doors=set(), colors={'blue', 'green', 'purple', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -5351,7 +5351,7 @@
                   "value": [
                     "The Incomparable - Achievement",
                     444585,
-                    "AccessRequirements(rooms={'Eight Room', 'Courtyard', 'Elements Area'}, doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Courtyard', 'Eight Room', 'Elements Area'}, doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -6277,7 +6277,7 @@
                   "value": [
                     "Color Barriers - RED and YELLOW",
                     445221,
-                    "AccessRequirements(rooms={'Directional Gallery', 'Color Hunt'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -9945,7 +9945,7 @@
                   "value": [
                     "The Colorful - Achievement",
                     444652,
-                    "AccessRequirements(rooms={'The Colorful (Gray)', 'The Colorful (Black)', 'The Colorful (Blue)', 'The Colorful (Purple)', 'The Colorful (Red)', 'The Colorful (Yellow)', 'The Colorful (Green)', 'The Colorful (Orange)', 'The Colorful (White)', 'The Colorful (Brown)'}, doors=set(), colors={'yellow', 'blue', 'gray', 'orange', 'purple', 'green', 'brown', 'black', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Colorful (Black)', 'The Colorful (Blue)', 'The Colorful (Brown)', 'The Colorful (Gray)', 'The Colorful (Green)', 'The Colorful (Orange)', 'The Colorful (Purple)', 'The Colorful (Red)', 'The Colorful (White)', 'The Colorful (Yellow)'}, doors=set(), colors={'black', 'blue', 'brown', 'gray', 'green', 'orange', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -10798,7 +10798,7 @@
                   "value": [
                     "Color Barriers - BLUE and YELLOW",
                     445235,
-                    "AccessRequirements(rooms={'Directional Gallery', 'Color Hunt'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -10826,7 +10826,7 @@
                   "value": [
                     "Color Barriers - RED and BLUE",
                     445236,
-                    "AccessRequirements(rooms={'Orange Tower Third Floor', 'Color Hunt'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Color Hunt', 'Orange Tower Third Floor'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -10854,7 +10854,7 @@
                   "value": [
                     "Color Barriers - GREEN, ORANGE and PURPLE",
                     445237,
-                    "AccessRequirements(rooms={'Courtyard', 'Outside The Initiated', 'Color Hunt', 'Directional Gallery', 'Orange Tower Third Floor', 'Outside The Agreeable'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Color Hunt', 'Courtyard', 'Directional Gallery', 'Orange Tower Third Floor', 'Outside The Agreeable', 'Outside The Initiated'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -11001,7 +11001,7 @@
                   "value": [
                     "The Optimistic - Achievement",
                     444667,
-                    "AccessRequirements(rooms={'Yellow Backside Area', 'The Observant', 'The Bearer', 'Directional Gallery'}, doors=set(), colors={'red', 'green'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Directional Gallery', 'The Bearer', 'The Observant', 'Yellow Backside Area'}, doors=set(), colors={'green', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12104,7 +12104,7 @@
                   "value": [
                     "Outside The Undeterred - RAINY",
                     444750,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'brown', 'yellow', 'black', 'red', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'brown', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12132,7 +12132,7 @@
                   "value": [
                     "Outside The Undeterred - ZERO",
                     444751,
-                    "AccessRequirements(rooms={'The Bearer (East)', 'Yellow Backside Area', 'Rhyme Room (Cross)', 'Number Hunt', 'Orange Tower Fifth Floor', 'Elements Area', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable', 'Hot Crusts Area', 'Crossroads', 'Dead End Area', 'Amen Name Area', 'The Bearer (South)', 'Outside The Initiated', 'Directional Gallery', 'The Traveled', 'Knight Night Exit', 'Outside The Bold', 'The Eyes They See', 'Art Gallery'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Amen Name Area', 'Art Gallery', 'Crossroads', 'Dead End Area', 'Directional Gallery', 'Elements Area', 'Hot Crusts Area', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Orange Tower Fifth Floor', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'Rhyme Room (Cross)', 'The Bearer (East)', 'The Bearer (South)', 'The Eyes They See', 'The Traveled', 'Yellow Backside Area'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12244,7 +12244,7 @@
                   "value": [
                     "Fours",
                     445240,
-                    "AccessRequirements(rooms={'The Traveled', 'Dead End Area', 'Outside The Undeterred', 'Hub Room'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Dead End Area', 'Hub Room', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12467,7 +12467,7 @@
                   "value": [
                     "Fives",
                     445241,
-                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'The Traveled', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12495,7 +12495,7 @@
                   "value": [
                     "Sixes",
                     445242,
-                    "AccessRequirements(rooms={'The Bearer (East)', 'Dead End Area', 'The Bearer (South)', 'Number Hunt', 'Directional Gallery', 'The Traveled', 'Outside The Bold', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Number Hunt', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Undeterred', 'The Bearer (East)', 'The Bearer (South)', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12523,7 +12523,7 @@
                   "value": [
                     "Sevens",
                     445243,
-                    "AccessRequirements(rooms={'The Bearer (East)', 'Number Hunt', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable', 'Dead End Area', 'The Bearer (South)', 'Outside The Initiated', 'Directional Gallery', 'The Traveled', 'Knight Night Exit', 'Outside The Bold'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'The Bearer (East)', 'The Bearer (South)', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12551,7 +12551,7 @@
                   "value": [
                     "Eights",
                     445244,
-                    "AccessRequirements(rooms={'The Bearer (East)', 'Number Hunt', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable', 'Hot Crusts Area', 'Crossroads', 'Dead End Area', 'The Bearer (South)', 'Outside The Initiated', 'Directional Gallery', 'The Traveled', 'Knight Night Exit', 'Outside The Bold', 'The Eyes They See', 'Art Gallery'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Art Gallery', 'Crossroads', 'Dead End Area', 'Directional Gallery', 'Hot Crusts Area', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'The Bearer (East)', 'The Bearer (South)', 'The Eyes They See', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12579,7 +12579,7 @@
                   "value": [
                     "Nines",
                     445245,
-                    "AccessRequirements(rooms={'The Bearer (East)', 'Yellow Backside Area', 'Rhyme Room (Cross)', 'Number Hunt', 'Orange Tower Fifth Floor', 'Elements Area', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable', 'Hot Crusts Area', 'Crossroads', 'Dead End Area', 'Amen Name Area', 'The Bearer (South)', 'Outside The Initiated', 'Directional Gallery', 'The Traveled', 'Knight Night Exit', 'Outside The Bold', 'The Eyes They See', 'Art Gallery'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Amen Name Area', 'Art Gallery', 'Crossroads', 'Dead End Area', 'Directional Gallery', 'Elements Area', 'Hot Crusts Area', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Orange Tower Fifth Floor', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'Rhyme Room (Cross)', 'The Bearer (East)', 'The Bearer (South)', 'The Eyes They See', 'The Traveled', 'Yellow Backside Area'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12903,7 +12903,7 @@
                   "value": [
                     "Directional Gallery - 834283054",
                     444792,
-                    "AccessRequirements(rooms={'Directional Gallery', 'The Traveled', 'Dead End Area', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable', 'Number Hunt'}, doors=set(), colors={'blue', 'purple', 'orange'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Number Hunt', 'Outside The Agreeable', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors={'blue', 'orange', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -12931,7 +12931,7 @@
                   "value": [
                     "Directional Gallery - PARANOID",
                     444793,
-                    "AccessRequirements(rooms={'Directional Gallery', 'The Traveled', 'Dead End Area', 'Outside The Undeterred', 'Hub Room', 'Outside The Agreeable', 'Number Hunt'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Number Hunt', 'Outside The Agreeable', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -13253,7 +13253,7 @@
                   "value": [
                     "Color Hunt - GREEN",
                     444811,
-                    "AccessRequirements(rooms={'Directional Gallery', 'Outside The Initiated', 'Color Hunt'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery', 'Outside The Initiated'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -13281,7 +13281,7 @@
                   "value": [
                     "Color Hunt - PURPLE",
                     444812,
-                    "AccessRequirements(rooms={'Outside The Initiated', 'Orange Tower Third Floor', 'Color Hunt'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Color Hunt', 'Orange Tower Third Floor', 'Outside The Initiated'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -13309,7 +13309,7 @@
                   "value": [
                     "Color Hunt - ORANGE",
                     444813,
-                    "AccessRequirements(rooms={'Directional Gallery', 'Color Hunt', 'Orange Tower Third Floor'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery', 'Orange Tower Third Floor'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -13633,7 +13633,7 @@
                   "value": [
                     "The Bearer - Achievement",
                     444819,
-                    "AccessRequirements(rooms={'The Bearer (East)', 'Cross Tower (South)', 'Bearer Side Area', 'The Bearer (South)', 'Cross Tower (East)', 'Suits Area', 'The Bearer (North)', 'Orange Tower Fifth Floor', 'The Bearer (West)', 'Cross Tower (North)', 'Outside The Bold', 'Elements Area', 'Cross Tower (West)'}, doors=set(), colors={'yellow', 'blue', 'red', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Bearer Side Area', 'Cross Tower (East)', 'Cross Tower (North)', 'Cross Tower (South)', 'Cross Tower (West)', 'Elements Area', 'Orange Tower Fifth Floor', 'Outside The Bold', 'Suits Area', 'The Bearer (East)', 'The Bearer (North)', 'The Bearer (South)', 'The Bearer (West)'}, doors=set(), colors={'blue', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -16514,7 +16514,7 @@
                   "value": [
                     "The Steady - Achievement",
                     444859,
-                    "AccessRequirements(rooms={'The Steady (Sapphire)', 'The Steady (Sunflower)', 'The Steady (Ruby)', 'The Steady (Orange)', 'The Steady (Cherry)', 'The Steady (Lilac)', 'The Steady (Blueberry)', 'The Steady (Lime)', 'The Steady (Emerald)', 'The Steady (Amethyst)', 'The Steady (Lemon)', 'The Steady (Topaz)', 'The Steady (Rose)', 'The Steady (Amber)', 'The Steady (Plum)', 'The Steady (Carnation)'}, doors=set(), colors={'blue', 'yellow', 'black', 'red', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Steady (Amber)', 'The Steady (Amethyst)', 'The Steady (Blueberry)', 'The Steady (Carnation)', 'The Steady (Cherry)', 'The Steady (Emerald)', 'The Steady (Lemon)', 'The Steady (Lilac)', 'The Steady (Lime)', 'The Steady (Orange)', 'The Steady (Plum)', 'The Steady (Rose)', 'The Steady (Ruby)', 'The Steady (Sapphire)', 'The Steady (Sunflower)', 'The Steady (Topaz)'}, doors=set(), colors={'black', 'blue', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -17334,7 +17334,7 @@
                   "value": [
                     "The Artistic - Achievement",
                     444885,
-                    "AccessRequirements(rooms={'The Artistic (Panda)', 'The Artistic (Lattice)', 'The Artistic (Apple)'}, doors=set(), colors={'yellow', 'black', 'red', 'blue'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Artistic (Apple)', 'The Artistic (Lattice)', 'The Artistic (Panda)'}, doors=set(), colors={'black', 'blue', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -17362,7 +17362,7 @@
                   "value": [
                     "The Artistic - Smiley and Panda",
                     445249,
-                    "AccessRequirements(rooms={'The Artistic (Panda)'}, doors=set(), colors={'yellow', 'blue', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Artistic (Panda)'}, doors=set(), colors={'blue', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -17516,7 +17516,7 @@
                   "value": [
                     "The Artistic - Panda and Lattice",
                     445250,
-                    "AccessRequirements(rooms={'The Artistic (Lattice)'}, doors=set(), colors={'blue', 'black', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Artistic (Lattice)'}, doors=set(), colors={'black', 'blue', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -17685,7 +17685,7 @@
                   "value": [
                     "The Artistic - Lattice and Apple",
                     445251,
-                    "AccessRequirements(rooms={'The Artistic (Apple)'}, doors=set(), colors={'yellow', 'black', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Artistic (Apple)'}, doors=set(), colors={'black', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -17839,7 +17839,7 @@
                   "value": [
                     "The Artistic - Apple and Smiley",
                     445252,
-                    "AccessRequirements(rooms={'The Artistic (Smiley)'}, doors=set(), colors={'yellow', 'blue', 'black'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Artistic (Smiley)'}, doors=set(), colors={'black', 'blue', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -18796,7 +18796,7 @@
                   "value": [
                     "The Wondrous - Achievement",
                     444947,
-                    "AccessRequirements(rooms={'The Wondrous (Table)', 'The Wondrous (Window)', 'The Wondrous (Chandelier)', 'The Wondrous (Bookcase)'}, doors=set(), colors={'yellow', 'red', 'blue', 'brown'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'The Wondrous (Bookcase)', 'The Wondrous (Chandelier)', 'The Wondrous (Table)', 'The Wondrous (Window)'}, doors=set(), colors={'blue', 'brown', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -19998,7 +19998,7 @@
                   "value": [
                     "Art Gallery - ORDER",
                     444981,
-                    "AccessRequirements(rooms={'Art Gallery (Fourth Floor)'}, doors=set(), colors={'yellow', 'blue', 'brown', 'gray', 'orange'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms={'Art Gallery (Fourth Floor)'}, doors=set(), colors={'blue', 'brown', 'gray', 'orange', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -20072,7 +20072,7 @@
                   "value": [
                     "Art Gallery - First Floor Puzzles",
                     445256,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow', 'blue', 'red', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -20146,7 +20146,7 @@
                   "value": [
                     "Art Gallery - Second Floor Puzzles",
                     445257,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'red', 'black', 'brown'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'blue', 'brown', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -20294,7 +20294,7 @@
                   "value": [
                     "Art Gallery - Fourth Floor Puzzles",
                     445259,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'yellow', 'orange', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'orange', 'purple', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -21414,7 +21414,7 @@
                   "value": [
                     "Outside The Wise - KITTEN, CAT",
                     445267,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'brown', 'black'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'brown'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -21465,7 +21465,7 @@
                   "value": [
                     "The Wise - Achievement",
                     445086,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'brown', 'black'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'brown'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -21799,7 +21799,7 @@
                   "value": [
                     "Challenge Room - Achievement",
                     445178,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'yellow', 'gray', 'orange', 'purple', 'brown', 'black', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
+                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'blue', 'brown', 'gray', 'orange', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
                   ]
                 }
               ]
@@ -21966,6 +21966,80 @@
         "type": null,
         "max_count": 2
       },
+      ":)": {
+        "name": ":)",
+        "id": 444409,
+        "groups": [
+          "Everything",
+          "Junk"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 52
+      },
+      "Slowness Trap": {
+        "name": "Slowness Trap",
+        "id": 444410,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 20
+      },
+      "Iceland Trap": {
+        "name": "Iceland Trap",
+        "id": 444411,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 20
+      },
+      "Atbash Trap": {
+        "name": "Atbash Trap",
+        "id": 444412,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 18
+      },
+      "Puzzle Skip": {
+        "name": "Puzzle Skip",
+        "id": 444413,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 46
+      },
       "Starting Room - Back Right Door": {
         "name": "Starting Room - Back Right Door",
         "id": 444416,
@@ -21996,9 +22070,39 @@
         "type": null,
         "max_count": 1
       },
+      "Rhyme Room Doors": {
+        "name": "Rhyme Room Doors",
+        "id": 444418,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Hidden Room - Dead End Door": {
         "name": "Hidden Room - Dead End Door",
         "id": 444419,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dead End Area Access": {
+        "name": "Dead End Area Access",
+        "id": 444420,
         "groups": [
           "Doors",
           "Everything"
@@ -22103,9 +22207,69 @@
         "type": null,
         "max_count": 1
       },
+      "Entrances to The Tenacious": {
+        "name": "Entrances to The Tenacious",
+        "id": 444427,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Symmetry Room - Near Far Door": {
+        "name": "Symmetry Room - Near Far Door",
+        "id": 444428,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Symmetry Doors": {
+        "name": "Symmetry Doors",
+        "id": 444429,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Hub Room - Shortcut to Hedge Maze": {
         "name": "Hub Room - Shortcut to Hedge Maze",
         "id": 444430,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hedge Maze Doors": {
+        "name": "Hedge Maze Doors",
+        "id": 444431,
         "groups": [
           "Doors",
           "Everything"
@@ -22149,84 +22313,9 @@
         "type": null,
         "max_count": 1
       },
-      "1 Sunwarp": {
-        "name": "1 Sunwarp",
-        "id": 444581,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "2 Sunwarp": {
-        "name": "2 Sunwarp",
-        "id": 444588,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "3 Sunwarp": {
-        "name": "3 Sunwarp",
-        "id": 444586,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "4 Sunwarp": {
-        "name": "4 Sunwarp",
-        "id": 444585,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "5 Sunwarp": {
-        "name": "5 Sunwarp",
-        "id": 444587,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "6 Sunwarp": {
-        "name": "6 Sunwarp",
-        "id": 444584,
+      "Entrance to The Traveled": {
+        "name": "Entrance to The Traveled",
+        "id": 444434,
         "groups": [
           "Doors",
           "Everything"
@@ -22317,6 +22406,21 @@
         "type": null,
         "max_count": 1
       },
+      "Crossroads - Tower Entrances": {
+        "name": "Crossroads - Tower Entrances",
+        "id": 444441,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Crossroads - Tower Back Entrance": {
         "name": "Crossroads - Tower Back Entrance",
         "id": 444442,
@@ -22335,6 +22439,21 @@
       "Crossroads - Words Sword Door": {
         "name": "Crossroads - Words Sword Door",
         "id": 444443,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crossroads Doors": {
+        "name": "Crossroads Doors",
+        "id": 444444,
         "groups": [
           "Doors",
           "Everything"
@@ -22425,21 +22544,6 @@
       "The Tenacious - Shortcut to Hub Room": {
         "name": "The Tenacious - Shortcut to Hub Room",
         "id": 444450,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Symmetry Room - Near Far Door": {
-        "name": "Symmetry Room - Near Far Door",
-        "id": 444428,
         "groups": [
           "Doors",
           "Everything"
@@ -22560,11 +22664,55 @@
         "type": null,
         "max_count": 1
       },
-      "Compass Room - Lookout Entrance": {
-        "name": "Compass Room - Lookout Entrance",
-        "id": 444579,
+      "Color Hunt Barriers": {
+        "name": "Color Hunt Barriers",
+        "id": 444458,
         "groups": [
           "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hallway Room (1) - Exit": {
+        "name": "Hallway Room (1) - Exit",
+        "id": 444459,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hallway Room Doors": {
+        "name": "Hallway Room Doors",
+        "id": 444460,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Hallway Room": {
+        "name": "Progressive Hallway Room",
+        "id": 444461,
+        "groups": [
           "Everything"
         ],
         "advancement": false,
@@ -22655,11 +22803,55 @@
         "type": null,
         "max_count": 1
       },
+      "Observant Doors": {
+        "name": "Observant Doors",
+        "id": 444467,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "The Fearless (First Floor) - Second Floor": {
         "name": "The Fearless (First Floor) - Second Floor",
         "id": 444468,
         "groups": [
           "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fearless Doors": {
+        "name": "Fearless Doors",
+        "id": 444469,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Fearless": {
+        "name": "Progressive Fearless",
+        "id": 444470,
+        "groups": [
           "Everything"
         ],
         "advancement": false,
@@ -22700,6 +22892,21 @@
         "type": null,
         "max_count": 1
       },
+      "Backside Doors": {
+        "name": "Backside Doors",
+        "id": 444473,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "The Observant - Stairs": {
         "name": "The Observant - Stairs",
         "id": 444474,
@@ -22719,22 +22926,6 @@
         "name": "The Incomparable - Eight Door",
         "id": 444475,
         "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outside The Initiated - Eight Door": {
-        "name": "Outside The Initiated - Eight Door",
-        "id": 444578,
-        "groups": [
-          "Achievement Room Entrances",
           "Doors",
           "Everything"
         ],
@@ -22836,9 +23027,38 @@
         "type": null,
         "max_count": 1
       },
+      "Progressive Orange Tower": {
+        "name": "Progressive Orange Tower",
+        "id": 444482,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Orange Tower First Floor - Shortcut to Hub Room": {
         "name": "Orange Tower First Floor - Shortcut to Hub Room",
         "id": 444483,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Orange Tower First Floor - Shortcuts": {
+        "name": "Orange Tower First Floor - Shortcuts",
+        "id": 444484,
         "groups": [
           "Doors",
           "Everything"
@@ -22941,6 +23161,21 @@
         "type": null,
         "max_count": 1
       },
+      "Welcome Back Doors": {
+        "name": "Welcome Back Doors",
+        "id": 444492,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Mastery": {
         "name": "Mastery",
         "id": 444493,
@@ -23005,6 +23240,21 @@
       "The Colorful - White Door": {
         "name": "The Colorful - White Door",
         "id": 444497,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Colorful Doors": {
+        "name": "Colorful Doors",
+        "id": 444498,
         "groups": [
           "Doors",
           "Everything"
@@ -23510,6 +23760,21 @@
         "type": null,
         "max_count": 1
       },
+      "Directional Gallery Doors": {
+        "name": "Directional Gallery Doors",
+        "id": 444531,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Number Hunt - Sixes": {
         "name": "Number Hunt - Sixes",
         "id": 444532,
@@ -23711,6 +23976,21 @@
         "type": null,
         "max_count": 1
       },
+      "Artistic Doors": {
+        "name": "Artistic Doors",
+        "id": 444545,
+        "groups": [
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "The Artistic (Panda) - Door to Lattice": {
         "name": "The Artistic (Panda) - Door to Lattice",
         "id": 444546,
@@ -23810,21 +24090,6 @@
           "Doors",
           "Everything",
           "Paintings"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hallway Room (1) - Exit": {
-        "name": "Hallway Room (1) - Exit",
-        "id": 444459,
-        "groups": [
-          "Doors",
-          "Everything"
         ],
         "advancement": false,
         "priority": false,
@@ -23976,6 +24241,20 @@
         "groups": [
           "Achievement Room Entrances",
           "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Art Gallery": {
+        "name": "Progressive Art Gallery",
+        "id": 444563,
+        "groups": [
           "Everything"
         ],
         "advancement": false,
@@ -24154,9 +24433,70 @@
         "type": null,
         "max_count": 1
       },
-      "Observant Doors": {
-        "name": "Observant Doors",
-        "id": 444467,
+      "The Feeling of Being Lost": {
+        "name": "The Feeling of Being Lost",
+        "id": 444575,
+        "groups": [
+          "Everything",
+          "Junk"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 44
+      },
+      "Wanderlust": {
+        "name": "Wanderlust",
+        "id": 444576,
+        "groups": [
+          "Everything",
+          "Junk"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 58
+      },
+      "Empty White Hallways": {
+        "name": "Empty White Hallways",
+        "id": 444577,
+        "groups": [
+          "Everything",
+          "Junk"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 32
+      },
+      "Outside The Initiated - Eight Door": {
+        "name": "Outside The Initiated - Eight Door",
+        "id": 444578,
+        "groups": [
+          "Achievement Room Entrances",
+          "Doors",
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Compass Room - Lookout Entrance": {
+        "name": "Compass Room - Lookout Entrance",
+        "id": 444579,
         "groups": [
           "Doors",
           "Everything"
@@ -24169,11 +24509,10 @@
         "type": null,
         "max_count": 1
       },
-      "Entrances to The Tenacious": {
-        "name": "Entrances to The Tenacious",
-        "id": 444427,
+      "Progressive Colorful": {
+        "name": "Progressive Colorful",
+        "id": 444580,
         "groups": [
-          "Doors",
           "Everything"
         ],
         "advancement": false,
@@ -24184,69 +24523,9 @@
         "type": null,
         "max_count": 1
       },
-      "Crossroads Doors": {
-        "name": "Crossroads Doors",
-        "id": 444444,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Directional Gallery Doors": {
-        "name": "Directional Gallery Doors",
-        "id": 444531,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Orange Tower First Floor - Shortcuts": {
-        "name": "Orange Tower First Floor - Shortcuts",
-        "id": 444484,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Entrance to The Traveled": {
-        "name": "Entrance to The Traveled",
-        "id": 444434,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Artistic Doors": {
-        "name": "Artistic Doors",
-        "id": 444545,
+      "1 Sunwarp": {
+        "name": "1 Sunwarp",
+        "id": 444581,
         "groups": [
           "Doors",
           "Everything"
@@ -24274,9 +24553,23 @@
         "type": null,
         "max_count": 1
       },
-      "Color Hunt Barriers": {
-        "name": "Color Hunt Barriers",
-        "id": 444458,
+      "Progressive Pilgrimage": {
+        "name": "Progressive Pilgrimage",
+        "id": 444583,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "6 Sunwarp": {
+        "name": "6 Sunwarp",
+        "id": 444584,
         "groups": [
           "Doors",
           "Everything"
@@ -24289,9 +24582,9 @@
         "type": null,
         "max_count": 1
       },
-      "Colorful Doors": {
-        "name": "Colorful Doors",
-        "id": 444498,
+      "4 Sunwarp": {
+        "name": "4 Sunwarp",
+        "id": 444585,
         "groups": [
           "Doors",
           "Everything"
@@ -24304,9 +24597,9 @@
         "type": null,
         "max_count": 1
       },
-      "Dead End Area Access": {
-        "name": "Dead End Area Access",
-        "id": 444420,
+      "3 Sunwarp": {
+        "name": "3 Sunwarp",
+        "id": 444586,
         "groups": [
           "Doors",
           "Everything"
@@ -24319,9 +24612,9 @@
         "type": null,
         "max_count": 1
       },
-      "Hallway Room Doors": {
-        "name": "Hallway Room Doors",
-        "id": 444460,
+      "5 Sunwarp": {
+        "name": "5 Sunwarp",
+        "id": 444587,
         "groups": [
           "Doors",
           "Everything"
@@ -24334,99 +24627,9 @@
         "type": null,
         "max_count": 1
       },
-      "Backside Doors": {
-        "name": "Backside Doors",
-        "id": 444473,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fearless Doors": {
-        "name": "Fearless Doors",
-        "id": 444469,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Welcome Back Doors": {
-        "name": "Welcome Back Doors",
-        "id": 444492,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rhyme Room Doors": {
-        "name": "Rhyme Room Doors",
-        "id": 444418,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hedge Maze Doors": {
-        "name": "Hedge Maze Doors",
-        "id": 444431,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Crossroads - Tower Entrances": {
-        "name": "Crossroads - Tower Entrances",
-        "id": 444441,
-        "groups": [
-          "Doors",
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Symmetry Doors": {
-        "name": "Symmetry Doors",
-        "id": 444429,
+      "2 Sunwarp": {
+        "name": "2 Sunwarp",
+        "id": 444588,
         "groups": [
           "Doors",
           "Everything"
@@ -24487,6 +24690,21 @@
       "Hub Room - SLAUGHTER (Panel)": {
         "name": "Hub Room - SLAUGHTER (Panel)",
         "id": 444592,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tenacious Entrance Panels": {
+        "name": "Tenacious Entrance Panels",
+        "id": 444593,
         "groups": [
           "Everything",
           "Panels"
@@ -24619,6 +24837,20 @@
         "type": null,
         "max_count": 1
       },
+      "Progressive Suits Area": {
+        "name": "Progressive Suits Area",
+        "id": 444602,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Lost Area - LOST (1), LOST (2) (Panels)": {
         "name": "Lost Area - LOST (1), LOST (2) (Panels)",
         "id": 444603,
@@ -24670,6 +24902,35 @@
         "groups": [
           "Everything",
           "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Symmetry Room Panels": {
+        "name": "Symmetry Room Panels",
+        "id": 444607,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Symmetry Room": {
+        "name": "Progressive Symmetry Room",
+        "id": 444608,
+        "groups": [
+          "Everything"
         ],
         "advancement": false,
         "priority": false,
@@ -24829,6 +25090,21 @@
         "type": null,
         "max_count": 1
       },
+      "Backside Entrance Panels": {
+        "name": "Backside Entrance Panels",
+        "id": 444620,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "The Observant - SIX (Panel)": {
         "name": "The Observant - SIX (Panel)",
         "id": 444621,
@@ -24937,6 +25213,21 @@
       "The Colorful - BEGIN (Panel)": {
         "name": "The Colorful - BEGIN (Panel)",
         "id": 444628,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Colorful Panels": {
+        "name": "Colorful Panels",
+        "id": 444629,
         "groups": [
           "Everything",
           "Panels"
@@ -25309,12 +25600,11 @@
         "type": null,
         "max_count": 1
       },
-      "Directional Gallery - TURN, LEARN (Panels)": {
-        "name": "Directional Gallery - TURN, LEARN (Panels)",
-        "id": 444679,
+      "Progressive Number Hunt": {
+        "name": "Progressive Number Hunt",
+        "id": 444654,
         "groups": [
-          "Everything",
-          "Panels"
+          "Everything"
         ],
         "advancement": false,
         "priority": false,
@@ -25342,6 +25632,21 @@
       "Color Hunt - RED (Panel)": {
         "name": "Color Hunt - RED (Panel)",
         "id": 444656,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Color Hunt Panels": {
+        "name": "Color Hunt Panels",
+        "id": 444657,
         "groups": [
           "Everything",
           "Panels"
@@ -25504,6 +25809,21 @@
         "type": null,
         "max_count": 1
       },
+      "Hallway Room Panels": {
+        "name": "Hallway Room Panels",
+        "id": 444668,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Hallway Room - Second Room Panels": {
         "name": "Hallway Room - Second Room Panels",
         "id": 444669,
@@ -25594,6 +25914,21 @@
         "type": null,
         "max_count": 1
       },
+      "Room Room Panels": {
+        "name": "Room Room Panels",
+        "id": 444675,
+        "groups": [
+          "Everything",
+          "Panels"
+        ],
+        "advancement": false,
+        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Room Room - BROOMED, LAYS, BASE (Panels)": {
         "name": "Room Room - BROOMED, LAYS, BASE (Panels)",
         "id": 444676,
@@ -25639,9 +25974,9 @@
         "type": null,
         "max_count": 1
       },
-      "Tenacious Entrance Panels": {
-        "name": "Tenacious Entrance Panels",
-        "id": 444593,
+      "Directional Gallery - TURN, LEARN (Panels)": {
+        "name": "Directional Gallery - TURN, LEARN (Panels)",
+        "id": 444679,
         "groups": [
           "Everything",
           "Panels"
@@ -25653,156 +25988,6 @@
         "event": false,
         "type": null,
         "max_count": 1
-      },
-      "Hallway Room Panels": {
-        "name": "Hallway Room Panels",
-        "id": 444668,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Colorful Panels": {
-        "name": "Colorful Panels",
-        "id": 444629,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Color Hunt Panels": {
-        "name": "Color Hunt Panels",
-        "id": 444657,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Backside Entrance Panels": {
-        "name": "Backside Entrance Panels",
-        "id": 444620,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Symmetry Room Panels": {
-        "name": "Symmetry Room Panels",
-        "id": 444607,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Room Room Panels": {
-        "name": "Room Room Panels",
-        "id": 444675,
-        "groups": [
-          "Everything",
-          "Panels"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      ":)": {
-        "name": ":)",
-        "id": 444409,
-        "groups": [
-          "Everything",
-          "Junk"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 52
-      },
-      "The Feeling of Being Lost": {
-        "name": "The Feeling of Being Lost",
-        "id": 444575,
-        "groups": [
-          "Everything",
-          "Junk"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 44
-      },
-      "Wanderlust": {
-        "name": "Wanderlust",
-        "id": 444576,
-        "groups": [
-          "Everything",
-          "Junk"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 58
-      },
-      "Empty White Hallways": {
-        "name": "Empty White Hallways",
-        "id": 444577,
-        "groups": [
-          "Everything",
-          "Junk"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 32
       },
       "Speed Boost": {
         "name": "Speed Boost",
@@ -25810,191 +25995,6 @@
         "groups": [
           "Everything",
           "Junk"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Slowness Trap": {
-        "name": "Slowness Trap",
-        "id": 444410,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 20
-      },
-      "Iceland Trap": {
-        "name": "Iceland Trap",
-        "id": 444411,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 20
-      },
-      "Atbash Trap": {
-        "name": "Atbash Trap",
-        "id": 444412,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 18
-      },
-      "Puzzle Skip": {
-        "name": "Puzzle Skip",
-        "id": 444413,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 46
-      },
-      "Progressive Symmetry Room": {
-        "name": "Progressive Symmetry Room",
-        "id": 444608,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Hallway Room": {
-        "name": "Progressive Hallway Room",
-        "id": 444461,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Pilgrimage": {
-        "name": "Progressive Pilgrimage",
-        "id": 444583,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Colorful": {
-        "name": "Progressive Colorful",
-        "id": 444580,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Orange Tower": {
-        "name": "Progressive Orange Tower",
-        "id": 444482,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Number Hunt": {
-        "name": "Progressive Number Hunt",
-        "id": 444654,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Art Gallery": {
-        "name": "Progressive Art Gallery",
-        "id": 444563,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Suits Area": {
-        "name": "Progressive Suits Area",
-        "id": 444602,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Fearless": {
-        "name": "Progressive Fearless",
-        "id": 444470,
-        "groups": [
-          "Everything"
         ],
         "advancement": false,
         "priority": false,

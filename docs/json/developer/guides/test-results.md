@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-10-04 16:31:06
+**Generated:** 2025-10-04 19:13:00
 
 **Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-10-04T16:31:06.359293
+**Source Data Last Updated:** 2025-10-04T19:13:00.547969
 
 **Script Version:** 1.0.0
 
@@ -50,7 +50,7 @@
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 0.1 | 12.1 | 🟠 0.8% | ✅ | ⚫ |
 | Kirby's Dream Land 3 | ❌ Failed seed 1 | 0 | 0 | 11.1 | 🔴 0.0% | ✅ | ⚫ |
 | Landstalker - The Treasures of King Nole | ❌ Failed seed 1 | 49 | 0.1 | 9.1 | 🟠 1.1% | ⚫ | ⚫ |
-| Lingo | ❌ Failed seed 1 | 0 | 0 | 4.1 | 🔴 0.0% | ⚫ | ⚫ |
+| Lingo | ❌ Failed seed 1 | 0 | 0 | 4.1 | 🔴 0.0% | ✅ | ⚫ |
 | Links Awakening DX | ❌ Failed seed 1 | 0 | 0 | 14.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ❌ Failed seed 1 | 0 | 0.1 | 7.1 | 🟠 1.4% | ⚫ | ⚫ |
@@ -66,7 +66,7 @@
 | Overcooked! 2 | ❌ Failed seed 1 | 0 | 0 | 17.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Paint | ❌ Failed seed 1 | 130 | 0.1 | 12.1 | 🟠 0.8% | ⚫ | ⚫ |
 | Pokemon Emerald | ❌ Failed seed 1 | 0 | 4.1 | 15.1 | 🟡 27.2% | ⚫ | ⚫ |
-| Pokemon Red and Blue | ❌ Failed seed 1 | 646 | 1.3 | 10.1 | 🟡 12.9% | ⚫ | ⚫ |
+| Pokemon Red and Blue | ❌ Failed seed 1 | 646 | 1.2 | 10.1 | 🟡 11.9% | ⚫ | ⚫ |
 | Raft | ❌ Failed seed 1 | 0 | 0 | 10.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed seed 1 | 0 | 0 | 14.1 | 🔴 0.0% | ⚫ | ⚫ |

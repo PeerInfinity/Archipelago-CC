@@ -60,11 +60,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:06:39.467675",
+      "timestamp": "2025-10-04T18:45:07.492358",
       "processing_time": {
-        "generation_seconds": 11.94,
-        "spoiler_test_seconds": 24.57,
-        "total_seconds": 36.51
+        "generation_seconds": 11.78,
+        "spoiler_test_seconds": 27.32,
+        "total_seconds": 39.1
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -174,11 +174,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:07:25.001615",
+      "timestamp": "2025-10-04T18:45:55.579175",
       "processing_time": {
-        "generation_seconds": 2.35,
-        "spoiler_test_seconds": 4.89,
-        "total_seconds": 7.24
+        "generation_seconds": 2.36,
+        "spoiler_test_seconds": 4.99,
+        "total_seconds": 7.35
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -251,11 +251,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:07:16.209594",
+      "timestamp": "2025-10-04T18:45:46.847941",
       "processing_time": {
-        "generation_seconds": 3.62,
-        "spoiler_test_seconds": 4.94,
-        "total_seconds": 8.56
+        "generation_seconds": 3.58,
+        "spoiler_test_seconds": 4.92,
+        "total_seconds": 8.5
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -328,11 +328,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:06:14.621680",
+      "timestamp": "2025-10-04T18:44:41.622816",
       "processing_time": {
-        "generation_seconds": 7.67,
-        "spoiler_test_seconds": 16.87,
-        "total_seconds": 24.54
+        "generation_seconds": 9.88,
+        "spoiler_test_seconds": 15.69,
+        "total_seconds": 25.57
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -450,11 +450,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:07:32.477828",
+      "timestamp": "2025-10-04T18:46:03.381686",
       "processing_time": {
-        "generation_seconds": 10.33,
-        "spoiler_test_seconds": 4.96,
-        "total_seconds": 15.29
+        "generation_seconds": 12.13,
+        "spoiler_test_seconds": 5.04,
+        "total_seconds": 17.17
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -495,11 +495,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:07:48.002148",
+      "timestamp": "2025-10-04T18:46:20.802974",
       "processing_time": {
-        "generation_seconds": 3.89,
-        "spoiler_test_seconds": 5.96,
-        "total_seconds": 9.85
+        "generation_seconds": 4.36,
+        "spoiler_test_seconds": 6.43,
+        "total_seconds": 10.79
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -540,11 +540,11 @@
       "progress_percent": 2.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:07:58.090549",
+      "timestamp": "2025-10-04T18:46:31.845218",
       "processing_time": {
-        "generation_seconds": 17.56,
-        "spoiler_test_seconds": 55.0,
-        "total_seconds": 72.56
+        "generation_seconds": 19.59,
+        "spoiler_test_seconds": 66.42,
+        "total_seconds": 86.01
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -585,11 +585,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:09:10.900707",
+      "timestamp": "2025-10-04T18:47:58.125248",
       "processing_time": {
-        "generation_seconds": 8.59,
-        "spoiler_test_seconds": 4.98,
-        "total_seconds": 13.57
+        "generation_seconds": 7.72,
+        "spoiler_test_seconds": 5.15,
+        "total_seconds": 12.870000000000001
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -662,11 +662,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:09:24.734676",
+      "timestamp": "2025-10-04T18:48:11.272848",
       "processing_time": {
-        "generation_seconds": 3.36,
-        "spoiler_test_seconds": 6.03,
-        "total_seconds": 9.39
+        "generation_seconds": 3.7,
+        "spoiler_test_seconds": 7.32,
+        "total_seconds": 11.02
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -708,11 +708,11 @@
       "progress_percent": 6.5,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:09:34.356916",
+      "timestamp": "2025-10-04T18:48:22.684518",
       "processing_time": {
-        "generation_seconds": 3.79,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 8.71
+        "generation_seconds": 4.22,
+        "spoiler_test_seconds": 7.08,
+        "total_seconds": 11.3
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -754,7 +754,7 @@
       "progress_percent": 36.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:09:43.330567",
+      "timestamp": "2025-10-04T18:48:34.256635",
       "processing_time": {
         "generation_seconds": 6.13,
         "spoiler_test_seconds": 4.89,
@@ -799,11 +799,11 @@
       "progress_percent": 1.9,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:09:56.359882",
+      "timestamp": "2025-10-04T18:48:46.487162",
       "processing_time": {
-        "generation_seconds": 2.61,
-        "spoiler_test_seconds": 5.1,
-        "total_seconds": 7.709999999999999
+        "generation_seconds": 2.92,
+        "spoiler_test_seconds": 5.22,
+        "total_seconds": 8.14
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -844,11 +844,11 @@
       "progress_percent": 2.2,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:10:04.337527",
+      "timestamp": "2025-10-04T18:48:54.897593",
       "processing_time": {
-        "generation_seconds": 2.36,
-        "spoiler_test_seconds": 5.0,
-        "total_seconds": 7.359999999999999
+        "generation_seconds": 2.45,
+        "spoiler_test_seconds": 5.12,
+        "total_seconds": 7.57
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -890,11 +890,11 @@
       "progress_percent": 1.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:10:19.618025",
+      "timestamp": "2025-10-04T18:49:12.354888",
       "processing_time": {
-        "generation_seconds": 4.34,
-        "spoiler_test_seconds": 6.55,
-        "total_seconds": 10.89
+        "generation_seconds": 4.83,
+        "spoiler_test_seconds": 5.34,
+        "total_seconds": 10.17
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -935,11 +935,11 @@
       "progress_percent": 1.2,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:10:30.754708",
+      "timestamp": "2025-10-04T18:49:22.781423",
       "processing_time": {
-        "generation_seconds": 2.77,
-        "spoiler_test_seconds": 4.91,
-        "total_seconds": 7.68
+        "generation_seconds": 2.99,
+        "spoiler_test_seconds": 5.27,
+        "total_seconds": 8.26
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1012,11 +1012,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:10:38.690563",
+      "timestamp": "2025-10-04T18:49:31.338376",
       "processing_time": {
-        "generation_seconds": 8.88,
-        "spoiler_test_seconds": 40.58,
-        "total_seconds": 49.46
+        "generation_seconds": 11.6,
+        "spoiler_test_seconds": 52.09,
+        "total_seconds": 63.690000000000005
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -1057,11 +1057,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:11:28.401081",
+      "timestamp": "2025-10-04T18:50:35.297787",
       "processing_time": {
-        "generation_seconds": 12.32,
-        "spoiler_test_seconds": 96.22,
-        "total_seconds": 108.53999999999999
+        "generation_seconds": 13.86,
+        "spoiler_test_seconds": 123.23,
+        "total_seconds": 137.09
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -1102,11 +1102,11 @@
       "progress_percent": 6.1,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:13:17.191053",
+      "timestamp": "2025-10-04T18:52:52.670755",
       "processing_time": {
-        "generation_seconds": 20.34,
-        "spoiler_test_seconds": 6.56,
-        "total_seconds": 26.9
+        "generation_seconds": 22.53,
+        "spoiler_test_seconds": 9.16,
+        "total_seconds": 31.69
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1147,10 +1147,10 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:13:44.354027",
+      "timestamp": "2025-10-04T18:53:24.641056",
       "processing_time": {
-        "generation_seconds": 8.07,
-        "spoiler_test_seconds": 7.8,
+        "generation_seconds": 6.87,
+        "spoiler_test_seconds": 9.0,
         "total_seconds": 15.870000000000001
       },
       "seed_range_info": {
@@ -1193,11 +1193,11 @@
       "progress_percent": 0.8,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:14:00.468507",
+      "timestamp": "2025-10-04T18:53:40.782580",
       "processing_time": {
-        "generation_seconds": 3.94,
-        "spoiler_test_seconds": 4.89,
-        "total_seconds": 8.83
+        "generation_seconds": 4.62,
+        "spoiler_test_seconds": 5.34,
+        "total_seconds": 9.96
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1254,11 +1254,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:14:09.534984",
+      "timestamp": "2025-10-04T18:53:51.021956",
       "processing_time": {
-        "generation_seconds": 3.39,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 8.31
+        "generation_seconds": 5.74,
+        "spoiler_test_seconds": 5.15,
+        "total_seconds": 10.89
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -1300,11 +1300,11 @@
       "progress_percent": 0.6,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:14:18.103413",
+      "timestamp": "2025-10-04T18:54:02.186089",
       "processing_time": {
-        "generation_seconds": 13.55,
-        "spoiler_test_seconds": 4.85,
-        "total_seconds": 18.4
+        "generation_seconds": 12.9,
+        "spoiler_test_seconds": 5.34,
+        "total_seconds": 18.240000000000002
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1377,11 +1377,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:14:36.740876",
+      "timestamp": "2025-10-04T18:54:20.706477",
       "processing_time": {
-        "generation_seconds": 11.38,
-        "spoiler_test_seconds": 94.58,
-        "total_seconds": 105.96
+        "generation_seconds": 14.8,
+        "spoiler_test_seconds": 119.0,
+        "total_seconds": 133.8
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -1422,11 +1422,11 @@
       "progress_percent": 0.1,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:16:22.941538",
+      "timestamp": "2025-10-04T18:56:34.795840",
       "processing_time": {
-        "generation_seconds": 28.06,
-        "spoiler_test_seconds": 13.84,
-        "total_seconds": 41.9
+        "generation_seconds": 31.84,
+        "spoiler_test_seconds": 16.28,
+        "total_seconds": 48.120000000000005
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1467,11 +1467,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:17:05.092262",
+      "timestamp": "2025-10-04T18:57:23.177793",
       "processing_time": {
-        "generation_seconds": 4.28,
-        "spoiler_test_seconds": 6.75,
-        "total_seconds": 11.030000000000001
+        "generation_seconds": 4.76,
+        "spoiler_test_seconds": 5.12,
+        "total_seconds": 9.879999999999999
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -1512,11 +1512,11 @@
       "progress_percent": 25.9,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:17:16.363771",
+      "timestamp": "2025-10-04T18:57:33.308012",
       "processing_time": {
-        "generation_seconds": 3.37,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 8.39
+        "generation_seconds": 3.7,
+        "spoiler_test_seconds": 5.12,
+        "total_seconds": 8.82
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1557,11 +1557,11 @@
       "progress_percent": 0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:17:25.007488",
+      "timestamp": "2025-10-04T18:57:42.413081",
       "processing_time": {
-        "generation_seconds": 7.18,
+        "generation_seconds": 7.98,
         "spoiler_test_seconds": 0,
-        "total_seconds": 7.18
+        "total_seconds": 7.98
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1603,11 +1603,11 @@
       "progress_percent": 0.8,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:17:32.301244",
+      "timestamp": "2025-10-04T18:57:50.520265",
       "processing_time": {
-        "generation_seconds": 13.84,
-        "spoiler_test_seconds": 6.72,
-        "total_seconds": 20.56
+        "generation_seconds": 17.03,
+        "spoiler_test_seconds": 5.13,
+        "total_seconds": 22.16
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1648,11 +1648,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": true,
-      "timestamp": "2025-10-04T16:17:53.108838",
+      "timestamp": "2025-10-04T18:58:12.953580",
       "processing_time": {
-        "generation_seconds": 8.01,
-        "spoiler_test_seconds": 4.94,
-        "total_seconds": 12.95
+        "generation_seconds": 8.82,
+        "spoiler_test_seconds": 7.11,
+        "total_seconds": 15.93
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1694,11 +1694,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:18:06.313656",
+      "timestamp": "2025-10-04T18:58:29.169673",
       "processing_time": {
-        "generation_seconds": 12.01,
-        "spoiler_test_seconds": 7.81,
-        "total_seconds": 19.82
+        "generation_seconds": 13.31,
+        "spoiler_test_seconds": 6.53,
+        "total_seconds": 19.84
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1739,11 +1739,11 @@
       "progress_percent": 1.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:18:26.390310",
+      "timestamp": "2025-10-04T18:58:49.280118",
       "processing_time": {
-        "generation_seconds": 7.47,
-        "spoiler_test_seconds": 4.98,
-        "total_seconds": 12.45
+        "generation_seconds": 8.09,
+        "spoiler_test_seconds": 6.96,
+        "total_seconds": 15.05
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1782,13 +1782,13 @@
       "sphere_reached": 0.0,
       "max_spheres": 4.1,
       "progress_percent": 0.0,
-      "has_custom_exporter": false,
+      "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:18:39.081578",
+      "timestamp": "2025-10-04T18:59:04.589497",
       "processing_time": {
-        "generation_seconds": 4.04,
-        "spoiler_test_seconds": 5.55,
-        "total_seconds": 9.59
+        "generation_seconds": 4.32,
+        "spoiler_test_seconds": 5.95,
+        "total_seconds": 10.27
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1830,11 +1830,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:18:48.936148",
+      "timestamp": "2025-10-04T18:59:15.142281",
       "processing_time": {
-        "generation_seconds": 8.97,
-        "spoiler_test_seconds": 4.97,
-        "total_seconds": 13.940000000000001
+        "generation_seconds": 7.67,
+        "spoiler_test_seconds": 5.11,
+        "total_seconds": 12.780000000000001
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1875,11 +1875,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:19:03.119201",
+      "timestamp": "2025-10-04T18:59:28.193627",
       "processing_time": {
-        "generation_seconds": 2.34,
-        "spoiler_test_seconds": 4.81,
-        "total_seconds": 7.1499999999999995
+        "generation_seconds": 2.73,
+        "spoiler_test_seconds": 6.98,
+        "total_seconds": 9.71
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -1921,11 +1921,11 @@
       "progress_percent": 1.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:19:10.505348",
+      "timestamp": "2025-10-04T18:59:38.154760",
       "processing_time": {
-        "generation_seconds": 7.69,
-        "spoiler_test_seconds": 5.01,
-        "total_seconds": 12.7
+        "generation_seconds": 8.57,
+        "spoiler_test_seconds": 5.07,
+        "total_seconds": 13.64
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -1967,11 +1967,11 @@
       "progress_percent": 1.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:19:32.553388",
+      "timestamp": "2025-10-04T18:59:59.821691",
       "processing_time": {
-        "generation_seconds": 2.84,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 7.76
+        "generation_seconds": 3.17,
+        "spoiler_test_seconds": 7.17,
+        "total_seconds": 10.34
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2012,11 +2012,11 @@
       "progress_percent": 3.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:19:40.559750",
+      "timestamp": "2025-10-04T19:00:10.419370",
       "processing_time": {
-        "generation_seconds": 6.12,
-        "spoiler_test_seconds": 4.88,
-        "total_seconds": 11.0
+        "generation_seconds": 6.71,
+        "spoiler_test_seconds": 5.11,
+        "total_seconds": 11.82
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2057,11 +2057,11 @@
       "progress_percent": 15.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:19:51.811470",
+      "timestamp": "2025-10-04T19:00:22.497723",
       "processing_time": {
-        "generation_seconds": 3.78,
-        "spoiler_test_seconds": 4.91,
-        "total_seconds": 8.69
+        "generation_seconds": 4.14,
+        "spoiler_test_seconds": 5.09,
+        "total_seconds": 9.23
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2102,11 +2102,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:20:15.072873",
+      "timestamp": "2025-10-04T19:00:47.477170",
       "processing_time": {
-        "generation_seconds": 2.96,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 7.9799999999999995
+        "generation_seconds": 3.26,
+        "spoiler_test_seconds": 5.2,
+        "total_seconds": 8.46
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -2147,11 +2147,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:20:23.287743",
+      "timestamp": "2025-10-04T19:00:56.179721",
       "processing_time": {
-        "generation_seconds": 4.53,
-        "spoiler_test_seconds": 4.89,
-        "total_seconds": 9.42
+        "generation_seconds": 4.87,
+        "spoiler_test_seconds": 5.06,
+        "total_seconds": 9.93
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -2192,11 +2192,11 @@
       "progress_percent": 0.5,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:20:33.003802",
+      "timestamp": "2025-10-04T19:01:06.432506",
       "processing_time": {
-        "generation_seconds": 18.07,
-        "spoiler_test_seconds": 72.45,
-        "total_seconds": 90.52000000000001
+        "generation_seconds": 19.79,
+        "spoiler_test_seconds": 90.48,
+        "total_seconds": 110.27000000000001
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2237,11 +2237,11 @@
       "progress_percent": 1.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:22:03.789576",
+      "timestamp": "2025-10-04T19:02:56.984421",
       "processing_time": {
-        "generation_seconds": 7.34,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 12.26
+        "generation_seconds": 10.23,
+        "spoiler_test_seconds": 5.09,
+        "total_seconds": 15.32
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2282,11 +2282,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:22:16.312881",
+      "timestamp": "2025-10-04T19:03:12.568155",
       "processing_time": {
-        "generation_seconds": 6.62,
-        "spoiler_test_seconds": 4.9,
-        "total_seconds": 11.52
+        "generation_seconds": 5.22,
+        "spoiler_test_seconds": 5.04,
+        "total_seconds": 10.26
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2327,11 +2327,11 @@
       "progress_percent": 0.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:22:28.078770",
+      "timestamp": "2025-10-04T19:03:23.088700",
       "processing_time": {
-        "generation_seconds": 3.12,
-        "spoiler_test_seconds": 4.9,
-        "total_seconds": 8.02
+        "generation_seconds": 3.64,
+        "spoiler_test_seconds": 5.16,
+        "total_seconds": 8.8
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2373,11 +2373,11 @@
       "progress_percent": 27.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:22:36.362321",
+      "timestamp": "2025-10-04T19:03:32.186255",
       "processing_time": {
-        "generation_seconds": 43.36,
-        "spoiler_test_seconds": 5.0,
-        "total_seconds": 48.36
+        "generation_seconds": 49.62,
+        "spoiler_test_seconds": 5.29,
+        "total_seconds": 54.91
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2414,16 +2414,16 @@
       "status": "failed",
       "generation_errors": 646,
       "generation_warnings": 0,
-      "sphere_reached": 1.3,
+      "sphere_reached": 1.2,
       "max_spheres": 10.1,
-      "progress_percent": 12.9,
+      "progress_percent": 11.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:23:25.006510",
+      "timestamp": "2025-10-04T19:04:27.390765",
       "processing_time": {
-        "generation_seconds": 83.46,
-        "spoiler_test_seconds": 7.0,
-        "total_seconds": 90.46
+        "generation_seconds": 90.63,
+        "spoiler_test_seconds": 8.06,
+        "total_seconds": 98.69
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2464,11 +2464,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:24:55.714296",
+      "timestamp": "2025-10-04T19:06:06.346259",
       "processing_time": {
-        "generation_seconds": 3.58,
-        "spoiler_test_seconds": 4.99,
-        "total_seconds": 8.57
+        "generation_seconds": 3.74,
+        "spoiler_test_seconds": 5.15,
+        "total_seconds": 8.89
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2509,11 +2509,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:25:04.550368",
+      "timestamp": "2025-10-04T19:06:15.529801",
       "processing_time": {
-        "generation_seconds": 5.93,
-        "spoiler_test_seconds": 4.93,
-        "total_seconds": 10.86
+        "generation_seconds": 4.84,
+        "spoiler_test_seconds": 7.27,
+        "total_seconds": 12.11
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -2555,11 +2555,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:25:15.637769",
+      "timestamp": "2025-10-04T19:06:27.899878",
       "processing_time": {
-        "generation_seconds": 4.11,
-        "spoiler_test_seconds": 5.64,
-        "total_seconds": 9.75
+        "generation_seconds": 5.03,
+        "spoiler_test_seconds": 6.13,
+        "total_seconds": 11.16
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2600,11 +2600,11 @@
       "progress_percent": 60.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:25:25.636285",
+      "timestamp": "2025-10-04T19:06:39.327625",
       "processing_time": {
-        "generation_seconds": 2.46,
-        "spoiler_test_seconds": 4.9,
-        "total_seconds": 7.36
+        "generation_seconds": 3.05,
+        "spoiler_test_seconds": 5.14,
+        "total_seconds": 8.19
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2645,11 +2645,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:25:33.250981",
+      "timestamp": "2025-10-04T19:06:47.797711",
       "processing_time": {
-        "generation_seconds": 5.81,
-        "spoiler_test_seconds": 7.28,
-        "total_seconds": 13.09
+        "generation_seconds": 6.53,
+        "spoiler_test_seconds": 8.21,
+        "total_seconds": 14.740000000000002
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2690,11 +2690,11 @@
       "progress_percent": 2.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:25:46.589940",
+      "timestamp": "2025-10-04T19:07:02.833372",
       "processing_time": {
-        "generation_seconds": 4.68,
-        "spoiler_test_seconds": 4.87,
-        "total_seconds": 9.55
+        "generation_seconds": 5.39,
+        "spoiler_test_seconds": 5.1,
+        "total_seconds": 10.489999999999998
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2735,11 +2735,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:25:56.392779",
+      "timestamp": "2025-10-04T19:07:13.609640",
       "processing_time": {
-        "generation_seconds": 5.44,
-        "spoiler_test_seconds": 12.98,
-        "total_seconds": 18.42
+        "generation_seconds": 6.12,
+        "spoiler_test_seconds": 18.34,
+        "total_seconds": 24.46
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -2780,11 +2780,11 @@
       "progress_percent": 0.8,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:26:15.083983",
+      "timestamp": "2025-10-04T19:07:38.354593",
       "processing_time": {
-        "generation_seconds": 15.38,
-        "spoiler_test_seconds": 4.94,
-        "total_seconds": 20.32
+        "generation_seconds": 14.61,
+        "spoiler_test_seconds": 5.17,
+        "total_seconds": 19.78
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2825,11 +2825,11 @@
       "progress_percent": 0.3,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:26:35.669674",
+      "timestamp": "2025-10-04T19:07:58.442260",
       "processing_time": {
-        "generation_seconds": 10.51,
-        "spoiler_test_seconds": 23.84,
-        "total_seconds": 34.35
+        "generation_seconds": 13.75,
+        "spoiler_test_seconds": 27.67,
+        "total_seconds": 41.42
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2870,11 +2870,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:27:10.262194",
+      "timestamp": "2025-10-04T19:08:40.161423",
       "processing_time": {
-        "generation_seconds": 3.34,
-        "spoiler_test_seconds": 4.94,
-        "total_seconds": 8.280000000000001
+        "generation_seconds": 6.07,
+        "spoiler_test_seconds": 5.14,
+        "total_seconds": 11.21
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2916,11 +2916,11 @@
       "progress_percent": 4.1,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:27:18.814505",
+      "timestamp": "2025-10-04T19:08:51.639158",
       "processing_time": {
-        "generation_seconds": 6.69,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 11.61
+        "generation_seconds": 5.2,
+        "spoiler_test_seconds": 5.05,
+        "total_seconds": 10.25
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -2962,11 +2962,11 @@
       "progress_percent": 0.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:27:30.664536",
+      "timestamp": "2025-10-04T19:09:02.171773",
       "processing_time": {
-        "generation_seconds": 3.21,
-        "spoiler_test_seconds": 4.93,
-        "total_seconds": 8.14
+        "generation_seconds": 3.45,
+        "spoiler_test_seconds": 5.19,
+        "total_seconds": 8.64
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3007,11 +3007,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:27:39.067874",
+      "timestamp": "2025-10-04T19:09:11.126181",
       "processing_time": {
-        "generation_seconds": 8.68,
-        "spoiler_test_seconds": 4.9,
-        "total_seconds": 13.58
+        "generation_seconds": 11.55,
+        "spoiler_test_seconds": 5.12,
+        "total_seconds": 16.67
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -3053,11 +3053,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:27:52.889714",
+      "timestamp": "2025-10-04T19:09:28.064299",
       "processing_time": {
-        "generation_seconds": 7.75,
-        "spoiler_test_seconds": 4.95,
-        "total_seconds": 12.7
+        "generation_seconds": 6.56,
+        "spoiler_test_seconds": 5.12,
+        "total_seconds": 11.68
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3098,11 +3098,11 @@
       "progress_percent": 2.4,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:28:05.832597",
+      "timestamp": "2025-10-04T19:09:40.022656",
       "processing_time": {
-        "generation_seconds": 6.68,
-        "spoiler_test_seconds": 4.9,
-        "total_seconds": 11.58
+        "generation_seconds": 8.02,
+        "spoiler_test_seconds": 7.33,
+        "total_seconds": 15.35
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3143,11 +3143,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:28:17.660598",
+      "timestamp": "2025-10-04T19:09:55.644474",
       "processing_time": {
-        "generation_seconds": 4.69,
-        "spoiler_test_seconds": 5.69,
-        "total_seconds": 10.38
+        "generation_seconds": 5.02,
+        "spoiler_test_seconds": 6.39,
+        "total_seconds": 11.41
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3188,11 +3188,11 @@
       "progress_percent": 0.9,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:28:28.293135",
+      "timestamp": "2025-10-04T19:10:07.354480",
       "processing_time": {
-        "generation_seconds": 6.27,
-        "spoiler_test_seconds": 4.94,
-        "total_seconds": 11.21
+        "generation_seconds": 5.13,
+        "spoiler_test_seconds": 5.36,
+        "total_seconds": 10.49
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3233,11 +3233,11 @@
       "progress_percent": 1.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:28:39.749466",
+      "timestamp": "2025-10-04T19:10:18.140202",
       "processing_time": {
-        "generation_seconds": 7.05,
-        "spoiler_test_seconds": 4.88,
-        "total_seconds": 11.93
+        "generation_seconds": 10.45,
+        "spoiler_test_seconds": 5.25,
+        "total_seconds": 15.7
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3279,11 +3279,11 @@
       "progress_percent": 0.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:28:51.949806",
+      "timestamp": "2025-10-04T19:10:34.127454",
       "processing_time": {
-        "generation_seconds": 2.78,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 7.699999999999999
+        "generation_seconds": 3.24,
+        "spoiler_test_seconds": 5.2,
+        "total_seconds": 8.440000000000001
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3324,11 +3324,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:28:59.907124",
+      "timestamp": "2025-10-04T19:10:42.855117",
       "processing_time": {
-        "generation_seconds": 7.89,
-        "spoiler_test_seconds": 5.77,
-        "total_seconds": 13.66
+        "generation_seconds": 6.8,
+        "spoiler_test_seconds": 6.5,
+        "total_seconds": 13.3
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3369,11 +3369,11 @@
       "progress_percent": 1.2,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:29:13.816153",
+      "timestamp": "2025-10-04T19:10:56.453238",
       "processing_time": {
-        "generation_seconds": 5.11,
-        "spoiler_test_seconds": 4.95,
-        "total_seconds": 10.06
+        "generation_seconds": 7.18,
+        "spoiler_test_seconds": 5.23,
+        "total_seconds": 12.41
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3414,11 +3414,11 @@
       "progress_percent": 75.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:29:24.118665",
+      "timestamp": "2025-10-04T19:11:09.139154",
       "processing_time": {
-        "generation_seconds": 2.74,
-        "spoiler_test_seconds": 4.94,
-        "total_seconds": 7.680000000000001
+        "generation_seconds": 3.12,
+        "spoiler_test_seconds": 5.25,
+        "total_seconds": 8.370000000000001
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3460,11 +3460,11 @@
       "progress_percent": 16.7,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:29:32.039516",
+      "timestamp": "2025-10-04T19:11:17.794034",
       "processing_time": {
-        "generation_seconds": 2.37,
-        "spoiler_test_seconds": 6.71,
-        "total_seconds": 9.08
+        "generation_seconds": 2.69,
+        "spoiler_test_seconds": 5.33,
+        "total_seconds": 8.02
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3505,11 +3505,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:29:41.365814",
+      "timestamp": "2025-10-04T19:11:26.099054",
       "processing_time": {
-        "generation_seconds": 2.66,
-        "spoiler_test_seconds": 4.98,
-        "total_seconds": 7.640000000000001
+        "generation_seconds": 2.8,
+        "spoiler_test_seconds": 7.05,
+        "total_seconds": 9.85
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3550,11 +3550,11 @@
       "progress_percent": 0.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:29:58.647796",
+      "timestamp": "2025-10-04T19:11:46.354504",
       "processing_time": {
-        "generation_seconds": 3.5,
-        "spoiler_test_seconds": 5.04,
-        "total_seconds": 8.54
+        "generation_seconds": 3.58,
+        "spoiler_test_seconds": 5.24,
+        "total_seconds": 8.82
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3595,11 +3595,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:30:07.441487",
+      "timestamp": "2025-10-04T19:11:55.471121",
       "processing_time": {
-        "generation_seconds": 4.86,
-        "spoiler_test_seconds": 6.64,
-        "total_seconds": 11.5
+        "generation_seconds": 5.67,
+        "spoiler_test_seconds": 7.02,
+        "total_seconds": 12.69
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3641,11 +3641,11 @@
       "progress_percent": 1.6,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:30:19.190292",
+      "timestamp": "2025-10-04T19:12:08.444632",
       "processing_time": {
-        "generation_seconds": 18.53,
-        "spoiler_test_seconds": 4.93,
-        "total_seconds": 23.46
+        "generation_seconds": 20.73,
+        "spoiler_test_seconds": 5.28,
+        "total_seconds": 26.01
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3687,11 +3687,11 @@
       "progress_percent": 0.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:30:42.906280",
+      "timestamp": "2025-10-04T19:12:34.779074",
       "processing_time": {
-        "generation_seconds": 8.75,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 13.67
+        "generation_seconds": 9.86,
+        "spoiler_test_seconds": 5.2,
+        "total_seconds": 15.059999999999999
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3732,11 +3732,11 @@
       "progress_percent": 2.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:30:56.835782",
+      "timestamp": "2025-10-04T19:12:50.119653",
       "processing_time": {
-        "generation_seconds": 4.52,
-        "spoiler_test_seconds": 4.87,
-        "total_seconds": 9.39
+        "generation_seconds": 5.04,
+        "spoiler_test_seconds": 5.24,
+        "total_seconds": 10.280000000000001
       },
       "seed_range_info": {
         "seed_range": "1",
@@ -3809,11 +3809,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:19:23.444881",
+      "timestamp": "2025-10-04T18:59:52.046111",
       "processing_time": {
-        "generation_seconds": 2.17,
-        "spoiler_test_seconds": 6.69,
-        "total_seconds": 8.86
+        "generation_seconds": 2.45,
+        "spoiler_test_seconds": 5.07,
+        "total_seconds": 7.5200000000000005
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -3925,11 +3925,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:10:11.937806",
+      "timestamp": "2025-10-04T18:49:02.732674",
       "processing_time": {
-        "generation_seconds": 2.33,
-        "spoiler_test_seconds": 5.11,
-        "total_seconds": 7.44
+        "generation_seconds": 4.11,
+        "spoiler_test_seconds": 5.16,
+        "total_seconds": 9.27
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -4002,11 +4002,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": false,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:29:49.258168",
+      "timestamp": "2025-10-04T19:11:36.227365",
       "processing_time": {
-        "generation_seconds": 3.01,
-        "spoiler_test_seconds": 6.13,
-        "total_seconds": 9.14
+        "generation_seconds": 3.51,
+        "spoiler_test_seconds": 6.34,
+        "total_seconds": 9.85
       },
       "seed_range_info": {
         "seed_range": "1-10",
@@ -4019,13 +4019,13 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2025-10-04T16:31:06.449964",
+    "test_data_updated": "2025-10-04T19:13:00.645756",
     "test_data_source": {
       "average_time_per_template_seconds": 18.9,
-      "batch_processing_time_minutes": 24.9,
-      "batch_processing_time_seconds": 1493.8,
+      "batch_processing_time_minutes": 24.8,
+      "batch_processing_time_seconds": 1490.4,
       "created": "2025-08-22T09:54:44.358796",
-      "last_updated": "2025-10-04T16:31:06.359293",
+      "last_updated": "2025-10-04T19:13:00.547969",
       "script_version": "1.0.0"
     },
     "games_with_test_data": 79,
@@ -4093,11 +4093,11 @@
       "progress_percent": 100.0,
       "has_custom_exporter": true,
       "has_custom_game_logic": false,
-      "timestamp": "2025-10-04T16:20:00.746653",
+      "timestamp": "2025-10-04T19:00:32.005074",
       "processing_time": {
-        "generation_seconds": 9.18,
-        "spoiler_test_seconds": 4.92,
-        "total_seconds": 14.1
+        "generation_seconds": 8.01,
+        "spoiler_test_seconds": 7.21,
+        "total_seconds": 15.219999999999999
       },
       "seed_range_info": {
         "seed_range": "1-10",

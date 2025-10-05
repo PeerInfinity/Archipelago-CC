@@ -111,8 +111,7 @@ def get_metamath_database(auto_download: bool = True):
     possible_paths = [
         'metamath_data/set.mm',
         os.path.join(os.path.dirname(__file__), 'metamath_data/set.mm'),
-        os.path.join(os.path.dirname(__file__), '../../metamath_data/set.mm'),
-        '/home/robert/tests/test2/archipelago-json/metamath_data/set.mm'
+        os.path.join(os.path.dirname(__file__), '../../metamath_data/set.mm')
     ]
 
     for path in possible_paths:
