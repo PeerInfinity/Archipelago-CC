@@ -110,11 +110,17 @@ export function createStateSnapshotInterface(
         case 'inventory':
           return snapshot?.inventory;
         case 'settings':
-          return snapshot?.settings;
+          return staticData?.settings;
         case 'flags':
           return snapshot?.flags;
         case 'state':
           return snapshot;
+        case 'self':
+          // In Python rules, 'self' refers to the game's rules class instance
+          // which has attributes like nerf_roc_wing from the world options
+          // We return the settings for the current player from staticData
+          const selfPlayerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
+          return staticData?.settings?.[selfPlayerId] || staticData?.settings || {};
         case 'regions':
           return staticData?.regions;
         case 'locations':
@@ -136,7 +142,7 @@ export function createStateSnapshotInterface(
           const playerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
           return {
             player: playerId,
-            options: snapshot?.settings?.[playerId] || snapshot?.settings || {}
+            options: staticData?.settings?.[playerId] || staticData?.settings || {}
           };
         case 'logic':
           // Return game-specific helper functions as an object
@@ -397,6 +403,30 @@ export function createStateSnapshotInterface(
           return finalSnapshotInterface.isRegionReachable(targetName);
         if (targetType === 'Location')
           return finalSnapshotInterface.isLocationAccessible(targetName);
+      }
+
+      // Handle StateManager inventory methods
+      if (methodName === 'has_any' && args.length >= 1) {
+        const items = args[0];
+        if (!Array.isArray(items)) return false;
+        return items.some(itemName => finalSnapshotInterface.hasItem(itemName));
+      }
+
+      if (methodName === 'has_all' && args.length >= 1) {
+        const items = args[0];
+        if (!Array.isArray(items)) return false;
+        return items.every(itemName => finalSnapshotInterface.hasItem(itemName));
+      }
+
+      if (methodName === 'has_all_counts' && args.length >= 1) {
+        const itemCounts = args[0];
+        if (typeof itemCounts !== 'object' || itemCounts === null) return false;
+        for (const [itemName, requiredCount] of Object.entries(itemCounts)) {
+          if (finalSnapshotInterface.countItem(itemName) < requiredCount) {
+            return false;
+          }
+        }
+        return true;
       }
 
       // Use game-specific agnostic helpers for all helper methods

@@ -256,6 +256,7 @@
           {
             "name": "Heat Man - Defeated",
             "id": 8912897,
+            "region": "Heat Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -274,6 +275,7 @@
           {
             "name": "Atomic Fire - Received",
             "id": 8913153,
+            "region": "Heat Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -292,6 +294,7 @@
           {
             "name": "Item 1 - Received",
             "id": 8913169,
+            "region": "Heat Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -310,6 +313,7 @@
           {
             "name": "Heat Man Stage - 1-Up",
             "id": 8913409,
+            "region": "Heat Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -351,6 +355,7 @@
           {
             "name": "Air Man - Defeated",
             "id": 8912898,
+            "region": "Air Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -369,6 +374,7 @@
           {
             "name": "Air Shooter - Received",
             "id": 8913154,
+            "region": "Air Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -387,6 +393,7 @@
           {
             "name": "Item 2 - Received",
             "id": 8913170,
+            "region": "Air Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -428,6 +435,7 @@
           {
             "name": "Wood Man - Defeated",
             "id": 8912899,
+            "region": "Wood Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -446,6 +454,7 @@
           {
             "name": "Leaf Shield - Received",
             "id": 8913155,
+            "region": "Wood Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -487,6 +496,7 @@
           {
             "name": "Bubble Man - Defeated",
             "id": 8912900,
+            "region": "Bubble Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -505,6 +515,7 @@
           {
             "name": "Bubble Lead - Received",
             "id": 8913156,
+            "region": "Bubble Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -546,6 +557,7 @@
           {
             "name": "Quick Man - Defeated",
             "id": 8912901,
+            "region": "Quick Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -564,6 +576,7 @@
           {
             "name": "Quick Boomerang - Received",
             "id": 8913157,
+            "region": "Quick Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -582,38 +595,18 @@
           {
             "name": "Quick Man Stage - 1-Up 1",
             "id": 8913410,
+            "region": "Quick Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_1"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_2"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_3"
-                    }
+                    "Item 1 - Propeller",
+                    "Item 2 - Rocket",
+                    "Item 3 - Bouncy"
                   ]
                 }
               ]
@@ -631,6 +624,7 @@
           {
             "name": "Quick Man Stage - E-Tank",
             "id": 8913411,
+            "region": "Quick Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -649,6 +643,7 @@
           {
             "name": "Quick Man Stage - 1-Up 2",
             "id": 8913412,
+            "region": "Quick Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -667,6 +662,7 @@
           {
             "name": "Quick Man Stage - 1-Up 3",
             "id": 8913416,
+            "region": "Quick Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -708,6 +704,7 @@
           {
             "name": "Flash Man - Defeated",
             "id": 8912902,
+            "region": "Flash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -726,6 +723,7 @@
           {
             "name": "Time Stopper - Received",
             "id": 8913158,
+            "region": "Flash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -744,6 +742,7 @@
           {
             "name": "Item 3 - Received",
             "id": 8913171,
+            "region": "Flash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -762,38 +761,18 @@
           {
             "name": "Flash Man Stage - 1-Up",
             "id": 8913419,
+            "region": "Flash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_1"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_2"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_3"
-                    }
+                    "Item 1 - Propeller",
+                    "Item 2 - Rocket",
+                    "Item 3 - Bouncy"
                   ]
                 }
               ]
@@ -811,6 +790,7 @@
           {
             "name": "Flash Man Stage - E-Tank",
             "id": 8913423,
+            "region": "Flash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -852,6 +832,7 @@
           {
             "name": "Metal Man - Defeated",
             "id": 8912903,
+            "region": "Metal Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -870,6 +851,7 @@
           {
             "name": "Metal Blade - Received",
             "id": 8913159,
+            "region": "Metal Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -888,6 +870,7 @@
           {
             "name": "Metal Man Stage - E-Tank 1",
             "id": 8913424,
+            "region": "Metal Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -906,30 +889,17 @@
           {
             "name": "Metal Man Stage - 1-Up",
             "id": 8913425,
+            "region": "Metal Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_1"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_2"
-                    }
+                    "Item 1 - Propeller",
+                    "Item 2 - Rocket"
                   ]
                 }
               ]
@@ -947,30 +917,17 @@
           {
             "name": "Metal Man Stage - E-Tank 2",
             "id": 8913426,
+            "region": "Metal Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_1"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_2"
-                    }
+                    "Item 1 - Propeller",
+                    "Item 2 - Rocket"
                   ]
                 }
               ]
@@ -1011,6 +968,7 @@
           {
             "name": "Crash Man - Defeated",
             "id": 8912904,
+            "region": "Crash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1029,6 +987,7 @@
           {
             "name": "Crash Bomber - Received",
             "id": 8913160,
+            "region": "Crash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1047,6 +1006,7 @@
           {
             "name": "Crash Man Stage - E-Tank",
             "id": 8913428,
+            "region": "Crash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1065,38 +1025,18 @@
           {
             "name": "Crash Man Stage - 1-Up",
             "id": 8913429,
+            "region": "Crash Man Stage",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_1"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_2"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "names"
-                      },
-                      "attr": "item_3"
-                    }
+                    "Item 1 - Propeller",
+                    "Item 2 - Rocket",
+                    "Item 3 - Bouncy"
                   ]
                 }
               ]
@@ -1158,6 +1098,7 @@
           {
             "name": "Mecha Dragon - Defeated",
             "id": 8912905,
+            "region": "Wily Stage 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1176,6 +1117,7 @@
           {
             "name": "Wily Stage 1 - Completed",
             "id": null,
+            "region": "Wily Stage 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1194,6 +1136,7 @@
           {
             "name": "Wily Stage 1 - 1-Up",
             "id": 8913430,
+            "region": "Wily Stage 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1256,6 +1199,7 @@
           {
             "name": "Picopico-kun - Defeated",
             "id": 8912906,
+            "region": "Wily Stage 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1274,6 +1218,7 @@
           {
             "name": "Wily Stage 2 - Completed",
             "id": null,
+            "region": "Wily Stage 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1292,6 +1237,7 @@
           {
             "name": "Wily Stage 2 - E-Tank 1",
             "id": 8913434,
+            "region": "Wily Stage 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1310,6 +1256,7 @@
           {
             "name": "Wily Stage 2 - 1-Up 1",
             "id": 8913435,
+            "region": "Wily Stage 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1328,6 +1275,7 @@
           {
             "name": "Wily Stage 2 - 1-Up 2",
             "id": 8913436,
+            "region": "Wily Stage 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1349,6 +1297,7 @@
           {
             "name": "Wily Stage 2 - E-Tank 2",
             "id": 8913437,
+            "region": "Wily Stage 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1414,6 +1363,7 @@
           {
             "name": "Guts Tank - Defeated",
             "id": 8912907,
+            "region": "Wily Stage 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1432,6 +1382,7 @@
           {
             "name": "Wily Stage 3 - Completed",
             "id": null,
+            "region": "Wily Stage 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1450,6 +1401,7 @@
           {
             "name": "Wily Stage 3 - E-Tank",
             "id": 8913440,
+            "region": "Wily Stage 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1515,6 +1467,7 @@
           {
             "name": "Boobeam Trap - Defeated",
             "id": 8912908,
+            "region": "Wily Stage 4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1553,6 +1506,7 @@
           {
             "name": "Wily Stage 4 - Completed",
             "id": null,
+            "region": "Wily Stage 4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1591,6 +1545,7 @@
           {
             "name": "Wily Stage 4 - 1-Up 1",
             "id": 8913445,
+            "region": "Wily Stage 4",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1609,6 +1564,7 @@
           {
             "name": "Wily Stage 4 - E-Tank 1",
             "id": 8913446,
+            "region": "Wily Stage 4",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1671,6 +1627,7 @@
           {
             "name": "Wily Machine 2 - Defeated",
             "id": 8912909,
+            "region": "Wily Stage 5",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -1691,6 +1648,7 @@
           {
             "name": "Wily Stage 5 - Completed",
             "id": null,
+            "region": "Wily Stage 5",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -1734,6 +1692,7 @@
           {
             "name": "Dr. Wily (Alien) - Defeated",
             "id": null,
+            "region": "Wily Stage 6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2202,12 +2161,58 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything",
-      "Items",
-      "Stages",
-      "Weapons"
-    ]
+    "1": {
+      "Weapons": [
+        "Leaf Shield",
+        "Air Shooter",
+        "Quick Boomerang",
+        "Crash Bomber",
+        "Atomic Fire",
+        "Metal Blade",
+        "Time Stopper",
+        "Bubble Lead"
+      ],
+      "Stages": [
+        "Heat Man Access Codes",
+        "Bubble Man Access Codes",
+        "Air Man Access Codes",
+        "Flash Man Access Codes",
+        "Wood Man Access Codes",
+        "Crash Man Access Codes",
+        "Metal Man Access Codes",
+        "Quick Man Access Codes"
+      ],
+      "Items": [
+        "Item 3 - Bouncy",
+        "Item 2 - Rocket",
+        "Item 1 - Propeller"
+      ],
+      "Everything": [
+        "Item 1 - Propeller",
+        "Leaf Shield",
+        "Air Shooter",
+        "Item 2 - Rocket",
+        "Bubble Man Access Codes",
+        "Weapon Energy (L)",
+        "Crash Man Access Codes",
+        "Health Energy (L)",
+        "Time Stopper",
+        "Metal Man Access Codes",
+        "E-Tank",
+        "1-Up",
+        "Quick Boomerang",
+        "Crash Bomber",
+        "Heat Man Access Codes",
+        "Atomic Fire",
+        "Air Man Access Codes",
+        "Flash Man Access Codes",
+        "Wood Man Access Codes",
+        "Item 3 - Bouncy",
+        "Metal Blade",
+        "Bubble Lead",
+        "Quick Man Access Codes"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

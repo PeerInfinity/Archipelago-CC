@@ -96,6 +96,7 @@
           {
             "name": "TECH_AP_ANCIENT_00",
             "id": 5041000,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -114,6 +115,7 @@
           {
             "name": "TECH_AP_ANCIENT_01",
             "id": 5041001,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -132,6 +134,7 @@
           {
             "name": "TECH_AP_ANCIENT_02",
             "id": 5041002,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -150,6 +153,7 @@
           {
             "name": "TECH_AP_ANCIENT_03",
             "id": 5041003,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -168,6 +172,7 @@
           {
             "name": "TECH_AP_ANCIENT_04",
             "id": 5041004,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -186,6 +191,7 @@
           {
             "name": "TECH_AP_ANCIENT_05",
             "id": 5041005,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -204,6 +210,7 @@
           {
             "name": "TECH_AP_ANCIENT_06",
             "id": 5041006,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -222,6 +229,7 @@
           {
             "name": "TECH_AP_ANCIENT_07",
             "id": 5041007,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -240,6 +248,7 @@
           {
             "name": "TECH_AP_ANCIENT_08",
             "id": 5041008,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -258,6 +267,7 @@
           {
             "name": "TECH_AP_ANCIENT_09",
             "id": 5041009,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -276,6 +286,7 @@
           {
             "name": "TECH_AP_ANCIENT_10",
             "id": 5041010,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -294,6 +305,7 @@
           {
             "name": "CIVIC_AP_ANCIENT_00",
             "id": 5041077,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -312,6 +324,7 @@
           {
             "name": "CIVIC_AP_ANCIENT_01",
             "id": 5041078,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -330,6 +343,7 @@
           {
             "name": "CIVIC_AP_ANCIENT_02",
             "id": 5041079,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -348,6 +362,7 @@
           {
             "name": "CIVIC_AP_ANCIENT_03",
             "id": 5041080,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -366,6 +381,7 @@
           {
             "name": "CIVIC_AP_ANCIENT_04",
             "id": 5041081,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -384,6 +400,7 @@
           {
             "name": "CIVIC_AP_ANCIENT_05",
             "id": 5041082,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -402,6 +419,7 @@
           {
             "name": "CIVIC_AP_ANCIENT_06",
             "id": 5041083,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -420,6 +438,7 @@
           {
             "name": "GOODY_HUT_1",
             "id": 5041146,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -438,6 +457,7 @@
           {
             "name": "GOODY_HUT_2",
             "id": 5041147,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -456,6 +476,7 @@
           {
             "name": "GOODY_HUT_3",
             "id": 5041148,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -474,6 +495,7 @@
           {
             "name": "GOODY_HUT_4",
             "id": 5041149,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -492,6 +514,7 @@
           {
             "name": "GOODY_HUT_5",
             "id": 5041150,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -510,6 +533,7 @@
           {
             "name": "GOODY_HUT_6",
             "id": 5041151,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -528,6 +552,7 @@
           {
             "name": "GOODY_HUT_7",
             "id": 5041152,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -546,6 +571,7 @@
           {
             "name": "GOODY_HUT_8",
             "id": 5041153,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -564,6 +590,7 @@
           {
             "name": "GOODY_HUT_9",
             "id": 5041154,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -582,6 +609,7 @@
           {
             "name": "GOODY_HUT_10",
             "id": 5041155,
+            "region": "ERA_ANCIENT",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -657,6 +685,7 @@
           {
             "name": "TECH_AP_CLASSICAL_11",
             "id": 5041011,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -675,6 +704,7 @@
           {
             "name": "TECH_AP_CLASSICAL_12",
             "id": 5041012,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -693,6 +723,7 @@
           {
             "name": "TECH_AP_CLASSICAL_13",
             "id": 5041013,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -711,6 +742,7 @@
           {
             "name": "TECH_AP_CLASSICAL_14",
             "id": 5041014,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -729,6 +761,7 @@
           {
             "name": "TECH_AP_CLASSICAL_15",
             "id": 5041015,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -747,6 +780,7 @@
           {
             "name": "TECH_AP_CLASSICAL_16",
             "id": 5041016,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -765,6 +799,7 @@
           {
             "name": "TECH_AP_CLASSICAL_17",
             "id": 5041017,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -783,6 +818,7 @@
           {
             "name": "TECH_AP_CLASSICAL_18",
             "id": 5041018,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -801,6 +837,7 @@
           {
             "name": "CIVIC_AP_CLASSICAL_07",
             "id": 5041084,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -819,6 +856,7 @@
           {
             "name": "CIVIC_AP_CLASSICAL_08",
             "id": 5041085,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -837,6 +875,7 @@
           {
             "name": "CIVIC_AP_CLASSICAL_09",
             "id": 5041086,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -855,6 +894,7 @@
           {
             "name": "CIVIC_AP_CLASSICAL_10",
             "id": 5041087,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -873,6 +913,7 @@
           {
             "name": "CIVIC_AP_CLASSICAL_11",
             "id": 5041088,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -891,6 +932,7 @@
           {
             "name": "CIVIC_AP_CLASSICAL_12",
             "id": 5041089,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -909,6 +951,7 @@
           {
             "name": "CIVIC_AP_CLASSICAL_13",
             "id": 5041090,
+            "region": "ERA_CLASSICAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -984,6 +1027,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_19",
             "id": 5041019,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1002,6 +1046,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_20",
             "id": 5041020,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1020,6 +1065,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_21",
             "id": 5041021,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1038,6 +1084,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_22",
             "id": 5041022,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1056,6 +1103,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_23",
             "id": 5041023,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1074,6 +1122,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_24",
             "id": 5041024,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1092,6 +1141,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_25",
             "id": 5041025,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1110,6 +1160,7 @@
           {
             "name": "TECH_AP_MEDIEVAL_67",
             "id": 5041067,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1128,6 +1179,7 @@
           {
             "name": "CIVIC_AP_MEDIEVAL_14",
             "id": 5041091,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1146,6 +1198,7 @@
           {
             "name": "CIVIC_AP_MEDIEVAL_15",
             "id": 5041092,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1164,6 +1217,7 @@
           {
             "name": "CIVIC_AP_MEDIEVAL_16",
             "id": 5041093,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1182,6 +1236,7 @@
           {
             "name": "CIVIC_AP_MEDIEVAL_17",
             "id": 5041094,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1200,6 +1255,7 @@
           {
             "name": "CIVIC_AP_MEDIEVAL_18",
             "id": 5041095,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1218,6 +1274,7 @@
           {
             "name": "CIVIC_AP_MEDIEVAL_19",
             "id": 5041096,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1236,6 +1293,7 @@
           {
             "name": "CIVIC_AP_MEDIEVAL_20",
             "id": 5041097,
+            "region": "ERA_MEDIEVAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1311,6 +1369,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_26",
             "id": 5041026,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1329,6 +1388,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_27",
             "id": 5041027,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1347,6 +1407,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_28",
             "id": 5041028,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1365,6 +1426,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_29",
             "id": 5041029,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1383,6 +1445,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_30",
             "id": 5041030,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1401,6 +1464,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_31",
             "id": 5041031,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1419,6 +1483,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_32",
             "id": 5041032,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1437,6 +1502,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_33",
             "id": 5041033,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1455,6 +1521,7 @@
           {
             "name": "TECH_AP_RENAISSANCE_34",
             "id": 5041034,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1473,6 +1540,7 @@
           {
             "name": "CIVIC_AP_RENAISSANCE_21",
             "id": 5041098,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1491,6 +1559,7 @@
           {
             "name": "CIVIC_AP_RENAISSANCE_22",
             "id": 5041099,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1509,6 +1578,7 @@
           {
             "name": "CIVIC_AP_RENAISSANCE_23",
             "id": 5041100,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1527,6 +1597,7 @@
           {
             "name": "CIVIC_AP_RENAISSANCE_24",
             "id": 5041101,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1545,6 +1616,7 @@
           {
             "name": "CIVIC_AP_RENAISSANCE_25",
             "id": 5041102,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1563,6 +1635,7 @@
           {
             "name": "CIVIC_AP_RENAISSANCE_26",
             "id": 5041103,
+            "region": "ERA_RENAISSANCE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1638,6 +1711,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_35",
             "id": 5041035,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1656,6 +1730,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_36",
             "id": 5041036,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1674,6 +1749,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_37",
             "id": 5041037,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1692,6 +1768,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_38",
             "id": 5041038,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1710,6 +1787,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_39",
             "id": 5041039,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1728,6 +1806,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_40",
             "id": 5041040,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1746,6 +1825,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_41",
             "id": 5041041,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1764,6 +1844,7 @@
           {
             "name": "TECH_AP_INDUSTRIAL_42",
             "id": 5041042,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1782,6 +1863,7 @@
           {
             "name": "CIVIC_AP_INDUSTRIAL_27",
             "id": 5041104,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1800,6 +1882,7 @@
           {
             "name": "CIVIC_AP_INDUSTRIAL_28",
             "id": 5041105,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1818,6 +1901,7 @@
           {
             "name": "CIVIC_AP_INDUSTRIAL_29",
             "id": 5041106,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1836,6 +1920,7 @@
           {
             "name": "CIVIC_AP_INDUSTRIAL_30",
             "id": 5041107,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1854,6 +1939,7 @@
           {
             "name": "CIVIC_AP_INDUSTRIAL_31",
             "id": 5041108,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1872,6 +1958,7 @@
           {
             "name": "CIVIC_AP_INDUSTRIAL_32",
             "id": 5041109,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1890,6 +1977,7 @@
           {
             "name": "CIVIC_AP_INDUSTRIAL_33",
             "id": 5041110,
+            "region": "ERA_INDUSTRIAL",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1965,6 +2053,7 @@
           {
             "name": "TECH_AP_MODERN_43",
             "id": 5041043,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1983,6 +2072,7 @@
           {
             "name": "TECH_AP_MODERN_44",
             "id": 5041044,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2001,6 +2091,7 @@
           {
             "name": "TECH_AP_MODERN_45",
             "id": 5041045,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2019,6 +2110,7 @@
           {
             "name": "TECH_AP_MODERN_46",
             "id": 5041046,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2037,6 +2129,7 @@
           {
             "name": "TECH_AP_MODERN_47",
             "id": 5041047,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2055,6 +2148,7 @@
           {
             "name": "TECH_AP_MODERN_48",
             "id": 5041048,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2073,6 +2167,7 @@
           {
             "name": "TECH_AP_MODERN_49",
             "id": 5041049,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2091,6 +2186,7 @@
           {
             "name": "TECH_AP_MODERN_68",
             "id": 5041068,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2109,6 +2205,7 @@
           {
             "name": "CIVIC_AP_MODERN_34",
             "id": 5041111,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2127,6 +2224,7 @@
           {
             "name": "CIVIC_AP_MODERN_35",
             "id": 5041112,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2145,6 +2243,7 @@
           {
             "name": "CIVIC_AP_MODERN_36",
             "id": 5041113,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2163,6 +2262,7 @@
           {
             "name": "CIVIC_AP_MODERN_37",
             "id": 5041114,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2181,6 +2281,7 @@
           {
             "name": "CIVIC_AP_MODERN_38",
             "id": 5041115,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2199,6 +2300,7 @@
           {
             "name": "CIVIC_AP_MODERN_39",
             "id": 5041116,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2217,6 +2319,7 @@
           {
             "name": "CIVIC_AP_MODERN_40",
             "id": 5041117,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2235,6 +2338,7 @@
           {
             "name": "CIVIC_AP_MODERN_41",
             "id": 5041118,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2253,6 +2357,7 @@
           {
             "name": "CIVIC_AP_MODERN_42",
             "id": 5041119,
+            "region": "ERA_MODERN",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2328,6 +2433,7 @@
           {
             "name": "TECH_AP_ATOMIC_50",
             "id": 5041050,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2346,6 +2452,7 @@
           {
             "name": "TECH_AP_ATOMIC_51",
             "id": 5041051,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2364,6 +2471,7 @@
           {
             "name": "TECH_AP_ATOMIC_52",
             "id": 5041052,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2382,6 +2490,7 @@
           {
             "name": "TECH_AP_ATOMIC_53",
             "id": 5041053,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2400,6 +2509,7 @@
           {
             "name": "TECH_AP_ATOMIC_54",
             "id": 5041054,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2418,6 +2528,7 @@
           {
             "name": "TECH_AP_ATOMIC_55",
             "id": 5041055,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2436,6 +2547,7 @@
           {
             "name": "TECH_AP_ATOMIC_56",
             "id": 5041056,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2454,6 +2566,7 @@
           {
             "name": "TECH_AP_ATOMIC_57",
             "id": 5041057,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2472,6 +2585,7 @@
           {
             "name": "CIVIC_AP_ATOMIC_43",
             "id": 5041120,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2490,6 +2604,7 @@
           {
             "name": "CIVIC_AP_ATOMIC_44",
             "id": 5041121,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2508,6 +2623,7 @@
           {
             "name": "CIVIC_AP_ATOMIC_45",
             "id": 5041122,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2526,6 +2642,7 @@
           {
             "name": "CIVIC_AP_ATOMIC_46",
             "id": 5041123,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2544,6 +2661,7 @@
           {
             "name": "CIVIC_AP_ATOMIC_47",
             "id": 5041124,
+            "region": "ERA_ATOMIC",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2619,6 +2737,7 @@
           {
             "name": "TECH_AP_INFORMATION_58",
             "id": 5041058,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2637,6 +2756,7 @@
           {
             "name": "TECH_AP_INFORMATION_59",
             "id": 5041059,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2655,6 +2775,7 @@
           {
             "name": "TECH_AP_INFORMATION_60",
             "id": 5041060,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2673,6 +2794,7 @@
           {
             "name": "TECH_AP_INFORMATION_61",
             "id": 5041061,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2691,6 +2813,7 @@
           {
             "name": "TECH_AP_INFORMATION_62",
             "id": 5041062,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2709,6 +2832,7 @@
           {
             "name": "TECH_AP_INFORMATION_63",
             "id": 5041063,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2727,6 +2851,7 @@
           {
             "name": "TECH_AP_INFORMATION_64",
             "id": 5041064,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2745,6 +2870,7 @@
           {
             "name": "TECH_AP_INFORMATION_65",
             "id": 5041065,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2763,6 +2889,7 @@
           {
             "name": "TECH_AP_INFORMATION_66",
             "id": 5041066,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2781,6 +2908,7 @@
           {
             "name": "CIVIC_AP_INFORMATION_48",
             "id": 5041125,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2799,6 +2927,7 @@
           {
             "name": "CIVIC_AP_INFORMATION_49",
             "id": 5041126,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2817,6 +2946,7 @@
           {
             "name": "CIVIC_AP_INFORMATION_51",
             "id": 5041128,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2835,6 +2965,7 @@
           {
             "name": "CIVIC_AP_INFORMATION_52",
             "id": 5041129,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2853,6 +2984,7 @@
           {
             "name": "CIVIC_AP_INFORMATION_53",
             "id": 5041130,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2871,6 +3003,7 @@
           {
             "name": "CIVIC_AP_INFORMATION_54",
             "id": 5041131,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2889,6 +3022,7 @@
           {
             "name": "CIVIC_AP_INFORMATION_55",
             "id": 5041132,
+            "region": "ERA_INFORMATION",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2930,6 +3064,7 @@
           {
             "name": "TECH_AP_FUTURE_69",
             "id": 5041069,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2948,6 +3083,7 @@
           {
             "name": "TECH_AP_FUTURE_70",
             "id": 5041070,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2966,6 +3102,7 @@
           {
             "name": "TECH_AP_FUTURE_71",
             "id": 5041071,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2984,6 +3121,7 @@
           {
             "name": "TECH_AP_FUTURE_72",
             "id": 5041072,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3002,6 +3140,7 @@
           {
             "name": "TECH_AP_FUTURE_73",
             "id": 5041073,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3020,6 +3159,7 @@
           {
             "name": "TECH_AP_FUTURE_74",
             "id": 5041074,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3038,6 +3178,7 @@
           {
             "name": "TECH_AP_FUTURE_75",
             "id": 5041075,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3056,6 +3197,7 @@
           {
             "name": "TECH_AP_FUTURE_76",
             "id": 5041076,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3074,6 +3216,7 @@
           {
             "name": "CIVIC_AP_FUTURE_50",
             "id": 5041127,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3092,6 +3235,7 @@
           {
             "name": "CIVIC_AP_FUTURE_56",
             "id": 5041133,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3110,6 +3254,7 @@
           {
             "name": "CIVIC_AP_FUTURE_57",
             "id": 5041134,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3128,6 +3273,7 @@
           {
             "name": "CIVIC_AP_FUTURE_58",
             "id": 5041135,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3146,6 +3292,7 @@
           {
             "name": "CIVIC_AP_FUTURE_59",
             "id": 5041136,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3164,6 +3311,7 @@
           {
             "name": "CIVIC_AP_FUTURE_60",
             "id": 5041137,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3182,6 +3330,7 @@
           {
             "name": "Complete a victory type",
             "id": null,
+            "region": "ERA_FUTURE",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -5575,9 +5724,177 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "State Workforce",
+        "Mobilization",
+        "Nanotechnology",
+        "Near Future Governance",
+        "Governor Title",
+        "Scientific Theory",
+        "Civil Service",
+        "Combustion",
+        "Feudalism",
+        "Settler",
+        "Steam Power",
+        "Progressive Space Port",
+        "Mass Production",
+        "Writing",
+        "Satellites",
+        "Seasteads",
+        "Theology",
+        "The Enlightenment",
+        "Trader",
+        "Machinery",
+        "Nuclear Fusion",
+        "Animal Husbandry",
+        "Cultural Hegemony",
+        "Games Recreation",
+        "Printing",
+        "Progressive Encampment",
+        "Masonry",
+        "Bronze Working",
+        "Mass Media",
+        "Banking",
+        "Space Race",
+        "Currency",
+        "Industrialization",
+        "Nuclear Program",
+        "Additional Population",
+        "Future Tech",
+        "Smart Power Doctrine",
+        "Drama and Poetry",
+        "Iron Working",
+        "Sailing",
+        "Radio",
+        "Flight",
+        "Shipbuilding",
+        "Combined Arms",
+        "Foreign Trade",
+        "Exodus Imperative",
+        "Mysticism",
+        "Ballistics",
+        "Lasers",
+        "Composites",
+        "Corporate Libertarianism",
+        "Progressive Neighborhood",
+        "Metal Casting",
+        "Defensive Tactics",
+        "Reformed Church",
+        "Nationalism",
+        "Builder",
+        "Offworld Mission",
+        "Scorched Earth",
+        "Relic",
+        "Progressive Harbor",
+        "Guidance Systems",
+        "Irrigation",
+        "Civil Engineering",
+        "Political Philosophy",
+        "Recorded History",
+        "Mercantilism",
+        "Rifling",
+        "Replaceable Parts",
+        "Future Civic",
+        "Naval Tradition",
+        "The Wheel",
+        "Suffrage",
+        "Astrology",
+        "Sanitation",
+        "Progressive Era",
+        "Economics",
+        "Military Engineering",
+        "Advanced AI",
+        "Exploration",
+        "Telecommunications",
+        "Diplomatic Favor",
+        "Plastics",
+        "Gunpowder",
+        "Medieval Faires",
+        "Gold: Small",
+        "Faith: Medium",
+        "Military Training",
+        "Celestial Navigation",
+        "Siege Tactics",
+        "Early Empire",
+        "Cultural Heritage",
+        "Castles",
+        "Mining",
+        "Colonialism",
+        "Craftsmanship",
+        "Progressive Diplomatic Quarter",
+        "Humanism",
+        "Envoy",
+        "Gold: Large",
+        "Military Tactics",
+        "Computers",
+        "Capitalism",
+        "Buttress",
+        "Pottery",
+        "Rocketry",
+        "Military Tradition",
+        "Progressive Industrial Zone",
+        "Electricity",
+        "Opera and Ballet",
+        "Diplomatic Service",
+        "Astronomy",
+        "Square Rigging",
+        "Progressive Theater",
+        "Scout",
+        "Steel",
+        "Cybernetics",
+        "Global Warming Mitigation",
+        "Stirrups",
+        "Apprenticeship",
+        "Faith: Small",
+        "Smart Materials",
+        "Guilds",
+        "Synthetic Technocracy",
+        "Digital Democracy",
+        "Predictive Systems",
+        "Education",
+        "Progressive Preserve",
+        "Engineering",
+        "Code of Laws",
+        "Professional Sports",
+        "Gold: Medium",
+        "Archery",
+        "Mercenaries",
+        "Class Struggle",
+        "Nuclear Fission",
+        "Progressive Aerodrome",
+        "Construction",
+        "Chemistry",
+        "Advanced Flight",
+        "Environmentalism",
+        "Ideology",
+        "Rapid Deployment",
+        "Advanced Power Cells",
+        "Faith: Large",
+        "Stealth Technology",
+        "Refining",
+        "Cold War",
+        "Advanced Ballistics",
+        "Robotics",
+        "Synthetic Materials",
+        "Conservation",
+        "Cartography",
+        "Natural History",
+        "Horseback Riding",
+        "Progressive Campus",
+        "Divine Right",
+        "Social Media",
+        "Totalitarianism",
+        "Urbanization",
+        "Progressive Entertainment Complex",
+        "Military Science",
+        "Progressive Holy Site",
+        "Information Warfare",
+        "Mathematics",
+        "Globalization",
+        "Progressive Commercial Hub"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

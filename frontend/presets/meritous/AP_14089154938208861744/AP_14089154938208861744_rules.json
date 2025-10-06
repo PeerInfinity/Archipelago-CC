@@ -55,6 +55,7 @@
           {
             "name": "Alpha Cache 1",
             "id": 593000,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -73,6 +74,7 @@
           {
             "name": "Alpha Cache 2",
             "id": 593001,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -91,6 +93,7 @@
           {
             "name": "Alpha Cache 3",
             "id": 593002,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -109,6 +112,7 @@
           {
             "name": "Alpha Cache 4",
             "id": 593003,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -127,6 +131,7 @@
           {
             "name": "Alpha Cache 5",
             "id": 593004,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -145,6 +150,7 @@
           {
             "name": "Alpha Cache 6",
             "id": 593005,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -163,6 +169,7 @@
           {
             "name": "Beta Cache 1",
             "id": 593024,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -181,6 +188,7 @@
           {
             "name": "Beta Cache 2",
             "id": 593025,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -199,6 +207,7 @@
           {
             "name": "Beta Cache 3",
             "id": 593026,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -217,6 +226,7 @@
           {
             "name": "Beta Cache 4",
             "id": 593027,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -235,6 +245,7 @@
           {
             "name": "Beta Cache 5",
             "id": 593028,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -253,6 +264,7 @@
           {
             "name": "Beta Cache 6",
             "id": 593029,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -271,6 +283,7 @@
           {
             "name": "Gamma Cache 1",
             "id": 593048,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -289,6 +302,7 @@
           {
             "name": "Gamma Cache 2",
             "id": 593049,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -307,6 +321,7 @@
           {
             "name": "Gamma Cache 3",
             "id": 593050,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -325,6 +340,7 @@
           {
             "name": "Gamma Cache 4",
             "id": 593051,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -343,6 +359,7 @@
           {
             "name": "Gamma Cache 5",
             "id": 593052,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -361,6 +378,7 @@
           {
             "name": "Gamma Cache 6",
             "id": 593053,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -379,6 +397,7 @@
           {
             "name": "Reward Chest 1",
             "id": 593072,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -397,6 +416,7 @@
           {
             "name": "Reward Chest 2",
             "id": 593073,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -415,6 +435,7 @@
           {
             "name": "Reward Chest 3",
             "id": 593074,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -433,6 +454,7 @@
           {
             "name": "Reward Chest 4",
             "id": 593075,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -451,6 +473,7 @@
           {
             "name": "Reward Chest 5",
             "id": 593076,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -469,6 +492,7 @@
           {
             "name": "Reward Chest 6",
             "id": 593077,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -487,6 +511,7 @@
           {
             "name": "PSI Key Storage 1",
             "id": 593096,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -556,6 +581,7 @@
           {
             "name": "Alpha Cache 7",
             "id": 593006,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -574,6 +600,7 @@
           {
             "name": "Alpha Cache 8",
             "id": 593007,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -592,6 +619,7 @@
           {
             "name": "Alpha Cache 9",
             "id": 593008,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -610,6 +638,7 @@
           {
             "name": "Alpha Cache 10",
             "id": 593009,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -628,6 +657,7 @@
           {
             "name": "Alpha Cache 11",
             "id": 593010,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -646,6 +676,7 @@
           {
             "name": "Alpha Cache 12",
             "id": 593011,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -664,6 +695,7 @@
           {
             "name": "Beta Cache 7",
             "id": 593030,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -682,6 +714,7 @@
           {
             "name": "Beta Cache 8",
             "id": 593031,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -700,6 +733,7 @@
           {
             "name": "Beta Cache 9",
             "id": 593032,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -718,6 +752,7 @@
           {
             "name": "Beta Cache 10",
             "id": 593033,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -736,6 +771,7 @@
           {
             "name": "Beta Cache 11",
             "id": 593034,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -754,6 +790,7 @@
           {
             "name": "Beta Cache 12",
             "id": 593035,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -772,6 +809,7 @@
           {
             "name": "Gamma Cache 7",
             "id": 593054,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -790,6 +828,7 @@
           {
             "name": "Gamma Cache 8",
             "id": 593055,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -808,6 +847,7 @@
           {
             "name": "Gamma Cache 9",
             "id": 593056,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -826,6 +866,7 @@
           {
             "name": "Gamma Cache 10",
             "id": 593057,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -844,6 +885,7 @@
           {
             "name": "Gamma Cache 11",
             "id": 593058,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -862,6 +904,7 @@
           {
             "name": "Gamma Cache 12",
             "id": 593059,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -880,6 +923,7 @@
           {
             "name": "Reward Chest 7",
             "id": 593078,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -898,6 +942,7 @@
           {
             "name": "Reward Chest 8",
             "id": 593079,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -916,6 +961,7 @@
           {
             "name": "Reward Chest 9",
             "id": 593080,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -934,6 +980,7 @@
           {
             "name": "Reward Chest 10",
             "id": 593081,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -952,6 +999,7 @@
           {
             "name": "Reward Chest 11",
             "id": 593082,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -970,6 +1018,7 @@
           {
             "name": "Reward Chest 12",
             "id": 593083,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -988,6 +1037,7 @@
           {
             "name": "PSI Key Storage 2",
             "id": 593097,
+            "region": "Second Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1057,6 +1107,7 @@
           {
             "name": "Alpha Cache 13",
             "id": 593012,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1075,6 +1126,7 @@
           {
             "name": "Alpha Cache 14",
             "id": 593013,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1093,6 +1145,7 @@
           {
             "name": "Alpha Cache 15",
             "id": 593014,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1111,6 +1164,7 @@
           {
             "name": "Alpha Cache 16",
             "id": 593015,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1129,6 +1183,7 @@
           {
             "name": "Alpha Cache 17",
             "id": 593016,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1147,6 +1202,7 @@
           {
             "name": "Alpha Cache 18",
             "id": 593017,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1165,6 +1221,7 @@
           {
             "name": "Beta Cache 13",
             "id": 593036,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1183,6 +1240,7 @@
           {
             "name": "Beta Cache 14",
             "id": 593037,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1201,6 +1259,7 @@
           {
             "name": "Beta Cache 15",
             "id": 593038,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1219,6 +1278,7 @@
           {
             "name": "Beta Cache 16",
             "id": 593039,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1237,6 +1297,7 @@
           {
             "name": "Beta Cache 17",
             "id": 593040,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1255,6 +1316,7 @@
           {
             "name": "Beta Cache 18",
             "id": 593041,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1273,6 +1335,7 @@
           {
             "name": "Gamma Cache 13",
             "id": 593060,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1291,6 +1354,7 @@
           {
             "name": "Gamma Cache 14",
             "id": 593061,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1309,6 +1373,7 @@
           {
             "name": "Gamma Cache 15",
             "id": 593062,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1327,6 +1392,7 @@
           {
             "name": "Gamma Cache 16",
             "id": 593063,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1345,6 +1411,7 @@
           {
             "name": "Gamma Cache 17",
             "id": 593064,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1363,6 +1430,7 @@
           {
             "name": "Gamma Cache 18",
             "id": 593065,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1381,6 +1449,7 @@
           {
             "name": "Reward Chest 13",
             "id": 593084,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1399,6 +1468,7 @@
           {
             "name": "Reward Chest 14",
             "id": 593085,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1417,6 +1487,7 @@
           {
             "name": "Reward Chest 15",
             "id": 593086,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1435,6 +1506,7 @@
           {
             "name": "Reward Chest 16",
             "id": 593087,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1453,6 +1525,7 @@
           {
             "name": "Reward Chest 17",
             "id": 593088,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1471,6 +1544,7 @@
           {
             "name": "Reward Chest 18",
             "id": 593089,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1489,6 +1563,7 @@
           {
             "name": "PSI Key Storage 3",
             "id": 593098,
+            "region": "Third Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1549,16 +1624,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Cursed Seal"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Agate Knife"
-                    }
+                    "Agate Knife",
+                    "Cursed Seal"
                   ]
                 }
               ]
@@ -1573,6 +1642,7 @@
           {
             "name": "Alpha Cache 19",
             "id": 593018,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1591,6 +1661,7 @@
           {
             "name": "Alpha Cache 20",
             "id": 593019,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1609,6 +1680,7 @@
           {
             "name": "Alpha Cache 21",
             "id": 593020,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1627,6 +1699,7 @@
           {
             "name": "Alpha Cache 22",
             "id": 593021,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1645,6 +1718,7 @@
           {
             "name": "Alpha Cache 23",
             "id": 593022,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1663,6 +1737,7 @@
           {
             "name": "Alpha Cache 24",
             "id": 593023,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1681,6 +1756,7 @@
           {
             "name": "Beta Cache 19",
             "id": 593042,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1699,6 +1775,7 @@
           {
             "name": "Beta Cache 20",
             "id": 593043,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1717,6 +1794,7 @@
           {
             "name": "Beta Cache 21",
             "id": 593044,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1735,6 +1813,7 @@
           {
             "name": "Beta Cache 22",
             "id": 593045,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1753,6 +1832,7 @@
           {
             "name": "Beta Cache 23",
             "id": 593046,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1771,6 +1851,7 @@
           {
             "name": "Beta Cache 24",
             "id": 593047,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1789,6 +1870,7 @@
           {
             "name": "Gamma Cache 19",
             "id": 593066,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1807,6 +1889,7 @@
           {
             "name": "Gamma Cache 20",
             "id": 593067,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1825,6 +1908,7 @@
           {
             "name": "Gamma Cache 21",
             "id": 593068,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1843,6 +1927,7 @@
           {
             "name": "Gamma Cache 22",
             "id": 593069,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1861,6 +1946,7 @@
           {
             "name": "Gamma Cache 23",
             "id": 593070,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1879,6 +1965,7 @@
           {
             "name": "Gamma Cache 24",
             "id": 593071,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1897,6 +1984,7 @@
           {
             "name": "Reward Chest 19",
             "id": 593090,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1915,6 +2003,7 @@
           {
             "name": "Reward Chest 20",
             "id": 593091,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1933,6 +2022,7 @@
           {
             "name": "Reward Chest 21",
             "id": 593092,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1951,6 +2041,7 @@
           {
             "name": "Reward Chest 22",
             "id": 593093,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1969,6 +2060,7 @@
           {
             "name": "Reward Chest 23",
             "id": 593094,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1987,6 +2079,7 @@
           {
             "name": "Reward Chest 24",
             "id": 593095,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2005,6 +2098,7 @@
           {
             "name": "Place of Power",
             "id": 593102,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2023,6 +2117,7 @@
           {
             "name": "The Last Place You'll Look",
             "id": 593103,
+            "region": "Last Quarter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2080,6 +2175,7 @@
           {
             "name": "Meridian",
             "id": 593099,
+            "region": "Meridian",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2098,6 +2194,7 @@
           {
             "name": "Meridian Defeat",
             "id": null,
+            "region": "Meridian",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2155,6 +2252,7 @@
           {
             "name": "Ataraxia",
             "id": 593100,
+            "region": "Ataraxia",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2173,6 +2271,7 @@
           {
             "name": "Ataraxia Defeat",
             "id": null,
+            "region": "Ataraxia",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2230,6 +2329,7 @@
           {
             "name": "Merodach",
             "id": 593101,
+            "region": "Merodach",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2248,6 +2348,7 @@
           {
             "name": "Merodach Defeat",
             "id": null,
+            "region": "Merodach",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2289,6 +2390,7 @@
           {
             "name": "Wervyn Anixil",
             "id": null,
+            "region": "Final Boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2330,6 +2432,7 @@
           {
             "name": "Wervyn Anixil?",
             "id": null,
+            "region": "True Final Boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2779,14 +2882,65 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Artifacts",
-      "Crystals",
-      "Everything",
-      "Important Artifacts",
-      "PSI Keys",
-      "Upgrades"
-    ]
+    "1": {
+      "PSI Keys": [
+        "PSI Key 2",
+        "PSI Key 1",
+        "PSI Key 3"
+      ],
+      "Upgrades": [
+        "Reflect Shield upgrade",
+        "Circuit Refill upgrade",
+        "Circuit Charge upgrade"
+      ],
+      "Artifacts": [
+        "Map",
+        "Crystal Efficiency",
+        "Shield Boost",
+        "Crystal Gatherer",
+        "Ethereal Monocle",
+        "Portable Compass",
+        "Dodge Enhancer",
+        "Circuit Booster",
+        "Metabolism"
+      ],
+      "Important Artifacts": [
+        "Metabolism",
+        "Shield Boost",
+        "Dodge Enhancer",
+        "Circuit Booster"
+      ],
+      "Crystals": [
+        "Crystals x1000",
+        "Crystals x2000",
+        "Crystals x500"
+      ],
+      "Everything": [
+        "Crystal Gatherer",
+        "Cursed Seal",
+        "Crystals x500",
+        "Ethereal Monocle",
+        "Circuit Charge upgrade",
+        "Portable Compass",
+        "Crystals x1000",
+        "Agate Knife",
+        "Evolution Trap",
+        "Dodge Enhancer",
+        "Circuit Booster",
+        "Metabolism",
+        "Reflect Shield upgrade",
+        "PSI Key 2",
+        "PSI Key 3",
+        "Map",
+        "Crystal Efficiency",
+        "Shield Boost",
+        "Circuit Refill upgrade",
+        "Nothing",
+        "Crystals x2000",
+        "PSI Key 1",
+        "Extra Life"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

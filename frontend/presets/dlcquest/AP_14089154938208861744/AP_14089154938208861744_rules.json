@@ -78,6 +78,7 @@
           {
             "name": "Movement Pack",
             "id": 120000,
+            "region": "Move Right",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -122,6 +123,7 @@
           {
             "name": "Animation Pack",
             "id": 120001,
+            "region": "Move Right",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -166,6 +168,7 @@
           {
             "name": "Audio Pack",
             "id": 120002,
+            "region": "Move Right",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -210,6 +213,7 @@
           {
             "name": "Pause Menu Pack",
             "id": 120003,
+            "region": "Move Right",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -254,6 +258,7 @@
           {
             "name": "Move Right coins",
             "id": null,
+            "region": "Move Right",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -326,6 +331,7 @@
           {
             "name": "Time is Money Pack",
             "id": 120004,
+            "region": "Movement Pack",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -370,6 +376,7 @@
           {
             "name": "Psychological Warfare Pack",
             "id": 120013,
+            "region": "Movement Pack",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -414,6 +421,7 @@
           {
             "name": "Armor for your Horse Pack",
             "id": 120014,
+            "region": "Movement Pack",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -458,6 +466,7 @@
           {
             "name": "Shepherd Sheep",
             "id": 120049,
+            "region": "Movement Pack",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -479,6 +488,7 @@
           {
             "name": "Movement Pack coins",
             "id": null,
+            "region": "Movement Pack",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -551,6 +561,7 @@
           {
             "name": "Double Jump Pack",
             "id": 120005,
+            "region": "Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -595,6 +606,7 @@
           {
             "name": "Map Pack",
             "id": 120009,
+            "region": "Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -639,6 +651,7 @@
           {
             "name": "Between Trees Sheep",
             "id": 120047,
+            "region": "Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -657,6 +670,7 @@
           {
             "name": "Hole in the Wall Sheep",
             "id": 120048,
+            "region": "Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -675,6 +689,7 @@
           {
             "name": "Behind Tree coins",
             "id": null,
+            "region": "Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -732,6 +747,7 @@
           {
             "name": "West Cave Sheep",
             "id": 120053,
+            "region": "Psychological Warfare",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -753,6 +769,7 @@
           {
             "name": "Psychological Warfare coins",
             "id": null,
+            "region": "Psychological Warfare",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -825,6 +842,7 @@
           {
             "name": "Pet Pack",
             "id": 120006,
+            "region": "Double Jump Total Left",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -869,6 +887,7 @@
           {
             "name": "Top Hat Pack",
             "id": 120008,
+            "region": "Double Jump Total Left",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -913,6 +932,7 @@
           {
             "name": "North West Alcove Sheep",
             "id": 120052,
+            "region": "Double Jump Total Left",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -934,6 +954,7 @@
           {
             "name": "Double Jump Total Left coins",
             "id": null,
+            "region": "Double Jump Total Left",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -975,6 +996,7 @@
           {
             "name": "Top Hat Sheep",
             "id": 120050,
+            "region": "Double Jump Total Left Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -993,6 +1015,7 @@
           {
             "name": "Double Jump Total Left Cave coins",
             "id": null,
+            "region": "Double Jump Total Left Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1034,6 +1057,7 @@
           {
             "name": "North West Ceiling Sheep",
             "id": 120051,
+            "region": "Double Jump Total Left Roof",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1055,6 +1079,7 @@
           {
             "name": "Double Jump Total Left Roof coins",
             "id": null,
+            "region": "Double Jump Total Left Roof",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1109,6 +1134,7 @@
           {
             "name": "Sexy Outfits Pack",
             "id": 120007,
+            "region": "Double Jump Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1153,6 +1179,7 @@
           {
             "name": "Double Jump Alcove Sheep",
             "id": 120042,
+            "region": "Double Jump Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1171,6 +1198,7 @@
           {
             "name": "Sexy Outfits Sheep",
             "id": 120044,
+            "region": "Double Jump Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1189,6 +1217,7 @@
           {
             "name": "Double Jump Behind Tree coins",
             "id": null,
+            "region": "Double Jump Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1230,6 +1259,7 @@
           {
             "name": "Double Jump Floating Sheep",
             "id": 120043,
+            "region": "True Double Jump Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1248,6 +1278,7 @@
           {
             "name": "Cutscene Sheep",
             "id": 120054,
+            "region": "True Double Jump Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1266,6 +1297,7 @@
           {
             "name": "True Double Jump Behind Tree coins",
             "id": null,
+            "region": "True Double Jump Behind Tree",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1338,6 +1370,7 @@
           {
             "name": "Gun Pack",
             "id": 120010,
+            "region": "The Forest",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1382,6 +1415,7 @@
           {
             "name": "Night Map Pack",
             "id": 120012,
+            "region": "The Forest",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1426,6 +1460,7 @@
           {
             "name": "The Forest coins",
             "id": null,
+            "region": "The Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1483,6 +1518,7 @@
           {
             "name": "The Zombie Pack",
             "id": 120011,
+            "region": "The Forest with double Jump",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1527,6 +1563,7 @@
           {
             "name": "Forest Low Sheep",
             "id": 120046,
+            "region": "The Forest with double Jump",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1545,6 +1582,7 @@
           {
             "name": "The Forest with double Jump coins",
             "id": null,
+            "region": "The Forest with double Jump",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1586,6 +1624,7 @@
           {
             "name": "Forest High Sheep",
             "id": 120045,
+            "region": "The Forest with double Jump Part 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1604,6 +1643,7 @@
           {
             "name": "The Forest with double Jump Part 2 coins",
             "id": null,
+            "region": "The Forest with double Jump Part 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1645,6 +1685,7 @@
           {
             "name": "Finish the Fight Pack",
             "id": 120015,
+            "region": "The Final Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1689,6 +1730,7 @@
           {
             "name": "Winning Basic",
             "id": null,
+            "region": "The Final Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2649,9 +2691,61 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "DLC Quest: Progressive Weapon",
+        "Gun Pack",
+        "Really Big Sword Pack",
+        "Parallax Pack",
+        "The Zombie Pack",
+        "Loading Screen",
+        "Canadian Dialog Pack",
+        "Removed Ads Pack",
+        "Sword",
+        "Gun",
+        "Humble Indie Bindle",
+        "Animation Pack",
+        "Map Pack",
+        "Finish the Fight Pack",
+        "Checkpoint Pack",
+        "Increased HP Pack",
+        "Live Freemium or Die: Coin Piece",
+        "Pet Pack",
+        "Sexy Outfits Pack",
+        "Wall Jump Pack",
+        "Top Hat Pack",
+        "High Definition Next Gen Pack",
+        "Box of Various Supplies",
+        "Temporary Spike",
+        "Audio Pack",
+        "Armor for your Horse Pack",
+        "Death of Comedy Pack",
+        "Name Change Pack",
+        "Big Sword Pack",
+        "Night Map Pack",
+        "Harmless Plants Pack",
+        "Double Jump Pack",
+        "Cut Content Pack",
+        "Wooden Sword",
+        "DLC Quest: Coin Bundle",
+        "Health Bar Pack",
+        "Live Freemium or Die: Coin Bundle",
+        "Zombie Sheep",
+        "Season Pass",
+        "Particles Pack",
+        "Day One Patch Pack",
+        "Live Freemium or Die: Progressive Weapon",
+        "Psychological Warfare Pack",
+        "Pickaxe",
+        "DLC NPC Pack",
+        "Incredibly Important Pack",
+        "Movement Pack",
+        "Time is Money Pack",
+        "DLC Quest: Coin Piece",
+        "Unfathomable Sword Pack",
+        "Pause Menu Pack"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

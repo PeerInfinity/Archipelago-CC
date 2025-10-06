@@ -1204,6 +1204,7 @@
           {
             "name": "Mushroom",
             "id": 1572883,
+            "region": "Light World",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1222,6 +1223,7 @@
           {
             "name": "Bottle Merchant",
             "id": 191256,
+            "region": "Light World",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1240,6 +1242,7 @@
           {
             "name": "Flute Spot",
             "id": 1573194,
+            "region": "Light World",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -1261,6 +1264,7 @@
           {
             "name": "Sunken Treasure",
             "id": 1573189,
+            "region": "Light World",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -1282,6 +1286,7 @@
           {
             "name": "Purple Chest",
             "id": 212328,
+            "region": "Light World",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -1303,6 +1308,7 @@
           {
             "name": "Flute Activation Spot",
             "id": null,
+            "region": "Light World",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -1468,6 +1474,7 @@
           {
             "name": "Blind's Hideout - Top",
             "id": 60175,
+            "region": "Blinds Hideout",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -1487,6 +1494,7 @@
           {
             "name": "Blind's Hideout - Left",
             "id": 60178,
+            "region": "Blinds Hideout",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1505,6 +1513,7 @@
           {
             "name": "Blind's Hideout - Right",
             "id": 60181,
+            "region": "Blinds Hideout",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1523,6 +1532,7 @@
           {
             "name": "Blind's Hideout - Far Left",
             "id": 60184,
+            "region": "Blinds Hideout",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1541,6 +1551,7 @@
           {
             "name": "Blind's Hideout - Far Right",
             "id": 60187,
+            "region": "Blinds Hideout",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1607,6 +1618,7 @@
           {
             "name": "Link's Uncle",
             "id": 188229,
+            "region": "Hyrule Castle Secret Entrance",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1625,6 +1637,7 @@
           {
             "name": "Secret Passage",
             "id": 59761,
+            "region": "Hyrule Castle Secret Entrance",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1668,6 +1681,7 @@
           {
             "name": "King Zora",
             "id": 975299,
+            "region": "Zoras River",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1686,6 +1700,7 @@
           {
             "name": "Zora's Ledge",
             "id": 1573193,
+            "region": "Zoras River",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -1732,6 +1747,7 @@
           {
             "name": "Waterfall Fairy - Left",
             "id": 59824,
+            "region": "Waterfall of Wishing",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1750,6 +1766,7 @@
           {
             "name": "Waterfall Fairy - Right",
             "id": 59857,
+            "region": "Waterfall of Wishing",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1856,6 +1873,7 @@
           {
             "name": "King's Tomb",
             "id": 59770,
+            "region": "Kings Grave",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1946,6 +1964,7 @@
           {
             "name": "Floodgate",
             "id": null,
+            "region": "Dam",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -1964,6 +1983,7 @@
           {
             "name": "Floodgate Chest",
             "id": 59788,
+            "region": "Dam",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -2030,6 +2050,7 @@
           {
             "name": "Link's House",
             "id": 59836,
+            "region": "Links House",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -2099,6 +2120,7 @@
           {
             "name": "Kakariko Tavern",
             "id": 59854,
+            "region": "Tavern",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -2662,6 +2684,7 @@
           {
             "name": "Chicken House",
             "id": 59881,
+            "region": "Chicken House",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -2706,6 +2729,7 @@
           {
             "name": "Aginah's Cave",
             "id": 59890,
+            "region": "Aginahs Cave",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -2750,6 +2774,7 @@
           {
             "name": "Sahasrahla's Hut - Left",
             "id": 60034,
+            "region": "Sahasrahlas Hut",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -2769,6 +2794,7 @@
           {
             "name": "Sahasrahla's Hut - Middle",
             "id": 60037,
+            "region": "Sahasrahlas Hut",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -2788,6 +2814,7 @@
           {
             "name": "Sahasrahla's Hut - Right",
             "id": 60040,
+            "region": "Sahasrahlas Hut",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -2807,6 +2834,7 @@
           {
             "name": "Sahasrahla",
             "id": 193020,
+            "region": "Sahasrahlas Hut",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -2866,6 +2894,7 @@
           {
             "name": "Kakariko Well - Top",
             "id": 60046,
+            "region": "Kakariko Well (top)",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -2885,6 +2914,7 @@
           {
             "name": "Kakariko Well - Left",
             "id": 60049,
+            "region": "Kakariko Well (top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -2903,6 +2933,7 @@
           {
             "name": "Kakariko Well - Middle",
             "id": 60052,
+            "region": "Kakariko Well (top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -2921,6 +2952,7 @@
           {
             "name": "Kakariko Well - Right",
             "id": 60055,
+            "region": "Kakariko Well (top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -2939,6 +2971,7 @@
           {
             "name": "Kakariko Well - Bottom",
             "id": 60058,
+            "region": "Kakariko Well (top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -3029,6 +3062,7 @@
           {
             "name": "Blacksmith",
             "id": 1572906,
+            "region": "Blacksmiths Hut",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -3050,6 +3084,7 @@
           {
             "name": "Missing Smith",
             "id": null,
+            "region": "Blacksmiths Hut",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -3175,6 +3210,7 @@
           {
             "name": "Magic Bat",
             "id": 1572885,
+            "region": "Bat Cave (right)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -3268,6 +3304,7 @@
           {
             "name": "Sick Kid",
             "id": 211407,
+            "region": "Sick Kids House",
             "crystal": false,
             "access_rule": {
               "type": "group_check",
@@ -3314,6 +3351,7 @@
           {
             "name": "Hobo",
             "id": 212605,
+            "region": "Hobo Bridge",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -3370,6 +3408,7 @@
           {
             "name": "Lost Woods Hideout",
             "id": 1572864,
+            "region": "Lost Woods Hideout (top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -3473,6 +3512,7 @@
           {
             "name": "Lumberjack Tree",
             "id": 1572865,
+            "region": "Lumberjack Tree (top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -3600,6 +3640,7 @@
           {
             "name": "Cave 45",
             "id": 1572867,
+            "region": "Cave 45",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -3680,6 +3721,7 @@
           {
             "name": "Graveyard Cave",
             "id": 1572868,
+            "region": "Graveyard Cave",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -3724,6 +3766,7 @@
           {
             "name": "Checkerboard Cave",
             "id": 1572869,
+            "region": "Checkerboard Cave",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -3791,6 +3834,7 @@
           {
             "name": "Mini Moldorm Cave - Far Left",
             "id": 60226,
+            "region": "Mini Moldorm Cave",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -3815,6 +3859,7 @@
           {
             "name": "Mini Moldorm Cave - Left",
             "id": 60229,
+            "region": "Mini Moldorm Cave",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -3839,6 +3884,7 @@
           {
             "name": "Mini Moldorm Cave - Right",
             "id": 60232,
+            "region": "Mini Moldorm Cave",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -3863,6 +3909,7 @@
           {
             "name": "Mini Moldorm Cave - Far Right",
             "id": 60235,
+            "region": "Mini Moldorm Cave",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -3887,6 +3934,7 @@
           {
             "name": "Mini Moldorm Cave - Generous Guy",
             "id": 1572880,
+            "region": "Mini Moldorm Cave",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -3936,6 +3984,7 @@
           {
             "name": "Ice Rod Cave",
             "id": 60238,
+            "region": "Ice Rod Cave",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -4133,6 +4182,7 @@
           {
             "name": "Bonk Rock Cave",
             "id": 60223,
+            "region": "Bonk Rock Cave",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -4176,6 +4226,7 @@
           {
             "name": "Library",
             "id": 1572882,
+            "region": "Library",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -4246,6 +4297,7 @@
           {
             "name": "Potion Shop",
             "id": 1572884,
+            "region": "Potion Shop",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -4321,6 +4373,7 @@
           {
             "name": "Lake Hylia Island",
             "id": 1573188,
+            "region": "Lake Hylia Island",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -4364,6 +4417,7 @@
           {
             "name": "Capacity Upgrade Shop",
             "id": null,
+            "region": "Capacity Upgrade",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -4520,6 +4574,7 @@
           {
             "name": "Maze Race",
             "id": 1573186,
+            "region": "Maze Race Ledge",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -4633,6 +4688,7 @@
           {
             "name": "Desert Ledge",
             "id": 1573187,
+            "region": "Desert Ledge",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -4966,6 +5022,7 @@
           {
             "name": "Desert Palace - Big Chest",
             "id": 59791,
+            "region": "Desert Palace Main (Outer)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -4987,6 +5044,7 @@
           {
             "name": "Desert Palace - Torch",
             "id": 1573216,
+            "region": "Desert Palace Main (Outer)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -5008,6 +5066,7 @@
           {
             "name": "Desert Palace - Map Chest",
             "id": 59830,
+            "region": "Desert Palace Main (Outer)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -5112,6 +5171,7 @@
           {
             "name": "Desert Palace - Compass Chest",
             "id": 59851,
+            "region": "Desert Palace East",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -5130,6 +5190,7 @@
           {
             "name": "Desert Palace - Big Key Chest",
             "id": 59842,
+            "region": "Desert Palace East",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -5193,6 +5254,7 @@
           {
             "name": "Desert Palace - Desert Tiles 1 Pot Key",
             "id": 1310769,
+            "region": "Desert Palace North",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -5211,6 +5273,7 @@
           {
             "name": "Desert Palace - Beamos Hall Pot Key",
             "id": 1310763,
+            "region": "Desert Palace North",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -5251,6 +5314,7 @@
           {
             "name": "Desert Palace - Desert Tiles 2 Pot Key",
             "id": 1310760,
+            "region": "Desert Palace North",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -5291,6 +5355,7 @@
           {
             "name": "Desert Palace - Boss",
             "id": 1573201,
+            "region": "Desert Palace North",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -5374,6 +5439,7 @@
           {
             "name": "Desert Palace - Prize",
             "id": null,
+            "region": "Desert Palace North",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -5511,6 +5577,7 @@
           {
             "name": "Eastern Palace - Compass Chest",
             "id": 59767,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -5529,6 +5596,7 @@
           {
             "name": "Eastern Palace - Big Chest",
             "id": 59773,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -5550,6 +5618,7 @@
           {
             "name": "Eastern Palace - Cannonball Chest",
             "id": 59827,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -5568,6 +5637,7 @@
           {
             "name": "Eastern Palace - Dark Square Pot Key",
             "id": 1310811,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -5589,6 +5659,7 @@
           {
             "name": "Eastern Palace - Dark Eyegore Key Drop",
             "id": 1310793,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -5637,6 +5708,7 @@
           {
             "name": "Eastern Palace - Big Key Chest",
             "id": 59833,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -5733,6 +5805,7 @@
           {
             "name": "Eastern Palace - Map Chest",
             "id": 59893,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -5751,6 +5824,7 @@
           {
             "name": "Eastern Palace - Boss",
             "id": 1573200,
+            "region": "Eastern Palace",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -5834,6 +5908,7 @@
           {
             "name": "Eastern Palace - Prize",
             "id": null,
+            "region": "Eastern Palace",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -5943,6 +6018,7 @@
           {
             "name": "Master Sword Pedestal",
             "id": 166320,
+            "region": "Master Sword Meadow",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -6306,6 +6382,7 @@
           {
             "name": "Hyrule Castle - Boomerang Chest",
             "id": 59764,
+            "region": "Hyrule Castle",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -6387,6 +6464,7 @@
           {
             "name": "Hyrule Castle - Map Chest",
             "id": 60172,
+            "region": "Hyrule Castle",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -6405,6 +6483,7 @@
           {
             "name": "Hyrule Castle - Zelda's Chest",
             "id": 60169,
+            "region": "Hyrule Castle",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -6497,6 +6576,7 @@
           {
             "name": "Hyrule Castle - Map Guard Key Drop",
             "id": 1310775,
+            "region": "Hyrule Castle",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -6521,6 +6601,7 @@
           {
             "name": "Hyrule Castle - Boomerang Guard Key Drop",
             "id": 1310772,
+            "region": "Hyrule Castle",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -6602,6 +6683,7 @@
           {
             "name": "Hyrule Castle - Big Key Drop",
             "id": 1310781,
+            "region": "Hyrule Castle",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -6790,6 +6872,7 @@
           {
             "name": "Sewers - Dark Cross",
             "id": 59758,
+            "region": "Sewers (Dark)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -6811,6 +6894,7 @@
           {
             "name": "Sewers - Key Rat Key Drop",
             "id": 1310733,
+            "region": "Sewers (Dark)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -6969,6 +7053,7 @@
           {
             "name": "Sewers - Secret Room - Left",
             "id": 60253,
+            "region": "Sewers Secret Room",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -6987,6 +7072,7 @@
           {
             "name": "Sewers - Secret Room - Middle",
             "id": 60256,
+            "region": "Sewers Secret Room",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -7005,6 +7091,7 @@
           {
             "name": "Sewers - Secret Room - Right",
             "id": 60259,
+            "region": "Sewers Secret Room",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -7081,6 +7168,7 @@
           {
             "name": "Sanctuary",
             "id": 60025,
+            "region": "Sanctuary",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -7179,6 +7267,7 @@
           {
             "name": "Castle Tower - Room 03",
             "id": 60085,
+            "region": "Agahnims Tower",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -7203,6 +7292,7 @@
           {
             "name": "Castle Tower - Dark Maze",
             "id": 60082,
+            "region": "Agahnims Tower",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -7255,6 +7345,7 @@
           {
             "name": "Castle Tower - Dark Archer Key Drop",
             "id": 1310817,
+            "region": "Agahnims Tower",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -7307,6 +7398,7 @@
           {
             "name": "Castle Tower - Circle of Pots Key Drop",
             "id": 1310802,
+            "region": "Agahnims Tower",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -7385,6 +7477,7 @@
           {
             "name": "Agahnim 1",
             "id": null,
+            "region": "Agahnim 1",
             "crystal": false,
             "access_rule": {
               "type": "function_call",
@@ -7487,6 +7580,7 @@
           {
             "name": "Old Man",
             "id": 1010170,
+            "region": "Old Man Cave",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -8042,6 +8136,7 @@
           {
             "name": "Spectacle Rock Cave",
             "id": 1572866,
+            "region": "Spectacle Rock Cave (Top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -8496,6 +8591,7 @@
           {
             "name": "Paradox Cave Lower - Far Left",
             "id": 60202,
+            "region": "Paradox Cave Chest Area",
             "crystal": false,
             "access_rule": {
               "type": "or",
@@ -8520,16 +8616,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Fire Rod"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Cane of Somaria"
-                        }
+                        "Cane of Somaria",
+                        "Fire Rod"
                       ]
                     }
                   ]
@@ -8549,6 +8639,7 @@
           {
             "name": "Paradox Cave Lower - Left",
             "id": 60205,
+            "region": "Paradox Cave Chest Area",
             "crystal": false,
             "access_rule": {
               "type": "or",
@@ -8573,16 +8664,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Fire Rod"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Cane of Somaria"
-                        }
+                        "Cane of Somaria",
+                        "Fire Rod"
                       ]
                     }
                   ]
@@ -8602,6 +8687,7 @@
           {
             "name": "Paradox Cave Lower - Right",
             "id": 60208,
+            "region": "Paradox Cave Chest Area",
             "crystal": false,
             "access_rule": {
               "type": "or",
@@ -8626,16 +8712,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Fire Rod"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Cane of Somaria"
-                        }
+                        "Cane of Somaria",
+                        "Fire Rod"
                       ]
                     }
                   ]
@@ -8655,6 +8735,7 @@
           {
             "name": "Paradox Cave Lower - Far Right",
             "id": 60211,
+            "region": "Paradox Cave Chest Area",
             "crystal": false,
             "access_rule": {
               "type": "or",
@@ -8679,16 +8760,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Fire Rod"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Cane of Somaria"
-                        }
+                        "Cane of Somaria",
+                        "Fire Rod"
                       ]
                     }
                   ]
@@ -8708,6 +8783,7 @@
           {
             "name": "Paradox Cave Lower - Middle",
             "id": 60214,
+            "region": "Paradox Cave Chest Area",
             "crystal": false,
             "access_rule": {
               "type": "or",
@@ -8732,16 +8808,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Fire Rod"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Cane of Somaria"
-                        }
+                        "Cane of Somaria",
+                        "Fire Rod"
                       ]
                     }
                   ]
@@ -8761,6 +8831,7 @@
           {
             "name": "Paradox Cave Upper - Left",
             "id": 60217,
+            "region": "Paradox Cave Chest Area",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -8780,6 +8851,7 @@
           {
             "name": "Paradox Cave Upper - Right",
             "id": 60220,
+            "region": "Paradox Cave Chest Area",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -9185,6 +9257,7 @@
           {
             "name": "Spiral Cave",
             "id": 59839,
+            "region": "Spiral Cave (Top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -9638,6 +9711,7 @@
           {
             "name": "Ether Tablet",
             "id": 1572886,
+            "region": "Death Mountain (Top)",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -9695,6 +9769,7 @@
           {
             "name": "Spectacle Rock",
             "id": 1573184,
+            "region": "Spectacle Rock",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -9883,6 +9958,7 @@
           {
             "name": "Tower of Hera - Basement Cage",
             "id": 1573218,
+            "region": "Tower of Hera (Bottom)",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -9902,6 +9978,7 @@
           {
             "name": "Tower of Hera - Map Chest",
             "id": 59821,
+            "region": "Tower of Hera (Bottom)",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -9947,6 +10024,7 @@
           {
             "name": "Tower of Hera - Big Key Chest",
             "id": 59878,
+            "region": "Tower of Hera (Basement)",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -9992,6 +10070,7 @@
           {
             "name": "Tower of Hera - Compass Chest",
             "id": 59899,
+            "region": "Tower of Hera (Top)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -10010,6 +10089,7 @@
           {
             "name": "Tower of Hera - Big Chest",
             "id": 59896,
+            "region": "Tower of Hera (Top)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -10031,6 +10111,7 @@
           {
             "name": "Tower of Hera - Boss",
             "id": 1573202,
+            "region": "Tower of Hera (Top)",
             "crystal": false,
             "access_rule": {
               "type": "function_call",
@@ -10069,6 +10150,7 @@
           {
             "name": "Tower of Hera - Prize",
             "id": null,
+            "region": "Tower of Hera (Top)",
             "crystal": true,
             "access_rule": {
               "type": "function_call",
@@ -10527,6 +10609,7 @@
           {
             "name": "Pyramid",
             "id": 1573191,
+            "region": "East Dark World",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -10584,6 +10667,7 @@
           {
             "name": "Catfish",
             "id": 975237,
+            "region": "Catfish",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -11084,6 +11168,7 @@
           {
             "name": "Stumpy",
             "id": 209095,
+            "region": "South Dark World",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -11141,6 +11226,7 @@
           {
             "name": "Digging Game",
             "id": 1573192,
+            "region": "South Dark World",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -11223,6 +11309,7 @@
           {
             "name": "Bombos Tablet",
             "id": 1572887,
+            "region": "Bombos Tablet Ledge",
             "crystal": false,
             "access_rule": {
               "type": "helper",
@@ -11652,6 +11739,7 @@
           {
             "name": "Hype Cave - Top",
             "id": 60190,
+            "region": "Hype Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -11683,6 +11771,7 @@
           {
             "name": "Hype Cave - Middle Right",
             "id": 60193,
+            "region": "Hype Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -11714,6 +11803,7 @@
           {
             "name": "Hype Cave - Middle Left",
             "id": 60196,
+            "region": "Hype Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -11745,6 +11835,7 @@
           {
             "name": "Hype Cave - Bottom",
             "id": 60199,
+            "region": "Hype Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -11776,6 +11867,7 @@
           {
             "name": "Hype Cave - Generous Guy",
             "id": 1572881,
+            "region": "Hype Cave",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -12194,6 +12286,7 @@
           {
             "name": "Frog",
             "id": null,
+            "region": "West Dark World",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -12478,6 +12571,7 @@
           {
             "name": "Dark Blacksmith Ruins",
             "id": null,
+            "region": "Hammer Peg Area",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -12824,6 +12918,7 @@
           {
             "name": "Peg Cave",
             "id": 1572870,
+            "region": "Dark World Hammer Peg Cave",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -12867,6 +12962,7 @@
           {
             "name": "Pyramid Fairy - Left",
             "id": 59776,
+            "region": "Pyramid Fairy",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -12888,6 +12984,7 @@
           {
             "name": "Pyramid Fairy - Right",
             "id": 59779,
+            "region": "Pyramid Fairy",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -12934,6 +13031,7 @@
           {
             "name": "Brewery",
             "id": 59884,
+            "region": "Brewery",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -12980,6 +13078,7 @@
           {
             "name": "C-Shaped House",
             "id": 59887,
+            "region": "C-Shaped House",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -13026,6 +13125,7 @@
           {
             "name": "Chest Game",
             "id": 60840,
+            "region": "Chest Game",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -13290,6 +13390,7 @@
           {
             "name": "Bumper Cave Ledge",
             "id": 1573190,
+            "region": "Bumper Cave Ledge",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -13691,6 +13792,7 @@
           {
             "name": "Mire Shed - Left",
             "id": 60019,
+            "region": "Mire Shed",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -13712,6 +13814,7 @@
           {
             "name": "Mire Shed - Right",
             "id": 60022,
+            "region": "Mire Shed",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -14352,6 +14455,7 @@
           {
             "name": "Superbunny Cave - Top",
             "id": 60028,
+            "region": "Superbunny Cave (Top)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -14385,6 +14489,7 @@
           {
             "name": "Superbunny Cave - Bottom",
             "id": 60031,
+            "region": "Superbunny Cave (Top)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -14492,6 +14597,7 @@
           {
             "name": "Spike Cave",
             "id": 60043,
+            "region": "Spike Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -14705,6 +14811,7 @@
           {
             "name": "Hookshot Cave - Top Right",
             "id": 60241,
+            "region": "Hookshot Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -14750,6 +14857,7 @@
           {
             "name": "Hookshot Cave - Top Left",
             "id": 60244,
+            "region": "Hookshot Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -14795,6 +14903,7 @@
           {
             "name": "Hookshot Cave - Bottom Right",
             "id": 60250,
+            "region": "Hookshot Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -14852,6 +14961,7 @@
           {
             "name": "Hookshot Cave - Bottom Left",
             "id": 60247,
+            "region": "Hookshot Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -15046,6 +15156,7 @@
           {
             "name": "Floating Island",
             "id": 1573185,
+            "region": "Death Mountain Floating Island (Light World)",
             "crystal": false,
             "access_rule": {
               "type": "constant",
@@ -15163,6 +15274,7 @@
           {
             "name": "Mimic Cave",
             "id": 59845,
+            "region": "Mimic Cave",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -15392,6 +15504,7 @@
           {
             "name": "Swamp Palace - Entrance",
             "id": 60061,
+            "region": "Swamp Palace (First Room)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15471,6 +15584,7 @@
           {
             "name": "Swamp Palace - Map Chest",
             "id": 59782,
+            "region": "Swamp Palace (Starting Area)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -15502,6 +15616,7 @@
           {
             "name": "Swamp Palace - Pot Row Pot Key",
             "id": 1310745,
+            "region": "Swamp Palace (Starting Area)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15523,6 +15638,7 @@
           {
             "name": "Swamp Palace - Trench 1 Pot Key",
             "id": 1310742,
+            "region": "Swamp Palace (Starting Area)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -15637,6 +15753,7 @@
           {
             "name": "Swamp Palace - Big Chest",
             "id": 59785,
+            "region": "Swamp Palace (Center)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -15702,6 +15819,7 @@
           {
             "name": "Swamp Palace - Compass Chest",
             "id": 60064,
+            "region": "Swamp Palace (Center)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15723,6 +15841,7 @@
           {
             "name": "Swamp Palace - Hookshot Pot Key",
             "id": 1310739,
+            "region": "Swamp Palace (Center)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -15756,6 +15875,7 @@
           {
             "name": "Swamp Palace - Trench 2 Pot Key",
             "id": 1310736,
+            "region": "Swamp Palace (Center)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15803,6 +15923,7 @@
           {
             "name": "Swamp Palace - Big Key Chest",
             "id": 60070,
+            "region": "Swamp Palace (West)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15824,6 +15945,7 @@
           {
             "name": "Swamp Palace - West Chest",
             "id": 60067,
+            "region": "Swamp Palace (West)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15871,6 +15993,7 @@
           {
             "name": "Swamp Palace - Flooded Room - Left",
             "id": 60073,
+            "region": "Swamp Palace (North)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15892,6 +16015,7 @@
           {
             "name": "Swamp Palace - Flooded Room - Right",
             "id": 60076,
+            "region": "Swamp Palace (North)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15913,6 +16037,7 @@
           {
             "name": "Swamp Palace - Waterway Pot Key",
             "id": 1310730,
+            "region": "Swamp Palace (North)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15934,6 +16059,7 @@
           {
             "name": "Swamp Palace - Waterfall Room",
             "id": 60079,
+            "region": "Swamp Palace (North)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -15955,6 +16081,7 @@
           {
             "name": "Swamp Palace - Boss",
             "id": 1573204,
+            "region": "Swamp Palace (North)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -16021,6 +16148,7 @@
           {
             "name": "Swamp Palace - Prize",
             "id": null,
+            "region": "Swamp Palace (North)",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -16141,6 +16269,7 @@
           {
             "name": "Thieves' Town - Big Key Chest",
             "id": 59908,
+            "region": "Thieves Town (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -16162,6 +16291,7 @@
           {
             "name": "Thieves' Town - Map Chest",
             "id": 59905,
+            "region": "Thieves Town (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -16183,6 +16313,7 @@
           {
             "name": "Thieves' Town - Compass Chest",
             "id": 59911,
+            "region": "Thieves Town (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -16204,6 +16335,7 @@
           {
             "name": "Thieves' Town - Ambush Chest",
             "id": 59914,
+            "region": "Thieves Town (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -16281,6 +16413,7 @@
           {
             "name": "Thieves' Town - Attic",
             "id": 59917,
+            "region": "Thieves Town (Deep)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -16318,6 +16451,7 @@
           {
             "name": "Thieves' Town - Big Chest",
             "id": 59920,
+            "region": "Thieves Town (Deep)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -16415,6 +16549,7 @@
           {
             "name": "Thieves' Town - Hallway Pot Key",
             "id": 1310814,
+            "region": "Thieves Town (Deep)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -16436,6 +16571,7 @@
           {
             "name": "Thieves' Town - Spike Switch Pot Key",
             "id": 1310799,
+            "region": "Thieves Town (Deep)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -16473,6 +16609,7 @@
           {
             "name": "Thieves' Town - Blind's Cell",
             "id": 59923,
+            "region": "Thieves Town (Deep)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -16536,6 +16673,7 @@
           {
             "name": "Thieves' Town - Boss",
             "id": 1573206,
+            "region": "Blind Fight",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -16586,6 +16724,7 @@
           {
             "name": "Thieves' Town - Prize",
             "id": null,
+            "region": "Blind Fight",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -16755,6 +16894,7 @@
           {
             "name": "Skull Woods - Map Chest",
             "id": 59803,
+            "region": "Skull Woods First Section",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -16890,6 +17030,7 @@
           {
             "name": "Skull Woods - Pinball Room",
             "id": 59848,
+            "region": "Skull Woods First Section (Right)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17018,6 +17159,7 @@
           {
             "name": "Skull Woods - Compass Chest",
             "id": 59794,
+            "region": "Skull Woods First Section (Left)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17051,6 +17193,7 @@
           {
             "name": "Skull Woods - Pot Prison",
             "id": 59809,
+            "region": "Skull Woods First Section (Left)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17136,6 +17279,7 @@
           {
             "name": "Skull Woods - Big Chest",
             "id": 59800,
+            "region": "Skull Woods First Section (Top)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17335,6 +17479,7 @@
           {
             "name": "Skull Woods - Big Key Chest",
             "id": 59806,
+            "region": "Skull Woods Second Section",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17380,6 +17525,7 @@
           {
             "name": "Skull Woods - West Lobby Pot Key",
             "id": 1310766,
+            "region": "Skull Woods Second Section",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17500,6 +17646,7 @@
           {
             "name": "Skull Woods - Bridge Room",
             "id": 59902,
+            "region": "Skull Woods Final Section (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -17547,6 +17694,7 @@
           {
             "name": "Skull Woods - Spike Corner Key Drop",
             "id": 1310748,
+            "region": "Skull Woods Final Section (Mothula)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -17568,6 +17716,7 @@
           {
             "name": "Skull Woods - Boss",
             "id": 1573205,
+            "region": "Skull Woods Final Section (Mothula)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17634,6 +17783,7 @@
           {
             "name": "Skull Woods - Prize",
             "id": null,
+            "region": "Skull Woods Final Section (Mothula)",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -17773,6 +17923,7 @@
           {
             "name": "Ice Palace - Jelly Key Drop",
             "id": 1310724,
+            "region": "Ice Palace (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17804,6 +17955,7 @@
           {
             "name": "Ice Palace - Compass Chest",
             "id": 59860,
+            "region": "Ice Palace (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -17897,6 +18049,7 @@
           {
             "name": "Ice Palace - Conveyor Key Drop",
             "id": 1310754,
+            "region": "Ice Palace (Second Section)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18054,12 +18207,9 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "can_take_damage"
+                      "type": "helper",
+                      "name": "can_take_damage",
+                      "args": []
                     },
                     {
                       "type": "item_check",
@@ -18167,6 +18317,7 @@
           {
             "name": "Ice Palace - Freezor Chest",
             "id": 59797,
+            "region": "Ice Palace (Main)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18188,6 +18339,7 @@
           {
             "name": "Ice Palace - Many Pots Pot Key",
             "id": 1310790,
+            "region": "Ice Palace (Main)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18209,6 +18361,7 @@
           {
             "name": "Ice Palace - Big Chest",
             "id": 59818,
+            "region": "Ice Palace (Main)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -18242,6 +18395,7 @@
           {
             "name": "Ice Palace - Iced T Room",
             "id": 59875,
+            "region": "Ice Palace (Main)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18315,6 +18469,7 @@
           {
             "name": "Ice Palace - Spike Room",
             "id": 59872,
+            "region": "Ice Palace (East)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18362,6 +18517,7 @@
           {
             "name": "Ice Palace - Big Key Chest",
             "id": 59812,
+            "region": "Ice Palace (East Top)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18383,6 +18539,7 @@
           {
             "name": "Ice Palace - Map Chest",
             "id": 59869,
+            "region": "Ice Palace (East Top)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18404,6 +18561,7 @@
           {
             "name": "Ice Palace - Hammer Block Key Drop",
             "id": 1310757,
+            "region": "Ice Palace (East Top)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18451,6 +18609,7 @@
           {
             "name": "Ice Palace - Boss",
             "id": 1573207,
+            "region": "Ice Palace (Kholdstare)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -18501,6 +18660,7 @@
           {
             "name": "Ice Palace - Prize",
             "id": null,
+            "region": "Ice Palace (Kholdstare)",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -18808,6 +18968,7 @@
           {
             "name": "Misery Mire - Big Chest",
             "id": 60007,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -18841,6 +19002,7 @@
           {
             "name": "Misery Mire - Map Chest",
             "id": 60010,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -18904,6 +19066,7 @@
           {
             "name": "Misery Mire - Main Lobby",
             "id": 59998,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -18967,6 +19130,7 @@
           {
             "name": "Misery Mire - Bridge Chest",
             "id": 60001,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -18988,6 +19152,7 @@
           {
             "name": "Misery Mire - Spike Chest",
             "id": 59866,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19053,6 +19218,7 @@
           {
             "name": "Misery Mire - Spikes Pot Key",
             "id": 1310805,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -19074,6 +19240,7 @@
           {
             "name": "Misery Mire - Fishbone Pot Key",
             "id": 1310796,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19123,6 +19290,7 @@
           {
             "name": "Misery Mire - Conveyor Crystal Key Drop",
             "id": 1310820,
+            "region": "Misery Mire (Main)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19286,6 +19454,7 @@
           {
             "name": "Misery Mire - Compass Chest",
             "id": 60004,
+            "region": "Misery Mire (West)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19317,6 +19486,7 @@
           {
             "name": "Misery Mire - Big Key Chest",
             "id": 60013,
+            "region": "Misery Mire (West)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19437,6 +19607,7 @@
           {
             "name": "Misery Mire - Boss",
             "id": 1573208,
+            "region": "Misery Mire (Vitreous)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19487,6 +19658,7 @@
           {
             "name": "Misery Mire - Prize",
             "id": null,
+            "region": "Misery Mire (Vitreous)",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -19686,6 +19858,7 @@
           {
             "name": "Turtle Rock - Compass Chest",
             "id": 59938,
+            "region": "Turtle Rock (First Section)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19731,6 +19904,7 @@
           {
             "name": "Turtle Rock - Roller Room - Left",
             "id": 59932,
+            "region": "Turtle Rock (First Section)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19788,6 +19962,7 @@
           {
             "name": "Turtle Rock - Roller Room - Right",
             "id": 59935,
+            "region": "Turtle Rock (First Section)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -19961,6 +20136,7 @@
           {
             "name": "Turtle Rock - Pokey 1 Key Drop",
             "id": 1310808,
+            "region": "Turtle Rock (Pokey Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -20139,6 +20315,7 @@
           {
             "name": "Turtle Rock - Chain Chomps",
             "id": 59926,
+            "region": "Turtle Rock (Chain Chomp Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -20183,32 +20360,14 @@
                           "method": "has_any",
                           "args": [
                             {
-                              "type": "list",
+                              "type": "constant",
                               "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Blue Boomerang"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Red Boomerang"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Hookshot"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Cane of Somaria"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Fire Rod"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Ice Rod"
-                                }
+                                "Blue Boomerang",
+                                "Cane of Somaria",
+                                "Fire Rod",
+                                "Hookshot",
+                                "Ice Rod",
+                                "Red Boomerang"
                               ]
                             }
                           ]
@@ -20401,6 +20560,7 @@
           {
             "name": "Turtle Rock - Big Key Chest",
             "id": 59941,
+            "region": "Turtle Rock (Second Section)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -20487,6 +20647,7 @@
           {
             "name": "Turtle Rock - Pokey 2 Key Drop",
             "id": 1310727,
+            "region": "Turtle Rock (Second Section)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -20702,6 +20863,7 @@
           {
             "name": "Turtle Rock - Big Chest",
             "id": 59929,
+            "region": "Turtle Rock (Big Chest)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -20827,6 +20989,7 @@
           {
             "name": "Turtle Rock - Crystaroller Room",
             "id": 59956,
+            "region": "Turtle Rock (Crystaroller Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21137,6 +21300,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Left",
             "id": 59953,
+            "region": "Turtle Rock (Eye Bridge)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21213,6 +21377,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Right",
             "id": 59950,
+            "region": "Turtle Rock (Eye Bridge)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21289,6 +21454,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Top Left",
             "id": 59947,
+            "region": "Turtle Rock (Eye Bridge)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21365,6 +21531,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Top Right",
             "id": 59944,
+            "region": "Turtle Rock (Eye Bridge)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21467,6 +21634,7 @@
           {
             "name": "Turtle Rock - Boss",
             "id": 1573209,
+            "region": "Turtle Rock (Trinexx)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21517,6 +21685,7 @@
           {
             "name": "Turtle Rock - Prize",
             "id": null,
+            "region": "Turtle Rock (Trinexx)",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -21648,6 +21817,7 @@
           {
             "name": "Palace of Darkness - Shooter Room",
             "id": 59995,
+            "region": "Palace of Darkness (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -21862,6 +22032,7 @@
           {
             "name": "Palace of Darkness - The Arena - Bridge",
             "id": 59965,
+            "region": "Palace of Darkness (Center)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21895,6 +22066,7 @@
           {
             "name": "Palace of Darkness - Stalfos Basement",
             "id": 59977,
+            "region": "Palace of Darkness (Center)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -21954,6 +22126,7 @@
           {
             "name": "Palace of Darkness - Big Key Chest",
             "id": 59959,
+            "region": "Palace of Darkness (Big Key Chest)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22017,6 +22190,7 @@
           {
             "name": "Palace of Darkness - The Arena - Ledge",
             "id": 59962,
+            "region": "Palace of Darkness (Bonk Section)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -22048,6 +22222,7 @@
           {
             "name": "Palace of Darkness - Map Chest",
             "id": 59986,
+            "region": "Palace of Darkness (Bonk Section)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22199,6 +22374,7 @@
           {
             "name": "Palace of Darkness - Compass Chest",
             "id": 59971,
+            "region": "Palace of Darkness (North)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22220,6 +22396,7 @@
           {
             "name": "Palace of Darkness - Dark Basement - Left",
             "id": 59980,
+            "region": "Palace of Darkness (North)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -22253,6 +22430,7 @@
           {
             "name": "Palace of Darkness - Dark Basement - Right",
             "id": 59983,
+            "region": "Palace of Darkness (North)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -22312,6 +22490,7 @@
           {
             "name": "Palace of Darkness - Dark Maze - Top",
             "id": 59989,
+            "region": "Palace of Darkness (Maze)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22333,6 +22512,7 @@
           {
             "name": "Palace of Darkness - Dark Maze - Bottom",
             "id": 59992,
+            "region": "Palace of Darkness (Maze)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22354,6 +22534,7 @@
           {
             "name": "Palace of Darkness - Big Chest",
             "id": 59968,
+            "region": "Palace of Darkness (Maze)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -22423,6 +22604,7 @@
           {
             "name": "Palace of Darkness - Harmless Hellway",
             "id": 59974,
+            "region": "Palace of Darkness (Harmless Hellway)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22470,6 +22652,7 @@
           {
             "name": "Palace of Darkness - Boss",
             "id": 1573203,
+            "region": "Palace of Darkness (Final Section)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -22520,6 +22703,7 @@
           {
             "name": "Palace of Darkness - Prize",
             "id": null,
+            "region": "Palace of Darkness (Final Section)",
             "crystal": true,
             "access_rule": {
               "type": "and",
@@ -22688,6 +22872,7 @@
           {
             "name": "Ganons Tower - Bob's Torch",
             "id": 1573217,
+            "region": "Ganons Tower (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -22721,6 +22906,7 @@
           {
             "name": "Ganons Tower - Hope Room - Left",
             "id": 60121,
+            "region": "Ganons Tower (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22742,6 +22928,7 @@
           {
             "name": "Ganons Tower - Hope Room - Right",
             "id": 60124,
+            "region": "Ganons Tower (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22763,6 +22950,7 @@
           {
             "name": "Ganons Tower - Conveyor Cross Pot Key",
             "id": 1310784,
+            "region": "Ganons Tower (Entrance)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -22898,6 +23086,7 @@
           {
             "name": "Ganons Tower - Tile Room",
             "id": 60130,
+            "region": "Ganons Tower (Tile Room)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -23021,6 +23210,7 @@
           {
             "name": "Ganons Tower - Compass Room - Top Left",
             "id": 60133,
+            "region": "Ganons Tower (Compass Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23143,6 +23333,7 @@
           {
             "name": "Ganons Tower - Compass Room - Top Right",
             "id": 60136,
+            "region": "Ganons Tower (Compass Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23265,6 +23456,7 @@
           {
             "name": "Ganons Tower - Compass Room - Bottom Left",
             "id": 60139,
+            "region": "Ganons Tower (Compass Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23387,6 +23579,7 @@
           {
             "name": "Ganons Tower - Compass Room - Bottom Right",
             "id": 60142,
+            "region": "Ganons Tower (Compass Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23509,6 +23702,7 @@
           {
             "name": "Ganons Tower - Conveyor Star Pits Pot Key",
             "id": 1310778,
+            "region": "Ganons Tower (Compass Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23761,6 +23955,7 @@
           {
             "name": "Ganons Tower - DMs Room - Top Left",
             "id": 60088,
+            "region": "Ganons Tower (Hookshot Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23794,6 +23989,7 @@
           {
             "name": "Ganons Tower - DMs Room - Top Right",
             "id": 60091,
+            "region": "Ganons Tower (Hookshot Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23827,6 +24023,7 @@
           {
             "name": "Ganons Tower - DMs Room - Bottom Left",
             "id": 60094,
+            "region": "Ganons Tower (Hookshot Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23860,6 +24057,7 @@
           {
             "name": "Ganons Tower - DMs Room - Bottom Right",
             "id": 60097,
+            "region": "Ganons Tower (Hookshot Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23893,6 +24091,7 @@
           {
             "name": "Ganons Tower - Double Switch Pot Key",
             "id": 1310787,
+            "region": "Ganons Tower (Hookshot Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -23962,6 +24161,7 @@
           {
             "name": "Ganons Tower - Map Chest",
             "id": 60115,
+            "region": "Ganons Tower (Map Room)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -24101,6 +24301,7 @@
           {
             "name": "Ganons Tower - Firesnake Room",
             "id": 60112,
+            "region": "Ganons Tower (Firesnake Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24262,6 +24463,7 @@
           {
             "name": "Ganons Tower - Randomizer Room - Top Left",
             "id": 60100,
+            "region": "Ganons Tower (Teleport Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24361,6 +24563,7 @@
           {
             "name": "Ganons Tower - Randomizer Room - Top Right",
             "id": 60103,
+            "region": "Ganons Tower (Teleport Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24460,6 +24663,7 @@
           {
             "name": "Ganons Tower - Randomizer Room - Bottom Left",
             "id": 60106,
+            "region": "Ganons Tower (Teleport Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24559,6 +24763,7 @@
           {
             "name": "Ganons Tower - Randomizer Room - Bottom Right",
             "id": 60109,
+            "region": "Ganons Tower (Teleport Room)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24694,6 +24899,7 @@
           {
             "name": "Ganons Tower - Bob's Chest",
             "id": 60127,
+            "region": "Ganons Tower (Bottom)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24727,6 +24933,7 @@
           {
             "name": "Ganons Tower - Big Chest",
             "id": 60118,
+            "region": "Ganons Tower (Bottom)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24772,6 +24979,7 @@
           {
             "name": "Ganons Tower - Big Key Room - Left",
             "id": 60148,
+            "region": "Ganons Tower (Bottom)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24834,6 +25042,7 @@
           {
             "name": "Ganons Tower - Big Key Room - Right",
             "id": 60151,
+            "region": "Ganons Tower (Bottom)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -24896,6 +25105,7 @@
           {
             "name": "Ganons Tower - Big Key Chest",
             "id": 60145,
+            "region": "Ganons Tower (Bottom)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -25116,6 +25326,7 @@
           {
             "name": "Ganons Tower - Mini Helmasaur Room - Left",
             "id": 60157,
+            "region": "Ganons Tower (Before Moldorm)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -25137,6 +25348,7 @@
           {
             "name": "Ganons Tower - Mini Helmasaur Room - Right",
             "id": 60160,
+            "region": "Ganons Tower (Before Moldorm)",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -25158,6 +25370,7 @@
           {
             "name": "Ganons Tower - Pre-Moldorm Chest",
             "id": 60163,
+            "region": "Ganons Tower (Before Moldorm)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -25205,6 +25418,7 @@
           {
             "name": "Ganons Tower - Mini Helmasaur Key Drop",
             "id": 1310751,
+            "region": "Ganons Tower (Before Moldorm)",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -25361,6 +25575,7 @@
           {
             "name": "Ganons Tower - Validation Chest",
             "id": 60166,
+            "region": "Agahnim 2",
             "crystal": false,
             "access_rule": {
               "type": "item_check",
@@ -25382,6 +25597,7 @@
           {
             "name": "Agahnim 2",
             "id": null,
+            "region": "Agahnim 2",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -25484,6 +25700,7 @@
           {
             "name": "Ganon",
             "id": null,
+            "region": "Pyramid",
             "crystal": false,
             "access_rule": {
               "type": "and",
@@ -29288,31 +29505,468 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Big Keys",
-      "Boomerangs",
-      "Bottles",
-      "Bows",
-      "Canes",
-      "Clocks",
-      "Compasses",
-      "Crystals",
-      "Everything",
-      "Gloves",
-      "Mails",
-      "Maps",
-      "Medallions",
-      "Non Progression Items",
-      "Pendants",
-      "Potions",
-      "Progression Items",
-      "Rods",
-      "Rupees",
-      "Shields",
-      "Small Keys",
-      "Swords",
-      "Upgrades"
-    ]
+    "1": {
+      "Bows": [
+        "Silver Bow",
+        "Progressive Bow",
+        "Silver Arrows",
+        "Bow",
+        "Progressive Bow (Alt)"
+      ],
+      "Gloves": [
+        "Power Glove",
+        "Progressive Glove",
+        "Titans Mitts"
+      ],
+      "Medallions": [
+        "Quake",
+        "Bombos",
+        "Ether"
+      ],
+      "Rupees": [
+        "Rupees (100)",
+        "Rupee (1)",
+        "Rupees (20)",
+        "Rupees (50)",
+        "Rupees (300)",
+        "Rupees (5)"
+      ],
+      "Big Keys": [
+        "Big Key (Swamp Palace)",
+        "Big Key (Eastern Palace)",
+        "Big Key (Agahnims Tower)",
+        "Big Key (Thieves Town)",
+        "Big Key (Desert Palace)",
+        "Big Key (Misery Mire)",
+        "Big Key (Palace of Darkness)",
+        "Big Key (Ice Palace)",
+        "Big Key (Turtle Rock)",
+        "Big Key (Skull Woods)",
+        "Big Key (Hyrule Castle)",
+        "Big Key (Ganons Tower)",
+        "Big Key (Tower of Hera)"
+      ],
+      "Crystals": [
+        "Crystal 5",
+        "Crystal 1",
+        "Crystal 3",
+        "Crystal 7",
+        "Crystal 6",
+        "Crystal 2",
+        "Crystal 4"
+      ],
+      "Mails": [
+        "Red Mail",
+        "Blue Mail",
+        "Progressive Mail"
+      ],
+      "Compasses": [
+        "Compass (Hyrule Castle)",
+        "Compass (Misery Mire)",
+        "Compass (Tower of Hera)",
+        "Compass (Skull Woods)",
+        "Compass (Thieves Town)",
+        "Compass (Swamp Palace)",
+        "Compass (Turtle Rock)",
+        "Compass (Ganons Tower)",
+        "Compass (Desert Palace)",
+        "Compass (Palace of Darkness)",
+        "Compass (Agahnims Tower)",
+        "Compass (Ice Palace)",
+        "Compass (Eastern Palace)"
+      ],
+      "Canes": [
+        "Cane of Byrna",
+        "Cane of Somaria"
+      ],
+      "Swords": [
+        "Progressive Sword",
+        "Golden Sword",
+        "Fighter Sword",
+        "Tempered Sword",
+        "Master Sword"
+      ],
+      "Rods": [
+        "Fire Rod",
+        "Ice Rod"
+      ],
+      "Clocks": [
+        "Red Clock",
+        "Green Clock",
+        "Blue Clock"
+      ],
+      "Boomerangs": [
+        "Blue Boomerang",
+        "Red Boomerang"
+      ],
+      "Potions": [
+        "Bottle (Green Potion)",
+        "Bottle (Blue Potion)",
+        "Red Potion",
+        "Green Potion",
+        "Bottle (Red Potion)",
+        "Blue Potion"
+      ],
+      "Bottles": [
+        "Bottle (Green Potion)",
+        "Bottle (Fairy)",
+        "Bottle (Bee)",
+        "Bottle (Blue Potion)",
+        "Bottle (Good Bee)",
+        "Bottle (Red Potion)",
+        "Bottle"
+      ],
+      "Shields": [
+        "Mirror Shield",
+        "Progressive Shield",
+        "Red Shield",
+        "Blue Shield"
+      ],
+      "Small Keys": [
+        "Small Key (Eastern Palace)",
+        "Small Key (Turtle Rock)",
+        "Small Key (Ganons Tower)",
+        "Small Key (Tower of Hera)",
+        "Small Key (Agahnims Tower)",
+        "Small Key (Universal)",
+        "Small Key (Misery Mire)",
+        "Small Key (Ice Palace)",
+        "Small Key (Hyrule Castle)",
+        "Small Key (Swamp Palace)",
+        "Small Key (Skull Woods)",
+        "Small Key (Desert Palace)",
+        "Small Key (Palace of Darkness)",
+        "Small Key (Thieves Town)"
+      ],
+      "Maps": [
+        "Map (Palace of Darkness)",
+        "Map (Turtle Rock)",
+        "Map (Tower of Hera)",
+        "Map (Swamp Palace)",
+        "Map (Ice Palace)",
+        "Map (Ganons Tower)",
+        "Map (Thieves Town)",
+        "Map (Hyrule Castle)",
+        "Map (Eastern Palace)",
+        "Map (Agahnims Tower)",
+        "Map (Skull Woods)",
+        "Map (Desert Palace)",
+        "Map (Misery Mire)"
+      ],
+      "Upgrades": [
+        "Magic Upgrade (1/2)",
+        "Bomb Upgrade (50)",
+        "Bomb Upgrade (+10)",
+        "Magic Upgrade (1/4)",
+        "Arrow Upgrade (70)",
+        "Bomb Upgrade (+5)",
+        "Arrow Upgrade (+5)",
+        "Arrow Upgrade (+10)"
+      ],
+      "Pendants": [
+        "Red Pendant",
+        "Blue Pendant",
+        "Green Pendant"
+      ],
+      "Progression Items": [
+        "Bombos",
+        "Silver Bow",
+        "Small Key (Tower of Hera)",
+        "Progressive Bow",
+        "Quake",
+        "Flute",
+        "Power Star",
+        "Big Key (Misery Mire)",
+        "Activated Flute",
+        "Bottle (Bee)",
+        "Progressive Bow (Alt)",
+        "Small Key (Misery Mire)",
+        "Small Key (Swamp Palace)",
+        "Small Key (Ganons Tower)",
+        "Flippers",
+        "Big Key (Agahnims Tower)",
+        "Arrow Upgrade (70)",
+        "Big Key (Skull Woods)",
+        "Arrow Upgrade (+5)",
+        "Small Key (Desert Palace)",
+        "Lamp",
+        "Mushroom",
+        "Small Key (Eastern Palace)",
+        "Small Key (Agahnims Tower)",
+        "Big Key (Ice Palace)",
+        "Mirror Shield",
+        "Magic Mirror",
+        "Cane of Somaria",
+        "Progressive Shield",
+        "Big Key (Ganons Tower)",
+        "Progressive Sword",
+        "Golden Sword",
+        "Ice Rod",
+        "Shovel",
+        "Red Boomerang",
+        "Titans Mitts",
+        "Master Sword",
+        "Big Key (Thieves Town)",
+        "Bottle (Green Potion)",
+        "Small Key (Ice Palace)",
+        "Triforce Piece",
+        "Pegasus Boots",
+        "Big Key (Hyrule Castle)",
+        "Small Key (Turtle Rock)",
+        "Bug Catching Net",
+        "Magic Upgrade (1/2)",
+        "Bomb Upgrade (50)",
+        "Triforce",
+        "Bottle",
+        "Bomb Upgrade (+10)",
+        "Big Key (Desert Palace)",
+        "Magic Upgrade (1/4)",
+        "Big Key (Palace of Darkness)",
+        "Progressive Glove",
+        "Ether",
+        "Fighter Sword",
+        "Blue Boomerang",
+        "Bottle (Blue Potion)",
+        "Tempered Sword",
+        "Bow",
+        "Bottle (Fairy)",
+        "Cane of Byrna",
+        "Small Key (Hyrule Castle)",
+        "Moon Pearl",
+        "Big Key (Turtle Rock)",
+        "Power Glove",
+        "Big Key (Tower of Hera)",
+        "Book of Mudora",
+        "Arrow Upgrade (+10)",
+        "Cape",
+        "Small Key (Palace of Darkness)",
+        "Big Key (Swamp Palace)",
+        "Magic Powder",
+        "Silver Arrows",
+        "Big Key (Eastern Palace)",
+        "Bottle (Good Bee)",
+        "Fire Rod",
+        "Bomb Upgrade (+5)",
+        "Hookshot",
+        "Bottle (Red Potion)",
+        "Small Key (Skull Woods)",
+        "Hammer",
+        "Small Key (Thieves Town)"
+      ],
+      "Non Progression Items": [
+        "Compass (Hyrule Castle)",
+        "Compass (Tower of Hera)",
+        "Map (Turtle Rock)",
+        "Map (Tower of Hera)",
+        "Small Heart",
+        "Arrows (10)",
+        "Compass (Agahnims Tower)",
+        "Multi RNG",
+        "Map (Swamp Palace)",
+        "Single Arrow",
+        "Bee Trap",
+        "Green Potion",
+        "Rupees (300)",
+        "Map (Ganons Tower)",
+        "Rupoor",
+        "Rupees (100)",
+        "Apple",
+        "Blue Mail",
+        "Bombs (10)",
+        "Small Key (Universal)",
+        "Single RNG",
+        "Compass (Skull Woods)",
+        "Map (Ice Palace)",
+        "Compass (Turtle Rock)",
+        "Magic Jar",
+        "Blue Shield",
+        "Compass (Desert Palace)",
+        "Piece of Heart",
+        "Red Clock",
+        "Map (Hyrule Castle)",
+        "Compass (Palace of Darkness)",
+        "Compass (Ganons Tower)",
+        "Red Mail",
+        "Blue Clock",
+        "Map (Agahnims Tower)",
+        "Blue Potion",
+        "Bee",
+        "Faerie",
+        "Compass (Misery Mire)",
+        "Red Potion",
+        "Red Shield",
+        "Map (Thieves Town)",
+        "Single Bomb",
+        "Rupees (5)",
+        "Compass (Ice Palace)",
+        "Map (Palace of Darkness)",
+        "Compass (Eastern Palace)",
+        "Map (Misery Mire)",
+        "Rupee (1)",
+        "Good Bee",
+        "Bombs (3)",
+        "Boss Heart Container",
+        "Compass (Swamp Palace)",
+        "Nothing",
+        "Compass (Thieves Town)",
+        "Rupees (20)",
+        "Rupees (50)",
+        "Green Clock",
+        "Map (Eastern Palace)",
+        "Map (Skull Woods)",
+        "Progressive Mail",
+        "Sanctuary Heart Container",
+        "Map (Desert Palace)"
+      ],
+      "Everything": [
+        "Bombos",
+        "Silver Bow",
+        "Small Key (Tower of Hera)",
+        "Progressive Bow",
+        "Compass (Tower of Hera)",
+        "Arrows (10)",
+        "Bee Trap",
+        "Small Key (Universal)",
+        "Compass (Turtle Rock)",
+        "Compass (Desert Palace)",
+        "Map (Hyrule Castle)",
+        "Big Key (Misery Mire)",
+        "Bottle (Bee)",
+        "Blue Clock",
+        "Small Key (Ganons Tower)",
+        "Faerie",
+        "Bee",
+        "Big Key (Agahnims Tower)",
+        "Arrow Upgrade (70)",
+        "Arrow Upgrade (+5)",
+        "Small Key (Desert Palace)",
+        "Compass (Thieves Town)",
+        "Mirror Shield",
+        "Magic Mirror",
+        "Cane of Somaria",
+        "Map (Skull Woods)",
+        "Progressive Sword",
+        "Compass (Hyrule Castle)",
+        "Map (Turtle Rock)",
+        "Shovel",
+        "Small Heart",
+        "Red Boomerang",
+        "Single Arrow",
+        "Triforce Piece",
+        "Small Key (Turtle Rock)",
+        "Rupees (100)",
+        "Apple",
+        "Bug Catching Net",
+        "Magic Upgrade (1/2)",
+        "Bomb Upgrade (50)",
+        "Compass (Skull Woods)",
+        "Map (Ice Palace)",
+        "Magic Jar",
+        "Bottle",
+        "Bomb Upgrade (+10)",
+        "Big Key (Desert Palace)",
+        "Magic Upgrade (1/4)",
+        "Big Key (Palace of Darkness)",
+        "Progressive Glove",
+        "Compass (Palace of Darkness)",
+        "Map (Agahnims Tower)",
+        "Red Potion",
+        "Cane of Byrna",
+        "Small Key (Hyrule Castle)",
+        "Moon Pearl",
+        "Map (Palace of Darkness)",
+        "Big Key (Turtle Rock)",
+        "Big Key (Tower of Hera)",
+        "Book of Mudora",
+        "Cape",
+        "Rupees (20)",
+        "Bomb Upgrade (+5)",
+        "Hookshot",
+        "Green Clock",
+        "Map (Eastern Palace)",
+        "Compass (Agahnims Tower)",
+        "Hammer",
+        "Progressive Mail",
+        "Small Key (Thieves Town)",
+        "Quake",
+        "Map (Tower of Hera)",
+        "Multi RNG",
+        "Rupees (300)",
+        "Rupoor",
+        "Blue Mail",
+        "Single RNG",
+        "Flute",
+        "Blue Shield",
+        "Piece of Heart",
+        "Red Clock",
+        "Power Star",
+        "Activated Flute",
+        "Progressive Bow (Alt)",
+        "Small Key (Misery Mire)",
+        "Small Key (Swamp Palace)",
+        "Flippers",
+        "Red Shield",
+        "Map (Thieves Town)",
+        "Rupees (5)",
+        "Big Key (Skull Woods)",
+        "Lamp",
+        "Compass (Eastern Palace)",
+        "Map (Misery Mire)",
+        "Small Key (Eastern Palace)",
+        "Small Key (Agahnims Tower)",
+        "Good Bee",
+        "Boss Heart Container",
+        "Big Key (Ice Palace)",
+        "Blue Potion",
+        "Progressive Shield",
+        "Big Key (Ganons Tower)",
+        "Golden Sword",
+        "Ice Rod",
+        "Map (Swamp Palace)",
+        "Titans Mitts",
+        "Master Sword",
+        "Big Key (Thieves Town)",
+        "Bottle (Green Potion)",
+        "Small Key (Ice Palace)",
+        "Pegasus Boots",
+        "Big Key (Hyrule Castle)",
+        "Green Potion",
+        "Map (Ganons Tower)",
+        "Bombs (10)",
+        "Single Bomb",
+        "Triforce",
+        "Compass (Ganons Tower)",
+        "Red Mail",
+        "Ether",
+        "Fighter Sword",
+        "Blue Boomerang",
+        "Compass (Misery Mire)",
+        "Bottle (Blue Potion)",
+        "Tempered Sword",
+        "Bow",
+        "Bottle (Fairy)",
+        "Compass (Ice Palace)",
+        "Power Glove",
+        "Arrow Upgrade (+10)",
+        "Small Key (Palace of Darkness)",
+        "Rupee (1)",
+        "Big Key (Swamp Palace)",
+        "Magic Powder",
+        "Bombs (3)",
+        "Silver Arrows",
+        "Big Key (Eastern Palace)",
+        "Bottle (Good Bee)",
+        "Compass (Swamp Palace)",
+        "Nothing",
+        "Rupees (50)",
+        "Fire Rod",
+        "Bottle (Red Potion)",
+        "Small Key (Skull Woods)",
+        "Sanctuary Heart Container",
+        "Map (Desert Palace)",
+        "Mushroom"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

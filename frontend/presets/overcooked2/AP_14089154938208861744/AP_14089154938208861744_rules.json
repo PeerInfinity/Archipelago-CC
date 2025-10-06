@@ -1154,6 +1154,7 @@
           {
             "name": "1-1 Completed",
             "id": 1,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1174,6 +1175,7 @@
           {
             "name": "1-1 Level Completed",
             "id": null,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1194,6 +1196,7 @@
           {
             "name": "1-1 (1-Star)",
             "id": null,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1214,6 +1217,7 @@
           {
             "name": "1-1 (2-Star)",
             "id": null,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1234,6 +1238,7 @@
           {
             "name": "1-1 (3-Star)",
             "id": null,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1290,6 +1295,7 @@
           {
             "name": "1-2 Completed",
             "id": 2,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1310,6 +1316,7 @@
           {
             "name": "1-2 Level Completed",
             "id": null,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1330,6 +1337,7 @@
           {
             "name": "1-2 (1-Star)",
             "id": null,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1350,6 +1358,7 @@
           {
             "name": "1-2 (2-Star)",
             "id": null,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1370,6 +1379,7 @@
           {
             "name": "1-2 (3-Star)",
             "id": null,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1426,6 +1436,7 @@
           {
             "name": "1-3 Completed",
             "id": 3,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1446,6 +1457,7 @@
           {
             "name": "1-3 Level Completed",
             "id": null,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1466,6 +1478,7 @@
           {
             "name": "1-3 (1-Star)",
             "id": null,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1486,6 +1499,7 @@
           {
             "name": "1-3 (2-Star)",
             "id": null,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1506,6 +1520,7 @@
           {
             "name": "1-3 (3-Star)",
             "id": null,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1562,6 +1577,7 @@
           {
             "name": "1-4 Completed",
             "id": 4,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1582,6 +1598,7 @@
           {
             "name": "1-4 Level Completed",
             "id": null,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1602,6 +1619,7 @@
           {
             "name": "1-4 (1-Star)",
             "id": null,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1622,6 +1640,7 @@
           {
             "name": "1-4 (2-Star)",
             "id": null,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1642,6 +1661,7 @@
           {
             "name": "1-4 (3-Star)",
             "id": null,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1698,6 +1718,7 @@
           {
             "name": "1-5 Completed",
             "id": 5,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1718,6 +1739,7 @@
           {
             "name": "1-5 Level Completed",
             "id": null,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1738,6 +1760,7 @@
           {
             "name": "1-5 (1-Star)",
             "id": null,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1758,6 +1781,7 @@
           {
             "name": "1-5 (2-Star)",
             "id": null,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1778,6 +1802,7 @@
           {
             "name": "1-5 (3-Star)",
             "id": null,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1834,6 +1859,7 @@
           {
             "name": "1-6 Completed",
             "id": 6,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1854,6 +1880,7 @@
           {
             "name": "1-6 Level Completed",
             "id": null,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1874,6 +1901,7 @@
           {
             "name": "1-6 (1-Star)",
             "id": null,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1894,6 +1922,7 @@
           {
             "name": "1-6 (2-Star)",
             "id": null,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1914,6 +1943,7 @@
           {
             "name": "1-6 (3-Star)",
             "id": null,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1970,6 +2000,7 @@
           {
             "name": "2-1 Completed",
             "id": 7,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1990,6 +2021,7 @@
           {
             "name": "2-1 Level Completed",
             "id": null,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2010,6 +2042,7 @@
           {
             "name": "2-1 (1-Star)",
             "id": null,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2030,6 +2063,7 @@
           {
             "name": "2-1 (2-Star)",
             "id": null,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2050,6 +2084,7 @@
           {
             "name": "2-1 (3-Star)",
             "id": null,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2106,6 +2141,7 @@
           {
             "name": "2-2 Completed",
             "id": 8,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2126,6 +2162,7 @@
           {
             "name": "2-2 Level Completed",
             "id": null,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2146,6 +2183,7 @@
           {
             "name": "2-2 (1-Star)",
             "id": null,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2166,6 +2204,7 @@
           {
             "name": "2-2 (2-Star)",
             "id": null,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2186,6 +2225,7 @@
           {
             "name": "2-2 (3-Star)",
             "id": null,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2242,6 +2282,7 @@
           {
             "name": "2-3 Completed",
             "id": 9,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2262,6 +2303,7 @@
           {
             "name": "2-3 Level Completed",
             "id": null,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2282,6 +2324,7 @@
           {
             "name": "2-3 (1-Star)",
             "id": null,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2302,6 +2345,7 @@
           {
             "name": "2-3 (2-Star)",
             "id": null,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2322,6 +2366,7 @@
           {
             "name": "2-3 (3-Star)",
             "id": null,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2378,6 +2423,7 @@
           {
             "name": "2-4 Completed",
             "id": 10,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2398,6 +2444,7 @@
           {
             "name": "2-4 Level Completed",
             "id": null,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2418,6 +2465,7 @@
           {
             "name": "2-4 (1-Star)",
             "id": null,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2438,6 +2486,7 @@
           {
             "name": "2-4 (2-Star)",
             "id": null,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2458,6 +2507,7 @@
           {
             "name": "2-4 (3-Star)",
             "id": null,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2514,6 +2564,7 @@
           {
             "name": "2-5 Completed",
             "id": 11,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2534,6 +2585,7 @@
           {
             "name": "2-5 Level Completed",
             "id": null,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2554,6 +2606,7 @@
           {
             "name": "2-5 (1-Star)",
             "id": null,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2574,6 +2627,7 @@
           {
             "name": "2-5 (2-Star)",
             "id": null,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2594,6 +2648,7 @@
           {
             "name": "2-5 (3-Star)",
             "id": null,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2650,6 +2705,7 @@
           {
             "name": "2-6 Completed",
             "id": 12,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2670,6 +2726,7 @@
           {
             "name": "2-6 Level Completed",
             "id": null,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2690,6 +2747,7 @@
           {
             "name": "2-6 (1-Star)",
             "id": null,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2710,6 +2768,7 @@
           {
             "name": "2-6 (2-Star)",
             "id": null,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2730,6 +2789,7 @@
           {
             "name": "2-6 (3-Star)",
             "id": null,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2786,6 +2846,7 @@
           {
             "name": "3-1 Completed",
             "id": 13,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2806,6 +2867,7 @@
           {
             "name": "3-1 Level Completed",
             "id": null,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2826,6 +2888,7 @@
           {
             "name": "3-1 (1-Star)",
             "id": null,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2846,6 +2909,7 @@
           {
             "name": "3-1 (2-Star)",
             "id": null,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2866,6 +2930,7 @@
           {
             "name": "3-1 (3-Star)",
             "id": null,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2922,6 +2987,7 @@
           {
             "name": "3-2 Completed",
             "id": 14,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2942,6 +3008,7 @@
           {
             "name": "3-2 Level Completed",
             "id": null,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2962,6 +3029,7 @@
           {
             "name": "3-2 (1-Star)",
             "id": null,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2982,6 +3050,7 @@
           {
             "name": "3-2 (2-Star)",
             "id": null,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3002,6 +3071,7 @@
           {
             "name": "3-2 (3-Star)",
             "id": null,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3058,6 +3128,7 @@
           {
             "name": "3-3 Completed",
             "id": 15,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3078,6 +3149,7 @@
           {
             "name": "3-3 Level Completed",
             "id": null,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3098,6 +3170,7 @@
           {
             "name": "3-3 (1-Star)",
             "id": null,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3118,6 +3191,7 @@
           {
             "name": "3-3 (2-Star)",
             "id": null,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3138,6 +3212,7 @@
           {
             "name": "3-3 (3-Star)",
             "id": null,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3194,6 +3269,7 @@
           {
             "name": "3-4 Completed",
             "id": 16,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3214,6 +3290,7 @@
           {
             "name": "3-4 Level Completed",
             "id": null,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3234,6 +3311,7 @@
           {
             "name": "3-4 (1-Star)",
             "id": null,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3254,6 +3332,7 @@
           {
             "name": "3-4 (2-Star)",
             "id": null,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3274,6 +3353,7 @@
           {
             "name": "3-4 (3-Star)",
             "id": null,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3330,6 +3410,7 @@
           {
             "name": "3-5 Completed",
             "id": 17,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3350,6 +3431,7 @@
           {
             "name": "3-5 Level Completed",
             "id": null,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3370,6 +3452,7 @@
           {
             "name": "3-5 (1-Star)",
             "id": null,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3390,6 +3473,7 @@
           {
             "name": "3-5 (2-Star)",
             "id": null,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3410,6 +3494,7 @@
           {
             "name": "3-5 (3-Star)",
             "id": null,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3466,6 +3551,7 @@
           {
             "name": "3-6 Completed",
             "id": 18,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3486,6 +3572,7 @@
           {
             "name": "3-6 Level Completed",
             "id": null,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3506,6 +3593,7 @@
           {
             "name": "3-6 (1-Star)",
             "id": null,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3526,6 +3614,7 @@
           {
             "name": "3-6 (2-Star)",
             "id": null,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3546,6 +3635,7 @@
           {
             "name": "3-6 (3-Star)",
             "id": null,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3602,6 +3692,7 @@
           {
             "name": "4-1 Completed",
             "id": 19,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3622,6 +3713,7 @@
           {
             "name": "4-1 Level Completed",
             "id": null,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3642,6 +3734,7 @@
           {
             "name": "4-1 (1-Star)",
             "id": null,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3662,6 +3755,7 @@
           {
             "name": "4-1 (2-Star)",
             "id": null,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3682,6 +3776,7 @@
           {
             "name": "4-1 (3-Star)",
             "id": null,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3738,6 +3833,7 @@
           {
             "name": "4-2 Completed",
             "id": 20,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3758,6 +3854,7 @@
           {
             "name": "4-2 Level Completed",
             "id": null,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3778,6 +3875,7 @@
           {
             "name": "4-2 (1-Star)",
             "id": null,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3798,6 +3896,7 @@
           {
             "name": "4-2 (2-Star)",
             "id": null,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3818,6 +3917,7 @@
           {
             "name": "4-2 (3-Star)",
             "id": null,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3874,6 +3974,7 @@
           {
             "name": "4-3 Completed",
             "id": 21,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3894,6 +3995,7 @@
           {
             "name": "4-3 Level Completed",
             "id": null,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3914,6 +4016,7 @@
           {
             "name": "4-3 (1-Star)",
             "id": null,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3934,6 +4037,7 @@
           {
             "name": "4-3 (2-Star)",
             "id": null,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3954,6 +4058,7 @@
           {
             "name": "4-3 (3-Star)",
             "id": null,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4010,6 +4115,7 @@
           {
             "name": "4-4 Completed",
             "id": 22,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4030,6 +4136,7 @@
           {
             "name": "4-4 Level Completed",
             "id": null,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4050,6 +4157,7 @@
           {
             "name": "4-4 (1-Star)",
             "id": null,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4070,6 +4178,7 @@
           {
             "name": "4-4 (2-Star)",
             "id": null,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4090,6 +4199,7 @@
           {
             "name": "4-4 (3-Star)",
             "id": null,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4146,6 +4256,7 @@
           {
             "name": "4-5 Completed",
             "id": 23,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4166,6 +4277,7 @@
           {
             "name": "4-5 Level Completed",
             "id": null,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4186,6 +4298,7 @@
           {
             "name": "4-5 (1-Star)",
             "id": null,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4206,6 +4319,7 @@
           {
             "name": "4-5 (2-Star)",
             "id": null,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4226,6 +4340,7 @@
           {
             "name": "4-5 (3-Star)",
             "id": null,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4282,6 +4397,7 @@
           {
             "name": "4-6 Completed",
             "id": 24,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4302,6 +4418,7 @@
           {
             "name": "4-6 Level Completed",
             "id": null,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4322,6 +4439,7 @@
           {
             "name": "4-6 (1-Star)",
             "id": null,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4342,6 +4460,7 @@
           {
             "name": "4-6 (2-Star)",
             "id": null,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4362,6 +4481,7 @@
           {
             "name": "4-6 (3-Star)",
             "id": null,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4418,6 +4538,7 @@
           {
             "name": "5-1 Completed",
             "id": 25,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4438,6 +4559,7 @@
           {
             "name": "5-1 Level Completed",
             "id": null,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4458,6 +4580,7 @@
           {
             "name": "5-1 (1-Star)",
             "id": null,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4478,6 +4601,7 @@
           {
             "name": "5-1 (2-Star)",
             "id": null,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4498,6 +4622,7 @@
           {
             "name": "5-1 (3-Star)",
             "id": null,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4554,6 +4679,7 @@
           {
             "name": "5-2 Completed",
             "id": 26,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4574,6 +4700,7 @@
           {
             "name": "5-2 Level Completed",
             "id": null,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4594,6 +4721,7 @@
           {
             "name": "5-2 (1-Star)",
             "id": null,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4614,6 +4742,7 @@
           {
             "name": "5-2 (2-Star)",
             "id": null,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4634,6 +4763,7 @@
           {
             "name": "5-2 (3-Star)",
             "id": null,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4690,6 +4820,7 @@
           {
             "name": "5-3 Completed",
             "id": 27,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4710,6 +4841,7 @@
           {
             "name": "5-3 Level Completed",
             "id": null,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4730,6 +4862,7 @@
           {
             "name": "5-3 (1-Star)",
             "id": null,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4750,6 +4883,7 @@
           {
             "name": "5-3 (2-Star)",
             "id": null,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4770,6 +4904,7 @@
           {
             "name": "5-3 (3-Star)",
             "id": null,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4826,6 +4961,7 @@
           {
             "name": "5-4 Completed",
             "id": 28,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4846,6 +4982,7 @@
           {
             "name": "5-4 Level Completed",
             "id": null,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4866,6 +5003,7 @@
           {
             "name": "5-4 (1-Star)",
             "id": null,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4886,6 +5024,7 @@
           {
             "name": "5-4 (2-Star)",
             "id": null,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4906,6 +5045,7 @@
           {
             "name": "5-4 (3-Star)",
             "id": null,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4962,6 +5102,7 @@
           {
             "name": "5-5 Completed",
             "id": 29,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4982,6 +5123,7 @@
           {
             "name": "5-5 Level Completed",
             "id": null,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5002,6 +5144,7 @@
           {
             "name": "5-5 (1-Star)",
             "id": null,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5022,6 +5165,7 @@
           {
             "name": "5-5 (2-Star)",
             "id": null,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5042,6 +5186,7 @@
           {
             "name": "5-5 (3-Star)",
             "id": null,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5098,6 +5243,7 @@
           {
             "name": "5-6 Completed",
             "id": 30,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5118,6 +5264,7 @@
           {
             "name": "5-6 Level Completed",
             "id": null,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5138,6 +5285,7 @@
           {
             "name": "5-6 (1-Star)",
             "id": null,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5158,6 +5306,7 @@
           {
             "name": "5-6 (2-Star)",
             "id": null,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5178,6 +5327,7 @@
           {
             "name": "5-6 (3-Star)",
             "id": null,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5234,6 +5384,7 @@
           {
             "name": "6-1 Completed",
             "id": 31,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5254,6 +5405,7 @@
           {
             "name": "6-1 Level Completed",
             "id": null,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5274,6 +5426,7 @@
           {
             "name": "6-1 (1-Star)",
             "id": null,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5294,6 +5447,7 @@
           {
             "name": "6-1 (2-Star)",
             "id": null,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5314,6 +5468,7 @@
           {
             "name": "6-1 (3-Star)",
             "id": null,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5370,6 +5525,7 @@
           {
             "name": "6-2 Completed",
             "id": 32,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5390,6 +5546,7 @@
           {
             "name": "6-2 Level Completed",
             "id": null,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5410,6 +5567,7 @@
           {
             "name": "6-2 (1-Star)",
             "id": null,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5430,6 +5588,7 @@
           {
             "name": "6-2 (2-Star)",
             "id": null,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5450,6 +5609,7 @@
           {
             "name": "6-2 (3-Star)",
             "id": null,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5506,6 +5666,7 @@
           {
             "name": "6-3 Completed",
             "id": 33,
+            "region": "6-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5526,6 +5687,7 @@
           {
             "name": "6-3 Level Completed",
             "id": null,
+            "region": "6-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5546,6 +5708,7 @@
           {
             "name": "6-3 (1-Star)",
             "id": null,
+            "region": "6-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5602,6 +5765,7 @@
           {
             "name": "6-4 Completed",
             "id": 34,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5622,6 +5786,7 @@
           {
             "name": "6-4 Level Completed",
             "id": null,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5642,6 +5807,7 @@
           {
             "name": "6-4 (1-Star)",
             "id": null,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5662,6 +5828,7 @@
           {
             "name": "6-4 (2-Star)",
             "id": null,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5682,6 +5849,7 @@
           {
             "name": "6-4 (3-Star)",
             "id": null,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5738,6 +5906,7 @@
           {
             "name": "6-5 Completed",
             "id": 35,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5758,6 +5927,7 @@
           {
             "name": "6-5 Level Completed",
             "id": null,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5778,6 +5948,7 @@
           {
             "name": "6-5 (1-Star)",
             "id": null,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5798,6 +5969,7 @@
           {
             "name": "6-5 (2-Star)",
             "id": null,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5818,6 +5990,7 @@
           {
             "name": "6-5 (3-Star)",
             "id": null,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5874,6 +6047,7 @@
           {
             "name": "6-6 Completed",
             "id": null,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5894,6 +6068,7 @@
           {
             "name": "6-6 (1-Star)",
             "id": null,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5914,6 +6089,7 @@
           {
             "name": "6-6 (2-Star)",
             "id": null,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5934,6 +6110,7 @@
           {
             "name": "6-6 (3-Star)",
             "id": null,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5990,6 +6167,7 @@
           {
             "name": "Kevin-1 Completed",
             "id": 37,
+            "region": "Kevin-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6010,6 +6188,7 @@
           {
             "name": "Kevin-1 Level Completed",
             "id": null,
+            "region": "Kevin-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6030,6 +6209,7 @@
           {
             "name": "Kevin-1 (1-Star)",
             "id": null,
+            "region": "Kevin-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6050,6 +6230,7 @@
           {
             "name": "Kevin-1 (2-Star)",
             "id": null,
+            "region": "Kevin-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6070,6 +6251,7 @@
           {
             "name": "Kevin-1 (3-Star)",
             "id": null,
+            "region": "Kevin-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6126,6 +6308,7 @@
           {
             "name": "Kevin-2 Completed",
             "id": 38,
+            "region": "Kevin-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6146,6 +6329,7 @@
           {
             "name": "Kevin-2 Level Completed",
             "id": null,
+            "region": "Kevin-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6166,6 +6350,7 @@
           {
             "name": "Kevin-2 (1-Star)",
             "id": null,
+            "region": "Kevin-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6186,6 +6371,7 @@
           {
             "name": "Kevin-2 (2-Star)",
             "id": null,
+            "region": "Kevin-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6206,6 +6392,7 @@
           {
             "name": "Kevin-2 (3-Star)",
             "id": null,
+            "region": "Kevin-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6262,6 +6449,7 @@
           {
             "name": "Kevin-3 Completed",
             "id": 39,
+            "region": "Kevin-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6282,6 +6470,7 @@
           {
             "name": "Kevin-3 Level Completed",
             "id": null,
+            "region": "Kevin-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6302,6 +6491,7 @@
           {
             "name": "Kevin-3 (1-Star)",
             "id": null,
+            "region": "Kevin-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6322,6 +6512,7 @@
           {
             "name": "Kevin-3 (2-Star)",
             "id": null,
+            "region": "Kevin-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6342,6 +6533,7 @@
           {
             "name": "Kevin-3 (3-Star)",
             "id": null,
+            "region": "Kevin-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6398,6 +6590,7 @@
           {
             "name": "Kevin-4 Completed",
             "id": 40,
+            "region": "Kevin-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6418,6 +6611,7 @@
           {
             "name": "Kevin-4 Level Completed",
             "id": null,
+            "region": "Kevin-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6438,6 +6632,7 @@
           {
             "name": "Kevin-4 (1-Star)",
             "id": null,
+            "region": "Kevin-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6494,6 +6689,7 @@
           {
             "name": "Kevin-5 Completed",
             "id": 41,
+            "region": "Kevin-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6514,6 +6710,7 @@
           {
             "name": "Kevin-5 Level Completed",
             "id": null,
+            "region": "Kevin-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6534,6 +6731,7 @@
           {
             "name": "Kevin-5 (1-Star)",
             "id": null,
+            "region": "Kevin-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6554,6 +6752,7 @@
           {
             "name": "Kevin-5 (2-Star)",
             "id": null,
+            "region": "Kevin-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6574,6 +6773,7 @@
           {
             "name": "Kevin-5 (3-Star)",
             "id": null,
+            "region": "Kevin-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6630,6 +6830,7 @@
           {
             "name": "Kevin-6 Completed",
             "id": 42,
+            "region": "Kevin-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6650,6 +6851,7 @@
           {
             "name": "Kevin-6 Level Completed",
             "id": null,
+            "region": "Kevin-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6670,6 +6872,7 @@
           {
             "name": "Kevin-6 (1-Star)",
             "id": null,
+            "region": "Kevin-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6690,6 +6893,7 @@
           {
             "name": "Kevin-6 (2-Star)",
             "id": null,
+            "region": "Kevin-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6710,6 +6914,7 @@
           {
             "name": "Kevin-6 (3-Star)",
             "id": null,
+            "region": "Kevin-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6766,6 +6971,7 @@
           {
             "name": "Kevin-7 Completed",
             "id": 43,
+            "region": "Kevin-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6786,6 +6992,7 @@
           {
             "name": "Kevin-7 Level Completed",
             "id": null,
+            "region": "Kevin-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6806,6 +7013,7 @@
           {
             "name": "Kevin-7 (1-Star)",
             "id": null,
+            "region": "Kevin-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6826,6 +7034,7 @@
           {
             "name": "Kevin-7 (2-Star)",
             "id": null,
+            "region": "Kevin-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6846,6 +7055,7 @@
           {
             "name": "Kevin-7 (3-Star)",
             "id": null,
+            "region": "Kevin-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6902,6 +7112,7 @@
           {
             "name": "Kevin-8 Completed",
             "id": 44,
+            "region": "Kevin-8",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6922,6 +7133,7 @@
           {
             "name": "Kevin-8 Level Completed",
             "id": null,
+            "region": "Kevin-8",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6942,6 +7154,7 @@
           {
             "name": "Kevin-8 (1-Star)",
             "id": null,
+            "region": "Kevin-8",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6962,6 +7175,7 @@
           {
             "name": "Kevin-8 (2-Star)",
             "id": null,
+            "region": "Kevin-8",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6982,6 +7196,7 @@
           {
             "name": "Kevin-8 (3-Star)",
             "id": null,
+            "region": "Kevin-8",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8279,9 +8494,55 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Progressive Dash",
+        "Burn Leniency",
+        "Control Stick Batteries",
+        "Coal Bucket",
+        "Kevin-7",
+        "Purple Ramp",
+        "Wok Wheels",
+        "Faster Condiment/Drink Switch",
+        "Clean Dishes",
+        "Pink Ramp",
+        "Curse Emote",
+        "Dish Scrubber",
+        "Cooking Emote",
+        "Washing Up Emote",
+        "Calmer Unbread",
+        "Coin Purse",
+        "Progressive Throw/Catch",
+        "Serving Emote",
+        "Order Lookahead",
+        "Fire Extinguisher",
+        "Sharp Knife",
+        "Spare Plate",
+        "Red Ramp",
+        "Bonus Star",
+        "Guest Patience",
+        "Faster Respawn Time",
+        "Kevin-4",
+        "Preparing Emote",
+        "Ramp Button",
+        "Lightweight Backpack",
+        "Larger Tip Jar",
+        "Kevin-8",
+        "Ok Emote",
+        "Blue Ramp",
+        "Dark Green Ramp",
+        "Emote Wheel",
+        "Kevin-2",
+        "Wood",
+        "Bellows",
+        "Kevin-6",
+        "Yellow Ramp",
+        "Kevin-3",
+        "Kevin-5",
+        "Kevin-1",
+        "Green Ramp"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

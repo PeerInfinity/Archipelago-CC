@@ -418,6 +418,7 @@
           {
             "name": "Garden of Assemblage Map",
             "id": 1245806,
+            "region": "Garden Of Assemblage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -436,6 +437,7 @@
           {
             "name": "GoA Lost Illusion",
             "id": 1245807,
+            "region": "Garden Of Assemblage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -454,6 +456,7 @@
           {
             "name": "Proof of Nonexistence Location",
             "id": 1245808,
+            "region": "Garden Of Assemblage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -509,6 +512,7 @@
           {
             "name": "(LoD) Bamboo Grove Dark Shard",
             "id": 1245648,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -527,6 +531,7 @@
           {
             "name": "(LoD) Bamboo Grove Ether",
             "id": 1245649,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -545,6 +550,7 @@
           {
             "name": "(LoD) Bamboo Grove Mythril Shard",
             "id": 1245650,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -563,6 +569,7 @@
           {
             "name": "(LoD) Bamboo Grove Encampment Area Map",
             "id": 1245651,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -581,6 +588,7 @@
           {
             "name": "(LoD) Mission 3",
             "id": 1245652,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -599,6 +607,7 @@
           {
             "name": "(LoD) Checkpoint Hi-Potion",
             "id": 1245653,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -617,6 +626,7 @@
           {
             "name": "(LoD) Checkpoint Mythril Shard",
             "id": 1245654,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -635,6 +645,7 @@
           {
             "name": "(LoD) Mountain Trail Lightning Shard",
             "id": 1245655,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -653,6 +664,7 @@
           {
             "name": "(LoD) Mountain Trail Recovery Recipe",
             "id": 1245656,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -671,6 +683,7 @@
           {
             "name": "(LoD) Mountain Trail Ether",
             "id": 1245657,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -689,6 +702,7 @@
           {
             "name": "(LoD) Mountain Trail Mythril Shard",
             "id": 1245658,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -707,6 +721,7 @@
           {
             "name": "(LoD) Village Cave Area Map",
             "id": 1245659,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -725,6 +740,7 @@
           {
             "name": "(LoD) Village Cave AP Boost",
             "id": 1245661,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -743,6 +759,7 @@
           {
             "name": "(LoD) Village Cave Dark Shard",
             "id": 1245660,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -761,6 +778,7 @@
           {
             "name": "(LoD) Village Cave Bonus: Sora Slot 1",
             "id": 1245662,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -779,6 +797,7 @@
           {
             "name": "(LoD) Ridge Frost Shard",
             "id": 1245663,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -797,6 +816,7 @@
           {
             "name": "(LoD) Ridge AP Boost",
             "id": 1245664,
+            "region": "Land of Dragons",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -857,6 +877,7 @@
           {
             "name": "(LoD) Shan-Yu Bonus: Sora Slot 1",
             "id": 1245665,
+            "region": "Shan Yu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -875,6 +896,7 @@
           {
             "name": "(LoD) Shan-Yu Bonus: Sora Slot 2",
             "id": 1245666,
+            "region": "Shan Yu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -893,6 +915,7 @@
           {
             "name": "(LoD) Hidden Dragon",
             "id": 1245667,
+            "region": "Shan Yu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -911,6 +934,7 @@
           {
             "name": "(LoD) Shan-Yu Bonus: Goofy Slot 1",
             "id": 1245877,
+            "region": "Shan Yu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -929,6 +953,7 @@
           {
             "name": "Shan Yu Event Location",
             "id": null,
+            "region": "Shan Yu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1020,6 +1045,7 @@
           {
             "name": "(LoD2) Throne Room Torn Pages",
             "id": 1245668,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1038,6 +1064,7 @@
           {
             "name": "(LoD2) Throne Room Palace Map",
             "id": 1245669,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1056,6 +1083,7 @@
           {
             "name": "(LoD2) Throne Room AP Boost",
             "id": 1245670,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1074,6 +1102,7 @@
           {
             "name": "(LoD2) Throne Room Queen Recipe",
             "id": 1245671,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1092,6 +1121,7 @@
           {
             "name": "(LoD2) Throne Room AP Boost 2",
             "id": 1245672,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1110,6 +1140,7 @@
           {
             "name": "(LoD2) Throne Room Ogre Shield",
             "id": 1245673,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1128,6 +1159,7 @@
           {
             "name": "(LoD2) Throne Room Mythril Crystal",
             "id": 1245674,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1146,6 +1178,7 @@
           {
             "name": "(LoD2) Throne Room Orichalcum",
             "id": 1245675,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1164,6 +1197,7 @@
           {
             "name": "Ansem Riku Event Location",
             "id": null,
+            "region": "Ansem Riku",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1219,6 +1253,7 @@
           {
             "name": "(LoD2) Storm Rider Bonus: Sora Slot 1",
             "id": 1245676,
+            "region": "Storm Rider",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1237,6 +1272,7 @@
           {
             "name": "(LoD2) Storm Rider Bonus: Goofy Slot 1",
             "id": 1245878,
+            "region": "Storm Rider",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1255,6 +1291,7 @@
           {
             "name": "Storm Rider Event Location",
             "id": null,
+            "region": "Storm Rider",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1296,6 +1333,7 @@
           {
             "name": "(Post LoD2: Summit) Data Xigbar",
             "id": 1245677,
+            "region": "Data Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1314,6 +1352,7 @@
           {
             "name": "Data Xigbar Event Location",
             "id": null,
+            "region": "Data Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1379,6 +1418,7 @@
           {
             "name": "(AG) Agrabah Map",
             "id": 1245612,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1397,6 +1437,7 @@
           {
             "name": "(AG) Agrabah Dark Shard",
             "id": 1245613,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1415,6 +1456,7 @@
           {
             "name": "(AG) Agrabah Mythril Shard",
             "id": 1245614,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1433,6 +1475,7 @@
           {
             "name": "(AG) Agrabah Hi-Potion",
             "id": 1245615,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1451,6 +1494,7 @@
           {
             "name": "(AG) Agrabah AP Boost",
             "id": 1245616,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1469,6 +1513,7 @@
           {
             "name": "(AG) Agrabah Mythril Stone",
             "id": 1245617,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1487,6 +1532,7 @@
           {
             "name": "(AG) Agrabah Mythril Shard 2",
             "id": 1245618,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1505,6 +1551,7 @@
           {
             "name": "(AG) Agrabah Serenity Shard",
             "id": 1245619,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1523,6 +1570,7 @@
           {
             "name": "(AG) Bazaar Mythril Gem",
             "id": 1245620,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1541,6 +1589,7 @@
           {
             "name": "(AG) Bazaar Power Shard",
             "id": 1245621,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1559,6 +1608,7 @@
           {
             "name": "(AG) Bazaar Hi-Potion",
             "id": 1245622,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1577,6 +1627,7 @@
           {
             "name": "(AG) Bazaar AP Boost",
             "id": 1245623,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1595,6 +1646,7 @@
           {
             "name": "(AG) Bazaar Mythril Shard",
             "id": 1245624,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1613,6 +1665,7 @@
           {
             "name": "(AG) Palace Walls Skill Ring",
             "id": 1245625,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1631,6 +1684,7 @@
           {
             "name": "(AG) Palace Walls Mythril Stone",
             "id": 1245626,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1649,6 +1703,7 @@
           {
             "name": "(AG) Cave Entrance Power Stone",
             "id": 1245627,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1667,6 +1722,7 @@
           {
             "name": "(AG) Cave Entrance Mythril Shard",
             "id": 1245628,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1685,6 +1741,7 @@
           {
             "name": "(AG) Valley of Stone Mythril Stone",
             "id": 1245629,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1703,6 +1760,7 @@
           {
             "name": "(AG) Valley of Stone AP Boost",
             "id": 1245630,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1721,6 +1779,7 @@
           {
             "name": "(AG) Valley of Stone Mythril Shard",
             "id": 1245631,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1739,6 +1798,7 @@
           {
             "name": "(AG) Valley of Stone Hi-Potion",
             "id": 1245632,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1757,6 +1817,7 @@
           {
             "name": "(AG) Abu Escort Bonus: Sora Slot 1",
             "id": 1245633,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1775,6 +1836,7 @@
           {
             "name": "(AG) Chasm of Challenges Cave of Wonders Map",
             "id": 1245634,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1793,6 +1855,7 @@
           {
             "name": "(AG) Chasm of Challenges AP Boost",
             "id": 1245635,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1811,6 +1874,7 @@
           {
             "name": "(AG) Treasure Room",
             "id": 1245636,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1829,6 +1893,7 @@
           {
             "name": "(AG) Treasure Room AP Boost",
             "id": 1245637,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1847,6 +1912,7 @@
           {
             "name": "(AG) Treasure Room Serenity Gem",
             "id": 1245638,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1865,6 +1931,7 @@
           {
             "name": "(AG) Treasure Room Heartless Bonus: Goofy Slot 1",
             "id": 1245881,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1883,6 +1950,7 @@
           {
             "name": "(AG) Abu Escort Bonus: Donald Slot 1",
             "id": 1245866,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1983,6 +2051,7 @@
           {
             "name": "(AG) Elemental Lords Bonus: Sora Slot 1",
             "id": 1245639,
+            "region": "Twin Lords",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2001,6 +2070,7 @@
           {
             "name": "(AG) Lamp Charm",
             "id": 1245640,
+            "region": "Twin Lords",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2019,6 +2089,7 @@
           {
             "name": "Twin Lords Event Location",
             "id": null,
+            "region": "Twin Lords",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2074,6 +2145,7 @@
           {
             "name": "(AG2) Ruined Chamber Torn Pages",
             "id": 1245641,
+            "region": "Agrabah 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2092,6 +2164,7 @@
           {
             "name": "(AG2) Ruined Chamber Ruins Map",
             "id": 1245642,
+            "region": "Agrabah 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2147,6 +2220,7 @@
           {
             "name": "(AG2) Genie Jafar",
             "id": 1245643,
+            "region": "Genie Jafar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2165,6 +2239,7 @@
           {
             "name": "(AG2) Wishing Lamp",
             "id": 1245644,
+            "region": "Genie Jafar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2183,6 +2258,7 @@
           {
             "name": "Genie Jafar Event Location",
             "id": null,
+            "region": "Genie Jafar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2224,6 +2300,7 @@
           {
             "name": "(Post AG2: Peddler's Shop) Lexaeus Bonus: Sora Slot 1",
             "id": 1245645,
+            "region": "Data Lexaeus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2242,6 +2319,7 @@
           {
             "name": "(Post AG2: Peddler's Shop) AS Lexaeus",
             "id": 1245646,
+            "region": "Data Lexaeus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2260,6 +2338,7 @@
           {
             "name": "(Post AG2: Peddler's Shop) Data Lexaeus",
             "id": 1245647,
+            "region": "Data Lexaeus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2278,6 +2357,7 @@
           {
             "name": "Data Lexaeus Event Location",
             "id": null,
+            "region": "Data Lexaeus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2338,6 +2418,7 @@
           {
             "name": "(DC) Courtyard Mythril Shard",
             "id": 1245582,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2356,6 +2437,7 @@
           {
             "name": "(DC) Courtyard Star Recipe",
             "id": 1245583,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2374,6 +2456,7 @@
           {
             "name": "(DC) Courtyard AP Boost",
             "id": 1245584,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2392,6 +2475,7 @@
           {
             "name": "(DC) Courtyard Mythril Stone",
             "id": 1245585,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2410,6 +2494,7 @@
           {
             "name": "(DC) Courtyard Blazing Stone",
             "id": 1245586,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2428,6 +2513,7 @@
           {
             "name": "(DC) Courtyard Blazing Shard",
             "id": 1245587,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2446,6 +2532,7 @@
           {
             "name": "(DC) Courtyard Mythril Shard 2",
             "id": 1245588,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2464,6 +2551,7 @@
           {
             "name": "(DC) Library Torn Pages",
             "id": 1245589,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2482,6 +2570,7 @@
           {
             "name": "(DC) Disney Castle Map",
             "id": 1245590,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2500,6 +2589,7 @@
           {
             "name": "(DC) Minnie Escort Bonus: Sora Slot 1",
             "id": 1245591,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2518,6 +2608,7 @@
           {
             "name": "(DC) Minnie Escort Bonus: Sora Slot 2",
             "id": 1245592,
+            "region": "Disney Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2573,6 +2664,7 @@
           {
             "name": "(TR) Cornerstone Hill Map",
             "id": 1245593,
+            "region": "Timeless River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2591,6 +2683,7 @@
           {
             "name": "(TR) Cornerstone Hill Frost Shard",
             "id": 1245594,
+            "region": "Timeless River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2609,6 +2702,7 @@
           {
             "name": "(TR) Pier Mythril Shard",
             "id": 1245595,
+            "region": "Timeless River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2627,6 +2721,7 @@
           {
             "name": "(TR) Pier Hi-Potion",
             "id": 1245596,
+            "region": "Timeless River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2682,6 +2777,7 @@
           {
             "name": "(TR) Waterway Mythril Stone",
             "id": 1245597,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2700,6 +2796,7 @@
           {
             "name": "(TR) Waterway AP Boost",
             "id": 1245598,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2718,6 +2815,7 @@
           {
             "name": "(TR) Waterway Frost Stone",
             "id": 1245599,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2736,6 +2834,7 @@
           {
             "name": "(TR) Window of Time Map",
             "id": 1245600,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2754,6 +2853,7 @@
           {
             "name": "(TR) Boat Pete Bonus: Sora Slot 1",
             "id": 1245601,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2772,6 +2872,7 @@
           {
             "name": "(TR) Boat Pete Bonus: Donald Slot 1",
             "id": 1245840,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2790,6 +2891,7 @@
           {
             "name": "(TR) Boat Pete Bonus: Donald Slot 2",
             "id": 1245841,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2808,6 +2910,7 @@
           {
             "name": "Old Pete Event Location",
             "id": null,
+            "region": "Old Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2888,6 +2991,7 @@
           {
             "name": "(TR) Future Pete Bonus: Sora Slot 1",
             "id": 1245602,
+            "region": "Future Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2906,6 +3010,7 @@
           {
             "name": "(TR) Future Pete Bonus: Sora Slot 2",
             "id": 1245603,
+            "region": "Future Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2924,6 +3029,7 @@
           {
             "name": "(TR) Monochrome",
             "id": 1245604,
+            "region": "Future Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2942,6 +3048,7 @@
           {
             "name": "(TR) Wisdom Form",
             "id": 1245605,
+            "region": "Future Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2960,6 +3067,7 @@
           {
             "name": "(TR) Future Pete Bonus: Goofy Slot 1",
             "id": 1245876,
+            "region": "Future Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2978,6 +3086,7 @@
           {
             "name": "Future Pete Event Location",
             "id": null,
+            "region": "Future Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3019,6 +3128,7 @@
           {
             "name": "(Post TR:Hall of the Cornerstone) Marluxia Bonus: Sora Slot 1",
             "id": 1245606,
+            "region": "Data Marluxia",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3037,6 +3147,7 @@
           {
             "name": "(Post TR:Hall of the Cornerstone) AS Marluxia",
             "id": 1245607,
+            "region": "Data Marluxia",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3055,6 +3166,7 @@
           {
             "name": "(Post TR:Hall of the Cornerstone) Data Marluxia",
             "id": 1245608,
+            "region": "Data Marluxia",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3073,6 +3185,7 @@
           {
             "name": "Data Marluxia Event Location",
             "id": null,
+            "region": "Data Marluxia",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3114,6 +3227,7 @@
           {
             "name": "(Post TR:Hall of the Cornerstone) Lingering Will Bonus: Sora Slot 1",
             "id": 1245609,
+            "region": "Terra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3132,6 +3246,7 @@
           {
             "name": "(Post TR:Hall of the Cornerstone) Lingering Will Proof of Connection",
             "id": 1245610,
+            "region": "Terra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3150,6 +3265,7 @@
           {
             "name": "(Post TR:Hall of the Cornerstone) Lingering Will Manifest Illusion",
             "id": 1245611,
+            "region": "Terra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3168,6 +3284,7 @@
           {
             "name": "Terra Event Location",
             "id": null,
+            "region": "Terra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3228,6 +3345,7 @@
           {
             "name": "(100Acre) Pooh's House 100 Acre Wood Map",
             "id": 1245558,
+            "region": "Pooh's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3246,6 +3364,7 @@
           {
             "name": "(100Acre) Pooh's House AP Boost",
             "id": 1245559,
+            "region": "Pooh's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3264,6 +3383,7 @@
           {
             "name": "(100Acre) Pooh's House Mythril Stone",
             "id": 1245560,
+            "region": "Pooh's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3324,6 +3444,7 @@
           {
             "name": "(100Acre) Piglet's House Defense Boost",
             "id": 1245561,
+            "region": "Piglet's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3342,6 +3463,7 @@
           {
             "name": "(100Acre) Piglet's House AP Boost",
             "id": 1245562,
+            "region": "Piglet's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3360,6 +3482,7 @@
           {
             "name": "(100Acre) Piglet's House Mythril Gem",
             "id": 1245563,
+            "region": "Piglet's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3420,6 +3543,7 @@
           {
             "name": "(100Acre) Rabbit's House Draw Ring",
             "id": 1245564,
+            "region": "Rabbit's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3438,6 +3562,7 @@
           {
             "name": "(100Acre) Rabbit's House Mythril Crystal",
             "id": 1245565,
+            "region": "Rabbit's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3456,6 +3581,7 @@
           {
             "name": "(100Acre) Rabbit's House AP Boost",
             "id": 1245566,
+            "region": "Rabbit's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3516,6 +3642,7 @@
           {
             "name": "(100Acre) Kanga's House Magic Boost",
             "id": 1245567,
+            "region": "Roo's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3534,6 +3661,7 @@
           {
             "name": "(100Acre) Kanga's House AP Boost",
             "id": 1245568,
+            "region": "Roo's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3552,6 +3680,7 @@
           {
             "name": "(100Acre) Kanga's House Orichalcum",
             "id": 1245569,
+            "region": "Roo's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3612,6 +3741,7 @@
           {
             "name": "(100Acre) Spooky Cave Mythril Gem",
             "id": 1245570,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3630,6 +3760,7 @@
           {
             "name": "(100Acre) Spooky Cave AP Boost",
             "id": 1245571,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3648,6 +3779,7 @@
           {
             "name": "(100Acre) Spooky Cave Orichalcum",
             "id": 1245572,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3666,6 +3798,7 @@
           {
             "name": "(100Acre) Spooky Cave Guard Recipe",
             "id": 1245573,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3684,6 +3817,7 @@
           {
             "name": "(100Acre) Spooky Cave Mythril Crystal",
             "id": 1245574,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3702,6 +3836,7 @@
           {
             "name": "(100Acre) Spooky Cave AP Boost 2",
             "id": 1245575,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3720,6 +3855,7 @@
           {
             "name": "(100Acre) Sweet Memories",
             "id": 1245576,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3738,6 +3874,7 @@
           {
             "name": "(100Acre) Spooky Cave Map",
             "id": 1245577,
+            "region": "Spooky Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3779,6 +3916,7 @@
           {
             "name": "(100Acre) Starry Hill Cosmic Ring",
             "id": 1245578,
+            "region": "Starry Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3797,6 +3935,7 @@
           {
             "name": "(100Acre) Starry Hill Style Recipe",
             "id": 1245579,
+            "region": "Starry Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3815,6 +3954,7 @@
           {
             "name": "(100Acre) Starry Hill Cure Element",
             "id": 1245580,
+            "region": "Starry Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3833,6 +3973,7 @@
           {
             "name": "(100Acre) Starry Hill Orichalcum+",
             "id": 1245581,
+            "region": "Starry Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3888,6 +4029,7 @@
           {
             "name": "(PR) Rampart Naval Map",
             "id": 1245423,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3906,6 +4048,7 @@
           {
             "name": "(PR) Rampart Mythril Stone",
             "id": 1245424,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3924,6 +4067,7 @@
           {
             "name": "(PR) Rampart Dark Shard",
             "id": 1245425,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3942,6 +4086,7 @@
           {
             "name": "(PR) Town Dark Stone",
             "id": 1245426,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3960,6 +4105,7 @@
           {
             "name": "(PR) Town AP Boost",
             "id": 1245427,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3978,6 +4124,7 @@
           {
             "name": "(PR) Town Mythril Shard",
             "id": 1245428,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3996,6 +4143,7 @@
           {
             "name": "(PR) Town Mythril Gem",
             "id": 1245429,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4014,6 +4162,7 @@
           {
             "name": "(PR) Cave Mouth Bright Shard",
             "id": 1245430,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4032,6 +4181,7 @@
           {
             "name": "(PR) Cave Mouth Mythril Shard",
             "id": 1245431,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4050,6 +4200,7 @@
           {
             "name": "(PR) Isla de Muerta Map",
             "id": 1245432,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4068,6 +4219,7 @@
           {
             "name": "(PR) Boat Fight Bonus: Sora Slot 1",
             "id": 1245433,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4086,6 +4238,7 @@
           {
             "name": "(PR) Interceptor Barrels Bonus: Sora Slot 1",
             "id": 1245434,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4104,6 +4257,7 @@
           {
             "name": "(PR) Powder Store AP Boost 1",
             "id": 1245435,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4122,6 +4276,7 @@
           {
             "name": "(PR) Powder Store AP Boost 2",
             "id": 1245436,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4140,6 +4295,7 @@
           {
             "name": "(PR) Moonlight Nook Mythril Shard",
             "id": 1245437,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4158,6 +4314,7 @@
           {
             "name": "(PR) Moonlight Nook Serenity Gem",
             "id": 1245438,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4176,6 +4333,7 @@
           {
             "name": "(PR) Moonlight Nook Power Stone",
             "id": 1245439,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4194,6 +4352,7 @@
           {
             "name": "(PR) Boat Fight Bonus: Donald Slot 1",
             "id": 1245846,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4212,6 +4371,7 @@
           {
             "name": "(PR) Interceptor Barrels Bonus: Goofy Slot 1",
             "id": 1245880,
+            "region": "Port Royal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4272,6 +4432,7 @@
           {
             "name": "(PR) Barbossa Bonus: Sora Slot 1",
             "id": 1245440,
+            "region": "Barbosa",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4290,6 +4451,7 @@
           {
             "name": "(PR) Barbossa Bonus: Sora Slot 2",
             "id": 1245441,
+            "region": "Barbosa",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4308,6 +4470,7 @@
           {
             "name": "(PR) Follow the Wind",
             "id": 1245442,
+            "region": "Barbosa",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4326,6 +4489,7 @@
           {
             "name": "(PR) Barbossa Bonus: Goofy Slot 1",
             "id": 1245867,
+            "region": "Barbosa",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4344,6 +4508,7 @@
           {
             "name": "(PR) Barbossa Bonus: Goofy Slot 2",
             "id": 1245868,
+            "region": "Barbosa",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4362,6 +4527,7 @@
           {
             "name": "Barbosa Event Location",
             "id": null,
+            "region": "Barbosa",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4453,6 +4619,7 @@
           {
             "name": "(PR2) Grim Reaper 1 Bonus: Sora Slot 1",
             "id": 1245443,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4471,6 +4638,7 @@
           {
             "name": "(PR2) Interceptor's Hold Feather Charm",
             "id": 1245444,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4489,6 +4657,7 @@
           {
             "name": "(PR2) Seadrift Keep AP Boost",
             "id": 1245445,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4507,6 +4676,7 @@
           {
             "name": "(PR2) Seadrift Keep Orichalcum",
             "id": 1245446,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4525,6 +4695,7 @@
           {
             "name": "(PR2) Seadrift Keep Meteor Staff",
             "id": 1245447,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4543,6 +4714,7 @@
           {
             "name": "(PR2) Seadrift Row Serenity Gem",
             "id": 1245448,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4561,6 +4733,7 @@
           {
             "name": "(PR2) Seadrift Row King Recipe",
             "id": 1245449,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4579,6 +4752,7 @@
           {
             "name": "(PR2) Seadrift Row Mythril Crystal",
             "id": 1245450,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4597,6 +4771,7 @@
           {
             "name": "(PR2) Seadrift Row Cursed Medallion",
             "id": 1245451,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4615,6 +4790,7 @@
           {
             "name": "(PR2) Seadrift Row Ship Graveyard Map",
             "id": 1245452,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4633,6 +4809,7 @@
           {
             "name": "(PR2) Grim Reaper 1 Bonus: Goofy Slot 1",
             "id": 1245869,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4651,6 +4828,7 @@
           {
             "name": "Grim Reaper 1 Event Location",
             "id": null,
+            "region": "Grim Reaper 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4706,6 +4884,7 @@
           {
             "name": "(PR2) Grim Reaper 2 Bonus: Donald Slot 1",
             "id": 1245850,
+            "region": "Grim Reaper 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4724,6 +4903,7 @@
           {
             "name": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1",
             "id": 1245453,
+            "region": "Grim Reaper 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4742,6 +4922,7 @@
           {
             "name": "(PR2) Secret Ansem Report 6 (Grim Reaper 2)",
             "id": 1245454,
+            "region": "Grim Reaper 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4760,6 +4941,7 @@
           {
             "name": "Grim Reaper 2 Event Location",
             "id": null,
+            "region": "Grim Reaper 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4801,6 +4983,7 @@
           {
             "name": "(Post PR2: Treasure Heap) Data Luxord",
             "id": 1245455,
+            "region": "Data Luxord",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4819,6 +5002,7 @@
           {
             "name": "Data Luxord Event Location",
             "id": null,
+            "region": "Data Luxord",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4874,6 +5058,7 @@
           {
             "name": "(OC) Passage Mythril Shard",
             "id": 1245512,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4892,6 +5077,7 @@
           {
             "name": "(OC) Passage Mythril Stone",
             "id": 1245513,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4910,6 +5096,7 @@
           {
             "name": "(OC) Passage Ether",
             "id": 1245514,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4928,6 +5115,7 @@
           {
             "name": "(OC) Passage AP Boost",
             "id": 1245515,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4946,6 +5134,7 @@
           {
             "name": "(OC) Passage Hi-Potion",
             "id": 1245516,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4964,6 +5153,7 @@
           {
             "name": "(OC) Inner Chamber Underworld Map",
             "id": 1245517,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4982,6 +5172,7 @@
           {
             "name": "(OC) Inner Chamber Mythril Shard",
             "id": 1245518,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5037,6 +5228,7 @@
           {
             "name": "(OC) Cerberus Bonus: Sora Slot 1",
             "id": 1245519,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5055,6 +5247,7 @@
           {
             "name": "(OC) Coliseum Map",
             "id": 1245520,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5073,6 +5266,7 @@
           {
             "name": "(OC) Urns Bonus: Sora Slot 1",
             "id": 1245521,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5091,6 +5285,7 @@
           {
             "name": "(OC) Underworld Entrance Power Boost",
             "id": 1245522,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5109,6 +5304,7 @@
           {
             "name": "(OC) Caverns Entrance Lucid Shard",
             "id": 1245523,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5127,6 +5323,7 @@
           {
             "name": "(OC) Caverns Entrance AP Boost",
             "id": 1245524,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5145,6 +5342,7 @@
           {
             "name": "(OC) Caverns Entrance Mythril Shard",
             "id": 1245525,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5163,6 +5361,7 @@
           {
             "name": "(OC) The Lost Road Bright Shard",
             "id": 1245526,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5181,6 +5380,7 @@
           {
             "name": "(OC) The Lost Road Ether",
             "id": 1245527,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5199,6 +5399,7 @@
           {
             "name": "(OC) The Lost Road Mythril Shard",
             "id": 1245528,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5217,6 +5418,7 @@
           {
             "name": "(OC) The Lost Road Mythril Stone",
             "id": 1245529,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5235,6 +5437,7 @@
           {
             "name": "(OC) Atrium Lucid Stone",
             "id": 1245530,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5253,6 +5456,7 @@
           {
             "name": "(OC) Atrium AP Boost",
             "id": 1245531,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5271,6 +5475,7 @@
           {
             "name": "(OC) Demyx Bonus: Sora Slot 1",
             "id": 1245532,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5289,6 +5494,7 @@
           {
             "name": "(OC) Secret Ansem Report 5 (Demyx)",
             "id": 1245533,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5307,6 +5513,7 @@
           {
             "name": "(OC) Olympus Stone",
             "id": 1245534,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5325,6 +5532,7 @@
           {
             "name": "(OC) The Lock Caverns Map",
             "id": 1245535,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5343,6 +5551,7 @@
           {
             "name": "(OC) The Lock Mythril Shard",
             "id": 1245536,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5361,6 +5570,7 @@
           {
             "name": "(OC) The Lock AP Boost",
             "id": 1245537,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5379,6 +5589,7 @@
           {
             "name": "Cerberus Event Location",
             "id": null,
+            "region": "Cerberus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5434,6 +5645,7 @@
           {
             "name": "(OC) Pete OC Bonus: Sora Slot 1",
             "id": 1245538,
+            "region": "Olympus Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5452,6 +5664,7 @@
           {
             "name": "(OC) Demyx Bonus: Donald Slot 1",
             "id": 1245839,
+            "region": "Olympus Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5470,6 +5683,7 @@
           {
             "name": "(OC) Pete Bonus: Goofy Slot 1",
             "id": 1245875,
+            "region": "Olympus Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5488,6 +5702,7 @@
           {
             "name": "Olympus Pete Event Location",
             "id": null,
+            "region": "Olympus Pete",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5574,6 +5789,7 @@
           {
             "name": "(OC) Hydra Bonus: Sora Slot 1",
             "id": 1245539,
+            "region": "Hydra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5592,6 +5808,7 @@
           {
             "name": "(OC) Hydra Bonus: Sora Slot 2",
             "id": 1245540,
+            "region": "Hydra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5610,6 +5827,7 @@
           {
             "name": "(OC) Hero's Crest",
             "id": 1245541,
+            "region": "Hydra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5628,6 +5846,7 @@
           {
             "name": "Hydra Event Location",
             "id": null,
+            "region": "Hydra",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5683,6 +5902,7 @@
           {
             "name": "(OC2) Auron's Statue",
             "id": 1245542,
+            "region": "Olympus Coliseum 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5764,6 +5984,7 @@
           {
             "name": "(OC2) Hades Bonus: Sora Slot 1",
             "id": 1245543,
+            "region": "Hades",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5782,6 +6003,7 @@
           {
             "name": "(OC2) Hades Bonus: Sora Slot 2",
             "id": 1245544,
+            "region": "Hades",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5800,6 +6022,7 @@
           {
             "name": "(OC2) Guardian Soul",
             "id": 1245545,
+            "region": "Hades",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5818,6 +6041,7 @@
           {
             "name": "Hades Event Location",
             "id": null,
+            "region": "Hades",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5859,6 +6083,7 @@
           {
             "name": "Protect Belt Pain and Panic Cup",
             "id": 1245549,
+            "region": "Pain and Panic Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5877,6 +6102,7 @@
           {
             "name": "Serenity Gem Pain and Panic Cup",
             "id": 1245550,
+            "region": "Pain and Panic Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5895,6 +6121,7 @@
           {
             "name": "Pain and Panic Cup Event Location",
             "id": null,
+            "region": "Pain and Panic Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5936,6 +6163,7 @@
           {
             "name": "Rising Dragon Cerberus Cup",
             "id": 1245551,
+            "region": "Cerberus Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5954,6 +6182,7 @@
           {
             "name": "Serenity Crystal Cerberus Cup",
             "id": 1245552,
+            "region": "Cerberus Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5972,6 +6201,7 @@
           {
             "name": "Cerberus Cup Event Location",
             "id": null,
+            "region": "Cerberus Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6013,6 +6243,7 @@
           {
             "name": "Genji Shield Titan Cup",
             "id": 1245553,
+            "region": "Titan Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6031,6 +6262,7 @@
           {
             "name": "Skillful Ring Titan Cup",
             "id": 1245554,
+            "region": "Titan Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6049,6 +6281,7 @@
           {
             "name": "Titan Cup Event Location",
             "id": null,
+            "region": "Titan Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6104,6 +6337,7 @@
           {
             "name": "Fatal Crest Goddess of Fate Cup",
             "id": 1245555,
+            "region": "Goddess of Fate Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6122,6 +6356,7 @@
           {
             "name": "Orichalcum+ Goddess of Fate Cup",
             "id": 1245556,
+            "region": "Goddess of Fate Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6140,6 +6375,7 @@
           {
             "name": "Goddess of Fate Cup Event Location",
             "id": null,
+            "region": "Goddess of Fate Cup",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6181,6 +6417,7 @@
           {
             "name": "Hades Cup Trophy Paradox Cups",
             "id": 1245557,
+            "region": "Olympus Coliseum Hade's Paradox",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6199,6 +6436,7 @@
           {
             "name": "Olympus Coliseum Hade's Paradox Event Location",
             "id": null,
+            "region": "Olympus Coliseum Hade's Paradox",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6240,6 +6478,7 @@
           {
             "name": "(Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Sora Slot 1",
             "id": 1245546,
+            "region": "Data Zexion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6258,6 +6497,7 @@
           {
             "name": "(Post OC2: Cave of the Dead Inner Chamber) AS Zexion",
             "id": 1245547,
+            "region": "Data Zexion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6276,6 +6516,7 @@
           {
             "name": "(Post OC2: Cave of the Dead Inner Chamber) Data Zexion",
             "id": 1245548,
+            "region": "Data Zexion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6294,6 +6535,7 @@
           {
             "name": "(Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Goofy Slot 1",
             "id": 1245882,
+            "region": "Data Zexion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6312,6 +6554,7 @@
           {
             "name": "Data Zexion Event Location",
             "id": null,
+            "region": "Data Zexion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6367,6 +6610,7 @@
           {
             "name": "(BC) Courtyard AP Boost",
             "id": 1245480,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6385,6 +6629,7 @@
           {
             "name": "(BC) Courtyard Hi-Potion",
             "id": 1245481,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6403,6 +6648,7 @@
           {
             "name": "(BC) Courtyard Mythril Shard",
             "id": 1245482,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6421,6 +6667,7 @@
           {
             "name": "(BC) Belle's Room Castle Map",
             "id": 1245483,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6439,6 +6686,7 @@
           {
             "name": "(BC) Belle's Room Mega-Recipe",
             "id": 1245484,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6457,6 +6705,7 @@
           {
             "name": "(BC) The East Wing Mythril Shard",
             "id": 1245485,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6475,6 +6724,7 @@
           {
             "name": "(BC) The East Wing Tent",
             "id": 1245486,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6493,6 +6743,7 @@
           {
             "name": "(BC) The West Hall Hi-Potion",
             "id": 1245487,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6511,6 +6762,7 @@
           {
             "name": "(BC) The West Hall Power Shard",
             "id": 1245488,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6529,6 +6781,7 @@
           {
             "name": "(BC) The West Hall Mythril Shard 2",
             "id": 1245498,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6547,6 +6800,7 @@
           {
             "name": "(BC) The West Hall Bright Stone",
             "id": 1245490,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6565,6 +6819,7 @@
           {
             "name": "(BC) The West Hall Mythril Shard",
             "id": 1245491,
+            "region": "Beast's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6620,6 +6875,7 @@
           {
             "name": "(BC) Thresholder Bonus: Sora Slot 1",
             "id": 1245492,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6638,6 +6894,7 @@
           {
             "name": "(BC) Dungeon Basement Map",
             "id": 1245493,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6656,6 +6913,7 @@
           {
             "name": "(BC) Dungeon AP Boost",
             "id": 1245494,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6674,6 +6932,7 @@
           {
             "name": "(BC) Secret Passage Mythril Shard",
             "id": 1245495,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6692,6 +6951,7 @@
           {
             "name": "(BC) Secret Passage Hi-Potion",
             "id": 1245496,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6710,6 +6970,7 @@
           {
             "name": "(BC) Secret Passage Lucid Shard",
             "id": 1245497,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6728,6 +6989,7 @@
           {
             "name": "(BC) The West Hall AP Boost Post Dungeon",
             "id": 1245489,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6746,6 +7008,7 @@
           {
             "name": "(BC) The West Wing Mythril Shard",
             "id": 1245499,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6764,6 +7027,7 @@
           {
             "name": "(BC) The West Wing Tent",
             "id": 1245500,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6782,6 +7046,7 @@
           {
             "name": "(BC) Thresholder Bonus: Donald Slot 1",
             "id": 1245848,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6800,6 +7065,7 @@
           {
             "name": "Thresholder Event Location",
             "id": null,
+            "region": "Thresholder",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6855,6 +7121,7 @@
           {
             "name": "(BC) Beast Bonus: Sora Slot 1",
             "id": 1245501,
+            "region": "Beast",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6873,6 +7140,7 @@
           {
             "name": "(BC) The Beast's Room Blazing Shard",
             "id": 1245502,
+            "region": "Beast",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6891,6 +7159,7 @@
           {
             "name": "(BC) Beast Bonus: Goofy Slot 1",
             "id": 1245879,
+            "region": "Beast",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6909,6 +7178,7 @@
           {
             "name": "Beast Event Location",
             "id": null,
+            "region": "Beast",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6969,6 +7239,7 @@
           {
             "name": "(BC) Dark Thorn Bonus: Sora Slot 1",
             "id": 1245503,
+            "region": "Dark Thorn",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6987,6 +7258,7 @@
           {
             "name": "(BC) Dark Thorn Bonus: Sora Slot 2",
             "id": 1245504,
+            "region": "Dark Thorn",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7005,6 +7277,7 @@
           {
             "name": "(BC) Dark Thorn Cure Element",
             "id": 1245505,
+            "region": "Dark Thorn",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7023,6 +7296,7 @@
           {
             "name": "Dark Thorn Event Location",
             "id": null,
+            "region": "Dark Thorn",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7078,6 +7352,7 @@
           {
             "name": "(BC2) Rumbling Rose",
             "id": 1245506,
+            "region": "Beast's Castle 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7096,6 +7371,7 @@
           {
             "name": "(BC2) Castle Walls Map",
             "id": 1245507,
+            "region": "Beast's Castle 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7151,6 +7427,7 @@
           {
             "name": "(BC2) Xaldin Bonus: Sora Slot 1",
             "id": 1245508,
+            "region": "Xaldin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7169,6 +7446,7 @@
           {
             "name": "(BC2) Xaldin Bonus: Sora Slot 2",
             "id": 1245509,
+            "region": "Xaldin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7187,6 +7465,7 @@
           {
             "name": "(BC2) Xaldin Bonus: Donald Slot 1",
             "id": 1245849,
+            "region": "Xaldin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7205,6 +7484,7 @@
           {
             "name": "(BC2) Secret Ansem Report 4 (Xaldin)",
             "id": 1245510,
+            "region": "Xaldin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7223,6 +7503,7 @@
           {
             "name": "Xaldin Event Location",
             "id": null,
+            "region": "Xaldin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7264,6 +7545,7 @@
           {
             "name": "(Post BC2: Ballroom) Data Xaldin",
             "id": 1245511,
+            "region": "Data Xaldin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7282,6 +7564,7 @@
           {
             "name": "Data Xaldin Event Location",
             "id": null,
+            "region": "Data Xaldin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7337,6 +7620,7 @@
           {
             "name": "(SP) Pit Cell Area Map",
             "id": 1245456,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7355,6 +7639,7 @@
           {
             "name": "(SP) Pit Cell Mythril Crystal",
             "id": 1245457,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7373,6 +7658,7 @@
           {
             "name": "(SP) Canyon Dark Crystal",
             "id": 1245458,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7391,6 +7677,7 @@
           {
             "name": "(SP) Canyon Mythril Stone",
             "id": 1245459,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7409,6 +7696,7 @@
           {
             "name": "(SP) Canyon Mythril Gem",
             "id": 1245460,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7427,6 +7715,7 @@
           {
             "name": "(SP) Canyon Frost Crystal",
             "id": 1245461,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7445,6 +7734,7 @@
           {
             "name": "(SP) Screens Bonus: Sora Slot 1",
             "id": 1245462,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7463,6 +7753,7 @@
           {
             "name": "(SP) Hallway Power Crystal",
             "id": 1245463,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7481,6 +7772,7 @@
           {
             "name": "(SP) Hallway AP Boost",
             "id": 1245464,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7499,6 +7791,7 @@
           {
             "name": "(SP) Communications Room I/O Tower Map",
             "id": 1245465,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7517,6 +7810,7 @@
           {
             "name": "(SP) Communications Room Gaia Belt",
             "id": 1245466,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7535,6 +7829,7 @@
           {
             "name": "(SP) Screens Bonus: Donald Slot 1",
             "id": 1245837,
+            "region": "Space Paranoids",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7595,6 +7890,7 @@
           {
             "name": "(SP) Hostile Program Bonus: Sora Slot 1",
             "id": 1245467,
+            "region": "Hostile Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7613,6 +7909,7 @@
           {
             "name": "(SP) Hostile Program Bonus: Sora Slot 2",
             "id": 1245468,
+            "region": "Hostile Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7631,6 +7928,7 @@
           {
             "name": "(SP) Photon Debugger",
             "id": 1245469,
+            "region": "Hostile Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7649,6 +7947,7 @@
           {
             "name": "(SP) Hostile Program Bonus: Goofy Slot 1",
             "id": 1245870,
+            "region": "Hostile Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7667,6 +7966,7 @@
           {
             "name": "Hostile Program Event Location",
             "id": null,
+            "region": "Hostile Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7722,6 +8022,7 @@
           {
             "name": "(SP2) Solar Sailer",
             "id": 1245470,
+            "region": "Space Paranoids 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7740,6 +8041,7 @@
           {
             "name": "(SP2) Central Computer Core AP Boost",
             "id": 1245471,
+            "region": "Space Paranoids 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7758,6 +8060,7 @@
           {
             "name": "(SP2) Central Computer Core Orichalcum+",
             "id": 1245472,
+            "region": "Space Paranoids 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7776,6 +8079,7 @@
           {
             "name": "(SP2) Central Computer Core Cosmic Arts",
             "id": 1245473,
+            "region": "Space Paranoids 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7794,6 +8098,7 @@
           {
             "name": "(SP2) Central Computer Core Map",
             "id": 1245474,
+            "region": "Space Paranoids 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7812,6 +8117,7 @@
           {
             "name": "(SP2) Solar Sailer Bonus: Donald Slot 1",
             "id": 1245844,
+            "region": "Space Paranoids 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7867,6 +8173,7 @@
           {
             "name": "(SP2) MCP Bonus: Sora Slot 1",
             "id": 1245475,
+            "region": "Master Control Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7885,6 +8192,7 @@
           {
             "name": "(SP2) MCP Bonus: Sora Slot 2",
             "id": 1245476,
+            "region": "Master Control Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7903,6 +8211,7 @@
           {
             "name": "Master Control Program Event Location",
             "id": null,
+            "region": "Master Control Program",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7944,6 +8253,7 @@
           {
             "name": "(Post SP2: Central Computer Core) Larxene Bonus: Sora Slot 1",
             "id": 1245477,
+            "region": "Data Larxene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7962,6 +8272,7 @@
           {
             "name": "(Post SP2: Central Computer Core) AS Larxene",
             "id": 1245478,
+            "region": "Data Larxene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7980,6 +8291,7 @@
           {
             "name": "(Post SP2: Central Computer Core) Data Larxene",
             "id": 1245479,
+            "region": "Data Larxene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7998,6 +8310,7 @@
           {
             "name": "Data Larxene Event Location",
             "id": null,
+            "region": "Data Larxene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8053,6 +8366,7 @@
           {
             "name": "(HT) Graveyard Mythril Shard",
             "id": 1245398,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8071,6 +8385,7 @@
           {
             "name": "(HT) Graveyard Serenity Gem",
             "id": 1245399,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8089,6 +8404,7 @@
           {
             "name": "(HT) Finklestein's Lab Halloween Town Map",
             "id": 1245400,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8107,6 +8423,7 @@
           {
             "name": "(HT) Town Square Mythril Stone",
             "id": 1245401,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8125,6 +8442,7 @@
           {
             "name": "(HT) Town Square Energy Shard",
             "id": 1245402,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8143,6 +8461,7 @@
           {
             "name": "(HT) Hinterlands Lightning Shard",
             "id": 1245403,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8161,6 +8480,7 @@
           {
             "name": "(HT) Hinterlands Mythril Stone",
             "id": 1245404,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8179,6 +8499,7 @@
           {
             "name": "(HT) Hinterlands AP Boost",
             "id": 1245405,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8197,6 +8518,7 @@
           {
             "name": "(HT) Candy Cane Lane Mega-Potion",
             "id": 1245406,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8215,6 +8537,7 @@
           {
             "name": "(HT) Candy Cane Lane Mythril Gem",
             "id": 1245407,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8233,6 +8556,7 @@
           {
             "name": "(HT) Candy Cane Lane Lightning Stone",
             "id": 1245408,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8251,6 +8575,7 @@
           {
             "name": "(HT) Candy Cane Lane Mythril Stone",
             "id": 1245409,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8269,6 +8594,7 @@
           {
             "name": "(HT) Santa's House Christmas Town Map",
             "id": 1245410,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8287,6 +8613,7 @@
           {
             "name": "(HT) Santa's House AP Boost",
             "id": 1245411,
+            "region": "Holloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8342,6 +8669,7 @@
           {
             "name": "(HT) Prison Keeper Bonus: Sora Slot 1",
             "id": 1245412,
+            "region": "Prison Keeper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8360,6 +8688,7 @@
           {
             "name": "(HT) Prison Keeper Bonus: Donald Slot 1",
             "id": 1245842,
+            "region": "Prison Keeper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8378,6 +8707,7 @@
           {
             "name": "Prison Keeper Event Location",
             "id": null,
+            "region": "Prison Keeper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8438,6 +8768,7 @@
           {
             "name": "(HT) Oogie Boogie Bonus: Sora Slot 1",
             "id": 1245413,
+            "region": "Oogie Boogie",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8456,6 +8787,7 @@
           {
             "name": "(HT) Oogie Boogie Magnet Element",
             "id": 1245414,
+            "region": "Oogie Boogie",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8474,6 +8806,7 @@
           {
             "name": "(HT) Oogie Boogie Bonus: Goofy Slot 1",
             "id": 1245874,
+            "region": "Oogie Boogie",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8492,6 +8825,7 @@
           {
             "name": "Oogie Boogie Event Location",
             "id": null,
+            "region": "Oogie Boogie",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8547,6 +8881,7 @@
           {
             "name": "(HT2) Lock, Shock and Barrel Bonus: Sora Slot 1",
             "id": 1245415,
+            "region": "Holloween Town 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8565,6 +8900,7 @@
           {
             "name": "(HT2) Present",
             "id": 1245416,
+            "region": "Holloween Town 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8583,6 +8919,7 @@
           {
             "name": "(HT2) Decoy Presents",
             "id": 1245417,
+            "region": "Holloween Town 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8601,6 +8938,7 @@
           {
             "name": "(HT2) Lock, Shock and Barrel Bonus: Goofy Slot 1",
             "id": 1245873,
+            "region": "Holloween Town 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8656,6 +8994,7 @@
           {
             "name": "(HT2) Experiment Bonus: Sora Slot 1",
             "id": 1245418,
+            "region": "The Experiment",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8674,6 +9013,7 @@
           {
             "name": "(HT2) Decisive Pumpkin",
             "id": 1245419,
+            "region": "The Experiment",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8692,6 +9032,7 @@
           {
             "name": "(HT2) Experiment Bonus: Donald Slot 1",
             "id": 1245845,
+            "region": "The Experiment",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8710,6 +9051,7 @@
           {
             "name": "The Experiment Event Location",
             "id": null,
+            "region": "The Experiment",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8751,6 +9093,7 @@
           {
             "name": "(Post HT2: Yuletide Hill) Vexen Bonus: Sora Slot 1",
             "id": 1245420,
+            "region": "Data Vexen",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8769,6 +9112,7 @@
           {
             "name": "(Post HT2: Yuletide Hill) AS Vexen",
             "id": 1245421,
+            "region": "Data Vexen",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8787,6 +9131,7 @@
           {
             "name": "(Post HT2: Yuletide Hill) Data Vexen",
             "id": 1245422,
+            "region": "Data Vexen",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8805,6 +9150,7 @@
           {
             "name": "Data Vexen Event Location",
             "id": null,
+            "region": "Data Vexen",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8865,6 +9211,7 @@
           {
             "name": "(HB) Marketplace Map",
             "id": 1245334,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8883,6 +9230,7 @@
           {
             "name": "(HB) Borough Drive Recovery",
             "id": 1245335,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8901,6 +9249,7 @@
           {
             "name": "(HB) Borough AP Boost",
             "id": 1245336,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8919,6 +9268,7 @@
           {
             "name": "(HB) Borough Hi-Potion",
             "id": 1245337,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8937,6 +9287,7 @@
           {
             "name": "(HB) Borough Mythril Shard",
             "id": 1245338,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8955,6 +9306,7 @@
           {
             "name": "(HB) Borough Dark Shard",
             "id": 1245339,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8973,6 +9325,7 @@
           {
             "name": "(HB) Merlin's House Membership Card",
             "id": 1245340,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8991,6 +9344,7 @@
           {
             "name": "(HB) Merlin's House Blizzard Element",
             "id": 1245341,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9009,6 +9363,7 @@
           {
             "name": "(HB) Bailey Bonus: Sora Slot 1",
             "id": 1245342,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9027,6 +9382,7 @@
           {
             "name": "(HB) Bailey Secret Ansem Report 7",
             "id": 1245343,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9045,6 +9401,7 @@
           {
             "name": "(HB) Baseball Charm",
             "id": 1245344,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9112,6 +9469,7 @@
           {
             "name": "(HB2) Postern Castle Perimeter Map",
             "id": 1245345,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9130,6 +9488,7 @@
           {
             "name": "(HB2) Postern Mythril Gem",
             "id": 1245346,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9148,6 +9507,7 @@
           {
             "name": "(HB2) Postern AP Boost",
             "id": 1245347,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9166,6 +9526,7 @@
           {
             "name": "(HB2) Corridors Mythril Stone",
             "id": 1245348,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9184,6 +9545,7 @@
           {
             "name": "(HB2) Corridors Mythril Crystal",
             "id": 1245349,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9202,6 +9564,7 @@
           {
             "name": "(HB2) Corridors Dark Crystal",
             "id": 1245350,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9220,6 +9583,7 @@
           {
             "name": "(HB2) Corridors AP Boost",
             "id": 1245351,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9238,6 +9602,7 @@
           {
             "name": "(HB2) Ansem's Study Master Form",
             "id": 1245352,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9256,6 +9621,7 @@
           {
             "name": "(HB2) Ansem's Study Sleeping Lion",
             "id": 1245353,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9274,6 +9640,7 @@
           {
             "name": "(HB2) Ansem's Study Skill Recipe",
             "id": 1245354,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9292,6 +9659,7 @@
           {
             "name": "(HB2) Ansem's Study Ukulele Charm",
             "id": 1245355,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9310,6 +9678,7 @@
           {
             "name": "(HB2) Restoration Site Moon Recipe",
             "id": 1245356,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9328,6 +9697,7 @@
           {
             "name": "(HB2) Restoration Site AP Boost",
             "id": 1245357,
+            "region": "Hollow Bastion 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9383,6 +9753,7 @@
           {
             "name": "(HB2) Demyx Bonus: Donald Slot 1",
             "id": 1245838,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9401,6 +9772,7 @@
           {
             "name": "(HB2) Demyx Bonus: Sora Slot 1",
             "id": 1245358,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9419,6 +9791,7 @@
           {
             "name": "(HB2) Demyx Bonus: Sora Slot 2",
             "id": 1245359,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9437,6 +9810,7 @@
           {
             "name": "(HB2) FF Fights Cure Element",
             "id": 1245360,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9455,6 +9829,7 @@
           {
             "name": "(HB2) Crystal Fissure Torn Pages",
             "id": 1245361,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9473,6 +9848,7 @@
           {
             "name": "(HB2) Crystal Fissure The Great Maw Map",
             "id": 1245362,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9491,6 +9867,7 @@
           {
             "name": "(HB2) Crystal Fissure Energy Crystal",
             "id": 1245363,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9509,6 +9886,7 @@
           {
             "name": "(HB2) Crystal Fissure AP Boost",
             "id": 1245364,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9527,6 +9905,7 @@
           {
             "name": "Hollow Bastion Demyx Event Location",
             "id": null,
+            "region": "Hollow Bastion Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9610,6 +9989,7 @@
           {
             "name": "(HB2) 1000 Heartless",
             "id": 1245365,
+            "region": "Thousand Heartless",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9628,6 +10008,7 @@
           {
             "name": "(HB2) 1000 Heartless Secret Ansem Report 1",
             "id": 1245366,
+            "region": "Thousand Heartless",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9646,6 +10027,7 @@
           {
             "name": "(HB2) 1000 Heartless Ice Cream",
             "id": 1245367,
+            "region": "Thousand Heartless",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9664,6 +10046,7 @@
           {
             "name": "(HB2) 1000 Heartless Picture",
             "id": 1245368,
+            "region": "Thousand Heartless",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9682,6 +10065,7 @@
           {
             "name": "(HB2) Postern Gull Wing",
             "id": 1245369,
+            "region": "Thousand Heartless",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9700,6 +10084,7 @@
           {
             "name": "(HB2) Heartless Manufactory Cosmic Chain",
             "id": 1245370,
+            "region": "Thousand Heartless",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9718,6 +10103,7 @@
           {
             "name": "Thousand Heartless Event Location",
             "id": null,
+            "region": "Thousand Heartless",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9759,6 +10145,7 @@
           {
             "name": "(Post HB2: Restoration Site) Data Demyx",
             "id": 1245375,
+            "region": "Data Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9777,6 +10164,7 @@
           {
             "name": "Data Demyx Event Location",
             "id": null,
+            "region": "Data Demyx",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9818,6 +10206,7 @@
           {
             "name": "(HB2) Winner's Proof",
             "id": 1245373,
+            "region": "Mushroom 13",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9836,6 +10225,7 @@
           {
             "name": "(HB2) Proof of Peace",
             "id": 1245374,
+            "region": "Mushroom 13",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9854,6 +10244,7 @@
           {
             "name": "Mushroom 13 Event Location",
             "id": null,
+            "region": "Mushroom 13",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9895,6 +10286,7 @@
           {
             "name": "Sephiroth Bonus: Sora Slot 1",
             "id": 1245371,
+            "region": "Sephiroth",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9913,6 +10305,7 @@
           {
             "name": "Sephiroth Fenrir",
             "id": 1245372,
+            "region": "Sephiroth",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9931,6 +10324,7 @@
           {
             "name": "Sephiroth Event Location",
             "id": null,
+            "region": "Sephiroth",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10006,6 +10400,7 @@
           {
             "name": "(CoR) Depths AP Boost",
             "id": 1245376,
+            "region": "Cavern of Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10024,6 +10419,7 @@
           {
             "name": "(CoR) Depths Power Crystal",
             "id": 1245377,
+            "region": "Cavern of Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10042,6 +10438,7 @@
           {
             "name": "(CoR) Depths Frost Crystal",
             "id": 1245378,
+            "region": "Cavern of Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10060,6 +10457,7 @@
           {
             "name": "(CoR) Depths Manifest Illusion",
             "id": 1245379,
+            "region": "Cavern of Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10078,6 +10476,7 @@
           {
             "name": "(CoR) Depths AP Boost 2",
             "id": 1245380,
+            "region": "Cavern of Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10096,6 +10495,7 @@
           {
             "name": "(CoR) Mineshaft Lower Level Depths of Remembrance Map",
             "id": 1245381,
+            "region": "Cavern of Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10114,6 +10514,7 @@
           {
             "name": "(CoR) Mineshaft Lower Level AP Boost",
             "id": 1245382,
+            "region": "Cavern of Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10169,6 +10570,7 @@
           {
             "name": "(CoR) Depths Upper Level Remembrance Gem",
             "id": 1245383,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10187,6 +10589,7 @@
           {
             "name": "(CoR) Mining Area Serenity Gem",
             "id": 1245384,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10205,6 +10608,7 @@
           {
             "name": "(CoR) Mining Area AP Boost",
             "id": 1245385,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10223,6 +10627,7 @@
           {
             "name": "(CoR) Mining Area Serenity Crystal",
             "id": 1245386,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10241,6 +10646,7 @@
           {
             "name": "(CoR) Mining Area Manifest Illusion",
             "id": 1245387,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10259,6 +10665,7 @@
           {
             "name": "(CoR) Mining Area Serenity Gem 2",
             "id": 1245388,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10277,6 +10684,7 @@
           {
             "name": "(CoR) Mining Area Dark Remembrance Map",
             "id": 1245389,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10295,6 +10703,7 @@
           {
             "name": "Cavern of Rememberance:Fight 1 Event Location",
             "id": null,
+            "region": "Cavern of Rememberance:Fight 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10350,6 +10759,7 @@
           {
             "name": "(CoR) Mineshaft Mid Level Power Boost",
             "id": 1245390,
+            "region": "Cavern of Rememberance:Fight 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10368,6 +10778,7 @@
           {
             "name": "(CoR) Engine Chamber Serenity Crystal",
             "id": 1245391,
+            "region": "Cavern of Rememberance:Fight 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10386,6 +10797,7 @@
           {
             "name": "(CoR) Engine Chamber Remembrance Crystal",
             "id": 1245392,
+            "region": "Cavern of Rememberance:Fight 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10404,6 +10816,7 @@
           {
             "name": "(CoR) Engine Chamber AP Boost",
             "id": 1245393,
+            "region": "Cavern of Rememberance:Fight 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10422,6 +10835,7 @@
           {
             "name": "(CoR) Engine Chamber Manifest Illusion",
             "id": 1245394,
+            "region": "Cavern of Rememberance:Fight 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10440,6 +10854,7 @@
           {
             "name": "(CoR) Mineshaft Upper Level Magic Boost",
             "id": 1245395,
+            "region": "Cavern of Rememberance:Fight 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10458,6 +10873,7 @@
           {
             "name": "Cavern of Rememberance:Fight 2 Event Location",
             "id": null,
+            "region": "Cavern of Rememberance:Fight 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10499,6 +10915,7 @@
           {
             "name": "(CoR) Mineshaft Upper Level AP Boost",
             "id": 1245396,
+            "region": "Transport to Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10517,6 +10934,7 @@
           {
             "name": "Transport to Remembrance",
             "id": 1245397,
+            "region": "Transport to Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10536,6 +10954,7 @@
           {
             "name": "Transport to Rememberance Event Location",
             "id": null,
+            "region": "Transport to Rememberance",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10592,6 +11011,7 @@
           {
             "name": "(PL) Gorge Savannah Map",
             "id": 1245301,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10610,6 +11030,7 @@
           {
             "name": "(PL) Gorge Dark Gem",
             "id": 1245302,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10628,6 +11049,7 @@
           {
             "name": "(PL) Gorge Mythril Stone",
             "id": 1245303,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10646,6 +11068,7 @@
           {
             "name": "(PL) Elephant Graveyard Frost Gem",
             "id": 1245304,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10664,6 +11087,7 @@
           {
             "name": "(PL) Elephant Graveyard Mythril Stone",
             "id": 1245305,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10682,6 +11106,7 @@
           {
             "name": "(PL) Elephant Graveyard Bright Stone",
             "id": 1245306,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10700,6 +11125,7 @@
           {
             "name": "(PL) Elephant Graveyard AP Boost",
             "id": 1245307,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10718,6 +11144,7 @@
           {
             "name": "(PL) Elephant Graveyard Mythril Shard",
             "id": 1245308,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10736,6 +11163,7 @@
           {
             "name": "(PL) Pride Rock Map",
             "id": 1245309,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10754,6 +11182,7 @@
           {
             "name": "(PL) Pride Rock Mythril Stone",
             "id": 1245310,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10772,6 +11201,7 @@
           {
             "name": "(PL) Pride Rock Serenity Crystal",
             "id": 1245311,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10790,6 +11220,7 @@
           {
             "name": "(PL) Wildebeest Valley Energy Stone",
             "id": 1245312,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10808,6 +11239,7 @@
           {
             "name": "(PL) Wildebeest Valley AP Boost",
             "id": 1245313,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10826,6 +11258,7 @@
           {
             "name": "(PL) Wildebeest Valley Mythril Gem",
             "id": 1245314,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10844,6 +11277,7 @@
           {
             "name": "(PL) Wildebeest Valley Mythril Stone",
             "id": 1245315,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10862,6 +11296,7 @@
           {
             "name": "(PL) Wildebeest Valley Lucid Gem",
             "id": 1245316,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10880,6 +11315,7 @@
           {
             "name": "(PL) Wastelands Mythril Shard",
             "id": 1245317,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10898,6 +11334,7 @@
           {
             "name": "(PL) Wastelands Serenity Gem",
             "id": 1245318,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10916,6 +11353,7 @@
           {
             "name": "(PL) Wastelands Mythril Stone",
             "id": 1245319,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10934,6 +11372,7 @@
           {
             "name": "(PL) Jungle Serenity Gem",
             "id": 1245320,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10952,6 +11391,7 @@
           {
             "name": "(PL) Jungle Mythril Stone",
             "id": 1245321,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10970,6 +11410,7 @@
           {
             "name": "(PL) Jungle Serenity Crystal",
             "id": 1245322,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10988,6 +11429,7 @@
           {
             "name": "(PL) Oasis Map",
             "id": 1245323,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11006,6 +11448,7 @@
           {
             "name": "(PL) Oasis Torn Pages",
             "id": 1245324,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11024,6 +11467,7 @@
           {
             "name": "(PL) Oasis AP Boost",
             "id": 1245325,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11042,6 +11486,7 @@
           {
             "name": "(PL) Circle of Life",
             "id": 1245326,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11060,6 +11505,7 @@
           {
             "name": "(PL) Hyenas 1 Bonus: Sora Slot 1",
             "id": 1245327,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11078,6 +11524,7 @@
           {
             "name": "(PL) Hyenas 1 Bonus: Goofy Slot 1",
             "id": 1245871,
+            "region": "Pride Lands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11138,6 +11585,7 @@
           {
             "name": "(PL) Scar Bonus: Sora Slot 1",
             "id": 1245328,
+            "region": "Scar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11156,6 +11604,7 @@
           {
             "name": "(PL) Scar Fire Element",
             "id": 1245329,
+            "region": "Scar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11174,6 +11623,7 @@
           {
             "name": "(PL) Scar Bonus: Donald Slot 1",
             "id": 1245843,
+            "region": "Scar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11192,6 +11642,7 @@
           {
             "name": "Scar Event Location",
             "id": null,
+            "region": "Scar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11247,6 +11698,7 @@
           {
             "name": "(PL2) Hyenas 2 Bonus: Sora Slot 1",
             "id": 1245330,
+            "region": "Pride Lands 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11265,6 +11717,7 @@
           {
             "name": "(PL2) Hyenas 2 Bonus: Goofy Slot 1",
             "id": 1245872,
+            "region": "Pride Lands 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11320,6 +11773,7 @@
           {
             "name": "(PL2) Groundshaker Bonus: Sora Slot 1",
             "id": 1245331,
+            "region": "Groundshaker",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11338,6 +11792,7 @@
           {
             "name": "(PL2) Groundshaker Bonus: Sora Slot 2",
             "id": 1245332,
+            "region": "Groundshaker",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11356,6 +11811,7 @@
           {
             "name": "Groundshaker Event Location",
             "id": null,
+            "region": "Groundshaker",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11397,6 +11853,7 @@
           {
             "name": "(Post PL2: Peak) Data Saix",
             "id": 1245333,
+            "region": "Data Saix",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11415,6 +11872,7 @@
           {
             "name": "Data Saix Event Location",
             "id": null,
+            "region": "Data Saix",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11470,6 +11928,7 @@
           {
             "name": "(STT) Twilight Town Map",
             "id": 1245273,
+            "region": "Simulated Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11488,6 +11947,7 @@
           {
             "name": "(STT) Munny Pouch Olette",
             "id": 1245274,
+            "region": "Simulated Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11506,6 +11966,7 @@
           {
             "name": "(STT) Station Dusks",
             "id": 1245275,
+            "region": "Simulated Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11524,6 +11985,7 @@
           {
             "name": "(STT) Station of Serenity Potion",
             "id": 1245276,
+            "region": "Simulated Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11542,6 +12004,7 @@
           {
             "name": "(STT) Station of Calling Potion",
             "id": 1245277,
+            "region": "Simulated Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11597,6 +12060,7 @@
           {
             "name": "(STT) Twilight Thorn",
             "id": 1245278,
+            "region": "Twilight Thorn",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11615,6 +12079,7 @@
           {
             "name": "Twilight Thorn Event Location",
             "id": null,
+            "region": "Twilight Thorn",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11670,6 +12135,7 @@
           {
             "name": "(STT) Axel 1",
             "id": 1245279,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11688,6 +12154,7 @@
           {
             "name": "(STT) Junk Champion Belt",
             "id": 1245280,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11706,6 +12173,7 @@
           {
             "name": "(STT) Junk Medal",
             "id": 1245281,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11724,6 +12192,7 @@
           {
             "name": "(STT) The Struggle Trophy",
             "id": 1245282,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11742,6 +12211,7 @@
           {
             "name": "(STT) Central Station Potion 1",
             "id": 1245283,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11760,6 +12230,7 @@
           {
             "name": "(STT) Central Station Hi-Potion",
             "id": 1245284,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11778,6 +12249,7 @@
           {
             "name": "(STT) Central Station Potion 2",
             "id": 1245285,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11796,6 +12268,7 @@
           {
             "name": "(STT) Sunset Terrace Ability Ring",
             "id": 1245286,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11814,6 +12287,7 @@
           {
             "name": "(STT) Sunset Terrace Hi-Potion",
             "id": 1245287,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11832,6 +12306,7 @@
           {
             "name": "(STT) Sunset Terrace Potion 1",
             "id": 1245288,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11850,6 +12325,7 @@
           {
             "name": "(STT) Sunset Terrace Potion 2",
             "id": 1245289,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11868,6 +12344,7 @@
           {
             "name": "(STT) Mansion Foyer Hi-Potion",
             "id": 1245290,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11886,6 +12363,7 @@
           {
             "name": "(STT) Mansion Foyer Potion 1",
             "id": 1245291,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11904,6 +12382,7 @@
           {
             "name": "(STT) Mansion Foyer Potion 2",
             "id": 1245292,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11922,6 +12401,7 @@
           {
             "name": "(STT) Mansion Dining Room Elven Bandanna",
             "id": 1245293,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11940,6 +12420,7 @@
           {
             "name": "(STT) Mansion Dining Room Potion",
             "id": 1245294,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11958,6 +12439,7 @@
           {
             "name": "(STT) Namine's Sketches",
             "id": 1245295,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11976,6 +12458,7 @@
           {
             "name": "(STT) Mansion Map",
             "id": 1245296,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11994,6 +12477,7 @@
           {
             "name": "(STT) Mansion Library Hi-Potion",
             "id": 1245297,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12012,6 +12496,7 @@
           {
             "name": "Axel 1 Event Location",
             "id": null,
+            "region": "Axel 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12067,6 +12552,7 @@
           {
             "name": "(STT) Axel 2",
             "id": 1245298,
+            "region": "Axel 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12085,6 +12571,7 @@
           {
             "name": "(STT) Mansion Basement Corridor Hi-Potion",
             "id": 1245299,
+            "region": "Axel 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12103,6 +12590,7 @@
           {
             "name": "Axel 2 Event Location",
             "id": null,
+            "region": "Axel 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12144,6 +12632,7 @@
           {
             "name": "(Post STT: Mansion Pod Room) Data Roxas",
             "id": 1245300,
+            "region": "Data Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12162,6 +12651,7 @@
           {
             "name": "Data Roxas Event Location",
             "id": null,
+            "region": "Data Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12222,6 +12712,7 @@
           {
             "name": "(TT) Old Mansion Potion",
             "id": 1245221,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12240,6 +12731,7 @@
           {
             "name": "(TT) Old Mansion Mythril Shard",
             "id": 1245222,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12258,6 +12750,7 @@
           {
             "name": "(TT) The Woods Potion",
             "id": 1245223,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12276,6 +12769,7 @@
           {
             "name": "(TT) The Woods Mythril Shard",
             "id": 1245224,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12294,6 +12788,7 @@
           {
             "name": "(TT) The Woods Hi-Potion",
             "id": 1245225,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12312,6 +12807,7 @@
           {
             "name": "(TT) Tram Common Hi-Potion",
             "id": 1245226,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12330,6 +12826,7 @@
           {
             "name": "(TT) Tram Common AP Boost",
             "id": 1245227,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12348,6 +12845,7 @@
           {
             "name": "(TT) Tram Common Tent",
             "id": 1245228,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12366,6 +12864,7 @@
           {
             "name": "(TT) Tram Common Mythril Shard 1",
             "id": 1245229,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12384,6 +12883,7 @@
           {
             "name": "(TT) Tram Common Potion 1",
             "id": 1245230,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12402,6 +12902,7 @@
           {
             "name": "(TT) Tram Common Mythril Shard 2",
             "id": 1245231,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12420,6 +12921,7 @@
           {
             "name": "(TT) Tram Common Potion 2",
             "id": 1245232,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12438,6 +12940,7 @@
           {
             "name": "(TT) Station Plaza Secret Ansem Report 2",
             "id": 1245233,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12456,6 +12959,7 @@
           {
             "name": "(TT) Munny Pouch Mickey",
             "id": 1245234,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12474,6 +12978,7 @@
           {
             "name": "(TT) Crystal Orb",
             "id": 1245235,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12492,6 +12997,7 @@
           {
             "name": "(TT) Central Station Tent",
             "id": 1245236,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12510,6 +13016,7 @@
           {
             "name": "(TT) Central Station Hi-Potion",
             "id": 1245237,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12528,6 +13035,7 @@
           {
             "name": "(TT) Central Station Mythril Shard",
             "id": 1245238,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12546,6 +13054,7 @@
           {
             "name": "(TT) The Tower Potion",
             "id": 1245239,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12564,6 +13073,7 @@
           {
             "name": "(TT) The Tower Hi-Potion",
             "id": 1245240,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12582,6 +13092,7 @@
           {
             "name": "(TT) The Tower Ether",
             "id": 1245241,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12600,6 +13111,7 @@
           {
             "name": "(TT) Tower Entryway Ether",
             "id": 1245242,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12618,6 +13130,7 @@
           {
             "name": "(TT) Tower Entryway Mythril Shard",
             "id": 1245243,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12636,6 +13149,7 @@
           {
             "name": "(TT) Sorcerer's Loft Tower Map",
             "id": 1245244,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12654,6 +13168,7 @@
           {
             "name": "(TT) Tower Wardrobe Mythril Stone",
             "id": 1245245,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12672,6 +13187,7 @@
           {
             "name": "(TT) Star Seeker",
             "id": 1245246,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12690,6 +13206,7 @@
           {
             "name": "(TT) Valor Form",
             "id": 1245247,
+            "region": "Twilight Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12750,6 +13267,7 @@
           {
             "name": "(TT2) Seifer's Trophy",
             "id": 1245248,
+            "region": "Twilight Town 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12768,6 +13286,7 @@
           {
             "name": "(TT2) Oathkeeper",
             "id": 1245249,
+            "region": "Twilight Town 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12786,6 +13305,7 @@
           {
             "name": "(TT2) Limit Form",
             "id": 1245250,
+            "region": "Twilight Town 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12841,6 +13361,7 @@
           {
             "name": "(TT3) Underground Concourse Mythril Gem",
             "id": 1245251,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12859,6 +13380,7 @@
           {
             "name": "(TT3) Underground Concourse AP Boost",
             "id": 1245252,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12877,6 +13399,7 @@
           {
             "name": "(TT3) Underground Concourse Mythril Crystal",
             "id": 1245254,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12895,6 +13418,7 @@
           {
             "name": "(TT3) Underground Concourse Orichalcum",
             "id": 1245253,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12913,6 +13437,7 @@
           {
             "name": "(TT3) Tunnelway Orichalcum",
             "id": 1245255,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12931,6 +13456,7 @@
           {
             "name": "(TT3) Tunnelway Mythril Crystal",
             "id": 1245256,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12949,6 +13475,7 @@
           {
             "name": "(TT3) Sunset Terrace Orichalcum+",
             "id": 1245257,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12967,6 +13494,7 @@
           {
             "name": "(TT3) Sunset Terrace Mythril Shard",
             "id": 1245258,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12985,6 +13513,7 @@
           {
             "name": "(TT3) Sunset Terrace Mythril Crystal",
             "id": 1245259,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13003,6 +13532,7 @@
           {
             "name": "(TT3) Sunset Terrace AP Boost",
             "id": 1245260,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13021,6 +13551,7 @@
           {
             "name": "(TT3) Mansion Nobodies Bonus: Sora Slot 1",
             "id": 1245261,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13039,6 +13570,7 @@
           {
             "name": "(TT3) Mansion Foyer Mythril Crystal",
             "id": 1245262,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13057,6 +13589,7 @@
           {
             "name": "(TT3) Mansion Foyer Mythril Stone",
             "id": 1245263,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13075,6 +13608,7 @@
           {
             "name": "(TT3) Mansion Foyer Serenity Crystal",
             "id": 1245264,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13093,6 +13627,7 @@
           {
             "name": "(TT3) Mansion Dining Room Mythril Crystal",
             "id": 1245265,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13111,6 +13646,7 @@
           {
             "name": "(TT3) Mansion Dining Room Mythril Stone",
             "id": 1245266,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13129,6 +13665,7 @@
           {
             "name": "(TT3) Mansion Library Orichalcum",
             "id": 1245267,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13147,6 +13684,7 @@
           {
             "name": "(TT3) Beam Secret Ansem Report 10",
             "id": 1245268,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13165,6 +13703,7 @@
           {
             "name": "(TT3) Mansion Basement Corridor Ultimate Recipe",
             "id": 1245269,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13183,6 +13722,7 @@
           {
             "name": "(TT3) Betwixt and Between",
             "id": 1245270,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13201,6 +13741,7 @@
           {
             "name": "(TT3) Betwixt and Between Bond of Flame",
             "id": 1245271,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13219,6 +13760,7 @@
           {
             "name": "(TT3) Mansion Nobodies Bonus: Donald Slot 1",
             "id": 1245847,
+            "region": "Twilight Town 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13260,6 +13802,7 @@
           {
             "name": "(Post TT3: Betwixt and Between) Data Axel",
             "id": 1245272,
+            "region": "Data Axel",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13278,6 +13821,7 @@
           {
             "name": "Data Axel Event Location",
             "id": null,
+            "region": "Data Axel",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13348,6 +13892,7 @@
           {
             "name": "(TWTNW) Fragment Crossing Mythril Stone",
             "id": 1245184,
+            "region": "The World That Never Was (Pre Roxas)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13366,6 +13911,7 @@
           {
             "name": "(TWTNW) Fragment Crossing Mythril Crystal",
             "id": 1245185,
+            "region": "The World That Never Was (Pre Roxas)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13384,6 +13930,7 @@
           {
             "name": "(TWTNW) Fragment Crossing AP Boost",
             "id": 1245186,
+            "region": "The World That Never Was (Pre Roxas)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13402,6 +13949,7 @@
           {
             "name": "(TWTNW) Fragment Crossing Orichalcum",
             "id": 1245187,
+            "region": "The World That Never Was (Pre Roxas)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13457,6 +14005,7 @@
           {
             "name": "(TWTNW2) Roxas Bonus: Sora Slot 1",
             "id": 1245188,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13475,6 +14024,7 @@
           {
             "name": "(TWTNW2) Roxas Bonus: Sora Slot 2",
             "id": 1245189,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13493,6 +14043,7 @@
           {
             "name": "(TWTNW2) Roxas Secret Ansem Report 8",
             "id": 1245190,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13511,6 +14062,7 @@
           {
             "name": "(TWTNW2) Two Become One",
             "id": 1245191,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13529,6 +14081,7 @@
           {
             "name": "(TWTNW2) Memory's Skyscaper Mythril Crystal",
             "id": 1245192,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13547,6 +14100,7 @@
           {
             "name": "(TWTNW2) Memory's Skyscaper AP Boost",
             "id": 1245193,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13565,6 +14119,7 @@
           {
             "name": "(TWTNW2) Memory's Skyscaper Mythril Stone",
             "id": 1245194,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13583,6 +14138,7 @@
           {
             "name": "(TWTNW2) The Brink of Despair Dark City Map",
             "id": 1245195,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13601,6 +14157,7 @@
           {
             "name": "(TWTNW2) The Brink of Despair Orichalcum+",
             "id": 1245196,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13619,6 +14176,7 @@
           {
             "name": "(TWTNW2) Nothing's Call Mythril Gem",
             "id": 1245197,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13637,6 +14195,7 @@
           {
             "name": "(TWTNW2) Nothing's Call Orichalcum",
             "id": 1245198,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13655,6 +14214,7 @@
           {
             "name": "(TWTNW2) Twilight's View Cosmic Belt",
             "id": 1245199,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13673,6 +14233,7 @@
           {
             "name": "Roxas Event Location",
             "id": null,
+            "region": "Roxas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13728,6 +14289,7 @@
           {
             "name": "(TWTNW2) Xigbar Bonus: Sora Slot 1",
             "id": 1245200,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13746,6 +14308,7 @@
           {
             "name": "(TWTNW2) Xigbar Secret Ansem Report 3",
             "id": 1245201,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13764,6 +14327,7 @@
           {
             "name": "(TWTNW2) Naught's Skyway Mythril Gem",
             "id": 1245202,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13782,6 +14346,7 @@
           {
             "name": "(TWTNW2) Naught's Skyway Orichalcum",
             "id": 1245203,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13800,6 +14365,7 @@
           {
             "name": "(TWTNW2) Naught's Skyway Mythril Crystal",
             "id": 1245204,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13818,6 +14384,7 @@
           {
             "name": "(TWTNW2) Oblivion",
             "id": 1245205,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13836,6 +14403,7 @@
           {
             "name": "(TWTNW2) Castle That Never Was Map",
             "id": 1245206,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13854,6 +14422,7 @@
           {
             "name": "Xigbar Event Location",
             "id": null,
+            "region": "Xigbar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13909,6 +14478,7 @@
           {
             "name": "(TWTNW2) Luxord Bonus: Sora Slot 2",
             "id": 1245207,
+            "region": "Luxord",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13927,6 +14497,7 @@
           {
             "name": "(TWTNW2) Luxord Bonus: Sora Slot 1",
             "id": 1245208,
+            "region": "Luxord",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13945,6 +14516,7 @@
           {
             "name": "(TWTNW2) Luxord Secret Ansem Report 9",
             "id": 1245209,
+            "region": "Luxord",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13963,6 +14535,7 @@
           {
             "name": "Luxord Event Location",
             "id": null,
+            "region": "Luxord",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14023,6 +14596,7 @@
           {
             "name": "(TWTNW2) Saix Bonus: Sora Slot 1",
             "id": 1245210,
+            "region": "Saix",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14041,6 +14615,7 @@
           {
             "name": "(TWTNW2) Saix Secret Ansem Report 12",
             "id": 1245211,
+            "region": "Saix",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14059,6 +14634,7 @@
           {
             "name": "Saix Event Location",
             "id": null,
+            "region": "Saix",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14114,6 +14690,7 @@
           {
             "name": "(TWTNW3) Secret Ansem Report 11 (Pre-Xemnas 1)",
             "id": 1245212,
+            "region": "The World That Never Was (Second Visit)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14132,6 +14709,7 @@
           {
             "name": "(TWTNW3) Ruin and Creation's Passage Mythril Stone",
             "id": 1245213,
+            "region": "The World That Never Was (Second Visit)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14150,6 +14728,7 @@
           {
             "name": "(TWTNW3) Ruin and Creation's Passage AP Boost",
             "id": 1245214,
+            "region": "The World That Never Was (Second Visit)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14168,6 +14747,7 @@
           {
             "name": "(TWTNW3) Ruin and Creation's Passage Mythril Crystal",
             "id": 1245215,
+            "region": "The World That Never Was (Second Visit)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14186,6 +14766,7 @@
           {
             "name": "(TWTNW3) Ruin and Creation's Passage Orichalcum",
             "id": 1245216,
+            "region": "The World That Never Was (Second Visit)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14254,6 +14835,7 @@
           {
             "name": "(TWTNW3) Xemnas 1 Bonus: Sora Slot 1",
             "id": 1245217,
+            "region": "Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14272,6 +14854,7 @@
           {
             "name": "(TWTNW3) Xemnas 1 Bonus: Sora Slot 2",
             "id": 1245218,
+            "region": "Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14290,6 +14873,7 @@
           {
             "name": "(TWTNW3) Xemnas 1 Secret Ansem Report 13",
             "id": 1245219,
+            "region": "Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14308,6 +14892,7 @@
           {
             "name": "Xemnas Event Location",
             "id": null,
+            "region": "Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14363,6 +14948,7 @@
           {
             "name": "Armored Xemnas Event Location",
             "id": null,
+            "region": "Armored Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14418,6 +15004,7 @@
           {
             "name": "Armored Xemnas 2 Event Location",
             "id": null,
+            "region": "Armored Xemnas 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14459,6 +15046,7 @@
           {
             "name": "Final Xemnas Event Location",
             "id": null,
+            "region": "Final Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14507,6 +15095,7 @@
           {
             "name": "(Post TWTNW3: The Altar of Naught) Data Xemnas",
             "id": 1245220,
+            "region": "Data Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14525,6 +15114,7 @@
           {
             "name": "Data Xemnas Event Location",
             "id": null,
+            "region": "Data Xemnas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14579,6 +15169,7 @@
           {
             "name": "(AT) Undersea Kingdom Map",
             "id": 1245898,
+            "region": "Atlantica First Song",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14670,6 +15261,7 @@
           {
             "name": "(AT) Mysterious Abyss",
             "id": 1245899,
+            "region": "Atlantica Third Song",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14711,6 +15303,7 @@
           {
             "name": "(AT) Musical Blizzard Element",
             "id": 1245900,
+            "region": "Atlantica Fourth Song",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14729,6 +15322,7 @@
           {
             "name": "(AT) Musical Orichalcum+",
             "id": 1245901,
+            "region": "Atlantica Fourth Song",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14770,6 +15364,7 @@
           {
             "name": "Valor level 2",
             "id": 1245776,
+            "region": "Valor Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14788,6 +15383,7 @@
           {
             "name": "Valor level 3",
             "id": 1245777,
+            "region": "Valor Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14806,6 +15402,7 @@
           {
             "name": "Valor level 4",
             "id": 1245778,
+            "region": "Valor Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14824,6 +15421,7 @@
           {
             "name": "Valor level 5",
             "id": 1245779,
+            "region": "Valor Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14842,6 +15440,7 @@
           {
             "name": "Valor level 6",
             "id": 1245780,
+            "region": "Valor Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14860,6 +15459,7 @@
           {
             "name": "Valor level 7",
             "id": 1245781,
+            "region": "Valor Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14901,6 +15501,7 @@
           {
             "name": "Wisdom level 2",
             "id": 1245782,
+            "region": "Wisdom Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14919,6 +15520,7 @@
           {
             "name": "Wisdom level 3",
             "id": 1245783,
+            "region": "Wisdom Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14937,6 +15539,7 @@
           {
             "name": "Wisdom level 4",
             "id": 1245784,
+            "region": "Wisdom Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14955,6 +15558,7 @@
           {
             "name": "Wisdom level 5",
             "id": 1245785,
+            "region": "Wisdom Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14973,6 +15577,7 @@
           {
             "name": "Wisdom level 6",
             "id": 1245786,
+            "region": "Wisdom Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -14991,6 +15596,7 @@
           {
             "name": "Wisdom level 7",
             "id": 1245787,
+            "region": "Wisdom Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15032,6 +15638,7 @@
           {
             "name": "Limit level 2",
             "id": 1245788,
+            "region": "Limit Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15050,6 +15657,7 @@
           {
             "name": "Limit level 3",
             "id": 1245789,
+            "region": "Limit Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15068,6 +15676,7 @@
           {
             "name": "Limit level 4",
             "id": 1245790,
+            "region": "Limit Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15086,6 +15695,7 @@
           {
             "name": "Limit level 5",
             "id": 1245791,
+            "region": "Limit Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15104,6 +15714,7 @@
           {
             "name": "Limit level 6",
             "id": 1245792,
+            "region": "Limit Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15122,6 +15733,7 @@
           {
             "name": "Limit level 7",
             "id": 1245793,
+            "region": "Limit Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15163,6 +15775,7 @@
           {
             "name": "Master level 2",
             "id": 1245794,
+            "region": "Master Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15181,6 +15794,7 @@
           {
             "name": "Master level 3",
             "id": 1245795,
+            "region": "Master Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15199,6 +15813,7 @@
           {
             "name": "Master level 4",
             "id": 1245796,
+            "region": "Master Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15217,6 +15832,7 @@
           {
             "name": "Master level 5",
             "id": 1245797,
+            "region": "Master Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15235,6 +15851,7 @@
           {
             "name": "Master level 6",
             "id": 1245798,
+            "region": "Master Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15253,6 +15870,7 @@
           {
             "name": "Master level 7",
             "id": 1245799,
+            "region": "Master Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15294,6 +15912,7 @@
           {
             "name": "Final level 2",
             "id": 1245800,
+            "region": "Final Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15312,6 +15931,7 @@
           {
             "name": "Final level 3",
             "id": 1245801,
+            "region": "Final Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15330,6 +15950,7 @@
           {
             "name": "Final level 4",
             "id": 1245802,
+            "region": "Final Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15348,6 +15969,7 @@
           {
             "name": "Final level 5",
             "id": 1245803,
+            "region": "Final Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15366,6 +15988,7 @@
           {
             "name": "Final level 6",
             "id": 1245804,
+            "region": "Final Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15384,6 +16007,7 @@
           {
             "name": "Final level 7",
             "id": 1245805,
+            "region": "Final Form",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15425,6 +16049,7 @@
           {
             "name": "FAKE Slot",
             "id": 1245809,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15446,6 +16071,7 @@
           {
             "name": "Detection Saber Slot",
             "id": 1245810,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15467,6 +16093,7 @@
           {
             "name": "Edge of Ultima Slot",
             "id": 1245811,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15488,6 +16115,7 @@
           {
             "name": "Kingdom Key Slot",
             "id": 1245812,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15506,6 +16134,7 @@
           {
             "name": "Oathkeeper Slot",
             "id": 1245813,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15527,6 +16156,7 @@
           {
             "name": "Oblivion Slot",
             "id": 1245814,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15548,6 +16178,7 @@
           {
             "name": "Star Seeker Slot",
             "id": 1245815,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15569,6 +16200,7 @@
           {
             "name": "Hidden Dragon Slot",
             "id": 1245816,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15590,6 +16222,7 @@
           {
             "name": "Hero's Crest Slot",
             "id": 1245817,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15611,6 +16244,7 @@
           {
             "name": "Monochrome Slot",
             "id": 1245818,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15632,6 +16266,7 @@
           {
             "name": "Follow the Wind Slot",
             "id": 1245819,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15653,6 +16288,7 @@
           {
             "name": "Circle of Life Slot",
             "id": 1245820,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15674,6 +16310,7 @@
           {
             "name": "Photon Debugger Slot",
             "id": 1245821,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15695,6 +16332,7 @@
           {
             "name": "Gull Wing Slot",
             "id": 1245822,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15716,6 +16354,7 @@
           {
             "name": "Rumbling Rose Slot",
             "id": 1245823,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15737,6 +16376,7 @@
           {
             "name": "Guardian Soul Slot",
             "id": 1245824,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15758,6 +16398,7 @@
           {
             "name": "Wishing Lamp Slot",
             "id": 1245825,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15779,6 +16420,7 @@
           {
             "name": "Decisive Pumpkin Slot",
             "id": 1245826,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15800,6 +16442,7 @@
           {
             "name": "Sweet Memories Slot",
             "id": 1245827,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15821,6 +16464,7 @@
           {
             "name": "Mysterious Abyss Slot",
             "id": 1245828,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15842,6 +16486,7 @@
           {
             "name": "Sleeping Lion Slot",
             "id": 1245829,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15863,6 +16508,7 @@
           {
             "name": "Bond of Flame Slot",
             "id": 1245830,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15884,6 +16530,7 @@
           {
             "name": "Two Become One Slot",
             "id": 1245831,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15905,6 +16552,7 @@
           {
             "name": "Fatal Crest Slot",
             "id": 1245832,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15926,6 +16574,7 @@
           {
             "name": "Fenrir Slot",
             "id": 1245833,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15947,6 +16596,7 @@
           {
             "name": "Ultima Weapon Slot",
             "id": 1245834,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15968,6 +16618,7 @@
           {
             "name": "Winner's Proof Slot",
             "id": 1245835,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -15989,6 +16640,7 @@
           {
             "name": "Pureblood Slot",
             "id": 1245836,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16010,6 +16662,7 @@
           {
             "name": "Centurion+ Slot",
             "id": 1245865,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16031,6 +16684,7 @@
           {
             "name": "Comet Staff Slot",
             "id": 1245851,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16049,6 +16703,7 @@
           {
             "name": "Hammer Staff Slot",
             "id": 1245852,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16067,6 +16722,7 @@
           {
             "name": "Lord's Broom Slot",
             "id": 1245853,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16085,6 +16741,7 @@
           {
             "name": "Mages Staff Slot",
             "id": 1245854,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16103,6 +16760,7 @@
           {
             "name": "Meteor Staff Slot",
             "id": 1245855,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16124,6 +16782,7 @@
           {
             "name": "Nobody Lance Slot",
             "id": 1245856,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16145,6 +16804,7 @@
           {
             "name": "Precious Mushroom Slot",
             "id": 1245857,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16166,6 +16826,7 @@
           {
             "name": "Precious Mushroom+ Slot",
             "id": 1245858,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16187,6 +16848,7 @@
           {
             "name": "Premium Mushroom Slot",
             "id": 1245859,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16208,6 +16870,7 @@
           {
             "name": "Rising Dragon Slot",
             "id": 1245860,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16229,6 +16892,7 @@
           {
             "name": "Save The Queen+ Slot",
             "id": 1245861,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16250,6 +16914,7 @@
           {
             "name": "Shaman's Relic Slot",
             "id": 1245862,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16271,6 +16936,7 @@
           {
             "name": "Victory Bell Slot",
             "id": 1245863,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16289,6 +16955,7 @@
           {
             "name": "Wisdom Wand Slot",
             "id": 1245864,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16307,6 +16974,7 @@
           {
             "name": "Adamant Shield Slot",
             "id": 1245883,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16325,6 +16993,7 @@
           {
             "name": "Akashic Record Slot",
             "id": 1245884,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16346,6 +17015,7 @@
           {
             "name": "Chain Gear Slot",
             "id": 1245885,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16364,6 +17034,7 @@
           {
             "name": "Dream Cloud Slot",
             "id": 1245886,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16382,6 +17053,7 @@
           {
             "name": "Falling Star Slot",
             "id": 1245887,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16400,6 +17072,7 @@
           {
             "name": "Frozen Pride+ Slot",
             "id": 1245888,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16421,6 +17094,7 @@
           {
             "name": "Genji Shield Slot",
             "id": 1245889,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16442,6 +17116,7 @@
           {
             "name": "Knight Defender Slot",
             "id": 1245890,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16460,6 +17135,7 @@
           {
             "name": "Knight's Shield Slot",
             "id": 1245891,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16478,6 +17154,7 @@
           {
             "name": "Majestic Mushroom Slot",
             "id": 1245892,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16499,6 +17176,7 @@
           {
             "name": "Majestic Mushroom+ Slot",
             "id": 1245893,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16520,6 +17198,7 @@
           {
             "name": "Nobody Guard Slot",
             "id": 1245894,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16541,6 +17220,7 @@
           {
             "name": "Ogre Shield Slot",
             "id": 1245895,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16562,6 +17242,7 @@
           {
             "name": "Save The King+ Slot",
             "id": 1245896,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16583,6 +17264,7 @@
           {
             "name": "Ultimate Mushroom Slot",
             "id": 1245897,
+            "region": "Weapon Slots",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -16646,6 +17328,7 @@
           {
             "name": "Level 02",
             "id": 1245678,
+            "region": "Levels Region (1 Visit Locking Item)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16664,6 +17347,7 @@
           {
             "name": "Level 04",
             "id": 1245680,
+            "region": "Levels Region (1 Visit Locking Item)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16682,6 +17366,7 @@
           {
             "name": "Level 07",
             "id": 1245683,
+            "region": "Levels Region (1 Visit Locking Item)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16700,6 +17385,7 @@
           {
             "name": "Level 09",
             "id": 1245685,
+            "region": "Levels Region (1 Visit Locking Item)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16718,6 +17404,7 @@
           {
             "name": "Level 10",
             "id": 1245686,
+            "region": "Levels Region (1 Visit Locking Item)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16778,6 +17465,7 @@
           {
             "name": "Level 12",
             "id": 1245688,
+            "region": "Levels Region (3 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16796,6 +17484,7 @@
           {
             "name": "Level 14",
             "id": 1245690,
+            "region": "Levels Region (3 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16814,6 +17503,7 @@
           {
             "name": "Level 15",
             "id": 1245691,
+            "region": "Levels Region (3 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16832,6 +17522,7 @@
           {
             "name": "Level 17",
             "id": 1245693,
+            "region": "Levels Region (3 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16850,6 +17541,7 @@
           {
             "name": "Level 20",
             "id": 1245696,
+            "region": "Levels Region (3 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16910,6 +17602,7 @@
           {
             "name": "Level 23",
             "id": 1245699,
+            "region": "Levels Region (6 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16928,6 +17621,7 @@
           {
             "name": "Level 25",
             "id": 1245701,
+            "region": "Levels Region (6 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16946,6 +17640,7 @@
           {
             "name": "Level 28",
             "id": 1245704,
+            "region": "Levels Region (6 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16964,6 +17659,7 @@
           {
             "name": "Level 30",
             "id": 1245706,
+            "region": "Levels Region (6 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17024,6 +17720,7 @@
           {
             "name": "Level 32",
             "id": 1245708,
+            "region": "Levels Region (9 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17042,6 +17739,7 @@
           {
             "name": "Level 34",
             "id": 1245710,
+            "region": "Levels Region (9 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17060,6 +17758,7 @@
           {
             "name": "Level 36",
             "id": 1245712,
+            "region": "Levels Region (9 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17078,6 +17777,7 @@
           {
             "name": "Level 39",
             "id": 1245715,
+            "region": "Levels Region (9 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17096,6 +17796,7 @@
           {
             "name": "Level 41",
             "id": 1245717,
+            "region": "Levels Region (9 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17156,6 +17857,7 @@
           {
             "name": "Level 44",
             "id": 1245720,
+            "region": "Levels Region (12 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17174,6 +17876,7 @@
           {
             "name": "Level 46",
             "id": 1245722,
+            "region": "Levels Region (12 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17192,6 +17895,7 @@
           {
             "name": "Level 48",
             "id": 1245724,
+            "region": "Levels Region (12 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17252,6 +17956,7 @@
           {
             "name": "Level 50",
             "id": 1245726,
+            "region": "Levels Region (15 Visit Locking Items)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22501,27 +23206,416 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Blizzard",
-      "Cure",
-      "Donald Limit",
-      "Drive Form",
-      "Everything",
-      "Fire",
-      "Gap Closer",
-      "Goofy Limit",
-      "Ground Finisher",
-      "Growth",
-      "Keyblade",
-      "Magic",
-      "Magnet",
-      "Proof",
-      "Reflect",
-      "Summon",
-      "Thunder",
-      "Visit Lock",
-      "hitlist"
-    ]
+    "1": {
+      "Drive Form": [
+        "Final Form",
+        "Limit Form",
+        "Valor Form",
+        "Master Form",
+        "Wisdom Form",
+        "Anti Form"
+      ],
+      "Growth": [
+        "Glide",
+        "Quick Run",
+        "High Jump",
+        "Dodge Roll",
+        "Aerial Dodge"
+      ],
+      "Donald Limit": [
+        "Donald Flare Force",
+        "Donald Fantasia"
+      ],
+      "Goofy Limit": [
+        "Teamwork",
+        "Tornado Fusion"
+      ],
+      "Magic": [
+        "Fire Element",
+        "Cure Element",
+        "Magnet Element",
+        "Reflect Element",
+        "Thunder Element",
+        "Blizzard Element"
+      ],
+      "Summon": [
+        "Peter Pan",
+        "Stitch",
+        "Chicken Little",
+        "Genie"
+      ],
+      "Gap Closer": [
+        "Slide Dash",
+        "Flash Step"
+      ],
+      "Ground Finisher": [
+        "Finishing Leap",
+        "Guard Break",
+        "Explosion"
+      ],
+      "Visit Lock": [
+        "Sword of the Ancestor",
+        "Disney Castle Key",
+        "Namine Sketches",
+        "Battlefields of War",
+        "Scimitar",
+        "Beast's Claw",
+        "Proud Fang",
+        "Way to the Dawn",
+        "Identity Disk",
+        "Ice Cream",
+        "Membership Card",
+        "Bone Fist",
+        "Skill and Crossbones"
+      ],
+      "Keyblade": [
+        "Circle of Life",
+        "Oathkeeper",
+        "Mysterious Abyss",
+        "Pureblood",
+        "Oblivion",
+        "Bond of Flame",
+        "Ultima Weapon",
+        "Monochrome",
+        "Rumbling Rose",
+        "Fatal Crest",
+        "Winner's Proof",
+        "Decisive Pumpkin",
+        "Star Seeker",
+        "Wishing Lamp",
+        "Hidden Dragon",
+        "Hero's Crest",
+        "Sleeping Lion",
+        "Sweet Memories",
+        "Follow the Wind",
+        "Fenrir",
+        "Gull Wing",
+        "Photon Debugger",
+        "Two Become One",
+        "Guardian Soul"
+      ],
+      "Fire": [
+        "Fire Element"
+      ],
+      "Blizzard": [
+        "Blizzard Element"
+      ],
+      "Thunder": [
+        "Thunder Element"
+      ],
+      "Cure": [
+        "Cure Element"
+      ],
+      "Magnet": [
+        "Magnet Element"
+      ],
+      "Reflect": [
+        "Reflect Element"
+      ],
+      "Proof": [
+        "Proof of Peace",
+        "Proof of Connection",
+        "Proof of Nonexistence"
+      ],
+      "hitlist": [
+        "Bounty"
+      ],
+      "Everything": [
+        "Hi-Potion",
+        "Secret Ansem's Report 4",
+        "Auto Wisdom",
+        "Shadow Anklet",
+        "Silver Ring",
+        "Chicken Little",
+        "Full Bloom+",
+        "Limit Form",
+        "Power Band",
+        "Skillful Ring",
+        "Soldier Earring",
+        "Donald Thunder",
+        "Centurion+",
+        "Beast's Claw",
+        "Rumbling Rose",
+        "Shadow Archive",
+        "Magic Boost",
+        "Dark Anklet",
+        "Membership Card",
+        "Cosmic Chain",
+        "Secret Ansem's Report 8",
+        "Retaliating Slash",
+        "Secret Ansem's Report 7",
+        "Ultimate Mushroom",
+        "Magnet Burst",
+        "Secret Ansem's Report 5",
+        "Power Boost",
+        "Blizzard Armlet",
+        "Master Form",
+        "Finishing Plus",
+        "Battlefields of War",
+        "Skill Ring",
+        "Quick Run",
+        "Garnet Ring",
+        "Explosion",
+        "Once More",
+        "Drive Boost",
+        "Namine Sketches",
+        "Proof of Peace",
+        "Shock Charm+",
+        "Rising Dragon",
+        "Medal",
+        "Guard",
+        "Mysterious Abyss",
+        "Stitch",
+        "Pureblood",
+        "Ice Cream",
+        "Fira Bangle",
+        "Champion Belt",
+        "Thundagun Trinket",
+        "Nobody Guard",
+        "Scimitar",
+        "Negative Combo",
+        "Bond of Flame",
+        "Donald Jackpot",
+        "Technician's Ring",
+        "Genie",
+        "Donald Hyper Healing",
+        "Grand Ribbon",
+        "Item Boost",
+        "Glide",
+        "Executive's Ring",
+        "Potion",
+        "Winner's Proof",
+        "Star Charm",
+        "Aquamarine Ring",
+        "Experience Boost",
+        "Star Seeker",
+        "Chaos Anklet",
+        "Majestic Mushroom+",
+        "Donald MP Hastera",
+        "Auto Summon",
+        "Draw Ring",
+        "Hero's Crest",
+        "Goofy Auto Change",
+        "Save The Queen+",
+        "Midnight Anklet",
+        "Donald Auto Healing",
+        "No Experience",
+        "Follow the Wind",
+        "Fenrir",
+        "Goofy Lucky Lucky",
+        "Photon Debugger",
+        "Unknown Disk",
+        "Thunder Element",
+        "Meteor Staff",
+        "Genji Shield",
+        "Goofy MP Rage",
+        "Peter Pan",
+        "Protect Belt",
+        "Goofy Once More",
+        "Secret Ansem's Report 3",
+        "Auto Limit",
+        "Circle of Life",
+        "Orichalcum Ring",
+        "Magnet Element",
+        "Thunder Boost",
+        "Auto Final",
+        "Aerial Spiral",
+        "Goofy Turbo",
+        "Oathkeeper",
+        "Trinity Limit",
+        "Gold Ring",
+        "Oblivion",
+        "Gaia Belt",
+        "Mythril Ring",
+        "Finishing Leap",
+        "Secret Ansem's Report 6",
+        "Reflect Element",
+        "Elven Bandana",
+        "Cosmic Ring",
+        "Ribbon",
+        "Combo Plus",
+        "Wisdom Form",
+        "Thundara Trinket",
+        "Donald Blizzard",
+        "Light & Darkness",
+        "Reaction Boost",
+        "Blizzard Element",
+        "Wishing Lamp",
+        "Petite Ribbon",
+        "Goofy Item Boost",
+        "Mage Earring",
+        "Donald Flare Force",
+        "Aegis Chain",
+        "High Jump",
+        "Sardonyx Ring",
+        "Draw",
+        "MP Haste",
+        "Damage Control",
+        "Goofy MP Hastega",
+        "Save The King+",
+        "Slapshot",
+        "Slide Dash",
+        "Second Chance",
+        "Form Boost",
+        "Elixir",
+        "Guard Break",
+        "Dodge Slash",
+        "Combo Boost",
+        "Identity Disk",
+        "Slayer Earring",
+        "Upper Slash",
+        "Auto Valor",
+        "Combination Boost",
+        "Fire Boost",
+        "Bone Fist",
+        "Diamond Ring",
+        "Accessory Slot Up",
+        "Goofy Tornado",
+        "Cure Element",
+        "Final Form",
+        "Expert's Ring",
+        "Blizzaga Armlet",
+        "Donald MP Hastega",
+        "Frozen Pride+",
+        "Two Become One",
+        "Air Combo Boost",
+        "Goofy Damage Control",
+        "Dodge Roll",
+        "Sword of the Ancestor",
+        "Premium Mushroom",
+        "Goofy Draw",
+        "MP Hastega",
+        "Goofy MP Haste",
+        "Secret Ansem's Report 1",
+        "Donald MP Haste",
+        "Donald Item Boost",
+        "Aerial Dive",
+        "Donald Damage Control",
+        "Disney Castle Key",
+        "Donald Cure",
+        "Damage Drive",
+        "Air Combo Plus",
+        "Precious Mushroom",
+        "Mickey Munny Pouch",
+        "Goofy Defender",
+        "Sleeping Lion",
+        "Promise Charm",
+        "Blizzara Armlet",
+        "Drive Recovery",
+        "Teamwork",
+        "Guardian Soul",
+        "Moon Amulet",
+        "Secret Ansem's Report 2",
+        "Thunder Trinket",
+        "Proof of Nonexistence",
+        "Hades Cup Trophy",
+        "Vicinity Break",
+        "Blizzard Boost",
+        "Cosmic Arts",
+        "Valor Form",
+        "Drive Converter",
+        "Platinum Ring",
+        "Way to the Dawn",
+        "Olympus Stone",
+        "Skill and Crossbones",
+        "Anti Form",
+        "Aerial Dodge",
+        "Flash Step",
+        "Fire Element",
+        "Ability Ring",
+        "Scan",
+        "Lucky Emblem",
+        "AP Boost",
+        "Aerial Finish",
+        "Lucky Ring",
+        "Max MP Up",
+        "Lucky Lucky",
+        "Summon Boost",
+        "Firaga Bangle",
+        "Tent",
+        "Blizzagun Armlet",
+        "Secret Ansem's Report 10",
+        "Olette Munny Pouch",
+        "Jackpot",
+        "Donald Auto Limit",
+        "Goofy Hyper Healing",
+        "Fire Bangle",
+        "Secret Ansem's Report 9",
+        "Bounty",
+        "Goofy Bash",
+        "Abas Chain",
+        "Goofy Jackpot",
+        "Shock Charm",
+        "Ether",
+        "Akashic Record",
+        "Cosmic Belt",
+        "Donald MP Rage",
+        "Thundaga Trinket",
+        "Donald Blizzard Boost",
+        "MP Hastera",
+        "Goofy Protect",
+        "Fatal Crest",
+        "Proof of Connection",
+        "Ogre Shield",
+        "Aerial Recovery",
+        "Goofy MP Hastera",
+        "Tourmaline Ring",
+        "Nobody Lance",
+        "Master's Ring",
+        "Decisive Pumpkin",
+        "Proud Fang",
+        "Donald Thunder Boost",
+        "Hidden Dragon",
+        "Secret Ansem's Report 13",
+        "Combo Master",
+        "Aerial Sweep",
+        "Goofy Protega",
+        "Majestic Mushroom",
+        "Defender",
+        "Donald Fire Boost",
+        "Counterguard",
+        "Torn Page",
+        "Firagun Bangle",
+        "Fencer Earring",
+        "Secret Ansem's Report 11",
+        "Secret Ansem's Report 12",
+        "Horizontal Slash",
+        "Donald Draw",
+        "Shadow Archive+",
+        "Goofy Auto Healing",
+        "Full Bloom",
+        "Tornado Fusion",
+        "Max HP Up",
+        "Auto Master",
+        "Ultima Weapon",
+        "Goofy Protera",
+        "Defense Boost",
+        "Monochrome",
+        "MP Rage",
+        "Magic Lock-On",
+        "Precious Mushroom+",
+        "Shaman's Relic",
+        "Acrisius",
+        "Donald Fantasia",
+        "Goofy Second Chance",
+        "Goofy Auto Limit",
+        "High Drive Recovery",
+        "Item Slot Up",
+        "Acrisius+",
+        "Engineer's Ring",
+        "Buster Band",
+        "Berserk Charge",
+        "Donald Lucky Lucky",
+        "Leaf Bracer",
+        "Sweet Memories",
+        "Megalixir",
+        "Gull Wing",
+        "Drive Gauge Up",
+        "Divine Bandana",
+        "Armor Slot Up",
+        "Donald Fire"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

@@ -919,22 +919,17 @@
           {
             "name": "Make Eggs, Throw Eggs: Red Coins",
             "id": 3166240,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    }
+                    "Beanstalk",
+                    "Dashed Stairs"
                   ]
                 }
               ]
@@ -952,22 +947,17 @@
           {
             "name": "Make Eggs, Throw Eggs: Flowers",
             "id": 3166241,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    }
+                    "Beanstalk",
+                    "Dashed Stairs"
                   ]
                 }
               ]
@@ -985,26 +975,18 @@
           {
             "name": "Make Eggs, Throw Eggs: Stars",
             "id": 3166242,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Tulip"
-                    }
+                    "Beanstalk",
+                    "Dashed Stairs",
+                    "Tulip"
                   ]
                 }
               ]
@@ -1022,6 +1004,7 @@
           {
             "name": "Make Eggs, Throw Eggs: Level Clear",
             "id": 3166243,
+            "region": "1-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1066,22 +1049,17 @@
           {
             "name": "Watch Out Below!: Red Coins",
             "id": 3166244,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Helicopter Morph",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -1099,22 +1077,17 @@
           {
             "name": "Watch Out Below!: Flowers",
             "id": 3166245,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Helicopter Morph",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -1132,6 +1105,7 @@
           {
             "name": "Watch Out Below!: Stars",
             "id": 3166246,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1170,6 +1144,7 @@
           {
             "name": "Watch Out Below!: Level Clear",
             "id": 3166247,
+            "region": "1-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1214,6 +1189,7 @@
           {
             "name": "The Cave Of Chomp Rock: Red Coins",
             "id": 3166248,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1235,6 +1211,7 @@
           {
             "name": "The Cave Of Chomp Rock: Flowers",
             "id": 3166249,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1256,6 +1233,7 @@
           {
             "name": "The Cave Of Chomp Rock: Stars",
             "id": 3166250,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1274,6 +1252,7 @@
           {
             "name": "The Cave Of Chomp Rock: Level Clear",
             "id": 3166251,
+            "region": "1-3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1336,6 +1315,7 @@
           {
             "name": "Burt The Bashful's Fort: Red Coins",
             "id": 3166252,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1357,6 +1337,7 @@
           {
             "name": "Burt The Bashful's Fort: Flowers",
             "id": 3166253,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1366,16 +1347,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        }
+                        "Key",
+                        "Spring Ball"
                       ]
                     }
                   ]
@@ -1423,6 +1398,7 @@
           {
             "name": "Burt The Bashful's Fort: Stars",
             "id": 3166254,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1473,6 +1449,7 @@
           {
             "name": "Burt The Bashful's Fort: Level Clear",
             "id": 3166255,
+            "region": "1-4",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1522,6 +1499,7 @@
           {
             "name": "Burt The Bashful's Boss Room",
             "id": null,
+            "region": "Burt The Bashful's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1571,6 +1549,7 @@
           {
             "name": "Hop! Hop! Donut Lifts: Red Coins",
             "id": 3166257,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1589,6 +1568,7 @@
           {
             "name": "Hop! Hop! Donut Lifts: Flowers",
             "id": 3166258,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1607,6 +1587,7 @@
           {
             "name": "Hop! Hop! Donut Lifts: Stars",
             "id": 3166259,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1650,6 +1631,7 @@
           {
             "name": "Hop! Hop! Donut Lifts: Level Clear",
             "id": 3166260,
+            "region": "1-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1691,30 +1673,19 @@
           {
             "name": "Shy-Guys On Stilts: Red Coins",
             "id": 3166261,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Flashing Eggs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Mole Tank Morph"
-                    }
+                    "! Switch",
+                    "Flashing Eggs",
+                    "Large Spring Ball",
+                    "Mole Tank Morph"
                   ]
                 }
               ]
@@ -1732,6 +1703,7 @@
           {
             "name": "Shy-Guys On Stilts: Flowers",
             "id": 3166262,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1753,6 +1725,7 @@
           {
             "name": "Shy-Guys On Stilts: Stars",
             "id": 3166263,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1832,22 +1805,17 @@
           {
             "name": "Shy-Guys On Stilts: Level Clear",
             "id": 3166264,
+            "region": "1-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Beanstalk",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -1888,30 +1856,19 @@
           {
             "name": "Touch Fuzzy Get Dizzy: Red Coins",
             "id": 3166265,
+            "region": "1-7",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Flashing Eggs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "Beanstalk",
+                    "Chomp Rock",
+                    "Flashing Eggs",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -1929,6 +1886,7 @@
           {
             "name": "Touch Fuzzy Get Dizzy: Flowers",
             "id": 3166266,
+            "region": "1-7",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1947,6 +1905,7 @@
           {
             "name": "Touch Fuzzy Get Dizzy: Stars",
             "id": 3166267,
+            "region": "1-7",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1979,20 +1938,11 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Beanstalk"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Chomp Rock"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Spring Ball"
-                            }
+                            "Beanstalk",
+                            "Chomp Rock",
+                            "Spring Ball"
                           ]
                         }
                       ]
@@ -2014,6 +1964,7 @@
           {
             "name": "Touch Fuzzy Get Dizzy: Level Clear",
             "id": 3166268,
+            "region": "1-7",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2032,6 +1983,7 @@
           {
             "name": "Touch Fuzzy Get Dizzy: Gather Coins",
             "id": null,
+            "region": "1-7",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2102,6 +2054,7 @@
           {
             "name": "Salvo The Slime's Castle: Red Coins",
             "id": 3166269,
+            "region": "1-8",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2123,6 +2076,7 @@
           {
             "name": "Salvo The Slime's Castle: Flowers",
             "id": 3166270,
+            "region": "1-8",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2144,6 +2098,7 @@
           {
             "name": "Salvo The Slime's Castle: Stars",
             "id": 3166271,
+            "region": "1-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2175,16 +2130,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Arrow Wheel"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Key"
-                            }
+                            "Arrow Wheel",
+                            "Key"
                           ]
                         }
                       ]
@@ -2206,6 +2155,7 @@
           {
             "name": "Salvo The Slime's Castle: Level Clear",
             "id": 3166272,
+            "region": "1-8",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2255,6 +2205,7 @@
           {
             "name": "Salvo The Slime's Boss Room",
             "id": null,
+            "region": "Salvo The Slime's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2304,26 +2255,18 @@
           {
             "name": "Visit Koopa And Para-Koopa: Red Coins",
             "id": 3166273,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Poochy"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "Large Spring Ball",
+                    "Poochy",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -2341,22 +2284,17 @@
           {
             "name": "Visit Koopa And Para-Koopa: Flowers",
             "id": 3166274,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Super Star"
-                    }
+                    "Large Spring Ball",
+                    "Super Star"
                   ]
                 }
               ]
@@ -2374,6 +2312,7 @@
           {
             "name": "Visit Koopa And Para-Koopa: Stars",
             "id": 3166275,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2412,6 +2351,7 @@
           {
             "name": "Visit Koopa And Para-Koopa: Level Clear",
             "id": 3166276,
+            "region": "2-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2456,34 +2396,20 @@
           {
             "name": "The Baseball Boys: Red Coins",
             "id": 3166277,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Egg Launcher"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Mole Tank Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Super Star"
-                    }
+                    "Beanstalk",
+                    "Egg Launcher",
+                    "Large Spring Ball",
+                    "Mole Tank Morph",
+                    "Super Star"
                   ]
                 }
               ]
@@ -2501,34 +2427,20 @@
           {
             "name": "The Baseball Boys: Flowers",
             "id": 3166278,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Egg Launcher"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Super Star"
-                    }
+                    "Beanstalk",
+                    "Egg Launcher",
+                    "Large Spring Ball",
+                    "Spring Ball",
+                    "Super Star"
                   ]
                 }
               ]
@@ -2546,6 +2458,7 @@
           {
             "name": "The Baseball Boys: Stars",
             "id": 3166279,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2579,24 +2492,12 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Beanstalk"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Egg Launcher"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Super Star"
-                        }
+                        "Beanstalk",
+                        "Egg Launcher",
+                        "Large Spring Ball",
+                        "Super Star"
                       ]
                     }
                   ]
@@ -2616,30 +2517,19 @@
           {
             "name": "The Baseball Boys: Level Clear",
             "id": 3166280,
+            "region": "2-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Egg Launcher"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Super Star"
-                    }
+                    "Beanstalk",
+                    "Egg Launcher",
+                    "Large Spring Ball",
+                    "Super Star"
                   ]
                 }
               ]
@@ -2680,6 +2570,7 @@
           {
             "name": "What's Gusty Taste Like?: Red Coins",
             "id": 3166281,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2701,22 +2592,17 @@
           {
             "name": "What's Gusty Taste Like?: Flowers",
             "id": 3166282,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Super Star"
-                    }
+                    "Large Spring Ball",
+                    "Super Star"
                   ]
                 }
               ]
@@ -2734,6 +2620,7 @@
           {
             "name": "What's Gusty Taste Like?: Stars",
             "id": 3166283,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2752,22 +2639,17 @@
           {
             "name": "What's Gusty Taste Like?: Level Clear",
             "id": 3166284,
+            "region": "2-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Super Star"
-                    }
+                    "Large Spring Ball",
+                    "Super Star"
                   ]
                 }
               ]
@@ -2829,26 +2711,18 @@
           {
             "name": "Bigger Boo's Fort: Red Coins",
             "id": 3166285,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    }
+                    "! Switch",
+                    "Dashed Stairs",
+                    "Key"
                   ]
                 }
               ]
@@ -2866,26 +2740,18 @@
           {
             "name": "Bigger Boo's Fort: Flowers",
             "id": 3166286,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    }
+                    "! Switch",
+                    "Dashed Stairs",
+                    "Key"
                   ]
                 }
               ]
@@ -2903,6 +2769,7 @@
           {
             "name": "Bigger Boo's Fort: Stars",
             "id": 3166287,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2912,20 +2779,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "! Switch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Dashed Stairs"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        }
+                        "! Switch",
+                        "Dashed Stairs",
+                        "Key"
                       ]
                     }
                   ]
@@ -2957,6 +2815,7 @@
           {
             "name": "Bigger Boo's Fort: Level Clear",
             "id": 3166288,
+            "region": "2-4",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3006,6 +2865,7 @@
           {
             "name": "Bigger Boo's Boss Room",
             "id": null,
+            "region": "Bigger Boo's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3055,6 +2915,7 @@
           {
             "name": "Watch Out For Lakitu: Red Coins",
             "id": 3166289,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3076,26 +2937,18 @@
           {
             "name": "Watch Out For Lakitu: Flowers",
             "id": 3166290,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Train Morph"
-                    }
+                    "Chomp Rock",
+                    "Key",
+                    "Train Morph"
                   ]
                 }
               ]
@@ -3113,6 +2966,7 @@
           {
             "name": "Watch Out For Lakitu: Stars",
             "id": 3166291,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3131,6 +2985,7 @@
           {
             "name": "Watch Out For Lakitu: Level Clear",
             "id": 3166292,
+            "region": "2-5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3175,6 +3030,7 @@
           {
             "name": "The Cave Of The Mystery Maze: Red Coins",
             "id": 3166293,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3196,22 +3052,17 @@
           {
             "name": "The Cave Of The Mystery Maze: Flowers",
             "id": 3166294,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Egg Launcher"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Egg Launcher",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -3229,6 +3080,7 @@
           {
             "name": "The Cave Of The Mystery Maze: Stars",
             "id": 3166295,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3267,6 +3119,7 @@
           {
             "name": "The Cave Of The Mystery Maze: Level Clear",
             "id": 3166296,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3288,6 +3141,7 @@
           {
             "name": "The Cave Of the Mystery Maze: Seed Spitting Contest",
             "id": null,
+            "region": "2-6",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3337,6 +3191,7 @@
           {
             "name": "Lakitu's Wall: Red Coins",
             "id": 3166297,
+            "region": "2-7",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3349,16 +3204,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Dashed Platform"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Giant Eggs"
-                            }
+                            "Dashed Platform",
+                            "Giant Eggs"
                           ]
                         }
                       ]
@@ -3399,6 +3248,7 @@
           {
             "name": "Lakitu's Wall: Flowers",
             "id": 3166298,
+            "region": "2-7",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3408,16 +3258,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "! Switch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        }
+                        "! Switch",
+                        "Large Spring Ball"
                       ]
                     }
                   ]
@@ -3461,6 +3305,7 @@
           {
             "name": "Lakitu's Wall: Stars",
             "id": 3166299,
+            "region": "2-7",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3499,22 +3344,17 @@
           {
             "name": "Lakitu's Wall: Level Clear",
             "id": 3166300,
+            "region": "2-7",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Car Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Car Morph",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -3532,6 +3372,7 @@
           {
             "name": "Lakitu's Wall: Gather Coins",
             "id": null,
+            "region": "2-7",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3602,6 +3443,7 @@
           {
             "name": "The Potted Ghost's Castle: Red Coins",
             "id": 3166301,
+            "region": "2-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3611,16 +3453,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Arrow Wheel"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        }
+                        "Arrow Wheel",
+                        "Key"
                       ]
                     }
                   ]
@@ -3651,6 +3487,7 @@
           {
             "name": "The Potted Ghost's Castle: Flowers",
             "id": 3166302,
+            "region": "2-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3660,20 +3497,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Arrow Wheel"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Train Morph"
-                        }
+                        "Arrow Wheel",
+                        "Key",
+                        "Train Morph"
                       ]
                     }
                   ]
@@ -3704,6 +3532,7 @@
           {
             "name": "The Potted Ghost's Castle: Stars",
             "id": 3166303,
+            "region": "2-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3713,16 +3542,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Arrow Wheel"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        }
+                        "Arrow Wheel",
+                        "Key"
                       ]
                     }
                   ]
@@ -3765,6 +3588,7 @@
           {
             "name": "The Potted Ghost's Castle: Level Clear",
             "id": 3166304,
+            "region": "2-8",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3814,6 +3638,7 @@
           {
             "name": "Roger The Ghost's Boss Room",
             "id": null,
+            "region": "Roger The Ghost's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3863,6 +3688,7 @@
           {
             "name": "Welcome To Monkey World!: Red Coins",
             "id": 3166305,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3881,6 +3707,7 @@
           {
             "name": "Welcome To Monkey World!: Flowers",
             "id": 3166306,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3899,6 +3726,7 @@
           {
             "name": "Welcome To Monkey World!: Stars",
             "id": 3166307,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3925,6 +3753,7 @@
           {
             "name": "Welcome To Monkey World!: Level Clear",
             "id": 3166308,
+            "region": "3-1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3966,22 +3795,17 @@
           {
             "name": "Jungle Rhythm...: Red Coins",
             "id": 3166309,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "Dashed Stairs",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -3999,22 +3823,17 @@
           {
             "name": "Jungle Rhythm...: Flowers",
             "id": 3166310,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "Dashed Stairs",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -4032,6 +3851,7 @@
           {
             "name": "Jungle Rhythm...: Stars",
             "id": 3166311,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4070,22 +3890,17 @@
           {
             "name": "Jungle Rhythm...: Level Clear",
             "id": 3166312,
+            "region": "3-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "Dashed Stairs",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -4126,22 +3941,17 @@
           {
             "name": "Nep-Enuts' Domain: Red Coins",
             "id": 3166313,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Submarine Morph"
-                    }
+                    "Helicopter Morph",
+                    "Submarine Morph"
                   ]
                 }
               ]
@@ -4159,22 +3969,17 @@
           {
             "name": "Nep-Enuts' Domain: Flowers",
             "id": 3166314,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Submarine Morph"
-                    }
+                    "Helicopter Morph",
+                    "Submarine Morph"
                   ]
                 }
               ]
@@ -4192,6 +3997,7 @@
           {
             "name": "Nep-Enuts' Domain: Stars",
             "id": 3166315,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4213,16 +4019,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Helicopter Morph"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Submarine Morph"
-                        }
+                        "Helicopter Morph",
+                        "Submarine Morph"
                       ]
                     }
                   ]
@@ -4242,22 +4042,17 @@
           {
             "name": "Nep-Enuts' Domain: Level Clear",
             "id": 3166316,
+            "region": "3-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Submarine Morph"
-                    }
+                    "Helicopter Morph",
+                    "Submarine Morph"
                   ]
                 }
               ]
@@ -4319,6 +4114,7 @@
           {
             "name": "Prince Froggy's Fort: Red Coins",
             "id": 3166317,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4340,6 +4136,7 @@
           {
             "name": "Prince Froggy's Fort: Flowers",
             "id": 3166318,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4394,6 +4191,7 @@
           {
             "name": "Prince Froggy's Fort: Stars",
             "id": 3166319,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4420,6 +4218,7 @@
           {
             "name": "Prince Froggy's Fort: Level Clear",
             "id": 3166320,
+            "region": "3-4",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4469,6 +4268,7 @@
           {
             "name": "Prince Froggy's Boss Room",
             "id": null,
+            "region": "Prince Froggy's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4518,6 +4318,7 @@
           {
             "name": "Jammin' Through The Trees: Red Coins",
             "id": 3166321,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4536,6 +4337,7 @@
           {
             "name": "Jammin' Through The Trees: Flowers",
             "id": 3166322,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4574,6 +4376,7 @@
           {
             "name": "Jammin' Through The Trees: Stars",
             "id": 3166323,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4658,6 +4461,7 @@
           {
             "name": "Jammin' Through The Trees: Level Clear",
             "id": 3166324,
+            "region": "3-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4699,30 +4503,19 @@
           {
             "name": "The Cave Of Harry Hedgehog: Red Coins",
             "id": 3166325,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Mole Tank Morph"
-                    }
+                    "Beanstalk",
+                    "Chomp Rock",
+                    "Large Spring Ball",
+                    "Mole Tank Morph"
                   ]
                 }
               ]
@@ -4740,34 +4533,20 @@
           {
             "name": "The Cave Of Harry Hedgehog: Flowers",
             "id": 3166326,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Mole Tank Morph"
-                    }
+                    "! Switch",
+                    "Beanstalk",
+                    "Chomp Rock",
+                    "Large Spring Ball",
+                    "Mole Tank Morph"
                   ]
                 }
               ]
@@ -4785,6 +4564,7 @@
           {
             "name": "The Cave Of Harry Hedgehog: Stars",
             "id": 3166327,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4794,32 +4574,14 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Beanstalk"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Chomp Rock"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Dashed Stairs"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Mole Tank Morph"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Tulip"
-                        }
+                        "Beanstalk",
+                        "Chomp Rock",
+                        "Dashed Stairs",
+                        "Large Spring Ball",
+                        "Mole Tank Morph",
+                        "Tulip"
                       ]
                     }
                   ]
@@ -4851,26 +4613,18 @@
           {
             "name": "The Cave Of Harry Hedgehog: Level Clear",
             "id": 3166328,
+            "region": "3-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Chomp Rock",
+                    "Key",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -4911,30 +4665,19 @@
           {
             "name": "Monkeys' Favorite Lake: Red Coins",
             "id": 3166329,
+            "region": "3-7",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Submarine Morph"
-                    }
+                    "! Switch",
+                    "Beanstalk",
+                    "Large Spring Ball",
+                    "Submarine Morph"
                   ]
                 }
               ]
@@ -4952,22 +4695,17 @@
           {
             "name": "Monkeys' Favorite Lake: Flowers",
             "id": 3166330,
+            "region": "3-7",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Beanstalk"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Beanstalk",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -4985,6 +4723,7 @@
           {
             "name": "Monkeys' Favorite Lake: Stars",
             "id": 3166331,
+            "region": "3-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5006,6 +4745,7 @@
           {
             "name": "Monkeys' Favorite Lake: Level Clear",
             "id": 3166332,
+            "region": "3-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5071,6 +4811,7 @@
           {
             "name": "Naval Piranha's Castle: Red Coins",
             "id": 3166333,
+            "region": "3-8",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5113,6 +4854,7 @@
           {
             "name": "Naval Piranha's Castle: Flowers",
             "id": 3166334,
+            "region": "3-8",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5155,6 +4897,7 @@
           {
             "name": "Naval Piranha's Castle: Stars",
             "id": 3166335,
+            "region": "3-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5193,6 +4936,7 @@
           {
             "name": "Naval Piranha's Castle: Level Clear",
             "id": 3166336,
+            "region": "3-8",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5242,6 +4986,7 @@
           {
             "name": "Naval Piranha's Boss Room",
             "id": null,
+            "region": "Naval Piranha's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5291,6 +5036,7 @@
           {
             "name": "GO! GO! MARIO!!: Red Coins",
             "id": 3166337,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5312,6 +5058,7 @@
           {
             "name": "GO! GO! MARIO!!: Flowers",
             "id": 3166338,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5333,6 +5080,7 @@
           {
             "name": "GO! GO! MARIO!!: Stars",
             "id": 3166339,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5388,6 +5136,7 @@
           {
             "name": "GO! GO! MARIO!!: Level Clear",
             "id": 3166340,
+            "region": "4-1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5432,26 +5181,18 @@
           {
             "name": "The Cave Of The Lakitus: Red Coins",
             "id": 3166341,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Egg Launcher"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "! Switch",
+                    "Egg Launcher",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -5469,22 +5210,17 @@
           {
             "name": "The Cave Of The Lakitus: Flowers",
             "id": 3166342,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Egg Launcher"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Egg Launcher",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -5502,22 +5238,17 @@
           {
             "name": "The Cave Of The Lakitus: Stars",
             "id": 3166343,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "Large Spring Ball",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -5535,6 +5266,7 @@
           {
             "name": "The Cave Of The Lakitus: Level Clear",
             "id": 3166344,
+            "region": "4-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5579,26 +5311,18 @@
           {
             "name": "Don't Look Back!: Red Coins",
             "id": 3166345,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "! Switch",
+                    "Helicopter Morph",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -5616,22 +5340,17 @@
           {
             "name": "Don't Look Back!: Flowers",
             "id": 3166346,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "! Switch",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -5649,6 +5368,7 @@
           {
             "name": "Don't Look Back!: Stars",
             "id": 3166347,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5699,6 +5419,7 @@
           {
             "name": "Don't Look Back!: Level Clear",
             "id": 3166348,
+            "region": "4-3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5764,6 +5485,7 @@
           {
             "name": "Marching Milde's Fort: Red Coins",
             "id": 3166349,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5773,28 +5495,13 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Arrow Wheel"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Bucket"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Dashed Stairs"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Vanishing Arrow Wheel"
-                        }
+                        "Arrow Wheel",
+                        "Bucket",
+                        "Dashed Stairs",
+                        "Key",
+                        "Vanishing Arrow Wheel"
                       ]
                     }
                   ]
@@ -5842,6 +5549,7 @@
           {
             "name": "Marching Milde's Fort: Flowers",
             "id": 3166350,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5851,24 +5559,12 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Arrow Wheel"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Bucket"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Dashed Stairs"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Vanishing Arrow Wheel"
-                        }
+                        "Arrow Wheel",
+                        "Bucket",
+                        "Dashed Stairs",
+                        "Vanishing Arrow Wheel"
                       ]
                     }
                   ]
@@ -5916,6 +5612,7 @@
           {
             "name": "Marching Milde's Fort: Stars",
             "id": 3166351,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5978,6 +5675,7 @@
           {
             "name": "Marching Milde's Fort: Level Clear",
             "id": 3166352,
+            "region": "4-4",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6027,6 +5725,7 @@
           {
             "name": "Marching Milde's Boss Room",
             "id": null,
+            "region": "Marching Milde's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6076,22 +5775,17 @@
           {
             "name": "Chomp Rock Zone: Red Coins",
             "id": 3166353,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Chomp Rock",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -6109,30 +5803,19 @@
           {
             "name": "Chomp Rock Zone: Flowers",
             "id": 3166354,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "! Switch",
+                    "Chomp Rock",
+                    "Dashed Platform",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -6150,30 +5833,19 @@
           {
             "name": "Chomp Rock Zone: Stars",
             "id": 3166355,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "! Switch",
+                    "Chomp Rock",
+                    "Dashed Platform",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -6191,6 +5863,7 @@
           {
             "name": "Chomp Rock Zone: Level Clear",
             "id": 3166356,
+            "region": "4-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6232,6 +5905,7 @@
           {
             "name": "Lake Shore Paradise: Red Coins",
             "id": 3166357,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6241,16 +5915,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        }
+                        "Large Spring Ball",
+                        "Spring Ball"
                       ]
                     }
                   ]
@@ -6294,6 +5962,7 @@
           {
             "name": "Lake Shore Paradise: Flowers",
             "id": 3166358,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6303,16 +5972,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        }
+                        "Large Spring Ball",
+                        "Spring Ball"
                       ]
                     }
                   ]
@@ -6356,6 +6019,7 @@
           {
             "name": "Lake Shore Paradise: Stars",
             "id": 3166359,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6440,6 +6104,7 @@
           {
             "name": "Lake Shore Paradise: Level Clear",
             "id": 3166360,
+            "region": "4-6",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6501,6 +6166,7 @@
           {
             "name": "Ride Like The Wind: Red Coins",
             "id": 3166361,
+            "region": "4-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6522,6 +6188,7 @@
           {
             "name": "Ride Like The Wind: Flowers",
             "id": 3166362,
+            "region": "4-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6543,6 +6210,7 @@
           {
             "name": "Ride Like The Wind: Stars",
             "id": 3166363,
+            "region": "4-7",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6593,6 +6261,7 @@
           {
             "name": "Ride Like The Wind: Level Clear",
             "id": 3166364,
+            "region": "4-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6614,6 +6283,7 @@
           {
             "name": "Ride Like The Wind: Gather Coins",
             "id": null,
+            "region": "4-7",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6684,26 +6354,18 @@
           {
             "name": "Hookbill The Koopa's Castle: Red Coins",
             "id": 3166365,
+            "region": "4-8",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Vanishing Arrow Wheel"
-                    }
+                    "Dashed Stairs",
+                    "Key",
+                    "Vanishing Arrow Wheel"
                   ]
                 }
               ]
@@ -6721,26 +6383,18 @@
           {
             "name": "Hookbill The Koopa's Castle: Flowers",
             "id": 3166366,
+            "region": "4-8",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Vanishing Arrow Wheel"
-                    }
+                    "Dashed Stairs",
+                    "Key",
+                    "Vanishing Arrow Wheel"
                   ]
                 }
               ]
@@ -6758,6 +6412,7 @@
           {
             "name": "Hookbill The Koopa's Castle: Stars",
             "id": 3166367,
+            "region": "4-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6779,16 +6434,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Dashed Stairs"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Vanishing Arrow Wheel"
-                        }
+                        "Dashed Stairs",
+                        "Vanishing Arrow Wheel"
                       ]
                     }
                   ]
@@ -6808,6 +6457,7 @@
           {
             "name": "Hookbill The Koopa's Castle: Level Clear",
             "id": 3166368,
+            "region": "4-8",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6857,6 +6507,7 @@
           {
             "name": "Hookbill The Koopa's Boss Room",
             "id": null,
+            "region": "Hookbill The Koopa's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6906,22 +6557,17 @@
           {
             "name": "BLIZZARD!!!: Red Coins",
             "id": 3166369,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    }
+                    "Dashed Stairs",
+                    "Helicopter Morph"
                   ]
                 }
               ]
@@ -6939,6 +6585,7 @@
           {
             "name": "BLIZZARD!!!: Flowers",
             "id": 3166370,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6957,6 +6604,7 @@
           {
             "name": "BLIZZARD!!!: Stars",
             "id": 3166371,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7024,6 +6672,7 @@
           {
             "name": "BLIZZARD!!!: Level Clear",
             "id": 3166372,
+            "region": "5-1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7065,6 +6714,7 @@
           {
             "name": "Ride The Ski Lifts: Red Coins",
             "id": 3166373,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7083,6 +6733,7 @@
           {
             "name": "Ride The Ski Lifts: Flowers",
             "id": 3166374,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7101,6 +6752,7 @@
           {
             "name": "Ride The Ski Lifts: Stars",
             "id": 3166375,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7139,6 +6791,7 @@
           {
             "name": "Ride The Ski Lifts: Level Clear",
             "id": 3166376,
+            "region": "5-2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7180,6 +6833,7 @@
           {
             "name": "Danger - Icy Conditions Ahead: Red Coins",
             "id": 3166377,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7213,28 +6867,13 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Bucket"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Dashed Platform"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Skis"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Super Star"
-                        }
+                        "Bucket",
+                        "Dashed Platform",
+                        "Skis",
+                        "Spring Ball",
+                        "Super Star"
                       ]
                     }
                   ]
@@ -7254,6 +6893,7 @@
           {
             "name": "Danger - Icy Conditions Ahead: Flowers",
             "id": 3166378,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7287,20 +6927,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Dashed Platform"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Skis"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        }
+                        "Dashed Platform",
+                        "Skis",
+                        "Spring Ball"
                       ]
                     }
                   ]
@@ -7320,6 +6951,7 @@
           {
             "name": "Danger - Icy Conditions Ahead: Stars",
             "id": 3166379,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7387,26 +7019,18 @@
           {
             "name": "Danger - Icy Conditions Ahead: Level Clear",
             "id": 3166380,
+            "region": "5-3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Skis"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
+                    "Dashed Platform",
+                    "Skis",
+                    "Spring Ball"
                   ]
                 }
               ]
@@ -7468,26 +7092,18 @@
           {
             "name": "Sluggy The Unshaven's Fort: Red Coins",
             "id": 3166381,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Platform Ghost"
-                    }
+                    "Dashed Platform",
+                    "Dashed Stairs",
+                    "Platform Ghost"
                   ]
                 }
               ]
@@ -7505,26 +7121,18 @@
           {
             "name": "Sluggy The Unshaven's Fort: Flowers",
             "id": 3166382,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Platform Ghost"
-                    }
+                    "Dashed Platform",
+                    "Dashed Stairs",
+                    "Platform Ghost"
                   ]
                 }
               ]
@@ -7542,6 +7150,7 @@
           {
             "name": "Sluggy The Unshaven's Fort: Stars",
             "id": 3166383,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7554,16 +7163,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Dashed Stairs"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Platform Ghost"
-                            }
+                            "Dashed Stairs",
+                            "Platform Ghost"
                           ]
                         }
                       ]
@@ -7628,6 +7231,7 @@
           {
             "name": "Sluggy The Unshaven's Fort: Level Clear",
             "id": 3166384,
+            "region": "5-4",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7677,6 +7281,7 @@
           {
             "name": "Sluggy The Unshaven's Boss Room",
             "id": null,
+            "region": "Sluggy The Unshaven's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7726,22 +7331,17 @@
           {
             "name": "Goonie Rides!: Red Coins",
             "id": 3166385,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    }
+                    "! Switch",
+                    "Helicopter Morph"
                   ]
                 }
               ]
@@ -7759,22 +7359,17 @@
           {
             "name": "Goonie Rides!: Flowers",
             "id": 3166386,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    }
+                    "! Switch",
+                    "Helicopter Morph"
                   ]
                 }
               ]
@@ -7792,6 +7387,7 @@
           {
             "name": "Goonie Rides!: Stars",
             "id": 3166387,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7818,22 +7414,17 @@
           {
             "name": "Goonie Rides!: Level Clear",
             "id": 3166388,
+            "region": "5-5",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    }
+                    "! Switch",
+                    "Helicopter Morph"
                   ]
                 }
               ]
@@ -7874,6 +7465,7 @@
           {
             "name": "Welcome To Cloud World: Red Coins",
             "id": 3166389,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7892,6 +7484,7 @@
           {
             "name": "Welcome To Cloud World: Flowers",
             "id": 3166390,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7910,6 +7503,7 @@
           {
             "name": "Welcome To Cloud World: Stars",
             "id": 3166391,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7948,6 +7542,7 @@
           {
             "name": "Welcome To Cloud World: Level Clear",
             "id": 3166392,
+            "region": "5-6",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7989,6 +7584,7 @@
           {
             "name": "Shifting Platforms Ahead: Red Coins",
             "id": 3166393,
+            "region": "5-7",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8031,6 +7627,7 @@
           {
             "name": "Shifting Platforms Ahead: Flowers",
             "id": 3166394,
+            "region": "5-7",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8073,6 +7670,7 @@
           {
             "name": "Shifting Platforms Ahead: Stars",
             "id": 3166395,
+            "region": "5-7",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8099,6 +7697,7 @@
           {
             "name": "Shifting Platforms Ahead: Level Clear",
             "id": 3166396,
+            "region": "5-7",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8161,22 +7760,17 @@
           {
             "name": "Raphael The Raven's Castle: Red Coins",
             "id": 3166397,
+            "region": "5-8",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Arrow Wheel"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Train Morph"
-                    }
+                    "Arrow Wheel",
+                    "Train Morph"
                   ]
                 }
               ]
@@ -8194,22 +7788,17 @@
           {
             "name": "Raphael The Raven's Castle: Flowers",
             "id": 3166398,
+            "region": "5-8",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Arrow Wheel"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Train Morph"
-                    }
+                    "Arrow Wheel",
+                    "Train Morph"
                   ]
                 }
               ]
@@ -8227,6 +7816,7 @@
           {
             "name": "Raphael The Raven's Castle: Stars",
             "id": 3166399,
+            "region": "5-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8265,6 +7855,7 @@
           {
             "name": "Raphael The Raven's Castle: Level Clear",
             "id": 3166400,
+            "region": "5-8",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8314,6 +7905,7 @@
           {
             "name": "Raphael The Raven's Boss Room",
             "id": null,
+            "region": "Raphael The Raven's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8363,22 +7955,17 @@
           {
             "name": "Scary Skeleton Goonies!: Red Coins",
             "id": 3166401,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Dashed Platform",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -8396,22 +7983,17 @@
           {
             "name": "Scary Skeleton Goonies!: Flowers",
             "id": 3166402,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Dashed Platform",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -8429,6 +8011,7 @@
           {
             "name": "Scary Skeleton Goonies!: Stars",
             "id": 3166403,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8467,22 +8050,17 @@
           {
             "name": "Scary Skeleton Goonies!: Level Clear",
             "id": 3166404,
+            "region": "6-1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Dashed Platform",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -8523,6 +8101,7 @@
           {
             "name": "The Cave Of The Bandits: Red Coins",
             "id": 3166405,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8544,6 +8123,7 @@
           {
             "name": "The Cave Of The Bandits: Flowers",
             "id": 3166406,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8565,6 +8145,7 @@
           {
             "name": "The Cave Of The Bandits: Stars",
             "id": 3166407,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8608,6 +8189,7 @@
           {
             "name": "The Cave Of The Bandits: Level Clear",
             "id": 3166408,
+            "region": "6-2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8652,6 +8234,7 @@
           {
             "name": "Beware The Spinning Logs: Red Coins",
             "id": 3166409,
+            "region": "6-3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8670,6 +8253,7 @@
           {
             "name": "Beware The Spinning Logs: Flowers",
             "id": 3166410,
+            "region": "6-3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8688,6 +8272,7 @@
           {
             "name": "Beware The Spinning Logs: Stars",
             "id": 3166411,
+            "region": "6-3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8706,6 +8291,7 @@
           {
             "name": "Beware The Spinning Logs: Level Clear",
             "id": 3166412,
+            "region": "6-3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8768,6 +8354,7 @@
           {
             "name": "Tap-Tap The Red Nose's Fort: Red Coins",
             "id": 3166413,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8777,24 +8364,12 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        }
+                        "Egg Plant",
+                        "Key",
+                        "Large Spring Ball",
+                        "Spring Ball"
                       ]
                     }
                   ]
@@ -8842,6 +8417,7 @@
           {
             "name": "Tap-Tap The Red Nose's Fort: Flowers",
             "id": 3166414,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8851,24 +8427,12 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        }
+                        "Egg Plant",
+                        "Key",
+                        "Large Spring Ball",
+                        "Spring Ball"
                       ]
                     }
                   ]
@@ -8916,6 +8480,7 @@
           {
             "name": "Tap-Tap The Red Nose's Fort: Stars",
             "id": 3166415,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8937,24 +8502,12 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Large Spring Ball"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Spring Ball"
-                        }
+                        "Egg Plant",
+                        "Key",
+                        "Large Spring Ball",
+                        "Spring Ball"
                       ]
                     }
                   ]
@@ -8974,6 +8527,7 @@
           {
             "name": "Tap-Tap The Red Nose's Fort: Level Clear",
             "id": 3166416,
+            "region": "6-4",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9023,6 +8577,7 @@
           {
             "name": "Tap-Tap The Red Nose's Boss Room",
             "id": null,
+            "region": "Tap-Tap The Red Nose's Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9072,6 +8627,7 @@
           {
             "name": "The Very Loooooong Cave: Red Coins",
             "id": 3166417,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9126,6 +8682,7 @@
           {
             "name": "The Very Loooooong Cave: Flowers",
             "id": 3166418,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9180,6 +8737,7 @@
           {
             "name": "The Very Loooooong Cave: Stars",
             "id": 3166419,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9246,6 +8804,7 @@
           {
             "name": "The Very Loooooong Cave: Level Clear",
             "id": 3166420,
+            "region": "6-5",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9287,26 +8846,18 @@
           {
             "name": "The Deep, Underground Maze: Red Coins",
             "id": 3166421,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Chomp Rock",
+                    "Key",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -9324,26 +8875,18 @@
           {
             "name": "The Deep, Underground Maze: Flowers",
             "id": 3166422,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Chomp Rock",
+                    "Key",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -9361,6 +8904,7 @@
           {
             "name": "The Deep, Underground Maze: Stars",
             "id": 3166423,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9370,20 +8914,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Chomp Rock"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Key"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Tulip"
-                        }
+                        "Chomp Rock",
+                        "Key",
+                        "Tulip"
                       ]
                     }
                   ]
@@ -9408,20 +8943,11 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Chomp Rock"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Key"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Large Spring Ball"
-                            }
+                            "Chomp Rock",
+                            "Key",
+                            "Large Spring Ball"
                           ]
                         }
                       ]
@@ -9443,30 +8969,19 @@
           {
             "name": "The Deep, Underground Maze: Level Clear",
             "id": 3166424,
+            "region": "6-6",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Chomp Rock"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Platform"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    }
+                    "Chomp Rock",
+                    "Dashed Platform",
+                    "Key",
+                    "Large Spring Ball"
                   ]
                 }
               ]
@@ -9507,6 +9022,7 @@
           {
             "name": "KEEP MOVING!!!!: Red Coins",
             "id": 3166425,
+            "region": "6-7",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9549,6 +9065,7 @@
           {
             "name": "KEEP MOVING!!!!: Flowers",
             "id": 3166426,
+            "region": "6-7",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -9570,6 +9087,7 @@
           {
             "name": "KEEP MOVING!!!!: Stars",
             "id": 3166427,
+            "region": "6-7",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9596,6 +9114,7 @@
           {
             "name": "KEEP MOVING!!!!: Level Clear",
             "id": 3166428,
+            "region": "6-7",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9658,6 +9177,7 @@
           {
             "name": "King Bowser's Castle: Red Coins",
             "id": 3166429,
+            "region": "6-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9667,16 +9187,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Helicopter Morph"
-                        }
+                        "Egg Plant",
+                        "Helicopter Morph"
                       ]
                     }
                   ]
@@ -9708,6 +9222,7 @@
           {
             "name": "King Bowser's Castle: Flowers",
             "id": 3166430,
+            "region": "6-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9717,16 +9232,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Helicopter Morph"
-                        }
+                        "Egg Plant",
+                        "Helicopter Morph"
                       ]
                     }
                   ]
@@ -9758,6 +9267,7 @@
           {
             "name": "King Bowser's Castle: Stars",
             "id": 3166431,
+            "region": "6-8",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9767,16 +9277,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Helicopter Morph"
-                        }
+                        "Egg Plant",
+                        "Helicopter Morph"
                       ]
                     }
                   ]
@@ -9831,6 +9335,7 @@
           {
             "name": "King Bowser's Castle: Level Clear",
             "id": null,
+            "region": "Bowser's Room",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10965,16 +10470,162 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Consumable",
-      "Everything",
-      "Gates",
-      "Items",
-      "Lives",
-      "Morphs",
-      "Panels",
-      "Traps"
-    ]
+    "1": {
+      "Items": [
+        "Vanishing Arrow Wheel",
+        "Middle Ring",
+        "Fire Melon",
+        "Piece of Luigi",
+        "Giant Eggs",
+        "! Switch",
+        "Large Spring Ball",
+        "Dashed Platform",
+        "Dashed Stairs",
+        "Egg Capacity Upgrade",
+        "Super Star",
+        "Ice Melon",
+        "Egg Plant",
+        "Poochy",
+        "Arrow Wheel",
+        "Tulip",
+        "Spring Ball",
+        "Secret Lens",
+        "Watermelon",
+        "Chomp Rock",
+        "Flashing Eggs",
+        "Skis",
+        "Key",
+        "Beanstalk",
+        "Bucket",
+        "Platform Ghost",
+        "Egg Launcher"
+      ],
+      "Morphs": [
+        "Car Morph",
+        "Mole Tank Morph",
+        "Train Morph",
+        "Submarine Morph",
+        "Helicopter Morph"
+      ],
+      "Gates": [
+        "World 5 Gate",
+        "World 6 Gate",
+        "World 3 Gate",
+        "World 1 Gate",
+        "World 2 Gate",
+        "World 4 Gate"
+      ],
+      "Panels": [
+        "Bonus 2",
+        "Extra 2",
+        "Extra 5",
+        "Bonus 1",
+        "Extra 4",
+        "Extra 3",
+        "Bonus 4",
+        "Extra Panels",
+        "Bonus 3",
+        "Bonus 5",
+        "Bonus 6",
+        "Extra 1",
+        "Bonus Panels",
+        "Extra 6"
+      ],
+      "Consumable": [
+        "Pocket Melon",
+        "Magnifying Glass",
+        "+20 Stars",
+        "+10 Stars",
+        "Anytime Egg",
+        "Pocket Ice Melon",
+        "Pocket Fire Melon",
+        "Anywhere Pow",
+        "Winged Cloud Maker"
+      ],
+      "Lives": [
+        "2-Up",
+        "10-Up",
+        "1-Up",
+        "3-Up"
+      ],
+      "Traps": [
+        "Reversal Trap",
+        "Fuzzy Trap",
+        "Darkness Trap",
+        "Freeze Trap"
+      ],
+      "Everything": [
+        "Vanishing Arrow Wheel",
+        "Middle Ring",
+        "Fire Melon",
+        "+20 Stars",
+        "! Switch",
+        "Train Morph",
+        "Egg Capacity Upgrade",
+        "Reversal Trap",
+        "Ice Melon",
+        "Arrow Wheel",
+        "World 4 Gate",
+        "Magnifying Glass",
+        "10-Up",
+        "Chomp Rock",
+        "Extra 5",
+        "Bonus 6",
+        "Anywhere Pow",
+        "Bonus Panels",
+        "Freeze Trap",
+        "1-Up",
+        "Extra 3",
+        "Pocket Ice Melon",
+        "World 5 Gate",
+        "Dashed Stairs",
+        "Poochy",
+        "Tulip",
+        "Watermelon",
+        "Flashing Eggs",
+        "Bonus 3",
+        "Bucket",
+        "Extra 1",
+        "Skis",
+        "Giant Eggs",
+        "Extra 2",
+        "Bonus 4",
+        "Dashed Platform",
+        "Pocket Fire Melon",
+        "Super Star",
+        "2-Up",
+        "World 1 Gate",
+        "Egg Plant",
+        "Pocket Melon",
+        "Car Morph",
+        "Bonus 2",
+        "Extra Panels",
+        "Beanstalk",
+        "Platform Ghost",
+        "3-Up",
+        "Egg Launcher",
+        "Submarine Morph",
+        "Winged Cloud Maker",
+        "+10 Stars",
+        "Piece of Luigi",
+        "Bonus 5",
+        "Extra 4",
+        "Anytime Egg",
+        "Large Spring Ball",
+        "World 3 Gate",
+        "Spring Ball",
+        "Helicopter Morph",
+        "World 6 Gate",
+        "Fuzzy Trap",
+        "Mole Tank Morph",
+        "World 2 Gate",
+        "Bonus 1",
+        "Key",
+        "Darkness Trap",
+        "Secret Lens",
+        "Extra 6"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

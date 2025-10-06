@@ -511,18 +511,28 @@ class RuleAnalyzer(ast.NodeVisitor):
         try:
             logging.debug(f"\n--- Analyzing Function Definition: {node.name} ---")
             logging.debug(f"Function args: {[arg.arg for arg in node.args.args]}")
-            
+
             # Detailed function body inspection
             for i, body_node in enumerate(node.body):
                 logging.debug(f"Function body node {i}: {type(body_node).__name__}")
-            
-            # Visit the first body node if exists and return its result
-            # Assumes the meaningful part is the first statement (e.g., return)
-            if node.body:
-                return self.visit(node.body[0]) 
+
+            # Skip docstrings - they are Expr nodes containing a Constant string as the first statement
+            body_to_analyze = node.body
+            if (body_to_analyze and
+                isinstance(body_to_analyze[0], ast.Expr) and
+                isinstance(body_to_analyze[0].value, ast.Constant) and
+                isinstance(body_to_analyze[0].value.value, str)):
+                # First statement is a docstring, skip it
+                logging.debug("Skipping docstring in function body")
+                body_to_analyze = body_to_analyze[1:]
+
+            # Visit the first meaningful body node if exists and return its result
+            # Assumes the meaningful part is the first statement after docstring (e.g., return)
+            if body_to_analyze:
+                return self.visit(body_to_analyze[0])
             return None # Return None if no body
         except Exception as e:
-            logging.error(f"Error analyzing function {node.name}", e)
+            logging.error(f"Error analyzing function {node.name}: {e}")
             return None
 
     def visit_Lambda(self, node):
@@ -653,6 +663,8 @@ class RuleAnalyzer(ast.NodeVisitor):
                      has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
                      # Attempt recursion if state arg is present
                      if has_state_arg:
+                          # Import analyze_rule locally to avoid forward reference issues
+                          from . import analyze_rule
                           # Get the actual function from the closure
                           actual_func = self.closure_vars[func_name]
                           logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
@@ -668,7 +680,7 @@ class RuleAnalyzer(ast.NodeVisitor):
                           else:
                               logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
                  except Exception as e:
-                      logging.error(f"Error during recursive analysis of closure var {func_name}", e)
+                      logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
@@ -807,6 +819,58 @@ class RuleAnalyzer(ast.NodeVisitor):
                         else:
                             # Keep unresolved attribute as-is
                             resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'list':
+                        # Recursively resolve list elements (e.g., [iname.double, iname.roc_wing])
+                        list_elements = arg.get('value', [])
+                        resolved_list = []
+                        all_resolved = True
+
+                        for element in list_elements:
+                            if element and element.get('type') == 'attribute':
+                                # Try to resolve the attribute
+                                resolved_value = self.resolve_expression(element)
+                                if resolved_value is not None:
+                                    # Handle enum values
+                                    if hasattr(resolved_value, 'value'):
+                                        final_value = resolved_value.value
+                                    else:
+                                        final_value = resolved_value
+                                    # Ensure the value is JSON-serializable
+                                    final_value = make_json_serializable(final_value)
+                                    resolved_list.append(final_value)
+                                else:
+                                    # Could not resolve this element
+                                    all_resolved = False
+                                    break
+                            elif element and element.get('type') == 'constant':
+                                # Already a constant, just extract the value
+                                resolved_list.append(element.get('value'))
+                            elif element and element.get('type') == 'name':
+                                # Try to resolve the name
+                                resolved_value = self.resolve_variable(element.get('name'))
+                                if resolved_value is not None:
+                                    if hasattr(resolved_value, 'value'):
+                                        final_value = resolved_value.value
+                                    else:
+                                        final_value = resolved_value
+                                    final_value = make_json_serializable(final_value)
+                                    resolved_list.append(final_value)
+                                else:
+                                    all_resolved = False
+                                    break
+                            else:
+                                # Unknown element type
+                                all_resolved = False
+                                break
+
+                        if all_resolved and len(resolved_list) == len(list_elements):
+                            # Successfully resolved all elements
+                            logging.debug(f"Resolved state method list argument to {resolved_list}")
+                            resolved_args.append({'type': 'constant', 'value': resolved_list})
+                        else:
+                            # Could not resolve all elements, keep the list structure
+                            logging.debug(f"Could not fully resolve list argument, keeping as-is")
+                            resolved_args.append(arg)
                     else:
                         resolved_args.append(arg)
                 
@@ -868,6 +932,25 @@ class RuleAnalyzer(ast.NodeVisitor):
                 logging.debug(f"State method result: {result}")
                 return result # Return state method result
 
+        # 2.5. Self method call (e.g., self.has_boss_strength)
+        elif func_info and func_info.get('type') == 'attribute':
+            if func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'self':
+                method_name = func_info['attr']
+                logging.debug(f"Processing self method call: {method_name}")
+
+                # Filter out state/player arguments
+                filtered_args = self._filter_special_args(args_with_nodes)
+
+                # Create helper result with the captured arguments
+                # DO NOT recursively analyze - we want to capture the call AS IS with its arguments
+                result = {
+                    'type': 'helper',
+                    'name': method_name,
+                    'args': filtered_args
+                }
+                logging.debug(f"Created helper result for self method: {result}")
+                return result
+
         # 3. Fallback for other types of calls (e.g., calling result of another function)
         logging.debug(f"Fallback function call type. func_info = {func_info}")
         filtered_args = self._filter_special_args(args_with_nodes)
@@ -901,7 +984,7 @@ class RuleAnalyzer(ast.NodeVisitor):
                  return None # Return None on error
 
         except Exception as e:
-            logging.error(f"Error in visit_Attribute for {ast.dump(node)}", e)
+            logging.error(f"Error in visit_Attribute for {ast.dump(node)}: {e}")
             return None
 
     def visit_Name(self, node):
@@ -938,7 +1021,7 @@ class RuleAnalyzer(ast.NodeVisitor):
             logging.debug(f"visit_Name: Set result to {result}")
             return result # Return the result
         except Exception as e:
-            logging.error(f"Error in visit_Name for {node.id}", e)
+            logging.error(f"Error in visit_Name for {node.id}: {e}")
             return None # Return None on error
 
     def visit_Expr(self, node: ast.Expr):
@@ -1102,7 +1185,7 @@ class RuleAnalyzer(ast.NodeVisitor):
             return result # Return the result
             
         except Exception as e:
-            logging.error(f"Error in visit_BoolOp", e)
+            logging.error(f"Error in visit_BoolOp: {e}")
             return None
 
     def visit_UnaryOp(self, node: ast.UnaryOp):
@@ -1286,7 +1369,7 @@ class RuleAnalyzer(ast.NodeVisitor):
             logging.debug(f"Node details: {vars(node)}")
             super().generic_visit(node)
         except Exception as e:
-            logging.error(f"Error in generic_visit for {type(node).__name__}", e)
+            logging.error(f"Error in generic_visit for {type(node).__name__}: {e}")
 
     def visit_Assign(self, node: ast.Assign):
         """ Handle assignment statements. If the value is a lambda/rule, analyze it. """

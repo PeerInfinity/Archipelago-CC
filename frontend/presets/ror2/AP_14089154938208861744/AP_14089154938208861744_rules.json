@@ -123,6 +123,7 @@
           {
             "name": "Distant Roost: Chest 1",
             "id": 38558,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -144,6 +145,7 @@
           {
             "name": "Distant Roost: Chest 2",
             "id": 38559,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -165,6 +167,7 @@
           {
             "name": "Distant Roost: Chest 3",
             "id": 38560,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -186,6 +189,7 @@
           {
             "name": "Distant Roost: Chest 4",
             "id": 38561,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -207,6 +211,7 @@
           {
             "name": "Distant Roost: Chest 5",
             "id": 38562,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -228,6 +233,7 @@
           {
             "name": "Distant Roost: Chest 6",
             "id": 38563,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -249,6 +255,7 @@
           {
             "name": "Distant Roost: Chest 7",
             "id": 38564,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -270,6 +277,7 @@
           {
             "name": "Distant Roost: Chest 8",
             "id": 38565,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -291,6 +299,7 @@
           {
             "name": "Distant Roost: Chest 9",
             "id": 38566,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -312,6 +321,7 @@
           {
             "name": "Distant Roost: Chest 10",
             "id": 38567,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -333,6 +343,7 @@
           {
             "name": "Distant Roost: Shrine 1",
             "id": 38578,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -354,6 +365,7 @@
           {
             "name": "Distant Roost: Shrine 2",
             "id": 38579,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -375,6 +387,7 @@
           {
             "name": "Distant Roost: Shrine 3",
             "id": 38580,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -396,6 +409,7 @@
           {
             "name": "Distant Roost: Shrine 4",
             "id": 38581,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -417,6 +431,7 @@
           {
             "name": "Distant Roost: Shrine 5",
             "id": 38582,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -438,6 +453,7 @@
           {
             "name": "Distant Roost: Radio Scanner 1",
             "id": 38599,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -459,6 +475,7 @@
           {
             "name": "Distant Roost: Newt Altar 1",
             "id": 38600,
+            "region": "Distant Roost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -516,6 +533,7 @@
           {
             "name": "Distant Roost (2): Chest 1",
             "id": 38602,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -537,6 +555,7 @@
           {
             "name": "Distant Roost (2): Chest 2",
             "id": 38603,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -558,6 +577,7 @@
           {
             "name": "Distant Roost (2): Chest 3",
             "id": 38604,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -579,6 +599,7 @@
           {
             "name": "Distant Roost (2): Chest 4",
             "id": 38605,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -600,6 +621,7 @@
           {
             "name": "Distant Roost (2): Chest 5",
             "id": 38606,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -621,6 +643,7 @@
           {
             "name": "Distant Roost (2): Chest 6",
             "id": 38607,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -642,6 +665,7 @@
           {
             "name": "Distant Roost (2): Chest 7",
             "id": 38608,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -663,6 +687,7 @@
           {
             "name": "Distant Roost (2): Chest 8",
             "id": 38609,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -684,6 +709,7 @@
           {
             "name": "Distant Roost (2): Chest 9",
             "id": 38610,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -705,6 +731,7 @@
           {
             "name": "Distant Roost (2): Chest 10",
             "id": 38611,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -726,6 +753,7 @@
           {
             "name": "Distant Roost (2): Shrine 1",
             "id": 38622,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -747,6 +775,7 @@
           {
             "name": "Distant Roost (2): Shrine 2",
             "id": 38623,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -768,6 +797,7 @@
           {
             "name": "Distant Roost (2): Shrine 3",
             "id": 38624,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -789,6 +819,7 @@
           {
             "name": "Distant Roost (2): Shrine 4",
             "id": 38625,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -810,6 +841,7 @@
           {
             "name": "Distant Roost (2): Shrine 5",
             "id": 38626,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -831,6 +863,7 @@
           {
             "name": "Distant Roost (2): Radio Scanner 1",
             "id": 38643,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -852,6 +885,7 @@
           {
             "name": "Distant Roost (2): Newt Altar 1",
             "id": 38644,
+            "region": "Distant Roost (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -909,6 +943,7 @@
           {
             "name": "Titanic Plains: Chest 1",
             "id": 38910,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -930,6 +965,7 @@
           {
             "name": "Titanic Plains: Chest 2",
             "id": 38911,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -951,6 +987,7 @@
           {
             "name": "Titanic Plains: Chest 3",
             "id": 38912,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -972,6 +1009,7 @@
           {
             "name": "Titanic Plains: Chest 4",
             "id": 38913,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -993,6 +1031,7 @@
           {
             "name": "Titanic Plains: Chest 5",
             "id": 38914,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1014,6 +1053,7 @@
           {
             "name": "Titanic Plains: Chest 6",
             "id": 38915,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1035,6 +1075,7 @@
           {
             "name": "Titanic Plains: Chest 7",
             "id": 38916,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1056,6 +1097,7 @@
           {
             "name": "Titanic Plains: Chest 8",
             "id": 38917,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1077,6 +1119,7 @@
           {
             "name": "Titanic Plains: Chest 9",
             "id": 38918,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1098,6 +1141,7 @@
           {
             "name": "Titanic Plains: Chest 10",
             "id": 38919,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1119,6 +1163,7 @@
           {
             "name": "Titanic Plains: Shrine 1",
             "id": 38930,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1140,6 +1185,7 @@
           {
             "name": "Titanic Plains: Shrine 2",
             "id": 38931,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1161,6 +1207,7 @@
           {
             "name": "Titanic Plains: Shrine 3",
             "id": 38932,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1182,6 +1229,7 @@
           {
             "name": "Titanic Plains: Shrine 4",
             "id": 38933,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1203,6 +1251,7 @@
           {
             "name": "Titanic Plains: Shrine 5",
             "id": 38934,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1224,6 +1273,7 @@
           {
             "name": "Titanic Plains: Radio Scanner 1",
             "id": 38951,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1245,6 +1295,7 @@
           {
             "name": "Titanic Plains: Newt Altar 1",
             "id": 38952,
+            "region": "Titanic Plains",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1302,6 +1353,7 @@
           {
             "name": "Titanic Plains (2): Chest 1",
             "id": 38954,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1323,6 +1375,7 @@
           {
             "name": "Titanic Plains (2): Chest 2",
             "id": 38955,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1344,6 +1397,7 @@
           {
             "name": "Titanic Plains (2): Chest 3",
             "id": 38956,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1365,6 +1419,7 @@
           {
             "name": "Titanic Plains (2): Chest 4",
             "id": 38957,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1386,6 +1441,7 @@
           {
             "name": "Titanic Plains (2): Chest 5",
             "id": 38958,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1407,6 +1463,7 @@
           {
             "name": "Titanic Plains (2): Chest 6",
             "id": 38959,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1428,6 +1485,7 @@
           {
             "name": "Titanic Plains (2): Chest 7",
             "id": 38960,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1449,6 +1507,7 @@
           {
             "name": "Titanic Plains (2): Chest 8",
             "id": 38961,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1470,6 +1529,7 @@
           {
             "name": "Titanic Plains (2): Chest 9",
             "id": 38962,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1491,6 +1551,7 @@
           {
             "name": "Titanic Plains (2): Chest 10",
             "id": 38963,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1512,6 +1573,7 @@
           {
             "name": "Titanic Plains (2): Shrine 1",
             "id": 38974,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1533,6 +1595,7 @@
           {
             "name": "Titanic Plains (2): Shrine 2",
             "id": 38975,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1554,6 +1617,7 @@
           {
             "name": "Titanic Plains (2): Shrine 3",
             "id": 38976,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1575,6 +1639,7 @@
           {
             "name": "Titanic Plains (2): Shrine 4",
             "id": 38977,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1596,6 +1661,7 @@
           {
             "name": "Titanic Plains (2): Shrine 5",
             "id": 38978,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1617,6 +1683,7 @@
           {
             "name": "Titanic Plains (2): Radio Scanner 1",
             "id": 38995,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1638,6 +1705,7 @@
           {
             "name": "Titanic Plains (2): Newt Altar 1",
             "id": 38996,
+            "region": "Titanic Plains (2)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1695,6 +1763,7 @@
           {
             "name": "Verdant Falls: Chest 1",
             "id": 39482,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1716,6 +1785,7 @@
           {
             "name": "Verdant Falls: Chest 2",
             "id": 39483,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1737,6 +1807,7 @@
           {
             "name": "Verdant Falls: Chest 3",
             "id": 39484,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1758,6 +1829,7 @@
           {
             "name": "Verdant Falls: Chest 4",
             "id": 39485,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1779,6 +1851,7 @@
           {
             "name": "Verdant Falls: Chest 5",
             "id": 39486,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1800,6 +1873,7 @@
           {
             "name": "Verdant Falls: Chest 6",
             "id": 39487,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1821,6 +1895,7 @@
           {
             "name": "Verdant Falls: Chest 7",
             "id": 39488,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1842,6 +1917,7 @@
           {
             "name": "Verdant Falls: Chest 8",
             "id": 39489,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1863,6 +1939,7 @@
           {
             "name": "Verdant Falls: Chest 9",
             "id": 39490,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1884,6 +1961,7 @@
           {
             "name": "Verdant Falls: Chest 10",
             "id": 39491,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1905,6 +1983,7 @@
           {
             "name": "Verdant Falls: Shrine 1",
             "id": 39502,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1926,6 +2005,7 @@
           {
             "name": "Verdant Falls: Shrine 2",
             "id": 39503,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1947,6 +2027,7 @@
           {
             "name": "Verdant Falls: Shrine 3",
             "id": 39504,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1968,6 +2049,7 @@
           {
             "name": "Verdant Falls: Shrine 4",
             "id": 39505,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1989,6 +2071,7 @@
           {
             "name": "Verdant Falls: Shrine 5",
             "id": 39506,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2010,6 +2093,7 @@
           {
             "name": "Verdant Falls: Radio Scanner 1",
             "id": 39523,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2031,6 +2115,7 @@
           {
             "name": "Verdant Falls: Newt Altar 1",
             "id": 39524,
+            "region": "Verdant Falls",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2088,6 +2173,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 1",
             "id": 38998,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2109,6 +2195,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 2",
             "id": 38999,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2130,6 +2217,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 3",
             "id": 39000,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2151,6 +2239,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 4",
             "id": 39001,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2172,6 +2261,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 5",
             "id": 39002,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2193,6 +2283,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 6",
             "id": 39003,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2214,6 +2305,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 7",
             "id": 39004,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2235,6 +2327,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 8",
             "id": 39005,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2256,6 +2349,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 9",
             "id": 39006,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2277,6 +2371,7 @@
           {
             "name": "Abandoned Aqueduct: Chest 10",
             "id": 39007,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2298,6 +2393,7 @@
           {
             "name": "Abandoned Aqueduct: Shrine 1",
             "id": 39018,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2319,6 +2415,7 @@
           {
             "name": "Abandoned Aqueduct: Shrine 2",
             "id": 39019,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2340,6 +2437,7 @@
           {
             "name": "Abandoned Aqueduct: Shrine 3",
             "id": 39020,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2361,6 +2459,7 @@
           {
             "name": "Abandoned Aqueduct: Shrine 4",
             "id": 39021,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2382,6 +2481,7 @@
           {
             "name": "Abandoned Aqueduct: Shrine 5",
             "id": 39022,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2403,6 +2503,7 @@
           {
             "name": "Abandoned Aqueduct: Radio Scanner 1",
             "id": 39039,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2424,6 +2525,7 @@
           {
             "name": "Abandoned Aqueduct: Newt Altar 1",
             "id": 39040,
+            "region": "Abandoned Aqueduct",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2481,6 +2583,7 @@
           {
             "name": "Wetland Aspect: Chest 1",
             "id": 38778,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2502,6 +2605,7 @@
           {
             "name": "Wetland Aspect: Chest 2",
             "id": 38779,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2523,6 +2627,7 @@
           {
             "name": "Wetland Aspect: Chest 3",
             "id": 38780,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2544,6 +2649,7 @@
           {
             "name": "Wetland Aspect: Chest 4",
             "id": 38781,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2565,6 +2671,7 @@
           {
             "name": "Wetland Aspect: Chest 5",
             "id": 38782,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2586,6 +2693,7 @@
           {
             "name": "Wetland Aspect: Chest 6",
             "id": 38783,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2607,6 +2715,7 @@
           {
             "name": "Wetland Aspect: Chest 7",
             "id": 38784,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2628,6 +2737,7 @@
           {
             "name": "Wetland Aspect: Chest 8",
             "id": 38785,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2649,6 +2759,7 @@
           {
             "name": "Wetland Aspect: Chest 9",
             "id": 38786,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2670,6 +2781,7 @@
           {
             "name": "Wetland Aspect: Chest 10",
             "id": 38787,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2691,6 +2803,7 @@
           {
             "name": "Wetland Aspect: Shrine 1",
             "id": 38798,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2712,6 +2825,7 @@
           {
             "name": "Wetland Aspect: Shrine 2",
             "id": 38799,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2733,6 +2847,7 @@
           {
             "name": "Wetland Aspect: Shrine 3",
             "id": 38800,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2754,6 +2869,7 @@
           {
             "name": "Wetland Aspect: Shrine 4",
             "id": 38801,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2775,6 +2891,7 @@
           {
             "name": "Wetland Aspect: Shrine 5",
             "id": 38802,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2796,6 +2913,7 @@
           {
             "name": "Wetland Aspect: Radio Scanner 1",
             "id": 38819,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2817,6 +2935,7 @@
           {
             "name": "Wetland Aspect: Newt Altar 1",
             "id": 38820,
+            "region": "Wetland Aspect",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2874,6 +2993,7 @@
           {
             "name": "Rallypoint Delta: Chest 1",
             "id": 38822,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2895,6 +3015,7 @@
           {
             "name": "Rallypoint Delta: Chest 2",
             "id": 38823,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2916,6 +3037,7 @@
           {
             "name": "Rallypoint Delta: Chest 3",
             "id": 38824,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2937,6 +3059,7 @@
           {
             "name": "Rallypoint Delta: Chest 4",
             "id": 38825,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2958,6 +3081,7 @@
           {
             "name": "Rallypoint Delta: Chest 5",
             "id": 38826,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2979,6 +3103,7 @@
           {
             "name": "Rallypoint Delta: Chest 6",
             "id": 38827,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3000,6 +3125,7 @@
           {
             "name": "Rallypoint Delta: Chest 7",
             "id": 38828,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3021,6 +3147,7 @@
           {
             "name": "Rallypoint Delta: Chest 8",
             "id": 38829,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3042,6 +3169,7 @@
           {
             "name": "Rallypoint Delta: Chest 9",
             "id": 38830,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3063,6 +3191,7 @@
           {
             "name": "Rallypoint Delta: Chest 10",
             "id": 38831,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3084,6 +3213,7 @@
           {
             "name": "Rallypoint Delta: Shrine 1",
             "id": 38842,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3105,6 +3235,7 @@
           {
             "name": "Rallypoint Delta: Shrine 2",
             "id": 38843,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3126,6 +3257,7 @@
           {
             "name": "Rallypoint Delta: Shrine 3",
             "id": 38844,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3147,6 +3279,7 @@
           {
             "name": "Rallypoint Delta: Shrine 4",
             "id": 38845,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3168,6 +3301,7 @@
           {
             "name": "Rallypoint Delta: Shrine 5",
             "id": 38846,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3189,6 +3323,7 @@
           {
             "name": "Rallypoint Delta: Radio Scanner 1",
             "id": 38863,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3210,6 +3345,7 @@
           {
             "name": "Rallypoint Delta: Newt Altar 1",
             "id": 38864,
+            "region": "Rallypoint Delta",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3267,6 +3403,7 @@
           {
             "name": "Scorched Acres: Chest 1",
             "id": 40318,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3288,6 +3425,7 @@
           {
             "name": "Scorched Acres: Chest 2",
             "id": 40319,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3309,6 +3447,7 @@
           {
             "name": "Scorched Acres: Chest 3",
             "id": 40320,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3330,6 +3469,7 @@
           {
             "name": "Scorched Acres: Chest 4",
             "id": 40321,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3351,6 +3491,7 @@
           {
             "name": "Scorched Acres: Chest 5",
             "id": 40322,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3372,6 +3513,7 @@
           {
             "name": "Scorched Acres: Chest 6",
             "id": 40323,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3393,6 +3535,7 @@
           {
             "name": "Scorched Acres: Chest 7",
             "id": 40324,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3414,6 +3557,7 @@
           {
             "name": "Scorched Acres: Chest 8",
             "id": 40325,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3435,6 +3579,7 @@
           {
             "name": "Scorched Acres: Chest 9",
             "id": 40326,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3456,6 +3601,7 @@
           {
             "name": "Scorched Acres: Chest 10",
             "id": 40327,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3477,6 +3623,7 @@
           {
             "name": "Scorched Acres: Shrine 1",
             "id": 40338,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3498,6 +3645,7 @@
           {
             "name": "Scorched Acres: Shrine 2",
             "id": 40339,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3519,6 +3667,7 @@
           {
             "name": "Scorched Acres: Shrine 3",
             "id": 40340,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3540,6 +3689,7 @@
           {
             "name": "Scorched Acres: Shrine 4",
             "id": 40341,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3561,6 +3711,7 @@
           {
             "name": "Scorched Acres: Shrine 5",
             "id": 40342,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3582,6 +3733,7 @@
           {
             "name": "Scorched Acres: Radio Scanner 1",
             "id": 40359,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3603,6 +3755,7 @@
           {
             "name": "Scorched Acres: Newt Altar 1",
             "id": 40360,
+            "region": "Scorched Acres",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3660,6 +3813,7 @@
           {
             "name": "Abyssal Depths: Chest 1",
             "id": 38690,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3681,6 +3835,7 @@
           {
             "name": "Abyssal Depths: Chest 2",
             "id": 38691,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3702,6 +3857,7 @@
           {
             "name": "Abyssal Depths: Chest 3",
             "id": 38692,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3723,6 +3879,7 @@
           {
             "name": "Abyssal Depths: Chest 4",
             "id": 38693,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3744,6 +3901,7 @@
           {
             "name": "Abyssal Depths: Chest 5",
             "id": 38694,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3765,6 +3923,7 @@
           {
             "name": "Abyssal Depths: Chest 6",
             "id": 38695,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3786,6 +3945,7 @@
           {
             "name": "Abyssal Depths: Chest 7",
             "id": 38696,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3807,6 +3967,7 @@
           {
             "name": "Abyssal Depths: Chest 8",
             "id": 38697,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3828,6 +3989,7 @@
           {
             "name": "Abyssal Depths: Chest 9",
             "id": 38698,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3849,6 +4011,7 @@
           {
             "name": "Abyssal Depths: Chest 10",
             "id": 38699,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3870,6 +4033,7 @@
           {
             "name": "Abyssal Depths: Shrine 1",
             "id": 38710,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3891,6 +4055,7 @@
           {
             "name": "Abyssal Depths: Shrine 2",
             "id": 38711,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3912,6 +4077,7 @@
           {
             "name": "Abyssal Depths: Shrine 3",
             "id": 38712,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3933,6 +4099,7 @@
           {
             "name": "Abyssal Depths: Shrine 4",
             "id": 38713,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3954,6 +4121,7 @@
           {
             "name": "Abyssal Depths: Shrine 5",
             "id": 38714,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3975,6 +4143,7 @@
           {
             "name": "Abyssal Depths: Radio Scanner 1",
             "id": 38731,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3996,6 +4165,7 @@
           {
             "name": "Abyssal Depths: Newt Altar 1",
             "id": 38732,
+            "region": "Abyssal Depths",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4053,6 +4223,7 @@
           {
             "name": "Siren's Call: Chest 1",
             "id": 39878,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4074,6 +4245,7 @@
           {
             "name": "Siren's Call: Chest 2",
             "id": 39879,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4095,6 +4267,7 @@
           {
             "name": "Siren's Call: Chest 3",
             "id": 39880,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4116,6 +4289,7 @@
           {
             "name": "Siren's Call: Chest 4",
             "id": 39881,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4137,6 +4311,7 @@
           {
             "name": "Siren's Call: Chest 5",
             "id": 39882,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4158,6 +4333,7 @@
           {
             "name": "Siren's Call: Chest 6",
             "id": 39883,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4179,6 +4355,7 @@
           {
             "name": "Siren's Call: Chest 7",
             "id": 39884,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4200,6 +4377,7 @@
           {
             "name": "Siren's Call: Chest 8",
             "id": 39885,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4221,6 +4399,7 @@
           {
             "name": "Siren's Call: Chest 9",
             "id": 39886,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4242,6 +4421,7 @@
           {
             "name": "Siren's Call: Chest 10",
             "id": 39887,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4263,6 +4443,7 @@
           {
             "name": "Siren's Call: Shrine 1",
             "id": 39898,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4284,6 +4465,7 @@
           {
             "name": "Siren's Call: Shrine 2",
             "id": 39899,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4305,6 +4487,7 @@
           {
             "name": "Siren's Call: Shrine 3",
             "id": 39900,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4326,6 +4509,7 @@
           {
             "name": "Siren's Call: Shrine 4",
             "id": 39901,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4347,6 +4531,7 @@
           {
             "name": "Siren's Call: Shrine 5",
             "id": 39902,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4368,6 +4553,7 @@
           {
             "name": "Siren's Call: Radio Scanner 1",
             "id": 39919,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4389,6 +4575,7 @@
           {
             "name": "Siren's Call: Newt Altar 1",
             "id": 39920,
+            "region": "Siren's Call",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4446,6 +4633,7 @@
           {
             "name": "Sundered Grove: Chest 1",
             "id": 39790,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4467,6 +4655,7 @@
           {
             "name": "Sundered Grove: Chest 2",
             "id": 39791,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4488,6 +4677,7 @@
           {
             "name": "Sundered Grove: Chest 3",
             "id": 39792,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4509,6 +4699,7 @@
           {
             "name": "Sundered Grove: Chest 4",
             "id": 39793,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4530,6 +4721,7 @@
           {
             "name": "Sundered Grove: Chest 5",
             "id": 39794,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4551,6 +4743,7 @@
           {
             "name": "Sundered Grove: Chest 6",
             "id": 39795,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4572,6 +4765,7 @@
           {
             "name": "Sundered Grove: Chest 7",
             "id": 39796,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4593,6 +4787,7 @@
           {
             "name": "Sundered Grove: Chest 8",
             "id": 39797,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4614,6 +4809,7 @@
           {
             "name": "Sundered Grove: Chest 9",
             "id": 39798,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4635,6 +4831,7 @@
           {
             "name": "Sundered Grove: Chest 10",
             "id": 39799,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4656,6 +4853,7 @@
           {
             "name": "Sundered Grove: Shrine 1",
             "id": 39810,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4677,6 +4875,7 @@
           {
             "name": "Sundered Grove: Shrine 2",
             "id": 39811,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4698,6 +4897,7 @@
           {
             "name": "Sundered Grove: Shrine 3",
             "id": 39812,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4719,6 +4919,7 @@
           {
             "name": "Sundered Grove: Shrine 4",
             "id": 39813,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4740,6 +4941,7 @@
           {
             "name": "Sundered Grove: Shrine 5",
             "id": 39814,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4761,6 +4963,7 @@
           {
             "name": "Sundered Grove: Radio Scanner 1",
             "id": 39831,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4782,6 +4985,7 @@
           {
             "name": "Sundered Grove: Newt Altar 1",
             "id": 39832,
+            "region": "Sundered Grove",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4851,6 +5055,7 @@
           {
             "name": "Sky Meadow: Chest 1",
             "id": 39922,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4872,6 +5077,7 @@
           {
             "name": "Sky Meadow: Chest 2",
             "id": 39923,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4893,6 +5099,7 @@
           {
             "name": "Sky Meadow: Chest 3",
             "id": 39924,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4914,6 +5121,7 @@
           {
             "name": "Sky Meadow: Chest 4",
             "id": 39925,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4935,6 +5143,7 @@
           {
             "name": "Sky Meadow: Chest 5",
             "id": 39926,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4956,6 +5165,7 @@
           {
             "name": "Sky Meadow: Chest 6",
             "id": 39927,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4977,6 +5187,7 @@
           {
             "name": "Sky Meadow: Chest 7",
             "id": 39928,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4998,6 +5209,7 @@
           {
             "name": "Sky Meadow: Chest 8",
             "id": 39929,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5019,6 +5231,7 @@
           {
             "name": "Sky Meadow: Chest 9",
             "id": 39930,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5040,6 +5253,7 @@
           {
             "name": "Sky Meadow: Chest 10",
             "id": 39931,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5061,6 +5275,7 @@
           {
             "name": "Sky Meadow: Shrine 1",
             "id": 39942,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5082,6 +5297,7 @@
           {
             "name": "Sky Meadow: Shrine 2",
             "id": 39943,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5103,6 +5319,7 @@
           {
             "name": "Sky Meadow: Shrine 3",
             "id": 39944,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5124,6 +5341,7 @@
           {
             "name": "Sky Meadow: Shrine 4",
             "id": 39945,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5145,6 +5363,7 @@
           {
             "name": "Sky Meadow: Shrine 5",
             "id": 39946,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5166,6 +5385,7 @@
           {
             "name": "Sky Meadow: Radio Scanner 1",
             "id": 39963,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5187,6 +5407,7 @@
           {
             "name": "Sky Meadow: Newt Altar 1",
             "id": 39964,
+            "region": "Sky Meadow",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5333,6 +5554,7 @@
           {
             "name": "Stage 5",
             "id": null,
+            "region": "OrderedStage_5",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6140,6 +6362,7 @@
           {
             "name": "Victory",
             "id": null,
+            "region": "Victory",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7091,14 +7314,119 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Environments",
-      "Everything",
-      "Fillers",
-      "Stages",
-      "Traps",
-      "Upgrades"
-    ]
+    "1": {
+      "Stages": [
+        "Stage 2",
+        "Stage 3",
+        "Progressive Stage",
+        "Stage 1",
+        "Stage 4"
+      ],
+      "Environments": [
+        "Void Fields",
+        "Verdant Falls",
+        "Siren's Call",
+        "Siphoned Forest",
+        "Aphelian Sanctuary",
+        "Rallypoint Delta",
+        "Hidden Realm: Bulwark's Ambry",
+        "Titanic Plains",
+        "Hidden Realm: A Moment, Whole",
+        "The Planetarium",
+        "Sundered Grove",
+        "Titanic Plains (2)",
+        "Wetland Aspect",
+        "Commencement",
+        "Distant Roost",
+        "Void Locus",
+        "Scorched Acres",
+        "Hidden Realm: Gilded Coast",
+        "Hidden Realm: A Moment, Fractured",
+        "Distant Roost (2)",
+        "Abyssal Depths",
+        "Sky Meadow",
+        "Hidden Realm: Bazaar Between Time",
+        "Sulfur Pools",
+        "Abandoned Aqueduct"
+      ],
+      "Upgrades": [
+        "Item Scrap, Red",
+        "Boss Item",
+        "Common Item",
+        "Legendary Item",
+        "Item Scrap, White",
+        "Item Scrap, Yellow",
+        "Void Item",
+        "Equipment",
+        "Item Scrap, Green",
+        "Uncommon Item"
+      ],
+      "Fillers": [
+        "1000 Exp",
+        "Money",
+        "Lunar Coin"
+      ],
+      "Traps": [
+        "Lunar Item",
+        "Combat Trap",
+        "Teleport Trap",
+        "Time Warp Trap",
+        "Mountain Trap"
+      ],
+      "Everything": [
+        "Item Scrap, Red",
+        "Void Fields",
+        "Siren's Call",
+        "Lunar Coin",
+        "Siphoned Forest",
+        "Stage 3",
+        "Rallypoint Delta",
+        "Hidden Realm: Bulwark's Ambry",
+        "Titanic Plains",
+        "Beads of Fealty",
+        "Combat Trap",
+        "Hidden Realm: A Moment, Whole",
+        "Teleport Trap",
+        "Wetland Aspect",
+        "Commencement",
+        "Distant Roost",
+        "Distant Roost (2)",
+        "Boss Item",
+        "Equipment",
+        "Sky Meadow",
+        "Money",
+        "Uncommon Item",
+        "Stage 4",
+        "1000 Exp",
+        "Dio's Best Friend",
+        "Stage 1",
+        "Verdant Falls",
+        "Item Scrap, White",
+        "Time Warp Trap",
+        "Mountain Trap",
+        "Aphelian Sanctuary",
+        "The Planetarium",
+        "Void Item",
+        "Sundered Grove",
+        "Radar Scanner",
+        "Titanic Plains (2)",
+        "Stage 2",
+        "Progressive Stage",
+        "Void Locus",
+        "Scorched Acres",
+        "Common Item",
+        "Legendary Item",
+        "Item Scrap, Yellow",
+        "Hidden Realm: Gilded Coast",
+        "Hidden Realm: A Moment, Fractured",
+        "Lunar Item",
+        "Abyssal Depths",
+        "Hidden Realm: Bazaar Between Time",
+        "Sulfur Pools",
+        "Item Scrap, Green",
+        "Abandoned Aqueduct"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

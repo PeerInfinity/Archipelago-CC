@@ -141,6 +141,7 @@
           {
             "name": "Coal Pits Chest 1",
             "id": 110126,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -159,6 +160,7 @@
           {
             "name": "Coal Pits Chest 2",
             "id": 110127,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -177,6 +179,7 @@
           {
             "name": "Coal Pits Chest 3",
             "id": 110128,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -195,6 +198,7 @@
           {
             "name": "Coal Pits Pedestal 1",
             "id": 110146,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -213,6 +217,7 @@
           {
             "name": "Coal Pits Pedestal 2",
             "id": 110147,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -231,6 +236,7 @@
           {
             "name": "Coal Pits Pedestal 3",
             "id": 110148,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -249,6 +255,7 @@
           {
             "name": "Coal Pits Pedestal 4",
             "id": 110149,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -267,6 +274,7 @@
           {
             "name": "Coal Pits Pedestal 5",
             "id": 110150,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -285,6 +293,7 @@
           {
             "name": "Coal Pits Pedestal 6",
             "id": 110151,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -303,6 +312,7 @@
           {
             "name": "Portal to Holy Mountain 2",
             "id": null,
+            "region": "Coal Pits",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -357,6 +367,7 @@
           {
             "name": "Coal Pits Holy Mountain Shop Item 1",
             "id": 110000,
+            "region": "Coal Pits Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -375,6 +386,7 @@
           {
             "name": "Coal Pits Holy Mountain Shop Item 2",
             "id": 110001,
+            "region": "Coal Pits Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -393,6 +405,7 @@
           {
             "name": "Coal Pits Holy Mountain Shop Item 3",
             "id": 110002,
+            "region": "Coal Pits Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -411,6 +424,7 @@
           {
             "name": "Coal Pits Holy Mountain Shop Item 4",
             "id": 110003,
+            "region": "Coal Pits Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -429,6 +443,7 @@
           {
             "name": "Coal Pits Holy Mountain Shop Item 5",
             "id": 110004,
+            "region": "Coal Pits Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -447,6 +462,7 @@
           {
             "name": "Coal Pits Holy Mountain Spell Refresh",
             "id": 110005,
+            "region": "Coal Pits Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -763,6 +779,7 @@
           {
             "name": "Hiisi Base Chest 1",
             "id": 110246,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -781,6 +798,7 @@
           {
             "name": "Hiisi Base Chest 2",
             "id": 110247,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -799,6 +817,7 @@
           {
             "name": "Hiisi Base Chest 3",
             "id": 110248,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -817,6 +836,7 @@
           {
             "name": "Hiisi Base Pedestal 1",
             "id": 110266,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -835,6 +855,7 @@
           {
             "name": "Hiisi Base Pedestal 2",
             "id": 110267,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -853,6 +874,7 @@
           {
             "name": "Hiisi Base Pedestal 3",
             "id": 110268,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -871,6 +893,7 @@
           {
             "name": "Hiisi Base Pedestal 4",
             "id": 110269,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -889,6 +912,7 @@
           {
             "name": "Hiisi Base Pedestal 5",
             "id": 110270,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -907,6 +931,7 @@
           {
             "name": "Hiisi Base Pedestal 6",
             "id": 110271,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -925,6 +950,7 @@
           {
             "name": "Portal to Holy Mountain 4",
             "id": null,
+            "region": "Hiisi Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -979,6 +1005,7 @@
           {
             "name": "Hiisi Base Holy Mountain Shop Item 1",
             "id": 110012,
+            "region": "Hiisi Base Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -997,6 +1024,7 @@
           {
             "name": "Hiisi Base Holy Mountain Shop Item 2",
             "id": 110013,
+            "region": "Hiisi Base Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1015,6 +1043,7 @@
           {
             "name": "Hiisi Base Holy Mountain Shop Item 3",
             "id": 110014,
+            "region": "Hiisi Base Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1033,6 +1062,7 @@
           {
             "name": "Hiisi Base Holy Mountain Shop Item 4",
             "id": 110015,
+            "region": "Hiisi Base Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1051,6 +1081,7 @@
           {
             "name": "Hiisi Base Holy Mountain Shop Item 5",
             "id": 110016,
+            "region": "Hiisi Base Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1069,6 +1100,7 @@
           {
             "name": "Hiisi Base Holy Mountain Spell Refresh",
             "id": 110017,
+            "region": "Hiisi Base Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1123,6 +1155,7 @@
           {
             "name": "Laboratory Holy Mountain Shop Item 1",
             "id": 110036,
+            "region": "Laboratory Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1141,6 +1174,7 @@
           {
             "name": "Laboratory Holy Mountain Shop Item 2",
             "id": 110037,
+            "region": "Laboratory Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1159,6 +1193,7 @@
           {
             "name": "Laboratory Holy Mountain Shop Item 3",
             "id": 110038,
+            "region": "Laboratory Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1177,6 +1212,7 @@
           {
             "name": "Laboratory Holy Mountain Shop Item 4",
             "id": 110039,
+            "region": "Laboratory Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1195,6 +1231,7 @@
           {
             "name": "Laboratory Holy Mountain Shop Item 5",
             "id": 110040,
+            "region": "Laboratory Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1213,6 +1250,7 @@
           {
             "name": "Laboratory Holy Mountain Spell Refresh",
             "id": 110041,
+            "region": "Laboratory Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1438,6 +1476,7 @@
           {
             "name": "Mines Chest 1",
             "id": 110046,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1456,6 +1495,7 @@
           {
             "name": "Mines Chest 2",
             "id": 110047,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1474,6 +1514,7 @@
           {
             "name": "Mines Chest 3",
             "id": 110048,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1492,6 +1533,7 @@
           {
             "name": "Mines Pedestal 1",
             "id": 110066,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1510,6 +1552,7 @@
           {
             "name": "Mines Pedestal 2",
             "id": 110067,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1528,6 +1571,7 @@
           {
             "name": "Mines Pedestal 3",
             "id": 110068,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1546,6 +1590,7 @@
           {
             "name": "Mines Pedestal 4",
             "id": 110069,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1564,6 +1609,7 @@
           {
             "name": "Mines Pedestal 5",
             "id": 110070,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1582,6 +1628,7 @@
           {
             "name": "Mines Pedestal 6",
             "id": 110071,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1600,6 +1647,7 @@
           {
             "name": "Portal to Holy Mountain 1",
             "id": null,
+            "region": "Mines",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1755,6 +1803,7 @@
           {
             "name": "Secret Shop Item 1",
             "id": 110042,
+            "region": "Secret Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1773,6 +1822,7 @@
           {
             "name": "Secret Shop Item 2",
             "id": 110043,
+            "region": "Secret Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1791,6 +1841,7 @@
           {
             "name": "Secret Shop Item 3",
             "id": 110044,
+            "region": "Secret Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1809,6 +1860,7 @@
           {
             "name": "Secret Shop Item 4",
             "id": 110045,
+            "region": "Secret Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1909,6 +1961,7 @@
           {
             "name": "Snowy Depths Chest 1",
             "id": 110206,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1927,6 +1980,7 @@
           {
             "name": "Snowy Depths Chest 2",
             "id": 110207,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1945,6 +1999,7 @@
           {
             "name": "Snowy Depths Chest 3",
             "id": 110208,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1963,6 +2018,7 @@
           {
             "name": "Snowy Depths Pedestal 1",
             "id": 110226,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1981,6 +2037,7 @@
           {
             "name": "Snowy Depths Pedestal 2",
             "id": 110227,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1999,6 +2056,7 @@
           {
             "name": "Snowy Depths Pedestal 3",
             "id": 110228,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2017,6 +2075,7 @@
           {
             "name": "Snowy Depths Pedestal 4",
             "id": 110229,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2035,6 +2094,7 @@
           {
             "name": "Snowy Depths Pedestal 5",
             "id": 110230,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2053,6 +2113,7 @@
           {
             "name": "Snowy Depths Pedestal 6",
             "id": 110231,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2071,6 +2132,7 @@
           {
             "name": "Portal to Holy Mountain 3",
             "id": null,
+            "region": "Snowy Depths",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2125,6 +2187,7 @@
           {
             "name": "Snowy Depths Holy Mountain Shop Item 1",
             "id": 110006,
+            "region": "Snowy Depths Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2143,6 +2206,7 @@
           {
             "name": "Snowy Depths Holy Mountain Shop Item 2",
             "id": 110007,
+            "region": "Snowy Depths Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2161,6 +2225,7 @@
           {
             "name": "Snowy Depths Holy Mountain Shop Item 3",
             "id": 110008,
+            "region": "Snowy Depths Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2179,6 +2244,7 @@
           {
             "name": "Snowy Depths Holy Mountain Shop Item 4",
             "id": 110009,
+            "region": "Snowy Depths Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2197,6 +2263,7 @@
           {
             "name": "Snowy Depths Holy Mountain Shop Item 5",
             "id": 110010,
+            "region": "Snowy Depths Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2215,6 +2282,7 @@
           {
             "name": "Snowy Depths Holy Mountain Spell Refresh",
             "id": 110011,
+            "region": "Snowy Depths Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2315,6 +2383,7 @@
           {
             "name": "Temple of the Art Chest 1",
             "id": 110406,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2333,6 +2402,7 @@
           {
             "name": "Temple of the Art Chest 2",
             "id": 110407,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2351,6 +2421,7 @@
           {
             "name": "Temple of the Art Chest 3",
             "id": 110408,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2369,6 +2440,7 @@
           {
             "name": "Temple of the Art Pedestal 1",
             "id": 110426,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2387,6 +2459,7 @@
           {
             "name": "Temple of the Art Pedestal 2",
             "id": 110427,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2405,6 +2478,7 @@
           {
             "name": "Temple of the Art Pedestal 3",
             "id": 110428,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2423,6 +2497,7 @@
           {
             "name": "Temple of the Art Pedestal 4",
             "id": 110429,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2441,6 +2516,7 @@
           {
             "name": "Temple of the Art Pedestal 5",
             "id": 110430,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2459,6 +2535,7 @@
           {
             "name": "Temple of the Art Pedestal 6",
             "id": 110431,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2477,6 +2554,7 @@
           {
             "name": "Portal to Holy Mountain 7",
             "id": null,
+            "region": "Temple of the Art",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2531,6 +2609,7 @@
           {
             "name": "Temple of the Art Holy Mountain Shop Item 1",
             "id": 110030,
+            "region": "Temple of the Art Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2549,6 +2628,7 @@
           {
             "name": "Temple of the Art Holy Mountain Shop Item 2",
             "id": 110031,
+            "region": "Temple of the Art Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2567,6 +2647,7 @@
           {
             "name": "Temple of the Art Holy Mountain Shop Item 3",
             "id": 110032,
+            "region": "Temple of the Art Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2585,6 +2666,7 @@
           {
             "name": "Temple of the Art Holy Mountain Shop Item 4",
             "id": 110033,
+            "region": "Temple of the Art Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2603,6 +2685,7 @@
           {
             "name": "Temple of the Art Holy Mountain Shop Item 5",
             "id": 110034,
+            "region": "Temple of the Art Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2621,6 +2704,7 @@
           {
             "name": "Temple of the Art Holy Mountain Spell Refresh",
             "id": 110035,
+            "region": "Temple of the Art Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2824,6 +2908,7 @@
           {
             "name": "The Vault Chest 1",
             "id": 110366,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2842,6 +2927,7 @@
           {
             "name": "The Vault Chest 2",
             "id": 110367,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2860,6 +2946,7 @@
           {
             "name": "The Vault Chest 3",
             "id": 110368,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2878,6 +2965,7 @@
           {
             "name": "The Vault Pedestal 1",
             "id": 110386,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2896,6 +2984,7 @@
           {
             "name": "The Vault Pedestal 2",
             "id": 110387,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2914,6 +3003,7 @@
           {
             "name": "The Vault Pedestal 3",
             "id": 110388,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2932,6 +3022,7 @@
           {
             "name": "The Vault Pedestal 4",
             "id": 110389,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2950,6 +3041,7 @@
           {
             "name": "The Vault Pedestal 5",
             "id": 110390,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2968,6 +3060,7 @@
           {
             "name": "The Vault Pedestal 6",
             "id": 110391,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2986,6 +3079,7 @@
           {
             "name": "Portal to Holy Mountain 6",
             "id": null,
+            "region": "The Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3027,6 +3121,7 @@
           {
             "name": "Victory",
             "id": null,
+            "region": "The Work",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3163,6 +3258,7 @@
           {
             "name": "Underground Jungle Chest 1",
             "id": 110286,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3181,6 +3277,7 @@
           {
             "name": "Underground Jungle Chest 2",
             "id": 110287,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3199,6 +3296,7 @@
           {
             "name": "Underground Jungle Chest 3",
             "id": 110288,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3217,6 +3315,7 @@
           {
             "name": "Underground Jungle Pedestal 1",
             "id": 110306,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3235,6 +3334,7 @@
           {
             "name": "Underground Jungle Pedestal 2",
             "id": 110307,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3253,6 +3353,7 @@
           {
             "name": "Underground Jungle Pedestal 3",
             "id": 110308,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3271,6 +3372,7 @@
           {
             "name": "Underground Jungle Pedestal 4",
             "id": 110309,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3289,6 +3391,7 @@
           {
             "name": "Underground Jungle Pedestal 5",
             "id": 110310,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3307,6 +3410,7 @@
           {
             "name": "Underground Jungle Pedestal 6",
             "id": 110311,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3325,6 +3429,7 @@
           {
             "name": "Portal to Holy Mountain 5",
             "id": null,
+            "region": "Underground Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3379,6 +3484,7 @@
           {
             "name": "Underground Jungle Holy Mountain Shop Item 1",
             "id": 110018,
+            "region": "Underground Jungle Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3397,6 +3503,7 @@
           {
             "name": "Underground Jungle Holy Mountain Shop Item 2",
             "id": 110019,
+            "region": "Underground Jungle Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3415,6 +3522,7 @@
           {
             "name": "Underground Jungle Holy Mountain Shop Item 3",
             "id": 110020,
+            "region": "Underground Jungle Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3433,6 +3541,7 @@
           {
             "name": "Underground Jungle Holy Mountain Shop Item 4",
             "id": 110021,
+            "region": "Underground Jungle Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3451,6 +3560,7 @@
           {
             "name": "Underground Jungle Holy Mountain Shop Item 5",
             "id": 110022,
+            "region": "Underground Jungle Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3469,6 +3579,7 @@
           {
             "name": "Underground Jungle Holy Mountain Spell Refresh",
             "id": 110023,
+            "region": "Underground Jungle Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3523,6 +3634,7 @@
           {
             "name": "Vault Holy Mountain Shop Item 1",
             "id": 110024,
+            "region": "Vault Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3541,6 +3653,7 @@
           {
             "name": "Vault Holy Mountain Shop Item 2",
             "id": 110025,
+            "region": "Vault Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3559,6 +3672,7 @@
           {
             "name": "Vault Holy Mountain Shop Item 3",
             "id": 110026,
+            "region": "Vault Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3577,6 +3691,7 @@
           {
             "name": "Vault Holy Mountain Shop Item 4",
             "id": 110027,
+            "region": "Vault Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3595,6 +3710,7 @@
           {
             "name": "Vault Holy Mountain Shop Item 5",
             "id": 110028,
+            "region": "Vault Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3613,6 +3729,7 @@
           {
             "name": "Vault Holy Mountain Spell Refresh",
             "id": 110029,
+            "region": "Vault Holy Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4296,17 +4413,89 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything",
-      "Gold",
-      "Items",
-      "Orbs",
-      "Perks",
-      "Pickups",
-      "Repeatable Perks",
-      "Traps",
-      "Wands"
-    ]
+    "1": {
+      "Traps": [
+        "Trap"
+      ],
+      "Pickups": [
+        "Spell Refresher",
+        "Extra Max HP"
+      ],
+      "Items": [
+        "Greed Die",
+        "Powder Pouch",
+        "S\u00e4dekivi",
+        "Random Potion",
+        "Broken Wand",
+        "Refreshing Gourd",
+        "Kammi",
+        "Secret Potion",
+        "Chaos Die"
+      ],
+      "Gold": [
+        "Gold (200)",
+        "Gold (1000)"
+      ],
+      "Wands": [
+        "Wand (Tier 5)",
+        "Wand (Tier 4)",
+        "Wand (Tier 1)",
+        "Wand (Tier 6)",
+        "Wand (Tier 3)",
+        "Wand (Tier 2)",
+        "Kantele"
+      ],
+      "Perks": [
+        "Melee Immunity Perk",
+        "Spatial Awareness Perk",
+        "Tinker with Wands Everywhere Perk",
+        "Explosion Immunity Perk",
+        "Electricity Immunity Perk",
+        "Toxic Immunity Perk",
+        "All-Seeing Eye Perk",
+        "Fire Immunity Perk"
+      ],
+      "Repeatable Perks": [
+        "Extra Life Perk"
+      ],
+      "Orbs": [
+        "Orb"
+      ],
+      "Everything": [
+        "Orb",
+        "Melee Immunity Perk",
+        "Powder Pouch",
+        "Greed Die",
+        "Spell Refresher",
+        "Spatial Awareness Perk",
+        "Random Potion",
+        "Toxic Immunity Perk",
+        "Wand (Tier 2)",
+        "Wand (Tier 4)",
+        "S\u00e4dekivi",
+        "Gold (1000)",
+        "Explosion Immunity Perk",
+        "Extra Life Perk",
+        "Secret Potion",
+        "Wand (Tier 5)",
+        "Gold (200)",
+        "Wand (Tier 6)",
+        "Kantele",
+        "Electricity Immunity Perk",
+        "Broken Wand",
+        "All-Seeing Eye Perk",
+        "Refreshing Gourd",
+        "Chaos Die",
+        "Trap",
+        "Kammi",
+        "Tinker with Wands Everywhere Perk",
+        "Potion",
+        "Wand (Tier 1)",
+        "Fire Immunity Perk",
+        "Wand (Tier 3)",
+        "Extra Max HP"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

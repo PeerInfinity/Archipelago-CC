@@ -2063,6 +2063,7 @@
           {
             "name": "The Docks (E1M1) - Yellow key",
             "id": 371000,
+            "region": "The Docks (E1M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2081,6 +2082,7 @@
           {
             "name": "The Docks (E1M1) - Silver Shield",
             "id": 371001,
+            "region": "The Docks (E1M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2147,6 +2149,7 @@
           {
             "name": "The Docks (E1M1) - Gauntlets of the Necromancer",
             "id": 371002,
+            "region": "The Docks (E1M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2165,6 +2168,7 @@
           {
             "name": "The Docks (E1M1) - Ethereal Crossbow",
             "id": 371003,
+            "region": "The Docks (E1M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2183,6 +2187,7 @@
           {
             "name": "The Docks (E1M1) - Tome of Power",
             "id": 371005,
+            "region": "The Docks (E1M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2201,6 +2206,7 @@
           {
             "name": "The Docks (E1M1) - Exit",
             "id": 371006,
+            "region": "The Docks (E1M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2255,6 +2261,7 @@
           {
             "name": "The Docks (E1M1) - Bag of Holding",
             "id": 371004,
+            "region": "The Docks (E1M1) Sea",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2355,6 +2362,7 @@
           {
             "name": "The Dungeons (E1M2) - Yellow key",
             "id": 371008,
+            "region": "The Dungeons (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2373,6 +2381,7 @@
           {
             "name": "The Dungeons (E1M2) - Silver Shield",
             "id": 371010,
+            "region": "The Dungeons (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2391,6 +2400,7 @@
           {
             "name": "The Dungeons (E1M2) - Torch",
             "id": 371011,
+            "region": "The Dungeons (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2409,6 +2419,7 @@
           {
             "name": "The Dungeons (E1M2) - Tome of Power",
             "id": 371017,
+            "region": "The Dungeons (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2427,6 +2438,7 @@
           {
             "name": "The Dungeons (E1M2) - Ethereal Crossbow",
             "id": 371018,
+            "region": "The Dungeons (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2488,6 +2500,7 @@
           {
             "name": "The Dungeons (E1M2) - Exit",
             "id": 371022,
+            "region": "The Dungeons (E1M2) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2581,6 +2594,7 @@
           {
             "name": "The Dungeons (E1M2) - Dragon Claw",
             "id": 371007,
+            "region": "The Dungeons (E1M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2599,6 +2613,7 @@
           {
             "name": "The Dungeons (E1M2) - Green key",
             "id": 371009,
+            "region": "The Dungeons (E1M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2617,6 +2632,7 @@
           {
             "name": "The Dungeons (E1M2) - Map Scroll",
             "id": 371012,
+            "region": "The Dungeons (E1M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2635,6 +2651,7 @@
           {
             "name": "The Dungeons (E1M2) - Shadowsphere",
             "id": 371013,
+            "region": "The Dungeons (E1M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2653,6 +2670,7 @@
           {
             "name": "The Dungeons (E1M2) - Gauntlets of the Necromancer",
             "id": 371020,
+            "region": "The Dungeons (E1M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2671,6 +2689,7 @@
           {
             "name": "The Dungeons (E1M2) - Silver Shield 2",
             "id": 371021,
+            "region": "The Dungeons (E1M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2737,6 +2756,7 @@
           {
             "name": "The Dungeons (E1M2) - Bag of Holding",
             "id": 371014,
+            "region": "The Dungeons (E1M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2755,6 +2775,7 @@
           {
             "name": "The Dungeons (E1M2) - Blue key",
             "id": 371015,
+            "region": "The Dungeons (E1M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2884,6 +2905,7 @@
           {
             "name": "The Gatehouse (E1M3) - Yellow key",
             "id": 371023,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2902,6 +2924,7 @@
           {
             "name": "The Gatehouse (E1M3) - Dragon Claw",
             "id": 371025,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2920,6 +2943,7 @@
           {
             "name": "The Gatehouse (E1M3) - Silver Shield",
             "id": 371026,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2938,6 +2962,7 @@
           {
             "name": "The Gatehouse (E1M3) - Ethereal Crossbow",
             "id": 371027,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2956,6 +2981,7 @@
           {
             "name": "The Gatehouse (E1M3) - Torch",
             "id": 371031,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2974,6 +3000,7 @@
           {
             "name": "The Gatehouse (E1M3) - Shadowsphere",
             "id": 371033,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2992,6 +3019,7 @@
           {
             "name": "The Gatehouse (E1M3) - Tome of Power 2",
             "id": 371035,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3010,6 +3038,7 @@
           {
             "name": "The Gatehouse (E1M3) - Tome of Power 3",
             "id": 371036,
+            "region": "The Gatehouse (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3064,6 +3093,7 @@
           {
             "name": "The Gatehouse (E1M3) - Green key",
             "id": 371024,
+            "region": "The Gatehouse (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3082,6 +3112,7 @@
           {
             "name": "The Gatehouse (E1M3) - Bag of Holding",
             "id": 371029,
+            "region": "The Gatehouse (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3100,6 +3131,7 @@
           {
             "name": "The Gatehouse (E1M3) - Gauntlets of the Necromancer",
             "id": 371030,
+            "region": "The Gatehouse (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3118,6 +3150,7 @@
           {
             "name": "The Gatehouse (E1M3) - Ring of Invincibility",
             "id": 371032,
+            "region": "The Gatehouse (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3136,6 +3169,7 @@
           {
             "name": "The Gatehouse (E1M3) - Morph Ovum",
             "id": 371034,
+            "region": "The Gatehouse (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3197,6 +3231,7 @@
           {
             "name": "The Gatehouse (E1M3) - Exit",
             "id": 371037,
+            "region": "The Gatehouse (E1M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3251,6 +3286,7 @@
           {
             "name": "The Gatehouse (E1M3) - Tome of Power",
             "id": 371028,
+            "region": "The Gatehouse (E1M3) Sea",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3322,6 +3358,7 @@
           {
             "name": "The Guard Tower (E1M4) - Gauntlets of the Necromancer",
             "id": 371038,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3340,6 +3377,7 @@
           {
             "name": "The Guard Tower (E1M4) - Dragon Claw",
             "id": 371039,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3358,6 +3396,7 @@
           {
             "name": "The Guard Tower (E1M4) - Ethereal Crossbow",
             "id": 371040,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3376,6 +3415,7 @@
           {
             "name": "The Guard Tower (E1M4) - Yellow key",
             "id": 371041,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3394,6 +3434,7 @@
           {
             "name": "The Guard Tower (E1M4) - Map Scroll",
             "id": 371046,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3412,6 +3453,7 @@
           {
             "name": "The Guard Tower (E1M4) - Tome of Power",
             "id": 371047,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3430,6 +3472,7 @@
           {
             "name": "The Guard Tower (E1M4) - Silver Shield",
             "id": 371048,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3448,6 +3491,7 @@
           {
             "name": "The Guard Tower (E1M4) - Torch",
             "id": 371049,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3466,6 +3510,7 @@
           {
             "name": "The Guard Tower (E1M4) - Tome of Power 3",
             "id": 371051,
+            "region": "The Guard Tower (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3549,6 +3594,7 @@
           {
             "name": "The Guard Tower (E1M4) - Shadowsphere",
             "id": 371043,
+            "region": "The Guard Tower (E1M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3567,6 +3613,7 @@
           {
             "name": "The Guard Tower (E1M4) - Green key",
             "id": 371044,
+            "region": "The Guard Tower (E1M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3585,6 +3632,7 @@
           {
             "name": "The Guard Tower (E1M4) - Tome of Power 2",
             "id": 371050,
+            "region": "The Guard Tower (E1M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3646,6 +3694,7 @@
           {
             "name": "The Guard Tower (E1M4) - Exit",
             "id": 371052,
+            "region": "The Guard Tower (E1M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3737,6 +3786,7 @@
           {
             "name": "The Citadel (E1M5) - Yellow key",
             "id": 371054,
+            "region": "The Citadel (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3755,6 +3805,7 @@
           {
             "name": "The Citadel (E1M5) - Gauntlets of the Necromancer",
             "id": 371058,
+            "region": "The Citadel (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3773,6 +3824,7 @@
           {
             "name": "The Citadel (E1M5) - Shadowsphere",
             "id": 371062,
+            "region": "The Citadel (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3791,6 +3843,7 @@
           {
             "name": "The Citadel (E1M5) - Torch",
             "id": 371064,
+            "region": "The Citadel (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3852,6 +3905,7 @@
           {
             "name": "The Citadel (E1M5) - Tome of Power 2",
             "id": 371061,
+            "region": "The Citadel (E1M5) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3870,6 +3924,7 @@
           {
             "name": "The Citadel (E1M5) - Silver Shield 2",
             "id": 371069,
+            "region": "The Citadel (E1M5) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3888,6 +3943,7 @@
           {
             "name": "The Citadel (E1M5) - Exit",
             "id": 371073,
+            "region": "The Citadel (E1M5) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3973,6 +4029,7 @@
           {
             "name": "The Citadel (E1M5) - Green key",
             "id": 371053,
+            "region": "The Citadel (E1M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3991,6 +4048,7 @@
           {
             "name": "The Citadel (E1M5) - Ethereal Crossbow",
             "id": 371057,
+            "region": "The Citadel (E1M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4086,6 +4144,7 @@
           {
             "name": "The Citadel (E1M5) - Blue key",
             "id": 371055,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4104,6 +4163,7 @@
           {
             "name": "The Citadel (E1M5) - Dragon Claw",
             "id": 371059,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4122,6 +4182,7 @@
           {
             "name": "The Citadel (E1M5) - Ring of Invincibility",
             "id": 371060,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4140,6 +4201,7 @@
           {
             "name": "The Citadel (E1M5) - Bag of Holding",
             "id": 371063,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4158,6 +4220,7 @@
           {
             "name": "The Citadel (E1M5) - Tome of Power 3",
             "id": 371065,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4176,6 +4239,7 @@
           {
             "name": "The Citadel (E1M5) - Morph Ovum",
             "id": 371067,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4194,6 +4258,7 @@
           {
             "name": "The Citadel (E1M5) - Torch 2",
             "id": 371070,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4212,6 +4277,7 @@
           {
             "name": "The Citadel (E1M5) - Tome of Power 4",
             "id": 371071,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4230,6 +4296,7 @@
           {
             "name": "The Citadel (E1M5) - Tome of Power 5",
             "id": 371072,
+            "region": "The Citadel (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4294,6 +4361,7 @@
           {
             "name": "The Citadel (E1M5) - Tome of Power",
             "id": 371056,
+            "region": "The Citadel (E1M5) Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4375,6 +4443,7 @@
           {
             "name": "The Cathedral (E1M6) - Yellow key",
             "id": 371074,
+            "region": "The Cathedral (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4393,6 +4462,7 @@
           {
             "name": "The Cathedral (E1M6) - Gauntlets of the Necromancer",
             "id": 371075,
+            "region": "The Cathedral (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4411,6 +4481,7 @@
           {
             "name": "The Cathedral (E1M6) - Tome of Power 3",
             "id": 371086,
+            "region": "The Cathedral (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4506,6 +4577,7 @@
           {
             "name": "The Cathedral (E1M6) - Ethereal Crossbow",
             "id": 371076,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4524,6 +4596,7 @@
           {
             "name": "The Cathedral (E1M6) - Dragon Claw",
             "id": 371077,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4542,6 +4615,7 @@
           {
             "name": "The Cathedral (E1M6) - Tome of Power",
             "id": 371078,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4560,6 +4634,7 @@
           {
             "name": "The Cathedral (E1M6) - Shadowsphere",
             "id": 371079,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4578,6 +4653,7 @@
           {
             "name": "The Cathedral (E1M6) - Green key",
             "id": 371080,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4596,6 +4672,7 @@
           {
             "name": "The Cathedral (E1M6) - Silver Shield",
             "id": 371081,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4614,6 +4691,7 @@
           {
             "name": "The Cathedral (E1M6) - Bag of Holding",
             "id": 371082,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4632,6 +4710,7 @@
           {
             "name": "The Cathedral (E1M6) - Ring of Invincibility",
             "id": 371083,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4650,6 +4729,7 @@
           {
             "name": "The Cathedral (E1M6) - Torch",
             "id": 371084,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4668,6 +4748,7 @@
           {
             "name": "The Cathedral (E1M6) - Tome of Power 2",
             "id": 371085,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4686,6 +4767,7 @@
           {
             "name": "The Cathedral (E1M6) - Morph Ovum",
             "id": 371087,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4704,6 +4786,7 @@
           {
             "name": "The Cathedral (E1M6) - Map Scroll",
             "id": 371088,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4722,6 +4805,7 @@
           {
             "name": "The Cathedral (E1M6) - Ring of Invincibility 2",
             "id": 371089,
+            "region": "The Cathedral (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4788,6 +4872,7 @@
           {
             "name": "The Cathedral (E1M6) - Silver Shield 2",
             "id": 371090,
+            "region": "The Cathedral (E1M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4806,6 +4891,7 @@
           {
             "name": "The Cathedral (E1M6) - Bag of Holding 2",
             "id": 371092,
+            "region": "The Cathedral (E1M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4824,6 +4910,7 @@
           {
             "name": "The Cathedral (E1M6) - Exit",
             "id": 371095,
+            "region": "The Cathedral (E1M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4888,6 +4975,7 @@
           {
             "name": "The Cathedral (E1M6) - Silver Shield 3",
             "id": 371093,
+            "region": "The Cathedral (E1M6) Main Fly",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4906,6 +4994,7 @@
           {
             "name": "The Cathedral (E1M6) - Bag of Holding 3",
             "id": 371094,
+            "region": "The Cathedral (E1M6) Main Fly",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5016,6 +5105,7 @@
           {
             "name": "The Crypts (E1M7) - Yellow key",
             "id": 371096,
+            "region": "The Crypts (E1M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5034,6 +5124,7 @@
           {
             "name": "The Crypts (E1M7) - Gauntlets of the Necromancer",
             "id": 371102,
+            "region": "The Crypts (E1M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5100,6 +5191,7 @@
           {
             "name": "The Crypts (E1M7) - Bag of Holding",
             "id": 371106,
+            "region": "The Crypts (E1M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5118,6 +5210,7 @@
           {
             "name": "The Crypts (E1M7) - Torch 2",
             "id": 371108,
+            "region": "The Crypts (E1M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5136,6 +5229,7 @@
           {
             "name": "The Crypts (E1M7) - Map Scroll",
             "id": 371111,
+            "region": "The Crypts (E1M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5154,6 +5248,7 @@
           {
             "name": "The Crypts (E1M7) - Exit",
             "id": 371113,
+            "region": "The Crypts (E1M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5266,6 +5361,7 @@
           {
             "name": "The Crypts (E1M7) - Ethereal Crossbow",
             "id": 371097,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5284,6 +5380,7 @@
           {
             "name": "The Crypts (E1M7) - Green key",
             "id": 371098,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5302,6 +5399,7 @@
           {
             "name": "The Crypts (E1M7) - Morph Ovum",
             "id": 371100,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5320,6 +5418,7 @@
           {
             "name": "The Crypts (E1M7) - Dragon Claw",
             "id": 371101,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5338,6 +5437,7 @@
           {
             "name": "The Crypts (E1M7) - Tome of Power",
             "id": 371103,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5356,6 +5456,7 @@
           {
             "name": "The Crypts (E1M7) - Ring of Invincibility",
             "id": 371104,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5374,6 +5475,7 @@
           {
             "name": "The Crypts (E1M7) - Tome of Power 2",
             "id": 371109,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5392,6 +5494,7 @@
           {
             "name": "The Crypts (E1M7) - Shadowsphere",
             "id": 371110,
+            "region": "The Crypts (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5475,6 +5578,7 @@
           {
             "name": "The Crypts (E1M7) - Blue key",
             "id": 371099,
+            "region": "The Crypts (E1M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5493,6 +5597,7 @@
           {
             "name": "The Crypts (E1M7) - Silver Shield",
             "id": 371105,
+            "region": "The Crypts (E1M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5511,6 +5616,7 @@
           {
             "name": "The Crypts (E1M7) - Torch",
             "id": 371107,
+            "region": "The Crypts (E1M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5529,6 +5635,7 @@
           {
             "name": "The Crypts (E1M7) - Silver Shield 2",
             "id": 371112,
+            "region": "The Crypts (E1M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5570,6 +5677,7 @@
           {
             "name": "Hell's Maw (E1M8) - Ethereal Crossbow",
             "id": 371114,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5588,6 +5696,7 @@
           {
             "name": "Hell's Maw (E1M8) - Dragon Claw",
             "id": 371115,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5606,6 +5715,7 @@
           {
             "name": "Hell's Maw (E1M8) - Tome of Power",
             "id": 371116,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5624,6 +5734,7 @@
           {
             "name": "Hell's Maw (E1M8) - Gauntlets of the Necromancer",
             "id": 371117,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5642,6 +5753,7 @@
           {
             "name": "Hell's Maw (E1M8) - Tome of Power 2",
             "id": 371118,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5660,6 +5772,7 @@
           {
             "name": "Hell's Maw (E1M8) - Silver Shield",
             "id": 371119,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5678,6 +5791,7 @@
           {
             "name": "Hell's Maw (E1M8) - Shadowsphere",
             "id": 371120,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5696,6 +5810,7 @@
           {
             "name": "Hell's Maw (E1M8) - Ring of Invincibility",
             "id": 371121,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5714,6 +5829,7 @@
           {
             "name": "Hell's Maw (E1M8) - Bag of Holding",
             "id": 371122,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5732,6 +5848,7 @@
           {
             "name": "Hell's Maw (E1M8) - Bag of Holding 2",
             "id": 371124,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5750,6 +5867,7 @@
           {
             "name": "Hell's Maw (E1M8) - Ring of Invincibility 3",
             "id": 371125,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5768,6 +5886,7 @@
           {
             "name": "Hell's Maw (E1M8) - Morph Ovum",
             "id": 371126,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5786,6 +5905,7 @@
           {
             "name": "Hell's Maw (E1M8) - Exit",
             "id": 371127,
+            "region": "Hell's Maw (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5915,6 +6035,7 @@
           {
             "name": "The Graveyard (E1M9) - Yellow key",
             "id": 371128,
+            "region": "The Graveyard (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5933,6 +6054,7 @@
           {
             "name": "The Graveyard (E1M9) - Bag of Holding",
             "id": 371131,
+            "region": "The Graveyard (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5951,6 +6073,7 @@
           {
             "name": "The Graveyard (E1M9) - Silver Shield",
             "id": 371135,
+            "region": "The Graveyard (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5969,6 +6092,7 @@
           {
             "name": "The Graveyard (E1M9) - Tome of Power",
             "id": 371138,
+            "region": "The Graveyard (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5987,6 +6111,7 @@
           {
             "name": "The Graveyard (E1M9) - Morph Ovum",
             "id": 371139,
+            "region": "The Graveyard (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6005,6 +6130,7 @@
           {
             "name": "The Graveyard (E1M9) - Dragon Claw 2",
             "id": 371141,
+            "region": "The Graveyard (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6059,6 +6185,7 @@
           {
             "name": "The Graveyard (E1M9) - Map Scroll",
             "id": 371140,
+            "region": "The Graveyard (E1M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6077,6 +6204,7 @@
           {
             "name": "The Graveyard (E1M9) - Exit",
             "id": 371143,
+            "region": "The Graveyard (E1M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6138,6 +6266,7 @@
           {
             "name": "The Graveyard (E1M9) - Green key",
             "id": 371129,
+            "region": "The Graveyard (E1M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6156,6 +6285,7 @@
           {
             "name": "The Graveyard (E1M9) - Dragon Claw",
             "id": 371132,
+            "region": "The Graveyard (E1M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6217,6 +6347,7 @@
           {
             "name": "The Graveyard (E1M9) - Blue key",
             "id": 371130,
+            "region": "The Graveyard (E1M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6235,6 +6366,7 @@
           {
             "name": "The Graveyard (E1M9) - Ethereal Crossbow",
             "id": 371133,
+            "region": "The Graveyard (E1M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6253,6 +6385,7 @@
           {
             "name": "The Graveyard (E1M9) - Shadowsphere",
             "id": 371134,
+            "region": "The Graveyard (E1M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6271,6 +6404,7 @@
           {
             "name": "The Graveyard (E1M9) - Ring of Invincibility",
             "id": 371136,
+            "region": "The Graveyard (E1M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6289,6 +6423,7 @@
           {
             "name": "The Graveyard (E1M9) - Torch",
             "id": 371137,
+            "region": "The Graveyard (E1M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6307,6 +6442,7 @@
           {
             "name": "The Graveyard (E1M9) - Tome of Power 2",
             "id": 371142,
+            "region": "The Graveyard (E1M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6378,6 +6514,7 @@
           {
             "name": "The Crater (E2M1) - Yellow key",
             "id": 371144,
+            "region": "The Crater (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6396,6 +6533,7 @@
           {
             "name": "The Crater (E2M1) - Ethereal Crossbow",
             "id": 371146,
+            "region": "The Crater (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6414,6 +6552,7 @@
           {
             "name": "The Crater (E2M1) - Tome of Power",
             "id": 371147,
+            "region": "The Crater (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6432,6 +6571,7 @@
           {
             "name": "The Crater (E2M1) - Silver Shield",
             "id": 371152,
+            "region": "The Crater (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6450,6 +6590,7 @@
           {
             "name": "The Crater (E2M1) - Torch",
             "id": 371153,
+            "region": "The Crater (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6533,6 +6674,7 @@
           {
             "name": "The Crater (E2M1) - Green key",
             "id": 371145,
+            "region": "The Crater (E2M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6551,6 +6693,7 @@
           {
             "name": "The Crater (E2M1) - Dragon Claw",
             "id": 371148,
+            "region": "The Crater (E2M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6569,6 +6712,7 @@
           {
             "name": "The Crater (E2M1) - Bag of Holding",
             "id": 371149,
+            "region": "The Crater (E2M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6587,6 +6731,7 @@
           {
             "name": "The Crater (E2M1) - Shadowsphere",
             "id": 371151,
+            "region": "The Crater (E2M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6605,6 +6750,7 @@
           {
             "name": "The Crater (E2M1) - Mystic Urn",
             "id": 371154,
+            "region": "The Crater (E2M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6666,6 +6812,7 @@
           {
             "name": "The Crater (E2M1) - Exit",
             "id": 371155,
+            "region": "The Crater (E2M1) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6747,6 +6894,7 @@
           {
             "name": "The Lava Pits (E2M2) - Yellow key",
             "id": 371157,
+            "region": "The Lava Pits (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6765,6 +6913,7 @@
           {
             "name": "The Lava Pits (E2M2) - Ethereal Crossbow",
             "id": 371158,
+            "region": "The Lava Pits (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6783,6 +6932,7 @@
           {
             "name": "The Lava Pits (E2M2) - Shadowsphere",
             "id": 371159,
+            "region": "The Lava Pits (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6801,6 +6951,7 @@
           {
             "name": "The Lava Pits (E2M2) - Tome of Power 2",
             "id": 371170,
+            "region": "The Lava Pits (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6819,6 +6970,7 @@
           {
             "name": "The Lava Pits (E2M2) - Bag of Holding 2",
             "id": 371174,
+            "region": "The Lava Pits (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6909,6 +7061,7 @@
           {
             "name": "The Lava Pits (E2M2) - Ring of Invincibility",
             "id": 371160,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6927,6 +7080,7 @@
           {
             "name": "The Lava Pits (E2M2) - Dragon Claw",
             "id": 371161,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6945,6 +7099,7 @@
           {
             "name": "The Lava Pits (E2M2) - Hellstaff",
             "id": 371162,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6963,6 +7118,7 @@
           {
             "name": "The Lava Pits (E2M2) - Tome of Power",
             "id": 371164,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6981,6 +7137,7 @@
           {
             "name": "The Lava Pits (E2M2) - Silver Shield",
             "id": 371165,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6999,6 +7156,7 @@
           {
             "name": "The Lava Pits (E2M2) - Gauntlets of the Necromancer",
             "id": 371166,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7017,6 +7175,7 @@
           {
             "name": "The Lava Pits (E2M2) - Map Scroll",
             "id": 371169,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7035,6 +7194,7 @@
           {
             "name": "The Lava Pits (E2M2) - Chaos Device",
             "id": 371171,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7053,6 +7213,7 @@
           {
             "name": "The Lava Pits (E2M2) - Morph Ovum",
             "id": 371175,
+            "region": "The Lava Pits (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7126,6 +7287,7 @@
           {
             "name": "The Lava Pits (E2M2) - Bag of Holding",
             "id": 371163,
+            "region": "The Lava Pits (E2M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7144,6 +7306,7 @@
           {
             "name": "The Lava Pits (E2M2) - Enchanted Shield",
             "id": 371167,
+            "region": "The Lava Pits (E2M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7162,6 +7325,7 @@
           {
             "name": "The Lava Pits (E2M2) - Mystic Urn",
             "id": 371168,
+            "region": "The Lava Pits (E2M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7180,6 +7344,7 @@
           {
             "name": "The Lava Pits (E2M2) - Exit",
             "id": 371176,
+            "region": "The Lava Pits (E2M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7309,6 +7474,7 @@
           {
             "name": "The River of Fire (E2M3) - Yellow key",
             "id": 371177,
+            "region": "The River of Fire (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7327,6 +7493,7 @@
           {
             "name": "The River of Fire (E2M3) - Gauntlets of the Necromancer",
             "id": 371180,
+            "region": "The River of Fire (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7345,6 +7512,7 @@
           {
             "name": "The River of Fire (E2M3) - Ethereal Crossbow",
             "id": 371181,
+            "region": "The River of Fire (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7363,6 +7531,7 @@
           {
             "name": "The River of Fire (E2M3) - Dragon Claw",
             "id": 371182,
+            "region": "The River of Fire (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7381,6 +7550,7 @@
           {
             "name": "The River of Fire (E2M3) - Tome of Power",
             "id": 371187,
+            "region": "The River of Fire (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7399,6 +7569,7 @@
           {
             "name": "The River of Fire (E2M3) - Ring of Invincibility",
             "id": 371188,
+            "region": "The River of Fire (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7417,6 +7588,7 @@
           {
             "name": "The River of Fire (E2M3) - Silver Shield",
             "id": 371189,
+            "region": "The River of Fire (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7478,6 +7650,7 @@
           {
             "name": "The River of Fire (E2M3) - Hellstaff",
             "id": 371184,
+            "region": "The River of Fire (E2M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7496,6 +7669,7 @@
           {
             "name": "The River of Fire (E2M3) - Enchanted Shield",
             "id": 371190,
+            "region": "The River of Fire (E2M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7514,6 +7688,7 @@
           {
             "name": "The River of Fire (E2M3) - Chaos Device",
             "id": 371191,
+            "region": "The River of Fire (E2M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7532,6 +7707,7 @@
           {
             "name": "The River of Fire (E2M3) - Exit",
             "id": 371198,
+            "region": "The River of Fire (E2M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7593,6 +7769,7 @@
           {
             "name": "The River of Fire (E2M3) - Green key",
             "id": 371179,
+            "region": "The River of Fire (E2M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7611,6 +7788,7 @@
           {
             "name": "The River of Fire (E2M3) - Morph Ovum",
             "id": 371193,
+            "region": "The River of Fire (E2M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7672,6 +7850,7 @@
           {
             "name": "The River of Fire (E2M3) - Blue key",
             "id": 371178,
+            "region": "The River of Fire (E2M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7690,6 +7869,7 @@
           {
             "name": "The River of Fire (E2M3) - Phoenix Rod",
             "id": 371183,
+            "region": "The River of Fire (E2M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7708,6 +7888,7 @@
           {
             "name": "The River of Fire (E2M3) - Tome of Power 2",
             "id": 371194,
+            "region": "The River of Fire (E2M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7726,6 +7907,7 @@
           {
             "name": "The River of Fire (E2M3) - Firemace",
             "id": 371195,
+            "region": "The River of Fire (E2M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7826,6 +8008,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Yellow key",
             "id": 371199,
+            "region": "The Ice Grotto (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7844,6 +8027,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Ethereal Crossbow",
             "id": 371204,
+            "region": "The Ice Grotto (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7862,6 +8046,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Bag of Holding",
             "id": 371208,
+            "region": "The Ice Grotto (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7880,6 +8065,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Silver Shield",
             "id": 371211,
+            "region": "The Ice Grotto (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7898,6 +8084,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Tome of Power 2",
             "id": 371213,
+            "region": "The Ice Grotto (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7916,6 +8103,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Morph Ovum",
             "id": 371219,
+            "region": "The Ice Grotto (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7934,6 +8122,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Shadowsphere 2",
             "id": 371220,
+            "region": "The Ice Grotto (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7995,6 +8184,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Hellstaff",
             "id": 371205,
+            "region": "The Ice Grotto (E2M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8013,6 +8203,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Exit",
             "id": 371221,
+            "region": "The Ice Grotto (E2M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8112,6 +8303,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Green key",
             "id": 371201,
+            "region": "The Ice Grotto (E2M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8130,6 +8322,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Phoenix Rod",
             "id": 371202,
+            "region": "The Ice Grotto (E2M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8148,6 +8341,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Tome of Power 3",
             "id": 371215,
+            "region": "The Ice Grotto (E2M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8231,6 +8425,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Blue key",
             "id": 371200,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8249,6 +8444,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Dragon Claw",
             "id": 371206,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8267,6 +8463,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Torch",
             "id": 371207,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8285,6 +8482,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Shadowsphere",
             "id": 371209,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8303,6 +8501,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Chaos Device",
             "id": 371210,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8321,6 +8520,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Tome of Power",
             "id": 371212,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8339,6 +8539,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Bag of Holding 2",
             "id": 371214,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8357,6 +8558,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Map Scroll",
             "id": 371216,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8375,6 +8577,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Enchanted Shield",
             "id": 371218,
+            "region": "The Ice Grotto (E2M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8429,6 +8632,7 @@
           {
             "name": "The Ice Grotto (E2M4) - Mystic Urn",
             "id": 371217,
+            "region": "The Ice Grotto (E2M4) Magenta",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8510,6 +8714,7 @@
           {
             "name": "The Catacombs (E2M5) - Yellow key",
             "id": 371222,
+            "region": "The Catacombs (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8528,6 +8733,7 @@
           {
             "name": "The Catacombs (E2M5) - Gauntlets of the Necromancer",
             "id": 371227,
+            "region": "The Catacombs (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8546,6 +8752,7 @@
           {
             "name": "The Catacombs (E2M5) - Dragon Claw",
             "id": 371228,
+            "region": "The Catacombs (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8564,6 +8771,7 @@
           {
             "name": "The Catacombs (E2M5) - Bag of Holding",
             "id": 371229,
+            "region": "The Catacombs (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8582,6 +8790,7 @@
           {
             "name": "The Catacombs (E2M5) - Torch",
             "id": 371241,
+            "region": "The Catacombs (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8643,6 +8852,7 @@
           {
             "name": "The Catacombs (E2M5) - Exit",
             "id": 371243,
+            "region": "The Catacombs (E2M5) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8726,6 +8936,7 @@
           {
             "name": "The Catacombs (E2M5) - Hellstaff",
             "id": 371224,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8744,6 +8955,7 @@
           {
             "name": "The Catacombs (E2M5) - Ethereal Crossbow",
             "id": 371226,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8762,6 +8974,7 @@
           {
             "name": "The Catacombs (E2M5) - Silver Shield",
             "id": 371230,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8780,6 +8993,7 @@
           {
             "name": "The Catacombs (E2M5) - Shadowsphere",
             "id": 371231,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8798,6 +9012,7 @@
           {
             "name": "The Catacombs (E2M5) - Ring of Invincibility",
             "id": 371232,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8816,6 +9031,7 @@
           {
             "name": "The Catacombs (E2M5) - Tome of Power",
             "id": 371233,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8834,6 +9050,7 @@
           {
             "name": "The Catacombs (E2M5) - Green key",
             "id": 371234,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8852,6 +9069,7 @@
           {
             "name": "The Catacombs (E2M5) - Chaos Device",
             "id": 371235,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8870,6 +9088,7 @@
           {
             "name": "The Catacombs (E2M5) - Tome of Power 2",
             "id": 371236,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8888,6 +9107,7 @@
           {
             "name": "The Catacombs (E2M5) - Mystic Urn",
             "id": 371238,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8906,6 +9126,7 @@
           {
             "name": "The Catacombs (E2M5) - Tome of Power 3",
             "id": 371242,
+            "region": "The Catacombs (E2M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9001,6 +9222,7 @@
           {
             "name": "The Catacombs (E2M5) - Blue key",
             "id": 371223,
+            "region": "The Catacombs (E2M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9019,6 +9241,7 @@
           {
             "name": "The Catacombs (E2M5) - Map Scroll",
             "id": 371237,
+            "region": "The Catacombs (E2M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9037,6 +9260,7 @@
           {
             "name": "The Catacombs (E2M5) - Morph Ovum",
             "id": 371239,
+            "region": "The Catacombs (E2M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9055,6 +9279,7 @@
           {
             "name": "The Catacombs (E2M5) - Enchanted Shield",
             "id": 371240,
+            "region": "The Catacombs (E2M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9184,6 +9409,7 @@
           {
             "name": "The Labyrinth (E2M6) - Yellow key",
             "id": 371244,
+            "region": "The Labyrinth (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9202,6 +9428,7 @@
           {
             "name": "The Labyrinth (E2M6) - Gauntlets of the Necromancer",
             "id": 371248,
+            "region": "The Labyrinth (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9220,6 +9447,7 @@
           {
             "name": "The Labyrinth (E2M6) - Ethereal Crossbow",
             "id": 371249,
+            "region": "The Labyrinth (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9238,6 +9466,7 @@
           {
             "name": "The Labyrinth (E2M6) - Morph Ovum",
             "id": 371257,
+            "region": "The Labyrinth (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9256,6 +9485,7 @@
           {
             "name": "The Labyrinth (E2M6) - Firemace",
             "id": 371264,
+            "region": "The Labyrinth (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9317,6 +9547,7 @@
           {
             "name": "The Labyrinth (E2M6) - Ring of Invincibility",
             "id": 371254,
+            "region": "The Labyrinth (E2M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9335,6 +9566,7 @@
           {
             "name": "The Labyrinth (E2M6) - Phoenix Rod 2",
             "id": 371263,
+            "region": "The Labyrinth (E2M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9353,6 +9585,7 @@
           {
             "name": "The Labyrinth (E2M6) - Firemace 4",
             "id": 371267,
+            "region": "The Labyrinth (E2M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9371,6 +9604,7 @@
           {
             "name": "The Labyrinth (E2M6) - Exit",
             "id": 371268,
+            "region": "The Labyrinth (E2M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9425,6 +9659,7 @@
           {
             "name": "The Labyrinth (E2M6) - Green key",
             "id": 371246,
+            "region": "The Labyrinth (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9443,6 +9678,7 @@
           {
             "name": "The Labyrinth (E2M6) - Dragon Claw",
             "id": 371250,
+            "region": "The Labyrinth (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9461,6 +9697,7 @@
           {
             "name": "The Labyrinth (E2M6) - Bag of Holding",
             "id": 371252,
+            "region": "The Labyrinth (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9479,6 +9716,7 @@
           {
             "name": "The Labyrinth (E2M6) - Shadowsphere",
             "id": 371253,
+            "region": "The Labyrinth (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9497,6 +9735,7 @@
           {
             "name": "The Labyrinth (E2M6) - Chaos Device",
             "id": 371261,
+            "region": "The Labyrinth (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9515,6 +9754,7 @@
           {
             "name": "The Labyrinth (E2M6) - Firemace 3",
             "id": 371266,
+            "region": "The Labyrinth (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9569,6 +9809,7 @@
           {
             "name": "The Labyrinth (E2M6) - Blue key",
             "id": 371245,
+            "region": "The Labyrinth (E2M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9587,6 +9828,7 @@
           {
             "name": "The Labyrinth (E2M6) - Hellstaff",
             "id": 371247,
+            "region": "The Labyrinth (E2M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9605,6 +9847,7 @@
           {
             "name": "The Labyrinth (E2M6) - Phoenix Rod",
             "id": 371251,
+            "region": "The Labyrinth (E2M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9623,6 +9866,7 @@
           {
             "name": "The Labyrinth (E2M6) - Tome of Power",
             "id": 371255,
+            "region": "The Labyrinth (E2M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9641,6 +9885,7 @@
           {
             "name": "The Labyrinth (E2M6) - Map Scroll",
             "id": 371258,
+            "region": "The Labyrinth (E2M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9659,6 +9904,7 @@
           {
             "name": "The Labyrinth (E2M6) - Enchanted Shield",
             "id": 371259,
+            "region": "The Labyrinth (E2M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9677,6 +9923,7 @@
           {
             "name": "The Labyrinth (E2M6) - Tome of Power 2",
             "id": 371260,
+            "region": "The Labyrinth (E2M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9777,6 +10024,7 @@
           {
             "name": "The Great Hall (E2M7) - Yellow key",
             "id": 371270,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9795,6 +10043,7 @@
           {
             "name": "The Great Hall (E2M7) - Morph Ovum",
             "id": 371272,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9813,6 +10062,7 @@
           {
             "name": "The Great Hall (E2M7) - Shadowsphere",
             "id": 371273,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9831,6 +10081,7 @@
           {
             "name": "The Great Hall (E2M7) - Torch",
             "id": 371278,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9849,6 +10100,7 @@
           {
             "name": "The Great Hall (E2M7) - Bag of Holding",
             "id": 371279,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9867,6 +10119,7 @@
           {
             "name": "The Great Hall (E2M7) - Silver Shield",
             "id": 371280,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9885,6 +10138,7 @@
           {
             "name": "The Great Hall (E2M7) - Enchanted Shield",
             "id": 371281,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9903,6 +10157,7 @@
           {
             "name": "The Great Hall (E2M7) - Ethereal Crossbow",
             "id": 371283,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9921,6 +10176,7 @@
           {
             "name": "The Great Hall (E2M7) - Gauntlets of the Necromancer",
             "id": 371284,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9939,6 +10195,7 @@
           {
             "name": "The Great Hall (E2M7) - Phoenix Rod",
             "id": 371287,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9957,6 +10214,7 @@
           {
             "name": "The Great Hall (E2M7) - Tome of Power 2",
             "id": 371288,
+            "region": "The Great Hall (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10018,6 +10276,7 @@
           {
             "name": "The Great Hall (E2M7) - Mystic Urn",
             "id": 371275,
+            "region": "The Great Hall (E2M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10036,6 +10295,7 @@
           {
             "name": "The Great Hall (E2M7) - Exit",
             "id": 371289,
+            "region": "The Great Hall (E2M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10126,6 +10386,7 @@
           {
             "name": "The Great Hall (E2M7) - Green key",
             "id": 371269,
+            "region": "The Great Hall (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10144,6 +10405,7 @@
           {
             "name": "The Great Hall (E2M7) - Ring of Invincibility",
             "id": 371274,
+            "region": "The Great Hall (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10162,6 +10424,7 @@
           {
             "name": "The Great Hall (E2M7) - Tome of Power",
             "id": 371276,
+            "region": "The Great Hall (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10180,6 +10443,7 @@
           {
             "name": "The Great Hall (E2M7) - Chaos Device",
             "id": 371277,
+            "region": "The Great Hall (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10198,6 +10462,7 @@
           {
             "name": "The Great Hall (E2M7) - Map Scroll",
             "id": 371282,
+            "region": "The Great Hall (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10216,6 +10481,7 @@
           {
             "name": "The Great Hall (E2M7) - Dragon Claw",
             "id": 371285,
+            "region": "The Great Hall (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10234,6 +10500,7 @@
           {
             "name": "The Great Hall (E2M7) - Hellstaff",
             "id": 371286,
+            "region": "The Great Hall (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10288,6 +10555,7 @@
           {
             "name": "The Great Hall (E2M7) - Blue key",
             "id": 371271,
+            "region": "The Great Hall (E2M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10329,6 +10597,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Ethereal Crossbow",
             "id": 371290,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10347,6 +10616,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Dragon Claw",
             "id": 371291,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10365,6 +10635,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Gauntlets of the Necromancer",
             "id": 371292,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10383,6 +10654,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Hellstaff",
             "id": 371293,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10401,6 +10673,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Phoenix Rod",
             "id": 371294,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10419,6 +10692,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Tome of Power",
             "id": 371295,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10437,6 +10711,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Silver Shield",
             "id": 371299,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10455,6 +10730,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Enchanted Shield",
             "id": 371300,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10473,6 +10749,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Chaos Device",
             "id": 371301,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10491,6 +10768,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Ring of Invincibility",
             "id": 371302,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10509,6 +10787,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Morph Ovum",
             "id": 371303,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10527,6 +10806,7 @@
           {
             "name": "The Portals of Chaos (E2M8) - Exit",
             "id": 371305,
+            "region": "The Portals of Chaos (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10656,6 +10936,7 @@
           {
             "name": "The Glacier (E2M9) - Yellow key",
             "id": 371306,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10674,6 +10955,7 @@
           {
             "name": "The Glacier (E2M9) - Ethereal Crossbow",
             "id": 371311,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10692,6 +10974,7 @@
           {
             "name": "The Glacier (E2M9) - Bag of Holding",
             "id": 371314,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10710,6 +10993,7 @@
           {
             "name": "The Glacier (E2M9) - Tome of Power",
             "id": 371315,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10728,6 +11012,7 @@
           {
             "name": "The Glacier (E2M9) - Shadowsphere",
             "id": 371316,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10746,6 +11031,7 @@
           {
             "name": "The Glacier (E2M9) - Silver Shield",
             "id": 371318,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10764,6 +11050,7 @@
           {
             "name": "The Glacier (E2M9) - Dragon Claw 2",
             "id": 371325,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10782,6 +11069,7 @@
           {
             "name": "The Glacier (E2M9) - Morph Ovum",
             "id": 371328,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10800,6 +11088,7 @@
           {
             "name": "The Glacier (E2M9) - Firemace",
             "id": 371329,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10818,6 +11107,7 @@
           {
             "name": "The Glacier (E2M9) - Firemace 4",
             "id": 371332,
+            "region": "The Glacier (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10879,6 +11169,7 @@
           {
             "name": "The Glacier (E2M9) - Mystic Urn",
             "id": 371320,
+            "region": "The Glacier (E2M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10897,6 +11188,7 @@
           {
             "name": "The Glacier (E2M9) - Map Scroll",
             "id": 371321,
+            "region": "The Glacier (E2M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10915,6 +11207,7 @@
           {
             "name": "The Glacier (E2M9) - Firemace 3",
             "id": 371331,
+            "region": "The Glacier (E2M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10933,6 +11226,7 @@
           {
             "name": "The Glacier (E2M9) - Exit",
             "id": 371333,
+            "region": "The Glacier (E2M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10994,6 +11288,7 @@
           {
             "name": "The Glacier (E2M9) - Green key",
             "id": 371308,
+            "region": "The Glacier (E2M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11012,6 +11307,7 @@
           {
             "name": "The Glacier (E2M9) - Dragon Claw",
             "id": 371312,
+            "region": "The Glacier (E2M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11030,6 +11326,7 @@
           {
             "name": "The Glacier (E2M9) - Chaos Device",
             "id": 371324,
+            "region": "The Glacier (E2M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11048,6 +11345,7 @@
           {
             "name": "The Glacier (E2M9) - Firemace 2",
             "id": 371330,
+            "region": "The Glacier (E2M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11102,6 +11400,7 @@
           {
             "name": "The Glacier (E2M9) - Blue key",
             "id": 371307,
+            "region": "The Glacier (E2M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11120,6 +11419,7 @@
           {
             "name": "The Glacier (E2M9) - Phoenix Rod",
             "id": 371309,
+            "region": "The Glacier (E2M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11138,6 +11438,7 @@
           {
             "name": "The Glacier (E2M9) - Hellstaff",
             "id": 371313,
+            "region": "The Glacier (E2M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11156,6 +11457,7 @@
           {
             "name": "The Glacier (E2M9) - Ring of Invincibility",
             "id": 371317,
+            "region": "The Glacier (E2M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11174,6 +11476,7 @@
           {
             "name": "The Glacier (E2M9) - Enchanted Shield",
             "id": 371319,
+            "region": "The Glacier (E2M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11192,6 +11495,7 @@
           {
             "name": "The Glacier (E2M9) - Mystic Urn 2",
             "id": 371322,
+            "region": "The Glacier (E2M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11210,6 +11514,7 @@
           {
             "name": "The Glacier (E2M9) - Torch",
             "id": 371323,
+            "region": "The Glacier (E2M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11310,6 +11615,7 @@
           {
             "name": "The Storehouse (E3M1) - Yellow key",
             "id": 371334,
+            "region": "The Storehouse (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11328,6 +11634,7 @@
           {
             "name": "The Storehouse (E3M1) - Bag of Holding",
             "id": 371336,
+            "region": "The Storehouse (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11346,6 +11653,7 @@
           {
             "name": "The Storehouse (E3M1) - Shadowsphere",
             "id": 371337,
+            "region": "The Storehouse (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11364,6 +11672,7 @@
           {
             "name": "The Storehouse (E3M1) - Silver Shield",
             "id": 371339,
+            "region": "The Storehouse (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11382,6 +11691,7 @@
           {
             "name": "The Storehouse (E3M1) - Chaos Device",
             "id": 371341,
+            "region": "The Storehouse (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11400,6 +11710,7 @@
           {
             "name": "The Storehouse (E3M1) - Dragon Claw",
             "id": 371344,
+            "region": "The Storehouse (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11418,6 +11729,7 @@
           {
             "name": "The Storehouse (E3M1) - Gauntlets of the Necromancer",
             "id": 371346,
+            "region": "The Storehouse (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11479,6 +11791,7 @@
           {
             "name": "The Storehouse (E3M1) - Green key",
             "id": 371335,
+            "region": "The Storehouse (E3M1) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11540,6 +11853,7 @@
           {
             "name": "The Storehouse (E3M1) - Ring of Invincibility",
             "id": 371338,
+            "region": "The Storehouse (E3M1) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11558,6 +11872,7 @@
           {
             "name": "The Storehouse (E3M1) - Map Scroll",
             "id": 371340,
+            "region": "The Storehouse (E3M1) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11576,6 +11891,7 @@
           {
             "name": "The Storehouse (E3M1) - Tome of Power",
             "id": 371342,
+            "region": "The Storehouse (E3M1) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11594,6 +11910,7 @@
           {
             "name": "The Storehouse (E3M1) - Hellstaff",
             "id": 371345,
+            "region": "The Storehouse (E3M1) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11612,6 +11929,7 @@
           {
             "name": "The Storehouse (E3M1) - Exit",
             "id": 371347,
+            "region": "The Storehouse (E3M1) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11693,6 +12011,7 @@
           {
             "name": "The Cesspool (E3M2) - Yellow key",
             "id": 371348,
+            "region": "The Cesspool (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11711,6 +12030,7 @@
           {
             "name": "The Cesspool (E3M2) - Ethereal Crossbow",
             "id": 371351,
+            "region": "The Cesspool (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11729,6 +12049,7 @@
           {
             "name": "The Cesspool (E3M2) - Silver Shield 2",
             "id": 371359,
+            "region": "The Cesspool (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11747,6 +12068,7 @@
           {
             "name": "The Cesspool (E3M2) - Morph Ovum",
             "id": 371360,
+            "region": "The Cesspool (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11765,6 +12087,7 @@
           {
             "name": "The Cesspool (E3M2) - Mystic Urn",
             "id": 371362,
+            "region": "The Cesspool (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11783,6 +12106,7 @@
           {
             "name": "The Cesspool (E3M2) - Tome of Power",
             "id": 371367,
+            "region": "The Cesspool (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11844,6 +12168,7 @@
           {
             "name": "The Cesspool (E3M2) - Firemace 3",
             "id": 371374,
+            "region": "The Cesspool (E3M2) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11862,6 +12187,7 @@
           {
             "name": "The Cesspool (E3M2) - Exit",
             "id": 371377,
+            "region": "The Cesspool (E3M2) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11945,6 +12271,7 @@
           {
             "name": "The Cesspool (E3M2) - Green key",
             "id": 371349,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11963,6 +12290,7 @@
           {
             "name": "The Cesspool (E3M2) - Dragon Claw",
             "id": 371354,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11981,6 +12309,7 @@
           {
             "name": "The Cesspool (E3M2) - Hellstaff",
             "id": 371356,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11999,6 +12328,7 @@
           {
             "name": "The Cesspool (E3M2) - Bag of Holding",
             "id": 371357,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12017,6 +12347,7 @@
           {
             "name": "The Cesspool (E3M2) - Shadowsphere",
             "id": 371363,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12035,6 +12366,7 @@
           {
             "name": "The Cesspool (E3M2) - Tome of Power 3",
             "id": 371369,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12053,6 +12385,7 @@
           {
             "name": "The Cesspool (E3M2) - Torch",
             "id": 371370,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12071,6 +12404,7 @@
           {
             "name": "The Cesspool (E3M2) - Firemace 2",
             "id": 371373,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12089,6 +12423,7 @@
           {
             "name": "The Cesspool (E3M2) - Firemace 5",
             "id": 371376,
+            "region": "The Cesspool (E3M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12191,6 +12526,7 @@
           {
             "name": "The Cesspool (E3M2) - Ring of Invincibility",
             "id": 371352,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12209,6 +12545,7 @@
           {
             "name": "The Cesspool (E3M2) - Gauntlets of the Necromancer",
             "id": 371353,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12227,6 +12564,7 @@
           {
             "name": "The Cesspool (E3M2) - Phoenix Rod",
             "id": 371355,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12245,6 +12583,7 @@
           {
             "name": "The Cesspool (E3M2) - Morph Ovum 2",
             "id": 371361,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12263,6 +12602,7 @@
           {
             "name": "The Cesspool (E3M2) - Enchanted Shield",
             "id": 371364,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12281,6 +12621,7 @@
           {
             "name": "The Cesspool (E3M2) - Map Scroll",
             "id": 371365,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12299,6 +12640,7 @@
           {
             "name": "The Cesspool (E3M2) - Chaos Device",
             "id": 371366,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12317,6 +12659,7 @@
           {
             "name": "The Cesspool (E3M2) - Tome of Power 2",
             "id": 371368,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12335,6 +12678,7 @@
           {
             "name": "The Cesspool (E3M2) - Bag of Holding 2",
             "id": 371371,
+            "region": "The Cesspool (E3M2) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12435,6 +12779,7 @@
           {
             "name": "The Confluence (E3M3) - Yellow key",
             "id": 371378,
+            "region": "The Confluence (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12453,6 +12798,7 @@
           {
             "name": "The Confluence (E3M3) - Shadowsphere",
             "id": 371395,
+            "region": "The Confluence (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12471,6 +12817,7 @@
           {
             "name": "The Confluence (E3M3) - Silver Shield",
             "id": 371398,
+            "region": "The Confluence (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12532,6 +12879,7 @@
           {
             "name": "The Confluence (E3M3) - Hellstaff",
             "id": 371381,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12550,6 +12898,7 @@
           {
             "name": "The Confluence (E3M3) - Hellstaff 2",
             "id": 371385,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12568,6 +12917,7 @@
           {
             "name": "The Confluence (E3M3) - Gauntlets of the Necromancer",
             "id": 371386,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12586,6 +12936,7 @@
           {
             "name": "The Confluence (E3M3) - Tome of Power 3",
             "id": 371389,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12604,6 +12955,7 @@
           {
             "name": "The Confluence (E3M3) - Tome of Power 4",
             "id": 371390,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12622,6 +12974,7 @@
           {
             "name": "The Confluence (E3M3) - Mystic Urn 2",
             "id": 371394,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12640,6 +12993,7 @@
           {
             "name": "The Confluence (E3M3) - Map Scroll",
             "id": 371397,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12658,6 +13012,7 @@
           {
             "name": "The Confluence (E3M3) - Phoenix Rod",
             "id": 371399,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12676,6 +13031,7 @@
           {
             "name": "The Confluence (E3M3) - Enchanted Shield",
             "id": 371400,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12694,6 +13050,7 @@
           {
             "name": "The Confluence (E3M3) - Firemace 4",
             "id": 371407,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12712,6 +13069,7 @@
           {
             "name": "The Confluence (E3M3) - Firemace 5",
             "id": 371408,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12730,6 +13088,7 @@
           {
             "name": "The Confluence (E3M3) - Exit",
             "id": 371410,
+            "region": "The Confluence (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12794,6 +13153,7 @@
           {
             "name": "The Confluence (E3M3) - Green key",
             "id": 371379,
+            "region": "The Confluence (E3M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12812,6 +13172,7 @@
           {
             "name": "The Confluence (E3M3) - Ethereal Crossbow",
             "id": 371384,
+            "region": "The Confluence (E3M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12914,6 +13275,7 @@
           {
             "name": "The Confluence (E3M3) - Blue key",
             "id": 371380,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12932,6 +13294,7 @@
           {
             "name": "The Confluence (E3M3) - Dragon Claw",
             "id": 371383,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12950,6 +13313,7 @@
           {
             "name": "The Confluence (E3M3) - Mystic Urn",
             "id": 371387,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12968,6 +13332,7 @@
           {
             "name": "The Confluence (E3M3) - Tome of Power 2",
             "id": 371388,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12986,6 +13351,7 @@
           {
             "name": "The Confluence (E3M3) - Tome of Power 5",
             "id": 371391,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13004,6 +13370,7 @@
           {
             "name": "The Confluence (E3M3) - Bag of Holding",
             "id": 371392,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13022,6 +13389,7 @@
           {
             "name": "The Confluence (E3M3) - Morph Ovum",
             "id": 371393,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13040,6 +13408,7 @@
           {
             "name": "The Confluence (E3M3) - Silver Shield 2",
             "id": 371401,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13058,6 +13427,7 @@
           {
             "name": "The Confluence (E3M3) - Chaos Device",
             "id": 371402,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13076,6 +13446,7 @@
           {
             "name": "The Confluence (E3M3) - Torch",
             "id": 371403,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13094,6 +13465,7 @@
           {
             "name": "The Confluence (E3M3) - Firemace",
             "id": 371404,
+            "region": "The Confluence (E3M3) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13194,6 +13566,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Yellow key",
             "id": 371411,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13212,6 +13585,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Dragon Claw",
             "id": 371413,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13230,6 +13604,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Ring of Invincibility",
             "id": 371414,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13248,6 +13623,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Ethereal Crossbow",
             "id": 371415,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13266,6 +13642,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Gauntlets of the Necromancer",
             "id": 371416,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13284,6 +13661,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Bag of Holding",
             "id": 371419,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13302,6 +13680,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Morph Ovum",
             "id": 371421,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13320,6 +13699,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Mystic Urn",
             "id": 371422,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13338,6 +13718,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Shadowsphere",
             "id": 371423,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13356,6 +13737,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Silver Shield",
             "id": 371424,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13374,6 +13756,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Torch",
             "id": 371430,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13392,6 +13775,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Tome of Power 2",
             "id": 371433,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13410,6 +13794,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Tome of Power 3",
             "id": 371434,
+            "region": "The Azure Fortress (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13464,6 +13849,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Green key",
             "id": 371412,
+            "region": "The Azure Fortress (E3M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13482,6 +13868,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Hellstaff",
             "id": 371417,
+            "region": "The Azure Fortress (E3M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13500,6 +13887,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Chaos Device",
             "id": 371428,
+            "region": "The Azure Fortress (E3M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13518,6 +13906,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Torch 3",
             "id": 371432,
+            "region": "The Azure Fortress (E3M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13536,6 +13925,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Enchanted Shield 2",
             "id": 371435,
+            "region": "The Azure Fortress (E3M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13554,6 +13944,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Morph Ovum 2",
             "id": 371436,
+            "region": "The Azure Fortress (E3M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13608,6 +13999,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Phoenix Rod",
             "id": 371418,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13626,6 +14018,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Bag of Holding 2",
             "id": 371420,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13644,6 +14037,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Silver Shield 2",
             "id": 371425,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13662,6 +14056,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Enchanted Shield",
             "id": 371426,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13680,6 +14075,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Map Scroll",
             "id": 371427,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13698,6 +14094,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Tome of Power",
             "id": 371429,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13716,6 +14113,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Torch 2",
             "id": 371431,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13734,6 +14132,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Mystic Urn 2",
             "id": 371437,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13752,6 +14151,7 @@
           {
             "name": "The Azure Fortress (E3M4) - Exit",
             "id": 371438,
+            "region": "The Azure Fortress (E3M4) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13852,6 +14252,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Yellow key",
             "id": 371439,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13870,6 +14271,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Hellstaff",
             "id": 371441,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13888,6 +14290,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Ethereal Crossbow",
             "id": 371447,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13906,6 +14309,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Ring of Invincibility",
             "id": 371450,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13924,6 +14328,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Silver Shield",
             "id": 371451,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13942,6 +14347,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Enchanted Shield",
             "id": 371452,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13960,6 +14366,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Torch",
             "id": 371456,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13978,6 +14385,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Tome of Power 2",
             "id": 371459,
+            "region": "The Ophidian Lair (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14032,6 +14440,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Green key",
             "id": 371440,
+            "region": "The Ophidian Lair (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14050,6 +14459,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Dragon Claw",
             "id": 371443,
+            "region": "The Ophidian Lair (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14068,6 +14478,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Gauntlets of the Necromancer",
             "id": 371444,
+            "region": "The Ophidian Lair (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14086,6 +14497,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Bag of Holding",
             "id": 371445,
+            "region": "The Ophidian Lair (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14104,6 +14516,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Morph Ovum",
             "id": 371446,
+            "region": "The Ophidian Lair (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14122,6 +14535,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Shadowsphere",
             "id": 371449,
+            "region": "The Ophidian Lair (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14140,6 +14554,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Chaos Device",
             "id": 371455,
+            "region": "The Ophidian Lair (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14194,6 +14609,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Mystic Urn",
             "id": 371448,
+            "region": "The Ophidian Lair (E3M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14212,6 +14628,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Silver Shield 2",
             "id": 371453,
+            "region": "The Ophidian Lair (E3M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14230,6 +14647,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Map Scroll",
             "id": 371454,
+            "region": "The Ophidian Lair (E3M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14248,6 +14666,7 @@
           {
             "name": "The Ophidian Lair (E3M5) - Exit",
             "id": 371460,
+            "region": "The Ophidian Lair (E3M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14339,6 +14758,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Yellow key",
             "id": 371461,
+            "region": "The Halls of Fear (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14357,6 +14777,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Ethereal Crossbow",
             "id": 371466,
+            "region": "The Halls of Fear (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14375,6 +14796,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Dragon Claw",
             "id": 371467,
+            "region": "The Halls of Fear (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14393,6 +14815,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Tome of Power 3",
             "id": 371483,
+            "region": "The Halls of Fear (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14411,6 +14834,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Hellstaff 2",
             "id": 371485,
+            "region": "The Halls of Fear (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14429,6 +14853,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Firemace 4",
             "id": 371488,
+            "region": "The Halls of Fear (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14502,6 +14927,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Bag of Holding",
             "id": 371470,
+            "region": "The Halls of Fear (E3M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14520,6 +14946,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Bag of Holding 2",
             "id": 371471,
+            "region": "The Halls of Fear (E3M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14538,6 +14965,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Map Scroll",
             "id": 371478,
+            "region": "The Halls of Fear (E3M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14556,6 +14984,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Bag of Holding 3",
             "id": 371482,
+            "region": "The Halls of Fear (E3M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14574,6 +15003,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Firemace",
             "id": 371484,
+            "region": "The Halls of Fear (E3M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14592,6 +15022,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Exit",
             "id": 371491,
+            "region": "The Halls of Fear (E3M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14714,6 +15145,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Green key",
             "id": 371462,
+            "region": "The Halls of Fear (E3M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14732,6 +15164,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Gauntlets of the Necromancer",
             "id": 371468,
+            "region": "The Halls of Fear (E3M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14750,6 +15183,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Morph Ovum",
             "id": 371472,
+            "region": "The Halls of Fear (E3M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14768,6 +15202,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Mystic Urn",
             "id": 371473,
+            "region": "The Halls of Fear (E3M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14786,6 +15221,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Silver Shield",
             "id": 371476,
+            "region": "The Halls of Fear (E3M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14864,6 +15300,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Blue key",
             "id": 371463,
+            "region": "The Halls of Fear (E3M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14882,6 +15319,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Hellstaff",
             "id": 371464,
+            "region": "The Halls of Fear (E3M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14900,6 +15338,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Chaos Device",
             "id": 371469,
+            "region": "The Halls of Fear (E3M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14918,6 +15357,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Shadowsphere",
             "id": 371474,
+            "region": "The Halls of Fear (E3M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14936,6 +15376,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Tome of Power 2",
             "id": 371480,
+            "region": "The Halls of Fear (E3M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14954,6 +15395,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Firemace 2",
             "id": 371486,
+            "region": "The Halls of Fear (E3M6) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15030,6 +15472,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Phoenix Rod",
             "id": 371465,
+            "region": "The Halls of Fear (E3M6) Cyan",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15048,6 +15491,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Enchanted Shield",
             "id": 371477,
+            "region": "The Halls of Fear (E3M6) Cyan",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15066,6 +15510,7 @@
           {
             "name": "The Halls of Fear (E3M6) - Tome of Power",
             "id": 371479,
+            "region": "The Halls of Fear (E3M6) Cyan",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15137,6 +15582,7 @@
           {
             "name": "The Chasm (E3M7) - Yellow key",
             "id": 371494,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15155,6 +15601,7 @@
           {
             "name": "The Chasm (E3M7) - Ethereal Crossbow",
             "id": 371495,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15173,6 +15620,7 @@
           {
             "name": "The Chasm (E3M7) - Dragon Claw",
             "id": 371498,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15191,6 +15639,7 @@
           {
             "name": "The Chasm (E3M7) - Bag of Holding",
             "id": 371501,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15209,6 +15658,7 @@
           {
             "name": "The Chasm (E3M7) - Silver Shield",
             "id": 371502,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15227,6 +15677,7 @@
           {
             "name": "The Chasm (E3M7) - Tome of Power",
             "id": 371503,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15245,6 +15696,7 @@
           {
             "name": "The Chasm (E3M7) - Shadowsphere 2",
             "id": 371514,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15263,6 +15715,7 @@
           {
             "name": "The Chasm (E3M7) - Bag of Holding 2",
             "id": 371515,
+            "region": "The Chasm (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15304,6 +15757,7 @@
           {
             "name": "The Chasm (E3M7) - Exit",
             "id": 371516,
+            "region": "The Chasm (E3M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15413,6 +15867,7 @@
           {
             "name": "The Chasm (E3M7) - Green key",
             "id": 371493,
+            "region": "The Chasm (E3M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15431,6 +15886,7 @@
           {
             "name": "The Chasm (E3M7) - Hellstaff",
             "id": 371496,
+            "region": "The Chasm (E3M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15449,6 +15905,7 @@
           {
             "name": "The Chasm (E3M7) - Morph Ovum",
             "id": 371505,
+            "region": "The Chasm (E3M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15510,6 +15967,7 @@
           {
             "name": "The Chasm (E3M7) - Blue key",
             "id": 371492,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15528,6 +15986,7 @@
           {
             "name": "The Chasm (E3M7) - Gauntlets of the Necromancer",
             "id": 371497,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15546,6 +16005,7 @@
           {
             "name": "The Chasm (E3M7) - Phoenix Rod",
             "id": 371499,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15564,6 +16024,7 @@
           {
             "name": "The Chasm (E3M7) - Ring of Invincibility",
             "id": 371506,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15582,6 +16043,7 @@
           {
             "name": "The Chasm (E3M7) - Mystic Urn",
             "id": 371507,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15600,6 +16062,7 @@
           {
             "name": "The Chasm (E3M7) - Enchanted Shield",
             "id": 371508,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15618,6 +16081,7 @@
           {
             "name": "The Chasm (E3M7) - Map Scroll",
             "id": 371509,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15636,6 +16100,7 @@
           {
             "name": "The Chasm (E3M7) - Chaos Device",
             "id": 371510,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15654,6 +16119,7 @@
           {
             "name": "The Chasm (E3M7) - Tome of Power 2",
             "id": 371511,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15672,6 +16138,7 @@
           {
             "name": "The Chasm (E3M7) - Tome of Power 3",
             "id": 371512,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15690,6 +16157,7 @@
           {
             "name": "The Chasm (E3M7) - Torch 2",
             "id": 371513,
+            "region": "The Chasm (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15731,6 +16199,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Phoenix Rod",
             "id": 371517,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15749,6 +16218,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Dragon Claw",
             "id": 371519,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15767,6 +16237,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Gauntlets of the Necromancer",
             "id": 371520,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15785,6 +16256,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Hellstaff",
             "id": 371521,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15803,6 +16275,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Bag of Holding",
             "id": 371522,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15821,6 +16294,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Mystic Urn",
             "id": 371523,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15839,6 +16313,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Ring of Invincibility",
             "id": 371524,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15857,6 +16332,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Shadowsphere",
             "id": 371525,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15875,6 +16351,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Silver Shield",
             "id": 371526,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15893,6 +16370,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Enchanted Shield",
             "id": 371527,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15911,6 +16389,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Tome of Power",
             "id": 371528,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15929,6 +16408,7 @@
           {
             "name": "D'Sparil's Keep (E3M8) - Exit",
             "id": 371532,
+            "region": "D'Sparil's Keep (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16010,6 +16490,7 @@
           {
             "name": "The Aquifer (E3M9) - Ethereal Crossbow",
             "id": 371536,
+            "region": "The Aquifer (E3M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16028,6 +16509,7 @@
           {
             "name": "The Aquifer (E3M9) - Silver Shield",
             "id": 371543,
+            "region": "The Aquifer (E3M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16046,6 +16528,7 @@
           {
             "name": "The Aquifer (E3M9) - Tome of Power",
             "id": 371544,
+            "region": "The Aquifer (E3M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16064,6 +16547,7 @@
           {
             "name": "The Aquifer (E3M9) - Torch",
             "id": 371551,
+            "region": "The Aquifer (E3M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16105,6 +16589,7 @@
           {
             "name": "The Aquifer (E3M9) - Exit",
             "id": 371558,
+            "region": "The Aquifer (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16195,6 +16680,7 @@
           {
             "name": "The Aquifer (E3M9) - Green key",
             "id": 371534,
+            "region": "The Aquifer (E3M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16213,6 +16699,7 @@
           {
             "name": "The Aquifer (E3M9) - Phoenix Rod",
             "id": 371537,
+            "region": "The Aquifer (E3M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16231,6 +16718,7 @@
           {
             "name": "The Aquifer (E3M9) - Ring of Invincibility",
             "id": 371541,
+            "region": "The Aquifer (E3M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16249,6 +16737,7 @@
           {
             "name": "The Aquifer (E3M9) - Bag of Holding",
             "id": 371545,
+            "region": "The Aquifer (E3M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16267,6 +16756,7 @@
           {
             "name": "The Aquifer (E3M9) - Chaos Device",
             "id": 371548,
+            "region": "The Aquifer (E3M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16352,6 +16842,7 @@
           {
             "name": "The Aquifer (E3M9) - Blue key",
             "id": 371533,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16370,6 +16861,7 @@
           {
             "name": "The Aquifer (E3M9) - Dragon Claw",
             "id": 371538,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16388,6 +16880,7 @@
           {
             "name": "The Aquifer (E3M9) - Hellstaff",
             "id": 371539,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16406,6 +16899,7 @@
           {
             "name": "The Aquifer (E3M9) - Gauntlets of the Necromancer",
             "id": 371540,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16424,6 +16918,7 @@
           {
             "name": "The Aquifer (E3M9) - Mystic Urn",
             "id": 371542,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16442,6 +16937,7 @@
           {
             "name": "The Aquifer (E3M9) - Morph Ovum",
             "id": 371546,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16460,6 +16956,7 @@
           {
             "name": "The Aquifer (E3M9) - Enchanted Shield",
             "id": 371549,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16478,6 +16975,7 @@
           {
             "name": "The Aquifer (E3M9) - Tome of Power 2",
             "id": 371550,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16496,6 +16994,7 @@
           {
             "name": "The Aquifer (E3M9) - Shadowsphere",
             "id": 371552,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16514,6 +17013,7 @@
           {
             "name": "The Aquifer (E3M9) - Firemace",
             "id": 371554,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16532,6 +17032,7 @@
           {
             "name": "The Aquifer (E3M9) - Firemace 2",
             "id": 371555,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16550,6 +17051,7 @@
           {
             "name": "The Aquifer (E3M9) - Firemace 3",
             "id": 371556,
+            "region": "The Aquifer (E3M9) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20568,16 +21070,510 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Ammos",
-      "Armors",
-      "Artifacts",
-      "Everything",
-      "Keys",
-      "Levels",
-      "Map Scrolls",
-      "Weapons"
-    ]
+    "1": {
+      "Ammos": [
+        "Energy Orb",
+        "Inferno Orb",
+        "Pile of Mace Spheres",
+        "Crystal Geode",
+        "Quiver of Ethereal Arrows",
+        "Greater Runes"
+      ],
+      "Armors": [
+        "Silver Shield",
+        "Enchanted Shield"
+      ],
+      "Artifacts": [
+        "Chaos Device",
+        "Torch",
+        "Morph Ovum",
+        "Mystic Urn",
+        "Ring of Invincibility",
+        "Shadowsphere",
+        "Tome of Power",
+        "Timebomb of the Ancients",
+        "Quartz Flask"
+      ],
+      "Keys": [
+        "The Chasm (E3M7) - Green key",
+        "The Great Hall (E2M7) - Green key",
+        "The Dungeons (E1M2) - Blue key",
+        "The Great Hall (E2M7) - Yellow key",
+        "Ambulatory (E4M3) - Yellow key",
+        "Catafalque (E4M1) - Green key",
+        "The Graveyard (E1M9) - Green key",
+        "The Labyrinth (E2M6) - Yellow key",
+        "The River of Fire (E2M3) - Yellow key",
+        "The Catacombs (E2M5) - Blue key",
+        "Blockhouse (E4M2) - Blue key",
+        "The Glacier (E2M9) - Blue key",
+        "Hydratyr (E5M5) - Green key",
+        "The Chasm (E3M7) - Yellow key",
+        "The Graveyard (E1M9) - Yellow key",
+        "The River of Fire (E2M3) - Green key",
+        "The Cesspool (E3M2) - Green key",
+        "The Docks (E1M1) - Yellow key",
+        "The Halls of Fear (E3M6) - Blue key",
+        "The Confluence (E3M3) - Green key",
+        "The Citadel (E1M5) - Yellow key",
+        "Ramparts of Perdition (E4M7) - Green key",
+        "Colonnade (E5M6) - Yellow key",
+        "The Cesspool (E3M2) - Yellow key",
+        "Skein of D'Sparil (E5M9) - Green key",
+        "Foetid Manse (E5M7) - Blue key",
+        "Great Stair (E4M5) - Green key",
+        "The Dungeons (E1M2) - Yellow key",
+        "Hydratyr (E5M5) - Blue key",
+        "The Confluence (E3M3) - Blue key",
+        "The Crypts (E1M7) - Green key",
+        "Colonnade (E5M6) - Green key",
+        "Rapids (E5M2) - Yellow key",
+        "Skein of D'Sparil (E5M9) - Yellow key",
+        "Ramparts of Perdition (E4M7) - Yellow key",
+        "The Storehouse (E3M1) - Green key",
+        "Shattered Bridge (E4M8) - Yellow key",
+        "Halls of the Apostate (E4M6) - Yellow key",
+        "Mausoleum (E4M9) - Yellow key",
+        "The Guard Tower (E1M4) - Yellow key",
+        "Skein of D'Sparil (E5M9) - Blue key",
+        "The Crypts (E1M7) - Yellow key",
+        "The Ophidian Lair (E3M5) - Green key",
+        "The River of Fire (E2M3) - Blue key",
+        "The Glacier (E2M9) - Yellow key",
+        "The Great Hall (E2M7) - Blue key",
+        "Ochre Cliffs (E5M1) - Yellow key",
+        "The Storehouse (E3M1) - Yellow key",
+        "The Gatehouse (E1M3) - Green key",
+        "Ochre Cliffs (E5M1) - Blue key",
+        "Quay (E5M3) - Green key",
+        "The Ophidian Lair (E3M5) - Yellow key",
+        "Blockhouse (E4M2) - Yellow key",
+        "The Catacombs (E2M5) - Yellow key",
+        "The Ice Grotto (E2M4) - Green key",
+        "The Halls of Fear (E3M6) - Green key",
+        "The Aquifer (E3M9) - Blue key",
+        "The Chasm (E3M7) - Blue key",
+        "The Gatehouse (E1M3) - Yellow key",
+        "Foetid Manse (E5M7) - Green key",
+        "Ambulatory (E4M3) - Green key",
+        "Courtyard (E5M4) - Yellow key",
+        "The Aquifer (E3M9) - Yellow key",
+        "The Azure Fortress (E3M4) - Green key",
+        "The Crater (E2M1) - Green key",
+        "Ambulatory (E4M3) - Blue key",
+        "Colonnade (E5M6) - Blue key",
+        "The Cesspool (E3M2) - Blue key",
+        "The Dungeons (E1M2) - Green key",
+        "The Guard Tower (E1M4) - Green key",
+        "The Ice Grotto (E2M4) - Yellow key",
+        "Ramparts of Perdition (E4M7) - Blue key",
+        "The Crypts (E1M7) - Blue key",
+        "The Citadel (E1M5) - Green key",
+        "Ochre Cliffs (E5M1) - Green key",
+        "Catafalque (E4M1) - Yellow key",
+        "Quay (E5M3) - Yellow key",
+        "The Lava Pits (E2M2) - Yellow key",
+        "The Confluence (E3M3) - Yellow key",
+        "Great Stair (E4M5) - Blue key",
+        "The Ice Grotto (E2M4) - Blue key",
+        "Halls of the Apostate (E4M6) - Green key",
+        "The Labyrinth (E2M6) - Blue key",
+        "The Crater (E2M1) - Yellow key",
+        "Great Stair (E4M5) - Yellow key",
+        "The Citadel (E1M5) - Blue key",
+        "The Catacombs (E2M5) - Green key",
+        "The Labyrinth (E2M6) - Green key",
+        "Hydratyr (E5M5) - Yellow key",
+        "Blockhouse (E4M2) - Green key",
+        "Quay (E5M3) - Blue key",
+        "Rapids (E5M2) - Green key",
+        "The Glacier (E2M9) - Green key",
+        "The Aquifer (E3M9) - Green key",
+        "Courtyard (E5M4) - Green key",
+        "The Cathedral (E1M6) - Yellow key",
+        "Courtyard (E5M4) - Blue key",
+        "The Halls of Fear (E3M6) - Yellow key",
+        "The Lava Pits (E2M2) - Green key",
+        "The Azure Fortress (E3M4) - Yellow key",
+        "The Graveyard (E1M9) - Blue key",
+        "The Cathedral (E1M6) - Green key",
+        "Halls of the Apostate (E4M6) - Blue key",
+        "Foetid Manse (E5M7) - Yellow key"
+      ],
+      "Levels": [
+        "The Guard Tower (E1M4)",
+        "The Crater (E2M1)",
+        "The Portals of Chaos (E2M8)",
+        "The Gatehouse (E1M3)",
+        "The Lava Pits (E2M2)",
+        "The Confluence (E3M3)",
+        "The Great Hall (E2M7)",
+        "The Chasm (E3M7)",
+        "Quay (E5M3)",
+        "Ochre Cliffs (E5M1)",
+        "Sepulcher (E4M4)",
+        "The Crypts (E1M7)",
+        "Shattered Bridge (E4M8)",
+        "Blockhouse (E4M2)",
+        "The Labyrinth (E2M6)",
+        "The River of Fire (E2M3)",
+        "The Cesspool (E3M2)",
+        "The Halls of Fear (E3M6)",
+        "Courtyard (E5M4)",
+        "The Aquifer (E3M9)",
+        "The Docks (E1M1)",
+        "Catafalque (E4M1)",
+        "Foetid Manse (E5M7)",
+        "Hydratyr (E5M5)",
+        "The Storehouse (E3M1)",
+        "The Ice Grotto (E2M4)",
+        "The Catacombs (E2M5)",
+        "The Azure Fortress (E3M4)",
+        "D'Sparil's Keep (E3M8)",
+        "Colonnade (E5M6)",
+        "The Graveyard (E1M9)",
+        "Skein of D'Sparil (E5M9)",
+        "Ramparts of Perdition (E4M7)",
+        "The Glacier (E2M9)",
+        "The Dungeons (E1M2)",
+        "The Citadel (E1M5)",
+        "Ambulatory (E4M3)",
+        "Halls of the Apostate (E4M6)",
+        "Rapids (E5M2)",
+        "Great Stair (E4M5)",
+        "Mausoleum (E4M9)",
+        "The Ophidian Lair (E3M5)",
+        "The Cathedral (E1M6)",
+        "Hell's Maw (E1M8)",
+        "Field of Judgement (E5M8)"
+      ],
+      "Map Scrolls": [
+        "Sepulcher (E4M4) - Map Scroll",
+        "Courtyard (E5M4) - Map Scroll",
+        "The Aquifer (E3M9) - Map Scroll",
+        "The Great Hall (E2M7) - Map Scroll",
+        "Shattered Bridge (E4M8) - Map Scroll",
+        "Halls of the Apostate (E4M6) - Map Scroll",
+        "The Halls of Fear (E3M6) - Map Scroll",
+        "The Azure Fortress (E3M4) - Map Scroll",
+        "Ambulatory (E4M3) - Map Scroll",
+        "Colonnade (E5M6) - Map Scroll",
+        "The Gatehouse (E1M3) - Map Scroll",
+        "The Catacombs (E2M5) - Map Scroll",
+        "Great Stair (E4M5) - Map Scroll",
+        "The Storehouse (E3M1) - Map Scroll",
+        "The Graveyard (E1M9) - Map Scroll",
+        "The Labyrinth (E2M6) - Map Scroll",
+        "Ochre Cliffs (E5M1) - Map Scroll",
+        "D'Sparil's Keep (E3M8) - Map Scroll",
+        "The Docks (E1M1) - Map Scroll",
+        "The Crypts (E1M7) - Map Scroll",
+        "The Glacier (E2M9) - Map Scroll",
+        "The Dungeons (E1M2) - Map Scroll",
+        "Foetid Manse (E5M7) - Map Scroll",
+        "The Cesspool (E3M2) - Map Scroll",
+        "The Citadel (E1M5) - Map Scroll",
+        "The Chasm (E3M7) - Map Scroll",
+        "The Lava Pits (E2M2) - Map Scroll",
+        "Rapids (E5M2) - Map Scroll",
+        "Hell's Maw (E1M8) - Map Scroll",
+        "Hydratyr (E5M5) - Map Scroll",
+        "The Ophidian Lair (E3M5) - Map Scroll",
+        "The Guard Tower (E1M4) - Map Scroll",
+        "Field of Judgement (E5M8) - Map Scroll",
+        "The Confluence (E3M3) - Map Scroll",
+        "Mausoleum (E4M9) - Map Scroll",
+        "The River of Fire (E2M3) - Map Scroll",
+        "Blockhouse (E4M2) - Map Scroll",
+        "Catafalque (E4M1) - Map Scroll",
+        "The Crater (E2M1) - Map Scroll",
+        "Ramparts of Perdition (E4M7) - Map Scroll",
+        "The Ice Grotto (E2M4) - Map Scroll",
+        "The Portals of Chaos (E2M8) - Map Scroll",
+        "Quay (E5M3) - Map Scroll",
+        "The Cathedral (E1M6) - Map Scroll",
+        "Skein of D'Sparil (E5M9) - Map Scroll"
+      ],
+      "Weapons": [
+        "Dragon Claw",
+        "Ethereal Crossbow",
+        "Phoenix Rod",
+        "Firemace",
+        "Gauntlets of the Necromancer",
+        "Hellstaff"
+      ],
+      "Everything": [
+        "Claw Orb Capacity",
+        "Morph Ovum",
+        "Hydratyr (E5M5) - Green key",
+        "The Chasm (E3M7) - Yellow key",
+        "The Graveyard (E1M9) - Map Scroll",
+        "The River of Fire (E2M3) - Green key",
+        "The Docks (E1M1) - Map Scroll",
+        "The Ice Grotto (E2M4)",
+        "The Chasm (E3M7) - Map Scroll",
+        "The Confluence (E3M3) - Blue key",
+        "The Storehouse (E3M1) - Green key",
+        "Mausoleum (E4M9) - Yellow key",
+        "Chaos Device",
+        "The Glacier (E2M9)",
+        "The River of Fire (E2M3) - Map Scroll",
+        "The Azure Fortress (E3M4) - Complete",
+        "Foetid Manse (E5M7) - Complete",
+        "The River of Fire (E2M3) - Blue key",
+        "The Dungeons (E1M2) - Complete",
+        "The Great Hall (E2M7) - Blue key",
+        "The Cathedral (E1M6) - Map Scroll",
+        "Hell's Maw (E1M8)",
+        "Shattered Bridge (E4M8) - Complete",
+        "Sepulcher (E4M4) - Map Scroll",
+        "The Storehouse (E3M1) - Yellow key",
+        "The Gatehouse (E1M3) - Green key",
+        "Catafalque (E4M1) - Complete",
+        "Blockhouse (E4M2) - Yellow key",
+        "The Azure Fortress (E3M4) - Map Scroll",
+        "Ramparts of Perdition (E4M7) - Complete",
+        "The Gatehouse (E1M3) - Yellow key",
+        "Foetid Manse (E5M7) - Green key",
+        "The Ophidian Lair (E3M5) - Complete",
+        "The River of Fire (E2M3) - Complete",
+        "Field of Judgement (E5M8) - Complete",
+        "Rune Capacity",
+        "The Labyrinth (E2M6) - Map Scroll",
+        "The Dungeons (E1M2) - Green key",
+        "The Azure Fortress (E3M4)",
+        "The Guard Tower (E1M4) - Green key",
+        "Quay (E5M3) - Yellow key",
+        "The Confluence (E3M3) - Yellow key",
+        "Rapids (E5M2) - Map Scroll",
+        "The Crypts (E1M7) - Complete",
+        "Great Stair (E4M5) - Yellow key",
+        "Sepulcher (E4M4) - Complete",
+        "The Confluence (E3M3) - Map Scroll",
+        "Catafalque (E4M1) - Map Scroll",
+        "The Crater (E2M1) - Map Scroll",
+        "Phoenix Rod",
+        "Rapids (E5M2) - Green key",
+        "The Aquifer (E3M9) - Green key",
+        "The Confluence (E3M3) - Complete",
+        "The Halls of Fear (E3M6) - Yellow key",
+        "Tome of Power",
+        "The Portals of Chaos (E2M8) - Map Scroll",
+        "Quay (E5M3) - Map Scroll",
+        "The Great Hall (E2M7) - Green key",
+        "The Great Hall (E2M7)",
+        "Ring of Invincibility",
+        "The Labyrinth (E2M6) - Yellow key",
+        "The River of Fire (E2M3) - Yellow key",
+        "The Cesspool (E3M2) - Complete",
+        "The Gatehouse (E1M3) - Map Scroll",
+        "The Crater (E2M1) - Complete",
+        "The Confluence (E3M3) - Green key",
+        "The Guard Tower (E1M4) - Complete",
+        "Shadowsphere",
+        "Colonnade (E5M6) - Yellow key",
+        "Foetid Manse (E5M7) - Blue key",
+        "Great Stair (E4M5) - Green key",
+        "The Dungeons (E1M2) - Yellow key",
+        "D'Sparil's Keep (E3M8)",
+        "Hydratyr (E5M5) - Blue key",
+        "The Crypts (E1M7) - Green key",
+        "The Gatehouse (E1M3) - Complete",
+        "Rapids (E5M2) - Yellow key",
+        "Skein of D'Sparil (E5M9) - Yellow key",
+        "Ramparts of Perdition (E4M7) - Yellow key",
+        "The Guard Tower (E1M4) - Map Scroll",
+        "Timebomb of the Ancients",
+        "Ramparts of Perdition (E4M7)",
+        "The Dungeons (E1M2)",
+        "Halls of the Apostate (E4M6) - Complete",
+        "The Cathedral (E1M6) - Complete",
+        "Great Stair (E4M5)",
+        "Ochre Cliffs (E5M1) - Yellow key",
+        "Field of Judgement (E5M8)",
+        "The Labyrinth (E2M6) - Complete",
+        "Ochre Cliffs (E5M1) - Blue key",
+        "Courtyard (E5M4) - Map Scroll",
+        "Colonnade (E5M6) - Complete",
+        "The Ophidian Lair (E3M5) - Yellow key",
+        "Ethereal Crossbow",
+        "The Halls of Fear (E3M6) - Green key",
+        "Ambulatory (E4M3) - Map Scroll",
+        "The Crypts (E1M7)",
+        "The Chasm (E3M7) - Blue key",
+        "Greater Runes",
+        "Blockhouse (E4M2)",
+        "The Aquifer (E3M9) - Yellow key",
+        "The Crater (E2M1) - Green key",
+        "The River of Fire (E2M3)",
+        "The Lava Pits (E2M2) - Complete",
+        "The Halls of Fear (E3M6)",
+        "Ambulatory (E4M3) - Blue key",
+        "Colonnade (E5M6) - Blue key",
+        "The Cesspool (E3M2) - Blue key",
+        "The Crypts (E1M7) - Map Scroll",
+        "Catafalque (E4M1)",
+        "Foetid Manse (E5M7)",
+        "Foetid Manse (E5M7) - Map Scroll",
+        "Ochre Cliffs (E5M1) - Green key",
+        "D'Sparil's Keep (E3M8) - Complete",
+        "Gauntlets of the Necromancer",
+        "Skein of D'Sparil (E5M9)",
+        "The Ice Grotto (E2M4) - Blue key",
+        "Mystic Urn",
+        "The Ophidian Lair (E3M5) - Map Scroll",
+        "The Catacombs (E2M5) - Green key",
+        "Blockhouse (E4M2) - Green key",
+        "Ramparts of Perdition (E4M7) - Map Scroll",
+        "The Great Hall (E2M7) - Complete",
+        "Ambulatory (E4M3)",
+        "Rapids (E5M2)",
+        "The Lava Pits (E2M2) - Green key",
+        "Mausoleum (E4M9)",
+        "The Cathedral (E1M6) - Green key",
+        "Halls of the Apostate (E4M6) - Blue key",
+        "Foetid Manse (E5M7) - Yellow key",
+        "The Halls of Fear (E3M6) - Complete",
+        "Bag of Holding",
+        "The Lava Pits (E2M2)",
+        "Ambulatory (E4M3) - Yellow key",
+        "The Graveyard (E1M9) - Green key",
+        "Sepulcher (E4M4)",
+        "Colonnade (E5M6) - Map Scroll",
+        "Blockhouse (E4M2) - Blue key",
+        "Shattered Bridge (E4M8)",
+        "Quartz Flask",
+        "Mausoleum (E4M9) - Complete",
+        "The Graveyard (E1M9) - Yellow key",
+        "The Halls of Fear (E3M6) - Blue key",
+        "Courtyard (E5M4)",
+        "Hell's Maw (E1M8) - Complete",
+        "D'Sparil's Keep (E3M8) - Map Scroll",
+        "The Storehouse (E3M1)",
+        "The Citadel (E1M5) - Map Scroll",
+        "Crystal Geode",
+        "Colonnade (E5M6)",
+        "Colonnade (E5M6) - Green key",
+        "Hell's Maw (E1M8) - Map Scroll",
+        "Hydratyr (E5M5) - Map Scroll",
+        "Halls of the Apostate (E4M6) - Yellow key",
+        "Flame Orb Capacity",
+        "The Ice Grotto (E2M4) - Complete",
+        "Blockhouse (E4M2) - Map Scroll",
+        "Skein of D'Sparil (E5M9) - Blue key",
+        "The Crypts (E1M7) - Yellow key",
+        "The Ophidian Lair (E3M5) - Green key",
+        "Quay (E5M3) - Complete",
+        "The Ophidian Lair (E3M5)",
+        "Skein of D'Sparil (E5M9) - Map Scroll",
+        "The Guard Tower (E1M4)",
+        "The Storehouse (E3M1) - Complete",
+        "Halls of the Apostate (E4M6) - Map Scroll",
+        "Shattered Bridge (E4M8) - Map Scroll",
+        "Ambulatory (E4M3) - Green key",
+        "Crystal Capacity",
+        "The Docks (E1M1)",
+        "The Cesspool (E3M2) - Map Scroll",
+        "The Portals of Chaos (E2M8) - Complete",
+        "Inferno Orb",
+        "The Ice Grotto (E2M4) - Yellow key",
+        "Ramparts of Perdition (E4M7) - Blue key",
+        "The Citadel (E1M5) - Green key",
+        "The Crypts (E1M7) - Blue key",
+        "The Lava Pits (E2M2) - Map Scroll",
+        "Dragon Claw",
+        "Great Stair (E4M5) - Blue key",
+        "Halls of the Apostate (E4M6) - Green key",
+        "Field of Judgement (E5M8) - Map Scroll",
+        "Mausoleum (E4M9) - Map Scroll",
+        "The Labyrinth (E2M6) - Green key",
+        "Quay (E5M3) - Blue key",
+        "The Citadel (E1M5)",
+        "Quiver of Ethereal Arrows",
+        "The Ice Grotto (E2M4) - Map Scroll",
+        "The Cathedral (E1M6) - Yellow key",
+        "The Catacombs (E2M5) - Complete",
+        "Halls of the Apostate (E4M6)",
+        "The Azure Fortress (E3M4) - Yellow key",
+        "The Graveyard (E1M9) - Blue key",
+        "The Chasm (E3M7) - Green key",
+        "The Dungeons (E1M2) - Blue key",
+        "The Great Hall (E2M7) - Yellow key",
+        "The Portals of Chaos (E2M8)",
+        "The Graveyard (E1M9) - Complete",
+        "The Chasm (E3M7)",
+        "Quay (E5M3)",
+        "Ochre Cliffs (E5M1) - Complete",
+        "Ambulatory (E4M3) - Complete",
+        "Mace Sphere Capacity",
+        "Catafalque (E4M1) - Green key",
+        "Energy Orb",
+        "The Catacombs (E2M5) - Blue key",
+        "The Glacier (E2M9) - Blue key",
+        "The Catacombs (E2M5) - Map Scroll",
+        "Skein of D'Sparil (E5M9) - Complete",
+        "The Storehouse (E3M1) - Map Scroll",
+        "The Cesspool (E3M2) - Green key",
+        "The Docks (E1M1) - Yellow key",
+        "The Citadel (E1M5) - Yellow key",
+        "Ramparts of Perdition (E4M7) - Green key",
+        "Ochre Cliffs (E5M1) - Map Scroll",
+        "The Dungeons (E1M2) - Map Scroll",
+        "The Aquifer (E3M9) - Complete",
+        "The Cesspool (E3M2) - Yellow key",
+        "Skein of D'Sparil (E5M9) - Green key",
+        "The Graveyard (E1M9)",
+        "Hellstaff",
+        "Blockhouse (E4M2) - Complete",
+        "The Glacier (E2M9) - Complete",
+        "Hydratyr (E5M5) - Complete",
+        "Shattered Bridge (E4M8) - Yellow key",
+        "The Guard Tower (E1M4) - Yellow key",
+        "Enchanted Shield",
+        "Ethereal Arrow Capacity",
+        "The Glacier (E2M9) - Yellow key",
+        "Silver Shield",
+        "The Docks (E1M1) - Complete",
+        "The Crater (E2M1)",
+        "Quay (E5M3) - Green key",
+        "The Gatehouse (E1M3)",
+        "The Confluence (E3M3)",
+        "The Aquifer (E3M9) - Map Scroll",
+        "Ochre Cliffs (E5M1)",
+        "The Great Hall (E2M7) - Map Scroll",
+        "The Halls of Fear (E3M6) - Map Scroll",
+        "Great Stair (E4M5) - Complete",
+        "The Catacombs (E2M5) - Yellow key",
+        "The Ice Grotto (E2M4) - Green key",
+        "The Aquifer (E3M9) - Blue key",
+        "Great Stair (E4M5) - Map Scroll",
+        "Courtyard (E5M4) - Yellow key",
+        "The Azure Fortress (E3M4) - Green key",
+        "The Labyrinth (E2M6)",
+        "Courtyard (E5M4) - Complete",
+        "The Cesspool (E3M2)",
+        "The Aquifer (E3M9)",
+        "The Glacier (E2M9) - Map Scroll",
+        "Hydratyr (E5M5)",
+        "The Catacombs (E2M5)",
+        "Catafalque (E4M1) - Yellow key",
+        "The Lava Pits (E2M2) - Yellow key",
+        "Firemace",
+        "The Citadel (E1M5) - Complete",
+        "Pile of Mace Spheres",
+        "The Labyrinth (E2M6) - Blue key",
+        "The Crater (E2M1) - Yellow key",
+        "The Citadel (E1M5) - Blue key",
+        "The Chasm (E3M7) - Complete",
+        "Hydratyr (E5M5) - Yellow key",
+        "The Glacier (E2M9) - Green key",
+        "Courtyard (E5M4) - Green key",
+        "Torch",
+        "Courtyard (E5M4) - Blue key",
+        "Rapids (E5M2) - Complete",
+        "The Cathedral (E1M6)"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

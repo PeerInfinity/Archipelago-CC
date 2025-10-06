@@ -542,6 +542,7 @@
           {
             "name": "Starting Room - HI",
             "id": 444400,
+            "region": "Starting Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -570,6 +571,7 @@
           {
             "name": "Starting Room - HIDDEN",
             "id": 444401,
+            "region": "Starting Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -799,6 +801,7 @@
           {
             "name": "Hidden Room - DEAD END",
             "id": 444406,
+            "region": "Hidden Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -827,6 +830,7 @@
           {
             "name": "Hidden Room - OPEN",
             "id": 444407,
+            "region": "Hidden Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -939,6 +943,7 @@
           {
             "name": "The Seeker - Achievement",
             "id": 444409,
+            "region": "The Seeker",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1051,6 +1056,7 @@
           {
             "name": "Second Room - LEVEL 2",
             "id": 444431,
+            "region": "Second Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1070,6 +1076,7 @@
           {
             "name": "Second Room - Good Luck",
             "id": 445203,
+            "region": "Second Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1533,6 +1540,7 @@
           {
             "name": "Hub Room - ORDER",
             "id": 444432,
+            "region": "Hub Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1561,6 +1569,7 @@
           {
             "name": "Hub Room - SLAUGHTER",
             "id": 444433,
+            "region": "Hub Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1589,6 +1598,7 @@
           {
             "name": "Hub Room - TRACE",
             "id": 444436,
+            "region": "Hub Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1617,6 +1627,7 @@
           {
             "name": "Hub Room - RAT",
             "id": 444437,
+            "region": "Hub Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1645,6 +1656,7 @@
           {
             "name": "Hub Room - OPEN",
             "id": 444438,
+            "region": "Hub Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1673,6 +1685,7 @@
           {
             "name": "Hub Room - LOST",
             "id": 444440,
+            "region": "Hub Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1877,6 +1890,7 @@
           {
             "name": "Pilgrim Antechamber - PILGRIM",
             "id": 444447,
+            "region": "Pilgrim Antechamber",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1905,6 +1919,7 @@
           {
             "name": "Pilgrim Room - HOT CRUST",
             "id": 445205,
+            "region": "Pilgrim Antechamber",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1992,6 +2007,7 @@
           {
             "name": "Pilgrim Room - THIS",
             "id": 444449,
+            "region": "Pilgrim Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2430,6 +2446,7 @@
           {
             "name": "Crossroads - DECAY",
             "id": 444462,
+            "region": "Crossroads",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2458,6 +2475,7 @@
           {
             "name": "Crossroads - NOPE",
             "id": 444463,
+            "region": "Crossroads",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2486,6 +2504,7 @@
           {
             "name": "Crossroads - WE ROT",
             "id": 444465,
+            "region": "Crossroads",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2514,6 +2533,7 @@
           {
             "name": "Crossroads - BEND HI",
             "id": 444469,
+            "region": "Crossroads",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2542,6 +2562,7 @@
           {
             "name": "Crossroads - THE EYES",
             "id": 444470,
+            "region": "Crossroads",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2570,6 +2591,7 @@
           {
             "name": "Crossroads - TURN/RUNT",
             "id": 445206,
+            "region": "Crossroads",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2598,6 +2620,7 @@
           {
             "name": "Crossroads - WORDS, SWORD",
             "id": 445207,
+            "region": "Crossroads",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2685,6 +2708,7 @@
           {
             "name": "Crossroads - LOST Pair",
             "id": 445208,
+            "region": "Lost Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2797,6 +2821,7 @@
           {
             "name": "Amen Name Area - AMEN, NAME",
             "id": 445209,
+            "region": "Amen Name Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3072,6 +3097,7 @@
           {
             "name": "The Tenacious - Achievement",
             "id": 444491,
+            "region": "The Tenacious",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3100,6 +3126,7 @@
           {
             "name": "The Tenacious - Palindromes",
             "id": 445210,
+            "region": "The Tenacious",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3128,6 +3155,7 @@
           {
             "name": "The Tenacious - White Palindromes",
             "id": 445211,
+            "region": "The Tenacious",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3237,6 +3265,7 @@
           {
             "name": "Symmetry Room - NEAR, FAR",
             "id": 445204,
+            "region": "Near Far Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3349,6 +3378,7 @@
           {
             "name": "Symmetry Room - WARTS, STRAW",
             "id": 445212,
+            "region": "Warts Straw Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3461,6 +3491,7 @@
           {
             "name": "Symmetry Room - LEAF, FEEL",
             "id": 445213,
+            "region": "Leaf Feel Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3816,6 +3847,7 @@
           {
             "name": "Outside The Agreeable - MASSACRED",
             "id": 444496,
+            "region": "Outside The Agreeable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3844,6 +3876,7 @@
           {
             "name": "Outside The Agreeable - BLACK",
             "id": 444497,
+            "region": "Outside The Agreeable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3872,6 +3905,7 @@
           {
             "name": "Outside The Agreeable - CLOSE",
             "id": 444498,
+            "region": "Outside The Agreeable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3900,6 +3934,7 @@
           {
             "name": "Outside The Agreeable - RIGHT",
             "id": 444501,
+            "region": "Outside The Agreeable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4031,6 +4066,7 @@
           {
             "name": "Outside The Agreeable - Lookout Panels",
             "id": 445271,
+            "region": "Compass Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4143,6 +4179,7 @@
           {
             "name": "Dread Hallway - DREAD",
             "id": 444516,
+            "region": "Dread Hallway",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4255,6 +4292,7 @@
           {
             "name": "The Agreeable - Achievement",
             "id": 444517,
+            "region": "The Agreeable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4283,6 +4321,7 @@
           {
             "name": "The Agreeable - BYE",
             "id": 444518,
+            "region": "The Agreeable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4599,6 +4638,7 @@
           {
             "name": "Hedge Maze - DOWN",
             "id": 444530,
+            "region": "Hedge Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4627,6 +4667,7 @@
           {
             "name": "Hedge Maze - Hide and Seek",
             "id": 445215,
+            "region": "Hedge Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4733,6 +4774,7 @@
           {
             "name": "The Perceptive - Achievement",
             "id": 444546,
+            "region": "The Perceptive",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4761,6 +4803,7 @@
           {
             "name": "The Perceptive - GAZE",
             "id": 444547,
+            "region": "The Perceptive",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4863,6 +4906,7 @@
           {
             "name": "The Fearless - First Floor Puzzles",
             "id": 445216,
+            "region": "The Fearless (First Floor)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4914,6 +4958,7 @@
           {
             "name": "The Fearless - Second Floor Puzzles",
             "id": 445217,
+            "region": "The Fearless (Second Floor)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4965,6 +5010,7 @@
           {
             "name": "The Fearless - Achievement",
             "id": 444560,
+            "region": "The Fearless",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5121,6 +5167,7 @@
           {
             "name": "The Observant - Achievement",
             "id": 444565,
+            "region": "The Observant",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5149,6 +5196,7 @@
           {
             "name": "The Observant - SIX",
             "id": 444569,
+            "region": "The Observant",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5177,6 +5225,7 @@
           {
             "name": "The Observant - FOUR (1), FOUR (2)",
             "id": 445218,
+            "region": "The Observant",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5341,6 +5390,7 @@
           {
             "name": "The Incomparable - Achievement",
             "id": 444585,
+            "region": "The Incomparable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5369,6 +5419,7 @@
           {
             "name": "Giant Sevens",
             "id": 445219,
+            "region": "The Incomparable",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5755,6 +5806,7 @@
           {
             "name": "Orange Tower First Floor - SECRET",
             "id": 444602,
+            "region": "Orange Tower First Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5783,6 +5835,7 @@
           {
             "name": "Orange Tower First Floor - DADS + ALE",
             "id": 444603,
+            "region": "Orange Tower First Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5811,6 +5864,7 @@
           {
             "name": "Orange Tower First Floor - Salt Pepper Door",
             "id": 445220,
+            "region": "Orange Tower First Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6239,6 +6293,7 @@
           {
             "name": "Orange Tower Third Floor - DEER + WREN",
             "id": 444606,
+            "region": "Orange Tower Third Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6267,6 +6322,7 @@
           {
             "name": "Color Barriers - RED and YELLOW",
             "id": 445221,
+            "region": "Orange Tower Third Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6602,6 +6658,7 @@
           {
             "name": "Orange Tower Fourth Floor - LEARNS + UNSEW",
             "id": 444609,
+            "region": "Orange Tower Fourth Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6630,6 +6687,7 @@
           {
             "name": "Orange Tower Fourth Floor - HOT CRUSTS",
             "id": 444610,
+            "region": "Orange Tower Fourth Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6658,6 +6716,7 @@
           {
             "name": "Orange Tower Fourth Floor - IRK HORN",
             "id": 444611,
+            "region": "Orange Tower Fourth Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6977,6 +7036,7 @@
           {
             "name": "Orange Tower Fifth Floor - DRAWL + RUNS",
             "id": 444615,
+            "region": "Orange Tower Fifth Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7005,6 +7065,7 @@
           {
             "name": "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
             "id": 445222,
+            "region": "Orange Tower Fifth Floor",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7322,6 +7383,7 @@
           {
             "name": "The End (Solved)",
             "id": null,
+            "region": "Ending Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8709,6 +8771,7 @@
           {
             "name": "Courtyard - FIRST, SECOND, THIRD, FOURTH",
             "id": 445224,
+            "region": "First Second Third Fourth",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8818,6 +8881,7 @@
           {
             "name": "The Colorful - White",
             "id": 445225,
+            "region": "The Colorful (White)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8930,6 +8994,7 @@
           {
             "name": "The Colorful - Black",
             "id": 445226,
+            "region": "The Colorful (Black)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9042,6 +9107,7 @@
           {
             "name": "The Colorful - Red",
             "id": 445227,
+            "region": "The Colorful (Red)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9154,6 +9220,7 @@
           {
             "name": "The Colorful - Yellow",
             "id": 445228,
+            "region": "The Colorful (Yellow)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9266,6 +9333,7 @@
           {
             "name": "The Colorful - Blue",
             "id": 445229,
+            "region": "The Colorful (Blue)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9378,6 +9446,7 @@
           {
             "name": "The Colorful - Purple",
             "id": 445230,
+            "region": "The Colorful (Purple)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9490,6 +9559,7 @@
           {
             "name": "The Colorful - Orange",
             "id": 445231,
+            "region": "The Colorful (Orange)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9602,6 +9672,7 @@
           {
             "name": "The Colorful - Green",
             "id": 445232,
+            "region": "The Colorful (Green)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9714,6 +9785,7 @@
           {
             "name": "The Colorful - Brown",
             "id": 445233,
+            "region": "The Colorful (Brown)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9826,6 +9898,7 @@
           {
             "name": "The Colorful - Gray",
             "id": 445234,
+            "region": "The Colorful (Gray)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9935,6 +10008,7 @@
           {
             "name": "The Colorful - Achievement",
             "id": 444652,
+            "region": "The Colorful",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10172,6 +10246,7 @@
           {
             "name": "Welcome Back Area - WELCOME BACK",
             "id": 444653,
+            "region": "Welcome Back Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10200,6 +10275,7 @@
           {
             "name": "Welcome Back Area - CLOCKWISE",
             "id": 444655,
+            "region": "Welcome Back Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10341,6 +10417,7 @@
           {
             "name": "Owl Hallway - STRAYS",
             "id": 444656,
+            "region": "Owl Hallway",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10369,6 +10446,7 @@
           {
             "name": "Owl Hallway - READS + RUST",
             "id": 444657,
+            "region": "Owl Hallway",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10732,6 +10810,7 @@
           {
             "name": "Outside The Initiated - UNCOVER",
             "id": 444664,
+            "region": "Outside The Initiated",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10760,6 +10839,7 @@
           {
             "name": "Outside The Initiated - OXEN",
             "id": 444665,
+            "region": "Outside The Initiated",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10788,6 +10868,7 @@
           {
             "name": "Color Barriers - BLUE and YELLOW",
             "id": 445235,
+            "region": "Outside The Initiated",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10816,6 +10897,7 @@
           {
             "name": "Color Barriers - RED and BLUE",
             "id": 445236,
+            "region": "Outside The Initiated",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10844,6 +10926,7 @@
           {
             "name": "Color Barriers - GREEN, ORANGE and PURPLE",
             "id": 445237,
+            "region": "Outside The Initiated",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10895,6 +10978,7 @@
           {
             "name": "The Initiated - Achievement",
             "id": 444676,
+            "region": "The Initiated",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10991,6 +11075,7 @@
           {
             "name": "The Optimistic - Achievement",
             "id": 444667,
+            "region": "The Optimistic",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11103,6 +11188,7 @@
           {
             "name": "The Traveled - Achievement",
             "id": 444693,
+            "region": "The Traveled",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11131,6 +11217,7 @@
           {
             "name": "The Traveled - HELLO",
             "id": 444698,
+            "region": "The Traveled",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11641,6 +11728,7 @@
           {
             "name": "Outside The Bold - UNOPEN",
             "id": 444711,
+            "region": "Outside The Bold",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11669,6 +11757,7 @@
           {
             "name": "Outside The Bold - BEGIN",
             "id": 444712,
+            "region": "Outside The Bold",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11720,6 +11809,7 @@
           {
             "name": "The Bold - Achievement",
             "id": 444725,
+            "region": "The Bold",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12038,6 +12128,7 @@
           {
             "name": "Outside The Undeterred - ART + ART",
             "id": 444743,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12066,6 +12157,7 @@
           {
             "name": "Outside The Undeterred - PEN",
             "id": 444744,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12094,6 +12186,7 @@
           {
             "name": "Outside The Undeterred - RAINY",
             "id": 444750,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12122,6 +12215,7 @@
           {
             "name": "Outside The Undeterred - ZERO",
             "id": 444751,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12150,6 +12244,7 @@
           {
             "name": "Outside The Undeterred - ONE",
             "id": 444752,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12178,6 +12273,7 @@
           {
             "name": "Twos",
             "id": 445238,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12206,6 +12302,7 @@
           {
             "name": "Threes",
             "id": 445239,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12234,6 +12331,7 @@
           {
             "name": "Fours",
             "id": 445240,
+            "region": "Outside The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12285,6 +12383,7 @@
           {
             "name": "The Undeterred - Achievement",
             "id": 444759,
+            "region": "The Undeterred",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12457,6 +12556,7 @@
           {
             "name": "Fives",
             "id": 445241,
+            "region": "Number Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12485,6 +12585,7 @@
           {
             "name": "Sixes",
             "id": 445242,
+            "region": "Number Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12513,6 +12614,7 @@
           {
             "name": "Sevens",
             "id": 445243,
+            "region": "Number Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12541,6 +12643,7 @@
           {
             "name": "Eights",
             "id": 445244,
+            "region": "Number Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12569,6 +12672,7 @@
           {
             "name": "Nines",
             "id": 445245,
+            "region": "Number Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12893,6 +12997,7 @@
           {
             "name": "Directional Gallery - 834283054",
             "id": 444792,
+            "region": "Directional Gallery",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12921,6 +13026,7 @@
           {
             "name": "Directional Gallery - PARANOID",
             "id": 444793,
+            "region": "Directional Gallery",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12949,6 +13055,7 @@
           {
             "name": "Directional Gallery - WADED + WEE",
             "id": 444795,
+            "region": "Directional Gallery",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12977,6 +13084,7 @@
           {
             "name": "Directional Gallery - TURN, LEARN",
             "id": 445246,
+            "region": "Directional Gallery",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13131,6 +13239,7 @@
           {
             "name": "Color Hunt - EXIT",
             "id": 444806,
+            "region": "Color Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13159,6 +13268,7 @@
           {
             "name": "Color Hunt - RED",
             "id": 444808,
+            "region": "Color Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13187,6 +13297,7 @@
           {
             "name": "Color Hunt - BLUE",
             "id": 444809,
+            "region": "Color Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13215,6 +13326,7 @@
           {
             "name": "Color Hunt - YELLOW",
             "id": 444810,
+            "region": "Color Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13243,6 +13355,7 @@
           {
             "name": "Color Hunt - GREEN",
             "id": 444811,
+            "region": "Color Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13271,6 +13384,7 @@
           {
             "name": "Color Hunt - PURPLE",
             "id": 444812,
+            "region": "Color Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13299,6 +13413,7 @@
           {
             "name": "Color Hunt - ORANGE",
             "id": 444813,
+            "region": "Color Hunt",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13376,6 +13491,7 @@
           {
             "name": "Champion's Rest - YOU",
             "id": 444814,
+            "region": "Champion's Rest",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13623,6 +13739,7 @@
           {
             "name": "The Bearer - Achievement",
             "id": 444819,
+            "region": "The Bearer",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13651,6 +13768,7 @@
           {
             "name": "The Bearer - MIDDLE",
             "id": 444820,
+            "region": "The Bearer",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13679,6 +13797,7 @@
           {
             "name": "The Bearer - FARTHER",
             "id": 444821,
+            "region": "The Bearer",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14306,6 +14425,7 @@
           {
             "name": "The Bearer - SHORTCUT",
             "id": 445247,
+            "region": "Bearer Side Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16504,6 +16624,7 @@
           {
             "name": "The Steady - Achievement",
             "id": 444859,
+            "region": "The Steady",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16894,6 +17015,7 @@
           {
             "name": "Knight Night Room - TRUSTED",
             "id": 445248,
+            "region": "Knight Night (Final)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -17324,6 +17446,7 @@
           {
             "name": "The Artistic - Achievement",
             "id": 444885,
+            "region": "The Artistic (Smiley)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -17352,6 +17475,7 @@
           {
             "name": "The Artistic - Smiley and Panda",
             "id": 445249,
+            "region": "The Artistic (Smiley)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -17506,6 +17630,7 @@
           {
             "name": "The Artistic - Panda and Lattice",
             "id": 445250,
+            "region": "The Artistic (Panda)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -17675,6 +17800,7 @@
           {
             "name": "The Artistic - Lattice and Apple",
             "id": 445251,
+            "region": "The Artistic (Lattice)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -17829,6 +17955,7 @@
           {
             "name": "The Artistic - Apple and Smiley",
             "id": 445252,
+            "region": "The Artistic (Apple)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -17902,6 +18029,7 @@
           {
             "name": "The Discerning - Achievement",
             "id": 444920,
+            "region": "The Discerning",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -18043,6 +18171,7 @@
           {
             "name": "The Eyes They See - NEAR",
             "id": 444937,
+            "region": "The Eyes They See",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -18296,6 +18425,7 @@
           {
             "name": "Outside The Wondrous - SHRINK",
             "id": 444940,
+            "region": "Outside The Wondrous",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -18786,6 +18916,7 @@
           {
             "name": "The Wondrous - Achievement",
             "id": 444947,
+            "region": "The Wondrous",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19017,6 +19148,7 @@
           {
             "name": "Hallway Room (1) - OUT",
             "id": 444505,
+            "region": "Hallway Room (1)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19045,6 +19177,7 @@
           {
             "name": "Hallway Room - First Room",
             "id": 445214,
+            "region": "Hallway Room (1)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19154,6 +19287,7 @@
           {
             "name": "Hallway Room - Second Room",
             "id": 445253,
+            "region": "Hallway Room (2)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19253,6 +19387,7 @@
           {
             "name": "Hallway Room - Third Room",
             "id": 445254,
+            "region": "Hallway Room (3)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19362,6 +19497,7 @@
           {
             "name": "Hallway Room - Fourth Room",
             "id": 445255,
+            "region": "Hallway Room (4)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19503,6 +19639,7 @@
           {
             "name": "Elements Area - UNDISTRACTED",
             "id": 444961,
+            "region": "Elements Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19647,6 +19784,7 @@
           {
             "name": "Outside The Wanderer - WANDERLUST",
             "id": 444966,
+            "region": "Outside The Wanderer",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19698,6 +19836,7 @@
           {
             "name": "The Wanderer - Achievement",
             "id": 444967,
+            "region": "The Wanderer",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -19988,6 +20127,7 @@
           {
             "name": "Art Gallery - ORDER",
             "id": 444981,
+            "region": "Art Gallery",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20062,6 +20202,7 @@
           {
             "name": "Art Gallery - First Floor Puzzles",
             "id": 445256,
+            "region": "Art Gallery (First Floor)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20136,6 +20277,7 @@
           {
             "name": "Art Gallery - Second Floor Puzzles",
             "id": 445257,
+            "region": "Art Gallery (Second Floor)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20210,6 +20352,7 @@
           {
             "name": "Art Gallery - Third Floor Puzzles",
             "id": 445258,
+            "region": "Art Gallery (Third Floor)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20284,6 +20427,7 @@
           {
             "name": "Art Gallery - Fourth Floor Puzzles",
             "id": 445259,
+            "region": "Art Gallery (Fourth Floor)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20431,6 +20575,7 @@
           {
             "name": "Rhyme Room (Smiley) - Puzzles Toward Target",
             "id": 445260,
+            "region": "Rhyme Room (Smiley)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20565,6 +20710,7 @@
           {
             "name": "Rhyme Room (Cross) - Exit Puzzles",
             "id": 445261,
+            "region": "Rhyme Room (Cross)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20709,6 +20855,7 @@
           {
             "name": "Rhyme Room - Circle/Smiley Wall",
             "id": 445262,
+            "region": "Rhyme Room (Circle)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20891,6 +21038,7 @@
           {
             "name": "Rhyme Room - Circle/Looped Square Wall",
             "id": 445263,
+            "region": "Rhyme Room (Looped Square)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20919,6 +21067,7 @@
           {
             "name": "Rhyme Room - Cross/Looped Square Wall",
             "id": 445264,
+            "region": "Rhyme Room (Looped Square)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -20947,6 +21096,7 @@
           {
             "name": "Rhyme Room - Target/Looped Square Wall",
             "id": 445265,
+            "region": "Rhyme Room (Looped Square)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -21081,6 +21231,7 @@
           {
             "name": "Rhyme Room (Target) - Puzzles Toward Cross",
             "id": 445266,
+            "region": "Rhyme Room (Target)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -21180,6 +21331,7 @@
           {
             "name": "Room Room - BASE",
             "id": 445076,
+            "region": "Room Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -21404,6 +21556,7 @@
           {
             "name": "Outside The Wise - KITTEN, CAT",
             "id": 445267,
+            "region": "Outside The Wise",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -21455,6 +21608,7 @@
           {
             "name": "The Wise - Achievement",
             "id": 445086,
+            "region": "The Wise",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -21761,6 +21915,7 @@
           {
             "name": "Challenge Room - WELCOME",
             "id": 445176,
+            "region": "Challenge Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -21789,6 +21944,7 @@
           {
             "name": "Challenge Room - Achievement",
             "id": 445178,
+            "region": "Challenge Room",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -26021,17 +26177,611 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Achievement Room Entrances",
-      "Colors",
-      "Doors",
-      "Everything",
-      "Junk",
-      "Numbers",
-      "Paintings",
-      "Panels",
-      "Traps"
-    ]
+    "1": {
+      "Colors": [
+        "Purple",
+        "Orange",
+        "Red",
+        "Brown",
+        "Blue",
+        "Yellow",
+        "Gray",
+        "Black",
+        "Green"
+      ],
+      "Doors": [
+        "Second Room - Exit Door",
+        "Crossroads - Tenacious Entrance",
+        "The Discerning - Entrance",
+        "Starting Room - Blue Painting",
+        "Welcome Back Area - Shortcut to Starting Room",
+        "Orange Tower Fifth Floor - Welcome Back",
+        "Number Hunt - Nines",
+        "The Wanderer - Entrance",
+        "4 Sunwarp",
+        "Starting Room - Rhyme Room Entrance",
+        "Art Gallery - Third Floor",
+        "Crossroads Doors",
+        "Hallway Room (3) - Exit",
+        "The Agreeable - Entrance",
+        "The Artistic (Smiley) - Door to Panda",
+        "Hallway Room (4) - Exit",
+        "The Bearer - Shortcut to Tower",
+        "The Colorful - White Door",
+        "Outside The Agreeable - Black Door",
+        "Orange Tower Fifth Floor - Quadruple Intersection",
+        "Outside The Undeterred - Twos",
+        "Color Hunt - Green Barrier",
+        "Owl Hallway - Shortcut to Hedge Maze",
+        "Symmetry Room - Warts Straw Door",
+        "The Steady - Entrance",
+        "Number Hunt - Sevens",
+        "Knight Night Room - Exit",
+        "The Wise - Entrance",
+        "The Traveled - Entrance",
+        "Starting Room - Symmetry Painting",
+        "Art Gallery - Second Floor",
+        "Artistic Doors",
+        "Crossroads - Roof Access",
+        "Outside The Agreeable - Tenacious Entrance",
+        "The Colorful - Orange Door",
+        "Outside The Initiated - Orange Barrier",
+        "The Colorful - Yellow Door",
+        "Number Hunt - Door to Directional Gallery",
+        "The Scientific - Entrance",
+        "Pilgrim Room - Shortcut to The Seeker",
+        "Starting Room - Street Painting",
+        "Orange Tower - Sixth Floor",
+        "Color Hunt Barriers",
+        "Hallway Room Doors",
+        "Champion's Rest - Entrance",
+        "Lost Area - Exit",
+        "Dread Hallway - Tenacious Entrance",
+        "Dead End Area Access",
+        "Directional Gallery - Shortcut to The Undeterred",
+        "The Artistic (Lattice) - Door to Apple",
+        "The Agreeable - Shortcut to Hedge Maze",
+        "Hedge Maze Doors",
+        "Color Hunt - Shortcut to The Steady",
+        "Outside The Undeterred - Zero Door",
+        "The Colorful - Purple Door",
+        "The Wondrous - Entrance",
+        "Entrances to The Tenacious",
+        "The Artistic (Apple) - Door to Smiley",
+        "The Wondrous - Exit",
+        "Compass Room - Lookout Entrance",
+        "Number Hunt - Challenge Entrance",
+        "Hallway Room (1) - Exit",
+        "Orange Tower - Third Floor",
+        "The Fearless (First Floor) - Second Floor",
+        "Colorful Doors",
+        "Hidden Room - Rhyme Room Entrance",
+        "The Undeterred - Entrance",
+        "Rhyme Room (Cross) - Exit",
+        "Outside The Wanderer - Tower Entrance",
+        "Outside The Initiated - Eight Door",
+        "Hub Room - Shortcut to Hedge Maze",
+        "Crossroads - Tower Back Entrance",
+        "Outside The Initiated - Shortcut to Hub Room",
+        "Starting Room - Back Right Door",
+        "The Traveled - Color Hallways Entrance",
+        "Crossroads - Words Sword Door",
+        "The Initiated - Entrance",
+        "Hub Room - Tenacious Entrance",
+        "The Colorful - Red Door",
+        "Crossroads - Tower Entrances",
+        "3 Sunwarp",
+        "Color Hunt - Orange Barrier",
+        "Art Gallery - Fourth Floor",
+        "1 Sunwarp",
+        "2 Sunwarp",
+        "Mastery",
+        "Starting Room - Pencil Painting",
+        "The Bearer - Backside Door",
+        "Orange Tower Third Floor - Rhyme Room Entrance",
+        "Outside The Undeterred - Green Painting",
+        "The Colorful - Brown Door",
+        "Orange Tower - Fourth Floor",
+        "Orange Tower Third Floor - Red Barrier",
+        "Number Hunt - Eights",
+        "Starting Room - Hedge Maze Painting",
+        "The Perceptive - Entrance",
+        "Fearless Doors",
+        "Orange Tower Fourth Floor - Hot Crusts Door",
+        "Hub Room - Near RAT Door",
+        "Symmetry Room - Near Far Door",
+        "The Incomparable - Eight Door",
+        "The Colorful - Green Door",
+        "5 Sunwarp",
+        "The Artistic (Panda) - Door to Lattice",
+        "Outside The Undeterred - Number Hunt",
+        "Crossroads - Hollow Hallway",
+        "Sunwarps",
+        "Courtyard - Backside Door",
+        "Orange Tower First Floor - Salt Pepper Door",
+        "Color Hunt - Purple Barrier",
+        "Hub Room - Crossroads Entrance",
+        "The Bold - Entrance",
+        "Orange Tower First Floor - Shortcut to Hub Room",
+        "Pilgrim Room - Sun Painting",
+        "Challenge Room - Welcome Door",
+        "Rhyme Room (Smiley) - Door to Target",
+        "Outside The Initiated - Blue Barrier",
+        "Directional Gallery - Yellow Barrier",
+        "Rhyme Room (Looped Square) - Door to Circle",
+        "Symmetry Doors",
+        "Room Room - Cellar Exit",
+        "Hallway Room (2) - Exit",
+        "The Colorful - Black Door",
+        "Starting Room - Flower Painting",
+        "The Observant - Entrance",
+        "Crossroads - Eye Wall",
+        "Entrance to The Traveled",
+        "Rhyme Room Doors",
+        "The Colorful - Blue Door",
+        "Number Hunt - Fives",
+        "Hidden Room - Dead End Door",
+        "The Observant - Backside Door",
+        "Outside The Undeterred - Threes",
+        "Outside The Undeterred - Fours",
+        "Welcome Back Doors",
+        "Orange Tower - Seventh Floor",
+        "6 Sunwarp",
+        "Art Gallery - Fifth Floor",
+        "Number Hunt - Sixes",
+        "Backside Doors",
+        "Orange Tower - Second Floor",
+        "Amen Name Area - Exit",
+        "The Seeker - Entrance",
+        "The Fearless (Second Floor) - Third Floor",
+        "The Colorful - Gray Door",
+        "Rhyme Room (Circle) - Door to Smiley",
+        "Orange Tower First Floor - Shortcuts",
+        "The Eyes They See - Exit",
+        "Courtyard - Green Barrier",
+        "Symmetry Room - Leaf Feel Door",
+        "Rhyme Room (Target) - Door to Cross",
+        "Orange Tower - Fifth Floor",
+        "The Observant - Stairs",
+        "Rhyme Room (Looped Square) - Door to Cross",
+        "Rhyme Room (Looped Square) - Door to Target",
+        "Directional Gallery Doors",
+        "Crossroads - Tower Entrance",
+        "Outside The Agreeable - Purple Barrier",
+        "Observant Doors",
+        "The Tenacious - Shortcut to Hub Room",
+        "Hidden Room - Knight Night Entrance",
+        "The Bearer - Entrance"
+      ],
+      "Achievement Room Entrances": [
+        "The Agreeable - Shortcut to Hedge Maze",
+        "Crossroads - Tenacious Entrance",
+        "The Wondrous - Entrance",
+        "The Discerning - Entrance",
+        "The Wanderer - Entrance",
+        "Number Hunt - Challenge Entrance",
+        "The Seeker - Entrance",
+        "The Agreeable - Entrance",
+        "The Bold - Entrance",
+        "Challenge Room - Welcome Door",
+        "The Undeterred - Entrance",
+        "Orange Tower Fifth Floor - Quadruple Intersection",
+        "The Steady - Entrance",
+        "Outside The Initiated - Eight Door",
+        "The Wise - Entrance",
+        "The Traveled - Entrance",
+        "The Traveled - Color Hallways Entrance",
+        "The Initiated - Entrance",
+        "Hub Room - Tenacious Entrance",
+        "Outside The Agreeable - Tenacious Entrance",
+        "The Observant - Entrance",
+        "The Scientific - Entrance",
+        "Dread Hallway - Tenacious Entrance",
+        "The Perceptive - Entrance",
+        "The Bearer - Entrance"
+      ],
+      "Paintings": [
+        "Starting Room - Symmetry Painting",
+        "Starting Room - Street Painting",
+        "Outside The Undeterred - Green Painting",
+        "Pilgrim Room - Sun Painting",
+        "Starting Room - Blue Painting",
+        "Starting Room - Flower Painting",
+        "Starting Room - Hedge Maze Painting",
+        "The Wondrous - Exit",
+        "Starting Room - Pencil Painting"
+      ],
+      "Numbers": [
+        "Number Hunt - Sixes",
+        "Number Hunt - Fives",
+        "Outside The Undeterred - Zero Door",
+        "Number Hunt - Eights",
+        "Outside The Undeterred - Twos",
+        "Number Hunt - Nines",
+        "Outside The Undeterred - Threes",
+        "Number Hunt - Sevens",
+        "Outside The Undeterred - Fours"
+      ],
+      "Panels": [
+        "Compass Room Panels",
+        "Symmetry Room - WARTS, STRAW (Panels)",
+        "Color Hunt - EXIT (Panel)",
+        "Six Panels",
+        "Color Hunt Panels",
+        "Hub Room - SLAUGHTER (Panel)",
+        "The Colorful - SPOON (Panel)",
+        "Orange Tower Fourth Floor - HOT CRUSTS (Panel)",
+        "Symmetry Room - LEAF, FEEL (Panels)",
+        "The Perceptive - GAZE (Panel)",
+        "Owl Hallway - STRAYS (Panel)",
+        "Three Panels",
+        "Orange Tower Fifth Floor - SIZE Panels",
+        "Outside The Agreeable - MASSACRED (Panel)",
+        "Hub Room - TRACE (Panel)",
+        "The Observant - SIX (Panel)",
+        "Outside The Wise - KITTEN, CAT (Panels)",
+        "Knight Night Room - TRUSTED (Panel)",
+        "The Colorful - OBSTACLE (Panel)",
+        "Hallway Room - WHEEL",
+        "Hedge Maze - DOWN (Panel)",
+        "Color Hunt - RED (Panel)",
+        "The Colorful - LOAF (Panel)",
+        "Courtyard - Ordinal Panels",
+        "Directional Gallery - TURN, LEARN (Panels)",
+        "The Bearer - MIDDLE (Panel)",
+        "Color Hunt - BLUE (Panel)",
+        "Seven Panels",
+        "Eight Panels",
+        "Outside The Bold - BEGIN (Panel)",
+        "Five Panels",
+        "Hallway Room Panels",
+        "The Colorful - BEGIN (Panel)",
+        "Crossroads - WORDS, SWORD (Panels)",
+        "Backside Entrance Panels",
+        "Room Room - BROOMED, LAYS, BASE (Panels)",
+        "Outside The Agreeable - BLACK (Panel)",
+        "Outside The Wanderer - WANDERLUST (Panel)",
+        "Crossroads - DECAY (Panel)",
+        "Hallway Room - First Room Panels",
+        "Starting Room - HIDDEN (Panel)",
+        "Crossroads - BEND HI (Panel)",
+        "Color Hunt - GREEN (Panel)",
+        "The Tenacious - Black Palindromes (Panels)",
+        "Crossroads - WE ROT (Panel)",
+        "Amen Name Area - AMEN, NAME (Panels)",
+        "Lost Area - LOST (1), LOST (2) (Panels)",
+        "Four Panels",
+        "Giant Seven Panels",
+        "Crossroads - NOPE (Panel)",
+        "Outside The Scientific - OPEN (Panel)",
+        "Room Room - STAIRS (Panel)",
+        "Tenacious Entrance Panels",
+        "The Colorful - SUN (Panel)",
+        "Symmetry Room Panels",
+        "Hub Room - ORDER (Panel)",
+        "Room Room Panels",
+        "Hallway Room - Second Room Panels",
+        "The Colorful - CREAM (Panel)",
+        "Symmetry Room - NEAR, FAR (Panels)",
+        "Outside The Agreeable - RIGHT (Panel)",
+        "Orange Tower First Floor - SECRET (Panel)",
+        "Nine Panels",
+        "Outside The Initiated - OXEN (Panel)",
+        "Orange Tower Panels",
+        "Color Hunt - YELLOW (Panel)",
+        "Hub Room - OPEN (Panel)",
+        "The Colorful - IRON (Panel)",
+        "Art Gallery - ORDER (Panel)",
+        "The Colorful - LETTERS (Panel)",
+        "Color Hunt - PURPLE (Panel)",
+        "Two Panels",
+        "Outside The Wondrous - SHRINK (Panel)",
+        "Outside The Initiated - UNCOVER (Panel)",
+        "The Bearer - FARTHER (Panel)",
+        "Outside The Bold - UNOPEN (Panel)",
+        "Colorful Panels",
+        "Hub Room - RAT (Panel)",
+        "Outside The Agreeable - CLOSE (Panel)",
+        "Hallway Room - Third Room Panels",
+        "Outside The Undeterred - PEN (Panel)",
+        "The Colorful - WALLS (Panel)",
+        "The Colorful - FOUND (Panel)",
+        "The Observant - Backside Entrance Panels",
+        "Color Hunt - ORANGE (Panel)",
+        "Outside The Undeterred - ZERO (Panel)",
+        "Hidden Room - OPEN (Panel)"
+      ],
+      "Junk": [
+        "Wanderlust",
+        ":)",
+        "The Feeling of Being Lost",
+        "Speed Boost",
+        "Empty White Hallways"
+      ],
+      "Traps": [
+        "Iceland Trap",
+        "Slowness Trap",
+        "Atbash Trap"
+      ],
+      "Everything": [
+        "Compass Room Panels",
+        "Second Room - Exit Door",
+        "Symmetry Room - WARTS, STRAW (Panels)",
+        "Starting Room - Blue Painting",
+        "Welcome Back Area - Shortcut to Starting Room",
+        "Orange Tower Fifth Floor - Welcome Back",
+        "Number Hunt - Nines",
+        "Speed Boost",
+        "Starting Room - Rhyme Room Entrance",
+        "Crossroads Doors",
+        "Hallway Room (3) - Exit",
+        "Color Hunt - EXIT (Panel)",
+        "The Agreeable - Entrance",
+        "The Artistic (Smiley) - Door to Panda",
+        "Orange Tower Fifth Floor - Quadruple Intersection",
+        "Outside The Agreeable - Black Door",
+        "Hub Room - SLAUGHTER (Panel)",
+        "Color Hunt - Green Barrier",
+        "Black",
+        "Symmetry Room - Warts Straw Door",
+        "The Steady - Entrance",
+        "The Wise - Entrance",
+        "Knight Night Room - Exit",
+        "Crossroads - Roof Access",
+        "Orange Tower Fourth Floor - HOT CRUSTS (Panel)",
+        "The Perceptive - GAZE (Panel)",
+        "The Feeling of Being Lost",
+        "Outside The Agreeable - Tenacious Entrance",
+        "The Colorful - Orange Door",
+        "Owl Hallway - STRAYS (Panel)",
+        "Outside The Initiated - Orange Barrier",
+        "Number Hunt - Door to Directional Gallery",
+        "Progressive Symmetry Room",
+        "Orange Tower Fifth Floor - SIZE Panels",
+        "Progressive Pilgrimage",
+        "Progressive Suits Area",
+        "Gray",
+        "Empty White Hallways",
+        "Hub Room - TRACE (Panel)",
+        "Hedge Maze Doors",
+        "The Observant - SIX (Panel)",
+        "Color Hunt - Shortcut to The Steady",
+        "The Colorful - Purple Door",
+        "The Artistic (Apple) - Door to Smiley",
+        "The Wondrous - Exit",
+        "Knight Night Room - TRUSTED (Panel)",
+        "Hallway Room (1) - Exit",
+        "Orange Tower - Third Floor",
+        "Colorful Doors",
+        "Hallway Room - WHEEL",
+        "Hedge Maze - DOWN (Panel)",
+        "The Undeterred - Entrance",
+        "Rhyme Room (Cross) - Exit",
+        "Courtyard - Ordinal Panels",
+        "Starting Room - Back Right Door",
+        "Crossroads - Words Sword Door",
+        "Hub Room - Tenacious Entrance",
+        "Crossroads - Tower Entrances",
+        "Color Hunt - Orange Barrier",
+        "2 Sunwarp",
+        "Mastery",
+        "Outside The Bold - BEGIN (Panel)",
+        "Hallway Room Panels",
+        "Orange Tower Third Floor - Rhyme Room Entrance",
+        "Orange Tower - Fourth Floor",
+        "Starting Room - Hedge Maze Painting",
+        "The Perceptive - Entrance",
+        "Room Room - BROOMED, LAYS, BASE (Panels)",
+        "Orange Tower Fourth Floor - Hot Crusts Door",
+        "Outside The Agreeable - BLACK (Panel)",
+        "Symmetry Room - Near Far Door",
+        "The Colorful - Green Door",
+        "5 Sunwarp",
+        "The Artistic (Panda) - Door to Lattice",
+        "Courtyard - Backside Door",
+        "Hallway Room - First Room Panels",
+        "Hub Room - Crossroads Entrance",
+        "Starting Room - HIDDEN (Panel)",
+        "The Bold - Entrance",
+        "Orange Tower First Floor - Shortcut to Hub Room",
+        "Red",
+        "Pilgrim Room - Sun Painting",
+        "Crossroads - BEND HI (Panel)",
+        "Rhyme Room (Smiley) - Door to Target",
+        "Color Hunt - GREEN (Panel)",
+        "The Tenacious - Black Palindromes (Panels)",
+        "Crossroads - WE ROT (Panel)",
+        "Giant Seven Panels",
+        "Crossroads - NOPE (Panel)",
+        "The Observant - Entrance",
+        "Outside The Scientific - OPEN (Panel)",
+        "Progressive Hallway Room",
+        "Room Room - STAIRS (Panel)",
+        "Tenacious Entrance Panels",
+        "Entrance to The Traveled",
+        "The Colorful - SUN (Panel)",
+        "The Colorful - Blue Door",
+        "Number Hunt - Fives",
+        "Symmetry Room Panels",
+        "Hub Room - ORDER (Panel)",
+        "Hidden Room - Dead End Door",
+        "The Observant - Backside Door",
+        "Welcome Back Doors",
+        "Orange Tower - Seventh Floor",
+        "Symmetry Room - NEAR, FAR (Panels)",
+        "Number Hunt - Sixes",
+        "Outside The Agreeable - RIGHT (Panel)",
+        "Nine Panels",
+        "Amen Name Area - Exit",
+        "Progressive Art Gallery",
+        "The Seeker - Entrance",
+        "The Fearless (Second Floor) - Third Floor",
+        "The Colorful - Gray Door",
+        "Rhyme Room (Circle) - Door to Smiley",
+        "Orange Tower First Floor - Shortcuts",
+        "The Colorful - IRON (Panel)",
+        "Art Gallery - ORDER (Panel)",
+        "The Colorful - LETTERS (Panel)",
+        "Rhyme Room (Target) - Door to Cross",
+        "Outside The Wondrous - SHRINK (Panel)",
+        "The Observant - Stairs",
+        "Rhyme Room (Looped Square) - Door to Cross",
+        "Directional Gallery Doors",
+        "Outside The Bold - UNOPEN (Panel)",
+        "Crossroads - Tower Entrance",
+        "Colorful Panels",
+        "Hub Room - RAT (Panel)",
+        "Outside The Agreeable - Purple Barrier",
+        "The Colorful - FOUND (Panel)",
+        "The Observant - Backside Entrance Panels",
+        "Crossroads - Tenacious Entrance",
+        "The Discerning - Entrance",
+        "The Wanderer - Entrance",
+        "4 Sunwarp",
+        "Green",
+        "Art Gallery - Third Floor",
+        "Purple",
+        "Six Panels",
+        "Hallway Room (4) - Exit",
+        "The Bearer - Shortcut to Tower",
+        "The Colorful - White Door",
+        "Color Hunt Panels",
+        "Outside The Undeterred - Twos",
+        "The Colorful - SPOON (Panel)",
+        "Owl Hallway - Shortcut to Hedge Maze",
+        "Number Hunt - Sevens",
+        "The Traveled - Entrance",
+        "Starting Room - Symmetry Painting",
+        "Art Gallery - Second Floor",
+        "Artistic Doors",
+        "Symmetry Room - LEAF, FEEL (Panels)",
+        "Progressive Colorful",
+        "Three Panels",
+        "The Scientific - Entrance",
+        "The Colorful - Yellow Door",
+        "Wanderlust",
+        "Pilgrim Room - Shortcut to The Seeker",
+        "Starting Room - Street Painting",
+        "Orange Tower - Sixth Floor",
+        "Color Hunt Barriers",
+        "Outside The Agreeable - MASSACRED (Panel)",
+        "Hallway Room Doors",
+        "Champion's Rest - Entrance",
+        "Lost Area - Exit",
+        "Dread Hallway - Tenacious Entrance",
+        "Dead End Area Access",
+        "Directional Gallery - Shortcut to The Undeterred",
+        "The Artistic (Lattice) - Door to Apple",
+        "The Agreeable - Shortcut to Hedge Maze",
+        "The Wondrous - Entrance",
+        "Outside The Undeterred - Zero Door",
+        "Entrances to The Tenacious",
+        "Outside The Wise - KITTEN, CAT (Panels)",
+        "Compass Room - Lookout Entrance",
+        "Number Hunt - Challenge Entrance",
+        "The Fearless (First Floor) - Second Floor",
+        "The Colorful - OBSTACLE (Panel)",
+        "Hidden Room - Rhyme Room Entrance",
+        "Color Hunt - RED (Panel)",
+        "Iceland Trap",
+        "The Colorful - LOAF (Panel)",
+        "Directional Gallery - TURN, LEARN (Panels)",
+        "Outside The Wanderer - Tower Entrance",
+        "Outside The Initiated - Eight Door",
+        "Hub Room - Shortcut to Hedge Maze",
+        "Crossroads - Tower Back Entrance",
+        "Outside The Initiated - Shortcut to Hub Room",
+        "The Bearer - MIDDLE (Panel)",
+        "Color Hunt - BLUE (Panel)",
+        "Seven Panels",
+        "The Traveled - Color Hallways Entrance",
+        "The Initiated - Entrance",
+        "The Colorful - Red Door",
+        "3 Sunwarp",
+        "Eight Panels",
+        "Art Gallery - Fourth Floor",
+        "1 Sunwarp",
+        "Hidden Room - OPEN (Panel)",
+        "Starting Room - Pencil Painting",
+        "Progressive Fearless",
+        "Five Panels",
+        "The Colorful - BEGIN (Panel)",
+        "The Bearer - Backside Door",
+        "Crossroads - WORDS, SWORD (Panels)",
+        "Outside The Undeterred - Green Painting",
+        "The Colorful - Brown Door",
+        ":)",
+        "Orange Tower Third Floor - Red Barrier",
+        "Number Hunt - Eights",
+        "Backside Entrance Panels",
+        "Progressive Number Hunt",
+        "Fearless Doors",
+        "Hub Room - Near RAT Door",
+        "Outside The Wanderer - WANDERLUST (Panel)",
+        "The Incomparable - Eight Door",
+        "Progressive Orange Tower",
+        "Outside The Undeterred - Number Hunt",
+        "Yellow",
+        "Crossroads - Hollow Hallway",
+        "Sunwarps",
+        "Orange Tower First Floor - Salt Pepper Door",
+        "Color Hunt - Purple Barrier",
+        "Crossroads - DECAY (Panel)",
+        "Slowness Trap",
+        "Challenge Room - Welcome Door",
+        "Blue",
+        "Outside The Initiated - Blue Barrier",
+        "Directional Gallery - Yellow Barrier",
+        "Amen Name Area - AMEN, NAME (Panels)",
+        "Rhyme Room (Looped Square) - Door to Circle",
+        "Symmetry Doors",
+        "Room Room - Cellar Exit",
+        "Lost Area - LOST (1), LOST (2) (Panels)",
+        "Four Panels",
+        "Brown",
+        "Hallway Room (2) - Exit",
+        "The Colorful - Black Door",
+        "Starting Room - Flower Painting",
+        "Atbash Trap",
+        "Crossroads - Eye Wall",
+        "Rhyme Room Doors",
+        "Room Room Panels",
+        "Hallway Room - Second Room Panels",
+        "Outside The Undeterred - Threes",
+        "Outside The Undeterred - Fours",
+        "The Colorful - CREAM (Panel)",
+        "Orange",
+        "6 Sunwarp",
+        "Art Gallery - Fifth Floor",
+        "Backside Doors",
+        "Orange Tower - Second Floor",
+        "Orange Tower First Floor - SECRET (Panel)",
+        "Outside The Initiated - OXEN (Panel)",
+        "Puzzle Skip",
+        "Orange Tower Panels",
+        "Color Hunt - YELLOW (Panel)",
+        "The Eyes They See - Exit",
+        "Hub Room - OPEN (Panel)",
+        "Courtyard - Green Barrier",
+        "Symmetry Room - Leaf Feel Door",
+        "Color Hunt - PURPLE (Panel)",
+        "Two Panels",
+        "Orange Tower - Fifth Floor",
+        "Outside The Initiated - UNCOVER (Panel)",
+        "Rhyme Room (Looped Square) - Door to Target",
+        "The Bearer - FARTHER (Panel)",
+        "Outside The Agreeable - CLOSE (Panel)",
+        "Hallway Room - Third Room Panels",
+        "Outside The Undeterred - PEN (Panel)",
+        "The Colorful - WALLS (Panel)",
+        "Observant Doors",
+        "The Tenacious - Shortcut to Hub Room",
+        "Color Hunt - ORANGE (Panel)",
+        "Outside The Undeterred - ZERO (Panel)",
+        "Hidden Room - Knight Night Entrance",
+        "The Bearer - Entrance"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

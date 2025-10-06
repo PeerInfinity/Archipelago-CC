@@ -271,6 +271,7 @@
           {
             "name": "Money Wrench",
             "id": 11391111,
+            "region": "Tower HQ",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -352,6 +353,7 @@
           {
             "name": "The Shop - Karuta Plates",
             "id": 11391079,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -389,6 +391,7 @@
           {
             "name": "The Shop - Serendipitous Bodies",
             "id": 11391080,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -426,6 +429,7 @@
           {
             "name": "The Shop - Path of Resilience",
             "id": 11391081,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -463,6 +467,7 @@
           {
             "name": "The Shop - Kusari Jacket",
             "id": 11391082,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -500,6 +505,7 @@
           {
             "name": "The Shop - Energy Shuriken",
             "id": 11391083,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -537,6 +543,7 @@
           {
             "name": "The Shop - Serendipitous Minds",
             "id": 11391084,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -574,6 +581,7 @@
           {
             "name": "The Shop - Prepared Mind",
             "id": 11391085,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -611,6 +619,7 @@
           {
             "name": "The Shop - Meditation",
             "id": 11391086,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -648,6 +657,7 @@
           {
             "name": "The Shop - Rejuvenative Spirit",
             "id": 11391087,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -685,6 +695,7 @@
           {
             "name": "The Shop - Centered Mind",
             "id": 11391088,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -722,6 +733,7 @@
           {
             "name": "The Shop - Strike of the Ninja",
             "id": 11391089,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -759,6 +771,7 @@
           {
             "name": "The Shop - Second Wind",
             "id": 11391090,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -796,6 +809,7 @@
           {
             "name": "The Shop - Currents Master",
             "id": 11391091,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -833,6 +847,7 @@
           {
             "name": "The Shop - Aerobatics Warrior",
             "id": 11391092,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -870,6 +885,7 @@
           {
             "name": "The Shop - Demon's Bane",
             "id": 11391093,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -907,6 +923,7 @@
           {
             "name": "The Shop - Devil's Due",
             "id": 11391094,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -944,6 +961,7 @@
           {
             "name": "The Shop - Time Sense",
             "id": 11391095,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -981,6 +999,7 @@
           {
             "name": "The Shop - Power Sense",
             "id": 11391096,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -1018,6 +1037,7 @@
           {
             "name": "The Shop - Focused Power Sense",
             "id": 11391097,
+            "region": "The Shop",
             "crystal": null,
             "access_rule": {
               "type": "subscript",
@@ -1078,6 +1098,7 @@
           {
             "name": "Green Kappa Figurine",
             "id": 11391098,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1096,6 +1117,7 @@
           {
             "name": "Blue Kappa Figurine",
             "id": 11391099,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1114,6 +1136,7 @@
           {
             "name": "Ountarde Figurine",
             "id": 11391100,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1132,6 +1155,7 @@
           {
             "name": "Red Kappa Figurine",
             "id": 11391101,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1150,6 +1174,7 @@
           {
             "name": "Demon King Figurine",
             "id": 11391102,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1168,6 +1193,7 @@
           {
             "name": "Quillshroom Figurine",
             "id": 11391103,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1186,6 +1212,7 @@
           {
             "name": "Jumping Quillshroom Figurine",
             "id": 11391104,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1204,6 +1231,7 @@
           {
             "name": "Scurubu Figurine",
             "id": 11391105,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1222,6 +1250,7 @@
           {
             "name": "Jumping Scurubu Figurine",
             "id": 11391106,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1240,6 +1269,7 @@
           {
             "name": "Wallaxer Figurine",
             "id": 11391107,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1258,6 +1288,7 @@
           {
             "name": "Barmath'azel Figurine",
             "id": 11391108,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1276,6 +1307,7 @@
           {
             "name": "Queen of Quills Figurine",
             "id": 11391109,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1294,6 +1326,7 @@
           {
             "name": "Demon Hive Figurine",
             "id": 11391110,
+            "region": "The Craftsman's Corner",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1335,6 +1368,7 @@
           {
             "name": "Corrupted Future - Key of Courage",
             "id": 11390977,
+            "region": "Corrupted Future",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1379,6 +1413,7 @@
           {
             "name": "Rescue Phantom",
             "id": null,
+            "region": "Music Box",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1490,6 +1525,7 @@
           {
             "name": "Ninja Village - Candle",
             "id": 11390988,
+            "region": "Ninja Village - Nest",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1533,6 +1569,7 @@
           {
             "name": "Ninja Village - Astral Seed",
             "id": 11390986,
+            "region": "Ninja Village - Nest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1551,6 +1588,7 @@
           {
             "name": "Ninja Village Seal - Tree House",
             "id": 11391000,
+            "region": "Ninja Village - Nest",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1826,6 +1864,7 @@
           {
             "name": "Autumn Hills Portal",
             "id": null,
+            "region": "Autumn Hills - Portal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1927,7 +1966,7 @@
             "connected_region": "Autumn Hills - Key of Hope Checkpoint",
             "access_rule": {
               "type": "constant",
-              "value": "It's a bit easier to just always create the connections that are only possible in hard or higher logic."
+              "value": false
             },
             "reverse": null,
             "randomization_type": 1,
@@ -1939,6 +1978,7 @@
           {
             "name": "Autumn Hills - Climbing Claws",
             "id": 11390985,
+            "region": "Autumn Hills - Climbing Claws Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1957,6 +1997,7 @@
           {
             "name": "Autumn Hills Seal - Trip Saws",
             "id": 11391001,
+            "region": "Autumn Hills - Climbing Claws Shop",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2262,6 +2303,7 @@
           {
             "name": "Autumn Hills - Leaf Golem",
             "id": 11391075,
+            "region": "Autumn Hills - Leaf Golem Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2320,16 +2362,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Meditation"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Path of Resilience"
-                        }
+                        "Meditation",
+                        "Path of Resilience"
                       ]
                     }
                   ]
@@ -2447,6 +2483,7 @@
           {
             "name": "Autumn Hills - Key of Hope",
             "id": 11390981,
+            "region": "Autumn Hills - Key of Hope Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2622,6 +2659,7 @@
           {
             "name": "Autumn Hills Seal - Double Swing Saws",
             "id": 11391002,
+            "region": "Autumn Hills - Double Swing Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2723,6 +2761,7 @@
           {
             "name": "Autumn Hills Seal - Spike Ball Swing",
             "id": 11391003,
+            "region": "Autumn Hills - Spike Ball Swing Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2741,6 +2780,7 @@
           {
             "name": "Autumn Hills Seal - Spike Ball Darts",
             "id": 11391004,
+            "region": "Autumn Hills - Spike Ball Swing Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3280,6 +3320,7 @@
           {
             "name": "Forlorn Temple Seal - Rocket Sunset",
             "id": 11391035,
+            "region": "Forlorn Temple - Rocket Sunset Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3498,6 +3539,7 @@
           {
             "name": "Forlorn Temple - Demon King",
             "id": 11390991,
+            "region": "Forlorn Temple - Demon King Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3622,6 +3664,7 @@
           {
             "name": "Forlorn Temple Seal - Rocket Maze",
             "id": 11391034,
+            "region": "Forlorn Temple - Rocket Maze Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3713,6 +3756,7 @@
           {
             "name": "Catacombs - Necro",
             "id": 11390996,
+            "region": "Catacombs - Top Left",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3992,6 +4036,7 @@
           {
             "name": "Catacombs Seal - Triple Spike Crushers",
             "id": 11391005,
+            "region": "Catacombs - Triple Spike Crushers Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4068,6 +4113,7 @@
           {
             "name": "Catacombs - Ruxxtin's Amulet",
             "id": 11390992,
+            "region": "Catacombs - Ruxxtin Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4086,6 +4132,7 @@
           {
             "name": "Catacombs - Ruxxtin",
             "id": 11391076,
+            "region": "Catacombs - Ruxxtin Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4320,6 +4367,7 @@
           {
             "name": "Catacombs Seal - Crusher Gauntlet",
             "id": 11391006,
+            "region": "Catacombs - Dirty Pond Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4338,6 +4386,7 @@
           {
             "name": "Catacombs Seal - Dirty Pond",
             "id": 11391007,
+            "region": "Catacombs - Dirty Pond Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4575,6 +4624,7 @@
           {
             "name": "Bamboo Creek Seal - Spike Crushers and Doors",
             "id": 11391008,
+            "region": "Bamboo Creek - Spike Crushers Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4718,6 +4768,7 @@
           {
             "name": "Bamboo Creek Seal - Spike Crushers and Doors v2",
             "id": 11391010,
+            "region": "Bamboo Creek - Time Loop Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4736,6 +4787,7 @@
           {
             "name": "Bamboo Creek - Claustro",
             "id": 11390998,
+            "region": "Bamboo Creek - Time Loop Shop",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4832,6 +4884,7 @@
           {
             "name": "Bamboo Creek Seal - Spike Ball Pits",
             "id": 11391009,
+            "region": "Bamboo Creek - Spike Ball Pits Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5221,6 +5274,7 @@
           {
             "name": "Howling Grotto Portal",
             "id": null,
+            "region": "Howling Grotto - Portal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5303,6 +5357,7 @@
           {
             "name": "Howling Grotto - Wingsuit",
             "id": 11390982,
+            "region": "Howling Grotto - Wingsuit Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5321,6 +5376,7 @@
           {
             "name": "Howling Grotto Seal - Windy Saws and Balls",
             "id": 11391011,
+            "region": "Howling Grotto - Wingsuit Shop",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5469,6 +5525,7 @@
           {
             "name": "Howling Grotto Seal - Crushing Pits",
             "id": 11391012,
+            "region": "Howling Grotto - Crushing Pits Shop",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5573,6 +5630,7 @@
           {
             "name": "Howling Grotto - Emerald Golem",
             "id": 11391077,
+            "region": "Howling Grotto - Emerald Golem Shop",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5808,6 +5866,7 @@
           {
             "name": "Howling Grotto Seal - Breezy Crushers",
             "id": 11391013,
+            "region": "Howling Grotto - Breezy Crushers Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6156,6 +6215,7 @@
           {
             "name": "Quillshroom Marsh Seal - Spikey Window",
             "id": 11391014,
+            "region": "Quillshroom Marsh - Spikey Window Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6276,6 +6336,7 @@
           {
             "name": "Quillshroom Marsh Seal - Sand Trap",
             "id": 11391015,
+            "region": "Quillshroom Marsh - Sand Trap Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6352,6 +6413,7 @@
           {
             "name": "Quillshroom Marsh - Queen of Quills",
             "id": 11391078,
+            "region": "Quillshroom Marsh - Queen of Quills Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6428,6 +6490,7 @@
           {
             "name": "Quillshroom Marsh - Seashell",
             "id": 11390989,
+            "region": "Quillshroom Marsh - Seashell Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6561,6 +6624,7 @@
           {
             "name": "Quillshroom Marsh Seal - Do the Spike Wave",
             "id": 11391016,
+            "region": "Quillshroom Marsh - Spike Wave Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6968,6 +7032,7 @@
           {
             "name": "Searing Crags - Pyro",
             "id": 11390997,
+            "region": "Searing Crags - Portal",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6989,6 +7054,7 @@
           {
             "name": "Searing Crags Portal",
             "id": null,
+            "region": "Searing Crags - Portal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7090,6 +7156,7 @@
           {
             "name": "Searing Crags - Rope Dart",
             "id": 11390983,
+            "region": "Searing Crags - Rope Dart Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7264,7 +7331,7 @@
             "connected_region": "Searing Crags - Key of Strength Shop",
             "access_rule": {
               "type": "constant",
-              "value": "It's a bit easier to just always create the connections that are only possible in hard or higher logic."
+              "value": false
             },
             "reverse": null,
             "randomization_type": 1,
@@ -7513,6 +7580,7 @@
           {
             "name": "Searing Crags Seal - Rhythm Rocks",
             "id": 11391019,
+            "region": "Searing Crags - Colossuses Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7531,6 +7599,7 @@
           {
             "name": "Searing Crags - Power Thistle",
             "id": 11390990,
+            "region": "Searing Crags - Colossuses Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7549,6 +7618,7 @@
           {
             "name": "Searing Crags - Astral Tea Leaves",
             "id": 11390987,
+            "region": "Searing Crags - Colossuses Shop",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7638,6 +7708,7 @@
           {
             "name": "Searing Crags - Key of Strength",
             "id": 11390980,
+            "region": "Searing Crags - Key of Strength Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7714,6 +7785,7 @@
           {
             "name": "Searing Crags Seal - Triple Ball Spinner",
             "id": 11391017,
+            "region": "Searing Crags - Triple Ball Spinner Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7723,16 +7795,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Meditation"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Path of Resilience"
-                        }
+                        "Meditation",
+                        "Path of Resilience"
                       ]
                     }
                   ]
@@ -7807,6 +7873,7 @@
           {
             "name": "Searing Crags Seal - Raining Rocks",
             "id": 11391018,
+            "region": "Searing Crags - Raining Rocks Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8138,6 +8205,7 @@
           {
             "name": "Glacial Peak Portal",
             "id": null,
+            "region": "Glacial Peak - Portal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8214,6 +8282,7 @@
           {
             "name": "Glacial Peak Seal - Ice Climbers",
             "id": 11391020,
+            "region": "Glacial Peak - Ice Climbers' Shop",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8474,6 +8543,7 @@
           {
             "name": "Glacial Peak Seal - Projectile Spike Pit",
             "id": 11391021,
+            "region": "Glacial Peak - Projectile Spike Pit Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8553,6 +8623,7 @@
           {
             "name": "Glacial Peak Seal - Glacial Air Swag",
             "id": 11391022,
+            "region": "Glacial Peak - Air Swag Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8772,6 +8843,7 @@
           {
             "name": "Tower of Time Seal - Time Waster",
             "id": 11391023,
+            "region": "Tower of Time - First Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8991,6 +9063,7 @@
           {
             "name": "Tower of Time Seal - Lantern Climb",
             "id": 11391024,
+            "region": "Tower of Time - Fourth Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9048,6 +9121,7 @@
           {
             "name": "Tower of Time Seal - Arcane Orbs",
             "id": 11391025,
+            "region": "Tower of Time - Fifth Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9684,6 +9758,7 @@
           {
             "name": "Cloud Ruins - Acro",
             "id": 11390999,
+            "region": "Cloud Ruins - Final Flight Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9763,6 +9838,7 @@
           {
             "name": "Cloud Ruins Seal - Money Farm Room",
             "id": 11391029,
+            "region": "Cloud Ruins - Manfred's Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9924,6 +10000,7 @@
           {
             "name": "Cloud Ruins Seal - Ghost Pit",
             "id": 11391026,
+            "region": "Cloud Ruins - Ghost Pit Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10050,6 +10127,7 @@
           {
             "name": "Cloud Ruins Seal - Toothbrush Alley",
             "id": 11391027,
+            "region": "Cloud Ruins - Toothbrush Alley Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10129,6 +10207,7 @@
           {
             "name": "Cloud Ruins Seal - Saw Pit",
             "id": 11391028,
+            "region": "Cloud Ruins - Saw Pit Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10293,6 +10372,7 @@
           {
             "name": "Underworld Seal - Sharp and Windy Climb",
             "id": 11391030,
+            "region": "Underworld - Left Shop",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10409,6 +10489,7 @@
           {
             "name": "Underworld Seal - Spike Wall",
             "id": 11391031,
+            "region": "Underworld - Fireball Wave Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10427,6 +10508,7 @@
           {
             "name": "Underworld Seal - Fireball Wave",
             "id": 11391032,
+            "region": "Underworld - Fireball Wave Shop",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -10685,6 +10767,7 @@
           {
             "name": "Underworld - Key of Chaos",
             "id": 11390978,
+            "region": "Underworld - Key of Chaos Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10897,6 +10980,7 @@
           {
             "name": "Underworld Seal - Rising Fanta",
             "id": 11391033,
+            "region": "Underworld - Hot Tub Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -11170,6 +11254,7 @@
           {
             "name": "Riviere Turquoise Portal",
             "id": null,
+            "region": "Riviere Turquoise - Portal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11288,6 +11373,7 @@
           {
             "name": "Riviere Turquoise Seal - Bounces and Balls",
             "id": 11391039,
+            "region": "Riviere Turquoise - Waterfall Shop",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11297,16 +11383,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Meditation"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Path of Resilience"
-                        }
+                        "Meditation",
+                        "Path of Resilience"
                       ]
                     }
                   ]
@@ -11406,6 +11486,7 @@
           {
             "name": "Riviere Turquoise Seal - Launch of Faith",
             "id": 11391040,
+            "region": "Riviere Turquoise - Launch of Faith Shop",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11538,6 +11619,7 @@
           {
             "name": "Riviere Turquoise Seal - Flower Power",
             "id": 11391041,
+            "region": "Riviere Turquoise - Restock Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11579,6 +11661,7 @@
           {
             "name": "Riviere Turquoise - Butterfly Matriarch",
             "id": 11390993,
+            "region": "Riviere Turquoise - Butterfly Matriarch Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11800,6 +11883,7 @@
           {
             "name": "Elemental Skylands Seal - Air",
             "id": 11391042,
+            "region": "Elemental Skylands - Air Seal Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -12042,6 +12126,7 @@
           {
             "name": "Elemental Skylands Seal - Water",
             "id": 11391043,
+            "region": "Elemental Skylands - Water Intro Shop",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -12186,6 +12271,7 @@
           {
             "name": "Elemental Skylands Seal - Fire",
             "id": 11391044,
+            "region": "Elemental Skylands - Fire Intro Shop",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -12312,6 +12398,7 @@
           {
             "name": "Elemental Skylands - Key of Symbiosis",
             "id": 11390979,
+            "region": "Elemental Skylands - Right",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -12550,22 +12637,17 @@
           {
             "name": "Sunken Shrine - Key of Love",
             "id": 11390976,
+            "region": "Sunken Shrine - Portal",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Moon Crest"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Sun Crest"
-                    }
+                    "Moon Crest",
+                    "Sun Crest"
                   ]
                 }
               ]
@@ -12583,6 +12665,7 @@
           {
             "name": "Sunken Shrine Portal",
             "id": null,
+            "region": "Sunken Shrine - Portal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12706,6 +12789,7 @@
           {
             "name": "Sunken Shrine Seal - Ultra Lifeguard",
             "id": 11391036,
+            "region": "Sunken Shrine - Lifeguard Shop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12864,6 +12948,7 @@
           {
             "name": "Sunken Shrine Seal - Tabi Gauntlet",
             "id": 11391038,
+            "region": "Sunken Shrine - Tabi Gauntlet Shop",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -12981,6 +13066,7 @@
           {
             "name": "Sunken Shrine - Lightfoot Tabi",
             "id": 11390984,
+            "region": "Sunken Shrine - Lightfoot Tabi Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13047,6 +13133,7 @@
           {
             "name": "Sunken Shrine - Sun Crest",
             "id": 11390994,
+            "region": "Sunken Shrine - Sun Crest Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13126,6 +13213,7 @@
           {
             "name": "Sunken Shrine Seal - Waterfall Paradise",
             "id": 11391037,
+            "region": "Sunken Shrine - Waterfall Paradise Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -13195,6 +13283,7 @@
           {
             "name": "Sunken Shrine - Moon Crest",
             "id": 11390995,
+            "region": "Sunken Shrine - Moon Crest Checkpoint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14246,14 +14335,106 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Crest",
-      "Everything",
-      "Keys",
-      "Notes",
-      "Phobe",
-      "Phobekin"
-    ]
+    "1": {
+      "Notes": [
+        "Key of Strength",
+        "Key of Love",
+        "Key of Hope",
+        "Key of Symbiosis",
+        "Key of Courage",
+        "Key of Chaos"
+      ],
+      "Keys": [
+        "Key of Strength",
+        "Key of Love",
+        "Key of Hope",
+        "Key of Symbiosis",
+        "Key of Courage",
+        "Key of Chaos"
+      ],
+      "Crest": [
+        "Sun Crest",
+        "Moon Crest"
+      ],
+      "Phobe": [
+        "Pyro",
+        "Acro",
+        "Claustro",
+        "Necro"
+      ],
+      "Phobekin": [
+        "Pyro",
+        "Acro",
+        "Claustro",
+        "Necro"
+      ],
+      "Everything": [
+        "Pyro",
+        "Lightfoot Tabi",
+        "Key of Chaos",
+        "Path of Resilience",
+        "Scurubu Figurine",
+        "Claustro",
+        "Centered Mind",
+        "Windmill Shuriken",
+        "Acro",
+        "Rope Dart",
+        "Key of Hope",
+        "Key of Strength",
+        "Money Wrench",
+        "Ountarde Figurine",
+        "Kusari Jacket",
+        "Focused Power Sense",
+        "Key of Love",
+        "Karuta Plates",
+        "Green Kappa Figurine",
+        "Demon King Figurine",
+        "Aerobatics Warrior",
+        "Jumping Quillshroom Figurine",
+        "Time Shard (10)",
+        "Power Sense",
+        "Energy Shuriken",
+        "Blue Kappa Figurine",
+        "Demon Hive Figurine",
+        "Second Wind",
+        "Prepared Mind",
+        "Quillshroom Figurine",
+        "Teleport Trap",
+        "Key of Courage",
+        "Queen of Quills Figurine",
+        "Key of Symbiosis",
+        "Serendipitous Minds",
+        "Prophecy Trap",
+        "Time Shard (50)",
+        "Meditation",
+        "Demon's Bane",
+        "Wallaxer Figurine",
+        "Strike of the Ninja",
+        "Ruxxtin's Amulet",
+        "Rejuvenative Spirit",
+        "Power Thistle",
+        "Time Shard (500)",
+        "Candle",
+        "Time Shard",
+        "Serendipitous Bodies",
+        "Jumping Scurubu Figurine",
+        "Devil's Due",
+        "Moon Crest",
+        "Sun Crest",
+        "Magic Firefly",
+        "Seashell",
+        "Red Kappa Figurine",
+        "Time Shard (300)",
+        "Time Shard (100)",
+        "Time Sense",
+        "Power Seal",
+        "Wingsuit",
+        "Currents Master",
+        "Demon King Crown",
+        "Barmath'azel Figurine",
+        "Necro"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

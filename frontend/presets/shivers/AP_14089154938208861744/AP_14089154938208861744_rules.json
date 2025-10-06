@@ -145,6 +145,7 @@
           {
             "name": "Puzzle Solved Combination Lock",
             "id": 27114,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -163,6 +164,7 @@
           {
             "name": "Puzzle Solved Gears",
             "id": 27000,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -181,6 +183,7 @@
           {
             "name": "Puzzle Solved Stone Henge",
             "id": 27001,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -199,6 +202,7 @@
           {
             "name": "Puzzle Solved Office Elevator",
             "id": 27110,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -250,6 +254,7 @@
           {
             "name": "Puzzle Solved Three Floor Elevator",
             "id": 27112,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -301,6 +306,7 @@
           {
             "name": "Puzzle Hint Found: Mailbox",
             "id": 27054,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -319,6 +325,7 @@
           {
             "name": "Puzzle Hint Found: Orange Symbol",
             "id": 27055,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -337,6 +344,7 @@
           {
             "name": "Puzzle Hint Found: Silver Symbol",
             "id": 27056,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -355,6 +363,7 @@
           {
             "name": "Puzzle Hint Found: Green Symbol",
             "id": 27057,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -373,6 +382,7 @@
           {
             "name": "Puzzle Hint Found: White Symbol",
             "id": 27058,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -391,6 +401,7 @@
           {
             "name": "Puzzle Hint Found: Brown Symbol",
             "id": 27059,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -409,6 +420,7 @@
           {
             "name": "Puzzle Hint Found: Tan Symbol",
             "id": 27060,
+            "region": "Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -570,6 +582,7 @@
           {
             "name": "Flashback Memory Obtained Windlenot's Ghost",
             "id": 27026,
+            "region": "Underground Lake",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -624,6 +637,7 @@
           {
             "name": "Flashback Memory Obtained Egyptian Hieroglyphics Explained",
             "id": 27031,
+            "region": "Windlenot's Body",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -642,6 +656,7 @@
           {
             "name": "Windlenot's Body",
             "id": null,
+            "region": "Windlenot's Body",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -879,16 +894,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Crawling"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key for Bedroom Elevator"
-                    }
+                    "Crawling",
+                    "Key for Bedroom Elevator"
                   ]
                 }
               ]
@@ -915,6 +924,7 @@
           {
             "name": "Flashback Memory Obtained Scrapbook",
             "id": 27028,
+            "region": "Office",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -933,6 +943,7 @@
           {
             "name": "Storage: Desk Drawer",
             "id": null,
+            "region": "Office",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -951,6 +962,7 @@
           {
             "name": "Puzzle Hint Found: Atlantis Map",
             "id": 27062,
+            "region": "Office",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -969,6 +981,7 @@
           {
             "name": "Puzzle Hint Found: Tape Recorder Heard",
             "id": 27069,
+            "region": "Office",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -987,22 +1000,17 @@
           {
             "name": "Puzzle Solved Bedroom Elevator",
             "id": 27111,
+            "region": "Office",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Crawling"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key for Bedroom Elevator"
-                    }
+                    "Crawling",
+                    "Key for Bedroom Elevator"
                   ]
                 }
               ]
@@ -1068,6 +1076,7 @@
           {
             "name": "Puzzle Solved Workshop Drawers",
             "id": 27002,
+            "region": "Workshop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1086,6 +1095,7 @@
           {
             "name": "Storage: Workshop Drawers",
             "id": null,
+            "region": "Workshop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1104,6 +1114,7 @@
           {
             "name": "Puzzle Hint Found: Basilisk Bone Fragments",
             "id": 27061,
+            "region": "Workshop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1159,16 +1170,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Crawling"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key for Bedroom Elevator"
-                    }
+                    "Crawling",
+                    "Key for Bedroom Elevator"
                   ]
                 }
               ]
@@ -1245,6 +1250,7 @@
           {
             "name": "Flashback Memory Obtained Professor Windlenot's Diary",
             "id": 27039,
+            "region": "Bedroom",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1620,6 +1626,7 @@
           {
             "name": "Puzzle Solved Theater Door",
             "id": 27004,
+            "region": "Lobby",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1641,6 +1648,7 @@
           {
             "name": "Flashback Memory Obtained Museum Brochure",
             "id": 27029,
+            "region": "Lobby",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1659,6 +1667,7 @@
           {
             "name": "Storage: Slide",
             "id": null,
+            "region": "Lobby",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1695,6 +1704,7 @@
           {
             "name": "Storage: Transforming Mask",
             "id": null,
+            "region": "Lobby",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1786,6 +1796,7 @@
           {
             "name": "Puzzle Solved Library Statue",
             "id": 27003,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1804,6 +1815,7 @@
           {
             "name": "Flashback Memory Obtained In Search of the Unexplained",
             "id": 27030,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1822,6 +1834,7 @@
           {
             "name": "Flashback Memory Obtained South American Pictographs",
             "id": 27032,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1840,6 +1853,7 @@
           {
             "name": "Flashback Memory Obtained Mythology of the Stars",
             "id": 27033,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1858,6 +1872,7 @@
           {
             "name": "Flashback Memory Obtained Black Book",
             "id": 27034,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1876,6 +1891,7 @@
           {
             "name": "Storage: Library Cabinet",
             "id": null,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1894,6 +1910,7 @@
           {
             "name": "Storage: Library Statue",
             "id": null,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2008,6 +2025,7 @@
           {
             "name": "Flashback Memory Obtained Beth's Address Book",
             "id": 27037,
+            "region": "Maintenance Tunnels",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2170,6 +2188,7 @@
           {
             "name": "Final Riddle: Beth's Body Page 17",
             "id": 27052,
+            "region": "Beth's Body",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2188,6 +2207,7 @@
           {
             "name": "Beth's Body",
             "id": null,
+            "region": "Beth's Body",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2264,6 +2284,7 @@
           {
             "name": "Storage: Theater",
             "id": null,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2285,6 +2306,7 @@
           {
             "name": "Puzzle Hint Found: Beth's Note",
             "id": 27115,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2407,6 +2429,7 @@
           {
             "name": "Puzzle Solved Clock Tower Door",
             "id": 27005,
+            "region": "Theater Back Hallway",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2575,6 +2598,7 @@
           {
             "name": "Puzzle Solved Clock Chains",
             "id": 27006,
+            "region": "Clock Chains",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2593,6 +2617,7 @@
           {
             "name": "Clock Chains",
             "id": null,
+            "region": "Clock Chains",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2647,6 +2672,7 @@
           {
             "name": "Flashback Memory Obtained Beth's Ghost",
             "id": 27024,
+            "region": "Clock Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2665,6 +2691,7 @@
           {
             "name": "Storage: Clock Tower",
             "id": null,
+            "region": "Clock Tower",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2686,6 +2713,7 @@
           {
             "name": "Puzzle Hint Found: Shaman Security Camera",
             "id": 27068,
+            "region": "Clock Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2704,6 +2732,7 @@
           {
             "name": "Jukebox",
             "id": null,
+            "region": "Clock Tower",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2814,6 +2843,7 @@
           {
             "name": "Flashback Memory Obtained Theater Movie",
             "id": 27035,
+            "region": "Projector Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2832,6 +2862,7 @@
           {
             "name": "Viewed Theater Movie",
             "id": null,
+            "region": "Projector Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2963,6 +2994,7 @@
           {
             "name": "Storage: Eagles Nest",
             "id": null,
+            "region": "Prehistoric",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2981,6 +3013,7 @@
           {
             "name": "Set Skull Dial: Prehistoric",
             "id": null,
+            "region": "Prehistoric",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3047,6 +3080,7 @@
           {
             "name": "Storage: Greenhouse",
             "id": null,
+            "region": "Greenhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3150,6 +3184,7 @@
           {
             "name": "Puzzle Solved Atlantis",
             "id": 27007,
+            "region": "Ocean",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3174,6 +3209,7 @@
           {
             "name": "Puzzle Solved Organ",
             "id": 27008,
+            "region": "Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3192,6 +3228,7 @@
           {
             "name": "Flashback Memory Obtained Museum Blueprints",
             "id": 27036,
+            "region": "Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3210,6 +3247,7 @@
           {
             "name": "Storage: Ocean",
             "id": null,
+            "region": "Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3228,6 +3266,7 @@
           {
             "name": "Puzzle Hint Found: Sirens Song Heard",
             "id": 27063,
+            "region": "Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3310,6 +3349,7 @@
           {
             "name": "Puzzle Solved Maze Door",
             "id": 27009,
+            "region": "Maze Staircase",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3471,6 +3511,7 @@
           {
             "name": "Storage: Tar River",
             "id": null,
+            "region": "Tar River",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3490,6 +3531,7 @@
           {
             "name": "Set Skull Dial: Tar River",
             "id": null,
+            "region": "Tar River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3612,6 +3654,7 @@
           {
             "name": "Puzzle Solved Columns of RA",
             "id": 27010,
+            "region": "Egypt",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3633,6 +3676,7 @@
           {
             "name": "Puzzle Solved Burial Door",
             "id": 27011,
+            "region": "Egypt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3651,6 +3695,7 @@
           {
             "name": "Storage: Egypt",
             "id": null,
+            "region": "Egypt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3669,6 +3714,7 @@
           {
             "name": "Puzzle Hint Found: Egyptian Sphinx Heard",
             "id": 27064,
+            "region": "Egypt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3687,6 +3733,7 @@
           {
             "name": "Set Skull Dial: Egypt",
             "id": null,
+            "region": "Egypt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3790,6 +3837,7 @@
           {
             "name": "Puzzle Solved Chinese Solitaire",
             "id": 27012,
+            "region": "Burial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3808,6 +3856,7 @@
           {
             "name": "Flashback Memory Obtained Merrick's Notebook",
             "id": 27038,
+            "region": "Burial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3826,6 +3875,7 @@
           {
             "name": "Storage: Chinese Solitaire",
             "id": null,
+            "region": "Burial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3844,6 +3894,7 @@
           {
             "name": "Set Skull Dial: Burial",
             "id": null,
+            "region": "Burial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3941,6 +3992,7 @@
           {
             "name": "Puzzle Solved Shaman Drums",
             "id": 27013,
+            "region": "Shaman",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3965,6 +4017,7 @@
           {
             "name": "Storage: Shaman Hut",
             "id": null,
+            "region": "Shaman",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4084,6 +4137,7 @@
           {
             "name": "Puzzle Solved Lyre",
             "id": 27014,
+            "region": "Gods Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4102,6 +4156,7 @@
           {
             "name": "Puzzle Solved Red Door",
             "id": 27015,
+            "region": "Gods Room",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4126,6 +4181,7 @@
           {
             "name": "Storage: Lyre",
             "id": null,
+            "region": "Gods Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4144,6 +4200,7 @@
           {
             "name": "Set Skull Dial: Gods Room",
             "id": null,
+            "region": "Gods Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4198,6 +4255,7 @@
           {
             "name": "Final Riddle: Norse God Stone Message",
             "id": 27051,
+            "region": "Norse Stone",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4216,6 +4274,7 @@
           {
             "name": "Norse Stone",
             "id": null,
+            "region": "Norse Stone",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4310,6 +4369,7 @@
           {
             "name": "Puzzle Solved Anansi Music Box",
             "id": 27019,
+            "region": "Anansi",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4331,6 +4391,7 @@
           {
             "name": "Flashback Memory Obtained Ancient Astrology",
             "id": 27027,
+            "region": "Anansi",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4349,6 +4410,7 @@
           {
             "name": "Storage: Skeleton",
             "id": null,
+            "region": "Anansi",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4367,6 +4429,7 @@
           {
             "name": "Storage: Anansi Music Box",
             "id": null,
+            "region": "Anansi",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4515,6 +4578,7 @@
           {
             "name": "Set Skull Dial: Werewolf",
             "id": null,
+            "region": "Werewolf",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4676,6 +4740,7 @@
           {
             "name": "Storage: Janitor Closet",
             "id": null,
+            "region": "Janitor Closet",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4781,6 +4846,7 @@
           {
             "name": "Puzzle Solved UFO Symbols",
             "id": 27018,
+            "region": "UFO",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4805,6 +4871,7 @@
           {
             "name": "Storage: UFO",
             "id": null,
+            "region": "UFO",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4865,6 +4932,7 @@
           {
             "name": "Final Riddle: Planets Aligned",
             "id": 27050,
+            "region": "Orrery",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4883,6 +4951,7 @@
           {
             "name": "Orrery",
             "id": null,
+            "region": "Orrery",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5036,6 +5105,7 @@
           {
             "name": "Puzzle Solved Fortune Teller Door",
             "id": 27016,
+            "region": "Blue Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5122,6 +5192,7 @@
           {
             "name": "Puzzle Hint Found: Elevator Writing",
             "id": 27067,
+            "region": "Three Floor Elevator",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5176,6 +5247,7 @@
           {
             "name": "Flashback Memory Obtained Merrick's Ghost",
             "id": 27025,
+            "region": "Fortune Teller",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5194,6 +5266,7 @@
           {
             "name": "Final Riddle: Fortune Teller",
             "id": 27049,
+            "region": "Fortune Teller",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5212,6 +5285,7 @@
           {
             "name": "Viewed Fortune",
             "id": null,
+            "region": "Fortune Teller",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5316,6 +5390,7 @@
           {
             "name": "Puzzle Solved Alchemy",
             "id": 27017,
+            "region": "Inventions",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5334,6 +5409,7 @@
           {
             "name": "Storage: Alchemy",
             "id": null,
+            "region": "Inventions",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5476,6 +5552,7 @@
           {
             "name": "Puzzle Solved Gallows",
             "id": 27020,
+            "region": "Torture",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5494,6 +5571,7 @@
           {
             "name": "Storage: Gallows",
             "id": null,
+            "region": "Torture",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5512,6 +5590,7 @@
           {
             "name": "Puzzle Hint Found: Gallows Information Plaque",
             "id": 27065,
+            "region": "Torture",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5566,6 +5645,7 @@
           {
             "name": "Final Riddle: Guillotine Dropped",
             "id": 27053,
+            "region": "Guillotine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5584,6 +5664,7 @@
           {
             "name": "Guillotine",
             "id": null,
+            "region": "Guillotine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5663,6 +5744,7 @@
           {
             "name": "Puzzle Solved Mastermind",
             "id": 27021,
+            "region": "Puzzle Room Mastermind",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5681,6 +5763,7 @@
           {
             "name": "Puzzle Hint Found: Mastermind Information Plaque",
             "id": 27066,
+            "region": "Puzzle Room Mastermind",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5757,6 +5840,7 @@
           {
             "name": "Puzzle Solved Marble Flipper",
             "id": 27022,
+            "region": "Puzzle Room Marbles",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5834,6 +5918,7 @@
           {
             "name": "Storage: Skull Bridge",
             "id": null,
+            "region": "Skull Bridge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5852,6 +5937,7 @@
           {
             "name": "Puzzle Solved Skull Dial Door",
             "id": 27023,
+            "region": "Skull Bridge",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5954,6 +6040,7 @@
           {
             "name": "Ixupi Captured Water",
             "id": 27040,
+            "region": "Water Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6016,6 +6103,7 @@
           {
             "name": "Ixupi Captured Wax",
             "id": 27041,
+            "region": "Wax Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6068,6 +6156,7 @@
           {
             "name": "Ixupi Captured Ash",
             "id": 27042,
+            "region": "Ash Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6120,6 +6209,7 @@
           {
             "name": "Ixupi Captured Oil",
             "id": 27043,
+            "region": "Oil Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6182,6 +6272,7 @@
           {
             "name": "Ixupi Captured Cloth",
             "id": 27044,
+            "region": "Cloth Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6254,6 +6345,7 @@
           {
             "name": "Ixupi Captured Wood",
             "id": 27045,
+            "region": "Wood Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6306,6 +6398,7 @@
           {
             "name": "Ixupi Captured Crystal",
             "id": 27046,
+            "region": "Crystal Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6358,6 +6451,7 @@
           {
             "name": "Ixupi Captured Sand",
             "id": 27047,
+            "region": "Sand Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6420,6 +6514,7 @@
           {
             "name": "Ixupi Captured Metal",
             "id": 27048,
+            "region": "Metal Capture",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6462,6 +6557,7 @@
           {
             "name": "Mystery Solved",
             "id": 27116,
+            "region": "Victory",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8065,9 +8161,86 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Key for Underground Lake",
+        "Cloth Pot Top",
+        "Mt. Pleasant Tribune: 45 year Old Mystery Solved!",
+        "Key for Bedroom Elevator",
+        "Ash Pot Complete",
+        "Cloth Pot Complete",
+        "Ash Pot Top",
+        "Wood Pot Top",
+        "Crystal Pot Top",
+        "Sand Pot Top",
+        "Key for Office Elevator",
+        "Key for Projector Room",
+        "Crystal Always Available in Lobby",
+        "Metal Always Available in Prehistoric",
+        "Metal Pot Complete",
+        "Key for Ocean Room",
+        "Metal Pot Bottom",
+        "Lightning Pot Bottom",
+        "Key for Generator Room",
+        "Easier Lyre",
+        "Cloth Always Available in Egypt",
+        "Metal Always Available in Bedroom",
+        "Key for Janitor Closet",
+        "Oil Pot Top",
+        "Key for Office",
+        "Sand Pot Complete",
+        "Oil Pot Bottom",
+        "Wood Always Available in Pegasus Room",
+        "Mt. Pleasant Tribune: 44 year Old Mystery Solved!",
+        "Lightning Pot Top",
+        "Crystal Pot Complete",
+        "Wax Always Available in Shaman Room",
+        "Key for Prehistoric Room",
+        "Ash Always Available in Office",
+        "Key for Front Door",
+        "Key for Library",
+        "Wood Always Available in Workshop",
+        "Sand Always Available in Ocean",
+        "Heal",
+        "Water Pot Complete",
+        "Key for Puzzle Room",
+        "Lightning Pot Complete",
+        "Key for Torture Room",
+        "Sand Pot Bottom",
+        "Key for UFO Room",
+        "Water Always Available in Lobby",
+        "Sand Always Available in Greenhouse",
+        "Wood Pot Complete",
+        "Metal Pot Top",
+        "Metal Always Available in Projector Room",
+        "Water Pot Bottom",
+        "Key for Workshop",
+        "Crystal Pot Bottom",
+        "Wax Always Available in Library",
+        "Wood Always Available in Gods Room",
+        "Ash Pot Bottom",
+        "Oil Pot Complete",
+        "Wood Pot Bottom",
+        "Key for Three Floor Elevator",
+        "Wood Always Available in Blue Maze",
+        "Key for Egypt Room",
+        "Oil Always Available in Prehistoric Room",
+        "Crawling",
+        "Key for Shaman Room",
+        "Wax Always Available in Anansi Room",
+        "Water Pot Top",
+        "Wax Pot Bottom",
+        "Cloth Always Available in Burial Room",
+        "Key for Bedroom",
+        "Crystal Always Available in Ocean",
+        "Wax Pot Complete",
+        "Cloth Pot Bottom",
+        "Key for Greenhouse",
+        "Mt. Pleasant Tribune: 46 year Old Mystery Solved!",
+        "Wax Pot Top",
+        "Ash Always Available in Burial Room"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

@@ -20,6 +20,7 @@ import * as celeste64Logic from './celeste64/celeste64Logic.js';
 import { celeste64StateModule } from './celeste64/celeste64Logic.js';
 import * as civ6Logic from './civ_6/civ6Logic.js';
 import { civ6StateModule } from './civ_6/civ6Logic.js';
+import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule } from './dlcquest/dlcquestLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
@@ -83,6 +84,12 @@ const GAME_REGISTRY = {
     helperFunctions: civ6Logic.helperFunctions,
     worldClasses: ['CivVIWorld'],
     aliases: ['Civilization VI', 'Civ VI', 'Civ6']
+  },
+  'Castlevania - Circle of the Moon': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: cvcotmHelperFunctions,
+    worldClasses: ['CVCotMWorld'],
+    aliases: ['Castlevania - Circle of the Moon', 'CvCotM', 'cvcotm']
   },
   'DLCQuest': {
     logicModule: dlcquestLogic.dlcquestStateModule,

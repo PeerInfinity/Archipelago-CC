@@ -201,7 +201,8 @@ export const helperFunctions = {
    * Check if player can reach a specific region
    */
   can_reach_region(snapshot, staticData, regionName) {
-    return snapshot?.regions?.includes(regionName) || false;
+    const status = snapshot?.regionReachability?.[regionName];
+    return status === 'reachable' || status === 'checked';
   },
 
   // Generic helper for any item requirement
@@ -234,9 +235,10 @@ export const helperFunctions = {
     ];
 
     // Check if any flask region is reachable
-    const hasFlaskRegion = doors.some(door =>
-      snapshot?.regions?.includes(door) || false
-    );
+    const hasFlaskRegion = doors.some(door => {
+      const status = snapshot?.regionReachability?.[door];
+      return status === 'reachable' || status === 'checked';
+    });
 
     return hasFlaskRegion ? (snapshot?.inventory?.["Empty Bile Vessel"] || 0) : 0;
   },
@@ -245,7 +247,8 @@ export const helperFunctions = {
    * Count quicksilver (requires reaching D01Z05S01[W])
    */
   quicksilver(snapshot, staticData) {
-    const canReach = snapshot?.regions?.includes("D01Z05S01[W]") || false;
+    const status = snapshot?.regionReachability?.["D01Z05S01[W]"];
+    const canReach = status === 'reachable' || status === 'checked';
     return canReach ? (snapshot?.inventory?.["Quicksilver"] || 0) : 0;
   },
 
@@ -259,18 +262,26 @@ export const helperFunctions = {
    * - bossNameOrStaticData will be the actual boss name
    */
   has_boss_strength(snapshot, worldOrBossName, bossNameOrStaticData, staticData) {
-    // The boss name is in the third parameter when called from the rule engine
-    const bossName = bossNameOrStaticData;
+    // Determine if we were called with or without boss name
+    let bossName = null;
+    let actualStaticData = staticData;
 
-    if (!bossName) {
-      return false; // No boss specified
+    if (arguments.length === 2) {
+      // Called with just (snapshot, staticData) - no boss name
+      // Use staticData from second argument
+      actualStaticData = worldOrBossName;
+    } else {
+      // Called with (snapshot, worldOrBossName, bossName, staticData)
+      bossName = bossNameOrStaticData;
+      actualStaticData = staticData;
     }
 
+    // Calculate player strength based on current upgrades
     const life = snapshot?.inventory?.["Life Upgrade"] || 0;
     const sword = snapshot?.inventory?.["Mea Culpa Upgrade"] || 0;
     const fervour = snapshot?.inventory?.["Fervour Upgrade"] || 0;
-    const flasks = this.flasks(snapshot, staticData);
-    const quicksilver = this.quicksilver(snapshot, staticData);
+    const flasks = this.flasks(snapshot, actualStaticData);
+    const quicksilver = this.quicksilver(snapshot, actualStaticData);
 
     // Calculate player strength (normalized 0-1 scale)
     const playerStrength = (
@@ -300,15 +311,24 @@ export const helperFunctions = {
       "legionary": 0.20
     };
 
+    // Default difficulty adjustment (assume normal difficulty = 1)
+    // Without difficulty setting, use normal: bossStrength + 0 (no adjustment)
+    const difficulty = actualStaticData?.settings?.[snapshot.player]?.difficulty ?? 1;
+    const adjustment = difficulty >= 2 ? -0.10 : (difficulty >= 1 ? 0 : 0.10);
+
+    if (!bossName) {
+      // No boss specified - check if player can beat the easiest bosses
+      // Easiest bosses are warden (-0.10) and perpetua (-0.05)
+      // Return true only if player strength >= 0 (after difficulty adjustment of +0.10 for easiest)
+      // This means with 0 upgrades (playerStrength = 0), can beat bosses with threshold <= -0.10
+      const easiestThreshold = -0.10; // warden's threshold
+      return playerStrength >= (easiestThreshold + adjustment);
+    }
+
     const bossStrength = bosses[bossName];
     if (bossStrength === undefined) {
       return false; // Unknown boss
     }
-
-    // Default difficulty adjustment (assume normal difficulty = 1)
-    // Without difficulty setting, use normal: bossStrength + 0 (no adjustment)
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
-    const adjustment = difficulty >= 2 ? -0.10 : (difficulty >= 1 ? 0 : 0.10);
 
     return playerStrength >= (bossStrength + adjustment);
   },
@@ -338,7 +358,8 @@ export const helperFunctions = {
     let total = 0;
     for (const subDoors of doorGroups) {
       for (const door of subDoors) {
-        if (snapshot?.regions?.includes(door)) {
+        const status = snapshot?.regionReachability?.[door];
+        if (status === 'reachable' || status === 'checked') {
           total++;
           break; // Only count one door per group
         }
@@ -351,67 +372,67 @@ export const helperFunctions = {
    * Boss defeat helpers - delegate to has_boss_strength
    */
   can_beat_brotherhood_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "warden");
+    return this.has_boss_strength(snapshot, 'world', "warden", staticData);
   },
 
   can_beat_mercy_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "ten-piedad");
+    return this.has_boss_strength(snapshot, 'world', "ten-piedad", staticData);
   },
 
   can_beat_convent_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "charred-visage");
+    return this.has_boss_strength(snapshot, 'world', "charred-visage", staticData);
   },
 
   can_beat_grievance_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "tres-angustias");
+    return this.has_boss_strength(snapshot, 'world', "tres-angustias", staticData);
   },
 
   can_beat_bridge_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "esdras");
+    return this.has_boss_strength(snapshot, 'world', "esdras", staticData);
   },
 
   can_beat_mothers_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "melquiades");
+    return this.has_boss_strength(snapshot, 'world', "melquiades", staticData);
   },
 
   can_beat_canvases_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "exposito");
+    return this.has_boss_strength(snapshot, 'world', "exposito", staticData);
   },
 
   can_beat_prison_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "quirce");
+    return this.has_boss_strength(snapshot, 'world', "quirce", staticData);
   },
 
   can_beat_rooftops_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "crisanta");
+    return this.has_boss_strength(snapshot, 'world', "crisanta", staticData);
   },
 
   can_beat_ossuary_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "isidora");
+    return this.has_boss_strength(snapshot, 'world', "isidora", staticData);
   },
 
   can_beat_mourning_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "sierpes");
+    return this.has_boss_strength(snapshot, 'world', "sierpes", staticData);
   },
 
   can_beat_graveyard_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "amanecida");
+    return this.has_boss_strength(snapshot, 'world', "amanecida", staticData);
   },
 
   can_beat_jondo_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "amanecida");
+    return this.has_boss_strength(snapshot, 'world', "amanecida", staticData);
   },
 
   can_beat_patio_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "amanecida");
+    return this.has_boss_strength(snapshot, 'world', "amanecida", staticData);
   },
 
   can_beat_wall_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "amanecida");
+    return this.has_boss_strength(snapshot, 'world', "amanecida", staticData);
   },
 
   can_beat_hall_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, staticData, "laudes");
+    return this.has_boss_strength(snapshot, 'world', "laudes", staticData);
   },
 
   canBeatBrotherhoodBoss(snapshot, staticData) {
@@ -487,14 +508,23 @@ export const helperFunctions = {
    * Check if Desecrated Cistern gate E is opened
    */
   openedDCGateE(snapshot, staticData) {
-    return this.has(snapshot, staticData, "DC Gate E");
+    // Check if the gate has been opened from either side
+    // The D01Z04S09[W] check creates a circular dependency, so we only check D01Z05S10[SE]
+    // Once we can reach D01Z05S10[SE], the gate is considered open
+    return this.can_reach_region(snapshot, staticData, "D01Z05S10[SE]");
   },
 
   /**
    * Check if Desecrated Cistern ladder is opened
+   * The ladder can be opened from either side:
+   * - From above (D01Z05S25[NE])
+   * - From below (D01Z05S02[S])
    */
   openedDCLadder(snapshot, staticData) {
-    return this.has(snapshot, staticData, "DC Ladder");
+    return (
+      this.can_reach_region(snapshot, staticData, "D01Z05S25[NE]") ||
+      this.can_reach_region(snapshot, staticData, "D01Z05S02[S]")
+    );
   },
 
   /**
@@ -631,27 +661,32 @@ export const helperFunctions = {
    * Count Redento rooms visited
    */
   redento_rooms(snapshot, staticData) {
-    const regions = snapshot?.regions || [];
+    const reachability = snapshot?.regionReachability || {};
+    const isReachable = (region) => {
+      const status = reachability[region];
+      return status === 'reachable' || status === 'checked';
+    };
+
     let count = 0;
 
     // First meeting
-    if (regions.includes("D03Z01S04[E]") || regions.includes("D03Z02S10[N]")) {
+    if (isReachable("D03Z01S04[E]") || isReachable("D03Z02S10[N]")) {
       count = 1;
 
       // Second meeting
-      if (regions.includes("D17Z01S05[S]") || regions.includes("D17BZ02S01[FrontR]")) {
+      if (isReachable("D17Z01S05[S]") || isReachable("D17BZ02S01[FrontR]")) {
         count = 2;
 
         // Third meeting
-        if (regions.includes("D01Z03S04[E]") || regions.includes("D08Z01S01[W]")) {
+        if (isReachable("D01Z03S04[E]") || isReachable("D08Z01S01[W]")) {
           count = 3;
 
           // Fourth meeting
-          if (regions.includes("D04Z01S03[E]") || regions.includes("D04Z02S01[W]")) {
+          if (isReachable("D04Z01S03[E]") || isReachable("D04Z02S01[W]")) {
             count = 4;
 
             // Fifth meeting (assuming there's more to the pattern)
-            if (regions.includes("D05Z02S12[E]") || regions.includes("D09Z01S01[E]")) {
+            if (isReachable("D05Z02S12[E]") || isReachable("D09Z01S01[E]")) {
               count = 5;
             }
           }
@@ -714,16 +749,94 @@ export const helperFunctions = {
   },
 
   /**
+   * Prayer helpers matching Python Rules.py
+   */
+  debla(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Debla of the Lights");
+  },
+
+  lorquiana(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Lorquiana");
+  },
+
+  zarabanda(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Zarabanda of the Safe Haven");
+  },
+
+  taranto(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Taranto to my Sister");
+  },
+
+  verdiales(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Verdiales of the Forsaken Hamlet");
+  },
+
+  cante(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Cante Jondo of the Three Sisters");
+  },
+
+  cantina(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Cantina of the Blue Rose");
+  },
+
+  tiento(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Tiento to my Sister");
+  },
+
+  aubade(snapshot, staticData) {
+    return (
+      this.has(snapshot, staticData, "Aubade of the Nameless Guardian") &&
+      this.total_fervour(snapshot, staticData) >= 90
+    );
+  },
+
+  tirana(snapshot, staticData) {
+    return (
+      this.has(snapshot, staticData, "Tirana of the Celestial Bastion") &&
+      this.total_fervour(snapshot, staticData) >= 90
+    );
+  },
+
+  ruby(snapshot, staticData) {
+    return this.has(snapshot, staticData, "Cloistered Ruby");
+  },
+
+  pillar(snapshot, staticData) {
+    return (
+      this.debla(snapshot, staticData) ||
+      this.taranto(snapshot, staticData) ||
+      this.ruby(snapshot, staticData)
+    );
+  },
+
+  any_small_prayer(snapshot, staticData) {
+    return (
+      this.debla(snapshot, staticData) ||
+      this.lorquiana(snapshot, staticData) ||
+      this.zarabanda(snapshot, staticData) ||
+      this.taranto(snapshot, staticData) ||
+      this.verdiales(snapshot, staticData) ||
+      this.cante(snapshot, staticData) ||
+      this.cantina(snapshot, staticData) ||
+      this.tiento(snapshot, staticData) ||
+      this.has(snapshot, staticData, "Campanillero to the Sons of the Aurora") ||
+      this.has(snapshot, staticData, "Mirabras of the Return to Port") ||
+      this.has(snapshot, staticData, "Romance to the Crimson Mist") ||
+      this.has(snapshot, staticData, "Saeta Dolorosa") ||
+      this.has(snapshot, staticData, "Seguiriya to your Eyes like Stars") ||
+      this.has(snapshot, staticData, "Verdiales of the Forsaken Hamlet") ||
+      this.has(snapshot, staticData, "Zambra to the Resplendent Crown")
+    );
+  },
+
+  /**
    * Check if player can use any prayer
    */
   can_use_any_prayer(snapshot, staticData) {
     return (
-      this.has(snapshot, staticData, "Debla of the Lights") ||
-      this.has(snapshot, staticData, "Taranto to my Sister") ||
-      this.has(snapshot, staticData, "Verdiales of the Forsaken Hamlet") ||
-      this.has(snapshot, staticData, "Zarabanda of the Safe Haven") ||
-      this.has(snapshot, staticData, "Tirana") ||
-      this.has(snapshot, staticData, "Aubade")
+      this.any_small_prayer(snapshot, staticData) ||
+      this.tirana(snapshot, staticData) ||
+      this.aubade(snapshot, staticData)
     );
   },
 
@@ -814,9 +927,10 @@ export const helperFunctions = {
       "D17Z01S04[W]"
     ];
 
-    return doors.filter(door =>
-      snapshot?.regions?.includes(door) || false
-    ).length;
+    return doors.filter(door => {
+      const status = snapshot?.regionReachability?.[door];
+      return status === 'reachable' || status === 'checked';
+    }).length;
   },
 
   /**
@@ -836,7 +950,8 @@ export const helperFunctions = {
     let total = 0;
     for (const subDoors of doorGroups) {
       for (const door of subDoors) {
-        if (snapshot?.regions?.includes(door)) {
+        const status = snapshot?.regionReachability?.[door];
+        if (status === 'reachable' || status === 'checked') {
           total++;
           break; // Only count one door per group
         }
@@ -857,9 +972,10 @@ export const helperFunctions = {
       "D06Z01S17[E]"
     ];
 
-    return doors.filter(door =>
-      snapshot?.regions?.includes(door) || false
-    ).length;
+    return doors.filter(door => {
+      const status = snapshot?.regionReachability?.[door];
+      return status === 'reachable' || status === 'checked';
+    }).length;
   },
 
   /**
@@ -869,5 +985,75 @@ export const helperFunctions = {
     // This would need the actual implementation from the Python code
     // For now return 0
     return 0;
+  },
+
+  /**
+   * Check if player can perform water jump
+   * Requires either Nail Uprooted from Dirt OR Purified Hand of the Nun (double jump)
+   */
+  canWaterJump(snapshot, staticData) {
+    return (
+      this.nail(snapshot, staticData) ||
+      this.double_jump(snapshot, staticData)
+    );
+  },
+
+  /**
+   * Check if player can walk on roots (camelCase version for exported rules)
+   */
+  canWalkOnRoot(snapshot, staticData) {
+    return this.root(snapshot, staticData);
+  },
+
+  /**
+   * Check if player can perform air stall (camelCase version for exported rules)
+   */
+  canAirStall(snapshot, staticData) {
+    return this.can_air_stall(snapshot, staticData);
+  },
+
+  /**
+   * Count unique masks in inventory
+   */
+  masks(snapshot, staticData) {
+    const maskItems = [
+      "Deformed Mask of Orestes",
+      "Mirrored Mask of Dolphos",
+      "Embossed Mask of Crescente"
+    ];
+    return maskItems.filter(mask => this.has(snapshot, staticData, mask)).length;
+  },
+
+  /**
+   * Check if player has at least 2 masks
+   */
+  masks2(snapshot, staticData) {
+    return this.masks(snapshot, staticData) >= 2;
+  },
+
+  /**
+   * Check if player has all 3 masks
+   */
+  masks3(snapshot, staticData) {
+    return this.masks(snapshot, staticData) >= 3;
+  },
+
+  /**
+   * Check if the Mother of Mothers ladder has been opened
+   * The ladder is opened if any of these regions have been reached
+   */
+  openedMoMLadder(snapshot, staticData) {
+    const regions = [
+      "D04Z02S11[E]",
+      "D04Z02S09[W]",
+      "D06Z01S23[S]",
+      "D04Z02S04[N]"
+    ];
+
+    const reachability = snapshot?.regionReachability || {};
+    return regions.some(region => {
+      const status = reachability[region];
+      return status === 'reachable' || status === 'checked';
+    });
   },
 };

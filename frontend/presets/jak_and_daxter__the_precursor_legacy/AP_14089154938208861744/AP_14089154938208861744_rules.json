@@ -74,6 +74,7 @@
           {
             "name": "GR: Free 7 Scout Flies",
             "id": 741000095,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -106,6 +107,7 @@
           {
             "name": "SV: Free 7 Scout Flies",
             "id": 741000075,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -138,6 +140,7 @@
           {
             "name": "FJ: Free 7 Scout Flies",
             "id": 741000007,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -170,6 +173,7 @@
           {
             "name": "SB: Free 7 Scout Flies",
             "id": 741000020,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -202,6 +206,7 @@
           {
             "name": "MI: Free 7 Scout Flies",
             "id": 741000028,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -234,6 +239,7 @@
           {
             "name": "FC: Free 7 Scout Flies",
             "id": 741000068,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -266,6 +272,7 @@
           {
             "name": "RV: Free 7 Scout Flies",
             "id": 741000076,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -298,6 +305,7 @@
           {
             "name": "PB: Free 7 Scout Flies",
             "id": 741000057,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -330,6 +338,7 @@
           {
             "name": "LPC: Free 7 Scout Flies",
             "id": 741000049,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -362,6 +371,7 @@
           {
             "name": "BS: Free 7 Scout Flies",
             "id": 741000043,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -394,6 +404,7 @@
           {
             "name": "MP: Free 7 Scout Flies",
             "id": 741000088,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -426,6 +437,7 @@
           {
             "name": "VC: Free 7 Scout Flies",
             "id": 741000077,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -458,6 +470,7 @@
           {
             "name": "SC: Free 7 Scout Flies",
             "id": 741000085,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -490,6 +503,7 @@
           {
             "name": "SM: Free 7 Scout Flies",
             "id": 741000065,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -522,6 +536,7 @@
           {
             "name": "LT: Free 7 Scout Flies",
             "id": 741000090,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -554,6 +569,7 @@
           {
             "name": "GMC: Free 7 Scout Flies",
             "id": 741000091,
+            "region": "'Free 7 Scout Flies' Power Cells",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -633,16 +649,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -652,16 +662,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut"
                       ]
                     }
                   ]
@@ -690,6 +694,7 @@
           {
             "name": "GR: Find The Cell On The Path",
             "id": 741000092,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -708,6 +713,7 @@
           {
             "name": "GR: Open The Precursor Door",
             "id": 741000093,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -726,6 +732,7 @@
           {
             "name": "GR: Scout Fly On Ground, Front",
             "id": 741001119,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -744,6 +751,7 @@
           {
             "name": "GR: Scout Fly On Ground, Back",
             "id": 741001759,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -762,6 +770,7 @@
           {
             "name": "GR: Scout Fly On Left Ledge",
             "id": 741001887,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -780,6 +789,7 @@
           {
             "name": "GR: Scout Fly On Right Ledge",
             "id": 741001247,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -798,6 +808,7 @@
           {
             "name": "GR: Scout Fly On Middle Ledge, Left",
             "id": 741001631,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -816,6 +827,7 @@
           {
             "name": "GR: Scout Fly On Middle Ledge, Right",
             "id": 741001375,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -834,6 +846,7 @@
           {
             "name": "GR: Scout Fly On Top Ledge",
             "id": 741001503,
+            "region": "Geyser Rock Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -888,6 +901,7 @@
           {
             "name": "GR: Climb Up The Cliff",
             "id": 741000094,
+            "region": "Geyser Rock Cliff",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -973,16 +987,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -992,20 +1000,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -1035,16 +1034,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -1054,20 +1047,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -1090,16 +1074,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     }
                   ]
@@ -1109,16 +1087,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -1193,6 +1165,7 @@
           {
             "name": "SV: Herd The Yakows Into The Pen",
             "id": 741000010,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1211,6 +1184,7 @@
           {
             "name": "SV: Bring 90 Orbs To The Mayor",
             "id": 741000011,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1250,6 +1224,7 @@
           {
             "name": "SV: Bring 90 Orbs to Your Uncle",
             "id": 741000012,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1289,6 +1264,7 @@
           {
             "name": "SV: Scout Fly In Fisherman's House",
             "id": 741001611,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1307,6 +1283,7 @@
           {
             "name": "SV: Scout Fly In Mayor's House",
             "id": 741001739,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1325,6 +1302,7 @@
           {
             "name": "SV: Scout Fly Under Bridge",
             "id": 741001355,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1343,6 +1321,7 @@
           {
             "name": "SV: Scout Fly Behind Sculptor's House",
             "id": 741001227,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1361,6 +1340,7 @@
           {
             "name": "SV: Scout Fly In Farmer's House",
             "id": 741001483,
+            "region": "Sandover Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1377,16 +1357,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -1448,6 +1422,7 @@
           {
             "name": "Orb Cache in Sandover Village",
             "id": 741004096,
+            "region": "Sandover Village Orb Cache Cliff",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1502,6 +1477,7 @@
           {
             "name": "SV: Scout Fly Overlooking Farmer's House",
             "id": 741001099,
+            "region": "Sandover Village Yakow Cliff",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -1558,6 +1534,7 @@
           {
             "name": "SV: Bring 120 Orbs To The Oracle (1)",
             "id": 741000013,
+            "region": "Sandover Village Oracle Platforms",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1597,6 +1574,7 @@
           {
             "name": "SV: Bring 120 Orbs To The Oracle (2)",
             "id": 741000014,
+            "region": "Sandover Village Oracle Platforms",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1636,6 +1614,7 @@
           {
             "name": "SV: Scout Fly Near Oracle",
             "id": 741001867,
+            "region": "Sandover Village Oracle Platforms",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -1746,6 +1725,7 @@
           {
             "name": "FJ: Scout Fly At End Of Path",
             "id": 741001799,
+            "region": "Forbidden Jungle Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1834,6 +1814,7 @@
           {
             "name": "FJ: Connect The Eco Beams",
             "id": 741000003,
+            "region": "Forbidden Jungle Lurker Machine",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -1854,6 +1835,7 @@
           {
             "name": "FJ: Open The Locked Temple Door",
             "id": 741000009,
+            "region": "Forbidden Jungle Lurker Machine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1872,6 +1854,7 @@
           {
             "name": "FJ: Scout Fly Behind Lurker Machine",
             "id": 741001287,
+            "region": "Forbidden Jungle Lurker Machine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1982,6 +1965,7 @@
           {
             "name": "FJ: Catch 200 Pounds Of Fish",
             "id": 741000005,
+            "region": "Forbidden Jungle River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2000,6 +1984,7 @@
           {
             "name": "FJ: Follow The Canyon To The Sea",
             "id": 741000008,
+            "region": "Forbidden Jungle River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2018,6 +2003,7 @@
           {
             "name": "FJ: Scout Fly Near Dark Eco Boxes",
             "id": 741001031,
+            "region": "Forbidden Jungle River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2036,6 +2022,7 @@
           {
             "name": "FJ: Scout Fly At End Of River",
             "id": 741001415,
+            "region": "Forbidden Jungle River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2054,6 +2041,7 @@
           {
             "name": "Fisherman's Boat",
             "id": 741002053,
+            "region": "Forbidden Jungle River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2072,6 +2060,7 @@
           {
             "name": "Orb Cache in Forbidden Jungle",
             "id": 741004121,
+            "region": "Forbidden Jungle River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2170,6 +2159,7 @@
           {
             "name": "FJ: Scout Fly On Spiral Of Stumps",
             "id": 741001543,
+            "region": "Forbidden Jungle Temple Exit",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -2249,6 +2239,7 @@
           {
             "name": "FJ: Get To The Top Of The Temple",
             "id": 741000004,
+            "region": "Forbidden Jungle Temple Exterior",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2267,6 +2258,7 @@
           {
             "name": "FJ: Scout Fly Around Temple Spire",
             "id": 741001671,
+            "region": "Forbidden Jungle Temple Exterior",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2285,6 +2277,7 @@
           {
             "name": "FJ: Scout Fly On Top Of Temple",
             "id": 741001159,
+            "region": "Forbidden Jungle Temple Exterior",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2303,6 +2296,7 @@
           {
             "name": "Jungle Elevator",
             "id": 741002052,
+            "region": "Forbidden Jungle Temple Exterior",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2360,6 +2354,7 @@
           {
             "name": "FJ: Find The Blue Vent Switch",
             "id": 741000002,
+            "region": "Forbidden Jungle Temple Interior (Pre Blue Eco)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2378,6 +2373,7 @@
           {
             "name": "Blue Eco Switch",
             "id": 741002050,
+            "region": "Forbidden Jungle Temple Interior (Pre Blue Eco)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2434,6 +2430,7 @@
           {
             "name": "FJ: Defeat The Dark Eco Plant",
             "id": 741000006,
+            "region": "Forbidden Jungle Temple Interior (Post Blue Eco)",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -2587,16 +2584,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -2609,16 +2600,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -2635,16 +2620,10 @@
                           "method": "has_all",
                           "args": [
                             {
-                              "type": "list",
+                              "type": "constant",
                               "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Crouch"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Crouch Uppercut"
-                                }
+                                "Crouch",
+                                "Crouch Uppercut"
                               ]
                             },
                             {
@@ -2658,16 +2637,10 @@
                           "method": "has_all",
                           "args": [
                             {
-                              "type": "list",
+                              "type": "constant",
                               "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Punch"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Punch Uppercut"
-                                }
+                                "Punch",
+                                "Punch Uppercut"
                               ]
                             },
                             {
@@ -2708,16 +2681,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -2734,16 +2701,10 @@
                           "method": "has_all",
                           "args": [
                             {
-                              "type": "list",
+                              "type": "constant",
                               "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Crouch"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Crouch Uppercut"
-                                }
+                                "Crouch",
+                                "Crouch Uppercut"
                               ]
                             },
                             {
@@ -2757,16 +2718,10 @@
                           "method": "has_all",
                           "args": [
                             {
-                              "type": "list",
+                              "type": "constant",
                               "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Punch"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Punch Uppercut"
-                                }
+                                "Punch",
+                                "Punch Uppercut"
                               ]
                             },
                             {
@@ -2806,6 +2761,7 @@
           {
             "name": "SB: Chase The Seagulls",
             "id": 741000018,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2824,6 +2780,7 @@
           {
             "name": "SB: Explore The Beach",
             "id": 741000021,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2842,6 +2799,7 @@
           {
             "name": "SB: Climb The Sentinel",
             "id": 741000022,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2860,6 +2818,7 @@
           {
             "name": "SB: Scout Fly At Entrance",
             "id": 741001684,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2878,6 +2837,7 @@
           {
             "name": "SB: Scout Fly Overlooking Locked Boxes",
             "id": 741001044,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2896,6 +2856,7 @@
           {
             "name": "SB: Scout Fly On Path To Flut Flut",
             "id": 741001172,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2914,6 +2875,7 @@
           {
             "name": "SB: Scout Fly Under Wood Pillars",
             "id": 741001556,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2932,6 +2894,7 @@
           {
             "name": "SB: Scout Fly On Sentinel",
             "id": 741001812,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2964,6 +2927,7 @@
           {
             "name": "Orb Cache near Flut Flut Egg",
             "id": 741006386,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2982,6 +2946,7 @@
           {
             "name": "Orb Cache near Pelican's Nest",
             "id": 741006387,
+            "region": "Sentinel Beach Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3036,6 +3001,7 @@
           {
             "name": "SB: Get The Power Cell From The Pelican",
             "id": 741000016,
+            "region": "Sentinel Beach Pelican",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -3092,26 +3058,18 @@
           {
             "name": "SB: Push The Flut Flut Egg Off The Cliff",
             "id": 741000017,
+            "region": "Sentinel Beach Flut Flut Egg",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Punch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Kick"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jump Kick"
-                    }
+                    "Jump Kick",
+                    "Kick",
+                    "Punch"
                   ]
                 }
               ]
@@ -3129,26 +3087,18 @@
           {
             "name": "Flut Flut",
             "id": 741002065,
+            "region": "Sentinel Beach Flut Flut Egg",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Punch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Kick"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jump Kick"
-                    }
+                    "Jump Kick",
+                    "Kick",
+                    "Punch"
                   ]
                 }
               ]
@@ -3202,6 +3152,7 @@
           {
             "name": "SB: Unblock The Eco Harvesters",
             "id": 741000015,
+            "region": "Sentinel Beach Eco Harvesters",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -3258,6 +3209,7 @@
           {
             "name": "SB: Scout Fly Overlooking Green Eco Vents",
             "id": 741001300,
+            "region": "Sentinel Beach Ridge Near Green Vents",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -3314,6 +3266,7 @@
           {
             "name": "SB: Scout Fly Overlooking Blue Eco Vent",
             "id": 741001428,
+            "region": "Sentinel Beach Ridge Near Blue Vent",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3382,6 +3335,7 @@
           {
             "name": "SB: Launch Up To The Cannon Tower",
             "id": 741000019,
+            "region": "Sentinel Beach Cannon Tower",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -3553,6 +3507,7 @@
           {
             "name": "MI: Catch The Sculptor's Muse",
             "id": 741000023,
+            "region": "Misty Island Muse Course",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3571,6 +3526,7 @@
           {
             "name": "MI: Scout Fly Overlooking Entrance",
             "id": 741001692,
+            "region": "Misty Island Muse Course",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -3618,16 +3574,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Crouch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Crouch Jump"
-                    }
+                    "Crouch",
+                    "Crouch Jump"
                   ]
                 }
               ]
@@ -3642,6 +3592,7 @@
           {
             "name": "MI: Destroy the Balloon Lurkers",
             "id": 741000027,
+            "region": "Misty Island Zoomer",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3660,6 +3611,7 @@
           {
             "name": "MI: Use Zoomer To Reach Power Cell",
             "id": 741000029,
+            "region": "Misty Island Zoomer",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3678,6 +3630,7 @@
           {
             "name": "MI: Scout Fly On Zoomer Ramps",
             "id": 741001820,
+            "region": "Misty Island Zoomer",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3766,6 +3719,7 @@
           {
             "name": "MI: Climb The Lurker Ship",
             "id": 741000024,
+            "region": "Misty Island Ship",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3784,6 +3738,7 @@
           {
             "name": "MI: Scout Fly On Ship",
             "id": 741001308,
+            "region": "Misty Island Ship",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -3885,16 +3840,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -3960,6 +3909,7 @@
           {
             "name": "MI: Scout Fly On Ledge Near Arena Exit",
             "id": 741001052,
+            "region": "Misty Island Far Side Cliff",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -4003,6 +3953,7 @@
           {
             "name": "Orb Cache on Misty Island",
             "id": 741004824,
+            "region": "Misty Island Far Side Orb Cache",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -4069,6 +4020,7 @@
           {
             "name": "MI: Scout Fly On Barrel Ramps",
             "id": 741001436,
+            "region": "Misty Island Barrel Course",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -4149,6 +4101,7 @@
           {
             "name": "MI: Stop The Cannon",
             "id": 741000026,
+            "region": "Misty Island Cannon",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -4237,6 +4190,7 @@
           {
             "name": "MI: Scout Fly On Ledge Near Arena Entrance",
             "id": 741001180,
+            "region": "Misty Island Upper Arena Approach",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -4257,6 +4211,7 @@
           {
             "name": "MI: Scout Fly Near Arena Door",
             "id": 741001564,
+            "region": "Misty Island Upper Arena Approach",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -4324,16 +4279,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Crouch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Crouch Jump"
-                    }
+                    "Crouch",
+                    "Crouch Jump"
                   ]
                 }
               ]
@@ -4362,6 +4311,7 @@
           {
             "name": "MI: Use Blue Eco To Reach Power Cell",
             "id": 741000030,
+            "region": "Misty Island Lower Arena Approach",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4458,6 +4408,7 @@
           {
             "name": "MI: Return To The Dark Eco Pool",
             "id": 741000025,
+            "region": "Misty Island Arena",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -4514,6 +4465,7 @@
           {
             "name": "FC: Reach The End Of Fire Canyon",
             "id": 741000069,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4532,6 +4484,7 @@
           {
             "name": "FC: Scout Fly 1",
             "id": 741001860,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4550,6 +4503,7 @@
           {
             "name": "FC: Scout Fly 2",
             "id": 741001092,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4568,6 +4522,7 @@
           {
             "name": "FC: Scout Fly 3",
             "id": 741001220,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4586,6 +4541,7 @@
           {
             "name": "FC: Scout Fly 4",
             "id": 741001476,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4604,6 +4560,7 @@
           {
             "name": "FC: Scout Fly 5",
             "id": 741001348,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4622,6 +4579,7 @@
           {
             "name": "FC: Scout Fly 6",
             "id": 741001604,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4640,6 +4598,7 @@
           {
             "name": "FC: Scout Fly 7",
             "id": 741001732,
+            "region": "Fire Canyon Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4705,16 +4664,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Roll"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Roll Jump"
-                    }
+                    "Roll",
+                    "Roll Jump"
                   ]
                 }
               ]
@@ -4768,6 +4721,7 @@
           {
             "name": "RV: Bring 90 Orbs To The Gambler",
             "id": 741000031,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4807,6 +4761,7 @@
           {
             "name": "RV: Bring 90 Orbs To The Geologist",
             "id": 741000032,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4846,6 +4801,7 @@
           {
             "name": "RV: Bring 90 Orbs To The Warrior",
             "id": 741000033,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4885,6 +4841,7 @@
           {
             "name": "RV: Bring 120 Orbs To The Oracle (1)",
             "id": 741000034,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4924,6 +4881,7 @@
           {
             "name": "RV: Bring 120 Orbs To The Oracle (2)",
             "id": 741000035,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4963,6 +4921,7 @@
           {
             "name": "RV: Scout Fly Behind Geologist",
             "id": 741001484,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4981,6 +4940,7 @@
           {
             "name": "RV: Scout Fly Behind Fiery Boulder",
             "id": 741001612,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4999,6 +4959,7 @@
           {
             "name": "RV: Scout Fly Behind Sage's Hut",
             "id": 741001100,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -5019,6 +4980,7 @@
           {
             "name": "RV: Scout Fly Near Waterfall",
             "id": 741001356,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -5039,6 +5001,7 @@
           {
             "name": "RV: Scout Fly On Dock",
             "id": 741001228,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -5059,6 +5022,7 @@
           {
             "name": "RV: Scout Fly At Pontoon Bridge",
             "id": 741001740,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -5079,6 +5043,7 @@
           {
             "name": "Warrior's Pontoons",
             "id": 741002081,
+            "region": "Rock Village Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5133,22 +5098,17 @@
           {
             "name": "Orb Cache in Rock Village",
             "id": 741004697,
+            "region": "Rock Village Orb Cache",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Roll"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Roll Jump"
-                    }
+                    "Roll",
+                    "Roll Jump"
                   ]
                 }
               ]
@@ -5228,16 +5188,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -5247,20 +5201,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -5289,6 +5234,7 @@
           {
             "name": "RV: Scout Fly At Boggy Swamp Entrance",
             "id": 741001868,
+            "region": "Rock Village Pontoon Bridge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5384,6 +5330,7 @@
           {
             "name": "PB: Herd The Moles Into Their Hole",
             "id": 741000054,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5402,6 +5349,7 @@
           {
             "name": "PB: Catch The Flying Lurkers",
             "id": 741000053,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5420,6 +5368,7 @@
           {
             "name": "PB: Beat Record Time On The Gorge",
             "id": 741000052,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5438,6 +5387,7 @@
           {
             "name": "PB: Get The Power Cell Over The Lake",
             "id": 741000056,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5456,6 +5406,7 @@
           {
             "name": "PB: Cure Dark Eco Infected Plants",
             "id": 741000055,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5474,6 +5425,7 @@
           {
             "name": "PB: Navigate The Purple Precursor Rings",
             "id": 741000058,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5492,6 +5444,7 @@
           {
             "name": "PB: Navigate The Blue Precursor Rings",
             "id": 741000059,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5510,6 +5463,7 @@
           {
             "name": "PB: Scout Fly Overlooking Entrance",
             "id": 741001465,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5528,6 +5482,7 @@
           {
             "name": "PB: Scout Fly Near Mole Hole",
             "id": 741001849,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5546,6 +5501,7 @@
           {
             "name": "PB: Scout Fly At Purple Ring Start",
             "id": 741001337,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5564,6 +5520,7 @@
           {
             "name": "PB: Scout Fly Near Dark Eco Plant, Above",
             "id": 741001209,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5582,6 +5539,7 @@
           {
             "name": "PB: Scout Fly At Blue Ring Start",
             "id": 741001081,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5600,6 +5558,7 @@
           {
             "name": "PB: Scout Fly Before Big Jump",
             "id": 741001593,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5618,6 +5577,7 @@
           {
             "name": "PB: Scout Fly Near Dark Eco Plant, Below",
             "id": 741001721,
+            "region": "Precursor Basin Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5819,16 +5779,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Jump Dive"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Double Jump"
-                    }
+                    "Double Jump",
+                    "Jump Dive"
                   ]
                 }
               ]
@@ -5843,6 +5797,7 @@
           {
             "name": "LPC: Scout Fly First Room",
             "id": 741001585,
+            "region": "Lost Precursor City First Chamber (Lower)",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -5890,16 +5845,10 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Jump Dive"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Double Jump"
-                    }
+                    "Double Jump",
+                    "Jump Dive"
                   ]
                 }
               ]
@@ -5914,22 +5863,17 @@
           {
             "name": "Orb Cache in First Sunken Chamber",
             "id": 741008259,
+            "region": "Lost Precursor City First Chamber Orb Cache",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Jump Dive"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Double Jump"
-                    }
+                    "Double Jump",
+                    "Jump Dive"
                   ]
                 }
               ]
@@ -6005,6 +5949,7 @@
           {
             "name": "LPC: Scout Fly Before Second Room",
             "id": 741001329,
+            "region": "Lost Precursor City First Hallway",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -6083,6 +6028,7 @@
           {
             "name": "LPC: Follow The Colored Pipes",
             "id": 741000045,
+            "region": "Lost Precursor City Second Chamber",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6104,6 +6050,7 @@
           {
             "name": "LPC: Scout Fly Second Room, Green Pipe",
             "id": 741001073,
+            "region": "Lost Precursor City Second Chamber",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6125,6 +6072,7 @@
           {
             "name": "LPC: Scout Fly Second Room, Blue Pipe",
             "id": 741001201,
+            "region": "Lost Precursor City Second Chamber",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6146,6 +6094,7 @@
           {
             "name": "LPC: Scout Fly Second Room, On Path To Cell",
             "id": 741001457,
+            "region": "Lost Precursor City Second Chamber",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -6166,6 +6115,7 @@
           {
             "name": "LPC: Scout Fly Second Room, Near Orb Vent",
             "id": 741001841,
+            "region": "Lost Precursor City Second Chamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6184,6 +6134,7 @@
           {
             "name": "Orb Cache in Second Sunken Chamber",
             "id": 741008590,
+            "region": "Lost Precursor City Second Chamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6282,6 +6233,7 @@
           {
             "name": "LPC: Reach The Center Of The Complex",
             "id": 741000051,
+            "region": "Lost Precursor City Center of the Complex",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6336,6 +6288,7 @@
           {
             "name": "LPC: Match The Platform Colors",
             "id": 741000044,
+            "region": "Lost Precursor City Color Platforms",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -6414,6 +6367,7 @@
           {
             "name": "LPC: Quickly Cross The Dangerous Pool",
             "id": 741000048,
+            "region": "Lost Precursor City Quick Platforms",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6521,6 +6475,7 @@
           {
             "name": "LPC: Raise The Chamber",
             "id": 741000047,
+            "region": "Lost Precursor City Capsule Chamber",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6540,16 +6495,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         }
                       ]
@@ -6559,16 +6508,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Punch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Punch Uppercut"
-                            }
+                            "Punch",
+                            "Punch Uppercut"
                           ]
                         }
                       ]
@@ -6590,6 +6533,7 @@
           {
             "name": "LPC: Scout Fly Across Steam Vents",
             "id": 741001713,
+            "region": "Lost Precursor City Capsule Chamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6638,16 +6582,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -6657,16 +6595,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     }
                   ]
@@ -6683,6 +6615,7 @@
           {
             "name": "LPC: Reach The Bottom Of The City",
             "id": 741000046,
+            "region": "Lost Precursor City Second Slide",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6692,16 +6625,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -6711,16 +6638,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     }
                   ]
@@ -6790,6 +6711,7 @@
           {
             "name": "LPC: Climb The Slide Tube",
             "id": 741000050,
+            "region": "Lost Precursor City Helix Chamber",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6872,16 +6794,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -6895,16 +6811,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -6925,6 +6835,7 @@
           {
             "name": "BS: Scout Fly Near Entrance",
             "id": 741001067,
+            "region": "Boggy Swamp Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7058,6 +6969,7 @@
           {
             "name": "BS: Scout Fly Over First Jump Pad",
             "id": 741001835,
+            "region": "Boggy Swamp First Jump Pad",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7148,16 +7060,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     }
                   ]
@@ -7167,16 +7073,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -7217,6 +7117,7 @@
           {
             "name": "BS: Break The Tethers To The Zeppelin (4)",
             "id": 741000042,
+            "region": "Boggy Swamp First Tether",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7306,6 +7207,7 @@
           {
             "name": "BS: Scout Fly Over Second Jump Pad",
             "id": 741001195,
+            "region": "Boggy Swamp Second Jump Pad",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7432,16 +7334,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     },
                     {
@@ -7455,16 +7351,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut"
                       ]
                     },
                     {
@@ -7478,16 +7368,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -7520,6 +7404,7 @@
           {
             "name": "BS: Break The Tethers To The Zeppelin (1)",
             "id": 741000039,
+            "region": "Boggy Swamp Second Tether",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7540,16 +7425,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     },
                     {
@@ -7563,16 +7442,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut"
                       ]
                     },
                     {
@@ -7586,16 +7459,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -7721,6 +7588,7 @@
           {
             "name": "BS: Scout Fly Across Black Swamp",
             "id": 741001579,
+            "region": "Boggy Swamp Second Bats Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7730,16 +7598,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -7753,16 +7615,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -7822,6 +7678,7 @@
           {
             "name": "BS: Defeat The Lurker Ambush",
             "id": 741000038,
+            "region": "Boggy Swamp Third Jump Pad (Arena)",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -7878,6 +7735,7 @@
           {
             "name": "BS: Break The Tethers To The Zeppelin (2)",
             "id": 741000040,
+            "region": "Boggy Swamp Fourth Jump Pad (Third Tether)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8014,6 +7872,7 @@
           {
             "name": "BS: Ride The Flut Flut",
             "id": 741000037,
+            "region": "Boggy Swamp Flut Flut Course",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8032,6 +7891,7 @@
           {
             "name": "BS: Scout Fly Overlooking Flut Flut",
             "id": 741001707,
+            "region": "Boggy Swamp Flut Flut Course",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8050,6 +7910,7 @@
           {
             "name": "BS: Scout Fly On Flut Flut Platforms",
             "id": 741001323,
+            "region": "Boggy Swamp Flut Flut Course",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8131,16 +7992,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     },
                     {
@@ -8154,16 +8009,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut"
                       ]
                     },
                     {
@@ -8177,16 +8026,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -8207,6 +8050,7 @@
           {
             "name": "BS: Protect Farthy's Snacks",
             "id": 741000036,
+            "region": "Boggy Swamp Farthy's Snacks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8276,16 +8120,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     },
                     {
@@ -8299,16 +8137,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut"
                       ]
                     },
                     {
@@ -8322,16 +8154,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -8358,16 +8184,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -8381,16 +8201,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -8411,6 +8225,7 @@
           {
             "name": "BS: Scout Fly In Field Of Boxes",
             "id": 741001451,
+            "region": "Boggy Swamp Field of Boxes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8469,16 +8284,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -8492,16 +8301,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -8528,16 +8331,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -8551,16 +8348,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -8610,16 +8401,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -8633,16 +8418,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -8675,6 +8454,7 @@
           {
             "name": "BS: Break The Tethers To The Zeppelin (3)",
             "id": 741000041,
+            "region": "Boggy Swamp Fourth Tether",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8695,16 +8475,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     },
                     {
@@ -8718,16 +8492,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Uppercut"
-                        }
+                        "Crouch",
+                        "Crouch Uppercut"
                       ]
                     },
                     {
@@ -8741,16 +8509,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -8823,6 +8585,7 @@
           {
             "name": "MP: Defeat Klaww",
             "id": 741000086,
+            "region": "Mountain Pass Main Area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8917,6 +8680,7 @@
           {
             "name": "MP: Reach The End Of The Mountain Pass",
             "id": 741000087,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8935,6 +8699,7 @@
           {
             "name": "MP: Scout Fly 1",
             "id": 741001112,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8953,6 +8718,7 @@
           {
             "name": "MP: Scout Fly 2",
             "id": 741001240,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8971,6 +8737,7 @@
           {
             "name": "MP: Scout Fly 3",
             "id": 741001368,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8989,6 +8756,7 @@
           {
             "name": "MP: Scout Fly 4",
             "id": 741001496,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9007,6 +8775,7 @@
           {
             "name": "MP: Scout Fly 5",
             "id": 741001624,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9025,6 +8794,7 @@
           {
             "name": "MP: Scout Fly 6",
             "id": 741001752,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9043,6 +8813,7 @@
           {
             "name": "MP: Scout Fly 7",
             "id": 741001880,
+            "region": "Mountain Pass Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9097,6 +8868,7 @@
           {
             "name": "MP: Find The Hidden Power Cell",
             "id": 741000110,
+            "region": "Mountain Pass Shortcut",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9185,6 +8957,7 @@
           {
             "name": "VC: Bring 90 Orbs To The Miners (1)",
             "id": 741000096,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9224,6 +8997,7 @@
           {
             "name": "VC: Bring 90 Orbs To The Miners (2)",
             "id": 741000097,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9263,6 +9037,7 @@
           {
             "name": "VC: Bring 90 Orbs To The Miners (3)",
             "id": 741000098,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9302,6 +9077,7 @@
           {
             "name": "VC: Bring 90 Orbs To The Miners (4)",
             "id": 741000099,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9341,6 +9117,7 @@
           {
             "name": "VC: Bring 120 Orbs To The Oracle (1)",
             "id": 741000100,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9380,6 +9157,7 @@
           {
             "name": "VC: Bring 120 Orbs To The Oracle (2)",
             "id": 741000101,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9419,6 +9197,7 @@
           {
             "name": "VC: Find The Hidden Power Cell",
             "id": 741000074,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9437,6 +9216,7 @@
           {
             "name": "VC: Scout Fly In Miner's Cave",
             "id": 741001613,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -9457,6 +9237,7 @@
           {
             "name": "VC: Scout Fly Near Oracle",
             "id": 741001869,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -9477,6 +9258,7 @@
           {
             "name": "VC: Scout Fly On Stone Platforms",
             "id": 741001485,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -9497,6 +9279,7 @@
           {
             "name": "VC: Scout Fly Near Lava Tube",
             "id": 741001357,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -9517,6 +9300,7 @@
           {
             "name": "VC: Scout Fly At Minecart Junction",
             "id": 741001101,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -9537,6 +9321,7 @@
           {
             "name": "VC: Scout Fly Near Spider Cave",
             "id": 741001229,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -9557,6 +9342,7 @@
           {
             "name": "VC: Scout Fly Near Mountain Pass",
             "id": 741001741,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -9577,6 +9363,7 @@
           {
             "name": "Snowy Mountain Gondola",
             "id": 741002153,
+            "region": "Volcanic Crater Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9685,16 +9472,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Crouch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Crouch Jump"
-                            }
+                            "Crouch",
+                            "Crouch Jump"
                           ]
                         }
                       ]
@@ -9713,6 +9494,7 @@
           {
             "name": "SC: Use Your Goggles To Shoot The Gnawing Lurkers",
             "id": 741000078,
+            "region": "Spider Cave Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9731,6 +9513,7 @@
           {
             "name": "SC: Climb the Precursor Platforms",
             "id": 741000084,
+            "region": "Spider Cave Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9749,6 +9532,7 @@
           {
             "name": "SC: Scout Fly Near Dark Cave Entrance",
             "id": 741001749,
+            "region": "Spider Cave Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9767,6 +9551,7 @@
           {
             "name": "SC: Scout Fly Main Cave, Overlooking Entrance",
             "id": 741001877,
+            "region": "Spider Cave Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9785,6 +9570,7 @@
           {
             "name": "SC: Scout Fly Main Cave, Near Dark Crystal",
             "id": 741001493,
+            "region": "Spider Cave Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9803,6 +9589,7 @@
           {
             "name": "SC: Scout Fly Main Cave, Near Robot Cave Entrance",
             "id": 741001365,
+            "region": "Spider Cave Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9844,6 +9631,7 @@
           {
             "name": "SC: Destroy The Dark Eco Crystals",
             "id": 741000079,
+            "region": "Spider Cave Dark Crystals",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9859,16 +9647,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     }
                   ]
@@ -9911,6 +9693,7 @@
           {
             "name": "SC: Explore The Dark Cave",
             "id": 741000080,
+            "region": "Spider Cave Dark Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9929,6 +9712,7 @@
           {
             "name": "SC: Scout Fly In Dark Cave",
             "id": 741001621,
+            "region": "Spider Cave Dark Cave",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -10164,16 +9948,10 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Double Jump"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jump Kick"
-                    }
+                    "Double Jump",
+                    "Jump Kick"
                   ]
                 }
               ]
@@ -10202,6 +9980,7 @@
           {
             "name": "SC: Scout Fly Robot Cave, At Bottom Level",
             "id": 741001109,
+            "region": "Spider Cave Robot Scaffolding Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10339,6 +10118,7 @@
           {
             "name": "SC: Climb The Giant Robot",
             "id": 741000081,
+            "region": "Spider Cave Robot Scaffolding Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10357,6 +10137,7 @@
           {
             "name": "SC: Scout Fly Robot Cave, At Top Level",
             "id": 741001237,
+            "region": "Spider Cave Robot Scaffolding Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10411,6 +10192,7 @@
           {
             "name": "SC: Launch To The Poles",
             "id": 741000082,
+            "region": "Spider Cave Pole Course",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10492,6 +10274,7 @@
           {
             "name": "SC: Navigate The Spider Tunnel",
             "id": 741000083,
+            "region": "Spider Cave Spider Tunnel",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10572,16 +10355,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -10595,16 +10372,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     },
                     {
@@ -10618,16 +10389,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -10668,16 +10433,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     },
                     {
@@ -10691,16 +10450,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -10721,6 +10474,7 @@
           {
             "name": "SM: Scout Fly Near Entrance",
             "id": 741001089,
+            "region": "Snowy Mountain Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -10764,6 +10518,7 @@
           {
             "name": "SM: Stop The 3 Lurker Glacier Troops",
             "id": 741000061,
+            "region": "Snowy Mountain Glacier Lurkers",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -10782,16 +10537,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Roll"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Roll Jump"
-                            }
+                            "Roll",
+                            "Roll Jump"
                           ]
                         },
                         {
@@ -10805,16 +10554,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -10863,6 +10606,7 @@
           {
             "name": "SM: Deactivate The Precursor Blockers",
             "id": 741000066,
+            "region": "Snowy Mountain Precursor Blockers",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -10881,16 +10625,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Roll"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Roll Jump"
-                            }
+                            "Roll",
+                            "Roll Jump"
                           ]
                         },
                         {
@@ -10904,16 +10642,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -11025,16 +10757,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     },
                     {
@@ -11048,16 +10774,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -11127,16 +10847,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     },
                     {
@@ -11150,16 +10864,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -11201,16 +10909,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     },
                     {
@@ -11224,16 +10926,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -11254,6 +10950,7 @@
           {
             "name": "SM: Scout Fly Near Frozen Box",
             "id": 741001729,
+            "region": "Snowy Mountain Frozen Box Cave",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -11322,6 +11019,7 @@
           {
             "name": "SM: Open The Frozen Crate",
             "id": 741000067,
+            "region": "Snowy Mountain Frozen Box Cave Orb Crates",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -11383,16 +11081,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     },
                     {
@@ -11406,16 +11098,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -11463,6 +11149,7 @@
           {
             "name": "SM: Scout Fly On Cliff near Flut Flut",
             "id": 741001345,
+            "region": "Snowy Mountain Ice Skating Rink",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -11519,6 +11206,7 @@
           {
             "name": "SM: Open The Lurker Fort Gate",
             "id": 741000063,
+            "region": "Snowy Mountain Flut Flut Course",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -11540,6 +11228,7 @@
           {
             "name": "Snowy Fort Gate",
             "id": 741002111,
+            "region": "Snowy Mountain Flut Flut Course",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -11631,16 +11320,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     },
                     {
@@ -11654,16 +11337,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -11729,16 +11406,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     },
                     {
@@ -11752,16 +11423,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     },
                     {
@@ -11775,16 +11440,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     },
                     {
@@ -11805,6 +11464,7 @@
           {
             "name": "SM: Scout Fly Near Yellow Eco Switch",
             "id": 741001217,
+            "region": "Snowy Mountain Fort Exterior",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -11825,6 +11485,7 @@
           {
             "name": "SM: Scout Fly Under Bridge To Fort",
             "id": 741001857,
+            "region": "Snowy Mountain Fort Exterior",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -11901,16 +11562,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Crouch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Crouch Jump"
-                            }
+                            "Crouch",
+                            "Crouch Jump"
                           ]
                         }
                       ]
@@ -11964,6 +11619,7 @@
           {
             "name": "SM: Survive The Lurker Infested Cave",
             "id": 741000064,
+            "region": "Snowy Mountain Bunny Cave (End)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12018,6 +11674,7 @@
           {
             "name": "SM: Find The Yellow Vent Switch",
             "id": 741000060,
+            "region": "Snowy Mountain Yellow Eco Switch Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12036,6 +11693,7 @@
           {
             "name": "Yellow Eco Switch",
             "id": 741002108,
+            "region": "Snowy Mountain Yellow Eco Switch Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12121,16 +11779,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -12160,16 +11812,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Crouch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Crouch Jump"
-                        }
+                        "Crouch",
+                        "Crouch Jump"
                       ]
                     }
                   ]
@@ -12192,16 +11838,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Double Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jump Kick"
-                        }
+                        "Double Jump",
+                        "Jump Kick"
                       ]
                     }
                   ]
@@ -12211,16 +11851,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Punch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Punch Uppercut"
-                        }
+                        "Punch",
+                        "Punch Uppercut"
                       ]
                     }
                   ]
@@ -12272,6 +11906,7 @@
           {
             "name": "SM: Scout Fly On Top Of Fort Tower",
             "id": 741001473,
+            "region": "Snowy Mountain Fort Interior (Caches)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12290,6 +11925,7 @@
           {
             "name": "Orb Cache in Snowy Fort (1)",
             "id": 741017100,
+            "region": "Snowy Mountain Fort Interior (Caches)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12308,6 +11944,7 @@
           {
             "name": "Orb Cache in Snowy Fort (2)",
             "id": 741017101,
+            "region": "Snowy Mountain Fort Interior (Caches)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12326,6 +11963,7 @@
           {
             "name": "Orb Cache in Snowy Fort (3)",
             "id": 741017102,
+            "region": "Snowy Mountain Fort Interior (Caches)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12380,6 +12018,7 @@
           {
             "name": "SM: Scout Fly On Top Of Fort",
             "id": 741001601,
+            "region": "Snowy Mountain Fort Interior (Base)",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -12436,6 +12075,7 @@
           {
             "name": "SM: Get Through The Lurker Fort",
             "id": 741000062,
+            "region": "Snowy Mountain Fort Interior (Course End)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12490,6 +12130,7 @@
           {
             "name": "LT: Cross The Lava Tube",
             "id": 741000089,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12508,6 +12149,7 @@
           {
             "name": "LT: Scout Fly 1",
             "id": 741001114,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12526,6 +12168,7 @@
           {
             "name": "LT: Scout Fly 2",
             "id": 741001242,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12544,6 +12187,7 @@
           {
             "name": "LT: Scout Fly 3",
             "id": 741001754,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12562,6 +12206,7 @@
           {
             "name": "LT: Scout Fly 4",
             "id": 741001626,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12580,6 +12225,7 @@
           {
             "name": "LT: Scout Fly 5",
             "id": 741001370,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12598,6 +12244,7 @@
           {
             "name": "LT: Scout Fly 6",
             "id": 741001498,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12616,6 +12263,7 @@
           {
             "name": "LT: Scout Fly 7",
             "id": 741001882,
+            "region": "Lava Tube Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12701,16 +12349,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Roll"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Roll Jump"
-                        }
+                        "Roll",
+                        "Roll Jump"
                       ]
                     }
                   ]
@@ -12739,6 +12381,7 @@
           {
             "name": "GMC: Scout Fly At Entrance",
             "id": 741001115,
+            "region": "Gol and Maia's Citadel Main Area",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -12844,16 +12487,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -12867,16 +12504,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Punch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Punch Uppercut"
-                            }
+                            "Punch",
+                            "Punch Uppercut"
                           ]
                         },
                         {
@@ -12895,16 +12526,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -12918,16 +12543,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Roll"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Roll Jump"
-                            }
+                            "Roll",
+                            "Roll Jump"
                           ]
                         }
                       ]
@@ -12962,16 +12581,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -12985,16 +12598,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Punch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Punch Uppercut"
-                            }
+                            "Punch",
+                            "Punch Uppercut"
                           ]
                         },
                         {
@@ -13013,16 +12620,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -13036,16 +12637,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Roll"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Roll Jump"
-                            }
+                            "Roll",
+                            "Roll Jump"
                           ]
                         }
                       ]
@@ -13095,16 +12690,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Crouch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Crouch Jump"
-                            }
+                            "Crouch",
+                            "Crouch Jump"
                           ]
                         },
                         {
@@ -13118,16 +12707,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Crouch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Crouch Uppercut"
-                            }
+                            "Crouch",
+                            "Crouch Uppercut"
                           ]
                         },
                         {
@@ -13143,20 +12726,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Freed The Blue Sage"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Freed The Red Sage"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Freed The Yellow Sage"
-                        }
+                        "Freed The Blue Sage",
+                        "Freed The Red Sage",
+                        "Freed The Yellow Sage"
                       ]
                     }
                   ]
@@ -13173,6 +12747,7 @@
           {
             "name": "GMC: Scout Fly Main Room, Right of Robot",
             "id": 741001499,
+            "region": "Gol and Maia's Citadel Scaffolding Around Robot",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13245,16 +12820,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -13268,16 +12837,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Roll"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Roll Jump"
-                            }
+                            "Roll",
+                            "Roll Jump"
                           ]
                         }
                       ]
@@ -13296,6 +12859,7 @@
           {
             "name": "GMC: Free The Yellow Sage",
             "id": 741000073,
+            "region": "Gol and Maia's Citadel Jump Pad Chamber",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13316,6 +12880,7 @@
           {
             "name": "Freed The Yellow Sage",
             "id": 741002121,
+            "region": "Gol and Maia's Citadel Jump Pad Chamber",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13336,6 +12901,7 @@
           {
             "name": "GMC: Scout Fly At Launch Pad Room",
             "id": 741001371,
+            "region": "Gol and Maia's Citadel Jump Pad Chamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13354,6 +12920,7 @@
           {
             "name": "GMC: Scout Fly Main Room, Left of Robot",
             "id": 741001243,
+            "region": "Gol and Maia's Citadel Jump Pad Chamber",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -13372,16 +12939,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Double Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Jump Kick"
-                            }
+                            "Double Jump",
+                            "Jump Kick"
                           ]
                         },
                         {
@@ -13395,16 +12956,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Punch"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Punch Uppercut"
-                            }
+                            "Punch",
+                            "Punch Uppercut"
                           ]
                         },
                         {
@@ -13430,6 +12985,7 @@
           {
             "name": "Orb Cache at End of Launch Pad Room",
             "id": 741017791,
+            "region": "Gol and Maia's Citadel Jump Pad Chamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13448,6 +13004,7 @@
           {
             "name": "Orb Cache at Start of Launch Pad Room",
             "id": 741017792,
+            "region": "Gol and Maia's Citadel Jump Pad Chamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13502,6 +13059,7 @@
           {
             "name": "GMC: Free The Blue Sage",
             "id": 741000071,
+            "region": "Gol and Maia's Citadel Blast Furnace",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13522,6 +13080,7 @@
           {
             "name": "Freed The Blue Sage",
             "id": 741002119,
+            "region": "Gol and Maia's Citadel Blast Furnace",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13542,6 +13101,7 @@
           {
             "name": "GMC: Scout Fly At Blast Furnace",
             "id": 741001883,
+            "region": "Gol and Maia's Citadel Blast Furnace",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13560,6 +13120,7 @@
           {
             "name": "Orb Cache at End of Blast Furnace",
             "id": 741017790,
+            "region": "Gol and Maia's Citadel Blast Furnace",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13621,16 +13182,10 @@
                           "method": "has_any",
                           "args": [
                             {
-                              "type": "list",
+                              "type": "constant",
                               "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Double Jump"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Jump Kick"
-                                }
+                                "Double Jump",
+                                "Jump Kick"
                               ]
                             },
                             {
@@ -13644,16 +13199,10 @@
                           "method": "has_all",
                           "args": [
                             {
-                              "type": "list",
+                              "type": "constant",
                               "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Punch"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Punch Uppercut"
-                                }
+                                "Punch",
+                                "Punch Uppercut"
                               ]
                             },
                             {
@@ -13669,16 +13218,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Roll"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Roll Jump"
-                            }
+                            "Roll",
+                            "Roll Jump"
                           ]
                         }
                       ]
@@ -13697,6 +13240,7 @@
           {
             "name": "GMC: Free The Red Sage",
             "id": 741000072,
+            "region": "Gol and Maia's Citadel Bunny Chamber",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13717,6 +13261,7 @@
           {
             "name": "Freed The Red Sage",
             "id": 741002120,
+            "region": "Gol and Maia's Citadel Bunny Chamber",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13737,6 +13282,7 @@
           {
             "name": "GMC: Scout Fly Before Jumping Lurkers",
             "id": 741001627,
+            "region": "Gol and Maia's Citadel Bunny Chamber",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13829,6 +13375,7 @@
           {
             "name": "GMC: Free The Green Sage",
             "id": 741000070,
+            "region": "Gol and Maia's Citadel Rotating Tower",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13849,6 +13396,7 @@
           {
             "name": "Freed The Green Sage",
             "id": 741002118,
+            "region": "Gol and Maia's Citadel Rotating Tower",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -13869,6 +13417,7 @@
           {
             "name": "GMC: Scout Fly Top Of Rotating Tower",
             "id": 741001755,
+            "region": "Gol and Maia's Citadel Rotating Tower",
             "crystal": null,
             "access_rule": {
               "type": "capability",
@@ -15065,15 +14614,171 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything",
-      "Moves",
-      "Power Cells",
-      "Precursor Orbs",
-      "Scout Flies",
-      "Specials",
-      "Traps"
-    ]
+    "1": {
+      "Power Cells": [
+        "Power Cell"
+      ],
+      "Scout Flies": [
+        "Scout Fly - Misty Island",
+        "Scout Fly - Fire Canyon",
+        "Scout Fly - Sandover Village",
+        "Scout Fly - Snowy Mountain",
+        "Scout Fly - Forbidden Jungle",
+        "Scout Fly - Lost Precursor City",
+        "Scout Fly - Volcanic Crater",
+        "Scout Fly - Citadel",
+        "Scout Fly - Sentinel Beach",
+        "Scout Fly - Mountain Pass",
+        "Scout Fly - Spider Cave",
+        "Scout Fly - Boggy Swamp",
+        "Scout Fly - Geyser Rock",
+        "Scout Fly - Precursor Basin",
+        "Scout Fly - Rock Village",
+        "Scout Fly - Lava Tube"
+      ],
+      "Specials": [
+        "Yellow Eco Switch",
+        "Snowy Fort Gate",
+        "Blue Eco Switch",
+        "Snowy Mountain Gondola",
+        "Freed The Green Sage",
+        "Freed The Yellow Sage",
+        "Flut Flut",
+        "Freed The Blue Sage",
+        "Jungle Elevator",
+        "Freed The Red Sage",
+        "Warrior's Pontoons",
+        "Fisherman's Boat"
+      ],
+      "Moves": [
+        "Punch",
+        "Roll Jump",
+        "Crouch Jump",
+        "Jump Kick",
+        "Punch Uppercut",
+        "Kick",
+        "Double Jump",
+        "Jump Dive",
+        "Crouch",
+        "Crouch Uppercut",
+        "Roll"
+      ],
+      "Precursor Orbs": [
+        "125 Precursor Orbs",
+        "5 Precursor Orbs",
+        "2 Precursor Orbs",
+        "1 Precursor Orb",
+        "25 Precursor Orbs",
+        "10 Precursor Orbs",
+        "80 Precursor Orbs",
+        "8 Precursor Orbs",
+        "40 Precursor Orbs",
+        "50 Precursor Orbs",
+        "200 Precursor Orbs",
+        "16 Precursor Orbs",
+        "500 Precursor Orbs",
+        "1000 Precursor Orbs",
+        "20 Precursor Orbs",
+        "400 Precursor Orbs",
+        "4 Precursor Orbs",
+        "250 Precursor Orbs",
+        "2000 Precursor Orbs",
+        "100 Precursor Orbs"
+      ],
+      "Traps": [
+        "Slippery Trap",
+        "Teleport Trap",
+        "Pacifism Trap",
+        "Darkness Trap",
+        "Despair Trap",
+        "Gravity Trap",
+        "Ecoless Trap",
+        "Zoomer Trap",
+        "Camera Trap",
+        "Health Trap",
+        "Ledge Trap",
+        "Mirror Trap",
+        "Earthquake Trap",
+        "Trip Trap"
+      ],
+      "Everything": [
+        "125 Precursor Orbs",
+        "5 Precursor Orbs",
+        "2 Precursor Orbs",
+        "Jump Kick",
+        "Teleport Trap",
+        "Scout Fly - Forbidden Jungle",
+        "10 Precursor Orbs",
+        "Freed The Blue Sage",
+        "50 Precursor Orbs",
+        "Punch",
+        "Scout Fly - Spider Cave",
+        "16 Precursor Orbs",
+        "20 Precursor Orbs",
+        "Pacifism Trap",
+        "Green Eco Pill",
+        "Ecoless Trap",
+        "Scout Fly - Precursor Basin",
+        "Crouch",
+        "Flut Flut",
+        "4 Precursor Orbs",
+        "Earthquake Trap",
+        "Fisherman's Boat",
+        "Scout Fly - Sandover Village",
+        "Yellow Eco Switch",
+        "Kick",
+        "1 Precursor Orb",
+        "Gravity Trap",
+        "Double Jump",
+        "Freed The Red Sage",
+        "Mirror Trap",
+        "Warrior's Pontoons",
+        "Crouch Uppercut",
+        "200 Precursor Orbs",
+        "Scout Fly - Boggy Swamp",
+        "Darkness Trap",
+        "Zoomer Trap",
+        "Camera Trap",
+        "Ledge Trap",
+        "2000 Precursor Orbs",
+        "Scout Fly - Rock Village",
+        "8 Precursor Orbs",
+        "Scout Fly - Snowy Mountain",
+        "Snowy Fort Gate",
+        "80 Precursor Orbs",
+        "Power Cell",
+        "Jungle Elevator",
+        "Trip Trap",
+        "Scout Fly - Citadel",
+        "Scout Fly - Mountain Pass",
+        "500 Precursor Orbs",
+        "1000 Precursor Orbs",
+        "Blue Eco Switch",
+        "400 Precursor Orbs",
+        "Scout Fly - Geyser Rock",
+        "Jump Dive",
+        "250 Precursor Orbs",
+        "Health Trap",
+        "100 Precursor Orbs",
+        "Scout Fly - Misty Island",
+        "Scout Fly - Fire Canyon",
+        "Crouch Jump",
+        "Roll Jump",
+        "25 Precursor Orbs",
+        "Freed The Yellow Sage",
+        "40 Precursor Orbs",
+        "Scout Fly - Lost Precursor City",
+        "Punch Uppercut",
+        "Roll",
+        "Scout Fly - Volcanic Crater",
+        "Scout Fly - Sentinel Beach",
+        "Slippery Trap",
+        "Snowy Mountain Gondola",
+        "Freed The Green Sage",
+        "Despair Trap",
+        "Scout Fly - Lava Tube"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

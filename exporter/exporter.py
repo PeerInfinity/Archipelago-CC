@@ -869,6 +869,7 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                             location_data = {
                                 'name': location_name,
                                 'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
+                                'region': region.name,  # Add region name reference
                                 'crystal': getattr(location, 'crystal', None),
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
@@ -1022,12 +1023,13 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
 
     return items_data
 
-def process_item_groups(multiworld, player: int) -> List[str]:
+def process_item_groups(multiworld, player: int) -> Dict[str, List[str]]:
     """Get item groups for this player."""
     world = multiworld.worlds[player]
     if hasattr(world, 'item_name_groups'):
-        return sorted(world.item_name_groups.keys())
-    return []
+        # Return the full mapping of group names to their member items
+        return {group_name: list(items) for group_name, items in world.item_name_groups.items()}
+    return {}
 
 def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
     """Extract progression item mapping data using the game handler."""
@@ -1290,7 +1292,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     context_excluded_fields=CONTEXT_EXCLUDED_FIELDS,
                     global_excluded_fields=EXCLUDED_FIELDS
                 )
-            
+
             # Write to file
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(filtered_data, f, indent=2)

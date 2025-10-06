@@ -235,6 +235,7 @@
           {
             "name": "Toad (Basement)",
             "id": 3626168,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -279,6 +280,7 @@
           {
             "name": "Toad (Second Floor)",
             "id": 3626169,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -323,6 +325,7 @@
           {
             "name": "Toad (Third Floor)",
             "id": 3626170,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -367,6 +370,7 @@
           {
             "name": "MIPS 1",
             "id": 3626171,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -411,6 +415,7 @@
           {
             "name": "MIPS 2",
             "id": 3626172,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -494,6 +499,7 @@
           {
             "name": "BoB: Big Bob-Omb on the Summit",
             "id": 3626000,
+            "region": "Bob-omb Battlefield",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -512,6 +518,7 @@
           {
             "name": "BoB: Footrace with Koopa The Quick",
             "id": 3626001,
+            "region": "Bob-omb Battlefield",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -530,25 +537,26 @@
           {
             "name": "BoB: Mario Wings to the Sky",
             "id": 3626004,
+            "region": "Bob-omb Battlefield",
             "crystal": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "rule",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "rule"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Cannon Unlock BoB"
+                  }
                 },
-                "iterator": {
-                  "type": "name",
-                  "name": "rules"
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Wing Cap"
+                  }
                 }
-              }
+              ]
             },
             "progress_type": 1,
             "locked": false,
@@ -563,6 +571,7 @@
           {
             "name": "BoB: Behind Chain Chomp's Gate",
             "id": 3626005,
+            "region": "Bob-omb Battlefield",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -581,6 +590,7 @@
           {
             "name": "BoB: Bob-omb Buddy",
             "id": 3626200,
+            "region": "Bob-omb Battlefield",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -622,6 +632,7 @@
           {
             "name": "BoB: Shoot to the Island in the Sky",
             "id": 3626002,
+            "region": "BoB: Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -640,6 +651,7 @@
           {
             "name": "BoB: Find the 8 Red Coins",
             "id": 3626003,
+            "region": "BoB: Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -694,6 +706,7 @@
           {
             "name": "WF: Chip Off Whomp's Block",
             "id": 3626007,
+            "region": "Whomp's Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -712,6 +725,7 @@
           {
             "name": "WF: Shoot into the Wild Blue",
             "id": 3626009,
+            "region": "Whomp's Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -730,6 +744,7 @@
           {
             "name": "WF: Red Coins on the Floating Isle",
             "id": 3626010,
+            "region": "Whomp's Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -748,6 +763,7 @@
           {
             "name": "WF: Fall onto the Caged Island",
             "id": 3626011,
+            "region": "Whomp's Fortress",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -772,6 +788,7 @@
           {
             "name": "WF: Blast Away the Wall",
             "id": 3626012,
+            "region": "Whomp's Fortress",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -816,6 +833,7 @@
           {
             "name": "WF: To the Top of the Fortress",
             "id": 3626008,
+            "region": "WF: Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -834,6 +852,7 @@
           {
             "name": "WF: Bob-omb Buddy",
             "id": 3626201,
+            "region": "WF: Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -900,6 +919,7 @@
           {
             "name": "JRB: Plunder in the Sunken Ship",
             "id": 3626014,
+            "region": "Jolly Roger Bay",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -918,6 +938,7 @@
           {
             "name": "JRB: Can the Eel Come Out to Play?",
             "id": 3626015,
+            "region": "Jolly Roger Bay",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -936,6 +957,7 @@
           {
             "name": "JRB: Treasure of the Ocean Cave",
             "id": 3626016,
+            "region": "Jolly Roger Bay",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -954,6 +976,7 @@
           {
             "name": "JRB: Blast to the Stone Pillar",
             "id": 3626018,
+            "region": "Jolly Roger Bay",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -980,6 +1003,7 @@
           {
             "name": "JRB: Through the Jet Stream",
             "id": 3626019,
+            "region": "Jolly Roger Bay",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1001,6 +1025,7 @@
           {
             "name": "JRB: Bob-omb Buddy",
             "id": 3626202,
+            "region": "Jolly Roger Bay",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1042,6 +1067,7 @@
           {
             "name": "JRB: Red Coins on the Ship Afloat",
             "id": 3626017,
+            "region": "JRB: Upper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1083,6 +1109,7 @@
           {
             "name": "CCM: Slip Slidin' Away",
             "id": 3626021,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1101,6 +1128,7 @@
           {
             "name": "CCM: Li'l Penguin Lost",
             "id": 3626022,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1119,6 +1147,7 @@
           {
             "name": "CCM: Big Penguin Race",
             "id": 3626023,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1137,6 +1166,7 @@
           {
             "name": "CCM: Frosty Slide for 8 Red Coins",
             "id": 3626024,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1155,6 +1185,7 @@
           {
             "name": "CCM: Snowman's Lost His Head",
             "id": 3626025,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1173,6 +1204,7 @@
           {
             "name": "CCM: Wall Kicks Will Work",
             "id": 3626026,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1194,6 +1226,7 @@
           {
             "name": "CCM: Bob-omb Buddy",
             "id": 3626203,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1212,6 +1245,7 @@
           {
             "name": "CCM: 1Up Block Near Snowman",
             "id": 3626215,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1230,6 +1264,7 @@
           {
             "name": "CCM: 1Up Block Ice Pillar",
             "id": 3626216,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1248,6 +1283,7 @@
           {
             "name": "CCM: 1Up Block Secret Slide",
             "id": 3626217,
+            "region": "Cool, Cool Mountain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1302,6 +1338,7 @@
           {
             "name": "BBH: Go on a Ghost Hunt",
             "id": 3626028,
+            "region": "Big Boo's Haunt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1320,6 +1357,7 @@
           {
             "name": "BBH: Ride Big Boo's Merry-Go-Round",
             "id": 3626029,
+            "region": "Big Boo's Haunt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1338,6 +1376,7 @@
           {
             "name": "BBH: Secret of the Haunted Books",
             "id": 3626030,
+            "region": "Big Boo's Haunt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1356,6 +1395,7 @@
           {
             "name": "BBH: Seek the 8 Red Coins",
             "id": 3626031,
+            "region": "Big Boo's Haunt",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1410,6 +1450,7 @@
           {
             "name": "BBH: Eye to Eye in the Secret Room",
             "id": 3626033,
+            "region": "BBH: Third Floor",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1454,6 +1495,7 @@
           {
             "name": "BBH: Big Boo's Balcony",
             "id": 3626032,
+            "region": "BBH: Roof",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1472,6 +1514,7 @@
           {
             "name": "BBH: 1Up Block Top of Mansion",
             "id": 3626218,
+            "region": "BBH: Roof",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1513,6 +1556,7 @@
           {
             "name": "The Princess's Secret Slide Block",
             "id": 3626126,
+            "region": "The Princess's Secret Slide",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1531,6 +1575,7 @@
           {
             "name": "The Princess's Secret Slide Fast",
             "id": 3626127,
+            "region": "The Princess's Secret Slide",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1572,6 +1617,7 @@
           {
             "name": "The Secret Aquarium",
             "id": 3626161,
+            "region": "The Secret Aquarium",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1613,6 +1659,7 @@
           {
             "name": "Tower of the Wing Cap Switch",
             "id": 3626181,
+            "region": "Tower of the Wing Cap",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1631,6 +1678,7 @@
           {
             "name": "Tower of the Wing Cap Red Coins",
             "id": 3626140,
+            "region": "Tower of the Wing Cap",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1672,6 +1720,7 @@
           {
             "name": "Bowser in the Dark World Red Coins",
             "id": 3626105,
+            "region": "Bowser in the Dark World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1690,6 +1739,7 @@
           {
             "name": "Bowser in the Dark World Key",
             "id": 3626178,
+            "region": "Bowser in the Dark World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1708,6 +1758,7 @@
           {
             "name": "Bowser in the Dark World 1Up Block on Tower",
             "id": 3626236,
+            "region": "Bowser in the Dark World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1726,6 +1777,7 @@
           {
             "name": "Bowser in the Dark World 1Up Block near Goombas",
             "id": 3626237,
+            "region": "Bowser in the Dark World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1932,6 +1984,7 @@
           {
             "name": "HMC: Swimming Beast in the Cavern",
             "id": 3626035,
+            "region": "Hazy Maze Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1950,6 +2003,7 @@
           {
             "name": "HMC: Metal-Head Mario Can Move!",
             "id": 3626037,
+            "region": "Hazy Maze Cave",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1976,6 +2030,7 @@
           {
             "name": "HMC: Watch for Rolling Rocks",
             "id": 3626040,
+            "region": "Hazy Maze Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1994,6 +2049,7 @@
           {
             "name": "HMC: Navigating the Toxic Maze",
             "id": 3626038,
+            "region": "Hazy Maze Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2012,6 +2068,7 @@
           {
             "name": "HMC: 1Up Block Past Rolling Rocks",
             "id": 3626220,
+            "region": "Hazy Maze Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2053,6 +2110,7 @@
           {
             "name": "HMC: Elevate for 8 Red Coins",
             "id": 3626036,
+            "region": "HMC: Red Coin Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2094,6 +2152,7 @@
           {
             "name": "HMC: A-Maze-Ing Emergency Exit",
             "id": 3626039,
+            "region": "HMC: Pit Islands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2112,6 +2171,7 @@
           {
             "name": "HMC: 1Up Block above Pit",
             "id": 3626219,
+            "region": "HMC: Pit Islands",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2166,6 +2226,7 @@
           {
             "name": "LLL: Boil the Big Bully",
             "id": 3626042,
+            "region": "Lethal Lava Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2184,6 +2245,7 @@
           {
             "name": "LLL: Bully the Bullies",
             "id": 3626043,
+            "region": "Lethal Lava Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2202,6 +2264,7 @@
           {
             "name": "LLL: 8-Coin Puzzle with 15 Pieces",
             "id": 3626044,
+            "region": "Lethal Lava Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2220,6 +2283,7 @@
           {
             "name": "LLL: Red-Hot Log Rolling",
             "id": 3626045,
+            "region": "Lethal Lava Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2261,6 +2325,7 @@
           {
             "name": "LLL: Hot-Foot-It into the Volcano",
             "id": 3626046,
+            "region": "LLL: Upper Volcano",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2279,6 +2344,7 @@
           {
             "name": "LLL: Elevator Tour in the Volcano",
             "id": 3626047,
+            "region": "LLL: Upper Volcano",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2333,6 +2399,7 @@
           {
             "name": "SSL: In the Talons of the Big Bird",
             "id": 3626049,
+            "region": "Shifting Sand Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2351,6 +2418,7 @@
           {
             "name": "SSL: Shining Atop the Pyramid",
             "id": 3626050,
+            "region": "Shifting Sand Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2369,6 +2437,7 @@
           {
             "name": "SSL: Free Flying for 8 Red Coins",
             "id": 3626053,
+            "region": "Shifting Sand Land",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2408,6 +2477,7 @@
           {
             "name": "SSL: Bob-omb Buddy",
             "id": 3626207,
+            "region": "Shifting Sand Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2426,6 +2496,7 @@
           {
             "name": "SSL: 1Up Block Outside Pyramid",
             "id": 3626221,
+            "region": "Shifting Sand Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2444,6 +2515,7 @@
           {
             "name": "SSL: 1Up Block Pyramid Left Path",
             "id": 3626222,
+            "region": "Shifting Sand Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2462,6 +2534,7 @@
           {
             "name": "SSL: 1Up Block Pyramid Back",
             "id": 3626223,
+            "region": "Shifting Sand Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2503,6 +2576,7 @@
           {
             "name": "SSL: Inside the Ancient Pyramid",
             "id": 3626051,
+            "region": "SSL: Upper Pyramid",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2521,6 +2595,7 @@
           {
             "name": "SSL: Stand Tall on the Four Pillars",
             "id": 3626052,
+            "region": "SSL: Upper Pyramid",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2560,6 +2635,7 @@
           {
             "name": "SSL: Pyramid Puzzle",
             "id": 3626054,
+            "region": "SSL: Upper Pyramid",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2601,6 +2677,7 @@
           {
             "name": "DDD: Board Bowser's Sub",
             "id": 3626056,
+            "region": "Dire, Dire Docks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2619,6 +2696,7 @@
           {
             "name": "DDD: Chests in the Current",
             "id": 3626057,
+            "region": "Dire, Dire Docks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2637,6 +2715,7 @@
           {
             "name": "DDD: Through the Jet Stream",
             "id": 3626059,
+            "region": "Dire, Dire Docks",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2658,6 +2737,7 @@
           {
             "name": "DDD: The Manta Ray's Reward",
             "id": 3626060,
+            "region": "Dire, Dire Docks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2676,6 +2756,7 @@
           {
             "name": "DDD: Collect the Caps...",
             "id": 3626061,
+            "region": "Dire, Dire Docks",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2703,6 +2784,7 @@
           {
             "name": "DDD: Pole-Jumping for Red Coins",
             "id": 3626058,
+            "region": "Dire, Dire Docks",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2750,6 +2832,7 @@
           {
             "name": "Cavern of the Metal Cap Switch",
             "id": 3626182,
+            "region": "Cavern of the Metal Cap",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2768,6 +2851,7 @@
           {
             "name": "Cavern of the Metal Cap Red Coins",
             "id": 3626133,
+            "region": "Cavern of the Metal Cap",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2789,6 +2873,7 @@
           {
             "name": "Cavern of the Metal Cap 1Up Block",
             "id": 3626241,
+            "region": "Cavern of the Metal Cap",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2830,6 +2915,7 @@
           {
             "name": "Vanish Cap Under the Moat Switch",
             "id": 3626183,
+            "region": "Vanish Cap under the Moat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2848,6 +2934,7 @@
           {
             "name": "Vanish Cap Under the Moat Red Coins",
             "id": 3626147,
+            "region": "Vanish Cap under the Moat",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2869,6 +2956,7 @@
           {
             "name": "Vanish Cap Under the Moat 1Up Block",
             "id": 3626242,
+            "region": "Vanish Cap under the Moat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2945,6 +3033,7 @@
           {
             "name": "Bowser in the Fire Sea Red Coins",
             "id": 3626112,
+            "region": "BitFS: Upper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2963,6 +3052,7 @@
           {
             "name": "Bowser in the Fire Sea Key",
             "id": 3626179,
+            "region": "BitFS: Upper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2981,6 +3071,7 @@
           {
             "name": "Bowser in the Fire Sea 1Up Block Swaying Stairs",
             "id": 3626238,
+            "region": "BitFS: Upper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2999,6 +3090,7 @@
           {
             "name": "Bowser in the Fire Sea 1Up Block Near Poles",
             "id": 3626239,
+            "region": "BitFS: Upper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3142,6 +3234,7 @@
           {
             "name": "SL: Snowman's Big Head",
             "id": 3626063,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3160,6 +3253,7 @@
           {
             "name": "SL: Chill with the Bully",
             "id": 3626064,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3178,6 +3272,7 @@
           {
             "name": "SL: In the Deep Freeze",
             "id": 3626065,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3196,6 +3291,7 @@
           {
             "name": "SL: Whirl from the Freezing Pond",
             "id": 3626066,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3214,6 +3310,7 @@
           {
             "name": "SL: Shell Shreddin' for Red Coins",
             "id": 3626067,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3232,6 +3329,7 @@
           {
             "name": "SL: Into the Igloo",
             "id": 3626068,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3253,6 +3351,7 @@
           {
             "name": "SL: Bob-omb Buddy",
             "id": 3626209,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3271,6 +3370,7 @@
           {
             "name": "SL: 1Up Block Near Moneybags",
             "id": 3626224,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3289,6 +3389,7 @@
           {
             "name": "SL: 1Up Block inside Igloo",
             "id": 3626225,
+            "region": "Snowman's Land",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3355,6 +3456,7 @@
           {
             "name": "WDW: Express Elevator--Hurry Up!",
             "id": 3626073,
+            "region": "Wet-Dry World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3396,6 +3498,7 @@
           {
             "name": "WDW: Shocking Arrow Lifts!",
             "id": 3626070,
+            "region": "WDW: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3414,6 +3517,7 @@
           {
             "name": "WDW: Top o' the Town",
             "id": 3626071,
+            "region": "WDW: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3432,6 +3536,7 @@
           {
             "name": "WDW: Secrets in the Shallows & Sky",
             "id": 3626072,
+            "region": "WDW: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3450,6 +3555,7 @@
           {
             "name": "WDW: Bob-omb Buddy",
             "id": 3626210,
+            "region": "WDW: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3491,6 +3597,7 @@
           {
             "name": "WDW: Go to Town for Red Coins",
             "id": 3626074,
+            "region": "WDW: Downtown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3509,6 +3616,7 @@
           {
             "name": "WDW: Quick Race Through Downtown!",
             "id": 3626075,
+            "region": "WDW: Downtown",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3548,6 +3656,7 @@
           {
             "name": "WDW: 1Up Block in Downtown",
             "id": 3626226,
+            "region": "WDW: Downtown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3637,6 +3746,7 @@
           {
             "name": "TTM: Scary 'Shrooms, Red Coins",
             "id": 3626079,
+            "region": "TTM: Middle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3655,6 +3765,7 @@
           {
             "name": "TTM: Blast to the Lonely Mushroom",
             "id": 3626082,
+            "region": "TTM: Middle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3676,6 +3787,7 @@
           {
             "name": "TTM: Bob-omb Buddy",
             "id": 3626211,
+            "region": "TTM: Middle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3694,6 +3806,7 @@
           {
             "name": "TTM: 1Up Block on Red Mushroom",
             "id": 3626227,
+            "region": "TTM: Middle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3735,6 +3848,7 @@
           {
             "name": "TTM: Scale the Mountain",
             "id": 3626077,
+            "region": "TTM: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3753,6 +3867,7 @@
           {
             "name": "TTM: Mystery of the Monkey Cage",
             "id": 3626078,
+            "region": "TTM: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3771,6 +3886,7 @@
           {
             "name": "TTM: Mysterious Mountainside",
             "id": 3626080,
+            "region": "TTM: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3789,6 +3905,7 @@
           {
             "name": "TTM: Breathtaking View from Bridge",
             "id": 3626081,
+            "region": "TTM: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3923,6 +4040,7 @@
           {
             "name": "THI: 1Up Block THI Small near Start",
             "id": 3626228,
+            "region": "Tiny-Huge Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3977,6 +4095,7 @@
           {
             "name": "THI: The Tip Top of the Huge Island",
             "id": 3626085,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3995,6 +4114,7 @@
           {
             "name": "THI: Pluck the Piranha Flower",
             "id": 3626084,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4013,6 +4133,7 @@
           {
             "name": "THI: Rematch with Koopa the Quick",
             "id": 3626086,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4031,6 +4152,7 @@
           {
             "name": "THI: Five Itty Bitty Secrets",
             "id": 3626087,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4049,6 +4171,7 @@
           {
             "name": "THI: Wiggler's Red Coins",
             "id": 3626088,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4067,6 +4190,7 @@
           {
             "name": "THI: Bob-omb Buddy",
             "id": 3626212,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4085,6 +4209,7 @@
           {
             "name": "THI: 1Up Block THI Large near Start",
             "id": 3626229,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4103,6 +4228,7 @@
           {
             "name": "THI: 1Up Block Windy Area",
             "id": 3626230,
+            "region": "THI: Pipes",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4144,6 +4270,7 @@
           {
             "name": "THI: Make Wiggler Squirm",
             "id": 3626089,
+            "region": "THI: Large Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4276,6 +4403,7 @@
           {
             "name": "TTC: Stop Time for Red Coins",
             "id": 3626096,
+            "region": "Tick Tock Clock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4330,6 +4458,7 @@
           {
             "name": "TTC: Roll into the Cage",
             "id": 3626091,
+            "region": "TTC: Lower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4348,6 +4477,7 @@
           {
             "name": "TTC: Get a Hand",
             "id": 3626093,
+            "region": "TTC: Lower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4402,6 +4532,7 @@
           {
             "name": "TTC: Timed Jumps on Moving Bars",
             "id": 3626095,
+            "region": "TTC: Upper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4420,6 +4551,7 @@
           {
             "name": "TTC: The Pit and the Pendulums",
             "id": 3626092,
+            "region": "TTC: Upper",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4461,6 +4593,7 @@
           {
             "name": "TTC: 1Up Block Midway Up",
             "id": 3626231,
+            "region": "TTC: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4479,6 +4612,7 @@
           {
             "name": "TTC: Stomp on the Thwomp",
             "id": 3626094,
+            "region": "TTC: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4497,6 +4631,7 @@
           {
             "name": "TTC: 1Up Block at the Top",
             "id": 3626232,
+            "region": "TTC: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4575,6 +4710,7 @@
           {
             "name": "RR: Swingin' in the Breeze",
             "id": 3626101,
+            "region": "Rainbow Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4593,6 +4729,7 @@
           {
             "name": "RR: Tricky Triangles!",
             "id": 3626102,
+            "region": "Rainbow Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4611,6 +4748,7 @@
           {
             "name": "RR: 1Up Block Top of Red Coin Maze",
             "id": 3626233,
+            "region": "Rainbow Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4629,6 +4767,7 @@
           {
             "name": "RR: 1Up Block Under Fly Guy",
             "id": 3626234,
+            "region": "Rainbow Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4647,6 +4786,7 @@
           {
             "name": "RR: Bob-omb Buddy",
             "id": 3626214,
+            "region": "Rainbow Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4688,6 +4828,7 @@
           {
             "name": "RR: Coins Amassed in a Maze",
             "id": 3626100,
+            "region": "RR: Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4729,6 +4870,7 @@
           {
             "name": "RR: Cruiser Crossing the Rainbow",
             "id": 3626098,
+            "region": "RR: Cruiser",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4747,6 +4889,7 @@
           {
             "name": "RR: Somewhere Over the Rainbow",
             "id": 3626103,
+            "region": "RR: Cruiser",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4791,6 +4934,7 @@
           {
             "name": "RR: The Big House in the Sky",
             "id": 3626099,
+            "region": "RR: House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4809,6 +4953,7 @@
           {
             "name": "RR: 1Up Block On House in the Sky",
             "id": 3626235,
+            "region": "RR: House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4850,6 +4995,7 @@
           {
             "name": "Wing Mario Over the Rainbow Red Coins",
             "id": 3626154,
+            "region": "Wing Mario over the Rainbow",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4876,6 +5022,7 @@
           {
             "name": "Wing Mario Over the Rainbow 1Up Block",
             "id": 3626243,
+            "region": "Wing Mario over the Rainbow",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4938,6 +5085,7 @@
           {
             "name": "Bowser in the Sky 1Up Block",
             "id": 3626240,
+            "region": "Bowser in the Sky",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4979,6 +5127,7 @@
           {
             "name": "Bowser in the Sky Red Coins",
             "id": 3626119,
+            "region": "BitS: Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5420,9 +5569,39 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Side Flip",
+        "Wall Kick",
+        "Wing Cap",
+        "Cannon Unlock TTM",
+        "Cannon Unlock RR",
+        "Cannon Unlock CCM",
+        "Ground Pound",
+        "Cannon Unlock WDW",
+        "Vanish Cap",
+        "Cannon Unlock BoB",
+        "Second Floor Key",
+        "Dive",
+        "Long Jump",
+        "1Up Mushroom",
+        "Double Jump",
+        "Backflip",
+        "Cannon Unlock SSL",
+        "Cannon Unlock WF",
+        "Cannon Unlock JRB",
+        "Kick",
+        "Climb",
+        "Power Star",
+        "Ledge Grab",
+        "Cannon Unlock SL",
+        "Metal Cap",
+        "Triple Jump",
+        "Basement Key",
+        "Cannon Unlock THI",
+        "Progressive Key"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

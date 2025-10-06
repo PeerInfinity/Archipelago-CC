@@ -24,10 +24,11 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         try:
             # Import BlasRules to access string_rules
             from worlds.blasphemous.Rules import BlasRules
-            temp_logic = BlasRules(world)
-            self.string_rules_map = temp_logic.string_rules if hasattr(temp_logic, 'string_rules') else {}
+            self.blas_rules = BlasRules(world)
+            self.string_rules_map = self.blas_rules.string_rules if hasattr(self.blas_rules, 'string_rules') else {}
         except Exception as e:
             logger.debug(f"Could not get string_rules: {e}")
+            self.blas_rules = None
             
         # Load the original logic data
         try:
@@ -47,7 +48,21 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             logger.warning("Could not import Blasphemous logic data")
             self.regions_data = []
             self.locations_data = []
-    
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Blasphemous-specific settings including difficulty."""
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # Export difficulty setting with default value of 1 (normal)
+        if hasattr(world, 'options') and hasattr(world.options, 'difficulty'):
+            difficulty_value = world.options.difficulty.value
+        else:
+            difficulty_value = 1  # Default to normal difficulty
+
+        settings_dict['difficulty'] = difficulty_value
+
+        return settings_dict
+
     def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for Blasphemous to reconstruct from original logic data."""
         # First try to extract from closure variables if this is a lambda with clauses
@@ -172,12 +187,10 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
                 if self._is_region(item_req):
                     # Region requirement
                     reqs.append({'type': 'can_reach', 'region': item_req})
-                elif item_req in self.string_rules_map:
-                    # Reference to a string rule (helper method)
-                    reqs.append(self._expand_string_rule(item_req))
                 else:
-                    # Unknown requirement - treat as helper
-                    reqs.append({'type': 'helper', 'name': item_req})
+                    # Try to expand via string_rule_expansions (handles both string_rules_map and boss checks)
+                    expanded = self._expand_string_rule(item_req)
+                    reqs.append(expanded)
             
             # Combine requirements for this clause
             if len(reqs) == 0:
@@ -269,11 +282,7 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
                     {'type': 'can_reach', 'region': 'D17BZ02S01[FrontR]'}
                 ]
             },
-            'canBeatBrotherhoodBoss': {
-                'type': 'helper',
-                'name': 'canBeatBrotherhoodBoss'  # Complex logic that needs custom implementation
-            },
-            
+
             # Bell items
             'bell': {'type': 'item_check', 'item': 'Dried Flowers Bathed in Tears'},
             'redWax': {'type': 'item_check', 'item': 'Smoking Heart of Incense'},
@@ -287,18 +296,25 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             'brokeBotTCStatue': {'type': 'helper', 'name': 'brokeBotTCStatue'},
             'openedWotHPGate': {'type': 'helper', 'name': 'openedWotHPGate'},
             
-            # Boss checks
-            'canBeatMercyBoss': {'type': 'helper', 'name': 'canBeatMercyBoss'},
-            'canBeatConventBoss': {'type': 'helper', 'name': 'canBeatConventBoss'},
-            'canBeatGrievanceBoss': {'type': 'helper', 'name': 'canBeatGrievanceBoss'},
-            'canBeatJondoBoss': {'type': 'helper', 'name': 'canBeatJondoBoss'},
-            'canBeatMothersBoss': {'type': 'helper', 'name': 'canBeatMothersBoss'},
-            'canBeatCanvasesBoss': {'type': 'helper', 'name': 'canBeatCanvasesBoss'},
-            'canBeatPrisonBoss': {'type': 'helper', 'name': 'canBeatPrisonBoss'},
-            'canBeatBridgeBoss': {'type': 'helper', 'name': 'canBeatBridgeBoss'},
-            'canBeatHallBoss': {'type': 'helper', 'name': 'canBeatHallBoss'},
-            'canBeatRooftopsBoss': {'type': 'helper', 'name': 'canBeatRooftopsBoss'},
-            'canBeatLegionary': {'type': 'helper', 'name': 'canBeatLegionary'},
+            # Boss checks - map to has_boss_strength with specific boss names
+            'canBeatBrotherhoodBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'warden'}]},
+            'canBeatMercyBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'ten-piedad'}]},
+            'canBeatConventBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'charred-visage'}]},
+            'canBeatGrievanceBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'tres-angustias'}]},
+            'canBeatBridgeBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'esdras'}]},
+            'canBeatMothersBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'melquiades'}]},
+            'canBeatCanvasesBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'exposito'}]},
+            'canBeatPrisonBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'quirce'}]},
+            'canBeatRooftopsBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'crisanta'}]},
+            'canBeatOssuaryBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'isidora'}]},
+            'canBeatMourningBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'sierpes'}]},
+            'canBeatGraveyardBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+            'canBeatJondoBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+            'canBeatPatioBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+            'canBeatWallBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+            'canBeatHallBoss': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'laudes'}]},
+            'canBeatPerpetua': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'perpetua'}]},
+            'canBeatLegionary': {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'legionary'}]},
             
             # Other items
             'masks': {'type': 'item_check', 'item': 'Mask'},
@@ -306,7 +322,7 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         
         if rule_name in string_rule_expansions:
             return string_rule_expansions[rule_name]
-        
+
         # If not found, try the self.method pattern
         return self._expand_self_helper({'name': f'self.{rule_name}'})
     
@@ -537,7 +553,13 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         
         # Check if we have a mapping for this method
         if helper_name in blas_methods:
-            return blas_methods[helper_name]
+            result = blas_methods[helper_name]
+            # Preserve args from the input rule if they exist
+            if 'args' in rule and rule['args']:
+                # Copy the result so we don't modify the dict in blas_methods
+                result = result.copy()
+                result['args'] = rule['args']
+            return result
             
         # Check for parameterized methods
         if helper_name.startswith('thorns'):

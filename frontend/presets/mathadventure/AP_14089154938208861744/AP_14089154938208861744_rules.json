@@ -134,6 +134,7 @@
           {
             "name": "Definition of 2",
             "id": 200000001,
+            "region": "Definitions",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -152,6 +153,7 @@
           {
             "name": "Definition of 3",
             "id": 200000002,
+            "region": "Definitions",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -170,6 +172,7 @@
           {
             "name": "Definition of 4",
             "id": 200000003,
+            "region": "Definitions",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -224,6 +227,7 @@
           {
             "name": "1 is Complex",
             "id": 200000004,
+            "region": "Axioms",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -278,6 +282,7 @@
           {
             "name": "2 is Complex",
             "id": 200000005,
+            "region": "BasicProperties",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -347,6 +352,7 @@
           {
             "name": "Equality Substitution Right",
             "id": 200000006,
+            "region": "ArithmeticOperations",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -368,6 +374,7 @@
           {
             "name": "Equality Substitution Left",
             "id": 200000007,
+            "region": "ArithmeticOperations",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -389,6 +396,7 @@
           {
             "name": "Addition Associativity",
             "id": 200000008,
+            "region": "ArithmeticOperations",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -445,6 +453,7 @@
           {
             "name": "Triple Equality Transitivity",
             "id": 200000009,
+            "region": "ProofCompletion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -485,6 +494,7 @@
           {
             "name": "Final Equality",
             "id": 200000010,
+            "region": "ProofCompletion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -518,6 +528,7 @@
           {
             "name": "Theorem: 2+2=4",
             "id": null,
+            "region": "ProofCompletion",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -710,9 +721,20 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "df-3",
+        "3eqtri",
+        "ax-1cn",
+        "2cn",
+        "oveq1i",
+        "df-4",
+        "eqtr4i",
+        "oveq2i",
+        "addassi",
+        "df-2"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

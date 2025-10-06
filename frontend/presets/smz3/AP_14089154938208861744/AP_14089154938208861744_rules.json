@@ -2064,6 +2064,7 @@
           {
             "name": "Castle Tower - Foyer",
             "id": 85357,
+            "region": "Castle Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2110,6 +2111,7 @@
           {
             "name": "Castle Tower - Dark Maze",
             "id": 85358,
+            "region": "Castle Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2192,6 +2194,7 @@
           {
             "name": "Eastern Palace - Cannonball Chest",
             "id": 85359,
+            "region": "Eastern Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2238,6 +2241,7 @@
           {
             "name": "Eastern Palace - Map Chest",
             "id": 85360,
+            "region": "Eastern Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2284,6 +2288,7 @@
           {
             "name": "Eastern Palace - Compass Chest",
             "id": 85361,
+            "region": "Eastern Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2330,6 +2335,7 @@
           {
             "name": "Eastern Palace - Big Chest",
             "id": 85362,
+            "region": "Eastern Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2376,6 +2382,7 @@
           {
             "name": "Eastern Palace - Big Key Chest",
             "id": 85363,
+            "region": "Eastern Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2422,6 +2429,7 @@
           {
             "name": "Eastern Palace - Armos Knights",
             "id": 85364,
+            "region": "Eastern Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2504,6 +2512,7 @@
           {
             "name": "Desert Palace - Big Chest",
             "id": 85365,
+            "region": "Desert Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2550,6 +2559,7 @@
           {
             "name": "Desert Palace - Torch",
             "id": 85366,
+            "region": "Desert Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2596,6 +2606,7 @@
           {
             "name": "Desert Palace - Map Chest",
             "id": 85367,
+            "region": "Desert Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2642,6 +2653,7 @@
           {
             "name": "Desert Palace - Big Key Chest",
             "id": 85368,
+            "region": "Desert Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2688,6 +2700,7 @@
           {
             "name": "Desert Palace - Compass Chest",
             "id": 85369,
+            "region": "Desert Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2734,6 +2747,7 @@
           {
             "name": "Desert Palace - Lanmolas",
             "id": 85370,
+            "region": "Desert Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2816,6 +2830,7 @@
           {
             "name": "Tower of Hera - Basement Cage",
             "id": 85371,
+            "region": "Tower of Hera",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2862,6 +2877,7 @@
           {
             "name": "Tower of Hera - Map Chest",
             "id": 85372,
+            "region": "Tower of Hera",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2908,6 +2924,7 @@
           {
             "name": "Tower of Hera - Big Key Chest",
             "id": 85373,
+            "region": "Tower of Hera",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2954,6 +2971,7 @@
           {
             "name": "Tower of Hera - Compass Chest",
             "id": 85374,
+            "region": "Tower of Hera",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3000,6 +3018,7 @@
           {
             "name": "Tower of Hera - Big Chest",
             "id": 85375,
+            "region": "Tower of Hera",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3046,6 +3065,7 @@
           {
             "name": "Tower of Hera - Moldorm",
             "id": 85376,
+            "region": "Tower of Hera",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3128,6 +3148,7 @@
           {
             "name": "Palace of Darkness - Shooter Room",
             "id": 85377,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3174,6 +3195,7 @@
           {
             "name": "Palace of Darkness - Big Key Chest",
             "id": 85378,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3220,6 +3242,7 @@
           {
             "name": "Palace of Darkness - Stalfos Basement",
             "id": 85379,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3266,6 +3289,7 @@
           {
             "name": "Palace of Darkness - The Arena - Bridge",
             "id": 85380,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3312,6 +3336,7 @@
           {
             "name": "Palace of Darkness - The Arena - Ledge",
             "id": 85381,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3358,6 +3383,7 @@
           {
             "name": "Palace of Darkness - Map Chest",
             "id": 85382,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3404,6 +3430,7 @@
           {
             "name": "Palace of Darkness - Compass Chest",
             "id": 85383,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3450,6 +3477,7 @@
           {
             "name": "Palace of Darkness - Harmless Hellway",
             "id": 85384,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3496,6 +3524,7 @@
           {
             "name": "Palace of Darkness - Dark Basement - Left",
             "id": 85385,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3542,6 +3571,7 @@
           {
             "name": "Palace of Darkness - Dark Basement - Right",
             "id": 85386,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3588,6 +3618,7 @@
           {
             "name": "Palace of Darkness - Dark Maze - Top",
             "id": 85387,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3634,6 +3665,7 @@
           {
             "name": "Palace of Darkness - Dark Maze - Bottom",
             "id": 85388,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3680,6 +3712,7 @@
           {
             "name": "Palace of Darkness - Big Chest",
             "id": 85389,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3726,6 +3759,7 @@
           {
             "name": "Palace of Darkness - Helmasaur King",
             "id": 85390,
+            "region": "Palace of Darkness",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3808,6 +3842,7 @@
           {
             "name": "Swamp Palace - Entrance",
             "id": 85391,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3854,6 +3889,7 @@
           {
             "name": "Swamp Palace - Map Chest",
             "id": 85392,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3900,6 +3936,7 @@
           {
             "name": "Swamp Palace - Big Chest",
             "id": 85393,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3946,6 +3983,7 @@
           {
             "name": "Swamp Palace - Compass Chest",
             "id": 85394,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3992,6 +4030,7 @@
           {
             "name": "Swamp Palace - West Chest",
             "id": 85395,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4038,6 +4077,7 @@
           {
             "name": "Swamp Palace - Big Key Chest",
             "id": 85396,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4084,6 +4124,7 @@
           {
             "name": "Swamp Palace - Flooded Room - Left",
             "id": 85397,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4130,6 +4171,7 @@
           {
             "name": "Swamp Palace - Flooded Room - Right",
             "id": 85398,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4176,6 +4218,7 @@
           {
             "name": "Swamp Palace - Waterfall Room",
             "id": 85399,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4222,6 +4265,7 @@
           {
             "name": "Swamp Palace - Arrghus",
             "id": 85400,
+            "region": "Swamp Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4304,6 +4348,7 @@
           {
             "name": "Skull Woods - Pot Prison",
             "id": 85401,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4350,6 +4395,7 @@
           {
             "name": "Skull Woods - Compass Chest",
             "id": 85402,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4396,6 +4442,7 @@
           {
             "name": "Skull Woods - Big Chest",
             "id": 85403,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4442,6 +4489,7 @@
           {
             "name": "Skull Woods - Map Chest",
             "id": 85404,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4488,6 +4536,7 @@
           {
             "name": "Skull Woods - Pinball Room",
             "id": 85405,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4534,6 +4583,7 @@
           {
             "name": "Skull Woods - Big Key Chest",
             "id": 85406,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4580,6 +4630,7 @@
           {
             "name": "Skull Woods - Bridge Room",
             "id": 85407,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4626,6 +4677,7 @@
           {
             "name": "Skull Woods - Mothula",
             "id": 85408,
+            "region": "Skull Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4708,6 +4760,7 @@
           {
             "name": "Thieves' Town - Map Chest",
             "id": 85409,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4754,6 +4807,7 @@
           {
             "name": "Thieves' Town - Ambush Chest",
             "id": 85410,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4800,6 +4854,7 @@
           {
             "name": "Thieves' Town - Compass Chest",
             "id": 85411,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4846,6 +4901,7 @@
           {
             "name": "Thieves' Town - Big Key Chest",
             "id": 85412,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4892,6 +4948,7 @@
           {
             "name": "Thieves' Town - Attic",
             "id": 85413,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4938,6 +4995,7 @@
           {
             "name": "Thieves' Town - Blind's Cell",
             "id": 85414,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4984,6 +5042,7 @@
           {
             "name": "Thieves' Town - Big Chest",
             "id": 85415,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5030,6 +5089,7 @@
           {
             "name": "Thieves' Town - Blind",
             "id": 85416,
+            "region": "Thieves' Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5112,6 +5172,7 @@
           {
             "name": "Ice Palace - Compass Chest",
             "id": 85417,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5158,6 +5219,7 @@
           {
             "name": "Ice Palace - Spike Room",
             "id": 85418,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5204,6 +5266,7 @@
           {
             "name": "Ice Palace - Map Chest",
             "id": 85419,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5250,6 +5313,7 @@
           {
             "name": "Ice Palace - Big Key Chest",
             "id": 85420,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5296,6 +5360,7 @@
           {
             "name": "Ice Palace - Iced T Room",
             "id": 85421,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5342,6 +5407,7 @@
           {
             "name": "Ice Palace - Freezor Chest",
             "id": 85422,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5388,6 +5454,7 @@
           {
             "name": "Ice Palace - Big Chest",
             "id": 85423,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5434,6 +5501,7 @@
           {
             "name": "Ice Palace - Kholdstare",
             "id": 85424,
+            "region": "Ice Palace",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5516,6 +5584,7 @@
           {
             "name": "Misery Mire - Main Lobby",
             "id": 85425,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5562,6 +5631,7 @@
           {
             "name": "Misery Mire - Map Chest",
             "id": 85426,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5608,6 +5678,7 @@
           {
             "name": "Misery Mire - Bridge Chest",
             "id": 85427,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5654,6 +5725,7 @@
           {
             "name": "Misery Mire - Spike Chest",
             "id": 85428,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5700,6 +5772,7 @@
           {
             "name": "Misery Mire - Compass Chest",
             "id": 85429,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5746,6 +5819,7 @@
           {
             "name": "Misery Mire - Big Key Chest",
             "id": 85430,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5792,6 +5866,7 @@
           {
             "name": "Misery Mire - Big Chest",
             "id": 85431,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5838,6 +5913,7 @@
           {
             "name": "Misery Mire - Vitreous",
             "id": 85432,
+            "region": "Misery Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5920,6 +5996,7 @@
           {
             "name": "Turtle Rock - Compass Chest",
             "id": 85433,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5966,6 +6043,7 @@
           {
             "name": "Turtle Rock - Roller Room - Left",
             "id": 85434,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6012,6 +6090,7 @@
           {
             "name": "Turtle Rock - Roller Room - Right",
             "id": 85435,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6058,6 +6137,7 @@
           {
             "name": "Turtle Rock - Chain Chomps",
             "id": 85436,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6104,6 +6184,7 @@
           {
             "name": "Turtle Rock - Big Key Chest",
             "id": 85437,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6150,6 +6231,7 @@
           {
             "name": "Turtle Rock - Big Chest",
             "id": 85438,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6196,6 +6278,7 @@
           {
             "name": "Turtle Rock - Crystaroller Room",
             "id": 85439,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6242,6 +6325,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Top Right",
             "id": 85440,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6288,6 +6372,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Top Left",
             "id": 85441,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6334,6 +6419,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Right",
             "id": 85442,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6380,6 +6466,7 @@
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Left",
             "id": 85443,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6426,6 +6513,7 @@
           {
             "name": "Turtle Rock - Trinexx",
             "id": 85444,
+            "region": "Turtle Rock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6508,6 +6596,7 @@
           {
             "name": "Ganon's Tower - Bob's Torch",
             "id": 85445,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6554,6 +6643,7 @@
           {
             "name": "Ganon's Tower - DMs Room - Top Left",
             "id": 85446,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6600,6 +6690,7 @@
           {
             "name": "Ganon's Tower - DMs Room - Top Right",
             "id": 85447,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6646,6 +6737,7 @@
           {
             "name": "Ganon's Tower - DMs Room - Bottom Left",
             "id": 85448,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6692,6 +6784,7 @@
           {
             "name": "Ganon's Tower - DMs Room - Bottom Right",
             "id": 85449,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6738,6 +6831,7 @@
           {
             "name": "Ganon's Tower - Map Chest",
             "id": 85450,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6784,6 +6878,7 @@
           {
             "name": "Ganon's Tower - Firesnake Room",
             "id": 85451,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6830,6 +6925,7 @@
           {
             "name": "Ganon's Tower - Randomizer Room - Top Left",
             "id": 85452,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6876,6 +6972,7 @@
           {
             "name": "Ganon's Tower - Randomizer Room - Top Right",
             "id": 85453,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6922,6 +7019,7 @@
           {
             "name": "Ganon's Tower - Randomizer Room - Bottom Left",
             "id": 85454,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6968,6 +7066,7 @@
           {
             "name": "Ganon's Tower - Randomizer Room - Bottom Right",
             "id": 85455,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7014,6 +7113,7 @@
           {
             "name": "Ganon's Tower - Hope Room - Left",
             "id": 85456,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7060,6 +7160,7 @@
           {
             "name": "Ganon's Tower - Hope Room - Right",
             "id": 85457,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7106,6 +7207,7 @@
           {
             "name": "Ganon's Tower - Tile Room",
             "id": 85458,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7152,6 +7254,7 @@
           {
             "name": "Ganon's Tower - Compass Room - Top Left",
             "id": 85459,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7198,6 +7301,7 @@
           {
             "name": "Ganon's Tower - Compass Room - Top Right",
             "id": 85460,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7244,6 +7348,7 @@
           {
             "name": "Ganon's Tower - Compass Room - Bottom Left",
             "id": 85461,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7290,6 +7395,7 @@
           {
             "name": "Ganon's Tower - Compass Room - Bottom Right",
             "id": 85462,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7336,6 +7442,7 @@
           {
             "name": "Ganon's Tower - Bob's Chest",
             "id": 85463,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7382,6 +7489,7 @@
           {
             "name": "Ganon's Tower - Big Chest",
             "id": 85464,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7428,6 +7536,7 @@
           {
             "name": "Ganon's Tower - Big Key Chest",
             "id": 85465,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7474,6 +7583,7 @@
           {
             "name": "Ganon's Tower - Big Key Room - Left",
             "id": 85466,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7520,6 +7630,7 @@
           {
             "name": "Ganon's Tower - Big Key Room - Right",
             "id": 85467,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7566,6 +7677,7 @@
           {
             "name": "Ganon's Tower - Mini Helmasaur Room - Left",
             "id": 85468,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7612,6 +7724,7 @@
           {
             "name": "Ganon's Tower - Mini Helmasaur Room - Right",
             "id": 85469,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7658,6 +7771,7 @@
           {
             "name": "Ganon's Tower - Pre-Moldorm Chest",
             "id": 85470,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7704,6 +7818,7 @@
           {
             "name": "Ganon's Tower - Moldorm Chest",
             "id": 85471,
+            "region": "Ganon's Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7786,6 +7901,7 @@
           {
             "name": "Ether Tablet",
             "id": 85256,
+            "region": "Light World Death Mountain West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7832,6 +7948,7 @@
           {
             "name": "Spectacle Rock",
             "id": 85257,
+            "region": "Light World Death Mountain West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7878,6 +7995,7 @@
           {
             "name": "Spectacle Rock Cave",
             "id": 85258,
+            "region": "Light World Death Mountain West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7924,6 +8042,7 @@
           {
             "name": "Old Man",
             "id": 85259,
+            "region": "Light World Death Mountain West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8006,6 +8125,7 @@
           {
             "name": "Floating Island",
             "id": 85260,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8052,6 +8172,7 @@
           {
             "name": "Spiral Cave",
             "id": 85261,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8098,6 +8219,7 @@
           {
             "name": "Paradox Cave Upper - Left",
             "id": 85262,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8144,6 +8266,7 @@
           {
             "name": "Paradox Cave Upper - Right",
             "id": 85263,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8190,6 +8313,7 @@
           {
             "name": "Paradox Cave Lower - Far Left",
             "id": 85264,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8236,6 +8360,7 @@
           {
             "name": "Paradox Cave Lower - Left",
             "id": 85265,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8282,6 +8407,7 @@
           {
             "name": "Paradox Cave Lower - Middle",
             "id": 85266,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8328,6 +8454,7 @@
           {
             "name": "Paradox Cave Lower - Right",
             "id": 85267,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8374,6 +8501,7 @@
           {
             "name": "Paradox Cave Lower - Far Right",
             "id": 85268,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8420,6 +8548,7 @@
           {
             "name": "Mimic Cave",
             "id": 85269,
+            "region": "Light World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8502,6 +8631,7 @@
           {
             "name": "Master Sword Pedestal",
             "id": 85270,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8548,6 +8678,7 @@
           {
             "name": "Mushroom",
             "id": 85271,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8594,6 +8725,7 @@
           {
             "name": "Lost Woods Hideout",
             "id": 85272,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8640,6 +8772,7 @@
           {
             "name": "Lumberjack Tree",
             "id": 85273,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8686,6 +8819,7 @@
           {
             "name": "Pegasus Rocks",
             "id": 85274,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8732,6 +8866,7 @@
           {
             "name": "Graveyard Ledge",
             "id": 85275,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8778,6 +8913,7 @@
           {
             "name": "King's Tomb",
             "id": 85276,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8824,6 +8960,7 @@
           {
             "name": "Kakariko Well - Top",
             "id": 85277,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8870,6 +9007,7 @@
           {
             "name": "Kakariko Well - Left",
             "id": 85278,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8916,6 +9054,7 @@
           {
             "name": "Kakariko Well - Middle",
             "id": 85279,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8962,6 +9101,7 @@
           {
             "name": "Kakariko Well - Right",
             "id": 85280,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9008,6 +9148,7 @@
           {
             "name": "Kakariko Well - Bottom",
             "id": 85281,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9054,6 +9195,7 @@
           {
             "name": "Blind's Hideout - Top",
             "id": 85282,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9100,6 +9242,7 @@
           {
             "name": "Blind's Hideout - Far Left",
             "id": 85283,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9146,6 +9289,7 @@
           {
             "name": "Blind's Hideout - Left",
             "id": 85284,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9192,6 +9336,7 @@
           {
             "name": "Blind's Hideout - Right",
             "id": 85285,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9238,6 +9383,7 @@
           {
             "name": "Blind's Hideout - Far Right",
             "id": 85286,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9284,6 +9430,7 @@
           {
             "name": "Bottle Merchant",
             "id": 85287,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9330,6 +9477,7 @@
           {
             "name": "Chicken House",
             "id": 85506,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9376,6 +9524,7 @@
           {
             "name": "Sick Kid",
             "id": 85289,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9422,6 +9571,7 @@
           {
             "name": "Kakariko Tavern",
             "id": 85290,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9468,6 +9618,7 @@
           {
             "name": "Magic Bat",
             "id": 85291,
+            "region": "Light World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9550,6 +9701,7 @@
           {
             "name": "King Zora",
             "id": 85292,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9596,6 +9748,7 @@
           {
             "name": "Zora's Ledge",
             "id": 85293,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9642,6 +9795,7 @@
           {
             "name": "Waterfall Fairy - Left",
             "id": 85510,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9688,6 +9842,7 @@
           {
             "name": "Waterfall Fairy - Right",
             "id": 85295,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9734,6 +9889,7 @@
           {
             "name": "Potion Shop",
             "id": 85296,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9780,6 +9936,7 @@
           {
             "name": "Sahasrahla's Hut - Left",
             "id": 85297,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9826,6 +9983,7 @@
           {
             "name": "Sahasrahla's Hut - Middle",
             "id": 85298,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9872,6 +10030,7 @@
           {
             "name": "Sahasrahla's Hut - Right",
             "id": 85299,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9918,6 +10077,7 @@
           {
             "name": "Sahasrahla",
             "id": 85300,
+            "region": "Light World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10000,6 +10160,7 @@
           {
             "name": "Maze Race",
             "id": 85301,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10046,6 +10207,7 @@
           {
             "name": "Library",
             "id": 85496,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10092,6 +10254,7 @@
           {
             "name": "Flute Spot",
             "id": 85497,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10138,6 +10301,7 @@
           {
             "name": "South of Grove",
             "id": 85498,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10184,6 +10348,7 @@
           {
             "name": "Link's House",
             "id": 85499,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10230,6 +10395,7 @@
           {
             "name": "Aginah's Cave",
             "id": 85500,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10276,6 +10442,7 @@
           {
             "name": "Mini Moldorm Cave - Far Left",
             "id": 85307,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10322,6 +10489,7 @@
           {
             "name": "Mini Moldorm Cave - Left",
             "id": 85308,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10368,6 +10536,7 @@
           {
             "name": "Mini Moldorm Cave - NPC",
             "id": 85309,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10414,6 +10583,7 @@
           {
             "name": "Mini Moldorm Cave - Right",
             "id": 85310,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10460,6 +10630,7 @@
           {
             "name": "Mini Moldorm Cave - Far Right",
             "id": 85507,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10506,6 +10677,7 @@
           {
             "name": "Desert Ledge",
             "id": 85508,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10552,6 +10724,7 @@
           {
             "name": "Checkerboard Cave",
             "id": 85509,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10598,6 +10771,7 @@
           {
             "name": "Bombos Tablet",
             "id": 85314,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10644,6 +10818,7 @@
           {
             "name": "Floodgate Chest",
             "id": 85315,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10690,6 +10865,7 @@
           {
             "name": "Sunken Treasure",
             "id": 85316,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10736,6 +10912,7 @@
           {
             "name": "Lake Hylia Island",
             "id": 85317,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10782,6 +10959,7 @@
           {
             "name": "Hobo",
             "id": 85318,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10828,6 +11006,7 @@
           {
             "name": "Ice Rod Cave",
             "id": 85319,
+            "region": "Light World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10910,6 +11089,7 @@
           {
             "name": "Sanctuary",
             "id": 85347,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10956,6 +11136,7 @@
           {
             "name": "Sewers - Secret Room - Left",
             "id": 85348,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11002,6 +11183,7 @@
           {
             "name": "Sewers - Secret Room - Middle",
             "id": 85349,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11048,6 +11230,7 @@
           {
             "name": "Sewers - Secret Room - Right",
             "id": 85350,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11094,6 +11277,7 @@
           {
             "name": "Sewers - Dark Cross",
             "id": 85351,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11140,6 +11324,7 @@
           {
             "name": "Hyrule Castle - Map Chest",
             "id": 85352,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11186,6 +11371,7 @@
           {
             "name": "Hyrule Castle - Boomerang Chest",
             "id": 85353,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11232,6 +11418,7 @@
           {
             "name": "Hyrule Castle - Zelda's Cell",
             "id": 85354,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11278,6 +11465,7 @@
           {
             "name": "Link's Uncle",
             "id": 85355,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11324,6 +11512,7 @@
           {
             "name": "Secret Passage",
             "id": 85356,
+            "region": "Hyrule Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11406,6 +11595,7 @@
           {
             "name": "Spike Cave",
             "id": 85320,
+            "region": "Dark World Death Mountain West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11488,6 +11678,7 @@
           {
             "name": "Hookshot Cave - Top Right",
             "id": 85321,
+            "region": "Dark World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11534,6 +11725,7 @@
           {
             "name": "Hookshot Cave - Top Left",
             "id": 85322,
+            "region": "Dark World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11580,6 +11772,7 @@
           {
             "name": "Hookshot Cave - Bottom Left",
             "id": 85323,
+            "region": "Dark World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11626,6 +11819,7 @@
           {
             "name": "Hookshot Cave - Bottom Right",
             "id": 85324,
+            "region": "Dark World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11672,6 +11866,7 @@
           {
             "name": "Superbunny Cave - Top",
             "id": 85325,
+            "region": "Dark World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11718,6 +11913,7 @@
           {
             "name": "Superbunny Cave - Bottom",
             "id": 85326,
+            "region": "Dark World Death Mountain East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11800,6 +11996,7 @@
           {
             "name": "Bumper Cave",
             "id": 85327,
+            "region": "Dark World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11846,6 +12043,7 @@
           {
             "name": "Chest Game",
             "id": 85328,
+            "region": "Dark World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11892,6 +12090,7 @@
           {
             "name": "C-Shaped House",
             "id": 85329,
+            "region": "Dark World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11938,6 +12137,7 @@
           {
             "name": "Brewery",
             "id": 85330,
+            "region": "Dark World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11984,6 +12184,7 @@
           {
             "name": "Hammer Pegs",
             "id": 85331,
+            "region": "Dark World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12030,6 +12231,7 @@
           {
             "name": "Blacksmith",
             "id": 85332,
+            "region": "Dark World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12076,6 +12278,7 @@
           {
             "name": "Purple Chest",
             "id": 85333,
+            "region": "Dark World North West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12158,6 +12361,7 @@
           {
             "name": "Catfish",
             "id": 85334,
+            "region": "Dark World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12204,6 +12408,7 @@
           {
             "name": "Pyramid",
             "id": 85335,
+            "region": "Dark World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12250,6 +12455,7 @@
           {
             "name": "Pyramid Fairy - Left",
             "id": 85336,
+            "region": "Dark World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12296,6 +12502,7 @@
           {
             "name": "Pyramid Fairy - Right",
             "id": 85337,
+            "region": "Dark World North East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12378,6 +12585,7 @@
           {
             "name": "Digging Game",
             "id": 85338,
+            "region": "Dark World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12424,6 +12632,7 @@
           {
             "name": "Stumpy",
             "id": 85339,
+            "region": "Dark World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12470,6 +12679,7 @@
           {
             "name": "Hype Cave - Top",
             "id": 85340,
+            "region": "Dark World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12516,6 +12726,7 @@
           {
             "name": "Hype Cave - Middle Right",
             "id": 85341,
+            "region": "Dark World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12562,6 +12773,7 @@
           {
             "name": "Hype Cave - Middle Left",
             "id": 85342,
+            "region": "Dark World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12608,6 +12820,7 @@
           {
             "name": "Hype Cave - Bottom",
             "id": 85343,
+            "region": "Dark World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12654,6 +12867,7 @@
           {
             "name": "Hype Cave - NPC",
             "id": 85344,
+            "region": "Dark World South",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12736,6 +12950,7 @@
           {
             "name": "Mire Shed - Left",
             "id": 85345,
+            "region": "Dark World Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12782,6 +12997,7 @@
           {
             "name": "Mire Shed - Right",
             "id": 85346,
+            "region": "Dark World Mire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12864,6 +13080,7 @@
           {
             "name": "Energy Tank, Terminator",
             "id": 85008,
+            "region": "Crateria West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12910,6 +13127,7 @@
           {
             "name": "Energy Tank, Gauntlet",
             "id": 85005,
+            "region": "Crateria West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12956,6 +13174,7 @@
           {
             "name": "Missile (Crateria gauntlet right)",
             "id": 85009,
+            "region": "Crateria West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13002,6 +13221,7 @@
           {
             "name": "Missile (Crateria gauntlet left)",
             "id": 85010,
+            "region": "Crateria West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13084,6 +13304,7 @@
           {
             "name": "Power Bomb (Crateria surface)",
             "id": 85000,
+            "region": "Crateria Central",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13130,6 +13351,7 @@
           {
             "name": "Missile (Crateria middle)",
             "id": 85012,
+            "region": "Crateria Central",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13176,6 +13398,7 @@
           {
             "name": "Missile (Crateria bottom)",
             "id": 85006,
+            "region": "Crateria Central",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13222,6 +13445,7 @@
           {
             "name": "Super Missile (Crateria)",
             "id": 85011,
+            "region": "Crateria Central",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13268,6 +13492,7 @@
           {
             "name": "Bombs",
             "id": 85007,
+            "region": "Crateria Central",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13350,6 +13575,7 @@
           {
             "name": "Missile (outside Wrecked Ship bottom)",
             "id": 85001,
+            "region": "Crateria East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13396,6 +13622,7 @@
           {
             "name": "Missile (outside Wrecked Ship top)",
             "id": 85002,
+            "region": "Crateria East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13442,6 +13669,7 @@
           {
             "name": "Missile (outside Wrecked Ship middle)",
             "id": 85003,
+            "region": "Crateria East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13488,6 +13716,7 @@
           {
             "name": "Missile (Crateria moat)",
             "id": 85004,
+            "region": "Crateria East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13570,6 +13799,7 @@
           {
             "name": "Morphing Ball",
             "id": 85026,
+            "region": "Brinstar Blue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13616,6 +13846,7 @@
           {
             "name": "Power Bomb (blue Brinstar)",
             "id": 85027,
+            "region": "Brinstar Blue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13662,6 +13893,7 @@
           {
             "name": "Missile (blue Brinstar middle)",
             "id": 85028,
+            "region": "Brinstar Blue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13708,6 +13940,7 @@
           {
             "name": "Energy Tank, Brinstar Ceiling",
             "id": 85029,
+            "region": "Brinstar Blue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13754,6 +13987,7 @@
           {
             "name": "Missile (blue Brinstar bottom)",
             "id": 85034,
+            "region": "Brinstar Blue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13800,6 +14034,7 @@
           {
             "name": "Missile (blue Brinstar top)",
             "id": 85036,
+            "region": "Brinstar Blue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13846,6 +14081,7 @@
           {
             "name": "Missile (blue Brinstar behind missile)",
             "id": 85037,
+            "region": "Brinstar Blue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13928,6 +14164,7 @@
           {
             "name": "Power Bomb (green Brinstar bottom)",
             "id": 85013,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13974,6 +14211,7 @@
           {
             "name": "Missile (green Brinstar below super missile)",
             "id": 85015,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14020,6 +14258,7 @@
           {
             "name": "Super Missile (green Brinstar top)",
             "id": 85016,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14066,6 +14305,7 @@
           {
             "name": "Reserve Tank, Brinstar",
             "id": 85017,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14112,6 +14352,7 @@
           {
             "name": "Missile (green Brinstar behind missile)",
             "id": 85018,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14158,6 +14399,7 @@
           {
             "name": "Missile (green Brinstar behind reserve tank)",
             "id": 85019,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14204,6 +14446,7 @@
           {
             "name": "Energy Tank, Etecoons",
             "id": 85030,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14250,6 +14493,7 @@
           {
             "name": "Super Missile (green Brinstar bottom)",
             "id": 85031,
+            "region": "Brinstar Green",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14332,6 +14576,7 @@
           {
             "name": "Super Missile (pink Brinstar)",
             "id": 85014,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14378,6 +14623,7 @@
           {
             "name": "Missile (pink Brinstar top)",
             "id": 85021,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14424,6 +14670,7 @@
           {
             "name": "Missile (pink Brinstar bottom)",
             "id": 85022,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14470,6 +14717,7 @@
           {
             "name": "Charge Beam",
             "id": 85023,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14516,6 +14764,7 @@
           {
             "name": "Power Bomb (pink Brinstar)",
             "id": 85024,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14562,6 +14811,7 @@
           {
             "name": "Missile (green Brinstar pipe)",
             "id": 85025,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14608,6 +14858,7 @@
           {
             "name": "Energy Tank, Waterway",
             "id": 85033,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14654,6 +14905,7 @@
           {
             "name": "Energy Tank, Brinstar Gate",
             "id": 85035,
+            "region": "Brinstar Pink",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14736,6 +14988,7 @@
           {
             "name": "X-Ray Scope",
             "id": 85038,
+            "region": "Brinstar Red",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14782,6 +15035,7 @@
           {
             "name": "Power Bomb (red Brinstar sidehopper room)",
             "id": 85039,
+            "region": "Brinstar Red",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14828,6 +15082,7 @@
           {
             "name": "Power Bomb (red Brinstar spike room)",
             "id": 85040,
+            "region": "Brinstar Red",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14874,6 +15129,7 @@
           {
             "name": "Missile (red Brinstar spike room)",
             "id": 85041,
+            "region": "Brinstar Red",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14920,6 +15176,7 @@
           {
             "name": "Spazer",
             "id": 85042,
+            "region": "Brinstar Red",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15002,6 +15259,7 @@
           {
             "name": "Energy Tank, Kraid",
             "id": 85043,
+            "region": "Brinstar Kraid",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15048,6 +15306,7 @@
           {
             "name": "Varia Suit",
             "id": 85048,
+            "region": "Brinstar Kraid",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15094,6 +15353,7 @@
           {
             "name": "Missile (Kraid)",
             "id": 85044,
+            "region": "Brinstar Kraid",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15176,6 +15436,7 @@
           {
             "name": "Missile (Wrecked Ship middle)",
             "id": 85128,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15222,6 +15483,7 @@
           {
             "name": "Reserve Tank, Wrecked Ship",
             "id": 85129,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15268,6 +15530,7 @@
           {
             "name": "Missile (Gravity Suit)",
             "id": 85130,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15314,6 +15577,7 @@
           {
             "name": "Missile (Wrecked Ship top)",
             "id": 85131,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15360,6 +15624,7 @@
           {
             "name": "Energy Tank, Wrecked Ship",
             "id": 85132,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15406,6 +15671,7 @@
           {
             "name": "Super Missile (Wrecked Ship left)",
             "id": 85133,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15452,6 +15718,7 @@
           {
             "name": "Right Super, Wrecked Ship",
             "id": 85134,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15498,6 +15765,7 @@
           {
             "name": "Gravity Suit",
             "id": 85135,
+            "region": "Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15580,6 +15848,7 @@
           {
             "name": "Missile (green Maridia shinespark)",
             "id": 85136,
+            "region": "Maridia Outer",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15626,6 +15895,7 @@
           {
             "name": "Super Missile (green Maridia)",
             "id": 85137,
+            "region": "Maridia Outer",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15672,6 +15942,7 @@
           {
             "name": "Energy Tank, Mama turtle",
             "id": 85138,
+            "region": "Maridia Outer",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15718,6 +15989,7 @@
           {
             "name": "Missile (green Maridia tatori)",
             "id": 85139,
+            "region": "Maridia Outer",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15800,6 +16072,7 @@
           {
             "name": "Super Missile (yellow Maridia)",
             "id": 85140,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15846,6 +16119,7 @@
           {
             "name": "Missile (yellow Maridia super missile)",
             "id": 85141,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15892,6 +16166,7 @@
           {
             "name": "Missile (yellow Maridia false wall)",
             "id": 85142,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15938,6 +16213,7 @@
           {
             "name": "Plasma Beam",
             "id": 85143,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15984,6 +16260,7 @@
           {
             "name": "Missile (left Maridia sand pit room)",
             "id": 85144,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16030,6 +16307,7 @@
           {
             "name": "Reserve Tank, Maridia",
             "id": 85145,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16076,6 +16354,7 @@
           {
             "name": "Missile (right Maridia sand pit room)",
             "id": 85146,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16122,6 +16401,7 @@
           {
             "name": "Power Bomb (right Maridia sand pit room)",
             "id": 85147,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16168,6 +16448,7 @@
           {
             "name": "Missile (pink Maridia)",
             "id": 85148,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16214,6 +16495,7 @@
           {
             "name": "Super Missile (pink Maridia)",
             "id": 85149,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16260,6 +16542,7 @@
           {
             "name": "Spring Ball",
             "id": 85150,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16306,6 +16589,7 @@
           {
             "name": "Missile (Draygon)",
             "id": 85151,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16352,6 +16636,7 @@
           {
             "name": "Energy Tank, Botwoon",
             "id": 85152,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16398,6 +16683,7 @@
           {
             "name": "Space Jump",
             "id": 85154,
+            "region": "Maridia Inner",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16480,6 +16766,7 @@
           {
             "name": "Missile (lava room)",
             "id": 85049,
+            "region": "Norfair Upper West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16526,6 +16813,7 @@
           {
             "name": "Ice Beam",
             "id": 85050,
+            "region": "Norfair Upper West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16572,6 +16860,7 @@
           {
             "name": "Missile (below Ice Beam)",
             "id": 85051,
+            "region": "Norfair Upper West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16618,6 +16907,7 @@
           {
             "name": "Hi-Jump Boots",
             "id": 85053,
+            "region": "Norfair Upper West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16664,6 +16954,7 @@
           {
             "name": "Missile (Hi-Jump Boots)",
             "id": 85055,
+            "region": "Norfair Upper West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16710,6 +17001,7 @@
           {
             "name": "Energy Tank (Hi-Jump Boots)",
             "id": 85056,
+            "region": "Norfair Upper West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16792,6 +17084,7 @@
           {
             "name": "Reserve Tank, Norfair",
             "id": 85061,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16838,6 +17131,7 @@
           {
             "name": "Missile (Norfair Reserve Tank)",
             "id": 85062,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16884,6 +17178,7 @@
           {
             "name": "Missile (bubble Norfair green door)",
             "id": 85063,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16930,6 +17225,7 @@
           {
             "name": "Missile (bubble Norfair)",
             "id": 85064,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16976,6 +17272,7 @@
           {
             "name": "Missile (Speed Booster)",
             "id": 85065,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17022,6 +17319,7 @@
           {
             "name": "Speed Booster",
             "id": 85066,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17068,6 +17366,7 @@
           {
             "name": "Missile (Wave Beam)",
             "id": 85067,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17114,6 +17413,7 @@
           {
             "name": "Wave Beam",
             "id": 85068,
+            "region": "Norfair Upper East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17196,6 +17496,7 @@
           {
             "name": "Energy Tank, Crocomire",
             "id": 85052,
+            "region": "Norfair Upper Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17242,6 +17543,7 @@
           {
             "name": "Missile (above Crocomire)",
             "id": 85054,
+            "region": "Norfair Upper Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17288,6 +17590,7 @@
           {
             "name": "Power Bomb (Crocomire)",
             "id": 85057,
+            "region": "Norfair Upper Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17334,6 +17637,7 @@
           {
             "name": "Missile (below Crocomire)",
             "id": 85058,
+            "region": "Norfair Upper Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17380,6 +17684,7 @@
           {
             "name": "Missile (Grappling Beam)",
             "id": 85059,
+            "region": "Norfair Upper Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17426,6 +17731,7 @@
           {
             "name": "Grappling Beam",
             "id": 85060,
+            "region": "Norfair Upper Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17508,6 +17814,7 @@
           {
             "name": "Missile (Gold Torizo)",
             "id": 85070,
+            "region": "Norfair Lower West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17554,6 +17861,7 @@
           {
             "name": "Super Missile (Gold Torizo)",
             "id": 85071,
+            "region": "Norfair Lower West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17600,6 +17908,7 @@
           {
             "name": "Screw Attack",
             "id": 85079,
+            "region": "Norfair Lower West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17646,6 +17955,7 @@
           {
             "name": "Missile (Mickey Mouse room)",
             "id": 85073,
+            "region": "Norfair Lower West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17728,6 +18038,7 @@
           {
             "name": "Missile (lower Norfair above fire flea room)",
             "id": 85074,
+            "region": "Norfair Lower East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17774,6 +18085,7 @@
           {
             "name": "Power Bomb (lower Norfair above fire flea room)",
             "id": 85075,
+            "region": "Norfair Lower East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17820,6 +18132,7 @@
           {
             "name": "Power Bomb (Power Bombs of shame)",
             "id": 85076,
+            "region": "Norfair Lower East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17866,6 +18179,7 @@
           {
             "name": "Missile (lower Norfair near Wave Beam)",
             "id": 85077,
+            "region": "Norfair Lower East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17912,6 +18226,7 @@
           {
             "name": "Energy Tank, Ridley",
             "id": 85078,
+            "region": "Norfair Lower East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17958,6 +18273,7 @@
           {
             "name": "Energy Tank, Firefleas",
             "id": 85080,
+            "region": "Norfair Lower East",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -20135,9 +20451,161 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "MapTH",
+        "ScrewAttack",
+        "CardCrateriaL2",
+        "TwentyRupees2",
+        "BigKeyDP",
+        "Shovel",
+        "CardNorfairL1",
+        "CardNorfairBoss",
+        "SmMapMaridia",
+        "FiveRupees",
+        "CardBrinstarL1",
+        "MapTR",
+        "KeyCT",
+        "BigKeySW",
+        "BottleWithBluePotion",
+        "Hammer",
+        "BigKeySP",
+        "ProgressiveTunic",
+        "HalfMagic",
+        "FiftyRupees",
+        "KeyTR",
+        "Hookshot",
+        "HeartPiece",
+        "HeartContainerRefill",
+        "CardLowerNorfairBoss",
+        "Somaria",
+        "Mushroom",
+        "Mirror",
+        "SpeedBooster",
+        "CompassEP",
+        "CardLowerNorfairL1",
+        "CardBrinstarBoss",
+        "MapGT",
+        "GreenContent",
+        "Grapple",
+        "ReserveTank",
+        "ProgressiveGlove",
+        "Bugnet",
+        "CardCrateriaL1",
+        "HiJump",
+        "Super",
+        "SmMapLowerNorfair",
+        "BigKeyTH",
+        "KeyIP",
+        "ProgressiveSword",
+        "SilverArrows",
+        "BigKeyTR",
+        "Something",
+        "Ether",
+        "Bombos",
+        "KeyHC",
+        "KeyPD",
+        "MoonPearl",
+        "KeySP",
+        "CompassSW",
+        "CompassTT",
+        "Boots",
+        "CompassIP",
+        "XRay",
+        "RedContent",
+        "ThreeHundredRupees",
+        "CardWreckedShipBoss",
+        "PowerBomb",
+        "ArrowUpgrade10",
+        "CompassGT",
+        "Icerod",
+        "BottleWithRedPotion",
+        "MapIP",
+        "KeyDP",
+        "BeeContent",
+        "Compass",
+        "KeyTT",
+        "Bombs",
+        "BigKeyPD",
+        "CompassMM",
+        "BottleWithFairy",
+        "BottleWithBee",
+        "Powder",
+        "Ice",
+        "TenArrows",
+        "CardMaridiaL2",
+        "Nothing",
+        "CardWreckedShipL1",
+        "MapEP",
+        "BottleWithGreenPotion",
+        "BigKeyMM",
+        "Key",
+        "CardCrateriaBoss",
+        "HeartContainer",
+        "Flute",
+        "BigKeyEP",
+        "BombUpgrade10",
+        "BigKeyTT",
+        "Bow",
+        "CardMaridiaBoss",
+        "Plasma",
+        "MapMM",
+        "CardNorfairL2",
+        "TwentyRupees",
+        "OneHundredRupees",
+        "Wave",
+        "CompassDP",
+        "Map",
+        "ThreeBombs",
+        "Charge",
+        "KeyMM",
+        "Firerod",
+        "MapSP",
+        "BigKeyGT",
+        "Quake",
+        "Bottle",
+        "CompassSP",
+        "Spazer",
+        "MapSW",
+        "SpringBall",
+        "Flippers",
+        "SmMapBrinstar",
+        "ETank",
+        "Morph",
+        "KeyGT",
+        "ProgressiveShield",
+        "CompassTR",
+        "MapPD",
+        "BombUpgrade5",
+        "BigKeyIP",
+        "Lamp",
+        "MapTT",
+        "CardBrinstarL2",
+        "BlueBoomerang",
+        "SmMapWreckedShip",
+        "ArrowUpgrade5",
+        "Gravity",
+        "SpaceJump",
+        "MapDP",
+        "CardMaridiaL1",
+        "CompassTH",
+        "Cape",
+        "BottleWithGoldBee",
+        "Byrna",
+        "Varia",
+        "OneRupee",
+        "Book",
+        "Missile",
+        "BlueContent",
+        "CompassPD",
+        "Arrow",
+        "MapHC",
+        "KeyTH",
+        "RedBoomerang",
+        "KeySW",
+        "BigKey"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

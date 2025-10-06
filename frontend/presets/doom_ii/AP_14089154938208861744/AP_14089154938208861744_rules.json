@@ -2078,6 +2078,7 @@
           {
             "name": "Entryway (MAP01) - Armor",
             "id": 361000,
+            "region": "Entryway (MAP01) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2096,6 +2097,7 @@
           {
             "name": "Entryway (MAP01) - Shotgun",
             "id": 361001,
+            "region": "Entryway (MAP01) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2114,6 +2116,7 @@
           {
             "name": "Entryway (MAP01) - Rocket launcher",
             "id": 361002,
+            "region": "Entryway (MAP01) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2132,6 +2135,7 @@
           {
             "name": "Entryway (MAP01) - Chainsaw",
             "id": 361003,
+            "region": "Entryway (MAP01) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2150,6 +2154,7 @@
           {
             "name": "Entryway (MAP01) - Exit",
             "id": 361004,
+            "region": "Entryway (MAP01) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2221,6 +2226,7 @@
           {
             "name": "Underhalls (MAP02) - Red keycard",
             "id": 361005,
+            "region": "Underhalls (MAP02) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2239,6 +2245,7 @@
           {
             "name": "Underhalls (MAP02) - Mega Armor",
             "id": 361007,
+            "region": "Underhalls (MAP02) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2257,6 +2264,7 @@
           {
             "name": "Underhalls (MAP02) - Super Shotgun",
             "id": 361008,
+            "region": "Underhalls (MAP02) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2318,6 +2326,7 @@
           {
             "name": "Underhalls (MAP02) - Exit",
             "id": 361009,
+            "region": "Underhalls (MAP02) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2401,6 +2410,7 @@
           {
             "name": "Underhalls (MAP02) - Blue keycard",
             "id": 361006,
+            "region": "Underhalls (MAP02) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2472,6 +2482,7 @@
           {
             "name": "The Gantlet (MAP03) - Mega Armor",
             "id": 361010,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2490,6 +2501,7 @@
           {
             "name": "The Gantlet (MAP03) - Shotgun",
             "id": 361011,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2508,6 +2520,7 @@
           {
             "name": "The Gantlet (MAP03) - Blue keycard",
             "id": 361012,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2526,6 +2539,7 @@
           {
             "name": "The Gantlet (MAP03) - Rocket launcher",
             "id": 361013,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2544,6 +2558,7 @@
           {
             "name": "The Gantlet (MAP03) - Partial invisibility",
             "id": 361014,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2562,6 +2577,7 @@
           {
             "name": "The Gantlet (MAP03) - Supercharge",
             "id": 361015,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2580,6 +2596,7 @@
           {
             "name": "The Gantlet (MAP03) - Mega Armor 2",
             "id": 361016,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2598,6 +2615,7 @@
           {
             "name": "The Gantlet (MAP03) - Chaingun",
             "id": 361018,
+            "region": "The Gantlet (MAP03) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2693,6 +2711,7 @@
           {
             "name": "The Gantlet (MAP03) - Red keycard",
             "id": 361017,
+            "region": "The Gantlet (MAP03) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2711,6 +2730,7 @@
           {
             "name": "The Gantlet (MAP03) - Backpack",
             "id": 361019,
+            "region": "The Gantlet (MAP03) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2752,6 +2772,7 @@
           {
             "name": "The Gantlet (MAP03) - Exit",
             "id": 361020,
+            "region": "The Gantlet (MAP03) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2887,6 +2908,7 @@
           {
             "name": "The Focus (MAP04) - Super Shotgun",
             "id": 361021,
+            "region": "The Focus (MAP04) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2905,6 +2927,7 @@
           {
             "name": "The Focus (MAP04) - Blue keycard",
             "id": 361022,
+            "region": "The Focus (MAP04) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2959,6 +2982,7 @@
           {
             "name": "The Focus (MAP04) - Red keycard",
             "id": 361023,
+            "region": "The Focus (MAP04) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3020,6 +3044,7 @@
           {
             "name": "The Focus (MAP04) - Exit",
             "id": 361025,
+            "region": "The Focus (MAP04) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3110,6 +3135,7 @@
           {
             "name": "The Focus (MAP04) - Yellow keycard",
             "id": 361024,
+            "region": "The Focus (MAP04) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3222,6 +3248,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Rocket launcher",
             "id": 361026,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3240,6 +3267,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Plasma gun",
             "id": 361029,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3258,6 +3286,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Red keycard",
             "id": 361030,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3276,6 +3305,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Supercharge",
             "id": 361031,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3294,6 +3324,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Mega Armor",
             "id": 361032,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3312,6 +3343,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Armor",
             "id": 361034,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3330,6 +3362,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Supercharge 2",
             "id": 361035,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3348,6 +3381,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Berserk",
             "id": 361037,
+            "region": "The Waste Tunnels (MAP05) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3438,6 +3472,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Yellow keycard",
             "id": 361033,
+            "region": "The Waste Tunnels (MAP05) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3499,6 +3534,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Exit",
             "id": 361038,
+            "region": "The Waste Tunnels (MAP05) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3553,6 +3589,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Blue keycard",
             "id": 361028,
+            "region": "The Waste Tunnels (MAP05) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3672,6 +3709,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Super Shotgun",
             "id": 361027,
+            "region": "The Waste Tunnels (MAP05) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3690,6 +3728,7 @@
           {
             "name": "The Waste Tunnels (MAP05) - Shotgun",
             "id": 361036,
+            "region": "The Waste Tunnels (MAP05) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3787,6 +3826,7 @@
           {
             "name": "The Crusher (MAP06) - Blue keycard",
             "id": 361041,
+            "region": "The Crusher (MAP06) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3805,6 +3845,7 @@
           {
             "name": "The Crusher (MAP06) - Supercharge",
             "id": 361042,
+            "region": "The Crusher (MAP06) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3823,6 +3864,7 @@
           {
             "name": "The Crusher (MAP06) - Plasma gun",
             "id": 361043,
+            "region": "The Crusher (MAP06) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3841,6 +3883,7 @@
           {
             "name": "The Crusher (MAP06) - Blue keycard 2",
             "id": 361044,
+            "region": "The Crusher (MAP06) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3859,6 +3902,7 @@
           {
             "name": "The Crusher (MAP06) - Blue keycard 3",
             "id": 361045,
+            "region": "The Crusher (MAP06) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3877,6 +3921,7 @@
           {
             "name": "The Crusher (MAP06) - Megasphere",
             "id": 361046,
+            "region": "The Crusher (MAP06) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3895,6 +3940,7 @@
           {
             "name": "The Crusher (MAP06) - Armor",
             "id": 361047,
+            "region": "The Crusher (MAP06) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3985,6 +4031,7 @@
           {
             "name": "The Crusher (MAP06) - Red keycard",
             "id": 361039,
+            "region": "The Crusher (MAP06) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4003,6 +4050,7 @@
           {
             "name": "The Crusher (MAP06) - Super Shotgun",
             "id": 361048,
+            "region": "The Crusher (MAP06) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4021,6 +4069,7 @@
           {
             "name": "The Crusher (MAP06) - Mega Armor",
             "id": 361049,
+            "region": "The Crusher (MAP06) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4039,6 +4088,7 @@
           {
             "name": "The Crusher (MAP06) - Rocket launcher",
             "id": 361050,
+            "region": "The Crusher (MAP06) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4057,6 +4107,7 @@
           {
             "name": "The Crusher (MAP06) - Backpack",
             "id": 361051,
+            "region": "The Crusher (MAP06) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4075,6 +4126,7 @@
           {
             "name": "The Crusher (MAP06) - Megasphere 2",
             "id": 361052,
+            "region": "The Crusher (MAP06) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4136,6 +4188,7 @@
           {
             "name": "The Crusher (MAP06) - Exit",
             "id": 361053,
+            "region": "The Crusher (MAP06) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4238,6 +4291,7 @@
           {
             "name": "The Crusher (MAP06) - Yellow keycard",
             "id": 361040,
+            "region": "The Crusher (MAP06) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4292,6 +4346,7 @@
           {
             "name": "Dead Simple (MAP07) - Megasphere",
             "id": 361054,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4310,6 +4365,7 @@
           {
             "name": "Dead Simple (MAP07) - Rocket launcher",
             "id": 361055,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4328,6 +4384,7 @@
           {
             "name": "Dead Simple (MAP07) - Partial invisibility",
             "id": 361056,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4346,6 +4403,7 @@
           {
             "name": "Dead Simple (MAP07) - Chaingun",
             "id": 361058,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4364,6 +4422,7 @@
           {
             "name": "Dead Simple (MAP07) - Plasma gun",
             "id": 361059,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4382,6 +4441,7 @@
           {
             "name": "Dead Simple (MAP07) - Berserk",
             "id": 361061,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4400,6 +4460,7 @@
           {
             "name": "Dead Simple (MAP07) - Partial invisibility 2",
             "id": 361062,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4418,6 +4479,7 @@
           {
             "name": "Dead Simple (MAP07) - Partial invisibility 3",
             "id": 361063,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4436,6 +4498,7 @@
           {
             "name": "Dead Simple (MAP07) - Partial invisibility 4",
             "id": 361064,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4454,6 +4517,7 @@
           {
             "name": "Dead Simple (MAP07) - Exit",
             "id": 361065,
+            "region": "Dead Simple (MAP07) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4595,6 +4659,7 @@
           {
             "name": "Dead Simple (MAP07) - Super Shotgun",
             "id": 361057,
+            "region": "Dead Simple (MAP07) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4613,6 +4678,7 @@
           {
             "name": "Dead Simple (MAP07) - Backpack",
             "id": 361060,
+            "region": "Dead Simple (MAP07) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4713,6 +4779,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Plasma gun",
             "id": 361066,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4731,6 +4798,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Rocket launcher",
             "id": 361067,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4749,6 +4817,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Armor",
             "id": 361068,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4767,6 +4836,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Chaingun",
             "id": 361069,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4785,6 +4855,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Shotgun",
             "id": 361070,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4803,6 +4874,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Supercharge",
             "id": 361071,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4821,6 +4893,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Invulnerability",
             "id": 361072,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4839,6 +4912,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Invulnerability 2",
             "id": 361073,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4857,6 +4931,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Yellow skull key",
             "id": 361074,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4875,6 +4950,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Backpack",
             "id": 361075,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4893,6 +4969,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Backpack 2",
             "id": 361076,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4911,6 +4988,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Invulnerability 3",
             "id": 361077,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4929,6 +5007,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Invulnerability 4",
             "id": 361078,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4947,6 +5026,7 @@
           {
             "name": "Tricks and Traps (MAP08) - BFG9000",
             "id": 361079,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4965,6 +5045,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Supercharge 2",
             "id": 361080,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4983,6 +5064,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Backpack 3",
             "id": 361081,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5001,6 +5083,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Backpack 4",
             "id": 361082,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5019,6 +5102,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Chainsaw",
             "id": 361083,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5037,6 +5121,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Armor 2",
             "id": 361086,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5055,6 +5140,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Backpack 5",
             "id": 361087,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5073,6 +5159,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Partial invisibility",
             "id": 361088,
+            "region": "Tricks and Traps (MAP08) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5127,6 +5214,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Red skull key",
             "id": 361084,
+            "region": "Tricks and Traps (MAP08) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5145,6 +5233,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Invulnerability 5",
             "id": 361085,
+            "region": "Tricks and Traps (MAP08) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5199,6 +5288,7 @@
           {
             "name": "Tricks and Traps (MAP08) - Exit",
             "id": 361089,
+            "region": "Tricks and Traps (MAP08) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5301,6 +5391,7 @@
           {
             "name": "The Pit (MAP09) - Berserk",
             "id": 361090,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5319,6 +5410,7 @@
           {
             "name": "The Pit (MAP09) - Shotgun",
             "id": 361091,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5337,6 +5429,7 @@
           {
             "name": "The Pit (MAP09) - Supercharge",
             "id": 361093,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5355,6 +5448,7 @@
           {
             "name": "The Pit (MAP09) - Berserk 2",
             "id": 361094,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5373,6 +5467,7 @@
           {
             "name": "The Pit (MAP09) - Rocket launcher",
             "id": 361095,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5391,6 +5486,7 @@
           {
             "name": "The Pit (MAP09) - BFG9000",
             "id": 361096,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5409,6 +5505,7 @@
           {
             "name": "The Pit (MAP09) - Blue keycard",
             "id": 361097,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5427,6 +5524,7 @@
           {
             "name": "The Pit (MAP09) - Armor",
             "id": 361104,
+            "region": "The Pit (MAP09) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5468,6 +5566,7 @@
           {
             "name": "The Pit (MAP09) - Yellow keycard",
             "id": 361098,
+            "region": "The Pit (MAP09) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5486,6 +5585,7 @@
           {
             "name": "The Pit (MAP09) - Backpack",
             "id": 361099,
+            "region": "The Pit (MAP09) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5504,6 +5604,7 @@
           {
             "name": "The Pit (MAP09) - Computer area map",
             "id": 361100,
+            "region": "The Pit (MAP09) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5522,6 +5623,7 @@
           {
             "name": "The Pit (MAP09) - Supercharge 2",
             "id": 361101,
+            "region": "The Pit (MAP09) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5540,6 +5642,7 @@
           {
             "name": "The Pit (MAP09) - Mega Armor 2",
             "id": 361102,
+            "region": "The Pit (MAP09) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5558,6 +5661,7 @@
           {
             "name": "The Pit (MAP09) - Berserk 3",
             "id": 361103,
+            "region": "The Pit (MAP09) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5619,6 +5723,7 @@
           {
             "name": "The Pit (MAP09) - Exit",
             "id": 361105,
+            "region": "The Pit (MAP09) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5760,6 +5865,7 @@
           {
             "name": "The Pit (MAP09) - Mega Armor",
             "id": 361092,
+            "region": "The Pit (MAP09) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5843,6 +5949,7 @@
           {
             "name": "Refueling Base (MAP10) - BFG9000",
             "id": 361106,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5861,6 +5968,7 @@
           {
             "name": "Refueling Base (MAP10) - Supercharge",
             "id": 361107,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5879,6 +5987,7 @@
           {
             "name": "Refueling Base (MAP10) - Plasma gun",
             "id": 361108,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5897,6 +6006,7 @@
           {
             "name": "Refueling Base (MAP10) - Blue keycard",
             "id": 361109,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5915,6 +6025,7 @@
           {
             "name": "Refueling Base (MAP10) - Chaingun",
             "id": 361111,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5933,6 +6044,7 @@
           {
             "name": "Refueling Base (MAP10) - Armor",
             "id": 361112,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5951,6 +6063,7 @@
           {
             "name": "Refueling Base (MAP10) - Rocket launcher",
             "id": 361113,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5969,6 +6082,7 @@
           {
             "name": "Refueling Base (MAP10) - Supercharge 2",
             "id": 361114,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5987,6 +6101,7 @@
           {
             "name": "Refueling Base (MAP10) - Backpack",
             "id": 361115,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6005,6 +6120,7 @@
           {
             "name": "Refueling Base (MAP10) - Berserk",
             "id": 361116,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6023,6 +6139,7 @@
           {
             "name": "Refueling Base (MAP10) - Mega Armor",
             "id": 361117,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6041,6 +6158,7 @@
           {
             "name": "Refueling Base (MAP10) - Invulnerability",
             "id": 361118,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6059,6 +6177,7 @@
           {
             "name": "Refueling Base (MAP10) - Invulnerability 2",
             "id": 361119,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6077,6 +6196,7 @@
           {
             "name": "Refueling Base (MAP10) - Armor 2",
             "id": 361120,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6095,6 +6215,7 @@
           {
             "name": "Refueling Base (MAP10) - Berserk 2",
             "id": 361121,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6113,6 +6234,7 @@
           {
             "name": "Refueling Base (MAP10) - Partial invisibility",
             "id": 361122,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6131,6 +6253,7 @@
           {
             "name": "Refueling Base (MAP10) - Chainsaw",
             "id": 361123,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6149,6 +6272,7 @@
           {
             "name": "Refueling Base (MAP10) - Yellow keycard",
             "id": 361124,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6167,6 +6291,7 @@
           {
             "name": "Refueling Base (MAP10) - Megasphere",
             "id": 361125,
+            "region": "Refueling Base (MAP10) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6285,6 +6410,7 @@
           {
             "name": "Refueling Base (MAP10) - Exit",
             "id": 361126,
+            "region": "Refueling Base (MAP10) Yellow Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6426,6 +6552,7 @@
           {
             "name": "Refueling Base (MAP10) - Shotgun",
             "id": 361110,
+            "region": "Refueling Base (MAP10) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6536,6 +6663,7 @@
           {
             "name": "Circle of Death (MAP11) - Red keycard",
             "id": 361127,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6554,6 +6682,7 @@
           {
             "name": "Circle of Death (MAP11) - Chaingun",
             "id": 361128,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6572,6 +6701,7 @@
           {
             "name": "Circle of Death (MAP11) - Supercharge",
             "id": 361129,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6590,6 +6720,7 @@
           {
             "name": "Circle of Death (MAP11) - Plasma gun",
             "id": 361130,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6608,6 +6739,7 @@
           {
             "name": "Circle of Death (MAP11) - Blue keycard",
             "id": 361131,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6626,6 +6758,7 @@
           {
             "name": "Circle of Death (MAP11) - Armor",
             "id": 361132,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6644,6 +6777,7 @@
           {
             "name": "Circle of Death (MAP11) - Shotgun",
             "id": 361133,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6662,6 +6796,7 @@
           {
             "name": "Circle of Death (MAP11) - Partial invisibility",
             "id": 361135,
+            "region": "Circle of Death (MAP11) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6716,6 +6851,7 @@
           {
             "name": "Circle of Death (MAP11) - Mega Armor",
             "id": 361134,
+            "region": "Circle of Death (MAP11) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6782,6 +6918,7 @@
           {
             "name": "Circle of Death (MAP11) - Invulnerability",
             "id": 361136,
+            "region": "Circle of Death (MAP11) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6800,6 +6937,7 @@
           {
             "name": "Circle of Death (MAP11) - Rocket launcher",
             "id": 361137,
+            "region": "Circle of Death (MAP11) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6854,6 +6992,7 @@
           {
             "name": "Circle of Death (MAP11) - Backpack",
             "id": 361138,
+            "region": "Circle of Death (MAP11) Ending",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6872,6 +7011,7 @@
           {
             "name": "Circle of Death (MAP11) - Supercharge 2",
             "id": 361139,
+            "region": "Circle of Death (MAP11) Ending",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6890,6 +7030,7 @@
           {
             "name": "Circle of Death (MAP11) - BFG9000",
             "id": 361140,
+            "region": "Circle of Death (MAP11) Ending",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6908,6 +7049,7 @@
           {
             "name": "Circle of Death (MAP11) - Exit",
             "id": 361141,
+            "region": "Circle of Death (MAP11) Ending",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7010,6 +7152,7 @@
           {
             "name": "The Factory (MAP12) - Supercharge",
             "id": 361145,
+            "region": "The Factory (MAP12) Indoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7028,6 +7171,7 @@
           {
             "name": "The Factory (MAP12) - Blue keycard",
             "id": 361146,
+            "region": "The Factory (MAP12) Indoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7046,6 +7190,7 @@
           {
             "name": "The Factory (MAP12) - Supercharge 2",
             "id": 361149,
+            "region": "The Factory (MAP12) Indoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7064,6 +7209,7 @@
           {
             "name": "The Factory (MAP12) - Berserk 2",
             "id": 361152,
+            "region": "The Factory (MAP12) Indoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7082,6 +7228,7 @@
           {
             "name": "The Factory (MAP12) - Yellow keycard",
             "id": 361153,
+            "region": "The Factory (MAP12) Indoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7100,6 +7247,7 @@
           {
             "name": "The Factory (MAP12) - Super Shotgun",
             "id": 361156,
+            "region": "The Factory (MAP12) Indoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7154,6 +7302,7 @@
           {
             "name": "The Factory (MAP12) - Armor",
             "id": 361147,
+            "region": "The Factory (MAP12) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7172,6 +7321,7 @@
           {
             "name": "The Factory (MAP12) - Backpack",
             "id": 361148,
+            "region": "The Factory (MAP12) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7190,6 +7340,7 @@
           {
             "name": "The Factory (MAP12) - BFG9000",
             "id": 361154,
+            "region": "The Factory (MAP12) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7231,6 +7382,7 @@
           {
             "name": "The Factory (MAP12) - Exit",
             "id": 361157,
+            "region": "The Factory (MAP12) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7318,6 +7470,7 @@
           {
             "name": "The Factory (MAP12) - Shotgun",
             "id": 361142,
+            "region": "The Factory (MAP12) Outdoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7336,6 +7489,7 @@
           {
             "name": "The Factory (MAP12) - Armor 2",
             "id": 361150,
+            "region": "The Factory (MAP12) Outdoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7354,6 +7508,7 @@
           {
             "name": "The Factory (MAP12) - Partial invisibility",
             "id": 361151,
+            "region": "The Factory (MAP12) Outdoors",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7485,6 +7640,7 @@
           {
             "name": "The Factory (MAP12) - Berserk",
             "id": 361143,
+            "region": "The Factory (MAP12) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7503,6 +7659,7 @@
           {
             "name": "The Factory (MAP12) - Chaingun",
             "id": 361144,
+            "region": "The Factory (MAP12) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7521,6 +7678,7 @@
           {
             "name": "The Factory (MAP12) - Berserk 3",
             "id": 361155,
+            "region": "The Factory (MAP12) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7650,6 +7808,7 @@
           {
             "name": "Downtown (MAP13) - Rocket launcher",
             "id": 361158,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7668,6 +7827,7 @@
           {
             "name": "Downtown (MAP13) - Shotgun",
             "id": 361159,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7686,6 +7846,7 @@
           {
             "name": "Downtown (MAP13) - Supercharge",
             "id": 361160,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7704,6 +7865,7 @@
           {
             "name": "Downtown (MAP13) - Berserk",
             "id": 361161,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7722,6 +7884,7 @@
           {
             "name": "Downtown (MAP13) - Mega Armor",
             "id": 361162,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7740,6 +7903,7 @@
           {
             "name": "Downtown (MAP13) - Chaingun",
             "id": 361163,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7758,6 +7922,7 @@
           {
             "name": "Downtown (MAP13) - Blue keycard",
             "id": 361164,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7776,6 +7941,7 @@
           {
             "name": "Downtown (MAP13) - Plasma gun",
             "id": 361167,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7794,6 +7960,7 @@
           {
             "name": "Downtown (MAP13) - Partial invisibility",
             "id": 361168,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7812,6 +7979,7 @@
           {
             "name": "Downtown (MAP13) - Backpack",
             "id": 361169,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7830,6 +7998,7 @@
           {
             "name": "Downtown (MAP13) - BFG9000",
             "id": 361171,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7848,6 +8017,7 @@
           {
             "name": "Downtown (MAP13) - Invulnerability 2",
             "id": 361173,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7866,6 +8036,7 @@
           {
             "name": "Downtown (MAP13) - Partial invisibility 2",
             "id": 361174,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7884,6 +8055,7 @@
           {
             "name": "Downtown (MAP13) - Partial invisibility 3",
             "id": 361175,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7902,6 +8074,7 @@
           {
             "name": "Downtown (MAP13) - Computer area map",
             "id": 361178,
+            "region": "Downtown (MAP13) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7956,6 +8129,7 @@
           {
             "name": "Downtown (MAP13) - Chainsaw",
             "id": 361170,
+            "region": "Downtown (MAP13) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7974,6 +8148,7 @@
           {
             "name": "Downtown (MAP13) - Invulnerability",
             "id": 361172,
+            "region": "Downtown (MAP13) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7992,6 +8167,7 @@
           {
             "name": "Downtown (MAP13) - Red keycard",
             "id": 361176,
+            "region": "Downtown (MAP13) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8046,6 +8222,7 @@
           {
             "name": "Downtown (MAP13) - Berserk 3",
             "id": 361177,
+            "region": "Downtown (MAP13) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8064,6 +8241,7 @@
           {
             "name": "Downtown (MAP13) - Exit",
             "id": 361179,
+            "region": "Downtown (MAP13) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8118,6 +8296,7 @@
           {
             "name": "Downtown (MAP13) - Yellow keycard",
             "id": 361165,
+            "region": "Downtown (MAP13) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8136,6 +8315,7 @@
           {
             "name": "Downtown (MAP13) - Berserk 2",
             "id": 361166,
+            "region": "Downtown (MAP13) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8237,6 +8417,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Shotgun",
             "id": 361180,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8255,6 +8436,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Supercharge",
             "id": 361181,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8273,6 +8455,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Mega Armor",
             "id": 361182,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8291,6 +8474,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Berserk",
             "id": 361183,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8309,6 +8493,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Chaingun",
             "id": 361184,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8327,6 +8512,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Plasma gun",
             "id": 361185,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8345,6 +8531,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Red skull key",
             "id": 361186,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8363,6 +8550,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Rocket launcher",
             "id": 361187,
+            "region": "The Inmost Dens (MAP14) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8436,6 +8624,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Exit",
             "id": 361190,
+            "region": "The Inmost Dens (MAP14) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8620,6 +8809,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Blue skull key",
             "id": 361188,
+            "region": "The Inmost Dens (MAP14) Red South",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8638,6 +8828,7 @@
           {
             "name": "The Inmost Dens (MAP14) - Partial invisibility",
             "id": 361189,
+            "region": "The Inmost Dens (MAP14) Red South",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8738,6 +8929,7 @@
           {
             "name": "Industrial Zone (MAP15) - Berserk",
             "id": 361191,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8756,6 +8948,7 @@
           {
             "name": "Industrial Zone (MAP15) - Rocket launcher",
             "id": 361192,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8774,6 +8967,7 @@
           {
             "name": "Industrial Zone (MAP15) - Shotgun",
             "id": 361193,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8792,6 +8986,7 @@
           {
             "name": "Industrial Zone (MAP15) - Partial invisibility",
             "id": 361194,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8810,6 +9005,7 @@
           {
             "name": "Industrial Zone (MAP15) - Backpack",
             "id": 361195,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8828,6 +9024,7 @@
           {
             "name": "Industrial Zone (MAP15) - BFG9000",
             "id": 361196,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8846,6 +9043,7 @@
           {
             "name": "Industrial Zone (MAP15) - Supercharge",
             "id": 361197,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8864,6 +9062,7 @@
           {
             "name": "Industrial Zone (MAP15) - Mega Armor",
             "id": 361198,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8882,6 +9081,7 @@
           {
             "name": "Industrial Zone (MAP15) - Armor",
             "id": 361199,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8900,6 +9100,7 @@
           {
             "name": "Industrial Zone (MAP15) - Yellow keycard",
             "id": 361200,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8918,6 +9119,7 @@
           {
             "name": "Industrial Zone (MAP15) - Chaingun",
             "id": 361201,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8936,6 +9138,7 @@
           {
             "name": "Industrial Zone (MAP15) - Invulnerability",
             "id": 361205,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8954,6 +9157,7 @@
           {
             "name": "Industrial Zone (MAP15) - Red keycard",
             "id": 361206,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8972,6 +9176,7 @@
           {
             "name": "Industrial Zone (MAP15) - Mega Armor 2",
             "id": 361212,
+            "region": "Industrial Zone (MAP15) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9033,6 +9238,7 @@
           {
             "name": "Industrial Zone (MAP15) - Exit",
             "id": 361213,
+            "region": "Industrial Zone (MAP15) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9116,6 +9322,7 @@
           {
             "name": "Industrial Zone (MAP15) - Chainsaw",
             "id": 361208,
+            "region": "Industrial Zone (MAP15) Yellow East",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9134,6 +9341,7 @@
           {
             "name": "Industrial Zone (MAP15) - Megasphere",
             "id": 361209,
+            "region": "Industrial Zone (MAP15) Yellow East",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9152,6 +9360,7 @@
           {
             "name": "Industrial Zone (MAP15) - Berserk 2",
             "id": 361210,
+            "region": "Industrial Zone (MAP15) Yellow East",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9206,6 +9415,7 @@
           {
             "name": "Industrial Zone (MAP15) - Plasma gun",
             "id": 361202,
+            "region": "Industrial Zone (MAP15) Yellow West",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9224,6 +9434,7 @@
           {
             "name": "Industrial Zone (MAP15) - Partial invisibility 2",
             "id": 361203,
+            "region": "Industrial Zone (MAP15) Yellow West",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9242,6 +9453,7 @@
           {
             "name": "Industrial Zone (MAP15) - Computer area map",
             "id": 361204,
+            "region": "Industrial Zone (MAP15) Yellow West",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9260,6 +9472,7 @@
           {
             "name": "Industrial Zone (MAP15) - Backpack 2",
             "id": 361207,
+            "region": "Industrial Zone (MAP15) Yellow West",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9278,6 +9491,7 @@
           {
             "name": "Industrial Zone (MAP15) - Blue keycard",
             "id": 361211,
+            "region": "Industrial Zone (MAP15) Yellow West",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9378,6 +9592,7 @@
           {
             "name": "Suburbs (MAP16) - Megasphere",
             "id": 361214,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9396,6 +9611,7 @@
           {
             "name": "Suburbs (MAP16) - Super Shotgun",
             "id": 361215,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9414,6 +9630,7 @@
           {
             "name": "Suburbs (MAP16) - Chaingun",
             "id": 361216,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9432,6 +9649,7 @@
           {
             "name": "Suburbs (MAP16) - Backpack",
             "id": 361217,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9450,6 +9668,7 @@
           {
             "name": "Suburbs (MAP16) - Rocket launcher",
             "id": 361218,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9468,6 +9687,7 @@
           {
             "name": "Suburbs (MAP16) - Berserk",
             "id": 361219,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9486,6 +9706,7 @@
           {
             "name": "Suburbs (MAP16) - BFG9000",
             "id": 361224,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9504,6 +9725,7 @@
           {
             "name": "Suburbs (MAP16) - Shotgun",
             "id": 361225,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9522,6 +9744,7 @@
           {
             "name": "Suburbs (MAP16) - Supercharge",
             "id": 361226,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9540,6 +9763,7 @@
           {
             "name": "Suburbs (MAP16) - Blue skull key",
             "id": 361227,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9558,6 +9782,7 @@
           {
             "name": "Suburbs (MAP16) - Invulnerability",
             "id": 361228,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9576,6 +9801,7 @@
           {
             "name": "Suburbs (MAP16) - Partial invisibility",
             "id": 361229,
+            "region": "Suburbs (MAP16) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9630,6 +9856,7 @@
           {
             "name": "Suburbs (MAP16) - Plasma gun",
             "id": 361220,
+            "region": "Suburbs (MAP16) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9648,6 +9875,7 @@
           {
             "name": "Suburbs (MAP16) - Plasma gun 2",
             "id": 361221,
+            "region": "Suburbs (MAP16) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9666,6 +9894,7 @@
           {
             "name": "Suburbs (MAP16) - Plasma gun 3",
             "id": 361222,
+            "region": "Suburbs (MAP16) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9684,6 +9913,7 @@
           {
             "name": "Suburbs (MAP16) - Plasma gun 4",
             "id": 361223,
+            "region": "Suburbs (MAP16) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9702,6 +9932,7 @@
           {
             "name": "Suburbs (MAP16) - Red skull key",
             "id": 361230,
+            "region": "Suburbs (MAP16) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9778,6 +10009,7 @@
           {
             "name": "Suburbs (MAP16) - Exit",
             "id": 361231,
+            "region": "Suburbs (MAP16) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9884,6 +10116,7 @@
           {
             "name": "Tenements (MAP17) - Shotgun",
             "id": 361234,
+            "region": "Tenements (MAP17) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9902,6 +10135,7 @@
           {
             "name": "Tenements (MAP17) - Red keycard",
             "id": 361235,
+            "region": "Tenements (MAP17) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9966,6 +10200,7 @@
           {
             "name": "Tenements (MAP17) - Supercharge 2",
             "id": 361237,
+            "region": "Tenements (MAP17) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9984,6 +10219,7 @@
           {
             "name": "Tenements (MAP17) - Yellow skull key",
             "id": 361238,
+            "region": "Tenements (MAP17) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10002,6 +10238,7 @@
           {
             "name": "Tenements (MAP17) - Rocket launcher",
             "id": 361239,
+            "region": "Tenements (MAP17) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10020,6 +10257,7 @@
           {
             "name": "Tenements (MAP17) - Partial invisibility",
             "id": 361240,
+            "region": "Tenements (MAP17) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10038,6 +10276,7 @@
           {
             "name": "Tenements (MAP17) - Backpack",
             "id": 361247,
+            "region": "Tenements (MAP17) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10104,6 +10343,7 @@
           {
             "name": "Tenements (MAP17) - Supercharge",
             "id": 361233,
+            "region": "Tenements (MAP17) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10122,6 +10362,7 @@
           {
             "name": "Tenements (MAP17) - BFG9000",
             "id": 361242,
+            "region": "Tenements (MAP17) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10140,6 +10381,7 @@
           {
             "name": "Tenements (MAP17) - Plasma gun",
             "id": 361243,
+            "region": "Tenements (MAP17) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10158,6 +10400,7 @@
           {
             "name": "Tenements (MAP17) - Megasphere",
             "id": 361248,
+            "region": "Tenements (MAP17) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10176,6 +10419,7 @@
           {
             "name": "Tenements (MAP17) - Exit",
             "id": 361249,
+            "region": "Tenements (MAP17) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10288,6 +10532,7 @@
           {
             "name": "Tenements (MAP17) - Armor",
             "id": 361232,
+            "region": "Tenements (MAP17) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10306,6 +10551,7 @@
           {
             "name": "Tenements (MAP17) - Blue keycard",
             "id": 361236,
+            "region": "Tenements (MAP17) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10324,6 +10570,7 @@
           {
             "name": "Tenements (MAP17) - Chaingun",
             "id": 361241,
+            "region": "Tenements (MAP17) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10342,6 +10589,7 @@
           {
             "name": "Tenements (MAP17) - Mega Armor",
             "id": 361244,
+            "region": "Tenements (MAP17) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10360,6 +10608,7 @@
           {
             "name": "Tenements (MAP17) - Armor 2",
             "id": 361245,
+            "region": "Tenements (MAP17) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10378,6 +10627,7 @@
           {
             "name": "Tenements (MAP17) - Berserk",
             "id": 361246,
+            "region": "Tenements (MAP17) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10478,6 +10728,7 @@
           {
             "name": "The Courtyard (MAP18) - Shotgun",
             "id": 361250,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10496,6 +10747,7 @@
           {
             "name": "The Courtyard (MAP18) - Plasma gun",
             "id": 361251,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10514,6 +10766,7 @@
           {
             "name": "The Courtyard (MAP18) - Armor",
             "id": 361252,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10532,6 +10785,7 @@
           {
             "name": "The Courtyard (MAP18) - Berserk",
             "id": 361253,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10550,6 +10804,7 @@
           {
             "name": "The Courtyard (MAP18) - Chaingun",
             "id": 361254,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10568,6 +10823,7 @@
           {
             "name": "The Courtyard (MAP18) - Rocket launcher",
             "id": 361255,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10586,6 +10842,7 @@
           {
             "name": "The Courtyard (MAP18) - Partial invisibility",
             "id": 361256,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10604,6 +10861,7 @@
           {
             "name": "The Courtyard (MAP18) - Partial invisibility 2",
             "id": 361257,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10622,6 +10880,7 @@
           {
             "name": "The Courtyard (MAP18) - Backpack",
             "id": 361258,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10640,6 +10899,7 @@
           {
             "name": "The Courtyard (MAP18) - Supercharge",
             "id": 361259,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10658,6 +10918,7 @@
           {
             "name": "The Courtyard (MAP18) - Invulnerability",
             "id": 361260,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10676,6 +10937,7 @@
           {
             "name": "The Courtyard (MAP18) - Invulnerability 2",
             "id": 361261,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10694,6 +10956,7 @@
           {
             "name": "The Courtyard (MAP18) - Yellow skull key",
             "id": 361262,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10712,6 +10975,7 @@
           {
             "name": "The Courtyard (MAP18) - BFG9000",
             "id": 361264,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10730,6 +10994,7 @@
           {
             "name": "The Courtyard (MAP18) - Computer area map",
             "id": 361265,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10748,6 +11013,7 @@
           {
             "name": "The Courtyard (MAP18) - Super Shotgun",
             "id": 361266,
+            "region": "The Courtyard (MAP18) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10809,6 +11075,7 @@
           {
             "name": "The Courtyard (MAP18) - Exit",
             "id": 361267,
+            "region": "The Courtyard (MAP18) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10870,6 +11137,7 @@
           {
             "name": "The Courtyard (MAP18) - Blue skull key",
             "id": 361263,
+            "region": "The Courtyard (MAP18) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10973,6 +11241,7 @@
           {
             "name": "The Citadel (MAP19) - Armor",
             "id": 361268,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10991,6 +11260,7 @@
           {
             "name": "The Citadel (MAP19) - Chaingun",
             "id": 361269,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11009,6 +11279,7 @@
           {
             "name": "The Citadel (MAP19) - Berserk",
             "id": 361270,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11027,6 +11298,7 @@
           {
             "name": "The Citadel (MAP19) - Mega Armor",
             "id": 361271,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11045,6 +11317,7 @@
           {
             "name": "The Citadel (MAP19) - Supercharge",
             "id": 361272,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11063,6 +11336,7 @@
           {
             "name": "The Citadel (MAP19) - Armor 2",
             "id": 361273,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11081,6 +11355,7 @@
           {
             "name": "The Citadel (MAP19) - Backpack",
             "id": 361274,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11099,6 +11374,7 @@
           {
             "name": "The Citadel (MAP19) - Invulnerability",
             "id": 361275,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11117,6 +11393,7 @@
           {
             "name": "The Citadel (MAP19) - Blue skull key",
             "id": 361276,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11135,6 +11412,7 @@
           {
             "name": "The Citadel (MAP19) - Partial invisibility",
             "id": 361277,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11153,6 +11431,7 @@
           {
             "name": "The Citadel (MAP19) - Red skull key",
             "id": 361278,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11171,6 +11450,7 @@
           {
             "name": "The Citadel (MAP19) - Yellow skull key",
             "id": 361279,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11189,6 +11469,7 @@
           {
             "name": "The Citadel (MAP19) - Computer area map",
             "id": 361280,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11207,6 +11488,7 @@
           {
             "name": "The Citadel (MAP19) - Rocket launcher",
             "id": 361281,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11225,6 +11507,7 @@
           {
             "name": "The Citadel (MAP19) - Super Shotgun",
             "id": 361282,
+            "region": "The Citadel (MAP19) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11318,6 +11601,7 @@
           {
             "name": "The Citadel (MAP19) - Exit",
             "id": 361283,
+            "region": "The Citadel (MAP19) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11359,6 +11643,7 @@
           {
             "name": "Gotcha! (MAP20) - Mega Armor",
             "id": 361284,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11377,6 +11662,7 @@
           {
             "name": "Gotcha! (MAP20) - Rocket launcher",
             "id": 361285,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11395,6 +11681,7 @@
           {
             "name": "Gotcha! (MAP20) - Supercharge",
             "id": 361286,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11413,6 +11700,7 @@
           {
             "name": "Gotcha! (MAP20) - Armor",
             "id": 361287,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11431,6 +11719,7 @@
           {
             "name": "Gotcha! (MAP20) - Megasphere",
             "id": 361288,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11449,6 +11738,7 @@
           {
             "name": "Gotcha! (MAP20) - Armor 2",
             "id": 361289,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11467,6 +11757,7 @@
           {
             "name": "Gotcha! (MAP20) - Super Shotgun",
             "id": 361290,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11485,6 +11776,7 @@
           {
             "name": "Gotcha! (MAP20) - Plasma gun",
             "id": 361291,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11503,6 +11795,7 @@
           {
             "name": "Gotcha! (MAP20) - Mega Armor 2",
             "id": 361292,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11521,6 +11814,7 @@
           {
             "name": "Gotcha! (MAP20) - Berserk",
             "id": 361293,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11539,6 +11833,7 @@
           {
             "name": "Gotcha! (MAP20) - Supercharge 2",
             "id": 361294,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11557,6 +11852,7 @@
           {
             "name": "Gotcha! (MAP20) - Supercharge 3",
             "id": 361295,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11575,6 +11871,7 @@
           {
             "name": "Gotcha! (MAP20) - BFG9000",
             "id": 361296,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11593,6 +11890,7 @@
           {
             "name": "Gotcha! (MAP20) - Supercharge 4",
             "id": 361297,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11611,6 +11909,7 @@
           {
             "name": "Gotcha! (MAP20) - Exit",
             "id": 361298,
+            "region": "Gotcha! (MAP20) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11741,6 +12040,7 @@
           {
             "name": "Nirvana (MAP21) - Rocket launcher",
             "id": 361300,
+            "region": "Nirvana (MAP21) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11759,6 +12059,7 @@
           {
             "name": "Nirvana (MAP21) - Yellow skull key",
             "id": 361301,
+            "region": "Nirvana (MAP21) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11777,6 +12078,7 @@
           {
             "name": "Nirvana (MAP21) - Backpack",
             "id": 361302,
+            "region": "Nirvana (MAP21) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11795,6 +12097,7 @@
           {
             "name": "Nirvana (MAP21) - Megasphere",
             "id": 361303,
+            "region": "Nirvana (MAP21) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11901,6 +12204,7 @@
           {
             "name": "Nirvana (MAP21) - Invulnerability",
             "id": 361304,
+            "region": "Nirvana (MAP21) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11919,6 +12223,7 @@
           {
             "name": "Nirvana (MAP21) - Blue skull key",
             "id": 361305,
+            "region": "Nirvana (MAP21) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11937,6 +12242,7 @@
           {
             "name": "Nirvana (MAP21) - Red skull key",
             "id": 361306,
+            "region": "Nirvana (MAP21) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12013,6 +12319,7 @@
           {
             "name": "Nirvana (MAP21) - Exit",
             "id": 361307,
+            "region": "Nirvana (MAP21) Magenta",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12090,6 +12397,7 @@
           {
             "name": "Nirvana (MAP21) - Super Shotgun",
             "id": 361299,
+            "region": "Nirvana (MAP21) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12244,6 +12552,7 @@
           {
             "name": "The Catacombs (MAP22) - Rocket launcher",
             "id": 361308,
+            "region": "The Catacombs (MAP22) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12262,6 +12571,7 @@
           {
             "name": "The Catacombs (MAP22) - Blue skull key",
             "id": 361309,
+            "region": "The Catacombs (MAP22) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12280,6 +12590,7 @@
           {
             "name": "The Catacombs (MAP22) - Berserk",
             "id": 361312,
+            "region": "The Catacombs (MAP22) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12334,6 +12645,7 @@
           {
             "name": "The Catacombs (MAP22) - Red skull key",
             "id": 361310,
+            "region": "The Catacombs (MAP22) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12395,6 +12707,7 @@
           {
             "name": "The Catacombs (MAP22) - Exit",
             "id": 361316,
+            "region": "The Catacombs (MAP22) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12536,6 +12849,7 @@
           {
             "name": "The Catacombs (MAP22) - Shotgun",
             "id": 361311,
+            "region": "The Catacombs (MAP22) Early",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12554,6 +12868,7 @@
           {
             "name": "The Catacombs (MAP22) - Plasma gun",
             "id": 361313,
+            "region": "The Catacombs (MAP22) Early",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12572,6 +12887,7 @@
           {
             "name": "The Catacombs (MAP22) - Supercharge",
             "id": 361314,
+            "region": "The Catacombs (MAP22) Early",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12590,6 +12906,7 @@
           {
             "name": "The Catacombs (MAP22) - Armor",
             "id": 361315,
+            "region": "The Catacombs (MAP22) Early",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12661,6 +12978,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Shotgun",
             "id": 361317,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12679,6 +12997,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Berserk",
             "id": 361318,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12697,6 +13016,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Backpack",
             "id": 361319,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12715,6 +13035,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Computer area map",
             "id": 361320,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12733,6 +13054,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Armor",
             "id": 361321,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12751,6 +13073,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Rocket launcher",
             "id": 361322,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12769,6 +13092,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Megasphere",
             "id": 361323,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12787,6 +13111,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Supercharge",
             "id": 361324,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12805,6 +13130,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Backpack 2",
             "id": 361325,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12823,6 +13149,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Yellow skull key",
             "id": 361326,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12841,6 +13168,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - BFG9000",
             "id": 361327,
+            "region": "Barrels o' Fun (MAP23) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12902,6 +13230,7 @@
           {
             "name": "Barrels o' Fun (MAP23) - Exit",
             "id": 361328,
+            "region": "Barrels o' Fun (MAP23) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12973,6 +13302,7 @@
           {
             "name": "The Chasm (MAP24) - Shotgun",
             "id": 361330,
+            "region": "The Chasm (MAP24) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12991,6 +13321,7 @@
           {
             "name": "The Chasm (MAP24) - Rocket launcher",
             "id": 361332,
+            "region": "The Chasm (MAP24) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13009,6 +13340,7 @@
           {
             "name": "The Chasm (MAP24) - Blue keycard",
             "id": 361333,
+            "region": "The Chasm (MAP24) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13027,6 +13359,7 @@
           {
             "name": "The Chasm (MAP24) - Berserk",
             "id": 361335,
+            "region": "The Chasm (MAP24) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13045,6 +13378,7 @@
           {
             "name": "The Chasm (MAP24) - BFG9000",
             "id": 361339,
+            "region": "The Chasm (MAP24) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13063,6 +13397,7 @@
           {
             "name": "The Chasm (MAP24) - Super Shotgun",
             "id": 361340,
+            "region": "The Chasm (MAP24) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13081,6 +13416,7 @@
           {
             "name": "The Chasm (MAP24) - Megasphere 2",
             "id": 361342,
+            "region": "The Chasm (MAP24) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13142,6 +13478,7 @@
           {
             "name": "The Chasm (MAP24) - Exit",
             "id": 361343,
+            "region": "The Chasm (MAP24) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13247,6 +13584,7 @@
           {
             "name": "The Chasm (MAP24) - Plasma gun",
             "id": 361329,
+            "region": "The Chasm (MAP24) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13265,6 +13603,7 @@
           {
             "name": "The Chasm (MAP24) - Invulnerability",
             "id": 361331,
+            "region": "The Chasm (MAP24) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13283,6 +13622,7 @@
           {
             "name": "The Chasm (MAP24) - Backpack",
             "id": 361334,
+            "region": "The Chasm (MAP24) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13301,6 +13641,7 @@
           {
             "name": "The Chasm (MAP24) - Berserk 2",
             "id": 361336,
+            "region": "The Chasm (MAP24) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13319,6 +13660,7 @@
           {
             "name": "The Chasm (MAP24) - Armor",
             "id": 361337,
+            "region": "The Chasm (MAP24) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13337,6 +13679,7 @@
           {
             "name": "The Chasm (MAP24) - Red keycard",
             "id": 361338,
+            "region": "The Chasm (MAP24) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13355,6 +13698,7 @@
           {
             "name": "The Chasm (MAP24) - Megasphere",
             "id": 361341,
+            "region": "The Chasm (MAP24) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13516,6 +13860,7 @@
           {
             "name": "Bloodfalls (MAP25) - Megasphere",
             "id": 361346,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13534,6 +13879,7 @@
           {
             "name": "Bloodfalls (MAP25) - Mega Armor",
             "id": 361348,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13552,6 +13898,7 @@
           {
             "name": "Bloodfalls (MAP25) - Armor",
             "id": 361349,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13570,6 +13917,7 @@
           {
             "name": "Bloodfalls (MAP25) - Blue skull key",
             "id": 361350,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13588,6 +13936,7 @@
           {
             "name": "Bloodfalls (MAP25) - Chaingun",
             "id": 361351,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13606,6 +13955,7 @@
           {
             "name": "Bloodfalls (MAP25) - Plasma gun",
             "id": 361352,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13624,6 +13974,7 @@
           {
             "name": "Bloodfalls (MAP25) - BFG9000 2",
             "id": 361353,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13642,6 +13993,7 @@
           {
             "name": "Bloodfalls (MAP25) - Rocket launcher",
             "id": 361354,
+            "region": "Bloodfalls (MAP25) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13703,6 +14055,7 @@
           {
             "name": "Bloodfalls (MAP25) - Partial invisibility",
             "id": 361345,
+            "region": "Bloodfalls (MAP25) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13721,6 +14074,7 @@
           {
             "name": "Bloodfalls (MAP25) - BFG9000",
             "id": 361347,
+            "region": "Bloodfalls (MAP25) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13739,6 +14093,7 @@
           {
             "name": "Bloodfalls (MAP25) - Exit",
             "id": 361355,
+            "region": "Bloodfalls (MAP25) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13837,6 +14192,7 @@
           {
             "name": "Bloodfalls (MAP25) - Super Shotgun",
             "id": 361344,
+            "region": "Bloodfalls (MAP25) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13966,6 +14322,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Super Shotgun",
             "id": 361357,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13984,6 +14341,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Rocket launcher",
             "id": 361358,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14002,6 +14360,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Plasma gun",
             "id": 361360,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14020,6 +14379,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Chaingun",
             "id": 361362,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14038,6 +14398,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Partial invisibility",
             "id": 361363,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14056,6 +14417,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Armor",
             "id": 361364,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14074,6 +14436,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Red keycard",
             "id": 361365,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14092,6 +14455,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Backpack",
             "id": 361367,
+            "region": "The Abandoned Mines (MAP26) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14153,6 +14517,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Yellow keycard",
             "id": 361366,
+            "region": "The Abandoned Mines (MAP26) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14214,6 +14579,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Exit",
             "id": 361368,
+            "region": "The Abandoned Mines (MAP26) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14268,6 +14634,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Blue keycard",
             "id": 361356,
+            "region": "The Abandoned Mines (MAP26) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14286,6 +14653,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Mega Armor",
             "id": 361359,
+            "region": "The Abandoned Mines (MAP26) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14304,6 +14672,7 @@
           {
             "name": "The Abandoned Mines (MAP26) - Supercharge",
             "id": 361361,
+            "region": "The Abandoned Mines (MAP26) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14433,6 +14802,7 @@
           {
             "name": "Monster Condo (MAP27) - Rocket launcher",
             "id": 361369,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14451,6 +14821,7 @@
           {
             "name": "Monster Condo (MAP27) - Partial invisibility",
             "id": 361370,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14469,6 +14840,7 @@
           {
             "name": "Monster Condo (MAP27) - Plasma gun",
             "id": 361371,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14487,6 +14859,7 @@
           {
             "name": "Monster Condo (MAP27) - Invulnerability",
             "id": 361372,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14505,6 +14878,7 @@
           {
             "name": "Monster Condo (MAP27) - Armor",
             "id": 361373,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14523,6 +14897,7 @@
           {
             "name": "Monster Condo (MAP27) - Backpack",
             "id": 361374,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14541,6 +14916,7 @@
           {
             "name": "Monster Condo (MAP27) - Invulnerability 2",
             "id": 361375,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14559,6 +14935,7 @@
           {
             "name": "Monster Condo (MAP27) - Partial invisibility 2",
             "id": 361376,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14577,6 +14954,7 @@
           {
             "name": "Monster Condo (MAP27) - Supercharge",
             "id": 361377,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14595,6 +14973,7 @@
           {
             "name": "Monster Condo (MAP27) - Armor 2",
             "id": 361378,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14613,6 +14992,7 @@
           {
             "name": "Monster Condo (MAP27) - Chaingun",
             "id": 361379,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14631,6 +15011,7 @@
           {
             "name": "Monster Condo (MAP27) - BFG9000",
             "id": 361380,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14649,6 +15030,7 @@
           {
             "name": "Monster Condo (MAP27) - Backpack 2",
             "id": 361381,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14667,6 +15049,7 @@
           {
             "name": "Monster Condo (MAP27) - Backpack 3",
             "id": 361382,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14685,6 +15068,7 @@
           {
             "name": "Monster Condo (MAP27) - Backpack 4",
             "id": 361383,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14703,6 +15087,7 @@
           {
             "name": "Monster Condo (MAP27) - Yellow skull key",
             "id": 361384,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14721,6 +15106,7 @@
           {
             "name": "Monster Condo (MAP27) - Chainsaw",
             "id": 361397,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14739,6 +15125,7 @@
           {
             "name": "Monster Condo (MAP27) - Super Shotgun",
             "id": 361398,
+            "region": "Monster Condo (MAP27) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14793,6 +15180,7 @@
           {
             "name": "Monster Condo (MAP27) - Red skull key",
             "id": 361385,
+            "region": "Monster Condo (MAP27) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14811,6 +15199,7 @@
           {
             "name": "Monster Condo (MAP27) - Supercharge 2",
             "id": 361386,
+            "region": "Monster Condo (MAP27) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14865,6 +15254,7 @@
           {
             "name": "Monster Condo (MAP27) - Blue skull key",
             "id": 361387,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14883,6 +15273,7 @@
           {
             "name": "Monster Condo (MAP27) - Supercharge 3",
             "id": 361388,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14901,6 +15292,7 @@
           {
             "name": "Monster Condo (MAP27) - Computer area map",
             "id": 361389,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14919,6 +15311,7 @@
           {
             "name": "Monster Condo (MAP27) - Berserk",
             "id": 361390,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14937,6 +15330,7 @@
           {
             "name": "Monster Condo (MAP27) - Supercharge 4",
             "id": 361391,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14955,6 +15349,7 @@
           {
             "name": "Monster Condo (MAP27) - Supercharge 5",
             "id": 361392,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14973,6 +15368,7 @@
           {
             "name": "Monster Condo (MAP27) - Computer area map 2",
             "id": 361393,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14991,6 +15387,7 @@
           {
             "name": "Monster Condo (MAP27) - Berserk 2",
             "id": 361394,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15009,6 +15406,7 @@
           {
             "name": "Monster Condo (MAP27) - Partial invisibility 3",
             "id": 361395,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15027,6 +15425,7 @@
           {
             "name": "Monster Condo (MAP27) - Invulnerability 3",
             "id": 361396,
+            "region": "Monster Condo (MAP27) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15088,6 +15487,7 @@
           {
             "name": "Monster Condo (MAP27) - Exit",
             "id": 361399,
+            "region": "Monster Condo (MAP27) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15188,6 +15588,7 @@
           {
             "name": "The Spirit World (MAP28) - Armor",
             "id": 361400,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15206,6 +15607,7 @@
           {
             "name": "The Spirit World (MAP28) - Chainsaw",
             "id": 361401,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15224,6 +15626,7 @@
           {
             "name": "The Spirit World (MAP28) - Invulnerability",
             "id": 361402,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15242,6 +15645,7 @@
           {
             "name": "The Spirit World (MAP28) - Yellow skull key",
             "id": 361403,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15260,6 +15664,7 @@
           {
             "name": "The Spirit World (MAP28) - Supercharge",
             "id": 361404,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15278,6 +15683,7 @@
           {
             "name": "The Spirit World (MAP28) - Chaingun",
             "id": 361405,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15296,6 +15702,7 @@
           {
             "name": "The Spirit World (MAP28) - Rocket launcher",
             "id": 361406,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15314,6 +15721,7 @@
           {
             "name": "The Spirit World (MAP28) - Backpack",
             "id": 361407,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15332,6 +15740,7 @@
           {
             "name": "The Spirit World (MAP28) - Backpack 2",
             "id": 361408,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15350,6 +15759,7 @@
           {
             "name": "The Spirit World (MAP28) - Backpack 3",
             "id": 361409,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15368,6 +15778,7 @@
           {
             "name": "The Spirit World (MAP28) - Backpack 4",
             "id": 361410,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15386,6 +15797,7 @@
           {
             "name": "The Spirit World (MAP28) - Berserk",
             "id": 361411,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15404,6 +15816,7 @@
           {
             "name": "The Spirit World (MAP28) - Plasma gun",
             "id": 361412,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15422,6 +15835,7 @@
           {
             "name": "The Spirit World (MAP28) - Invulnerability 2",
             "id": 361413,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15440,6 +15854,7 @@
           {
             "name": "The Spirit World (MAP28) - Invulnerability 3",
             "id": 361414,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15458,6 +15873,7 @@
           {
             "name": "The Spirit World (MAP28) - BFG9000",
             "id": 361415,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15476,6 +15892,7 @@
           {
             "name": "The Spirit World (MAP28) - Megasphere",
             "id": 361416,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15494,6 +15911,7 @@
           {
             "name": "The Spirit World (MAP28) - Megasphere 2",
             "id": 361417,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15512,6 +15930,7 @@
           {
             "name": "The Spirit World (MAP28) - Invulnerability 4",
             "id": 361418,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15530,6 +15949,7 @@
           {
             "name": "The Spirit World (MAP28) - Invulnerability 5",
             "id": 361419,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15548,6 +15968,7 @@
           {
             "name": "The Spirit World (MAP28) - Super Shotgun",
             "id": 361420,
+            "region": "The Spirit World (MAP28) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15609,6 +16030,7 @@
           {
             "name": "The Spirit World (MAP28) - Red skull key",
             "id": 361421,
+            "region": "The Spirit World (MAP28) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15670,6 +16092,7 @@
           {
             "name": "The Spirit World (MAP28) - Exit",
             "id": 361422,
+            "region": "The Spirit World (MAP28) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15711,6 +16134,7 @@
           {
             "name": "The Living End (MAP29) - Chaingun",
             "id": 361423,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15729,6 +16153,7 @@
           {
             "name": "The Living End (MAP29) - Plasma gun",
             "id": 361424,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15747,6 +16172,7 @@
           {
             "name": "The Living End (MAP29) - Backpack",
             "id": 361425,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15765,6 +16191,7 @@
           {
             "name": "The Living End (MAP29) - Super Shotgun",
             "id": 361426,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15783,6 +16210,7 @@
           {
             "name": "The Living End (MAP29) - Mega Armor",
             "id": 361427,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15801,6 +16229,7 @@
           {
             "name": "The Living End (MAP29) - Armor",
             "id": 361428,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15819,6 +16248,7 @@
           {
             "name": "The Living End (MAP29) - Backpack 2",
             "id": 361429,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15837,6 +16267,7 @@
           {
             "name": "The Living End (MAP29) - Supercharge",
             "id": 361430,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15855,6 +16286,7 @@
           {
             "name": "The Living End (MAP29) - Berserk",
             "id": 361431,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15873,6 +16305,7 @@
           {
             "name": "The Living End (MAP29) - Berserk 2",
             "id": 361432,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15891,6 +16324,7 @@
           {
             "name": "The Living End (MAP29) - Exit",
             "id": 361433,
+            "region": "The Living End (MAP29) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15945,6 +16379,7 @@
           {
             "name": "Icon of Sin (MAP30) - Supercharge",
             "id": 361434,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15963,6 +16398,7 @@
           {
             "name": "Icon of Sin (MAP30) - Supercharge 2",
             "id": 361435,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15981,6 +16417,7 @@
           {
             "name": "Icon of Sin (MAP30) - Supercharge 3",
             "id": 361436,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15999,6 +16436,7 @@
           {
             "name": "Icon of Sin (MAP30) - Invulnerability",
             "id": 361437,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16017,6 +16455,7 @@
           {
             "name": "Icon of Sin (MAP30) - Invulnerability 2",
             "id": 361438,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16035,6 +16474,7 @@
           {
             "name": "Icon of Sin (MAP30) - Invulnerability 3",
             "id": 361439,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16053,6 +16493,7 @@
           {
             "name": "Icon of Sin (MAP30) - Invulnerability 4",
             "id": 361440,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16071,6 +16512,7 @@
           {
             "name": "Icon of Sin (MAP30) - Megasphere 2",
             "id": 361450,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16089,6 +16531,7 @@
           {
             "name": "Icon of Sin (MAP30) - Berserk",
             "id": 361451,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16107,6 +16550,7 @@
           {
             "name": "Icon of Sin (MAP30) - Exit",
             "id": 361452,
+            "region": "Icon of Sin (MAP30) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16238,6 +16682,7 @@
           {
             "name": "Icon of Sin (MAP30) - BFG9000",
             "id": 361441,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16256,6 +16701,7 @@
           {
             "name": "Icon of Sin (MAP30) - Chaingun",
             "id": 361442,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16274,6 +16720,7 @@
           {
             "name": "Icon of Sin (MAP30) - Chainsaw",
             "id": 361443,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16292,6 +16739,7 @@
           {
             "name": "Icon of Sin (MAP30) - Plasma gun",
             "id": 361444,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16310,6 +16758,7 @@
           {
             "name": "Icon of Sin (MAP30) - Rocket launcher",
             "id": 361445,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16328,6 +16777,7 @@
           {
             "name": "Icon of Sin (MAP30) - Shotgun",
             "id": 361446,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16346,6 +16796,7 @@
           {
             "name": "Icon of Sin (MAP30) - Super Shotgun",
             "id": 361447,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16364,6 +16815,7 @@
           {
             "name": "Icon of Sin (MAP30) - Backpack",
             "id": 361448,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16382,6 +16834,7 @@
           {
             "name": "Icon of Sin (MAP30) - Megasphere",
             "id": 361449,
+            "region": "Icon of Sin (MAP30) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19049,15 +19502,340 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Ammos",
-      "Computer area maps",
-      "Everything",
-      "Keys",
-      "Levels",
-      "Powerups",
-      "Weapons"
-    ]
+    "1": {
+      "Ammos": [
+        "Box of shotgun shells",
+        "Energy cell pack",
+        "Box of bullets",
+        "Box of rockets"
+      ],
+      "Computer area maps": [
+        "Bloodfalls (MAP25) - Computer area map",
+        "The Abandoned Mines (MAP26) - Computer area map",
+        "The Spirit World (MAP28) - Computer area map",
+        "The Inmost Dens (MAP14) - Computer area map",
+        "Icon of Sin (MAP30) - Computer area map",
+        "Tricks and Traps (MAP08) - Computer area map",
+        "The Catacombs (MAP22) - Computer area map",
+        "The Waste Tunnels (MAP05) - Computer area map",
+        "Underhalls (MAP02) - Computer area map",
+        "Nirvana (MAP21) - Computer area map",
+        "Dead Simple (MAP07) - Computer area map",
+        "Industrial Zone (MAP15) - Computer area map",
+        "Downtown (MAP13) - Computer area map",
+        "Circle of Death (MAP11) - Computer area map",
+        "The Chasm (MAP24) - Computer area map",
+        "The Pit (MAP09) - Computer area map",
+        "The Factory (MAP12) - Computer area map",
+        "The Living End (MAP29) - Computer area map",
+        "Suburbs (MAP16) - Computer area map",
+        "Monster Condo (MAP27) - Computer area map",
+        "Wolfenstein (MAP31) - Computer area map",
+        "Barrels o' Fun (MAP23) - Computer area map",
+        "Entryway (MAP01) - Computer area map",
+        "The Citadel (MAP19) - Computer area map",
+        "The Focus (MAP04) - Computer area map",
+        "Refueling Base (MAP10) - Computer area map",
+        "The Gantlet (MAP03) - Computer area map",
+        "The Crusher (MAP06) - Computer area map",
+        "Gotcha! (MAP20) - Computer area map",
+        "Grosse (MAP32) - Computer area map",
+        "Tenements (MAP17) - Computer area map",
+        "The Courtyard (MAP18) - Computer area map"
+      ],
+      "Keys": [
+        "Downtown (MAP13) - Yellow keycard",
+        "The Citadel (MAP19) - Yellow skull key",
+        "Downtown (MAP13) - Red keycard",
+        "The Spirit World (MAP28) - Yellow skull key",
+        "The Factory (MAP12) - Yellow keycard",
+        "The Citadel (MAP19) - Blue skull key",
+        "The Crusher (MAP06) - Blue keycard",
+        "The Inmost Dens (MAP14) - Blue skull key",
+        "The Abandoned Mines (MAP26) - Yellow keycard",
+        "Tenements (MAP17) - Blue keycard",
+        "The Chasm (MAP24) - Blue keycard",
+        "The Pit (MAP09) - Yellow keycard",
+        "Monster Condo (MAP27) - Blue skull key",
+        "Circle of Death (MAP11) - Blue keycard",
+        "The Abandoned Mines (MAP26) - Blue keycard",
+        "The Crusher (MAP06) - Red keycard",
+        "The Gantlet (MAP03) - Blue keycard",
+        "The Inmost Dens (MAP14) - Red skull key",
+        "Suburbs (MAP16) - Blue skull key",
+        "Downtown (MAP13) - Blue keycard",
+        "Monster Condo (MAP27) - Red skull key",
+        "The Abandoned Mines (MAP26) - Red keycard",
+        "Industrial Zone (MAP15) - Red keycard",
+        "Bloodfalls (MAP25) - Blue skull key",
+        "The Focus (MAP04) - Red keycard",
+        "The Focus (MAP04) - Yellow keycard",
+        "The Waste Tunnels (MAP05) - Blue keycard",
+        "The Factory (MAP12) - Blue keycard",
+        "The Pit (MAP09) - Blue keycard",
+        "The Chasm (MAP24) - Red keycard",
+        "The Waste Tunnels (MAP05) - Yellow keycard",
+        "The Catacombs (MAP22) - Blue skull key",
+        "Tricks and Traps (MAP08) - Red skull key",
+        "Barrels o' Fun (MAP23) - Yellow skull key",
+        "The Spirit World (MAP28) - Red skull key",
+        "Monster Condo (MAP27) - Yellow skull key",
+        "Tenements (MAP17) - Yellow skull key",
+        "Refueling Base (MAP10) - Yellow keycard",
+        "Industrial Zone (MAP15) - Yellow keycard",
+        "The Citadel (MAP19) - Red skull key",
+        "The Waste Tunnels (MAP05) - Red keycard",
+        "The Crusher (MAP06) - Yellow keycard",
+        "Underhalls (MAP02) - Red keycard",
+        "Nirvana (MAP21) - Blue skull key",
+        "Nirvana (MAP21) - Yellow skull key",
+        "The Courtyard (MAP18) - Blue skull key",
+        "Tenements (MAP17) - Red keycard",
+        "The Focus (MAP04) - Blue keycard",
+        "Nirvana (MAP21) - Red skull key",
+        "Suburbs (MAP16) - Red skull key",
+        "Underhalls (MAP02) - Blue keycard",
+        "Refueling Base (MAP10) - Blue keycard",
+        "Industrial Zone (MAP15) - Blue keycard",
+        "Tricks and Traps (MAP08) - Yellow skull key",
+        "The Gantlet (MAP03) - Red keycard",
+        "Circle of Death (MAP11) - Red keycard",
+        "The Catacombs (MAP22) - Red skull key",
+        "The Courtyard (MAP18) - Yellow skull key"
+      ],
+      "Levels": [
+        "Circle of Death (MAP11)",
+        "Barrels o' Fun (MAP23)",
+        "The Gantlet (MAP03)",
+        "The Waste Tunnels (MAP05)",
+        "Dead Simple (MAP07)",
+        "Downtown (MAP13)",
+        "The Citadel (MAP19)",
+        "Tricks and Traps (MAP08)",
+        "The Chasm (MAP24)",
+        "Underhalls (MAP02)",
+        "The Catacombs (MAP22)",
+        "Refueling Base (MAP10)",
+        "Monster Condo (MAP27)",
+        "Tenements (MAP17)",
+        "The Inmost Dens (MAP14)",
+        "Suburbs (MAP16)",
+        "The Living End (MAP29)",
+        "Bloodfalls (MAP25)",
+        "Gotcha! (MAP20)",
+        "The Abandoned Mines (MAP26)",
+        "Wolfenstein (MAP31)",
+        "Grosse (MAP32)",
+        "The Pit (MAP09)",
+        "Industrial Zone (MAP15)",
+        "The Courtyard (MAP18)",
+        "Nirvana (MAP21)",
+        "Entryway (MAP01)",
+        "Icon of Sin (MAP30)",
+        "The Factory (MAP12)",
+        "The Spirit World (MAP28)",
+        "The Focus (MAP04)",
+        "The Crusher (MAP06)"
+      ],
+      "Powerups": [
+        "Partial invisibility",
+        "Armor",
+        "Invulnerability",
+        "Supercharge",
+        "Megasphere",
+        "Mega Armor",
+        "Berserk"
+      ],
+      "Weapons": [
+        "BFG9000",
+        "Shotgun",
+        "Chainsaw",
+        "Rocket launcher",
+        "Plasma gun",
+        "Super Shotgun",
+        "Chaingun"
+      ],
+      "Everything": [
+        "Downtown (MAP13) - Yellow keycard",
+        "BFG9000",
+        "The Citadel (MAP19) - Yellow skull key",
+        "Bloodfalls (MAP25) - Computer area map",
+        "Shell capacity",
+        "The Inmost Dens (MAP14) - Blue skull key",
+        "The Crusher (MAP06) - Blue keycard",
+        "The Inmost Dens (MAP14) - Computer area map",
+        "The Gantlet (MAP03)",
+        "Medikit",
+        "Dead Simple (MAP07) - Complete",
+        "The Factory (MAP12) - Complete",
+        "Suburbs (MAP16) - Complete",
+        "The Waste Tunnels (MAP05) - Computer area map",
+        "The Gantlet (MAP03) - Blue keycard",
+        "The Crusher (MAP06) - Red keycard",
+        "Underhalls (MAP02) - Computer area map",
+        "Suburbs (MAP16) - Blue skull key",
+        "Downtown (MAP13) - Blue keycard",
+        "Dead Simple (MAP07) - Computer area map",
+        "Grosse (MAP32) - Computer area map",
+        "Industrial Zone (MAP15) - Red keycard",
+        "Bloodfalls (MAP25) - Blue skull key",
+        "The Focus (MAP04) - Red keycard",
+        "The Factory (MAP12) - Blue keycard",
+        "Monster Condo (MAP27)",
+        "Tenements (MAP17)",
+        "The Inmost Dens (MAP14)",
+        "Industrial Zone (MAP15) - Computer area map",
+        "The Waste Tunnels (MAP05) - Yellow keycard",
+        "The Chasm (MAP24) - Computer area map",
+        "Supercharge",
+        "Barrels o' Fun (MAP23) - Yellow skull key",
+        "Bloodfalls (MAP25) - Complete",
+        "The Spirit World (MAP28) - Red skull key",
+        "Super Shotgun",
+        "Wolfenstein (MAP31) - Computer area map",
+        "Tenements (MAP17) - Yellow skull key",
+        "Industrial Zone (MAP15) - Yellow keycard",
+        "Barrels o' Fun (MAP23) - Computer area map",
+        "The Waste Tunnels (MAP05) - Red keycard",
+        "Entryway (MAP01) - Complete",
+        "The Crusher (MAP06) - Yellow keycard",
+        "Backpack",
+        "The Courtyard (MAP18) - Blue skull key",
+        "The Focus (MAP04) - Computer area map",
+        "Underhalls (MAP02) - Blue keycard",
+        "Nirvana (MAP21) - Red skull key",
+        "The Gantlet (MAP03) - Computer area map",
+        "Tricks and Traps (MAP08) - Yellow skull key",
+        "The Gantlet (MAP03) - Red keycard",
+        "Tenements (MAP17) - Computer area map",
+        "Circle of Death (MAP11) - Red keycard",
+        "The Courtyard (MAP18) - Yellow skull key",
+        "The Crusher (MAP06)",
+        "Nirvana (MAP21) - Complete",
+        "The Waste Tunnels (MAP05) - Complete",
+        "The Citadel (MAP19) - Blue skull key",
+        "The Spirit World (MAP28) - Computer area map",
+        "Berserk",
+        "The Chasm (MAP24) - Blue keycard",
+        "Barrels o' Fun (MAP23)",
+        "Dead Simple (MAP07)",
+        "Circle of Death (MAP11) - Blue keycard",
+        "The Crusher (MAP06) - Complete",
+        "Monster Condo (MAP27) - Complete",
+        "Grosse (MAP32) - Complete",
+        "The Inmost Dens (MAP14) - Red skull key",
+        "The Chasm (MAP24)",
+        "Gotcha! (MAP20) - Complete",
+        "Underhalls (MAP02)",
+        "The Focus (MAP04) - Yellow keycard",
+        "The Abandoned Mines (MAP26) - Complete",
+        "Box of shotgun shells",
+        "Suburbs (MAP16)",
+        "The Chasm (MAP24) - Red keycard",
+        "The Factory (MAP12) - Computer area map",
+        "Rocket capacity",
+        "Bloodfalls (MAP25)",
+        "Chaingun",
+        "Refueling Base (MAP10) - Yellow keycard",
+        "Refueling Base (MAP10) - Computer area map",
+        "The Focus (MAP04) - Blue keycard",
+        "The Citadel (MAP19) - Complete",
+        "Tricks and Traps (MAP08) - Complete",
+        "Tenements (MAP17) - Complete",
+        "Nirvana (MAP21)",
+        "Energy cell capacity",
+        "Underhalls (MAP02) - Complete",
+        "Entryway (MAP01)",
+        "Gotcha! (MAP20) - Computer area map",
+        "The Factory (MAP12)",
+        "The Spirit World (MAP28)",
+        "The Gantlet (MAP03) - Complete",
+        "The Abandoned Mines (MAP26) - Computer area map",
+        "Wolfenstein (MAP31) - Complete",
+        "The Chasm (MAP24) - Complete",
+        "Bullet capacity",
+        "The Courtyard (MAP18) - Complete",
+        "The Focus (MAP04) - Complete",
+        "The Pit (MAP09) - Yellow keycard",
+        "The Abandoned Mines (MAP26) - Blue keycard",
+        "The Catacombs (MAP22) - Computer area map",
+        "Nirvana (MAP21) - Computer area map",
+        "Energy cell pack",
+        "The Waste Tunnels (MAP05) - Blue keycard",
+        "The Pit (MAP09) - Blue keycard",
+        "Refueling Base (MAP10)",
+        "The Pit (MAP09) - Computer area map",
+        "Megasphere",
+        "Monster Condo (MAP27) - Yellow skull key",
+        "Gotcha! (MAP20)",
+        "The Inmost Dens (MAP14) - Complete",
+        "Invulnerability",
+        "Downtown (MAP13) - Complete",
+        "Wolfenstein (MAP31)",
+        "Circle of Death (MAP11) - Complete",
+        "Industrial Zone (MAP15) - Complete",
+        "Underhalls (MAP02) - Red keycard",
+        "The Citadel (MAP19) - Computer area map",
+        "Nirvana (MAP21) - Blue skull key",
+        "Industrial Zone (MAP15)",
+        "The Courtyard (MAP18)",
+        "Suburbs (MAP16) - Red skull key",
+        "Mega Armor",
+        "Refueling Base (MAP10) - Blue keycard",
+        "Icon of Sin (MAP30) - Complete",
+        "The Spirit World (MAP28) - Complete",
+        "The Focus (MAP04)",
+        "The Courtyard (MAP18) - Computer area map",
+        "The Spirit World (MAP28) - Yellow skull key",
+        "Downtown (MAP13) - Red keycard",
+        "The Factory (MAP12) - Yellow keycard",
+        "The Abandoned Mines (MAP26) - Yellow keycard",
+        "Circle of Death (MAP11)",
+        "Tenements (MAP17) - Blue keycard",
+        "Icon of Sin (MAP30) - Computer area map",
+        "Partial invisibility",
+        "The Waste Tunnels (MAP05)",
+        "Tricks and Traps (MAP08) - Computer area map",
+        "Monster Condo (MAP27) - Blue skull key",
+        "Downtown (MAP13)",
+        "Box of bullets",
+        "The Citadel (MAP19)",
+        "Tricks and Traps (MAP08)",
+        "Rocket launcher",
+        "The Living End (MAP29) - Complete",
+        "Monster Condo (MAP27) - Red skull key",
+        "The Abandoned Mines (MAP26) - Red keycard",
+        "Shotgun",
+        "Box of rockets",
+        "The Catacombs (MAP22)",
+        "Chainsaw",
+        "The Living End (MAP29)",
+        "Circle of Death (MAP11) - Computer area map",
+        "Downtown (MAP13) - Computer area map",
+        "Tricks and Traps (MAP08) - Red skull key",
+        "The Catacombs (MAP22) - Blue skull key",
+        "The Living End (MAP29) - Computer area map",
+        "Plasma gun",
+        "Suburbs (MAP16) - Computer area map",
+        "Monster Condo (MAP27) - Computer area map",
+        "The Abandoned Mines (MAP26)",
+        "Barrels o' Fun (MAP23) - Complete",
+        "The Citadel (MAP19) - Red skull key",
+        "Entryway (MAP01) - Computer area map",
+        "The Catacombs (MAP22) - Complete",
+        "Grosse (MAP32)",
+        "The Pit (MAP09)",
+        "Nirvana (MAP21) - Yellow skull key",
+        "Armor",
+        "Tenements (MAP17) - Red keycard",
+        "Industrial Zone (MAP15) - Blue keycard",
+        "The Crusher (MAP06) - Computer area map",
+        "The Pit (MAP09) - Complete",
+        "Refueling Base (MAP10) - Complete",
+        "Icon of Sin (MAP30)",
+        "The Catacombs (MAP22) - Red skull key"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

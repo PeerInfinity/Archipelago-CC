@@ -75,6 +75,7 @@
           {
             "name": "Tutorial: Yo Momma 1",
             "id": 1337000,
+            "region": "Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -93,6 +94,7 @@
           {
             "name": "Tutorial: Yo Momma 2",
             "id": 1337001,
+            "region": "Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -325,6 +327,7 @@
           {
             "name": "Lake Desolation: Starter chest 2",
             "id": 1337002,
+            "region": "Lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -343,6 +346,7 @@
           {
             "name": "Lake Desolation: Starter chest 3",
             "id": 1337003,
+            "region": "Lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -361,6 +365,7 @@
           {
             "name": "Lake Desolation: Starter chest 1",
             "id": 1337004,
+            "region": "Lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -379,6 +384,7 @@
           {
             "name": "Lake Desolation (Lower): Timespinner Wheel room",
             "id": 1337005,
+            "region": "Lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -397,6 +403,7 @@
           {
             "name": "Lake Desolation: Forget me not chest",
             "id": 1337006,
+            "region": "Lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -442,30 +449,19 @@
           {
             "name": "Lake Desolation (Lower): Chicken chest",
             "id": 1337007,
+            "region": "Lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -541,6 +537,7 @@
           {
             "name": "Lake Desolation (Upper): Oxygen recovery room",
             "id": 1337010,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -559,6 +556,7 @@
           {
             "name": "Lake Desolation (Upper): Secret room",
             "id": 1337011,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -595,26 +593,18 @@
           {
             "name": "Lake Desolation (Upper): Double jump cave platform",
             "id": 1337012,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -632,6 +622,7 @@
           {
             "name": "Lake Desolation (Upper): Double jump cave floor",
             "id": 1337013,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -650,6 +641,7 @@
           {
             "name": "Lake Desolation (Upper): Sparrow chest",
             "id": 1337014,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -668,6 +660,7 @@
           {
             "name": "Lake Desolation (Upper): Crash site pedestal",
             "id": 1337015,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -686,6 +679,7 @@
           {
             "name": "Lake Desolation (Upper): Crash site chest 1",
             "id": 1337016,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -707,6 +701,7 @@
           {
             "name": "Lake Desolation (Upper): Crash site chest 2",
             "id": 1337017,
+            "region": "Upper lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -796,6 +791,7 @@
           {
             "name": "Lake Desolation (Lower): Not so secret room",
             "id": 1337008,
+            "region": "Lower lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -832,30 +828,19 @@
           {
             "name": "Lake Desolation (Upper): Tank chest",
             "id": 1337009,
+            "region": "Lower lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -1008,6 +993,7 @@
           {
             "name": "Lake Desolation: Kitty Boss",
             "id": 1337018,
+            "region": "Eastern lake desolation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1154,24 +1140,12 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard C"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard D"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
                     ]
                   }
                 ]
@@ -1215,6 +1189,7 @@
           {
             "name": "Library: Basement",
             "id": 1337019,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1233,6 +1208,7 @@
           {
             "name": "Library: Warp gate",
             "id": 1337020,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1251,6 +1227,7 @@
           {
             "name": "Library: Librarian",
             "id": 1337021,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1269,6 +1246,7 @@
           {
             "name": "Library: Reading nook chest",
             "id": 1337022,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1287,6 +1265,7 @@
           {
             "name": "Library: Storage room chest 1",
             "id": 1337023,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -1310,24 +1289,12 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard C"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard D"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
                     ]
                   }
                 ]
@@ -1346,6 +1313,7 @@
           {
             "name": "Library: Storage room chest 2",
             "id": 1337024,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -1369,24 +1337,12 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard C"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard D"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
                     ]
                   }
                 ]
@@ -1405,6 +1361,7 @@
           {
             "name": "Library: Storage room chest 3",
             "id": 1337025,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -1428,24 +1385,12 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard C"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard D"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
                     ]
                   }
                 ]
@@ -1464,6 +1409,7 @@
           {
             "name": "Library: Terminal 2 (Lachiem)",
             "id": 1337156,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1485,6 +1431,7 @@
           {
             "name": "Library: Terminal 1 (Windaria)",
             "id": 1337157,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1506,6 +1453,7 @@
           {
             "name": "Library: Terminal 3 (Emperor Nuvius)",
             "id": 1337159,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1527,22 +1475,17 @@
           {
             "name": "Library: V terminal 1 (War of the Sisters)",
             "id": 1337160,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Library Keycard V"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Tablet"
-                    }
+                    "Library Keycard V",
+                    "Tablet"
                   ]
                 }
               ]
@@ -1560,22 +1503,17 @@
           {
             "name": "Library: V terminal 2 (Lake Desolation Map)",
             "id": 1337161,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Library Keycard V"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Tablet"
-                    }
+                    "Library Keycard V",
+                    "Tablet"
                   ]
                 }
               ]
@@ -1593,22 +1531,17 @@
           {
             "name": "Library: V terminal 3 (Vilete)",
             "id": 1337162,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Library Keycard V"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Tablet"
-                    }
+                    "Library Keycard V",
+                    "Tablet"
                   ]
                 }
               ]
@@ -1662,6 +1595,7 @@
           {
             "name": "Library: Backer room chest 5",
             "id": 1337026,
+            "region": "Library top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1680,6 +1614,7 @@
           {
             "name": "Library: Backer room chest 4",
             "id": 1337027,
+            "region": "Library top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1698,6 +1633,7 @@
           {
             "name": "Library: Backer room chest 3",
             "id": 1337028,
+            "region": "Library top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1716,6 +1652,7 @@
           {
             "name": "Library: Backer room chest 2",
             "id": 1337029,
+            "region": "Library top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1734,6 +1671,7 @@
           {
             "name": "Library: Backer room chest 1",
             "id": 1337030,
+            "region": "Library top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1752,6 +1690,7 @@
           {
             "name": "Library: Backer room terminal (Vandagray Metropolis Map)",
             "id": 1337163,
+            "region": "Library top",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1859,20 +1798,11 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard C"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
                     ]
                   }
                 ]
@@ -1908,16 +1838,10 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B"
                     ]
                   }
                 ]
@@ -1992,6 +1916,7 @@
           {
             "name": "Varndagroth Towers (Left): Elevator Key not required",
             "id": 1337031,
+            "region": "Varndagroth tower left",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2010,6 +1935,7 @@
           {
             "name": "Varndagroth Towers (Left): Ye olde Timespinner",
             "id": 1337032,
+            "region": "Varndagroth tower left",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2028,6 +1954,7 @@
           {
             "name": "Varndagroth Towers (Left): Bottom floor",
             "id": 1337033,
+            "region": "Varndagroth tower left",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -2051,20 +1978,11 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard C"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
                     ]
                   }
                 ]
@@ -2083,6 +2001,7 @@
           {
             "name": "Varndagroth Towers (Left): Air vents secret",
             "id": 1337034,
+            "region": "Varndagroth tower left",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -2119,6 +2038,7 @@
           {
             "name": "Varndagroth Towers (Left): Elevator chest",
             "id": 1337035,
+            "region": "Varndagroth tower left",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2201,6 +2121,7 @@
           {
             "name": "Varndagroth Towers: Bridge",
             "id": 1337036,
+            "region": "Varndagroth tower right (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2219,6 +2140,7 @@
           {
             "name": "Varndagroth Towers (Right): Elevator card chest",
             "id": 1337038,
+            "region": "Varndagroth tower right (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2257,6 +2179,7 @@
           {
             "name": "Varndagroth Towers (Right): Air vents right chest",
             "id": 1337039,
+            "region": "Varndagroth tower right (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2295,6 +2218,7 @@
           {
             "name": "Varndagroth Towers (Right): Air vents left chest",
             "id": 1337040,
+            "region": "Varndagroth tower right (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2417,16 +2341,10 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B"
                     ]
                   }
                 ]
@@ -2502,20 +2420,11 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Laser Access A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Laser Access I"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Laser Access M"
-                      }
+                      "Laser Access A",
+                      "Laser Access I",
+                      "Laser Access M"
                     ]
                   }
                 ]
@@ -2560,6 +2469,7 @@
           {
             "name": "Varndagroth Towers (Right): Bottom floor",
             "id": 1337041,
+            "region": "Varndagroth tower right (lower)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2636,6 +2546,7 @@
           {
             "name": "Varndagroth Towers (Right): Elevator chest",
             "id": 1337037,
+            "region": "Varndagroth tower right (elevator)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2654,6 +2565,7 @@
           {
             "name": "Varndagroth Towers (Right): Varndagroth",
             "id": 1337042,
+            "region": "Varndagroth tower right (elevator)",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -2677,20 +2589,11 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard B"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Security Keycard C"
-                      }
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
                     ]
                   }
                 ]
@@ -2709,6 +2612,7 @@
           {
             "name": "Varndagroth Towers (Right): Spider Hell",
             "id": 1337043,
+            "region": "Varndagroth tower right (elevator)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2730,6 +2634,7 @@
           {
             "name": "Varndagroth Towers (Right): Medbay terminal (Bleakness Research)",
             "id": 1337164,
+            "region": "Varndagroth tower right (elevator)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2870,6 +2775,7 @@
           {
             "name": "Sealed Caves (Sirens): Water hook",
             "id": 1337053,
+            "region": "Sealed Caves (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2891,6 +2797,7 @@
           {
             "name": "Sealed Caves (Sirens): Siren room underwater right",
             "id": 1337054,
+            "region": "Sealed Caves (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2912,6 +2819,7 @@
           {
             "name": "Sealed Caves (Sirens): Siren room underwater left",
             "id": 1337055,
+            "region": "Sealed Caves (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2933,6 +2841,7 @@
           {
             "name": "Sealed Caves (Sirens): Cave after sirens chest 1",
             "id": 1337056,
+            "region": "Sealed Caves (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2951,6 +2860,7 @@
           {
             "name": "Sealed Caves (Sirens): Cave after sirens chest 2",
             "id": 1337057,
+            "region": "Sealed Caves (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3036,20 +2946,11 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "list",
+                    "type": "constant",
                     "value": [
-                      {
-                        "type": "constant",
-                        "value": "Laser Access A"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Laser Access I"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Laser Access M"
-                      }
+                      "Laser Access A",
+                      "Laser Access I",
+                      "Laser Access M"
                     ]
                   }
                 ]
@@ -3101,20 +3002,11 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -3129,6 +3021,7 @@
           {
             "name": "Military Fortress: Bomber chest",
             "id": 1337058,
+            "region": "Military Fortress",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3167,6 +3060,7 @@
           {
             "name": "Military Fortress: Close combat room",
             "id": 1337059,
+            "region": "Military Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3286,6 +3180,7 @@
           {
             "name": "Military Fortress: Soldiers bridge",
             "id": 1337060,
+            "region": "Military Fortress (hangar)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3304,6 +3199,7 @@
           {
             "name": "Military Fortress: Giantess room",
             "id": 1337061,
+            "region": "Military Fortress (hangar)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3322,6 +3218,7 @@
           {
             "name": "Military Fortress: Giantess bridge",
             "id": 1337062,
+            "region": "Military Fortress (hangar)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3340,6 +3237,7 @@
           {
             "name": "Military Fortress: B door chest 2",
             "id": 1337063,
+            "region": "Military Fortress (hangar)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3401,6 +3299,7 @@
           {
             "name": "Military Fortress: B door chest 1",
             "id": 1337064,
+            "region": "Military Fortress (hangar)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3462,6 +3361,7 @@
           {
             "name": "Military Fortress: Pedestal",
             "id": 1337065,
+            "region": "Military Fortress (hangar)",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -3602,6 +3502,7 @@
           {
             "name": "Lab: Coffee break",
             "id": 1337066,
+            "region": "The lab",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3620,26 +3521,18 @@
           {
             "name": "Lab: Lower trash right",
             "id": 1337067,
+            "region": "The lab",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -3657,6 +3550,7 @@
           {
             "name": "Lab: Lower trash left",
             "id": 1337068,
+            "region": "The lab",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -3706,26 +3600,18 @@
           {
             "name": "Lab: Below lab entrance",
             "id": 1337069,
+            "region": "The lab",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -3743,6 +3629,7 @@
           {
             "name": "Lab: Experiment 13 terminal (W.R.E.C Farewell)",
             "id": 1337168,
+            "region": "The lab",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3764,6 +3651,7 @@
           {
             "name": "Lab: Left terminal (Biotechnology)",
             "id": 1337169,
+            "region": "The lab",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3898,6 +3786,7 @@
           {
             "name": "Lab: Trash jump room",
             "id": 1337070,
+            "region": "The lab (power off)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3940,6 +3829,7 @@
           {
             "name": "Lab: Dynamo Works",
             "id": 1337071,
+            "region": "The lab (power off)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3960,16 +3850,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Lab Access Research"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Lab Access Dynamo"
-                        }
+                        "Lab Access Dynamo",
+                        "Lab Access Research"
                       ]
                     }
                   ]
@@ -3989,6 +3873,7 @@
           {
             "name": "Lab: Experiment #13",
             "id": 1337073,
+            "region": "The lab (power off)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4026,6 +3911,7 @@
           {
             "name": "Lab: Spider Hell",
             "id": 1337076,
+            "region": "The lab (power off)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4080,6 +3966,7 @@
           {
             "name": "Lab: Middle terminal (Amadeus Laboratory Map)",
             "id": 1337166,
+            "region": "The lab (power off)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4129,6 +4016,7 @@
           {
             "name": "Lab: Sentry platform terminal (Origins)",
             "id": 1337167,
+            "region": "The lab (power off)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4199,6 +4087,7 @@
           {
             "name": "Lab: Right terminal (Experiment #11)",
             "id": 1337170,
+            "region": "The lab (power off)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4372,28 +4261,13 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Gear 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Gear 2"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Gear 3"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Spindle"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Timespinner Gear 1",
+                    "Timespinner Gear 2",
+                    "Timespinner Gear 3",
+                    "Timespinner Spindle",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -4408,6 +4282,7 @@
           {
             "name": "Lab: Genza (Blob Mom)",
             "id": 1337072,
+            "region": "The lab (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4426,6 +4301,7 @@
           {
             "name": "Lab: Download and chest room chest",
             "id": 1337074,
+            "region": "The lab (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4444,6 +4320,7 @@
           {
             "name": "Lab: Lab secret",
             "id": 1337075,
+            "region": "The lab (upper)",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -4480,6 +4357,7 @@
           {
             "name": "Lab: Download and chest room terminal (Experiment #13)",
             "id": 1337165,
+            "region": "The lab (upper)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4537,6 +4415,7 @@
           {
             "name": "Emperor's Tower: Courtyard bottom chest",
             "id": 1337077,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4555,6 +4434,7 @@
           {
             "name": "Emperor's Tower: Courtyard floor secret",
             "id": 1337078,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4598,6 +4478,7 @@
           {
             "name": "Emperor's Tower: Courtyard upper chest",
             "id": 1337079,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4624,6 +4505,7 @@
           {
             "name": "Emperor's Tower: Galactic sage room",
             "id": 1337080,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4642,6 +4524,7 @@
           {
             "name": "Emperor's Tower: Bottom right tower",
             "id": 1337081,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4660,6 +4543,7 @@
           {
             "name": "Emperor's Tower: Wayyyy up there",
             "id": 1337082,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4715,6 +4599,7 @@
           {
             "name": "Emperor's Tower: Left tower balcony",
             "id": 1337083,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4733,6 +4618,7 @@
           {
             "name": "Emperor's Tower: Emperor's Chambers chest",
             "id": 1337084,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4751,6 +4637,7 @@
           {
             "name": "Emperor's Tower: Emperor's Chambers pedestal",
             "id": 1337085,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4769,6 +4656,7 @@
           {
             "name": "Killed Emperor",
             "id": null,
+            "region": "Emperors tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4886,6 +4774,7 @@
           {
             "name": "Sealed Caves (Xarion): Skeleton",
             "id": 1337044,
+            "region": "Skeleton Shaft",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4978,30 +4867,19 @@
           {
             "name": "Sealed Caves (Xarion): Shroom jump room",
             "id": 1337045,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -5019,6 +4897,7 @@
           {
             "name": "Sealed Caves (Xarion): Double shroom room",
             "id": 1337046,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5037,6 +4916,7 @@
           {
             "name": "Sealed Caves (Xarion): Jacksquat room",
             "id": 1337047,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5092,6 +4972,7 @@
           {
             "name": "Sealed Caves (Xarion): Below Jacksquat room",
             "id": 1337048,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5110,6 +4991,7 @@
           {
             "name": "Sealed Caves (Xarion): Secret room",
             "id": 1337049,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -5146,6 +5028,7 @@
           {
             "name": "Sealed Caves (Xarion): Bottom left room",
             "id": 1337050,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5164,26 +5047,18 @@
           {
             "name": "Sealed Caves (Xarion): Last chance before Xarion",
             "id": 1337051,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -5201,6 +5076,7 @@
           {
             "name": "Sealed Caves (Xarion): Xarion",
             "id": 1337052,
+            "region": "Sealed Caves (Xarion)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5329,16 +5205,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Timespinner Spindle"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Timespinner Wheel"
-                        }
+                        "Timespinner Spindle",
+                        "Timespinner Wheel"
                       ]
                     }
                   ]
@@ -5383,6 +5253,7 @@
           {
             "name": "Refugee Camp: Neliste's Bra",
             "id": 1337086,
+            "region": "Refugee Camp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5401,6 +5272,7 @@
           {
             "name": "Refugee Camp: Storage chest 3",
             "id": 1337087,
+            "region": "Refugee Camp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5419,6 +5291,7 @@
           {
             "name": "Refugee Camp: Storage chest 2",
             "id": 1337088,
+            "region": "Refugee Camp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5437,6 +5310,7 @@
           {
             "name": "Refugee Camp: Storage chest 1",
             "id": 1337089,
+            "region": "Refugee Camp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5626,6 +5500,7 @@
           {
             "name": "Forest: Refugee camp roof",
             "id": 1337090,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5644,6 +5519,7 @@
           {
             "name": "Forest: Bat jump ledge",
             "id": 1337091,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5699,6 +5575,7 @@
           {
             "name": "Forest: Green platform secret",
             "id": 1337092,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -5735,6 +5612,7 @@
           {
             "name": "Forest: Rats guarded chest",
             "id": 1337093,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5753,6 +5631,7 @@
           {
             "name": "Forest: Waterfall chest 1",
             "id": 1337094,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5774,6 +5653,7 @@
           {
             "name": "Forest: Waterfall chest 2",
             "id": 1337095,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5795,6 +5675,7 @@
           {
             "name": "Forest: Batcave",
             "id": 1337096,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5813,6 +5694,7 @@
           {
             "name": "Castle Ramparts: In the moat",
             "id": 1337097,
+            "region": "Forest",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5919,24 +5801,12 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -6010,6 +5880,7 @@
           {
             "name": "Forest: Before Serene single bat cave",
             "id": 1337098,
+            "region": "Left Side forest Caves",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6028,6 +5899,7 @@
           {
             "name": "Lake Serene (Lower): Under the eels",
             "id": 1337106,
+            "region": "Left Side forest Caves",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6049,6 +5921,7 @@
           {
             "name": "Lake Serene (Lower): Past the eels",
             "id": 1337110,
+            "region": "Left Side forest Caves",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6157,6 +6030,7 @@
           {
             "name": "Lake Serene (Upper): Rat nest",
             "id": 1337099,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6175,26 +6049,18 @@
           {
             "name": "Lake Serene (Upper): Double jump cave platform",
             "id": 1337100,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -6212,6 +6078,7 @@
           {
             "name": "Lake Serene (Upper): Double jump cave floor",
             "id": 1337101,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6230,6 +6097,7 @@
           {
             "name": "Lake Serene (Upper): Cave secret",
             "id": 1337102,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -6266,6 +6134,7 @@
           {
             "name": "Lake Serene: Before Big Bird",
             "id": 1337175,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6284,6 +6153,7 @@
           {
             "name": "Lake Serene: Behind the vines",
             "id": 1337103,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6302,6 +6172,7 @@
           {
             "name": "Lake Serene: Pyramid keys room",
             "id": 1337104,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6320,6 +6191,7 @@
           {
             "name": "Lake Serene (Upper): Chicken ledge",
             "id": 1337174,
+            "region": "Upper Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6439,6 +6311,7 @@
           {
             "name": "Lake Serene (Lower): Deep dive",
             "id": 1337105,
+            "region": "Lower Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6457,6 +6330,7 @@
           {
             "name": "Lake Serene (Lower): Water spikes room",
             "id": 1337107,
+            "region": "Lower Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6475,6 +6349,7 @@
           {
             "name": "Lake Serene (Lower): Underwater secret",
             "id": 1337108,
+            "region": "Lower Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -6511,6 +6386,7 @@
           {
             "name": "Lake Serene (Lower): T chest",
             "id": 1337109,
+            "region": "Lower Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6550,6 +6426,7 @@
           {
             "name": "Lake Serene (Lower): Underwater pedestal",
             "id": 1337111,
+            "region": "Lower Lake Serene",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6723,6 +6600,7 @@
           {
             "name": "Caves of Banishment (Maw): Shroom jump room",
             "id": 1337112,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6762,6 +6640,7 @@
           {
             "name": "Caves of Banishment (Maw): Secret room",
             "id": 1337113,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6816,6 +6695,7 @@
           {
             "name": "Caves of Banishment (Maw): Bottom left room",
             "id": 1337114,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6853,6 +6733,7 @@
           {
             "name": "Caves of Banishment (Maw): Single shroom room",
             "id": 1337115,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6871,6 +6752,7 @@
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 1",
             "id": 1337116,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6910,6 +6792,7 @@
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 2",
             "id": 1337117,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6949,6 +6832,7 @@
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 3",
             "id": 1337118,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6988,6 +6872,7 @@
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 4",
             "id": 1337119,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7027,6 +6912,7 @@
           {
             "name": "Caves of Banishment (Maw): Pedestal",
             "id": 1337120,
+            "region": "Caves of Banishment (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7142,16 +7028,10 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Gas Mask"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Talaria Attachment"
-                    }
+                    "Gas Mask",
+                    "Talaria Attachment"
                   ]
                 }
               ]
@@ -7194,6 +7074,7 @@
           {
             "name": "Caves of Banishment (Maw): Last chance before Maw",
             "id": 1337121,
+            "region": "Caves of Banishment (Maw)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7233,22 +7114,17 @@
           {
             "name": "Caves of Banishment (Maw): Plasma Crystal",
             "id": 1337173,
+            "region": "Caves of Banishment (Maw)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Gas Mask"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Talaria Attachment"
-                    }
+                    "Gas Mask",
+                    "Talaria Attachment"
                   ]
                 }
               ]
@@ -7266,6 +7142,7 @@
           {
             "name": "Killed Maw",
             "id": null,
+            "region": "Caves of Banishment (Maw)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7287,22 +7164,17 @@
           {
             "name": "Caves of Banishment (Maw): Mineshaft",
             "id": 1337122,
+            "region": "Caves of Banishment (Maw)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Gas Mask"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Talaria Attachment"
-                    }
+                    "Gas Mask",
+                    "Talaria Attachment"
                   ]
                 }
               ]
@@ -7366,6 +7238,7 @@
           {
             "name": "Caves of Banishment (Sirens): Wyvern room",
             "id": 1337123,
+            "region": "Caves of Banishment (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7384,6 +7257,7 @@
           {
             "name": "Caves of Banishment (Sirens): Siren room above water chest",
             "id": 1337124,
+            "region": "Caves of Banishment (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7402,6 +7276,7 @@
           {
             "name": "Caves of Banishment (Sirens): Siren room underwater left chest",
             "id": 1337125,
+            "region": "Caves of Banishment (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7423,6 +7298,7 @@
           {
             "name": "Caves of Banishment (Sirens): Siren room underwater right chest",
             "id": 1337126,
+            "region": "Caves of Banishment (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7444,6 +7320,7 @@
           {
             "name": "Caves of Banishment (Sirens): Siren room underwater right ground",
             "id": 1337172,
+            "region": "Caves of Banishment (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7465,6 +7342,7 @@
           {
             "name": "Caves of Banishment (Sirens): Water hook",
             "id": 1337127,
+            "region": "Caves of Banishment (Sirens)",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7572,6 +7450,7 @@
           {
             "name": "Castle Ramparts: Bomber chest",
             "id": 1337128,
+            "region": "Castle Ramparts",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7610,6 +7489,7 @@
           {
             "name": "Castle Ramparts: Freeze the engineer",
             "id": 1337129,
+            "region": "Castle Ramparts",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7648,6 +7528,7 @@
           {
             "name": "Castle Ramparts: Giantess guarded room",
             "id": 1337130,
+            "region": "Castle Ramparts",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7666,6 +7547,7 @@
           {
             "name": "Castle Ramparts: Knight and archer guarded room",
             "id": 1337131,
+            "region": "Castle Ramparts",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7684,6 +7566,7 @@
           {
             "name": "Castle Ramparts: Pedestal",
             "id": 1337132,
+            "region": "Castle Ramparts",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7870,6 +7753,7 @@
           {
             "name": "Castle Keep: Under the twins",
             "id": 1337139,
+            "region": "Castle Keep",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7888,30 +7772,19 @@
           {
             "name": "Killed Twins",
             "id": null,
+            "region": "Castle Keep",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -7929,30 +7802,19 @@
           {
             "name": "Castle Keep: Advisor jump",
             "id": 1337171,
+            "region": "Castle Keep",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -7970,30 +7832,19 @@
           {
             "name": "Castle Keep: Twins",
             "id": 1337140,
+            "region": "Castle Keep",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Timespinner Wheel"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
                   ]
                 }
               ]
@@ -8011,6 +7862,7 @@
           {
             "name": "Castle Keep: Royal guard tiny room",
             "id": 1337141,
+            "region": "Castle Keep",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8077,6 +7929,7 @@
           {
             "name": "Castle Basement: Secret pedestal",
             "id": 1337133,
+            "region": "Castle Basement",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -8113,6 +7966,7 @@
           {
             "name": "Castle Basement: Clean the castle basement",
             "id": 1337134,
+            "region": "Castle Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8131,6 +7985,7 @@
           {
             "name": "Castle Basement: Giantess guarded chest",
             "id": 1337136,
+            "region": "Castle Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8149,6 +8004,7 @@
           {
             "name": "Castle Basement: Omelette chest",
             "id": 1337137,
+            "region": "Castle Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8167,6 +8023,7 @@
           {
             "name": "Castle Basement: Just an egg",
             "id": 1337138,
+            "region": "Castle Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8301,26 +8158,18 @@
           {
             "name": "Castle Keep: Yas queen room",
             "id": 1337135,
+            "region": "Royal towers (lower)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Plasma Geyser"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Plasma Orb"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Royal Ring"
-                    }
+                    "Plasma Geyser",
+                    "Plasma Orb",
+                    "Royal Ring"
                   ]
                 }
               ]
@@ -8338,6 +8187,7 @@
           {
             "name": "Royal Towers: Floor secret",
             "id": 1337142,
+            "region": "Royal towers (lower)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8430,20 +8280,11 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -8458,6 +8299,7 @@
           {
             "name": "Royal Towers: Pre-climb gap",
             "id": 1337143,
+            "region": "Royal towers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8476,6 +8318,7 @@
           {
             "name": "Royal Towers: Long balcony",
             "id": 1337144,
+            "region": "Royal towers",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8513,6 +8356,7 @@
           {
             "name": "Royal Towers: Past bottom struggle juggle",
             "id": 1337145,
+            "region": "Royal towers",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8552,6 +8396,7 @@
           {
             "name": "Royal Towers: Bottom struggle juggle",
             "id": 1337146,
+            "region": "Royal towers",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8607,6 +8452,7 @@
           {
             "name": "Royal Towers: Right tower freebie",
             "id": 1337149,
+            "region": "Royal towers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8661,6 +8507,7 @@
           {
             "name": "Royal Towers: Top struggle juggle",
             "id": 1337147,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8716,6 +8563,7 @@
           {
             "name": "Royal Towers: No struggle required",
             "id": 1337148,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8734,6 +8582,7 @@
           {
             "name": "Royal Towers: Left tower small balcony",
             "id": 1337150,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8752,6 +8601,7 @@
           {
             "name": "Royal Towers: Left tower royal guard",
             "id": 1337151,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8770,6 +8620,7 @@
           {
             "name": "Royal Towers: Before Aelana",
             "id": 1337152,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8788,6 +8639,7 @@
           {
             "name": "Killed Aelana",
             "id": null,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8806,22 +8658,17 @@
           {
             "name": "Royal Towers: Aelana's attic",
             "id": 1337153,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    }
+                    "Celestial Sash",
+                    "Lightwall"
                   ]
                 }
               ]
@@ -8839,6 +8686,7 @@
           {
             "name": "Royal Towers: Aelana's chest",
             "id": 1337154,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8857,6 +8705,7 @@
           {
             "name": "Royal Towers: Aelana's pedestal",
             "id": 1337155,
+            "region": "Royal towers (upper)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8957,20 +8806,11 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Celestial Sash"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Lightwall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Succubus Hairpin"
-                    }
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
                   ]
                 }
               ]
@@ -9013,6 +8853,7 @@
           {
             "name": "Ancient Pyramid: Why not it's right there",
             "id": 1337246,
+            "region": "Ancient Pyramid (entrance)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9138,6 +8979,7 @@
           {
             "name": "Ancient Pyramid: Conviction guarded room",
             "id": 1337247,
+            "region": "Ancient Pyramid (left)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9156,6 +8998,7 @@
           {
             "name": "Ancient Pyramid: Pit secret room",
             "id": 1337248,
+            "region": "Ancient Pyramid (left)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9210,6 +9053,7 @@
           {
             "name": "Ancient Pyramid: Regret chest",
             "id": 1337249,
+            "region": "Ancient Pyramid (left)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9366,6 +9210,7 @@
           {
             "name": "Ancient Pyramid: Nightmare Door chest",
             "id": 1337236,
+            "region": "Ancient Pyramid (right)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9403,6 +9248,7 @@
           {
             "name": "Killed Nightmare",
             "id": null,
+            "region": "Ancient Pyramid (right)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9412,28 +9258,13 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Timespinner Gear 1"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Timespinner Gear 2"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Timespinner Gear 3"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Timespinner Spindle"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Timespinner Wheel"
-                        }
+                        "Timespinner Gear 1",
+                        "Timespinner Gear 2",
+                        "Timespinner Gear 3",
+                        "Timespinner Spindle",
+                        "Timespinner Wheel"
                       ]
                     }
                   ]
@@ -13329,21 +13160,430 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Equipment",
-      "Everything",
-      "Familiar",
-      "Key",
-      "Lab Access",
-      "Laser Access",
-      "Orb Melee",
-      "Orb Passive",
-      "Orb Spell",
-      "Relic",
-      "Stat",
-      "Trap",
-      "UseItem"
-    ]
+    "1": {
+      "Equipment": [
+        "Mother o' Pearl",
+        "Pendulum",
+        "Empire Crown",
+        "Dragoon Helmet",
+        "Lab Coat",
+        "Librarian Robe",
+        "Buckle Hat",
+        "Princess Dress",
+        "Military Armor",
+        "Azure Stole",
+        "Copper Helmet",
+        "Glass Pumpkin",
+        "Ancient Coin",
+        "Galaxy Earrings",
+        "Chaos Horn",
+        "Filigree Clasp",
+        "Shiny Rock",
+        "Trendy Jacket",
+        "Empress Robe",
+        "Pointy Hat",
+        "Captain's Uniform",
+        "Captain's Cap",
+        "Chaos Stole",
+        "Combat Helmet",
+        "Leather Helmet",
+        "Viletian Crown",
+        "Advisor Robe",
+        "Sunglasses",
+        "Engineer Goggles",
+        "Copper Breastplate",
+        "Lab Glasses",
+        "Security Visor",
+        "Advisor Hat",
+        "Selen's Bangle",
+        "Metal Wristband",
+        "Traveler's Cloak",
+        "Nymph Hairband",
+        "Gilded Egg",
+        "Eternal Crown",
+        "Old Coat",
+        "Synthetic Plume",
+        "Bird Statue",
+        "Dragoon Armor",
+        "Midnight Cloak",
+        "Leather Jerkin",
+        "Cheveur Plume",
+        "Security Vest",
+        "Librarian Hat",
+        "Eternal Coat"
+      ],
+      "Familiar": [
+        "Merchant Crow",
+        "Sprite",
+        "Demon",
+        "Meyef",
+        "Griffin",
+        "Kobo"
+      ],
+      "UseItem": [
+        "Plasma Core",
+        "Gold Necklace",
+        "Empress Cake",
+        "MapReveal 1",
+        "Hi-Ether",
+        "Cheveur Drumstick",
+        "Lachiemi Sun",
+        "Food Synthesizer",
+        "Jerky",
+        "Plasma Crystal",
+        "Eel Meat",
+        "Alchemy Tools",
+        "Plump Maggot",
+        "Orange Juice",
+        "Filigree Tea",
+        "Royal Casserole",
+        "Cheveux Feather",
+        "Siren Ink",
+        "Cheveur au Vin",
+        "Herb",
+        "Galaxy Stone",
+        "Chaos Rose",
+        "Berry Pick-Mi-Up",
+        "Sand Vial",
+        "Spaghetti",
+        "Essence Crystal",
+        "PlaceHolderItem1",
+        "Plasma IV Bag",
+        "Hi-Potion",
+        "Rotten Tail",
+        "Unagi Roll",
+        "Antidote",
+        "Saut\u00e9ed Wyvern Tail",
+        "Ether",
+        "Mushroom",
+        "Gold Ring",
+        "Sand Bottle",
+        "MapReveal 0",
+        "Dream Wisp",
+        "Fried Cheveur",
+        "Wyvern Tail",
+        "Cheveux Breast",
+        "MapReveal 2",
+        "Biscuit",
+        "Mind Refresh ULTRA",
+        "Warp Shard",
+        "Historical Documents",
+        "Potion",
+        "Mind Refresh",
+        "Berry Pick-Mi-Up+",
+        "Silver Ore"
+      ],
+      "Relic": [
+        "Jewelry Box",
+        "Security Keycard A",
+        "Timespinner Gear 2",
+        "Wyrm Brooch",
+        "Security Keycard D",
+        "Soul Scanner",
+        "Goddess Brooch",
+        "Eternal Brooch",
+        "Twin Pyramid Key",
+        "Gas Mask",
+        "Timeworn Warp Beacon",
+        "Tablet",
+        "Succubus Hairpin",
+        "Security Keycard C",
+        "Timespinner Wheel",
+        "Modern Warp Beacon",
+        "Library Keycard V",
+        "Greed Brooch",
+        "Celestial Sash",
+        "Security Keycard B",
+        "Water Mask",
+        "Timespinner Gear 3",
+        "Elevator Keycard",
+        "Mysterious Warp Beacon",
+        "Timespinner Spindle",
+        "Timespinner Gear 1",
+        "Talaria Attachment"
+      ],
+      "Orb Melee": [
+        "Plasma Orb",
+        "Umbra Orb",
+        "Empire Orb",
+        "Ice Orb",
+        "Gun Orb",
+        "Radiant Orb",
+        "Blood Orb",
+        "Blade Orb",
+        "Blue Orb",
+        "Wind Orb",
+        "Shattered Orb",
+        "Forbidden Tome",
+        "Eye Orb",
+        "Iron Orb",
+        "Fire Orb",
+        "Nether Orb"
+      ],
+      "Orb Spell": [
+        "Djinn Inferno",
+        "Storm Eye",
+        "Bombardment",
+        "Chaos Blades",
+        "Plasma Geyser",
+        "Colossal Hammer",
+        "Frozen Spires",
+        "Lightwall",
+        "Dark Flames",
+        "Crimson Vortex",
+        "Corruption",
+        "Infernal Flames",
+        "Colossal Blade",
+        "Aura Serpent",
+        "Arm Cannon",
+        "Aura Blast"
+      ],
+      "Orb Passive": [
+        "Scythe Ring",
+        "Oculus Ring",
+        "Economizer Ring",
+        "Star of Lachiem",
+        "Royal Ring",
+        "Bleak Ring",
+        "Sanguine Ring",
+        "Hope Ring",
+        "Pyro Ring",
+        "Dusk Ring",
+        "Shield Ring",
+        "Shadow Seal",
+        "Tailwind Ring",
+        "Sun Ring",
+        "Silence Ring",
+        "Icicle Ring"
+      ],
+      "Stat": [
+        "Max HP",
+        "Max Aura",
+        "Max Sand"
+      ],
+      "Trap": [
+        "Neurotoxin Trap",
+        "Throw Stun Trap",
+        "Bee Trap",
+        "Meteor Sparrow Trap",
+        "Chaos Trap",
+        "Poison Trap"
+      ],
+      "Laser Access": [
+        "Laser Access M",
+        "Laser Access A",
+        "Laser Access I"
+      ],
+      "Lab Access": [
+        "Lab Access Dynamo",
+        "Lab Access Research",
+        "Lab Access Genza",
+        "Lab Access Experiment"
+      ],
+      "Key": [
+        "Drawbridge Key"
+      ],
+      "Everything": [
+        "Neurotoxin Trap",
+        "Gold Necklace",
+        "Jewelry Box",
+        "Dragoon Helmet",
+        "Librarian Robe",
+        "Hi-Ether",
+        "Sprite",
+        "Dusk Ring",
+        "Princess Dress",
+        "Jerky",
+        "Plasma Crystal",
+        "Crimson Vortex",
+        "Ancient Coin",
+        "Plump Maggot",
+        "Laser Access I",
+        "Filigree Tea",
+        "Blade Orb",
+        "Cheveur au Vin",
+        "Timespinner Gear 3",
+        "Captain's Uniform",
+        "Aura Serpent",
+        "Arm Cannon",
+        "Meteor Sparrow Trap",
+        "Lab Access Research",
+        "Spaghetti",
+        "Essence Crystal",
+        "Aura Blast",
+        "Umbra Orb",
+        "Lab Access Dynamo",
+        "Antidote",
+        "Security Visor",
+        "Mushroom",
+        "Frozen Spires",
+        "Old Coat",
+        "Radiant Orb",
+        "Blood Orb",
+        "Shadow Seal",
+        "Bird Statue",
+        "Throw Stun Trap",
+        "Kobo",
+        "Blue Orb",
+        "Cheveux Breast",
+        "Chaos Trap",
+        "Library Keycard V",
+        "Cheveur Plume",
+        "Mind Refresh ULTRA",
+        "Security Keycard B",
+        "Mind Refresh",
+        "Pendulum",
+        "Timespinner Gear 1",
+        "Plasma Core",
+        "Royal Ring",
+        "Bleak Ring",
+        "Lab Coat",
+        "MapReveal 1",
+        "Lab Access Genza",
+        "Plasma Geyser",
+        "Buckle Hat",
+        "Gas Mask",
+        "Cheveur Drumstick",
+        "Max Sand",
+        "Military Armor",
+        "Azure Stole",
+        "Copper Helmet",
+        "Glass Pumpkin",
+        "Alchemy Tools",
+        "Lab Access Experiment",
+        "Griffin",
+        "Max HP",
+        "Siren Ink",
+        "Corruption",
+        "Herb",
+        "Empress Robe",
+        "Icicle Ring",
+        "PlaceHolderItem1",
+        "Plasma Orb",
+        "Scythe Ring",
+        "Sunglasses",
+        "Bombardment",
+        "Colossal Hammer",
+        "Ether",
+        "Gilded Egg",
+        "Gold Ring",
+        "Sand Bottle",
+        "MapReveal 0",
+        "Dream Wisp",
+        "Timespinner Wheel",
+        "Modern Warp Beacon",
+        "Forbidden Tome",
+        "Silence Ring",
+        "Meyef",
+        "Poison Trap",
+        "Leather Helmet",
+        "Ice Orb",
+        "Talaria Attachment",
+        "Mother o' Pearl",
+        "Security Keycard A",
+        "Empire Crown",
+        "Timespinner Gear 2",
+        "Storm Eye",
+        "Empire Orb",
+        "Pyro Ring",
+        "Food Synthesizer",
+        "Security Keycard C",
+        "Drawbridge Key",
+        "Royal Casserole",
+        "Filigree Clasp",
+        "Shiny Rock",
+        "Greed Brooch",
+        "Celestial Sash",
+        "Trendy Jacket",
+        "Chaos Stole",
+        "Captain's Cap",
+        "Laser Access A",
+        "Berry Pick-Mi-Up",
+        "Sand Vial",
+        "Timespinner Spindle",
+        "Merchant Crow",
+        "Djinn Inferno",
+        "Oculus Ring",
+        "Viletian Crown",
+        "Advisor Robe",
+        "Rotten Tail",
+        "Wyrm Brooch",
+        "Max Aura",
+        "Unagi Roll",
+        "Copper Breastplate",
+        "Chaos Blades",
+        "Lab Glasses",
+        "Advisor Hat",
+        "Eternal Brooch",
+        "Metal Wristband",
+        "Timeworn Warp Beacon",
+        "Traveler's Cloak",
+        "Tablet",
+        "Laser Access M",
+        "Dark Flames",
+        "Demon",
+        "Fried Cheveur",
+        "MapReveal 2",
+        "Leather Jerkin",
+        "Warp Shard",
+        "Biscuit",
+        "Security Vest",
+        "Iron Orb",
+        "Eternal Coat",
+        "Silver Ore",
+        "Twin Pyramid Key",
+        "Nether Orb",
+        "Economizer Ring",
+        "Empress Cake",
+        "Star of Lachiem",
+        "Security Keycard D",
+        "Goddess Brooch",
+        "Lachiemi Sun",
+        "Lightwall",
+        "Eel Meat",
+        "Orange Juice",
+        "Tailwind Ring",
+        "Sun Ring",
+        "Galaxy Earrings",
+        "Chaos Horn",
+        "Cheveux Feather",
+        "Infernal Flames",
+        "Galaxy Stone",
+        "Pointy Hat",
+        "Chaos Rose",
+        "Shield Ring",
+        "Mysterious Warp Beacon",
+        "Combat Helmet",
+        "Plasma IV Bag",
+        "Hi-Potion",
+        "Sanguine Ring",
+        "Soul Scanner",
+        "Engineer Goggles",
+        "Hope Ring",
+        "Selen's Bangle",
+        "Saut\u00e9ed Wyvern Tail",
+        "Berry Pick-Mi-Up+",
+        "Succubus Hairpin",
+        "Nymph Hairband",
+        "Gun Orb",
+        "Eternal Crown",
+        "Synthetic Plume",
+        "Wyvern Tail",
+        "Bee Trap",
+        "Dragoon Armor",
+        "Midnight Cloak",
+        "Wind Orb",
+        "Historical Documents",
+        "Water Mask",
+        "Shattered Orb",
+        "Potion",
+        "Eye Orb",
+        "Colossal Blade",
+        "Elevator Keycard",
+        "Librarian Hat",
+        "Fire Orb"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

@@ -175,6 +175,7 @@
           {
             "name": "Blue Labyrinth 0",
             "id": 118000004,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -193,6 +194,7 @@
           {
             "name": "Blue Labyrinth 1",
             "id": 118000006,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -211,6 +213,7 @@
           {
             "name": "Catacombs",
             "id": 118000009,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -229,6 +232,7 @@
           {
             "name": "Adjacent to Catacombs",
             "id": 118000012,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -247,6 +251,7 @@
           {
             "name": "Southwest of Catacombs",
             "id": 118000014,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -265,6 +270,7 @@
           {
             "name": "White Castle Gate",
             "id": 118000015,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -283,6 +289,7 @@
           {
             "name": "Black Castle Gate",
             "id": 118000016,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -301,6 +308,7 @@
           {
             "name": "Yellow Castle Gate",
             "id": 118000017,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -319,6 +327,7 @@
           {
             "name": "Northeast of Catacombs",
             "id": 118000028,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -337,6 +346,7 @@
           {
             "name": "Southeast of Catacombs",
             "id": 118000029,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -355,6 +365,7 @@
           {
             "name": "Slay Yorgle",
             "id": 118000209,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -424,6 +435,7 @@
           {
             "name": "Inside Yellow Castle",
             "id": 118000018,
+            "region": "YellowCastle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -442,6 +454,7 @@
           {
             "name": "Chalice Home",
             "id": null,
+            "region": "YellowCastle",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -573,6 +586,7 @@
           {
             "name": "RedMaze0",
             "id": 118000023,
+            "region": "WhiteCastle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -591,6 +605,7 @@
           {
             "name": "RedMaze1",
             "id": 118000026,
+            "region": "WhiteCastle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -645,6 +660,7 @@
           {
             "name": "Red Maze Vault Entrance",
             "id": 118000183,
+            "region": "WhiteCastlePreVaultPeek",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -699,6 +715,7 @@
           {
             "name": "Red Maze Vault",
             "id": 118000025,
+            "region": "WhiteCastleVault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -717,6 +734,7 @@
           {
             "name": "Slay Grundle",
             "id": 118000210,
+            "region": "WhiteCastleVault",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -823,6 +841,7 @@
           {
             "name": "Dungeon0",
             "id": 118000019,
+            "region": "BlackCastle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -841,6 +860,7 @@
           {
             "name": "Dungeon1",
             "id": 118000021,
+            "region": "BlackCastle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -859,6 +879,7 @@
           {
             "name": "Black Castle Foyer",
             "id": 118000027,
+            "region": "BlackCastle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -877,6 +898,7 @@
           {
             "name": "Slay Rhindle",
             "id": 118000208,
+            "region": "BlackCastle",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -946,6 +968,7 @@
           {
             "name": "Dungeon Vault",
             "id": 118000181,
+            "region": "BlackCastleVault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1025,6 +1048,7 @@
           {
             "name": "Credits Left Side",
             "id": 118000030,
+            "region": "CreditsRoom",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1079,6 +1103,7 @@
           {
             "name": "Credits Right Side",
             "id": 118000190,
+            "region": "CreditsRoomFarSide",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1338,9 +1363,25 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Right Difficulty Switch",
+        "Left Difficulty Switch",
+        "Slow Grundle",
+        "White Key",
+        "nothing",
+        "Black Key",
+        "Yellow Key",
+        "Magnet",
+        "Freeincarnate",
+        "Bridge",
+        "Slow Rhindle",
+        "Sword",
+        "Chalice",
+        "Revive Dragons",
+        "Slow Yorgle"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

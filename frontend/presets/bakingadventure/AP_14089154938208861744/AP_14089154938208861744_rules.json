@@ -152,6 +152,7 @@
           {
             "name": "Gather Mixing Bowls",
             "id": 300000001,
+            "region": "Kitchen",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -170,6 +171,7 @@
           {
             "name": "Get Electric Mixer",
             "id": 300000002,
+            "region": "Kitchen",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -188,6 +190,7 @@
           {
             "name": "Find Measuring Tools",
             "id": 300000003,
+            "region": "Kitchen",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -242,6 +245,7 @@
           {
             "name": "Preheat Oven to 375F",
             "id": 300000004,
+            "region": "Preparation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -260,6 +264,7 @@
           {
             "name": "Line Baking Sheets",
             "id": 300000005,
+            "region": "Preparation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -278,6 +283,7 @@
           {
             "name": "Soften Butter",
             "id": 300000006,
+            "region": "Preparation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -369,6 +375,7 @@
           {
             "name": "Cream Butter and Sugars",
             "id": 300000007,
+            "region": "WetIngredients",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -409,6 +416,7 @@
           {
             "name": "Add Eggs",
             "id": 300000008,
+            "region": "WetIngredients",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -430,6 +438,7 @@
           {
             "name": "Add Vanilla",
             "id": 300000009,
+            "region": "WetIngredients",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -487,6 +496,7 @@
           {
             "name": "Measure Flour",
             "id": 300000010,
+            "region": "DryIngredients",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -508,6 +518,7 @@
           {
             "name": "Add Baking Soda and Salt",
             "id": 300000011,
+            "region": "DryIngredients",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -590,6 +601,7 @@
           {
             "name": "Gradually Mix Dry into Wet",
             "id": 300000012,
+            "region": "Combining",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -608,6 +620,7 @@
           {
             "name": "Fold in Chocolate Chips",
             "id": 300000013,
+            "region": "Combining",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -690,6 +703,7 @@
           {
             "name": "Scoop Dough onto Sheets",
             "id": 300000014,
+            "region": "Finishing",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -759,6 +773,7 @@
           {
             "name": "Bake for 9-11 Minutes",
             "id": 300000015,
+            "region": "Baking",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -792,6 +807,7 @@
           {
             "name": "Cool on Wire Rack",
             "id": null,
+            "region": "Baking",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1054,9 +1070,25 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Creamed Mixture",
+        "Softened Butter",
+        "Basic Dough",
+        "Mixing Bowls",
+        "Shaped Cookies",
+        "Measured Flour",
+        "Prepared Sheets",
+        "Butter Sugar Base",
+        "Baked Cookies",
+        "Flour Mixture",
+        "Egg Mixture",
+        "Preheated Oven",
+        "Measuring Tools",
+        "Cookie Dough",
+        "Electric Mixer"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

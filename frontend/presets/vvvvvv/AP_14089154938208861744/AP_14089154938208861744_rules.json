@@ -300,6 +300,7 @@
           {
             "name": "Overworld (Pipe-shaped Segment)",
             "id": 2515013,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -318,6 +319,7 @@
           {
             "name": "Overworld (Left of Ship)",
             "id": 2515015,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -336,6 +338,7 @@
           {
             "name": "Overworld (Square Room)",
             "id": 2515016,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -354,6 +357,7 @@
           {
             "name": "Overworld (Sad Elephant)",
             "id": 2515017,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -372,6 +376,7 @@
           {
             "name": "It's a Secret to Nobody",
             "id": 2515000,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -390,6 +395,7 @@
           {
             "name": "Trench Warfare",
             "id": 2515001,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -408,6 +414,7 @@
           {
             "name": "NPC Trinket",
             "id": 2515018,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -488,6 +495,7 @@
           {
             "name": "V",
             "id": 2515019,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -586,6 +594,7 @@
           {
             "name": "Young Man, It's Worth the Challenge",
             "id": 2515009,
+            "region": "Laboratory",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -604,6 +613,7 @@
           {
             "name": "Overworld (Outside Entanglement Generator)",
             "id": 2515014,
+            "region": "Laboratory",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -622,6 +632,7 @@
           {
             "name": "The Tantalizing Trinket",
             "id": 2515010,
+            "region": "Laboratory",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -640,6 +651,7 @@
           {
             "name": "Purest Unobtainium",
             "id": 2515011,
+            "region": "Laboratory",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -681,6 +693,7 @@
           {
             "name": "The Tower 1",
             "id": 2515007,
+            "region": "The Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -699,6 +712,7 @@
           {
             "name": "The Tower 2",
             "id": 2515008,
+            "region": "The Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -740,6 +754,7 @@
           {
             "name": "One Way Room",
             "id": 2515002,
+            "region": "Space Station 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -758,6 +773,7 @@
           {
             "name": "You Just Keep Coming Back",
             "id": 2515003,
+            "region": "Space Station 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -776,6 +792,7 @@
           {
             "name": "Clarion Call",
             "id": 2515004,
+            "region": "Space Station 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -794,6 +811,7 @@
           {
             "name": "Prize for the Reckless",
             "id": 2515006,
+            "region": "Space Station 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -812,6 +830,7 @@
           {
             "name": "Doing things the hard way",
             "id": 2515005,
+            "region": "Space Station 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -853,6 +872,7 @@
           {
             "name": "Edge Games",
             "id": 2515012,
+            "region": "Warp Zone",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1168,9 +1188,30 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Trinket 01",
+        "Trinket 13",
+        "Trinket 07",
+        "Trinket 12",
+        "Trinket 08",
+        "Trinket 06",
+        "Trinket 17",
+        "Trinket 20",
+        "Trinket 18",
+        "Trinket 16",
+        "Trinket 02",
+        "Trinket 04",
+        "Trinket 09",
+        "Trinket 19",
+        "Trinket 11",
+        "Trinket 14",
+        "Trinket 15",
+        "Trinket 05",
+        "Trinket 03",
+        "Trinket 10"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

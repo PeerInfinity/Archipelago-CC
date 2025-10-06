@@ -63,6 +63,7 @@
           {
             "name": "Level 1 - 250 Points",
             "id": 595000,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -81,6 +82,7 @@
           {
             "name": "Level 1 - 500 Points",
             "id": 595001,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -99,6 +101,7 @@
           {
             "name": "Level 1 - 750 Points",
             "id": 595002,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -117,6 +120,7 @@
           {
             "name": "Level 1 - 1000 Points",
             "id": 595003,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -135,6 +139,7 @@
           {
             "name": "Level 1 - 500 Level Points",
             "id": 595004,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -153,6 +158,7 @@
           {
             "name": "Level 1 - 1000 Level Points",
             "id": 595005,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -171,6 +177,7 @@
           {
             "name": "Level 1 - 1500 Level Points",
             "id": 595006,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -189,6 +196,7 @@
           {
             "name": "Level 1 - 2000 Level Points",
             "id": 595007,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -207,6 +215,7 @@
           {
             "name": "Level 1 - 25 Level Bumpers",
             "id": 595008,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -225,6 +234,7 @@
           {
             "name": "Level 1 - 50 Level Bumpers",
             "id": 595009,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -243,6 +253,7 @@
           {
             "name": "Level 1 - 75 Level Bumpers",
             "id": 595010,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -261,6 +272,7 @@
           {
             "name": "Level 1 - Combo 5",
             "id": 595011,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -279,6 +291,7 @@
           {
             "name": "Bonus Booster 1",
             "id": 595063,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -304,6 +317,7 @@
           {
             "name": "Treasure Bumper 1",
             "id": 595068,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -329,6 +343,7 @@
           {
             "name": "Treasure Bumper 2",
             "id": 595069,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -354,6 +369,7 @@
           {
             "name": "Treasure Bumper 3",
             "id": 595070,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -379,6 +395,7 @@
           {
             "name": "Treasure Bumper 4",
             "id": 595071,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -404,6 +421,7 @@
           {
             "name": "Treasure Bumper 5",
             "id": 595072,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -429,6 +447,7 @@
           {
             "name": "Treasure Bumper 6",
             "id": 595073,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -454,6 +473,7 @@
           {
             "name": "Treasure Bumper 7",
             "id": 595074,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -479,6 +499,7 @@
           {
             "name": "Treasure Bumper 8",
             "id": 595075,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -563,6 +584,7 @@
           {
             "name": "Level 2 - 500 Points",
             "id": 595012,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -581,6 +603,7 @@
           {
             "name": "Level 2 - 1000 Points",
             "id": 595013,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -599,6 +622,7 @@
           {
             "name": "Level 2 - 1500 Points",
             "id": 595014,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -617,6 +641,7 @@
           {
             "name": "Level 2 - 2000 Points",
             "id": 595015,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -635,6 +660,7 @@
           {
             "name": "Level 2 - 1000 Level Points",
             "id": 595016,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -653,6 +679,7 @@
           {
             "name": "Level 2 - 2000 Level Points",
             "id": 595017,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -671,6 +698,7 @@
           {
             "name": "Level 2 - 3000 Level Points",
             "id": 595018,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -689,6 +717,7 @@
           {
             "name": "Level 2 - 4000 Level Points",
             "id": 595019,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -707,6 +736,7 @@
           {
             "name": "Level 2 - 25 Level Bumpers",
             "id": 595020,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -725,6 +755,7 @@
           {
             "name": "Level 2 - 50 Level Bumpers",
             "id": 595021,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -743,6 +774,7 @@
           {
             "name": "Level 2 - 75 Level Bumpers",
             "id": 595022,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -761,6 +793,7 @@
           {
             "name": "Level 2 - 100 Level Bumpers",
             "id": 595023,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -779,6 +812,7 @@
           {
             "name": "Level 2 - Combo 5",
             "id": 595024,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -797,6 +831,7 @@
           {
             "name": "Level 2 - Chain x2",
             "id": 595025,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -815,6 +850,7 @@
           {
             "name": "Bonus Booster 2",
             "id": 595064,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -840,6 +876,7 @@
           {
             "name": "Treasure Bumper 9",
             "id": 595076,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -865,6 +902,7 @@
           {
             "name": "Treasure Bumper 10",
             "id": 595077,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -890,6 +928,7 @@
           {
             "name": "Treasure Bumper 11",
             "id": 595078,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -915,6 +954,7 @@
           {
             "name": "Treasure Bumper 12",
             "id": 595079,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -940,6 +980,7 @@
           {
             "name": "Treasure Bumper 13",
             "id": 595080,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -965,6 +1006,7 @@
           {
             "name": "Treasure Bumper 14",
             "id": 595081,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -990,6 +1032,7 @@
           {
             "name": "Treasure Bumper 15",
             "id": 595082,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1015,6 +1058,7 @@
           {
             "name": "Treasure Bumper 16",
             "id": 595083,
+            "region": "Level 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1099,6 +1143,7 @@
           {
             "name": "Level 3 - 800 Points",
             "id": 595026,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1117,6 +1162,7 @@
           {
             "name": "Level 3 - 1600 Points",
             "id": 595027,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1135,6 +1181,7 @@
           {
             "name": "Level 3 - 2400 Points",
             "id": 595028,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1153,6 +1200,7 @@
           {
             "name": "Level 3 - 3200 Points",
             "id": 595029,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1171,6 +1219,7 @@
           {
             "name": "Level 3 - 2000 Level Points",
             "id": 595030,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1189,6 +1238,7 @@
           {
             "name": "Level 3 - 4000 Level Points",
             "id": 595031,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1207,6 +1257,7 @@
           {
             "name": "Level 3 - 6000 Level Points",
             "id": 595032,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1225,6 +1276,7 @@
           {
             "name": "Level 3 - 8000 Level Points",
             "id": 595033,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1243,6 +1295,7 @@
           {
             "name": "Level 3 - 25 Level Bumpers",
             "id": 595034,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1261,6 +1314,7 @@
           {
             "name": "Level 3 - 50 Level Bumpers",
             "id": 595035,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1279,6 +1333,7 @@
           {
             "name": "Level 3 - 75 Level Bumpers",
             "id": 595036,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1297,6 +1352,7 @@
           {
             "name": "Level 3 - 100 Level Bumpers",
             "id": 595037,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1315,6 +1371,7 @@
           {
             "name": "Level 3 - 125 Level Bumpers",
             "id": 595038,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1333,6 +1390,7 @@
           {
             "name": "Level 3 - Combo 5",
             "id": 595039,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1351,6 +1409,7 @@
           {
             "name": "Level 3 - Combo 7",
             "id": 595040,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1369,6 +1428,7 @@
           {
             "name": "Level 3 - Chain x2",
             "id": 595041,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1387,6 +1447,7 @@
           {
             "name": "Level 3 - All Clear, 3 colors",
             "id": 595042,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1405,6 +1466,7 @@
           {
             "name": "Bonus Booster 3",
             "id": 595065,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1430,6 +1492,7 @@
           {
             "name": "Treasure Bumper 17",
             "id": 595084,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1455,6 +1518,7 @@
           {
             "name": "Treasure Bumper 18",
             "id": 595085,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1480,6 +1544,7 @@
           {
             "name": "Treasure Bumper 19",
             "id": 595086,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1505,6 +1570,7 @@
           {
             "name": "Treasure Bumper 20",
             "id": 595087,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1530,6 +1596,7 @@
           {
             "name": "Treasure Bumper 21",
             "id": 595088,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1555,6 +1622,7 @@
           {
             "name": "Treasure Bumper 22",
             "id": 595089,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1580,6 +1648,7 @@
           {
             "name": "Treasure Bumper 23",
             "id": 595090,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1605,6 +1674,7 @@
           {
             "name": "Treasure Bumper 24",
             "id": 595091,
+            "region": "Level 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1689,6 +1759,7 @@
           {
             "name": "Level 4 - 1500 Points",
             "id": 595043,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1707,6 +1778,7 @@
           {
             "name": "Level 4 - 3000 Points",
             "id": 595044,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1725,6 +1797,7 @@
           {
             "name": "Level 4 - 4500 Points",
             "id": 595045,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1743,6 +1816,7 @@
           {
             "name": "Level 4 - 6000 Points",
             "id": 595046,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1761,6 +1835,7 @@
           {
             "name": "Level 4 - 3000 Level Points",
             "id": 595047,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1779,6 +1854,7 @@
           {
             "name": "Level 4 - 6000 Level Points",
             "id": 595048,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1797,6 +1873,7 @@
           {
             "name": "Level 4 - 9000 Level Points",
             "id": 595049,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1815,6 +1892,7 @@
           {
             "name": "Level 4 - 12000 Level Points",
             "id": 595050,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1833,6 +1911,7 @@
           {
             "name": "Level 4 - 25 Level Bumpers",
             "id": 595051,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1851,6 +1930,7 @@
           {
             "name": "Level 4 - 50 Level Bumpers",
             "id": 595052,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1869,6 +1949,7 @@
           {
             "name": "Level 4 - 75 Level Bumpers",
             "id": 595053,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1887,6 +1968,7 @@
           {
             "name": "Level 4 - 100 Level Bumpers",
             "id": 595054,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1905,6 +1987,7 @@
           {
             "name": "Level 4 - 125 Level Bumpers",
             "id": 595055,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1923,6 +2006,7 @@
           {
             "name": "Level 4 - 150 Level Bumpers",
             "id": 595056,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1941,6 +2025,7 @@
           {
             "name": "Level 4 - Combo 5",
             "id": 595057,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1959,6 +2044,7 @@
           {
             "name": "Level 4 - Combo 7",
             "id": 595058,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1977,6 +2063,7 @@
           {
             "name": "Level 4 - Chain x2",
             "id": 595059,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1995,6 +2082,7 @@
           {
             "name": "Level 4 - Chain x3",
             "id": 595060,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2013,6 +2101,7 @@
           {
             "name": "Bonus Booster 4",
             "id": 595066,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2038,6 +2127,7 @@
           {
             "name": "Bonus Booster 5",
             "id": 595067,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2063,6 +2153,7 @@
           {
             "name": "Treasure Bumper 25",
             "id": 595092,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2088,6 +2179,7 @@
           {
             "name": "Treasure Bumper 26",
             "id": 595093,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2113,6 +2205,7 @@
           {
             "name": "Treasure Bumper 27",
             "id": 595094,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2138,6 +2231,7 @@
           {
             "name": "Treasure Bumper 28",
             "id": 595095,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2163,6 +2257,7 @@
           {
             "name": "Treasure Bumper 29",
             "id": 595096,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2188,6 +2283,7 @@
           {
             "name": "Treasure Bumper 30",
             "id": 595097,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2213,6 +2309,7 @@
           {
             "name": "Treasure Bumper 31",
             "id": 595098,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2238,6 +2335,7 @@
           {
             "name": "Treasure Bumper 32",
             "id": 595099,
+            "region": "Level 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2286,6 +2384,7 @@
           {
             "name": "Level 5 - 50,000+ Total Points",
             "id": 595061,
+            "region": "Level 4",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2304,6 +2403,7 @@
           {
             "name": "Level 5 - Cleared all Hazards",
             "id": 595062,
+            "region": "Level 4",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2487,12 +2587,37 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything",
-      "Helpers",
-      "Targets",
-      "Traps"
-    ]
+    "1": {
+      "Helpers": [
+        "Starting Turner",
+        "Task Advance",
+        "Starting Paint Can"
+      ],
+      "Targets": [
+        "Hazard Bumper",
+        "Booster Bumper",
+        "Treasure Bumper"
+      ],
+      "Traps": [
+        "Spinner Trap",
+        "Killer Trap",
+        "Rainbow Trap"
+      ],
+      "Everything": [
+        "Booster Bumper",
+        "Treasure Bumper",
+        "Rainbow Trap",
+        "Killer Trap",
+        "Starting Turner",
+        "Task Advance",
+        "Hazard Bumper",
+        "Starting Paint Can",
+        "Nothing",
+        "Score Bonus",
+        "Spinner Trap",
+        "Reserved"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

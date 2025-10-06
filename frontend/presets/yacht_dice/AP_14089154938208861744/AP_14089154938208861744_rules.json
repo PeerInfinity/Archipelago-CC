@@ -62,6 +62,7 @@
           {
             "name": "1 score",
             "id": 16871244501,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -123,6 +124,7 @@
           {
             "name": "2 score",
             "id": 16871244502,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -184,6 +186,7 @@
           {
             "name": "3 score",
             "id": 16871244503,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -245,6 +248,7 @@
           {
             "name": "4 score",
             "id": 16871244504,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -306,6 +310,7 @@
           {
             "name": "5 score",
             "id": 16871244505,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -367,6 +372,7 @@
           {
             "name": "6 score",
             "id": 16871244506,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -428,6 +434,7 @@
           {
             "name": "7 score",
             "id": 16871244507,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -489,6 +496,7 @@
           {
             "name": "8 score",
             "id": 16871244508,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -550,6 +558,7 @@
           {
             "name": "9 score",
             "id": 16871244509,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -611,6 +620,7 @@
           {
             "name": "10 score",
             "id": 16871244510,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -672,6 +682,7 @@
           {
             "name": "11 score",
             "id": 16871244511,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -733,6 +744,7 @@
           {
             "name": "12 score",
             "id": 16871244512,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -794,6 +806,7 @@
           {
             "name": "13 score",
             "id": 16871244513,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -855,6 +868,7 @@
           {
             "name": "14 score",
             "id": 16871244514,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -916,6 +930,7 @@
           {
             "name": "15 score",
             "id": 16871244515,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -977,6 +992,7 @@
           {
             "name": "17 score",
             "id": 16871244517,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1038,6 +1054,7 @@
           {
             "name": "19 score",
             "id": 16871244519,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1099,6 +1116,7 @@
           {
             "name": "22 score",
             "id": 16871244522,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1160,6 +1178,7 @@
           {
             "name": "25 score",
             "id": 16871244525,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1221,6 +1240,7 @@
           {
             "name": "28 score",
             "id": 16871244528,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1282,6 +1302,7 @@
           {
             "name": "32 score",
             "id": 16871244532,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1343,6 +1364,7 @@
           {
             "name": "36 score",
             "id": 16871244536,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1404,6 +1426,7 @@
           {
             "name": "40 score",
             "id": 16871244540,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1465,6 +1488,7 @@
           {
             "name": "44 score",
             "id": 16871244544,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1526,6 +1550,7 @@
           {
             "name": "48 score",
             "id": 16871244548,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1587,6 +1612,7 @@
           {
             "name": "53 score",
             "id": 16871244553,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1648,6 +1674,7 @@
           {
             "name": "58 score",
             "id": 16871244558,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1709,6 +1736,7 @@
           {
             "name": "63 score",
             "id": 16871244563,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1770,6 +1798,7 @@
           {
             "name": "69 score",
             "id": 16871244569,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1831,6 +1860,7 @@
           {
             "name": "74 score",
             "id": 16871244574,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1892,6 +1922,7 @@
           {
             "name": "80 score",
             "id": 16871244580,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1953,6 +1984,7 @@
           {
             "name": "87 score",
             "id": 16871244587,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2014,6 +2046,7 @@
           {
             "name": "93 score",
             "id": 16871244593,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2075,6 +2108,7 @@
           {
             "name": "100 score",
             "id": 16871244600,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2136,6 +2170,7 @@
           {
             "name": "107 score",
             "id": 16871244607,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2197,6 +2232,7 @@
           {
             "name": "114 score",
             "id": 16871244614,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2258,6 +2294,7 @@
           {
             "name": "122 score",
             "id": 16871244622,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2319,6 +2356,7 @@
           {
             "name": "130 score",
             "id": 16871244630,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2380,6 +2418,7 @@
           {
             "name": "138 score",
             "id": 16871244638,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2441,6 +2480,7 @@
           {
             "name": "146 score",
             "id": 16871244646,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2502,6 +2542,7 @@
           {
             "name": "155 score",
             "id": 16871244655,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2563,6 +2604,7 @@
           {
             "name": "164 score",
             "id": 16871244664,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2624,6 +2666,7 @@
           {
             "name": "173 score",
             "id": 16871244673,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2685,6 +2728,7 @@
           {
             "name": "183 score",
             "id": 16871244683,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2746,6 +2790,7 @@
           {
             "name": "193 score",
             "id": 16871244693,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2807,6 +2852,7 @@
           {
             "name": "203 score",
             "id": 16871244703,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2868,6 +2914,7 @@
           {
             "name": "214 score",
             "id": 16871244714,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2929,6 +2976,7 @@
           {
             "name": "224 score",
             "id": 16871244724,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -2990,6 +3038,7 @@
           {
             "name": "236 score",
             "id": 16871244736,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3051,6 +3100,7 @@
           {
             "name": "247 score",
             "id": 16871244747,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3112,6 +3162,7 @@
           {
             "name": "259 score",
             "id": 16871244759,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3173,6 +3224,7 @@
           {
             "name": "271 score",
             "id": 16871244771,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3234,6 +3286,7 @@
           {
             "name": "283 score",
             "id": 16871244783,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3295,6 +3348,7 @@
           {
             "name": "296 score",
             "id": 16871244796,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3356,6 +3410,7 @@
           {
             "name": "309 score",
             "id": 16871244809,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3417,6 +3472,7 @@
           {
             "name": "322 score",
             "id": 16871244822,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3478,6 +3534,7 @@
           {
             "name": "336 score",
             "id": 16871244836,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3539,6 +3596,7 @@
           {
             "name": "350 score",
             "id": 16871244850,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3600,6 +3658,7 @@
           {
             "name": "364 score",
             "id": 16871244864,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3661,6 +3720,7 @@
           {
             "name": "378 score",
             "id": 16871244878,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3722,6 +3782,7 @@
           {
             "name": "393 score",
             "id": 16871244893,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3783,6 +3844,7 @@
           {
             "name": "408 score",
             "id": 16871244908,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3844,6 +3906,7 @@
           {
             "name": "424 score",
             "id": 16871244924,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3905,6 +3968,7 @@
           {
             "name": "440 score",
             "id": 16871244940,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -3966,6 +4030,7 @@
           {
             "name": "456 score",
             "id": 16871244956,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4027,6 +4092,7 @@
           {
             "name": "473 score",
             "id": 16871244973,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4088,6 +4154,7 @@
           {
             "name": "490 score",
             "id": 16871244990,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4149,6 +4216,7 @@
           {
             "name": "507 score",
             "id": 16871245007,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4210,6 +4278,7 @@
           {
             "name": "524 score",
             "id": 16871245024,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4271,6 +4340,7 @@
           {
             "name": "542 score",
             "id": 16871245042,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4332,6 +4402,7 @@
           {
             "name": "560 score",
             "id": 16871245060,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4393,6 +4464,7 @@
           {
             "name": "579 score",
             "id": 16871245079,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4454,6 +4526,7 @@
           {
             "name": "598 score",
             "id": 16871245098,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4515,6 +4588,7 @@
           {
             "name": "617 score",
             "id": 16871245117,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4576,6 +4650,7 @@
           {
             "name": "637 score",
             "id": 16871245137,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4637,6 +4712,7 @@
           {
             "name": "657 score",
             "id": 16871245157,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4698,6 +4774,7 @@
           {
             "name": "677 score",
             "id": 16871245177,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4759,6 +4836,7 @@
           {
             "name": "698 score",
             "id": 16871245198,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4820,6 +4898,7 @@
           {
             "name": "719 score",
             "id": 16871245219,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4881,6 +4960,7 @@
           {
             "name": "740 score",
             "id": 16871245240,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -4942,6 +5022,7 @@
           {
             "name": "762 score",
             "id": 16871245262,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5003,6 +5084,7 @@
           {
             "name": "777 score",
             "id": 16871245277,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5064,6 +5146,7 @@
           {
             "name": "806 score",
             "id": 16871245306,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5125,6 +5208,7 @@
           {
             "name": "829 score",
             "id": 16871245329,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5186,6 +5270,7 @@
           {
             "name": "852 score",
             "id": 16871245352,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5247,6 +5332,7 @@
           {
             "name": "876 score",
             "id": 16871245376,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5308,6 +5394,7 @@
           {
             "name": "899 score",
             "id": 16871245399,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5369,6 +5456,7 @@
           {
             "name": "924 score",
             "id": 16871245424,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5430,6 +5518,7 @@
           {
             "name": "948 score",
             "id": 16871245448,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -5491,6 +5580,7 @@
           {
             "name": "1000 score",
             "id": 16871245500,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -6279,12 +6369,101 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Categories",
-      "Everything",
-      "Points",
-      "Score Multiplier"
-    ]
+    "1": {
+      "Score Multiplier": [
+        "Fixed Score Multiplier",
+        "Step Score Multiplier"
+      ],
+      "Categories": [
+        "Category Two times Ones",
+        "Category Small Straight",
+        "Category Large Straight",
+        "Category Sum of Odds",
+        "Category Fives",
+        "Category Three Distinct Dice",
+        "Category Inverse Choice",
+        "Category Four of a Kind",
+        "Category Pair",
+        "Category Threes",
+        "Category Choice",
+        "Category Full House",
+        "Category Five Distinct Dice",
+        "Category 2-1-2 Consecutive",
+        "Category Two Pair",
+        "Category Three of a Kind",
+        "Category Half of Sixes",
+        "Category Sixes",
+        "Category Twos",
+        "Category Tiny Straight",
+        "Category Twos and Threes",
+        "Category Double Threes and Fours",
+        "Category 1-2-1 Consecutive",
+        "Category Three Odds",
+        "Category Distincts",
+        "Category 4&5 Full House",
+        "Category Sum of Evens",
+        "Category Micro Straight",
+        "Category Quadruple Ones and Twos",
+        "Category Yacht",
+        "Category Fours",
+        "Category Ones"
+      ],
+      "Points": [
+        "Bonus Point",
+        "100 Points",
+        "1 Point",
+        "10 Points"
+      ],
+      "Everything": [
+        "Category Two times Ones",
+        "Category Small Straight",
+        "Category Large Straight",
+        "Category Sum of Odds",
+        "Step Score Multiplier",
+        "Category Fives",
+        "Category Three Distinct Dice",
+        "Dice Fragment",
+        "Category Inverse Choice",
+        "Category Four of a Kind",
+        "Category Pair",
+        "Fixed Score Multiplier",
+        "Category Threes",
+        "Bad RNG",
+        "Category Choice",
+        "100 Points",
+        "Category Full House",
+        "Category Five Distinct Dice",
+        "Category 2-1-2 Consecutive",
+        "Story Chapter",
+        "Category Two Pair",
+        "Roll",
+        "Encouragement",
+        "Category Three of a Kind",
+        "Category Half of Sixes",
+        "Category Sixes",
+        "Category Twos",
+        "Category Tiny Straight",
+        "Category Twos and Threes",
+        "Category Double Threes and Fours",
+        "Roll Fragment",
+        "Category 1-2-1 Consecutive",
+        "Category Three Odds",
+        "Category Distincts",
+        "Bonus Point",
+        "1 Point",
+        "Category 4&5 Full House",
+        "Category Sum of Evens",
+        "10 Points",
+        "Category Quadruple Ones and Twos",
+        "Category Micro Straight",
+        "Good RNG",
+        "Fun Fact",
+        "Dice",
+        "Category Yacht",
+        "Category Fours",
+        "Category Ones"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

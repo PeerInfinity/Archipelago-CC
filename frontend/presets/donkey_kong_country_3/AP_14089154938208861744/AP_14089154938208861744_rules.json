@@ -1385,6 +1385,7 @@
           {
             "name": "Lakeside Limbo - Flag",
             "id": 14430208,
+            "region": "Lakeside Limbo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1403,6 +1404,7 @@
           {
             "name": "Lakeside Limbo - Bonus 1",
             "id": 14430209,
+            "region": "Lakeside Limbo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1421,6 +1423,7 @@
           {
             "name": "Lakeside Limbo - Bonus 2",
             "id": 14430210,
+            "region": "Lakeside Limbo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1439,6 +1442,7 @@
           {
             "name": "Lakeside Limbo - DK Coin",
             "id": 14430211,
+            "region": "Lakeside Limbo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1480,6 +1484,7 @@
           {
             "name": "Doorstop Dash - Flag",
             "id": 14430212,
+            "region": "Doorstop Dash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1498,6 +1503,7 @@
           {
             "name": "Doorstop Dash - Bonus 1",
             "id": 14430213,
+            "region": "Doorstop Dash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1516,6 +1522,7 @@
           {
             "name": "Doorstop Dash - Bonus 2",
             "id": 14430214,
+            "region": "Doorstop Dash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1534,6 +1541,7 @@
           {
             "name": "Doorstop Dash - DK Coin",
             "id": 14430215,
+            "region": "Doorstop Dash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1575,6 +1583,7 @@
           {
             "name": "Tidal Trouble - Flag",
             "id": 14430216,
+            "region": "Tidal Trouble",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1593,6 +1602,7 @@
           {
             "name": "Tidal Trouble - Bonus 1",
             "id": 14430217,
+            "region": "Tidal Trouble",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1611,6 +1621,7 @@
           {
             "name": "Tidal Trouble - Bonus 2",
             "id": 14430218,
+            "region": "Tidal Trouble",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1629,6 +1640,7 @@
           {
             "name": "Tidal Trouble - DK Coin",
             "id": 14430219,
+            "region": "Tidal Trouble",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1670,6 +1682,7 @@
           {
             "name": "Skidda's Row - Flag",
             "id": 14430220,
+            "region": "Skidda's Row",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1688,6 +1701,7 @@
           {
             "name": "Skidda's Row - Bonus 1",
             "id": 14430221,
+            "region": "Skidda's Row",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1706,6 +1720,7 @@
           {
             "name": "Skidda's Row - Bonus 2",
             "id": 14430222,
+            "region": "Skidda's Row",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1724,6 +1739,7 @@
           {
             "name": "Skidda's Row - DK Coin",
             "id": 14430223,
+            "region": "Skidda's Row",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1765,6 +1781,7 @@
           {
             "name": "Murky Mill - Flag",
             "id": 14430224,
+            "region": "Murky Mill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1783,6 +1800,7 @@
           {
             "name": "Murky Mill - Bonus 1",
             "id": 14430225,
+            "region": "Murky Mill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1801,6 +1819,7 @@
           {
             "name": "Murky Mill - Bonus 2",
             "id": 14430226,
+            "region": "Murky Mill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1819,6 +1838,7 @@
           {
             "name": "Murky Mill - DK Coin",
             "id": 14430227,
+            "region": "Murky Mill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1860,6 +1880,7 @@
           {
             "name": "Barrel Shield Bust-Up - Flag",
             "id": 14430228,
+            "region": "Barrel Shield Bust-Up",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1878,6 +1899,7 @@
           {
             "name": "Barrel Shield Bust-Up - Bonus 1",
             "id": 14430229,
+            "region": "Barrel Shield Bust-Up",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1896,6 +1918,7 @@
           {
             "name": "Barrel Shield Bust-Up - Bonus 2",
             "id": 14430230,
+            "region": "Barrel Shield Bust-Up",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1914,6 +1937,7 @@
           {
             "name": "Barrel Shield Bust-Up - DK Coin",
             "id": 14430231,
+            "region": "Barrel Shield Bust-Up",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1955,6 +1979,7 @@
           {
             "name": "Riverside Race - Flag",
             "id": 14430232,
+            "region": "Riverside Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1973,6 +1998,7 @@
           {
             "name": "Riverside Race - Bonus 1",
             "id": 14430233,
+            "region": "Riverside Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1991,6 +2017,7 @@
           {
             "name": "Riverside Race - Bonus 2",
             "id": 14430234,
+            "region": "Riverside Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2009,6 +2036,7 @@
           {
             "name": "Riverside Race - DK Coin",
             "id": 14430235,
+            "region": "Riverside Race",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2050,6 +2078,7 @@
           {
             "name": "Squeals On Wheels - Flag",
             "id": 14430236,
+            "region": "Squeals On Wheels",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2068,6 +2097,7 @@
           {
             "name": "Squeals On Wheels - Bonus 1",
             "id": 14430237,
+            "region": "Squeals On Wheels",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2086,6 +2116,7 @@
           {
             "name": "Squeals On Wheels - Bonus 2",
             "id": 14430238,
+            "region": "Squeals On Wheels",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2104,6 +2135,7 @@
           {
             "name": "Squeals On Wheels - DK Coin",
             "id": 14430239,
+            "region": "Squeals On Wheels",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2145,6 +2177,7 @@
           {
             "name": "Springin' Spiders - Flag",
             "id": 14430240,
+            "region": "Springin' Spiders",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2163,6 +2196,7 @@
           {
             "name": "Springin' Spiders - Bonus 1",
             "id": 14430241,
+            "region": "Springin' Spiders",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2181,6 +2215,7 @@
           {
             "name": "Springin' Spiders - Bonus 2",
             "id": 14430242,
+            "region": "Springin' Spiders",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2199,6 +2234,7 @@
           {
             "name": "Springin' Spiders - DK Coin",
             "id": 14430243,
+            "region": "Springin' Spiders",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2240,6 +2276,7 @@
           {
             "name": "Bobbing Barrel Brawl - Flag",
             "id": 14430244,
+            "region": "Bobbing Barrel Brawl",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2258,6 +2295,7 @@
           {
             "name": "Bobbing Barrel Brawl - Bonus 1",
             "id": 14430245,
+            "region": "Bobbing Barrel Brawl",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2276,6 +2314,7 @@
           {
             "name": "Bobbing Barrel Brawl - Bonus 2",
             "id": 14430246,
+            "region": "Bobbing Barrel Brawl",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2294,6 +2333,7 @@
           {
             "name": "Bobbing Barrel Brawl - DK Coin",
             "id": 14430247,
+            "region": "Bobbing Barrel Brawl",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2335,6 +2375,7 @@
           {
             "name": "Bazza's Blockade - Flag",
             "id": 14430248,
+            "region": "Bazza's Blockade",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2353,6 +2394,7 @@
           {
             "name": "Bazza's Blockade - Bonus 1",
             "id": 14430249,
+            "region": "Bazza's Blockade",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2371,6 +2413,7 @@
           {
             "name": "Bazza's Blockade - Bonus 2",
             "id": 14430250,
+            "region": "Bazza's Blockade",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2389,6 +2432,7 @@
           {
             "name": "Bazza's Blockade - DK Coin",
             "id": 14430251,
+            "region": "Bazza's Blockade",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2430,6 +2474,7 @@
           {
             "name": "Rocket Barrel Ride - Flag",
             "id": 14430252,
+            "region": "Rocket Barrel Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2448,6 +2493,7 @@
           {
             "name": "Rocket Barrel Ride - Bonus 1",
             "id": 14430253,
+            "region": "Rocket Barrel Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2466,6 +2512,7 @@
           {
             "name": "Rocket Barrel Ride - Bonus 2",
             "id": 14430254,
+            "region": "Rocket Barrel Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2484,6 +2531,7 @@
           {
             "name": "Rocket Barrel Ride - DK Coin",
             "id": 14430255,
+            "region": "Rocket Barrel Ride",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2525,6 +2573,7 @@
           {
             "name": "Kreeping Klasps - Flag",
             "id": 14430256,
+            "region": "Kreeping Klasps",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2543,6 +2592,7 @@
           {
             "name": "Kreeping Klasps - Bonus 1",
             "id": 14430257,
+            "region": "Kreeping Klasps",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2561,6 +2611,7 @@
           {
             "name": "Kreeping Klasps - Bonus 2",
             "id": 14430258,
+            "region": "Kreeping Klasps",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2579,6 +2630,7 @@
           {
             "name": "Kreeping Klasps - DK Coin",
             "id": 14430259,
+            "region": "Kreeping Klasps",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2620,6 +2672,7 @@
           {
             "name": "Tracker Barrel Trek - Flag",
             "id": 14430260,
+            "region": "Tracker Barrel Trek",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2638,6 +2691,7 @@
           {
             "name": "Tracker Barrel Trek - Bonus 1",
             "id": 14430261,
+            "region": "Tracker Barrel Trek",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2656,6 +2710,7 @@
           {
             "name": "Tracker Barrel Trek - Bonus 2",
             "id": 14430262,
+            "region": "Tracker Barrel Trek",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2674,6 +2729,7 @@
           {
             "name": "Tracker Barrel Trek - DK Coin",
             "id": 14430263,
+            "region": "Tracker Barrel Trek",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2715,6 +2771,7 @@
           {
             "name": "Fish Food Frenzy - Flag",
             "id": 14430264,
+            "region": "Fish Food Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2733,6 +2790,7 @@
           {
             "name": "Fish Food Frenzy - Bonus 1",
             "id": 14430265,
+            "region": "Fish Food Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2751,6 +2809,7 @@
           {
             "name": "Fish Food Frenzy - Bonus 2",
             "id": 14430266,
+            "region": "Fish Food Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2769,6 +2828,7 @@
           {
             "name": "Fish Food Frenzy - DK Coin",
             "id": 14430267,
+            "region": "Fish Food Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2810,6 +2870,7 @@
           {
             "name": "Fire-Ball Frenzy - Flag",
             "id": 14430268,
+            "region": "Fire-Ball Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2828,6 +2889,7 @@
           {
             "name": "Fire-Ball Frenzy - Bonus 1",
             "id": 14430269,
+            "region": "Fire-Ball Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2846,6 +2908,7 @@
           {
             "name": "Fire-Ball Frenzy - Bonus 2",
             "id": 14430270,
+            "region": "Fire-Ball Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2864,6 +2927,7 @@
           {
             "name": "Fire-Ball Frenzy - DK Coin",
             "id": 14430271,
+            "region": "Fire-Ball Frenzy",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2905,6 +2969,7 @@
           {
             "name": "Demolition Drain-Pipe - Flag",
             "id": 14430272,
+            "region": "Demolition Drain-Pipe",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2923,6 +2988,7 @@
           {
             "name": "Demolition Drain-Pipe - Bonus 1",
             "id": 14430273,
+            "region": "Demolition Drain-Pipe",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2941,6 +3007,7 @@
           {
             "name": "Demolition Drain-Pipe - Bonus 2",
             "id": 14430274,
+            "region": "Demolition Drain-Pipe",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2959,6 +3026,7 @@
           {
             "name": "Demolition Drain-Pipe - DK Coin",
             "id": 14430275,
+            "region": "Demolition Drain-Pipe",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3000,6 +3068,7 @@
           {
             "name": "Ripsaw Rage - Flag",
             "id": 14430276,
+            "region": "Ripsaw Rage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3018,6 +3087,7 @@
           {
             "name": "Ripsaw Rage - Bonus 1",
             "id": 14430277,
+            "region": "Ripsaw Rage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3036,6 +3106,7 @@
           {
             "name": "Ripsaw Rage - Bonus 2",
             "id": 14430278,
+            "region": "Ripsaw Rage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3054,6 +3125,7 @@
           {
             "name": "Ripsaw Rage - DK Coin",
             "id": 14430279,
+            "region": "Ripsaw Rage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3095,6 +3167,7 @@
           {
             "name": "Blazing Bazukas - Flag",
             "id": 14430280,
+            "region": "Blazing Bazukas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3113,6 +3186,7 @@
           {
             "name": "Blazing Bazukas - Bonus 1",
             "id": 14430281,
+            "region": "Blazing Bazukas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3131,6 +3205,7 @@
           {
             "name": "Blazing Bazukas - Bonus 2",
             "id": 14430282,
+            "region": "Blazing Bazukas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3149,6 +3224,7 @@
           {
             "name": "Blazing Bazukas - DK Coin",
             "id": 14430283,
+            "region": "Blazing Bazukas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3190,6 +3266,7 @@
           {
             "name": "Low-G Labyrinth - Flag",
             "id": 14430284,
+            "region": "Low-G Labyrinth",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3208,6 +3285,7 @@
           {
             "name": "Low-G Labyrinth - Bonus 1",
             "id": 14430285,
+            "region": "Low-G Labyrinth",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3226,6 +3304,7 @@
           {
             "name": "Low-G Labyrinth - Bonus 2",
             "id": 14430286,
+            "region": "Low-G Labyrinth",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3244,6 +3323,7 @@
           {
             "name": "Low-G Labyrinth - DK Coin",
             "id": 14430287,
+            "region": "Low-G Labyrinth",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3285,6 +3365,7 @@
           {
             "name": "Krevice Kreepers - Flag",
             "id": 14430288,
+            "region": "Krevice Kreepers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3303,6 +3384,7 @@
           {
             "name": "Krevice Kreepers - Bonus 1",
             "id": 14430289,
+            "region": "Krevice Kreepers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3321,6 +3403,7 @@
           {
             "name": "Krevice Kreepers - Bonus 2",
             "id": 14430290,
+            "region": "Krevice Kreepers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3339,6 +3422,7 @@
           {
             "name": "Krevice Kreepers - DK Coin",
             "id": 14430291,
+            "region": "Krevice Kreepers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3380,6 +3464,7 @@
           {
             "name": "Tearaway Toboggan - Flag",
             "id": 14430292,
+            "region": "Tearaway Toboggan",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3398,6 +3483,7 @@
           {
             "name": "Tearaway Toboggan - Bonus 1",
             "id": 14430293,
+            "region": "Tearaway Toboggan",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3416,6 +3502,7 @@
           {
             "name": "Tearaway Toboggan - Bonus 2",
             "id": 14430294,
+            "region": "Tearaway Toboggan",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3434,6 +3521,7 @@
           {
             "name": "Tearaway Toboggan - DK Coin",
             "id": 14430295,
+            "region": "Tearaway Toboggan",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3475,6 +3563,7 @@
           {
             "name": "Barrel Drop Bounce - Flag",
             "id": 14430296,
+            "region": "Barrel Drop Bounce",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3493,6 +3582,7 @@
           {
             "name": "Barrel Drop Bounce - Bonus 1",
             "id": 14430297,
+            "region": "Barrel Drop Bounce",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3511,6 +3601,7 @@
           {
             "name": "Barrel Drop Bounce - Bonus 2",
             "id": 14430298,
+            "region": "Barrel Drop Bounce",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3529,6 +3620,7 @@
           {
             "name": "Barrel Drop Bounce - DK Coin",
             "id": 14430299,
+            "region": "Barrel Drop Bounce",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3570,6 +3662,7 @@
           {
             "name": "Krack-Shot Kroc - Flag",
             "id": 14430300,
+            "region": "Krack-Shot Kroc",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3588,6 +3681,7 @@
           {
             "name": "Krack-Shot Kroc - Bonus 1",
             "id": 14430301,
+            "region": "Krack-Shot Kroc",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3606,6 +3700,7 @@
           {
             "name": "Krack-Shot Kroc - Bonus 2",
             "id": 14430302,
+            "region": "Krack-Shot Kroc",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3624,6 +3719,7 @@
           {
             "name": "Krack-Shot Kroc - DK Coin",
             "id": 14430303,
+            "region": "Krack-Shot Kroc",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3665,6 +3761,7 @@
           {
             "name": "Lemguin Lunge - Flag",
             "id": 14430304,
+            "region": "Lemguin Lunge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3683,6 +3780,7 @@
           {
             "name": "Lemguin Lunge - Bonus 1",
             "id": 14430305,
+            "region": "Lemguin Lunge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3701,6 +3799,7 @@
           {
             "name": "Lemguin Lunge - Bonus 2",
             "id": 14430306,
+            "region": "Lemguin Lunge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3719,6 +3818,7 @@
           {
             "name": "Lemguin Lunge - DK Coin",
             "id": 14430307,
+            "region": "Lemguin Lunge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3760,6 +3860,7 @@
           {
             "name": "Buzzer Barrage - Flag",
             "id": 14430308,
+            "region": "Buzzer Barrage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3778,6 +3879,7 @@
           {
             "name": "Buzzer Barrage - Bonus 1",
             "id": 14430309,
+            "region": "Buzzer Barrage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3796,6 +3898,7 @@
           {
             "name": "Buzzer Barrage - Bonus 2",
             "id": 14430310,
+            "region": "Buzzer Barrage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3814,6 +3917,7 @@
           {
             "name": "Buzzer Barrage - DK Coin",
             "id": 14430311,
+            "region": "Buzzer Barrage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3855,6 +3959,7 @@
           {
             "name": "Kong-Fused Cliffs - Flag",
             "id": 14430312,
+            "region": "Kong-Fused Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3873,6 +3978,7 @@
           {
             "name": "Kong-Fused Cliffs - Bonus 1",
             "id": 14430313,
+            "region": "Kong-Fused Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3891,6 +3997,7 @@
           {
             "name": "Kong-Fused Cliffs - Bonus 2",
             "id": 14430314,
+            "region": "Kong-Fused Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3909,6 +4016,7 @@
           {
             "name": "Kong-Fused Cliffs - DK Coin",
             "id": 14430315,
+            "region": "Kong-Fused Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3950,6 +4058,7 @@
           {
             "name": "Floodlit Fish - Flag",
             "id": 14430316,
+            "region": "Floodlit Fish",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3968,6 +4077,7 @@
           {
             "name": "Floodlit Fish - Bonus 1",
             "id": 14430317,
+            "region": "Floodlit Fish",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3986,6 +4096,7 @@
           {
             "name": "Floodlit Fish - Bonus 2",
             "id": 14430318,
+            "region": "Floodlit Fish",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4004,6 +4115,7 @@
           {
             "name": "Floodlit Fish - DK Coin",
             "id": 14430319,
+            "region": "Floodlit Fish",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4045,6 +4157,7 @@
           {
             "name": "Pothole Panic - Flag",
             "id": 14430320,
+            "region": "Pothole Panic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4063,6 +4176,7 @@
           {
             "name": "Pothole Panic - Bonus 1",
             "id": 14430321,
+            "region": "Pothole Panic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4081,6 +4195,7 @@
           {
             "name": "Pothole Panic - Bonus 2",
             "id": 14430322,
+            "region": "Pothole Panic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4099,6 +4214,7 @@
           {
             "name": "Pothole Panic - DK Coin",
             "id": 14430323,
+            "region": "Pothole Panic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4140,6 +4256,7 @@
           {
             "name": "Ropey Rumpus - Flag",
             "id": 14430324,
+            "region": "Ropey Rumpus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4158,6 +4275,7 @@
           {
             "name": "Ropey Rumpus - Bonus 1",
             "id": 14430325,
+            "region": "Ropey Rumpus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4176,6 +4294,7 @@
           {
             "name": "Ropey Rumpus - Bonus 2",
             "id": 14430326,
+            "region": "Ropey Rumpus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4194,6 +4313,7 @@
           {
             "name": "Ropey Rumpus - DK Coin",
             "id": 14430327,
+            "region": "Ropey Rumpus",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4235,6 +4355,7 @@
           {
             "name": "Konveyor Rope Klash - Flag",
             "id": 14430328,
+            "region": "Konveyor Rope Klash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4253,6 +4374,7 @@
           {
             "name": "Konveyor Rope Klash - Bonus 1",
             "id": 14430329,
+            "region": "Konveyor Rope Klash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4271,6 +4393,7 @@
           {
             "name": "Konveyor Rope Klash - Bonus 2",
             "id": 14430330,
+            "region": "Konveyor Rope Klash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4289,6 +4412,7 @@
           {
             "name": "Konveyor Rope Klash - DK Coin",
             "id": 14430331,
+            "region": "Konveyor Rope Klash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4330,6 +4454,7 @@
           {
             "name": "Creepy Caverns - Flag",
             "id": 14430332,
+            "region": "Creepy Caverns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4348,6 +4473,7 @@
           {
             "name": "Creepy Caverns - Bonus 1",
             "id": 14430333,
+            "region": "Creepy Caverns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4366,6 +4492,7 @@
           {
             "name": "Creepy Caverns - Bonus 2",
             "id": 14430334,
+            "region": "Creepy Caverns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4384,6 +4511,7 @@
           {
             "name": "Creepy Caverns - DK Coin",
             "id": 14430335,
+            "region": "Creepy Caverns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4425,6 +4553,7 @@
           {
             "name": "Lightning Lookout - Flag",
             "id": 14430336,
+            "region": "Lightning Lookout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4443,6 +4572,7 @@
           {
             "name": "Lightning Lookout - Bonus 1",
             "id": 14430337,
+            "region": "Lightning Lookout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4461,6 +4591,7 @@
           {
             "name": "Lightning Lookout - Bonus 2",
             "id": 14430338,
+            "region": "Lightning Lookout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4479,6 +4610,7 @@
           {
             "name": "Lightning Lookout - DK Coin",
             "id": 14430339,
+            "region": "Lightning Lookout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4520,6 +4652,7 @@
           {
             "name": "Koindozer Klamber - Flag",
             "id": 14430340,
+            "region": "Koindozer Klamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4538,6 +4671,7 @@
           {
             "name": "Koindozer Klamber - Bonus 1",
             "id": 14430341,
+            "region": "Koindozer Klamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4556,6 +4690,7 @@
           {
             "name": "Koindozer Klamber - Bonus 2",
             "id": 14430342,
+            "region": "Koindozer Klamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4574,6 +4709,7 @@
           {
             "name": "Koindozer Klamber - DK Coin",
             "id": 14430343,
+            "region": "Koindozer Klamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4615,6 +4751,7 @@
           {
             "name": "Poisonous Pipeline - Flag",
             "id": 14430344,
+            "region": "Poisonous Pipeline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4633,6 +4770,7 @@
           {
             "name": "Poisonous Pipeline - Bonus 1",
             "id": 14430345,
+            "region": "Poisonous Pipeline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4651,6 +4789,7 @@
           {
             "name": "Poisonous Pipeline - Bonus 2",
             "id": 14430346,
+            "region": "Poisonous Pipeline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4669,6 +4808,7 @@
           {
             "name": "Poisonous Pipeline - DK Coin",
             "id": 14430347,
+            "region": "Poisonous Pipeline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4710,6 +4850,7 @@
           {
             "name": "Stampede Sprint - Flag",
             "id": 14430348,
+            "region": "Stampede Sprint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4728,6 +4869,7 @@
           {
             "name": "Stampede Sprint - Bonus 1",
             "id": 14430349,
+            "region": "Stampede Sprint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4746,6 +4888,7 @@
           {
             "name": "Stampede Sprint - Bonus 2",
             "id": 14430350,
+            "region": "Stampede Sprint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4764,6 +4907,7 @@
           {
             "name": "Stampede Sprint - Bonus 3",
             "id": 14430351,
+            "region": "Stampede Sprint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4782,6 +4926,7 @@
           {
             "name": "Stampede Sprint - DK Coin",
             "id": 14430352,
+            "region": "Stampede Sprint",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4823,6 +4968,7 @@
           {
             "name": "Criss Kross Cliffs - Flag",
             "id": 14430353,
+            "region": "Criss Kross Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4841,6 +4987,7 @@
           {
             "name": "Criss Kross Cliffs - Bonus 1",
             "id": 14430354,
+            "region": "Criss Kross Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4859,6 +5006,7 @@
           {
             "name": "Criss Kross Cliffs - Bonus 2",
             "id": 14430355,
+            "region": "Criss Kross Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4877,6 +5025,7 @@
           {
             "name": "Criss Kross Cliffs - DK Coin",
             "id": 14430356,
+            "region": "Criss Kross Cliffs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4918,6 +5067,7 @@
           {
             "name": "Tyrant Twin Tussle - Flag",
             "id": 14430357,
+            "region": "Tyrant Twin Tussle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4936,6 +5086,7 @@
           {
             "name": "Tyrant Twin Tussle - Bonus 1",
             "id": 14430358,
+            "region": "Tyrant Twin Tussle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4954,6 +5105,7 @@
           {
             "name": "Tyrant Twin Tussle - Bonus 2",
             "id": 14430359,
+            "region": "Tyrant Twin Tussle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4972,6 +5124,7 @@
           {
             "name": "Tyrant Twin Tussle - Bonus 3",
             "id": 14430360,
+            "region": "Tyrant Twin Tussle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4990,6 +5143,7 @@
           {
             "name": "Tyrant Twin Tussle - DK Coin",
             "id": 14430361,
+            "region": "Tyrant Twin Tussle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5031,6 +5185,7 @@
           {
             "name": "Swoopy Salvo - Flag",
             "id": 14430362,
+            "region": "Swoopy Salvo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5049,6 +5204,7 @@
           {
             "name": "Swoopy Salvo - Bonus 1",
             "id": 14430363,
+            "region": "Swoopy Salvo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5067,6 +5223,7 @@
           {
             "name": "Swoopy Salvo - Bonus 2",
             "id": 14430364,
+            "region": "Swoopy Salvo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5085,6 +5242,7 @@
           {
             "name": "Swoopy Salvo - Bonus 3",
             "id": 14430365,
+            "region": "Swoopy Salvo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5103,6 +5261,7 @@
           {
             "name": "Swoopy Salvo - DK Coin",
             "id": 14430366,
+            "region": "Swoopy Salvo",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5144,6 +5303,7 @@
           {
             "name": "Rocket Rush - Flag",
             "id": 14430367,
+            "region": "Rocket Rush",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5162,6 +5322,7 @@
           {
             "name": "Rocket Rush - DK Coin",
             "id": 14430368,
+            "region": "Rocket Rush",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5203,6 +5364,7 @@
           {
             "name": "Belcha's Barn",
             "id": 14430369,
+            "region": "Belcha's Barn Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5244,6 +5406,7 @@
           {
             "name": "Arich's Ambush",
             "id": 14430370,
+            "region": "Arich's Ambush Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5285,6 +5448,7 @@
           {
             "name": "Squirt's Showdown",
             "id": 14430371,
+            "region": "Squirt's Showdown Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5326,6 +5490,7 @@
           {
             "name": "KAOS Karnage",
             "id": 14430372,
+            "region": "KAOS Karnage Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5367,6 +5532,7 @@
           {
             "name": "Bleak's House",
             "id": 14430373,
+            "region": "Bleak's House Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5408,6 +5574,7 @@
           {
             "name": "Barbos's Barrier",
             "id": 14430374,
+            "region": "Barbos's Barrier Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5449,6 +5616,7 @@
           {
             "name": "Kastle KAOS",
             "id": 14430375,
+            "region": "Kastle KAOS Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5490,6 +5658,7 @@
           {
             "name": "Knautilus",
             "id": 14430376,
+            "region": "Knautilus Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5531,6 +5700,7 @@
           {
             "name": "Belcha's Burrow",
             "id": 14430377,
+            "region": "Belcha's Burrow Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5572,6 +5742,7 @@
           {
             "name": "Kong Cave",
             "id": 14430378,
+            "region": "Kong Cave Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5613,6 +5784,7 @@
           {
             "name": "Undercover Cove",
             "id": 14430379,
+            "region": "Undercover Cove Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5654,6 +5826,7 @@
           {
             "name": "K's Cache",
             "id": 14430380,
+            "region": "K's Cache Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5695,6 +5868,7 @@
           {
             "name": "Hill-Top Hoard",
             "id": 14430381,
+            "region": "Hill-Top Hoard Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5736,6 +5910,7 @@
           {
             "name": "Bounty Beach",
             "id": 14430382,
+            "region": "Bounty Beach Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5777,6 +5952,7 @@
           {
             "name": "Smuggler's Cove",
             "id": 14430383,
+            "region": "Smuggler's Cove Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5818,6 +5994,7 @@
           {
             "name": "Arich's Hoard",
             "id": 14430384,
+            "region": "Arich's Hoard Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5859,6 +6036,7 @@
           {
             "name": "Bounty Bay",
             "id": 14430385,
+            "region": "Bounty Bay Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5922,6 +6100,7 @@
           {
             "name": "Glacial Grotto",
             "id": 14430387,
+            "region": "Glacial Grotto Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5985,6 +6164,7 @@
           {
             "name": "Sewer Stockpile",
             "id": 14430389,
+            "region": "Sewer Stockpile Region",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6286,9 +6466,18 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Donkey Kong",
+        "Bonus Coin",
+        "Bear Coin",
+        "Banana Bird",
+        "Progressive Boat Upgrade",
+        "DK Coin",
+        "Krematoa Cog",
+        "1-Up Balloon"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

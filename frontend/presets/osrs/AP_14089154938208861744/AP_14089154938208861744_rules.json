@@ -43,6 +43,7 @@
           {
             "name": "Reach a Level 10",
             "id": 458852,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -61,6 +62,7 @@
           {
             "name": "Reach a Level 20",
             "id": 458857,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -79,6 +81,7 @@
           {
             "name": "Total XP 125,000",
             "id": 458869,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -117,6 +120,7 @@
           {
             "name": "Total Level 150",
             "id": 458862,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -155,6 +159,7 @@
           {
             "name": "Get Prompted to Buy Membership",
             "id": 458881,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -173,6 +178,7 @@
           {
             "name": "Total Level 50",
             "id": 458856,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -191,6 +197,7 @@
           {
             "name": "Burn a Log",
             "id": 458828,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -218,6 +225,7 @@
           {
             "name": "Combat Level 15",
             "id": 458861,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -236,6 +244,7 @@
           {
             "name": "Total XP 25,000",
             "id": 458858,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -254,6 +263,7 @@
           {
             "name": "Activate the \"Protect Item\" Prayer",
             "id": 458777,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -877,6 +887,7 @@
           {
             "name": "Quest: Cook's Assistant",
             "id": 458752,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -981,6 +992,7 @@
           {
             "name": "Points: Cook's Assistant",
             "id": 458900,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1007,6 +1019,7 @@
           {
             "name": "Quest: The Restless Ghost",
             "id": 458754,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1073,6 +1086,7 @@
           {
             "name": "Points: The Restless Ghost",
             "id": 458902,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1099,6 +1113,7 @@
           {
             "name": "Quest: Rune Mysteries",
             "id": 458768,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1165,6 +1180,7 @@
           {
             "name": "Points: Rune Mysteries",
             "id": 458916,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1191,6 +1207,7 @@
           {
             "name": "Quest: X Marks the Spot",
             "id": 458771,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1257,6 +1274,7 @@
           {
             "name": "Points: X Marks the Spot",
             "id": 458919,
+            "region": "Lumbridge",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1443,6 +1461,7 @@
           {
             "name": "Quest: Misthalin Mystery",
             "id": 458769,
+            "region": "Lumbridge Swamp",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1471,6 +1490,7 @@
           {
             "name": "Points: Misthalin Mystery",
             "id": 458917,
+            "region": "Lumbridge Swamp",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1497,6 +1517,7 @@
           {
             "name": "Kill a Giant Frog",
             "id": 458839,
+            "region": "Lumbridge Swamp",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1878,6 +1899,7 @@
           {
             "name": "Quest: Sheep Shearer",
             "id": 458756,
+            "region": "Lumbridge Farms West",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1925,6 +1947,7 @@
           {
             "name": "Points: Sheep Shearer",
             "id": 458904,
+            "region": "Lumbridge Farms West",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3103,6 +3126,7 @@
           {
             "name": "Quest: Demon Slayer",
             "id": 458753,
+            "region": "Central Varrock",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3188,6 +3212,7 @@
           {
             "name": "Points: Demon Slayer",
             "id": 458901,
+            "region": "Central Varrock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3214,6 +3239,7 @@
           {
             "name": "Quest: Romeo & Juliet",
             "id": 458755,
+            "region": "Central Varrock",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3299,6 +3325,7 @@
           {
             "name": "Points: Romeo & Juliet",
             "id": 458903,
+            "region": "Central Varrock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3325,6 +3352,7 @@
           {
             "name": "Quest: Shield of Arrav",
             "id": 458757,
+            "region": "Central Varrock",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3410,6 +3438,7 @@
           {
             "name": "Points: Shield of Arrav",
             "id": 458905,
+            "region": "Central Varrock",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3436,6 +3465,7 @@
           {
             "name": "Have the Apothecary Make a Strength Potion",
             "id": 458884,
+            "region": "Central Varrock",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4226,6 +4256,7 @@
           {
             "name": "Enter the Cook's Guild",
             "id": 458825,
+            "region": "Cook's Guild",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5388,6 +5419,7 @@
           {
             "name": "Quest: Ernest the Chicken",
             "id": 458758,
+            "region": "Draynor Manor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -5416,6 +5448,7 @@
           {
             "name": "Points: Ernest the Chicken",
             "id": 458906,
+            "region": "Draynor Manor",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5696,6 +5729,7 @@
           {
             "name": "Quest: Doric's Quest",
             "id": 458762,
+            "region": "Dwarven Mountain Pass",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5826,6 +5860,7 @@
           {
             "name": "Points: Doric's Quest",
             "id": 458910,
+            "region": "Dwarven Mountain Pass",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6037,6 +6072,7 @@
           {
             "name": "Quest: Black Knights' Fortress",
             "id": 458763,
+            "region": "Dwarven Mines",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6182,6 +6218,7 @@
           {
             "name": "Points: Black Knights' Fortress",
             "id": 458911,
+            "region": "Dwarven Mines",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6208,6 +6245,7 @@
           {
             "name": "Quest: Below Ice Mountain",
             "id": 458772,
+            "region": "Dwarven Mines",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6379,6 +6417,7 @@
           {
             "name": "Points: Below Ice Mountain",
             "id": 458920,
+            "region": "Dwarven Mines",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6481,6 +6520,7 @@
           {
             "name": "Quest: Goblin Diplomacy",
             "id": 458766,
+            "region": "Goblin Village",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6585,6 +6625,7 @@
           {
             "name": "Points: Goblin Diplomacy",
             "id": 458914,
+            "region": "Goblin Village",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6787,6 +6828,7 @@
           {
             "name": "Open an Ornate Lockbox",
             "id": 458877,
+            "region": "Camdozaal",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -7149,6 +7191,7 @@
           {
             "name": "Quest: The Knight's Sword",
             "id": 458765,
+            "region": "Falador",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7386,6 +7429,7 @@
           {
             "name": "Points: The Knight's Sword",
             "id": 458913,
+            "region": "Falador",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8061,6 +8105,7 @@
           {
             "name": "Quest: Pirate's Treasure",
             "id": 458767,
+            "region": "Port Sarim",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8146,6 +8191,7 @@
           {
             "name": "Points: Pirate's Treasure",
             "id": 458915,
+            "region": "Port Sarim",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -8822,6 +8868,7 @@
           {
             "name": "Quest: Dragon Slayer",
             "id": 458773,
+            "region": "Crandor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9345,6 +9392,7 @@
           {
             "name": "Quest: Witch's Potion",
             "id": 458764,
+            "region": "Rimmington",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9392,6 +9440,7 @@
           {
             "name": "Points: Witch's Potion",
             "id": 458912,
+            "region": "Rimmington",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -9418,6 +9467,7 @@
           {
             "name": "Quest: The Corsair Curse",
             "id": 458770,
+            "region": "Rimmington",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9484,6 +9534,7 @@
           {
             "name": "Points: The Corsair Curse",
             "id": 458918,
+            "region": "Rimmington",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10594,6 +10645,7 @@
           {
             "name": "Quest: Vampyre Slayer",
             "id": 458759,
+            "region": "Draynor Village",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -10660,6 +10712,7 @@
           {
             "name": "Points: Vampyre Slayer",
             "id": 458907,
+            "region": "Draynor Village",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -10686,6 +10739,7 @@
           {
             "name": "Equip an Orange Cape",
             "id": 458894,
+            "region": "Draynor Village",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -10777,6 +10831,7 @@
           {
             "name": "Quest: Imp Catcher",
             "id": 458760,
+            "region": "Wizard Tower",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -10824,6 +10879,7 @@
           {
             "name": "Points: Imp Catcher",
             "id": 458908,
+            "region": "Wizard Tower",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11184,6 +11240,7 @@
           {
             "name": "Quest: Prince Ali Rescue",
             "id": 458761,
+            "region": "Al Kharid",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11326,6 +11383,7 @@
           {
             "name": "Points: Prince Ali Rescue",
             "id": 458909,
+            "region": "Al Kharid",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11352,6 +11410,7 @@
           {
             "name": "Get Sent to Jail in Shantay Pass",
             "id": 458883,
+            "region": "Al Kharid",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -12489,6 +12548,7 @@
           {
             "name": "Cut a Diamond",
             "id": 458801,
+            "region": "Chisel",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -12791,6 +12851,7 @@
           {
             "name": "Cut a Ruby",
             "id": 458799,
+            "region": "Chisel",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -13248,6 +13309,7 @@
           {
             "name": "Smelt an Iron Bar",
             "id": 458812,
+            "region": "Iron Ore",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -13433,6 +13495,7 @@
           {
             "name": "Mine Silver",
             "id": 458808,
+            "region": "Silver Ore",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -13671,6 +13734,7 @@
           {
             "name": "Smelt a Gold Bar",
             "id": 458815,
+            "region": "Gold Ore",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -14071,6 +14135,7 @@
           {
             "name": "Catch a Trout",
             "id": 458818,
+            "region": "Fly Fishing Spot",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -14162,6 +14227,7 @@
           {
             "name": "Catch a Lobster",
             "id": 458820,
+            "region": "Lobster Spot",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -14282,6 +14348,7 @@
           {
             "name": "Bake a Redberry Pie",
             "id": 458822,
+            "region": "Redberry Bush",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -14895,6 +14962,7 @@
           {
             "name": "Bake a Cake",
             "id": 458826,
+            "region": "Wheat",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15506,6 +15574,7 @@
           {
             "name": "Burn some Oak Logs",
             "id": 458829,
+            "region": "Oak Tree",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15682,6 +15751,7 @@
           {
             "name": "Burn some Willow Logs",
             "id": 458830,
+            "region": "Willow Tree",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15972,6 +16042,7 @@
           {
             "name": "Kill a Barbarian",
             "id": 458838,
+            "region": "Barbarian",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16072,6 +16143,7 @@
           {
             "name": "Kill a Zombie",
             "id": 458840,
+            "region": "Zombie",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16234,6 +16306,7 @@
           {
             "name": "Kill a Hill Giant",
             "id": 458842,
+            "region": "Hill Giant",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16605,6 +16678,7 @@
           {
             "name": "Cast Bones To Bananas",
             "id": 458779,
+            "region": "Nature Runes",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17163,6 +17237,7 @@
           {
             "name": "Kill a Duck",
             "id": 458834,
+            "region": "Duck",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17429,6 +17504,7 @@
           {
             "name": "Find a Needle in a Haystack",
             "id": 458895,
+            "region": "Haystack",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -19018,9 +19094,96 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "An Invitation to the Gielinor Games",
+        "Area: Falador",
+        "Area: Lumbridge Farms",
+        "Area: Wilderness",
+        "Care Pack: 100 Chaos Runes",
+        "Area: Mudskipper Point",
+        "Care Pack: 200 Mind Runes",
+        "Fifty Billion RS3 GP (Worthless)",
+        "Progressive Ranged Weapon",
+        "Care Pack: 10,000 GP",
+        "Care Pack: 100 Law Runes",
+        "Nothing Interesting Happens",
+        "Area: South of Varrock",
+        "Free Haircut at the Falador Hairdresser",
+        "Care Pack: 50 Energy Potion (4)",
+        "Area: Port Sarim",
+        "A Review on that Pull Request You've Been Waiting On",
+        "Area: Central Varrock",
+        "A Logic Error",
+        "Care Pack: 90 Steel Nails",
+        "Area: Citharede Abbey",
+        "1-Up Mushroom",
+        "Care Pack: 200 Iron Ore",
+        "Area: Barbarian Village",
+        "A Funny Feeling You Would Have Been Followed",
+        "A Hornless Unicorn",
+        "A Ratcatchers Dialogue Rewrite",
+        "Ten Free Pulls on the Squeal of Fortune",
+        "Mod Ash's Coffee Cup",
+        "Area: Draynor Manor",
+        "Care Pack: 10 Each Uncut gems",
+        "An Ominous Prediction From Gnome Child",
+        "Another Bug To Report",
+        "Care Pack: 500 Rune Essence",
+        "Progressive Ranged Armor",
+        "An Embarrasing Photo of Zammorak at the Christmas Party",
+        "The Ability To Use ::bank",
+        "Care Pack: 100 Coal Ore",
+        "Area: Corsair Cove",
+        "Progressive Tools",
+        "Evolution of Combat",
+        "Area: Crafting Guild",
+        "Care Pack: 50 Lobsters",
+        "Care Pack: 300 Each Elemental Rune",
+        "Progressive Armor",
+        "Care Pack: 100 Raw Trout",
+        "Care Pack: 3 Rings of Forging",
+        "Progressive Weapons",
+        "Care Pack: 200 Leather",
+        "Area: Al Kharid",
+        "Area: Crandor",
+        "XP Waste",
+        "Area: Falador Farms",
+        "Area: Edgeville",
+        "Area: Draynor Village",
+        "Care Pack: 50 Bronze Bars",
+        "Area: Dwarven Mines",
+        "Hannanie's Lost Sanity",
+        "Care Pack: 100 Oak Logs",
+        "Area: Wizard Tower",
+        "Area: Menaphos",
+        "Area: HAM Hideout",
+        "Area: West Varrock",
+        "Project Zanaris Beta Invite",
+        "\"Nostalgia\"",
+        "Care Pack: 100 Death Runes",
+        "The Stone of Jas",
+        "Why Fletch?",
+        "Area: Karamja",
+        "Empty White Hallways",
+        "Area: Varrock Palace",
+        "Care Pack: 200 Big Bones",
+        "The Warding Skill",
+        "Area: Rimmington",
+        "Area: Lumbridge Swamp",
+        "Settled's Crossbow",
+        "A 1/2500 Chance At Your Very Own Pet Baron Sucellus, Redeemable at your Local Duke, Some Restrictions May Apply",
+        "Area: Ice Mountain",
+        "Progressive Magic Spell",
+        "A Suspicious Email From Iagex.com Asking for your Password",
+        "Nieve's Phone Number",
+        "Area: Monastery",
+        "Care Pack: 50 Willow Logs",
+        "Area: Lumbridge",
+        "Area: Lumberyard",
+        "Care Pack: 25 Swordfish"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

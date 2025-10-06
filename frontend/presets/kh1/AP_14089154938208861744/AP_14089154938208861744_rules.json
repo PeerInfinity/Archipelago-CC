@@ -157,6 +157,7 @@
           {
             "name": "Traverse Town 1st District Accessory Shop Roof Chest",
             "id": 2650212,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -175,6 +176,7 @@
           {
             "name": "Traverse Town 1st District Blue Trinity Balcony Chest",
             "id": 2650411,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -233,6 +235,7 @@
           {
             "name": "Traverse Town 1st District Candle Puzzle Chest",
             "id": 2650211,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -254,6 +257,7 @@
           {
             "name": "Traverse Town 1st District Safe Postcard",
             "id": 2656501,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -272,6 +276,7 @@
           {
             "name": "Traverse Town 1st District Speak with Cid Event",
             "id": 2656375,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -290,6 +295,7 @@
           {
             "name": "Traverse Town 2nd District Boots and Shoes Awning Chest",
             "id": 2650213,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -308,6 +314,7 @@
           {
             "name": "Traverse Town 2nd District Gizmo Shop Facade Chest",
             "id": 2650251,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -326,6 +333,7 @@
           {
             "name": "Traverse Town 2nd District Rooftop Chest",
             "id": 2650214,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -344,6 +352,7 @@
           {
             "name": "Traverse Town 3rd District Balcony Postcard",
             "id": 2656505,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -362,6 +371,7 @@
           {
             "name": "Traverse Town Accessory Shop Chest",
             "id": 2650332,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -380,6 +390,7 @@
           {
             "name": "Traverse Town Alleyway Balcony Chest",
             "id": 2650252,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -398,6 +409,7 @@
           {
             "name": "Traverse Town Alleyway Behind Crates Chest",
             "id": 2650892,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -419,6 +431,7 @@
           {
             "name": "Traverse Town Alleyway Blue Room Awning Chest",
             "id": 2650253,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -437,6 +450,7 @@
           {
             "name": "Traverse Town Alleyway Corner Chest",
             "id": 2650254,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -455,6 +469,7 @@
           {
             "name": "Traverse Town Defeat Guard Armor Blue Trinity Event",
             "id": 2656013,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -473,6 +488,7 @@
           {
             "name": "Traverse Town Defeat Guard Armor Brave Warrior Event",
             "id": 2656016,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -491,6 +507,7 @@
           {
             "name": "Traverse Town Defeat Guard Armor Dodge Roll Event",
             "id": 2656011,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -509,6 +526,7 @@
           {
             "name": "Traverse Town Defeat Guard Armor Fire Event",
             "id": 2656012,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -527,6 +545,7 @@
           {
             "name": "Traverse Town Defeat Opposite Armor Aero Event",
             "id": 2656131,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -548,6 +567,7 @@
           {
             "name": "Traverse Town Geppetto's House Chest",
             "id": 2650334,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -620,6 +640,7 @@
           {
             "name": "Traverse Town Geppetto's House Geppetto All Summons Reward",
             "id": 2656309,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -697,6 +718,7 @@
           {
             "name": "Traverse Town Geppetto's House Geppetto Reward 1",
             "id": 2656304,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -769,6 +791,7 @@
           {
             "name": "Traverse Town Geppetto's House Geppetto Reward 2",
             "id": 2656305,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -841,6 +864,7 @@
           {
             "name": "Traverse Town Geppetto's House Geppetto Reward 3",
             "id": 2656306,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -913,6 +937,7 @@
           {
             "name": "Traverse Town Geppetto's House Geppetto Reward 4",
             "id": 2656307,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -985,6 +1010,7 @@
           {
             "name": "Traverse Town Geppetto's House Geppetto Reward 5",
             "id": 2656308,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1057,6 +1083,7 @@
           {
             "name": "Traverse Town Geppetto's House Postcard",
             "id": 2656506,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1129,6 +1156,7 @@
           {
             "name": "Traverse Town Geppetto's House Talk to Pinocchio",
             "id": 2656310,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1201,6 +1229,7 @@
           {
             "name": "Traverse Town Gizmo Shop Postcard 1",
             "id": 2656502,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1222,6 +1251,7 @@
           {
             "name": "Traverse Town Gizmo Shop Postcard 2",
             "id": 2656503,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1243,6 +1273,7 @@
           {
             "name": "Traverse Town Green Room Clock Puzzle Chest",
             "id": 2650292,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1261,6 +1292,7 @@
           {
             "name": "Traverse Town Green Room Table Chest",
             "id": 2650293,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1279,6 +1311,7 @@
           {
             "name": "Traverse Town Item Shop Postcard",
             "id": 2656500,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1297,6 +1330,7 @@
           {
             "name": "Traverse Town Item Workshop Left Chest",
             "id": 2650893,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1334,6 +1368,7 @@
           {
             "name": "Traverse Town Item Workshop Postcard",
             "id": 2656504,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1371,6 +1406,7 @@
           {
             "name": "Traverse Town Item Workshop Right Chest",
             "id": 2650371,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1408,6 +1444,7 @@
           {
             "name": "Traverse Town Kairi Secret Waterway Oathkeeper Event",
             "id": 2656015,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1458,6 +1495,7 @@
           {
             "name": "Traverse Town Leon Secret Waterway Earthshine Event",
             "id": 2656014,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1476,6 +1514,7 @@
           {
             "name": "Traverse Town Magician's Study Obtained All Arts Items",
             "id": 2656311,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1524,6 +1563,7 @@
           {
             "name": "Traverse Town Magician's Study Obtained All LV1 Magic",
             "id": 2656312,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1548,6 +1588,7 @@
           {
             "name": "Traverse Town Magician's Study Obtained All LV3 Magic",
             "id": 2656313,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1572,6 +1613,7 @@
           {
             "name": "Traverse Town Mail Postcard 01 Event",
             "id": 2656120,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1593,6 +1635,7 @@
           {
             "name": "Traverse Town Mail Postcard 02 Event",
             "id": 2656121,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1618,6 +1661,7 @@
           {
             "name": "Traverse Town Mail Postcard 03 Event",
             "id": 2656122,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1643,6 +1687,7 @@
           {
             "name": "Traverse Town Mail Postcard 04 Event",
             "id": 2656123,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1668,6 +1713,7 @@
           {
             "name": "Traverse Town Mail Postcard 05 Event",
             "id": 2656124,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1693,6 +1739,7 @@
           {
             "name": "Traverse Town Mail Postcard 06 Event",
             "id": 2656125,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1718,6 +1765,7 @@
           {
             "name": "Traverse Town Mail Postcard 07 Event",
             "id": 2656126,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1743,6 +1791,7 @@
           {
             "name": "Traverse Town Mail Postcard 08 Event",
             "id": 2656127,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1768,6 +1817,7 @@
           {
             "name": "Traverse Town Mail Postcard 09 Event",
             "id": 2656128,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1793,6 +1843,7 @@
           {
             "name": "Traverse Town Mail Postcard 10 Event",
             "id": 2656129,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1818,6 +1869,7 @@
           {
             "name": "Traverse Town Mystical House Glide Chest",
             "id": 2650891,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1931,6 +1983,7 @@
           {
             "name": "Traverse Town Mystical House Yellow Trinity Chest",
             "id": 2650331,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2000,6 +2053,7 @@
           {
             "name": "Traverse Town Piano Room Return 10 Puppies",
             "id": 2656314,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2076,6 +2130,7 @@
           {
             "name": "Traverse Town Piano Room Return 20 Puppies",
             "id": 2656315,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2152,6 +2207,7 @@
           {
             "name": "Traverse Town Piano Room Return 30 Puppies",
             "id": 2656316,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2228,6 +2284,7 @@
           {
             "name": "Traverse Town Piano Room Return 40 Puppies",
             "id": 2656317,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2304,6 +2361,7 @@
           {
             "name": "Traverse Town Piano Room Return 50 Puppies Reward 1",
             "id": 2656318,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2380,6 +2438,7 @@
           {
             "name": "Traverse Town Piano Room Return 50 Puppies Reward 2",
             "id": 2656319,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2456,6 +2515,7 @@
           {
             "name": "Traverse Town Piano Room Return 60 Puppies",
             "id": 2656320,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2532,6 +2592,7 @@
           {
             "name": "Traverse Town Piano Room Return 70 Puppies",
             "id": 2656321,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2608,6 +2669,7 @@
           {
             "name": "Traverse Town Piano Room Return 80 Puppies",
             "id": 2656322,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2684,6 +2746,7 @@
           {
             "name": "Traverse Town Piano Room Return 90 Puppies",
             "id": 2656324,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2760,6 +2823,7 @@
           {
             "name": "Traverse Town Piano Room Return 99 Puppies Reward 1",
             "id": 2656326,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2836,6 +2900,7 @@
           {
             "name": "Traverse Town Piano Room Return 99 Puppies Reward 2",
             "id": 2656327,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2912,6 +2977,7 @@
           {
             "name": "Traverse Town Red Room Chest",
             "id": 2650294,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2930,6 +2996,7 @@
           {
             "name": "Traverse Town Secret Waterway Near Stairs Chest",
             "id": 2650894,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2948,6 +3015,7 @@
           {
             "name": "Traverse Town Secret Waterway White Trinity Chest",
             "id": 2650333,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2969,6 +3037,7 @@
           {
             "name": "Traverse Town Synth Cloth",
             "id": 2656402,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3022,6 +3091,7 @@
           {
             "name": "Traverse Town Synth Fish",
             "id": 2656405,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3075,6 +3145,7 @@
           {
             "name": "Traverse Town Synth Log",
             "id": 2656401,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3128,6 +3199,7 @@
           {
             "name": "Traverse Town Synth Mushroom",
             "id": 2656406,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3181,6 +3253,7 @@
           {
             "name": "Traverse Town Synth Rope",
             "id": 2656403,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3234,6 +3307,7 @@
           {
             "name": "Traverse Town Synth Seagull Egg",
             "id": 2656404,
+            "region": "Traverse Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3310,6 +3384,7 @@
           {
             "name": "Wonderland Bizarre Room Green Trinity Chest",
             "id": 2650971,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3331,6 +3406,7 @@
           {
             "name": "Wonderland Bizarre Room Lamp Chest",
             "id": 2651091,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3352,6 +3428,7 @@
           {
             "name": "Wonderland Bizarre Room Navi-G Piece Event",
             "id": 2656385,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3373,6 +3450,7 @@
           {
             "name": "Wonderland Bizarre Room Read Book",
             "id": 2656376,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3394,6 +3472,7 @@
           {
             "name": "Wonderland Defeat Trickmaster Blizzard Event",
             "id": 2656041,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3415,6 +3494,7 @@
           {
             "name": "Wonderland Defeat Trickmaster Ifrit's Horn Event",
             "id": 2656042,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3436,6 +3516,7 @@
           {
             "name": "Wonderland Lotus Forest Corner Chest",
             "id": 2651054,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3482,6 +3563,7 @@
           {
             "name": "Wonderland Lotus Forest Glide Chest",
             "id": 2651052,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3545,6 +3627,7 @@
           {
             "name": "Wonderland Lotus Forest Nut Chest",
             "id": 2651053,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3563,22 +3646,17 @@
           {
             "name": "Wonderland Lotus Forest Through the Painting Thunder Plant Chest",
             "id": 2651051,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Footprints"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Progressive Thunder"
-                    }
+                    "Footprints",
+                    "Progressive Thunder"
                   ]
                 }
               ]
@@ -3596,22 +3674,17 @@
           {
             "name": "Wonderland Lotus Forest Through the Painting White Trinity Chest",
             "id": 2651133,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Footprints"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "White Trinity"
-                    }
+                    "Footprints",
+                    "White Trinity"
                   ]
                 }
               ]
@@ -3629,22 +3702,17 @@
           {
             "name": "Wonderland Lotus Forest Thunder Plant Chest",
             "id": 2651014,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Footprints"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Progressive Thunder"
-                    }
+                    "Footprints",
+                    "Progressive Thunder"
                   ]
                 }
               ]
@@ -3662,6 +3730,7 @@
           {
             "name": "Wonderland Queen's Castle Hedge Left Red Chest",
             "id": 2651011,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3702,6 +3771,7 @@
           {
             "name": "Wonderland Queen's Castle Hedge Right Blue Chest",
             "id": 2651012,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3742,6 +3812,7 @@
           {
             "name": "Wonderland Queen's Castle Hedge Right Red Chest",
             "id": 2651013,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3782,6 +3853,7 @@
           {
             "name": "Wonderland Rabbit Hole Defeat Heartless 1 Chest",
             "id": 2650932,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3800,6 +3872,7 @@
           {
             "name": "Wonderland Rabbit Hole Defeat Heartless 2 Chest",
             "id": 2650933,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3818,6 +3891,7 @@
           {
             "name": "Wonderland Rabbit Hole Defeat Heartless 3 Chest",
             "id": 2650934,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3846,6 +3920,7 @@
           {
             "name": "Wonderland Rabbit Hole Green Trinity Chest",
             "id": 2650931,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3867,6 +3942,7 @@
           {
             "name": "Wonderland Tea Party Garden Above Lotus Forest Entrance 1st Chest",
             "id": 2651094,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3917,16 +3993,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Footprints"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "High Jump"
-                            }
+                            "Footprints",
+                            "High Jump"
                           ]
                         }
                       ]
@@ -3948,6 +4018,7 @@
           {
             "name": "Wonderland Tea Party Garden Above Lotus Forest Entrance 2nd Chest",
             "id": 2651093,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3998,16 +4069,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Footprints"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "High Jump"
-                            }
+                            "Footprints",
+                            "High Jump"
                           ]
                         }
                       ]
@@ -4029,6 +4094,7 @@
           {
             "name": "Wonderland Tea Party Garden Across From Bizarre Room Entrance Chest",
             "id": 2651132,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4079,20 +4145,11 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Combo Master"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Footprints"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "High Jump"
-                            }
+                            "Combo Master",
+                            "Footprints",
+                            "High Jump"
                           ]
                         }
                       ]
@@ -4114,6 +4171,7 @@
           {
             "name": "Wonderland Tea Party Garden Bear and Clock Puzzle Chest",
             "id": 2651131,
+            "region": "Wonderland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4183,6 +4241,7 @@
           {
             "name": "Olympus Coliseum Clear Phil's Training Thunder Event",
             "id": 2656031,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4201,6 +4260,7 @@
           {
             "name": "Olympus Coliseum Cloud Sonic Blade Event",
             "id": 2656032,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4222,6 +4282,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Blizzaga Chest",
             "id": 2653373,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4247,6 +4308,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Blizzara Chest",
             "id": 2653372,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4272,6 +4334,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Entry Pass Event",
             "id": 2656386,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4290,6 +4353,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Green Trinity",
             "id": 2656377,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4311,6 +4375,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Hero's License Event",
             "id": 2656380,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4332,6 +4397,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Left Behind Columns Chest",
             "id": 2653332,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4350,6 +4416,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Left Blue Trinity Chest",
             "id": 2653334,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4371,6 +4438,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates Right Blue Trinity Chest",
             "id": 2653333,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4392,6 +4460,7 @@
           {
             "name": "Olympus Coliseum Coliseum Gates White Trinity Chest",
             "id": 2653371,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4413,6 +4482,7 @@
           {
             "name": "Olympus Coliseum Defeat Cerberus Inferno Band Event",
             "id": 2656033,
+            "region": "Olympus Coliseum",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4457,6 +4527,7 @@
           {
             "name": "Deep Jungle Bamboo Thicket Save Gorillas",
             "id": 2656367,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4478,6 +4549,7 @@
           {
             "name": "Deep Jungle Camp Blue Trinity Chest",
             "id": 2651333,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4499,6 +4571,7 @@
           {
             "name": "Deep Jungle Camp Ether Experiment",
             "id": 2656362,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4520,6 +4593,7 @@
           {
             "name": "Deep Jungle Camp Hi-Potion Experiment",
             "id": 2656361,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4541,6 +4615,7 @@
           {
             "name": "Deep Jungle Camp Replication Experiment",
             "id": 2656363,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4562,6 +4637,7 @@
           {
             "name": "Deep Jungle Camp Save Gorillas",
             "id": 2656366,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4583,6 +4659,7 @@
           {
             "name": "Deep Jungle Cavern of Hearts Navi-G Piece Event",
             "id": 2656384,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4604,22 +4681,17 @@
           {
             "name": "Deep Jungle Cavern of Hearts White Trinity Chest",
             "id": 2651332,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Slides"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "White Trinity"
-                    }
+                    "Slides",
+                    "White Trinity"
                   ]
                 }
               ]
@@ -4637,6 +4709,7 @@
           {
             "name": "Deep Jungle Cliff Right Cliff Left Chest",
             "id": 2651411,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4655,6 +4728,7 @@
           {
             "name": "Deep Jungle Cliff Right Cliff Right Chest",
             "id": 2651412,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4673,6 +4747,7 @@
           {
             "name": "Deep Jungle Cliff Save Gorillas",
             "id": 2656364,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4694,6 +4769,7 @@
           {
             "name": "Deep Jungle Climbing Trees Blue Trinity Chest",
             "id": 2651293,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4715,6 +4791,7 @@
           {
             "name": "Deep Jungle Climbing Trees Save Gorillas",
             "id": 2656368,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4736,6 +4813,7 @@
           {
             "name": "Deep Jungle Defeat Clayton Cure Event",
             "id": 2656022,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4757,6 +4835,7 @@
           {
             "name": "Deep Jungle Defeat Sabor White Fang Event",
             "id": 2656021,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4778,6 +4857,7 @@
           {
             "name": "Deep Jungle Hippo's Lagoon Center Chest",
             "id": 2651251,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4796,6 +4876,7 @@
           {
             "name": "Deep Jungle Hippo's Lagoon Left Chest",
             "id": 2651252,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4814,6 +4895,7 @@
           {
             "name": "Deep Jungle Hippo's Lagoon Right Chest",
             "id": 2651253,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4855,6 +4937,7 @@
           {
             "name": "Deep Jungle Jungle Slider 10 Fruits",
             "id": 2656370,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4876,6 +4959,7 @@
           {
             "name": "Deep Jungle Jungle Slider 20 Fruits",
             "id": 2656371,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4897,6 +4981,7 @@
           {
             "name": "Deep Jungle Jungle Slider 30 Fruits",
             "id": 2656372,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4918,6 +5003,7 @@
           {
             "name": "Deep Jungle Jungle Slider 40 Fruits",
             "id": 2656373,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4939,6 +5025,7 @@
           {
             "name": "Deep Jungle Jungle Slider 50 Fruits",
             "id": 2656374,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4960,6 +5047,7 @@
           {
             "name": "Deep Jungle Seal Keyhole Jungle King Event",
             "id": 2656023,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4981,6 +5069,7 @@
           {
             "name": "Deep Jungle Seal Keyhole Red Trinity Event",
             "id": 2656024,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5002,6 +5091,7 @@
           {
             "name": "Deep Jungle Tent Chest",
             "id": 2651334,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5020,6 +5110,7 @@
           {
             "name": "Deep Jungle Tent Protect-G Event",
             "id": 2656383,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5038,6 +5129,7 @@
           {
             "name": "Deep Jungle Tree House Beneath Tree House Chest",
             "id": 2651213,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5056,6 +5148,7 @@
           {
             "name": "Deep Jungle Tree House Rooftop Chest",
             "id": 2651214,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5074,6 +5167,7 @@
           {
             "name": "Deep Jungle Tree House Save Gorillas",
             "id": 2656365,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5095,6 +5189,7 @@
           {
             "name": "Deep Jungle Tree House Suspended Boat Chest",
             "id": 2651413,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5129,6 +5224,7 @@
           {
             "name": "Deep Jungle Tunnel Chest",
             "id": 2651331,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5147,6 +5243,7 @@
           {
             "name": "Deep Jungle Vines 2 Chest",
             "id": 2651292,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5165,6 +5262,7 @@
           {
             "name": "Deep Jungle Vines Chest",
             "id": 2651291,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5183,6 +5281,7 @@
           {
             "name": "Deep Jungle Waterfall Cavern High Middle Chest",
             "id": 2651374,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5204,6 +5303,7 @@
           {
             "name": "Deep Jungle Waterfall Cavern High Wall Chest",
             "id": 2651373,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5225,6 +5325,7 @@
           {
             "name": "Deep Jungle Waterfall Cavern Low Chest",
             "id": 2651371,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5246,6 +5347,7 @@
           {
             "name": "Deep Jungle Waterfall Cavern Middle Chest",
             "id": 2651372,
+            "region": "Deep Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5290,6 +5392,7 @@
           {
             "name": "Agrabah Aladdin's House Main Street Entrance Chest",
             "id": 2652294,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5308,6 +5411,7 @@
           {
             "name": "Agrabah Aladdin's House Plaza Entrance Chest",
             "id": 2652331,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5326,6 +5430,7 @@
           {
             "name": "Agrabah Alley Chest",
             "id": 2652011,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5344,6 +5449,7 @@
           {
             "name": "Agrabah Bazaar Across Windows Chest",
             "id": 2652012,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5362,6 +5468,7 @@
           {
             "name": "Agrabah Bazaar High Corner Chest",
             "id": 2652013,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5380,6 +5487,7 @@
           {
             "name": "Agrabah Cave of Wonders Bottomless Hall Across Chasm Chest",
             "id": 2652172,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5398,6 +5506,7 @@
           {
             "name": "Agrabah Cave of Wonders Bottomless Hall Pillar Chest",
             "id": 2652171,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5439,6 +5548,7 @@
           {
             "name": "Agrabah Cave of Wonders Bottomless Hall Raised Platform Chest",
             "id": 2652134,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5457,6 +5567,7 @@
           {
             "name": "Agrabah Cave of Wonders Dark Chamber Abu Gem Chest",
             "id": 2652251,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5475,6 +5586,7 @@
           {
             "name": "Agrabah Cave of Wonders Dark Chamber Across from Relic Chamber Entrance Chest",
             "id": 2652252,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5493,6 +5605,7 @@
           {
             "name": "Agrabah Cave of Wonders Dark Chamber Bridge Chest",
             "id": 2652253,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5511,6 +5624,7 @@
           {
             "name": "Agrabah Cave of Wonders Dark Chamber Near Save Chest",
             "id": 2652254,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5529,6 +5643,7 @@
           {
             "name": "Agrabah Cave of Wonders Entrance Left Chest",
             "id": 2652094,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5547,6 +5662,7 @@
           {
             "name": "Agrabah Cave of Wonders Entrance Tall Tower Chest",
             "id": 2652131,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5622,6 +5738,7 @@
           {
             "name": "Agrabah Cave of Wonders Entrance White Trinity Chest",
             "id": 2652332,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5643,6 +5760,7 @@
           {
             "name": "Agrabah Cave of Wonders Hall High Left Chest",
             "id": 2652132,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5661,6 +5779,7 @@
           {
             "name": "Agrabah Cave of Wonders Hall Near Bottomless Hall Chest",
             "id": 2652133,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5679,6 +5798,7 @@
           {
             "name": "Agrabah Cave of Wonders Hidden Room Left Chest",
             "id": 2652293,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5732,6 +5852,7 @@
           {
             "name": "Agrabah Cave of Wonders Hidden Room Right Chest",
             "id": 2652292,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5785,6 +5906,7 @@
           {
             "name": "Agrabah Cave of Wonders Relic Chamber Jump from Stairs Chest",
             "id": 2652213,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5803,6 +5925,7 @@
           {
             "name": "Agrabah Cave of Wonders Relic Chamber Stairs Chest",
             "id": 2652214,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5821,6 +5944,7 @@
           {
             "name": "Agrabah Cave of Wonders Silent Chamber Blue Trinity Chest",
             "id": 2652291,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5842,6 +5966,7 @@
           {
             "name": "Agrabah Cave of Wonders Treasure Room Above Fire Chest",
             "id": 2652212,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5860,6 +5985,7 @@
           {
             "name": "Agrabah Cave of Wonders Treasure Room Across Platforms Chest",
             "id": 2652173,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5878,6 +6004,7 @@
           {
             "name": "Agrabah Cave of Wonders Treasure Room Large Treasure Pile Chest",
             "id": 2652211,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5896,6 +6023,7 @@
           {
             "name": "Agrabah Cave of Wonders Treasure Room Small Treasure Pile Chest",
             "id": 2652174,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5914,6 +6042,7 @@
           {
             "name": "Agrabah Defeat Jafar Blizzard Event",
             "id": 2656052,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5932,6 +6061,7 @@
           {
             "name": "Agrabah Defeat Jafar Genie Ansem's Report 1",
             "id": 2657018,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5950,6 +6080,7 @@
           {
             "name": "Agrabah Defeat Jafar Genie Fire Event",
             "id": 2656053,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5968,6 +6099,7 @@
           {
             "name": "Agrabah Defeat Pot Centipede Ray of Light Event",
             "id": 2656051,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5986,6 +6118,7 @@
           {
             "name": "Agrabah Main Street High Above Alley Entrance Chest",
             "id": 2652051,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6004,6 +6137,7 @@
           {
             "name": "Agrabah Main Street High Above Palace Gates Entrance Chest",
             "id": 2652052,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6055,6 +6189,7 @@
           {
             "name": "Agrabah Main Street Right Palace Entrance Chest",
             "id": 2652014,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6073,6 +6208,7 @@
           {
             "name": "Agrabah Palace Gates High Close to Palace Chest",
             "id": 2652091,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6085,16 +6221,10 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "High Jump"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Progressive Glide"
-                            }
+                            "High Jump",
+                            "Progressive Glide"
                           ]
                         }
                       ]
@@ -6177,6 +6307,7 @@
           {
             "name": "Agrabah Palace Gates High Opposite Palace Chest",
             "id": 2652054,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6211,6 +6342,7 @@
           {
             "name": "Agrabah Palace Gates Low Chest",
             "id": 2652053,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6229,6 +6361,7 @@
           {
             "name": "Agrabah Plaza By Storage Chest",
             "id": 2651972,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6247,6 +6380,7 @@
           {
             "name": "Agrabah Plaza Raised Terrace Chest",
             "id": 2651973,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6265,6 +6399,7 @@
           {
             "name": "Agrabah Plaza Top Corner Chest",
             "id": 2651974,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6283,6 +6418,7 @@
           {
             "name": "Agrabah Seal Keyhole Genie Event",
             "id": 2656054,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6301,6 +6437,7 @@
           {
             "name": "Agrabah Seal Keyhole Green Trinity Event",
             "id": 2656056,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6319,6 +6456,7 @@
           {
             "name": "Agrabah Seal Keyhole Three Wishes Event",
             "id": 2656055,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6337,6 +6475,7 @@
           {
             "name": "Agrabah Storage Behind Barrel Chest",
             "id": 2652093,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6355,6 +6494,7 @@
           {
             "name": "Agrabah Storage Green Trinity Chest",
             "id": 2652092,
+            "region": "Agrabah",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6399,6 +6539,7 @@
           {
             "name": "Monstro Chamber 2 Ground Chest",
             "id": 2653534,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6417,6 +6558,7 @@
           {
             "name": "Monstro Chamber 2 Platform Chest",
             "id": 2653571,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6435,6 +6577,7 @@
           {
             "name": "Monstro Chamber 3 Ground Chest",
             "id": 2653614,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6453,6 +6596,7 @@
           {
             "name": "Monstro Chamber 3 Near Chamber 6 Entrance Chest",
             "id": 2653652,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6471,6 +6615,7 @@
           {
             "name": "Monstro Chamber 3 Platform Above Chamber 2 Entrance Chest",
             "id": 2653651,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6505,6 +6650,7 @@
           {
             "name": "Monstro Chamber 3 Platform Near Chamber 6 Entrance Chest",
             "id": 2653653,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6539,6 +6685,7 @@
           {
             "name": "Monstro Chamber 5 Atop Barrel Chest",
             "id": 2653733,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6573,6 +6720,7 @@
           {
             "name": "Monstro Chamber 5 Low 1st Chest",
             "id": 2653771,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6591,6 +6739,7 @@
           {
             "name": "Monstro Chamber 5 Low 2nd Chest",
             "id": 2653734,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6609,6 +6758,7 @@
           {
             "name": "Monstro Chamber 5 Platform Chest",
             "id": 2653613,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6630,6 +6780,7 @@
           {
             "name": "Monstro Chamber 6 Low Chest",
             "id": 2652452,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6648,6 +6799,7 @@
           {
             "name": "Monstro Chamber 6 Other Platform Chest",
             "id": 2652413,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6657,16 +6809,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "High Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Progressive Glide"
-                        }
+                        "High Jump",
+                        "Progressive Glide"
                       ]
                     }
                   ]
@@ -6706,6 +6852,7 @@
           {
             "name": "Monstro Chamber 6 Platform Near Chamber 5 Entrance Chest",
             "id": 2652414,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6740,6 +6887,7 @@
           {
             "name": "Monstro Chamber 6 Raised Area Near Chamber 1 Entrance Chest",
             "id": 2652451,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6749,16 +6897,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "High Jump"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Progressive Glide"
-                        }
+                        "High Jump",
+                        "Progressive Glide"
                       ]
                     }
                   ]
@@ -6798,6 +6940,7 @@
           {
             "name": "Monstro Chamber 6 White Trinity Chest",
             "id": 2655092,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6819,6 +6962,7 @@
           {
             "name": "Monstro Defeat Parasite Cage I Goofy Cheer Event",
             "id": 2656061,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6837,6 +6981,7 @@
           {
             "name": "Monstro Defeat Parasite Cage II Stop Event",
             "id": 2656062,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6883,6 +7028,7 @@
           {
             "name": "Monstro Mouth Boat Deck Chest",
             "id": 2653454,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6901,6 +7047,7 @@
           {
             "name": "Monstro Mouth Green Trinity Top of Boat Chest",
             "id": 2653494,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6946,6 +7093,7 @@
           {
             "name": "Monstro Mouth High Platform Across from Boat Chest",
             "id": 2653492,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6979,6 +7127,7 @@
           {
             "name": "Monstro Mouth High Platform Boat Side Chest",
             "id": 2653491,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7012,6 +7161,7 @@
           {
             "name": "Monstro Mouth High Platform Near Teeth Chest",
             "id": 2653732,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7030,6 +7180,7 @@
           {
             "name": "Monstro Mouth Near Ship Chest",
             "id": 2653493,
+            "region": "Monstro",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7093,6 +7244,7 @@
           {
             "name": "Halloween Town Boneyard Tombstone Puzzle Chest",
             "id": 2653052,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7114,6 +7266,7 @@
           {
             "name": "Halloween Town Bridge Left of Gate Chest",
             "id": 2653291,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7123,16 +7276,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7179,6 +7326,7 @@
           {
             "name": "Halloween Town Bridge Right of Gate Chest",
             "id": 2653053,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7188,16 +7336,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7237,22 +7379,17 @@
           {
             "name": "Halloween Town Bridge Under Bridge",
             "id": 2653051,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Forget-Me-Not"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jack-In-The-Box"
-                    }
+                    "Forget-Me-Not",
+                    "Jack-In-The-Box"
                   ]
                 }
               ]
@@ -7270,6 +7407,7 @@
           {
             "name": "Halloween Town Cemetery Behind Grave Chest",
             "id": 2653054,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7279,16 +7417,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7318,6 +7450,7 @@
           {
             "name": "Halloween Town Cemetery Between Graves Chest",
             "id": 2653092,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7327,16 +7460,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7366,6 +7493,7 @@
           {
             "name": "Halloween Town Cemetery By Cat Shape Chest",
             "id": 2653091,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7375,16 +7503,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7414,6 +7536,7 @@
           {
             "name": "Halloween Town Cemetery By Striped Grave Chest",
             "id": 2653292,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7423,16 +7546,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7462,26 +7579,18 @@
           {
             "name": "Halloween Town Defeat Oogie Boogie Ansem's Report 7",
             "id": 2657012,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Forget-Me-Not"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jack-In-The-Box"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Progressive Fire"
-                    }
+                    "Forget-Me-Not",
+                    "Jack-In-The-Box",
+                    "Progressive Fire"
                   ]
                 }
               ]
@@ -7499,6 +7608,7 @@
           {
             "name": "Halloween Town Defeat Oogie Boogie Holy Circlet Event",
             "id": 2656081,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7508,16 +7618,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7547,6 +7651,7 @@
           {
             "name": "Halloween Town Defeat Oogie's Manor Gravity Event",
             "id": 2656082,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7556,16 +7661,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -7595,6 +7694,7 @@
           {
             "name": "Halloween Town Graveyard Forget-Me-Not Event",
             "id": 2656382,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7613,6 +7713,7 @@
           {
             "name": "Halloween Town Guillotine Square High Tower Chest",
             "id": 2653133,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7677,6 +7778,7 @@
           {
             "name": "Halloween Town Guillotine Square Pumpkin Structure Left Chest",
             "id": 2653134,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7771,6 +7873,7 @@
           {
             "name": "Halloween Town Guillotine Square Pumpkin Structure Right Chest",
             "id": 2653294,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7865,6 +7968,7 @@
           {
             "name": "Halloween Town Guillotine Square Ring Jack's Doorbell 3 Times",
             "id": 2656331,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7883,6 +7987,7 @@
           {
             "name": "Halloween Town Guillotine Square Under Jack's House Stairs Chest",
             "id": 2653293,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7901,6 +8006,7 @@
           {
             "name": "Halloween Town Lab Torn Page",
             "id": 2656508,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7919,22 +8025,17 @@
           {
             "name": "Halloween Town Moonlight Hill White Trinity Chest",
             "id": 2653014,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Forget-Me-Not"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "White Trinity"
-                    }
+                    "Forget-Me-Not",
+                    "White Trinity"
                   ]
                 }
               ]
@@ -7952,22 +8053,17 @@
           {
             "name": "Halloween Town Oogie's Manor Entrance Steps Chest",
             "id": 2653171,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Forget-Me-Not"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jack-In-The-Box"
-                    }
+                    "Forget-Me-Not",
+                    "Jack-In-The-Box"
                   ]
                 }
               ]
@@ -7985,26 +8081,18 @@
           {
             "name": "Halloween Town Oogie's Manor Grounds Red Trinity Chest",
             "id": 2653132,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Forget-Me-Not"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jack-In-The-Box"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Red Trinity"
-                    }
+                    "Forget-Me-Not",
+                    "Jack-In-The-Box",
+                    "Red Trinity"
                   ]
                 }
               ]
@@ -8022,6 +8110,7 @@
           {
             "name": "Halloween Town Oogie's Manor Hollow Chest",
             "id": 2653131,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8031,16 +8120,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -8070,22 +8153,17 @@
           {
             "name": "Halloween Town Oogie's Manor Inside Entrance Chest",
             "id": 2653172,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Forget-Me-Not"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Jack-In-The-Box"
-                    }
+                    "Forget-Me-Not",
+                    "Jack-In-The-Box"
                   ]
                 }
               ]
@@ -8103,6 +8181,7 @@
           {
             "name": "Halloween Town Oogie's Manor Lower Iron Cage Chest",
             "id": 2653093,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8112,16 +8191,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -8151,6 +8224,7 @@
           {
             "name": "Halloween Town Oogie's Manor Upper Iron Cage Chest",
             "id": 2653094,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8160,16 +8234,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -8199,6 +8267,7 @@
           {
             "name": "Halloween Town Seal Keyhole Pumpkinhead Event",
             "id": 2656083,
+            "region": "Halloween Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8208,16 +8277,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Forget-Me-Not"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Jack-In-The-Box"
-                        }
+                        "Forget-Me-Not",
+                        "Jack-In-The-Box"
                       ]
                     }
                   ]
@@ -8270,6 +8333,7 @@
           {
             "name": "Neverland Cabin Chest",
             "id": 2653813,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8291,6 +8355,7 @@
           {
             "name": "Neverland Captain's Cabin Chest",
             "id": 2654053,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8312,6 +8377,7 @@
           {
             "name": "Neverland Clock Tower Chest",
             "id": 2654014,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8353,6 +8419,7 @@
           {
             "name": "Neverland Defeat Anti Sora Raven's Claw Event",
             "id": 2656091,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8374,6 +8441,7 @@
           {
             "name": "Neverland Defeat Captain Hook Ars Arcanum Event",
             "id": 2656097,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8395,6 +8463,7 @@
           {
             "name": "Neverland Defeat Hook Ansem's Report 9",
             "id": 2657028,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8416,6 +8485,7 @@
           {
             "name": "Neverland Encounter Hook Cure Event",
             "id": 2656092,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8437,6 +8507,7 @@
           {
             "name": "Neverland Galley Chest",
             "id": 2653812,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8455,6 +8526,7 @@
           {
             "name": "Neverland Hold Aero Chest",
             "id": 2656344,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8476,6 +8548,7 @@
           {
             "name": "Neverland Hold Flight 1st Chest",
             "id": 2653814,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8520,6 +8593,7 @@
           {
             "name": "Neverland Hold Flight 2nd Chest",
             "id": 2654051,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8564,6 +8638,7 @@
           {
             "name": "Neverland Hold Yellow Trinity Green Chest",
             "id": 2654052,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8585,6 +8660,7 @@
           {
             "name": "Neverland Hold Yellow Trinity Left Blue Chest",
             "id": 2653811,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8606,6 +8682,7 @@
           {
             "name": "Neverland Hold Yellow Trinity Right Blue Chest",
             "id": 2653774,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8627,6 +8704,7 @@
           {
             "name": "Neverland Pirate Ship Crows Nest Chest",
             "id": 2653773,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8648,22 +8726,17 @@
           {
             "name": "Neverland Pirate Ship Deck White Trinity Chest",
             "id": 2653772,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Green Trinity"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "White Trinity"
-                    }
+                    "Green Trinity",
+                    "White Trinity"
                   ]
                 }
               ]
@@ -8681,6 +8754,7 @@
           {
             "name": "Neverland Seal Keyhole Fairy Harp Event",
             "id": 2656093,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8702,6 +8776,7 @@
           {
             "name": "Neverland Seal Keyhole Glide Event",
             "id": 2656095,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8723,6 +8798,7 @@
           {
             "name": "Neverland Seal Keyhole Tinker Bell Event",
             "id": 2656094,
+            "region": "Neverland",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8767,6 +8843,7 @@
           {
             "name": "Hollow Bastion Base Level Bubble Under the Wall Platform Chest",
             "id": 2654331,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8785,6 +8862,7 @@
           {
             "name": "Hollow Bastion Base Level Near Crystal Switch Chest",
             "id": 2654333,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8803,6 +8881,7 @@
           {
             "name": "Hollow Bastion Base Level Platform Near Entrance Chest",
             "id": 2654332,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8821,6 +8900,7 @@
           {
             "name": "Hollow Bastion Castle Gates Freestanding Pillar Chest",
             "id": 2654133,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8879,6 +8959,7 @@
           {
             "name": "Hollow Bastion Castle Gates Gravity Chest",
             "id": 2654132,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8976,6 +9057,7 @@
           {
             "name": "Hollow Bastion Castle Gates High Pillar Chest",
             "id": 2654134,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9034,6 +9116,7 @@
           {
             "name": "Hollow Bastion Defeat Behemoth Omega Arts Event",
             "id": 2656105,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9058,6 +9141,7 @@
           {
             "name": "Hollow Bastion Defeat Dragon Maleficent Fireglow Event",
             "id": 2656103,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9082,6 +9166,7 @@
           {
             "name": "Hollow Bastion Defeat Maleficent Ansem's Report 5",
             "id": 2657014,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9106,6 +9191,7 @@
           {
             "name": "Hollow Bastion Defeat Maleficent Donald Cheer Event",
             "id": 2656102,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9130,6 +9216,7 @@
           {
             "name": "Hollow Bastion Defeat Riku I White Trinity Event",
             "id": 2656101,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9148,6 +9235,7 @@
           {
             "name": "Hollow Bastion Defeat Riku II Ragnarok Event",
             "id": 2656104,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9172,6 +9260,7 @@
           {
             "name": "Hollow Bastion Dungeon By Candles Chest",
             "id": 2654373,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9190,6 +9279,7 @@
           {
             "name": "Hollow Bastion Dungeon Corner Chest",
             "id": 2654374,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9208,6 +9298,7 @@
           {
             "name": "Hollow Bastion Entrance Hall Emblem Piece (Chest)",
             "id": 2656517,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9255,6 +9346,7 @@
           {
             "name": "Hollow Bastion Entrance Hall Emblem Piece (Flame)",
             "id": 2656516,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9348,6 +9440,7 @@
           {
             "name": "Hollow Bastion Entrance Hall Emblem Piece (Fountain)",
             "id": 2656519,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9395,6 +9488,7 @@
           {
             "name": "Hollow Bastion Entrance Hall Emblem Piece (Statue)",
             "id": 2656518,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9454,6 +9548,7 @@
           {
             "name": "Hollow Bastion Entrance Hall Left of Emblem Door Chest",
             "id": 2654212,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9508,6 +9603,7 @@
           {
             "name": "Hollow Bastion Grand Hall Left of Gate Chest",
             "id": 2654492,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9532,6 +9628,7 @@
           {
             "name": "Hollow Bastion Grand Hall Oblivion Chest",
             "id": 2654491,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9556,6 +9653,7 @@
           {
             "name": "Hollow Bastion Grand Hall Steps Right Side Chest",
             "id": 2654454,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9580,6 +9678,7 @@
           {
             "name": "Hollow Bastion Great Crest After Battle Platform Chest",
             "id": 2654172,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9604,6 +9703,7 @@
           {
             "name": "Hollow Bastion Great Crest Lower Chest",
             "id": 2654171,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9628,6 +9728,7 @@
           {
             "name": "Hollow Bastion High Tower 1st Gravity Chest",
             "id": 2654174,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9664,6 +9765,7 @@
           {
             "name": "Hollow Bastion High Tower 2nd Gravity Chest",
             "id": 2654173,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9700,6 +9802,7 @@
           {
             "name": "Hollow Bastion High Tower Above Sliding Blocks Chest",
             "id": 2654211,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9724,6 +9827,7 @@
           {
             "name": "Hollow Bastion Library 1st Floor Turn the Carousel Chest",
             "id": 2654214,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9742,6 +9846,7 @@
           {
             "name": "Hollow Bastion Library 2nd Floor Turn the Carousel 1st Chest",
             "id": 2654252,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9760,6 +9865,7 @@
           {
             "name": "Hollow Bastion Library 2nd Floor Turn the Carousel 2nd Chest",
             "id": 2654253,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9778,6 +9884,7 @@
           {
             "name": "Hollow Bastion Library Speak to Aerith Cure",
             "id": 2656523,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9802,6 +9909,7 @@
           {
             "name": "Hollow Bastion Library Speak to Belle Divine Rose",
             "id": 2656522,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9826,6 +9934,7 @@
           {
             "name": "Hollow Bastion Library Top of Bookshelf Chest",
             "id": 2654213,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9844,6 +9953,7 @@
           {
             "name": "Hollow Bastion Library Top of Bookshelf Turn the Carousel Chest",
             "id": 2654251,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9862,6 +9972,7 @@
           {
             "name": "Hollow Bastion Lift Stop Heartless Sigil Door Gravity Chest",
             "id": 2654294,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9898,6 +10009,7 @@
           {
             "name": "Hollow Bastion Lift Stop Library Node After High Tower Switch Gravity Chest",
             "id": 2654254,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9934,6 +10046,7 @@
           {
             "name": "Hollow Bastion Lift Stop Library Node Gravity Chest",
             "id": 2654291,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -9955,6 +10068,7 @@
           {
             "name": "Hollow Bastion Lift Stop Outside Library Gravity Chest",
             "id": 2654293,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -9976,6 +10090,7 @@
           {
             "name": "Hollow Bastion Lift Stop Under High Tower Sliding Blocks Chest",
             "id": 2654292,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9995,16 +10110,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Glide"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Progressive Gravity"
-                        }
+                        "Progressive Glide",
+                        "Progressive Gravity"
                       ]
                     }
                   ]
@@ -10024,6 +10133,7 @@
           {
             "name": "Hollow Bastion Rising Falls Floating Platform Near Bubble Chest",
             "id": 2654094,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10064,6 +10174,7 @@
           {
             "name": "Hollow Bastion Rising Falls Floating Platform Near Save Chest",
             "id": 2654093,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10104,6 +10215,7 @@
           {
             "name": "Hollow Bastion Rising Falls High Platform Chest",
             "id": 2654131,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10172,6 +10284,7 @@
           {
             "name": "Hollow Bastion Rising Falls Under Water 1st Chest",
             "id": 2654091,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10190,6 +10303,7 @@
           {
             "name": "Hollow Bastion Rising Falls Under Water 2nd Chest",
             "id": 2654092,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10214,6 +10328,7 @@
           {
             "name": "Hollow Bastion Rising Falls Water's Surface Chest",
             "id": 2654054,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10232,6 +10347,7 @@
           {
             "name": "Hollow Bastion Rising Falls White Trinity Chest",
             "id": 2654494,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10253,6 +10369,7 @@
           {
             "name": "Hollow Bastion Speak to Princesses Fire Event",
             "id": 2656106,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10277,6 +10394,7 @@
           {
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 10",
             "id": 2657027,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10301,6 +10419,7 @@
           {
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 2",
             "id": 2657017,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10325,6 +10444,7 @@
           {
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 4",
             "id": 2657015,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10349,6 +10469,7 @@
           {
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 6",
             "id": 2657013,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10373,6 +10494,7 @@
           {
             "name": "Hollow Bastion Waterway Blizzard on Bubble Chest",
             "id": 2654371,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10422,6 +10544,7 @@
           {
             "name": "Hollow Bastion Waterway Near Save Chest",
             "id": 2654334,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10440,6 +10563,7 @@
           {
             "name": "Hollow Bastion Waterway Unlock Passage from Base Level Chest",
             "id": 2654372,
+            "region": "Hollow Bastion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10481,6 +10605,7 @@
           {
             "name": "End of the World Defeat Chernabog Superglide Event",
             "id": 2656111,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10499,6 +10624,7 @@
           {
             "name": "End of the World Final Dimension 10th Chest",
             "id": 2654573,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10517,6 +10643,7 @@
           {
             "name": "End of the World Final Dimension 1st Chest",
             "id": 2654531,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10535,6 +10662,7 @@
           {
             "name": "End of the World Final Dimension 2nd Chest",
             "id": 2654532,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10553,6 +10681,7 @@
           {
             "name": "End of the World Final Dimension 3rd Chest",
             "id": 2654533,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10571,6 +10700,7 @@
           {
             "name": "End of the World Final Dimension 4th Chest",
             "id": 2654534,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10589,6 +10719,7 @@
           {
             "name": "End of the World Final Dimension 5th Chest",
             "id": 2654571,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10607,6 +10738,7 @@
           {
             "name": "End of the World Final Dimension 6th Chest",
             "id": 2654572,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10625,6 +10757,7 @@
           {
             "name": "End of the World Final Dimension 7th Chest",
             "id": 2654612,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10643,6 +10776,7 @@
           {
             "name": "End of the World Final Dimension 8th Chest",
             "id": 2654611,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10661,6 +10795,7 @@
           {
             "name": "End of the World Final Dimension 9th Chest",
             "id": 2654574,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10679,6 +10814,7 @@
           {
             "name": "End of the World Final Rest Chest",
             "id": 2654772,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10697,6 +10833,7 @@
           {
             "name": "End of the World Giant Crevasse 1st Chest",
             "id": 2654651,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10730,6 +10867,7 @@
           {
             "name": "End of the World Giant Crevasse 2nd Chest",
             "id": 2654653,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10748,6 +10886,7 @@
           {
             "name": "End of the World Giant Crevasse 3rd Chest",
             "id": 2654613,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10766,6 +10905,7 @@
           {
             "name": "End of the World Giant Crevasse 4th Chest",
             "id": 2654652,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10819,6 +10959,7 @@
           {
             "name": "End of the World Giant Crevasse 5th Chest",
             "id": 2654614,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10840,6 +10981,7 @@
           {
             "name": "End of the World World Terminus 100 Acre Wood Chest",
             "id": 2654734,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10858,6 +11000,7 @@
           {
             "name": "End of the World World Terminus Agrabah Chest",
             "id": 2654694,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10909,6 +11052,7 @@
           {
             "name": "End of the World World Terminus Atlantica Chest",
             "id": 2654731,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10927,6 +11071,7 @@
           {
             "name": "End of the World World Terminus Deep Jungle Chest",
             "id": 2654693,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10945,6 +11090,7 @@
           {
             "name": "End of the World World Terminus Halloween Town Chest",
             "id": 2654732,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10963,6 +11109,7 @@
           {
             "name": "End of the World World Terminus Neverland Chest",
             "id": 2654733,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10981,6 +11128,7 @@
           {
             "name": "End of the World World Terminus Olympus Coliseum Chest",
             "id": 2654692,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10999,6 +11147,7 @@
           {
             "name": "End of the World World Terminus Traverse Town Chest",
             "id": 2654654,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11017,6 +11166,7 @@
           {
             "name": "End of the World World Terminus Wonderland Chest",
             "id": 2654691,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11035,6 +11185,7 @@
           {
             "name": "Final Ansem",
             "id": 2659999,
+            "region": "End of the World",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11116,6 +11267,7 @@
           {
             "name": "Level 001",
             "id": 2658001,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11170,6 +11322,7 @@
           {
             "name": "Level 002",
             "id": 2658002,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11224,6 +11377,7 @@
           {
             "name": "Level 003",
             "id": 2658003,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11278,6 +11432,7 @@
           {
             "name": "Level 004",
             "id": 2658004,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11332,6 +11487,7 @@
           {
             "name": "Level 005",
             "id": 2658005,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11386,6 +11542,7 @@
           {
             "name": "Level 006",
             "id": 2658006,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11440,6 +11597,7 @@
           {
             "name": "Level 007",
             "id": 2658007,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11494,6 +11652,7 @@
           {
             "name": "Level 008",
             "id": 2658008,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11548,6 +11707,7 @@
           {
             "name": "Level 009",
             "id": 2658009,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11602,6 +11762,7 @@
           {
             "name": "Level 010",
             "id": 2658010,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11656,6 +11817,7 @@
           {
             "name": "Level 011",
             "id": 2658011,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11710,6 +11872,7 @@
           {
             "name": "Level 012",
             "id": 2658012,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11764,6 +11927,7 @@
           {
             "name": "Level 013",
             "id": 2658013,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11818,6 +11982,7 @@
           {
             "name": "Level 014",
             "id": 2658014,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11872,6 +12037,7 @@
           {
             "name": "Level 015",
             "id": 2658015,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11926,6 +12092,7 @@
           {
             "name": "Level 016",
             "id": 2658016,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11980,6 +12147,7 @@
           {
             "name": "Level 017",
             "id": 2658017,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12034,6 +12202,7 @@
           {
             "name": "Level 018",
             "id": 2658018,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12088,6 +12257,7 @@
           {
             "name": "Level 019",
             "id": 2658019,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12142,6 +12312,7 @@
           {
             "name": "Level 020",
             "id": 2658020,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12196,6 +12367,7 @@
           {
             "name": "Level 021",
             "id": 2658021,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12250,6 +12422,7 @@
           {
             "name": "Level 022",
             "id": 2658022,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12304,6 +12477,7 @@
           {
             "name": "Level 023",
             "id": 2658023,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12358,6 +12532,7 @@
           {
             "name": "Level 024",
             "id": 2658024,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12412,6 +12587,7 @@
           {
             "name": "Level 025",
             "id": 2658025,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12466,6 +12642,7 @@
           {
             "name": "Level 026",
             "id": 2658026,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12520,6 +12697,7 @@
           {
             "name": "Level 027",
             "id": 2658027,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12574,6 +12752,7 @@
           {
             "name": "Level 028",
             "id": 2658028,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12628,6 +12807,7 @@
           {
             "name": "Level 029",
             "id": 2658029,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12682,6 +12862,7 @@
           {
             "name": "Level 030",
             "id": 2658030,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12736,6 +12917,7 @@
           {
             "name": "Level 031",
             "id": 2658031,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12790,6 +12972,7 @@
           {
             "name": "Level 032",
             "id": 2658032,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12844,6 +13027,7 @@
           {
             "name": "Level 033",
             "id": 2658033,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12898,6 +13082,7 @@
           {
             "name": "Level 034",
             "id": 2658034,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -12952,6 +13137,7 @@
           {
             "name": "Level 035",
             "id": 2658035,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13006,6 +13192,7 @@
           {
             "name": "Level 036",
             "id": 2658036,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13060,6 +13247,7 @@
           {
             "name": "Level 037",
             "id": 2658037,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13114,6 +13302,7 @@
           {
             "name": "Level 038",
             "id": 2658038,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13168,6 +13357,7 @@
           {
             "name": "Level 039",
             "id": 2658039,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13222,6 +13412,7 @@
           {
             "name": "Level 040",
             "id": 2658040,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13276,6 +13467,7 @@
           {
             "name": "Level 041",
             "id": 2658041,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13330,6 +13522,7 @@
           {
             "name": "Level 042",
             "id": 2658042,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13384,6 +13577,7 @@
           {
             "name": "Level 043",
             "id": 2658043,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13438,6 +13632,7 @@
           {
             "name": "Level 044",
             "id": 2658044,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13492,6 +13687,7 @@
           {
             "name": "Level 045",
             "id": 2658045,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13546,6 +13742,7 @@
           {
             "name": "Level 046",
             "id": 2658046,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13600,6 +13797,7 @@
           {
             "name": "Level 047",
             "id": 2658047,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13654,6 +13852,7 @@
           {
             "name": "Level 048",
             "id": 2658048,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13708,6 +13907,7 @@
           {
             "name": "Level 049",
             "id": 2658049,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13762,6 +13962,7 @@
           {
             "name": "Level 050",
             "id": 2658050,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13816,6 +14017,7 @@
           {
             "name": "Level 051",
             "id": 2658051,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13870,6 +14072,7 @@
           {
             "name": "Level 052",
             "id": 2658052,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13924,6 +14127,7 @@
           {
             "name": "Level 053",
             "id": 2658053,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -13978,6 +14182,7 @@
           {
             "name": "Level 054",
             "id": 2658054,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14032,6 +14237,7 @@
           {
             "name": "Level 055",
             "id": 2658055,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14086,6 +14292,7 @@
           {
             "name": "Level 056",
             "id": 2658056,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14140,6 +14347,7 @@
           {
             "name": "Level 057",
             "id": 2658057,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14194,6 +14402,7 @@
           {
             "name": "Level 058",
             "id": 2658058,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14248,6 +14457,7 @@
           {
             "name": "Level 059",
             "id": 2658059,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14302,6 +14512,7 @@
           {
             "name": "Level 060",
             "id": 2658060,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14356,6 +14567,7 @@
           {
             "name": "Level 061",
             "id": 2658061,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14410,6 +14622,7 @@
           {
             "name": "Level 062",
             "id": 2658062,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14464,6 +14677,7 @@
           {
             "name": "Level 063",
             "id": 2658063,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14518,6 +14732,7 @@
           {
             "name": "Level 064",
             "id": 2658064,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14572,6 +14787,7 @@
           {
             "name": "Level 065",
             "id": 2658065,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14626,6 +14842,7 @@
           {
             "name": "Level 066",
             "id": 2658066,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14680,6 +14897,7 @@
           {
             "name": "Level 067",
             "id": 2658067,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14734,6 +14952,7 @@
           {
             "name": "Level 068",
             "id": 2658068,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14788,6 +15007,7 @@
           {
             "name": "Level 069",
             "id": 2658069,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14842,6 +15062,7 @@
           {
             "name": "Level 070",
             "id": 2658070,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14896,6 +15117,7 @@
           {
             "name": "Level 071",
             "id": 2658071,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -14950,6 +15172,7 @@
           {
             "name": "Level 072",
             "id": 2658072,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15004,6 +15227,7 @@
           {
             "name": "Level 073",
             "id": 2658073,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15058,6 +15282,7 @@
           {
             "name": "Level 074",
             "id": 2658074,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15112,6 +15337,7 @@
           {
             "name": "Level 075",
             "id": 2658075,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15166,6 +15392,7 @@
           {
             "name": "Level 076",
             "id": 2658076,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15220,6 +15447,7 @@
           {
             "name": "Level 077",
             "id": 2658077,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15274,6 +15502,7 @@
           {
             "name": "Level 078",
             "id": 2658078,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15328,6 +15557,7 @@
           {
             "name": "Level 079",
             "id": 2658079,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15382,6 +15612,7 @@
           {
             "name": "Level 080",
             "id": 2658080,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15436,6 +15667,7 @@
           {
             "name": "Level 081",
             "id": 2658081,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15490,6 +15722,7 @@
           {
             "name": "Level 082",
             "id": 2658082,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15544,6 +15777,7 @@
           {
             "name": "Level 083",
             "id": 2658083,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15598,6 +15832,7 @@
           {
             "name": "Level 084",
             "id": 2658084,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15652,6 +15887,7 @@
           {
             "name": "Level 085",
             "id": 2658085,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15706,6 +15942,7 @@
           {
             "name": "Level 086",
             "id": 2658086,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15760,6 +15997,7 @@
           {
             "name": "Level 087",
             "id": 2658087,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15814,6 +16052,7 @@
           {
             "name": "Level 088",
             "id": 2658088,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15868,6 +16107,7 @@
           {
             "name": "Level 089",
             "id": 2658089,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15922,6 +16162,7 @@
           {
             "name": "Level 090",
             "id": 2658090,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -15976,6 +16217,7 @@
           {
             "name": "Level 091",
             "id": 2658091,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16030,6 +16272,7 @@
           {
             "name": "Level 092",
             "id": 2658092,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16084,6 +16327,7 @@
           {
             "name": "Level 093",
             "id": 2658093,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16138,6 +16382,7 @@
           {
             "name": "Level 094",
             "id": 2658094,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16192,6 +16437,7 @@
           {
             "name": "Level 095",
             "id": 2658095,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16246,6 +16492,7 @@
           {
             "name": "Level 096",
             "id": 2658096,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16300,6 +16547,7 @@
           {
             "name": "Level 097",
             "id": 2658097,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16354,6 +16602,7 @@
           {
             "name": "Level 098",
             "id": 2658098,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16408,6 +16657,7 @@
           {
             "name": "Level 099",
             "id": 2658099,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -16462,6 +16712,7 @@
           {
             "name": "Level 100",
             "id": 2658100,
+            "region": "Levels",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -22319,29 +22570,772 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Abilities",
-      "Accessory",
-      "Camping",
-      "Cups",
-      "Everything",
-      "Item",
-      "Key",
-      "Keyblades",
-      "Level Up",
-      "Limited Level Up",
-      "Magic",
-      "Puppies",
-      "Reports",
-      "Shared Abilities",
-      "Stat Ups",
-      "Summons",
-      "Torn Pages",
-      "Trinities",
-      "VIC",
-      "Weapons",
-      "Worlds"
-    ]
+    "1": {
+      "VIC": [
+        "Victory"
+      ],
+      "Item": [
+        "Megalixir",
+        "Mega-Potion",
+        "Potion",
+        "Hi-Potion",
+        "Mega-Ether",
+        "Ether",
+        "Elixir"
+      ],
+      "Accessory": [
+        "Element Ring",
+        "Dark Ring",
+        "Raven's Claw",
+        "Ribbon",
+        "Shiva Belt",
+        "Angel Bangle",
+        "Ifrit's Horn",
+        "Guard Earring",
+        "Prime Cap",
+        "Obsidian Ring",
+        "Three Stars",
+        "Thundaga Ring",
+        "Gaia Bangle",
+        "Brave Warrior",
+        "Inferno Band",
+        "Cosmic Arts",
+        "Ability Stud",
+        "Thundara Ring",
+        "Titan Chain",
+        "White Fang",
+        "Power Chain",
+        "Thundagun Band",
+        "Protera Chain",
+        "Holy Circlet",
+        "Ramuh Belt",
+        "Thunder Ring",
+        "Golem Chain",
+        "Fire Ring",
+        "Chaos Ring",
+        "Protega Chain",
+        "Firaga Ring",
+        "Royal Crown",
+        "Ifrit Belt",
+        "Blizzaga Ring",
+        "Fira Ring",
+        "Blizzara Ring",
+        "Energy Bangle",
+        "Omega Arts",
+        "EXP Earring",
+        "Protect Chain",
+        "Blizzard Ring",
+        "Master Earring",
+        "Firagun Band",
+        "Blizzagun Band",
+        "Magic Armlet",
+        "Heartguard",
+        "Ray of Light",
+        "Rune Armlet",
+        "Crystal Crown",
+        "EXP Ring",
+        "Moogle Badge",
+        "EXP Bracelet",
+        "Atlas Armlet",
+        "EXP Necklace"
+      ],
+      "Keyblades": [
+        "Wooden Sword",
+        "Three Wishes",
+        "Jungle King",
+        "Divine Rose",
+        "Metal Chocobo",
+        "Wishing Star",
+        "Oathkeeper",
+        "Fairy Harp",
+        "Spellbinder",
+        "Lionheart",
+        "Lady Luck",
+        "Pumpkinhead",
+        "Olympia",
+        "Diamond Dust",
+        "Crabclaw",
+        "One-Winged Angel",
+        "Ultima Weapon",
+        "Oblivion"
+      ],
+      "Weapons": [
+        "Warhammer",
+        "Mythril Shield",
+        "Stout Shield",
+        "Genji Shield",
+        "Golem Shield",
+        "Gigas Fist",
+        "Silver Mallet",
+        "Save the King",
+        "Lord Fortune",
+        "Wisdom Staff",
+        "Wizard's Relic",
+        "Dream Rod (Donald)",
+        "Fantasista",
+        "Mighty Shield",
+        "Magus Staff",
+        "Grand Mallet",
+        "Seven Elements",
+        "Adamant Shield",
+        "Violetta",
+        "Meteor Strike",
+        "Smasher",
+        "Herc's Shield",
+        "Shooting Star",
+        "Defender",
+        "Onyx Shield",
+        "Morning Star",
+        "Save the Queen",
+        "Dream Shield (Goofy)"
+      ],
+      "Camping": [
+        "Tent",
+        "Cottage",
+        "Camping Set"
+      ],
+      "Reports": [
+        "Ansem's Report 12",
+        "Ansem's Report 6",
+        "Ansem's Report 11",
+        "Ansem's Report 7",
+        "Ansem's Report 13",
+        "Ansem's Report 9",
+        "Ansem's Report 10",
+        "Ansem's Report 1",
+        "Ansem's Report 5",
+        "Ansem's Report 2",
+        "Ansem's Report 8",
+        "Ansem's Report 3",
+        "Ansem's Report 4"
+      ],
+      "Stat Ups": [
+        "Defense Up",
+        "Power Up",
+        "AP Up"
+      ],
+      "Key": [
+        "Cure Arts",
+        "Slides",
+        "Crystal Trident",
+        "Entry Pass",
+        "Emblem Piece (Statue)",
+        "Jack-In-The-Box",
+        "Aero Arts",
+        "Stop Arts",
+        "Footprints",
+        "Thunder Arts",
+        "Emblem Piece (Chest)",
+        "Emblem Piece (Flame)",
+        "Empty Bottle",
+        "Forget-Me-Not",
+        "Emblem Piece (Fountain)",
+        "Blizzard Arts",
+        "Theon Vol. 6",
+        "Postcard",
+        "Gravity Arts",
+        "Fire Arts"
+      ],
+      "Torn Pages": [
+        "Torn Page 3",
+        "Torn Page 4",
+        "Torn Page 1",
+        "Torn Page 2",
+        "Torn Page 5"
+      ],
+      "Shared Abilities": [
+        "Mermaid Kick",
+        "Progressive Glide",
+        "High Jump"
+      ],
+      "Puppies": [
+        "Puppies 55-57",
+        "Puppy 19",
+        "Puppy 59",
+        "Puppy 69",
+        "Puppy 44",
+        "Puppies 04-06",
+        "Puppies 01-03",
+        "Puppy 26",
+        "Puppy 93",
+        "Puppy 94",
+        "Puppy 39",
+        "Puppy 72",
+        "Puppy 73",
+        "Puppies 46-48",
+        "Puppy 67",
+        "Puppy 31",
+        "Puppies 43-45",
+        "Puppies 49-51",
+        "Puppy 15",
+        "Puppy 40",
+        "Puppies 70-72",
+        "Puppy 36",
+        "Puppy 52",
+        "Puppies 85-87",
+        "Puppy 25",
+        "Puppy 87",
+        "Puppies 79-81",
+        "Puppy 74",
+        "Puppy 68",
+        "Puppy 63",
+        "Puppy 88",
+        "Puppy 50",
+        "Puppies 31-33",
+        "Puppies 61-63",
+        "Puppy 54",
+        "Puppy 64",
+        "Puppies 25-27",
+        "Puppy 70",
+        "Puppy 49",
+        "Puppy 75",
+        "Puppy 02",
+        "Puppy 04",
+        "Puppies 40-42",
+        "Puppy 11",
+        "Puppy 78",
+        "Puppies 34-36",
+        "Puppy 81",
+        "Puppy 47",
+        "Puppy 37",
+        "Puppy 23",
+        "Puppy 84",
+        "Puppy 53",
+        "Puppy 92",
+        "Puppy 77",
+        "Puppy 32",
+        "Puppy 82",
+        "Puppies 28-30",
+        "Puppy 85",
+        "Puppy 18",
+        "Puppy 33",
+        "Puppies 37-39",
+        "Puppy 22",
+        "Puppy 65",
+        "Puppy 20",
+        "Puppy 97",
+        "Puppies 64-66",
+        "Puppy 57",
+        "Puppies 94-96",
+        "Puppies 88-90",
+        "Puppy 43",
+        "Puppies 97-99",
+        "Puppy 30",
+        "Puppy 91",
+        "Puppies 58-60",
+        "Puppies 16-18",
+        "Puppy 10",
+        "Puppy 21",
+        "Puppy 76",
+        "Puppy 45",
+        "Puppies 67-69",
+        "Puppy 13",
+        "Puppies 73-75",
+        "Puppy 08",
+        "Puppy 71",
+        "Puppy 07",
+        "Puppies 10-12",
+        "Puppy 90",
+        "Puppies 82-84",
+        "Puppy 60",
+        "Puppy 86",
+        "Puppy 58",
+        "Puppy 41",
+        "Puppies 91-93",
+        "Puppy 28",
+        "Puppies 13-15",
+        "Puppy 16",
+        "Puppy 62",
+        "Puppy 80",
+        "All Puppies",
+        "Puppy 55",
+        "Puppy 46",
+        "Puppy 35",
+        "Puppy 66",
+        "Puppy 05",
+        "Puppy 98",
+        "Puppy 89",
+        "Puppy 24",
+        "Puppy 06",
+        "Puppy 95",
+        "Puppy 12",
+        "Puppy 17",
+        "Puppies 76-78",
+        "Puppy 42",
+        "Puppy 48",
+        "Puppy 09",
+        "Puppy 56",
+        "Puppy 34",
+        "Puppy 96",
+        "Puppy 61",
+        "Puppy 51",
+        "Puppies 22-24",
+        "Puppy 01",
+        "Puppy 99",
+        "Puppy 79",
+        "Puppy 03",
+        "Puppies 19-21",
+        "Puppies 07-09",
+        "Puppy 38",
+        "Puppy 14",
+        "Puppy 83",
+        "Puppy 27",
+        "Puppies 52-54",
+        "Puppy 29"
+      ],
+      "Abilities": [
+        "Sonic Blade",
+        "Guard",
+        "Tech Boost",
+        "Second Chance",
+        "Strike Raid",
+        "Lucky Strike",
+        "Berserk",
+        "Vortex",
+        "MP Haste",
+        "Combo Plus",
+        "Aerial Sweep",
+        "Scan",
+        "Hurricane Blast",
+        "Dodge Roll",
+        "EXP Zero",
+        "Blitz",
+        "Cheer",
+        "Ars Arcanum",
+        "Jackpot",
+        "Gravity Break",
+        "Trinity Limit",
+        "Counterattack",
+        "Ragnarok",
+        "Leaf Bracer",
+        "Encounter Plus",
+        "Critical Plus",
+        "Slapshot",
+        "Zantetsuken",
+        "Treasure Magnet",
+        "Ripple Drive",
+        "MP Rage",
+        "Air Combo Plus",
+        "Combo Master",
+        "Sliding Dash",
+        "Stun Impact"
+      ],
+      "Level Up": [
+        "Max AP Increase",
+        "Max HP Increase",
+        "Defense Increase",
+        "Max MP Increase",
+        "Strength Increase"
+      ],
+      "Limited Level Up": [
+        "Item Slot Increase",
+        "Accessory Slot Increase"
+      ],
+      "Summons": [
+        "Genie",
+        "Bambi",
+        "Dumbo",
+        "Simba",
+        "Tinker Bell",
+        "Mushu"
+      ],
+      "Magic": [
+        "Progressive Aero",
+        "Progressive Cure",
+        "Progressive Stop",
+        "Progressive Thunder",
+        "Progressive Fire",
+        "Progressive Gravity",
+        "Progressive Blizzard"
+      ],
+      "Worlds": [
+        "Agrabah",
+        "End of the World",
+        "Wonderland",
+        "Olympus Coliseum",
+        "Hollow Bastion",
+        "Monstro",
+        "Deep Jungle",
+        "Neverland",
+        "Atlantica",
+        "Halloween Town"
+      ],
+      "Trinities": [
+        "White Trinity",
+        "Red Trinity",
+        "Yellow Trinity",
+        "Blue Trinity",
+        "Green Trinity"
+      ],
+      "Cups": [
+        "Hercules Cup",
+        "Pegasus Cup",
+        "Phil Cup"
+      ],
+      "Everything": [
+        "Wishing Star",
+        "Puppy 69",
+        "Ansem's Report 9",
+        "Emblem Piece (Statue)",
+        "Puppy 94",
+        "Puppy 39",
+        "Ribbon",
+        "Second Chance",
+        "Max HP Increase",
+        "Shiva Belt",
+        "Puppy 72",
+        "Angel Bangle",
+        "Puppies 46-48",
+        "Ifrit's Horn",
+        "Guard Earring",
+        "Puppies 49-51",
+        "Puppy 31",
+        "Puppies 43-45",
+        "Scan",
+        "Puppy 40",
+        "Shooting Star",
+        "Dodge Roll",
+        "Ability Stud",
+        "White Fang",
+        "Morning Star",
+        "Ramuh Belt",
+        "Gravity Arts",
+        "Puppies 70-72",
+        "Theon Vol. 6",
+        "Puppy 36",
+        "Puppy 52",
+        "Mega-Potion",
+        "Puppies 85-87",
+        "Ansem's Report 7",
+        "Puppies 79-81",
+        "Blizzara Ring",
+        "Ansem's Report 12",
+        "Megalixir",
+        "Blizzard Ring",
+        "Ripple Drive",
+        "Puppy 63",
+        "Puppy 88",
+        "Heartguard",
+        "Puppy 50",
+        "Emblem Piece (Fountain)",
+        "Puppies 61-63",
+        "Puppy 64",
+        "Puppy 70",
+        "Crystal Crown",
+        "Puppy 49",
+        "Puppy 75",
+        "Puppy 02",
+        "Stun Impact",
+        "Puppy 04",
+        "Element Ring",
+        "Wooden Sword",
+        "Torn Page 3",
+        "Puppy 78",
+        "Puppies 34-36",
+        "Max MP Increase",
+        "Bambi",
+        "Entry Pass",
+        "Puppy 81",
+        "Accessory Slot Increase",
+        "Lucky Strike",
+        "Vortex",
+        "Atlantica",
+        "Emblem Piece (Flame)",
+        "Progressive Cure",
+        "Gaia Bangle",
+        "Camping Set",
+        "One-Winged Angel",
+        "Blitz",
+        "Fire Ring",
+        "Puppy 53",
+        "Puppy 92",
+        "Puppy 77",
+        "Puppy 32",
+        "Protega Chain",
+        "Puppy 82",
+        "Wizard's Relic",
+        "Emblem Piece (Chest)",
+        "Puppy 18",
+        "Puppy 33",
+        "Blizzagun Band",
+        "Puppies 37-39",
+        "Puppy 22",
+        "Dumbo",
+        "MP Rage",
+        "Puppy 65",
+        "Puppies 64-66",
+        "Ray of Light",
+        "Hollow Bastion",
+        "Sliding Dash",
+        "Prime Cap",
+        "EXP Necklace",
+        "Mega-Ether",
+        "Torn Page 4",
+        "Puppy 43",
+        "Sonic Blade",
+        "Puppy 30",
+        "Progressive Gravity",
+        "Silver Mallet",
+        "Ansem's Report 2",
+        "Puppies 58-60",
+        "Puppy 21",
+        "Lady Luck",
+        "Hercules Cup",
+        "Forget-Me-Not",
+        "Combo Plus",
+        "Grand Mallet",
+        "Puppy 71",
+        "Postcard",
+        "Oblivion",
+        "Puppies 82-84",
+        "Puppy 60",
+        "Thunder Ring",
+        "Gravity Break",
+        "Puppy 41",
+        "Puppies 91-93",
+        "Genji Shield",
+        "Puppies 13-15",
+        "Stop Arts",
+        "Slapshot",
+        "Puppy 16",
+        "Puppy 62",
+        "Blizzaga Ring",
+        "Puppy 80",
+        "Puppy 55",
+        "Ether",
+        "Elixir",
+        "Defender",
+        "EXP Ring",
+        "Puppy 06",
+        "Genie",
+        "Firagun Band",
+        "Progressive Stop",
+        "Puppy 17",
+        "Dark Ring",
+        "Stout Shield",
+        "Guard",
+        "Tech Boost",
+        "Thunder Arts",
+        "Puppy 48",
+        "Adamant Shield",
+        "Meteor Strike",
+        "Brave Warrior",
+        "Titan Chain",
+        "Puppy 96",
+        "Blue Trinity",
+        "Puppy 61",
+        "Ars Arcanum",
+        "Puppy 51",
+        "Puppies 22-24",
+        "Mythril Shield",
+        "Crystal Trident",
+        "Counterattack",
+        "Puppy 79",
+        "Puppy 03",
+        "Encounter Plus",
+        "Royal Crown",
+        "Footprints",
+        "Neverland",
+        "Simba",
+        "Magus Staff",
+        "Defense Increase",
+        "Torn Page 1",
+        "Air Combo Plus",
+        "End of the World",
+        "Puppy 83",
+        "Phil Cup",
+        "Puppies 52-54",
+        "EXP Bracelet",
+        "Puppy 29",
+        "Puppies 55-57",
+        "Three Wishes",
+        "Puppy 19",
+        "Puppy 59",
+        "Puppy 44",
+        "Cottage",
+        "Puppies 04-06",
+        "Puppies 01-03",
+        "Puppy 26",
+        "Puppy 93",
+        "Progressive Blizzard",
+        "Strike Raid",
+        "Deep Jungle",
+        "Puppy 73",
+        "Puppy 67",
+        "Agrabah",
+        "Puppy 15",
+        "Diamond Dust",
+        "Hi-Potion",
+        "Thundaga Ring",
+        "Inferno Band",
+        "Herc's Shield",
+        "Ansem's Report 1",
+        "Save the Queen",
+        "Ansem's Report 10",
+        "Cheer",
+        "Holy Circlet",
+        "Jackpot",
+        "Trinity Limit",
+        "Chaos Ring",
+        "Firaga Ring",
+        "Ansem's Report 5",
+        "Puppy 25",
+        "Puppy 87",
+        "Wisdom Staff",
+        "Pegasus Cup",
+        "Ansem's Report 8",
+        "Item Slot Increase",
+        "Puppy 74",
+        "EXP Earring",
+        "Green Trinity",
+        "Puppy 68",
+        "Treasure Magnet",
+        "Ansem's Report 11",
+        "Olympia",
+        "Magic Armlet",
+        "Puppies 31-33",
+        "Puppy 54",
+        "Onyx Shield",
+        "Puppies 25-27",
+        "Power Up",
+        "Progressive Aero",
+        "Puppies 40-42",
+        "Puppy 11",
+        "Torn Page 2",
+        "Golem Shield",
+        "Save the King",
+        "Monstro",
+        "Puppy 47",
+        "Berserk",
+        "Victory",
+        "Puppy 37",
+        "MP Haste",
+        "AP Up",
+        "Progressive Fire",
+        "Three Stars",
+        "Violetta",
+        "Puppy 23",
+        "Puppy 84",
+        "Olympus Coliseum",
+        "Cosmic Arts",
+        "Ansem's Report 3",
+        "Ansem's Report 4",
+        "Protera Chain",
+        "Fire Arts",
+        "Jungle King",
+        "Warhammer",
+        "Ragnarok",
+        "Leaf Bracer",
+        "Aero Arts",
+        "Puppies 28-30",
+        "Ifrit Belt",
+        "Tent",
+        "Zantetsuken",
+        "Puppy 85",
+        "Lionheart",
+        "Master Earring",
+        "Empty Bottle",
+        "Puppy 97",
+        "Ansem's Report 13",
+        "Puppy 20",
+        "Puppy 57",
+        "Puppies 94-96",
+        "Dream Shield (Goofy)",
+        "Defense Up",
+        "Halloween Town",
+        "Oathkeeper",
+        "Puppies 88-90",
+        "Wonderland",
+        "Gigas Fist",
+        "Jack-In-The-Box",
+        "Yellow Trinity",
+        "Puppy 91",
+        "Dream Rod (Donald)",
+        "Puppies 16-18",
+        "Spellbinder",
+        "Fantasista",
+        "Puppy 10",
+        "Red Trinity",
+        "Mighty Shield",
+        "Puppy 45",
+        "Puppy 76",
+        "Seven Elements",
+        "Puppies 67-69",
+        "Puppy 13",
+        "Puppies 73-75",
+        "Puppy 08",
+        "EXP Zero",
+        "White Trinity",
+        "Puppy 07",
+        "Puppies 10-12",
+        "Thundagun Band",
+        "Puppy 90",
+        "Torn Page 5",
+        "Puppy 86",
+        "Puppy 58",
+        "Puppy 28",
+        "Critical Plus",
+        "Omega Arts",
+        "All Puppies",
+        "Protect Chain",
+        "Puppy 46",
+        "Puppy 35",
+        "Rune Armlet",
+        "Puppy 66",
+        "Crabclaw",
+        "Puppy 05",
+        "Puppy 98",
+        "Moogle Badge",
+        "Puppy 89",
+        "Combo Master",
+        "Puppy 24",
+        "Puppy 95",
+        "High Jump",
+        "Divine Rose",
+        "Puppy 12",
+        "Raven's Claw",
+        "Puppies 76-78",
+        "Mermaid Kick",
+        "Puppy 42",
+        "Puppy 09",
+        "Max AP Increase",
+        "Puppy 56",
+        "Puppy 34",
+        "Obsidian Ring",
+        "Aerial Sweep",
+        "Mushu",
+        "Hurricane Blast",
+        "Thundara Ring",
+        "Power Chain",
+        "Strength Increase",
+        "Golem Chain",
+        "Potion",
+        "Blizzard Arts",
+        "Cure Arts",
+        "Slides",
+        "Metal Chocobo",
+        "Progressive Glide",
+        "Puppy 01",
+        "Puppy 99",
+        "Puppies 19-21",
+        "Lord Fortune",
+        "Puppies 07-09",
+        "Energy Bangle",
+        "Fira Ring",
+        "Ansem's Report 6",
+        "Fairy Harp",
+        "Pumpkinhead",
+        "Smasher",
+        "Puppy 14",
+        "Puppy 38",
+        "Ultima Weapon",
+        "Puppy 27",
+        "Progressive Thunder",
+        "Tinker Bell",
+        "Puppies 97-99",
+        "Atlas Armlet"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

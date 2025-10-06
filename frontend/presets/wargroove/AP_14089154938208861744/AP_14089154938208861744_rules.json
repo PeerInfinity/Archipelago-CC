@@ -223,6 +223,7 @@
           {
             "name": "Humble Beginnings: Caesar",
             "id": 53001,
+            "region": "Humble Beginnings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -241,6 +242,7 @@
           {
             "name": "Humble Beginnings: Chest 1",
             "id": 53002,
+            "region": "Humble Beginnings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -259,6 +261,7 @@
           {
             "name": "Humble Beginnings: Chest 2",
             "id": 53003,
+            "region": "Humble Beginnings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -277,6 +280,7 @@
           {
             "name": "Humble Beginnings: Victory",
             "id": 53004,
+            "region": "Humble Beginnings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -439,6 +443,7 @@
           {
             "name": "Best Friendssss: Find Sedge",
             "id": 53005,
+            "region": "Best Friendssss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -457,6 +462,7 @@
           {
             "name": "Best Friendssss: Victory",
             "id": 53006,
+            "region": "Best Friendssss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -619,6 +625,7 @@
           {
             "name": "A Knight's Folly: Caesar",
             "id": 53007,
+            "region": "A Knight's Folly",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -637,6 +644,7 @@
           {
             "name": "A Knight's Folly: Victory",
             "id": 53008,
+            "region": "A Knight's Folly",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -799,6 +807,7 @@
           {
             "name": "Denrunaway: Chest",
             "id": 53009,
+            "region": "Denrunaway",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -817,6 +826,7 @@
           {
             "name": "Denrunaway: Victory",
             "id": 53010,
+            "region": "Denrunaway",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -899,6 +909,7 @@
           {
             "name": "Dragon Freeway: Victory",
             "id": 53011,
+            "region": "Dragon Freeway",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -987,6 +998,7 @@
           {
             "name": "Deep Thicket: Find Sedge",
             "id": 53012,
+            "region": "Deep Thicket",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1011,6 +1023,7 @@
           {
             "name": "Deep Thicket: Victory",
             "id": 53013,
+            "region": "Deep Thicket",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1099,6 +1112,7 @@
           {
             "name": "Corrupted Inlet: Victory",
             "id": 53014,
+            "region": "Corrupted Inlet",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1252,6 +1266,7 @@
           {
             "name": "Mage Mayhem: Caesar",
             "id": 53015,
+            "region": "Mage Mayhem",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1291,6 +1306,7 @@
           {
             "name": "Mage Mayhem: Victory",
             "id": 53016,
+            "region": "Mage Mayhem",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1434,6 +1450,7 @@
           {
             "name": "Endless Knight: Victory",
             "id": 53017,
+            "region": "Endless Knight",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1562,6 +1579,7 @@
           {
             "name": "Ambushed in the Middle: Victory (Blue)",
             "id": 53018,
+            "region": "Ambushed in the Middle",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1586,6 +1604,7 @@
           {
             "name": "Ambushed in the Middle: Victory (Green)",
             "id": 53019,
+            "region": "Ambushed in the Middle",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1674,6 +1693,7 @@
           {
             "name": "The Churning Sea: Victory",
             "id": 53020,
+            "region": "The Churning Sea",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1792,6 +1812,7 @@
           {
             "name": "Frigid Archery: Light the Torch",
             "id": 53021,
+            "region": "Frigid Archery",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1831,6 +1852,7 @@
           {
             "name": "Frigid Archery: Victory",
             "id": 53022,
+            "region": "Frigid Archery",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1919,6 +1941,7 @@
           {
             "name": "Archery Lessons: Chest",
             "id": 53023,
+            "region": "Archery Lessons",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1958,6 +1981,7 @@
           {
             "name": "Archery Lessons: Victory",
             "id": 53024,
+            "region": "Archery Lessons",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2020,6 +2044,7 @@
           {
             "name": "Surrounded: Caesar",
             "id": 53025,
+            "region": "Surrounded",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2048,6 +2073,7 @@
           {
             "name": "Surrounded: Victory",
             "id": 53026,
+            "region": "Surrounded",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2099,6 +2125,7 @@
           {
             "name": "Darkest Knight: Victory",
             "id": 53027,
+            "region": "Darkest Knight",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2150,6 +2177,7 @@
           {
             "name": "Robbed: Victory",
             "id": 53028,
+            "region": "Robbed",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2216,6 +2244,7 @@
           {
             "name": "Open Season: Caesar",
             "id": 53029,
+            "region": "Open Season",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2259,6 +2288,7 @@
           {
             "name": "Open Season: Victory",
             "id": 53030,
+            "region": "Open Season",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2325,6 +2355,7 @@
           {
             "name": "Doggo Mountain: Find all the Dogs",
             "id": 53031,
+            "region": "Doggo Mountain",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2353,6 +2384,7 @@
           {
             "name": "Doggo Mountain: Victory",
             "id": 53032,
+            "region": "Doggo Mountain",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2404,6 +2436,7 @@
           {
             "name": "Tenri's Fall: Victory",
             "id": 53033,
+            "region": "Tenri's Fall",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2480,6 +2513,7 @@
           {
             "name": "Foolish Canal: Victory",
             "id": 53038,
+            "region": "Foolish Canal",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2546,6 +2580,7 @@
           {
             "name": "Master of the Lake: Victory",
             "id": 53034,
+            "region": "Master of the Lake",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2597,6 +2632,7 @@
           {
             "name": "A Ballista's Revenge: Victory",
             "id": 53035,
+            "region": "A Ballista's Revenge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2648,6 +2684,7 @@
           {
             "name": "Rebel Village: Victory (Pink)",
             "id": 53036,
+            "region": "Rebel Village",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2676,6 +2713,7 @@
           {
             "name": "Rebel Village: Victory (Red)",
             "id": 53037,
+            "region": "Rebel Village",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2727,6 +2765,7 @@
           {
             "name": "Wargroove Finale: Victory",
             "id": null,
+            "region": "Wargroove Finale",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3241,9 +3280,41 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Spearman",
+        "Golem",
+        "Turtle",
+        "Harpoon Ship",
+        "Harpy",
+        "Final Walls",
+        "Wagon",
+        "Eastern Bridges",
+        "Knight",
+        "Heavensong Commanders",
+        "Archer",
+        "Balloon",
+        "Outlaw Commanders",
+        "Ballista",
+        "Commander Defense Boost",
+        "Thief",
+        "Felheim Commanders",
+        "Final Bridges",
+        "Requiem Commanders",
+        "Income Boost",
+        "Cherrystone Commanders",
+        "Dragon",
+        "Barge",
+        "Witch",
+        "Floran Commanders",
+        "Merfolk",
+        "Southern Walls",
+        "Mage",
+        "Rifleman",
+        "Warship",
+        "Final Sickle"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

@@ -232,20 +232,11 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Gun"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Magic Orb"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Magic Wand"
-                            }
+                            "Gun",
+                            "Magic Orb",
+                            "Magic Wand"
                           ]
                         }
                       ]
@@ -303,20 +294,11 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Gun"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Hero's Laurels"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Magic Orb"
-                            }
+                            "Gun",
+                            "Hero's Laurels",
+                            "Magic Orb"
                           ]
                         }
                       ]
@@ -387,20 +369,11 @@
                         "method": "has_all",
                         "args": [
                           {
-                            "type": "list",
+                            "type": "constant",
                             "value": [
-                              {
-                                "type": "constant",
-                                "value": "Blue Questagon"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Green Questagon"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Red Questagon"
-                              }
+                              "Blue Questagon",
+                              "Green Questagon",
+                              "Red Questagon"
                             ]
                           }
                         ]
@@ -439,16 +412,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Hero's Laurels"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Lantern"
-                        }
+                        "Hero's Laurels",
+                        "Lantern"
                       ]
                     }
                   ]
@@ -465,6 +432,7 @@
           {
             "name": "Dark Tomb Checkpoint - [Passage To Dark Tomb] Page Pickup",
             "id": 509342414,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -483,6 +451,7 @@
           {
             "name": "Lower Mountain - Page Before Door",
             "id": 509342500,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -501,6 +470,7 @@
           {
             "name": "Changing Room - Normal Chest",
             "id": 509342501,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -519,6 +489,7 @@
           {
             "name": "Fortress Courtyard - Chest Near Cave",
             "id": 509342502,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -574,6 +545,7 @@
           {
             "name": "Fortress Courtyard - Near Fuse",
             "id": 509342503,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -592,6 +564,7 @@
           {
             "name": "Fortress Courtyard - Below Walkway",
             "id": 509342504,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -610,6 +583,7 @@
           {
             "name": "Fortress Courtyard - Page Near Cave",
             "id": 509342505,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -665,6 +639,7 @@
           {
             "name": "West Furnace - Lantern Pickup",
             "id": 509342506,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -680,16 +655,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Hero's Laurels"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Magic Wand"
-                        }
+                        "Hero's Laurels",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -709,6 +678,7 @@
           {
             "name": "Maze Cave - Maze Room Chest",
             "id": 509342507,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -727,6 +697,7 @@
           {
             "name": "Old House - Normal Chest",
             "id": 509342508,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -764,6 +735,7 @@
           {
             "name": "Old House - Shield Pickup",
             "id": 509342509,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -801,6 +773,7 @@
           {
             "name": "Overworld - [West] Obscured Behind Windmill",
             "id": 509342510,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -819,6 +792,7 @@
           {
             "name": "Overworld - [South] Beach Chest",
             "id": 509342511,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -837,6 +811,7 @@
           {
             "name": "Overworld - [West] Obscured Near Well",
             "id": 509342512,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -855,6 +830,7 @@
           {
             "name": "Overworld - [Central] Bombable Wall",
             "id": 509342513,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -893,6 +869,7 @@
           {
             "name": "Overworld - [Northwest] Chest Near Turret",
             "id": 509342514,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -911,6 +888,7 @@
           {
             "name": "Overworld - [East] Chest Near Pots",
             "id": 509342515,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -929,6 +907,7 @@
           {
             "name": "Overworld - [Northwest] Chest Near Golden Obelisk",
             "id": 509342516,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -947,6 +926,7 @@
           {
             "name": "Overworld - [Southwest] South Chest Near Guard",
             "id": 509342517,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -965,6 +945,7 @@
           {
             "name": "Overworld - [Southwest] West Beach Guarded By Turret",
             "id": 509342518,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -983,6 +964,7 @@
           {
             "name": "Overworld - [Southwest] Chest Guarded By Turret",
             "id": 509342519,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1001,6 +983,7 @@
           {
             "name": "Overworld - [Northwest] Shadowy Corner Chest",
             "id": 509342520,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1019,6 +1002,7 @@
           {
             "name": "Overworld - [Southwest] Obscured In Tunnel To Beach",
             "id": 509342521,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1037,22 +1021,17 @@
           {
             "name": "Overworld - [Southwest] Grapple Chest Over Walkway",
             "id": 509342522,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Hero's Laurels"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Magic Orb"
-                    }
+                    "Hero's Laurels",
+                    "Magic Orb"
                   ]
                 }
               ]
@@ -1070,22 +1049,17 @@
           {
             "name": "Overworld - [Northwest] Chest Beneath Quarry Gate",
             "id": 509342523,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Hero's Laurels"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Magic Orb"
-                    }
+                    "Hero's Laurels",
+                    "Magic Orb"
                   ]
                 }
               ]
@@ -1103,6 +1077,7 @@
           {
             "name": "Overworld - [Southeast] Chest Near Swamp",
             "id": 509342524,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1121,6 +1096,7 @@
           {
             "name": "Overworld - [Southwest] From West Garden",
             "id": 509342525,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1142,6 +1118,7 @@
           {
             "name": "Overworld - [East] Grapple Chest",
             "id": 509342526,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1163,22 +1140,17 @@
           {
             "name": "Overworld - [Southwest] West Beach Guarded By Turret 2",
             "id": 509342527,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Hero's Laurels"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Magic Orb"
-                    }
+                    "Hero's Laurels",
+                    "Magic Orb"
                   ]
                 }
               ]
@@ -1196,6 +1168,7 @@
           {
             "name": "Overworld - [Southwest] Beach Chest Near Flowers",
             "id": 509342528,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1214,6 +1187,7 @@
           {
             "name": "Overworld - [Southwest] Bombable Wall Near Fountain",
             "id": 509342529,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1252,6 +1226,7 @@
           {
             "name": "Overworld - [West] Chest After Bell",
             "id": 509342530,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1301,6 +1276,7 @@
           {
             "name": "Overworld - [Southwest] Tunnel Guarded By Turret",
             "id": 509342531,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1319,6 +1295,7 @@
           {
             "name": "Overworld - [East] Between Ladders Near Ruined Passage",
             "id": 509342532,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1337,6 +1314,7 @@
           {
             "name": "Overworld - [Northeast] Chest Above Patrol Cave",
             "id": 509342533,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1355,6 +1333,7 @@
           {
             "name": "Overworld - [Southwest] Beach Chest Beneath Guard",
             "id": 509342534,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1373,6 +1352,7 @@
           {
             "name": "Overworld - [Central] Chest Across From Well",
             "id": 509342535,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1391,6 +1371,7 @@
           {
             "name": "Overworld - [Northwest] Chest Near Quarry Gate",
             "id": 509342536,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1409,6 +1390,7 @@
           {
             "name": "Overworld - [East] Chest In Trees",
             "id": 509342537,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1427,6 +1409,7 @@
           {
             "name": "Overworld - [West] Chest Behind Moss Wall",
             "id": 509342538,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1445,6 +1428,7 @@
           {
             "name": "Overworld - [South] Beach Page",
             "id": 509342539,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1463,6 +1447,7 @@
           {
             "name": "Overworld - [Southeast] Page on Pillar by Swamp",
             "id": 509342540,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1484,6 +1469,7 @@
           {
             "name": "Overworld - [Southwest] Key Pickup",
             "id": 509342541,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1502,6 +1488,7 @@
           {
             "name": "Overworld - [West] Key Pickup",
             "id": 509342542,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1520,6 +1507,7 @@
           {
             "name": "Overworld - [East] Page Near Secret Shop",
             "id": 509342543,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1538,6 +1526,7 @@
           {
             "name": "Overworld - [Southwest] Fountain Page",
             "id": 509342544,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1559,6 +1548,7 @@
           {
             "name": "Overworld - [Northwest] Page on Pillar by Dark Tomb",
             "id": 509342545,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1580,6 +1570,7 @@
           {
             "name": "Overworld - [Northwest] Fire Wand Pickup",
             "id": 509342546,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1598,6 +1589,7 @@
           {
             "name": "Overworld - [West] Page On Teleporter",
             "id": 509342547,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1616,6 +1608,7 @@
           {
             "name": "Overworld - [Northwest] Page By Well",
             "id": 509342548,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1634,6 +1627,7 @@
           {
             "name": "Patrol Cave - Normal Chest",
             "id": 509342549,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1652,6 +1646,7 @@
           {
             "name": "Ruined Shop - Chest 1",
             "id": 509342550,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1670,6 +1665,7 @@
           {
             "name": "Ruined Shop - Chest 2",
             "id": 509342551,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1688,6 +1684,7 @@
           {
             "name": "Ruined Shop - Chest 3",
             "id": 509342552,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1706,6 +1703,7 @@
           {
             "name": "Ruined Passage - Page Pickup",
             "id": 509342553,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1724,6 +1722,7 @@
           {
             "name": "Shop - Potion 1",
             "id": 509342554,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1744,6 +1743,7 @@
           {
             "name": "Shop - Potion 2",
             "id": 509342555,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1764,6 +1764,7 @@
           {
             "name": "Shop - Coin 1",
             "id": 509342556,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1784,6 +1785,7 @@
           {
             "name": "Shop - Coin 2",
             "id": 509342557,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1804,6 +1806,7 @@
           {
             "name": "Special Shop - Secret Page Pickup",
             "id": 509342558,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1825,6 +1828,7 @@
           {
             "name": "Stick House - Stick Chest",
             "id": 509342559,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1843,6 +1847,7 @@
           {
             "name": "Sealed Temple - Page Pickup",
             "id": 509342560,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1904,6 +1909,7 @@
           {
             "name": "Hourglass Cave - Hourglass Chest",
             "id": 509342561,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1922,6 +1928,7 @@
           {
             "name": "Far Shore - Secret Chest",
             "id": 509342562,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1954,6 +1961,7 @@
           {
             "name": "Far Shore - Page Pickup",
             "id": 509342563,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1974,6 +1982,7 @@
           {
             "name": "Coins in the Well - 10 Coins",
             "id": 509342564,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1999,6 +2008,7 @@
           {
             "name": "Coins in the Well - 15 Coins",
             "id": 509342565,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2024,6 +2034,7 @@
           {
             "name": "Coins in the Well - 3 Coins",
             "id": 509342566,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2049,6 +2060,7 @@
           {
             "name": "Coins in the Well - 6 Coins",
             "id": 509342567,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2074,6 +2086,7 @@
           {
             "name": "Secret Gathering Place - 20 Fairy Reward",
             "id": 509342568,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2099,6 +2112,7 @@
           {
             "name": "Secret Gathering Place - 10 Fairy Reward",
             "id": 509342569,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2124,6 +2138,7 @@
           {
             "name": "West Garden - [Central Highlands] After Garden Knight",
             "id": 509342696,
+            "region": "Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2196,6 +2211,7 @@
           {
             "name": "Overworld - [West] Moss Wall Holy Cross",
             "id": 509342570,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2214,6 +2230,7 @@
           {
             "name": "Overworld - [Southwest] Flowers Holy Cross",
             "id": 509342571,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2232,6 +2249,7 @@
           {
             "name": "Overworld - [Southwest] Fountain Holy Cross",
             "id": 509342572,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2250,6 +2268,7 @@
           {
             "name": "Overworld - [Northeast] Flowers Holy Cross",
             "id": 509342573,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2268,6 +2287,7 @@
           {
             "name": "Overworld - [East] Weathervane Holy Cross",
             "id": 509342574,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2286,6 +2306,7 @@
           {
             "name": "Overworld - [West] Windmill Holy Cross",
             "id": 509342575,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2304,6 +2325,7 @@
           {
             "name": "Overworld - [Southwest] Haiku Holy Cross",
             "id": 509342576,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2322,6 +2344,7 @@
           {
             "name": "Overworld - [West] Windchimes Holy Cross",
             "id": 509342577,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2340,6 +2363,7 @@
           {
             "name": "Overworld - [South] Starting Platform Holy Cross",
             "id": 509342578,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2358,6 +2382,7 @@
           {
             "name": "Overworld - [Northwest] Golden Obelisk Page",
             "id": 509342579,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2376,6 +2401,7 @@
           {
             "name": "Old House - Holy Cross Door Page",
             "id": 509342580,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2394,6 +2420,7 @@
           {
             "name": "Cube Cave - Holy Cross Chest",
             "id": 509342581,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2432,6 +2459,7 @@
           {
             "name": "Southeast Cross Door - Chest 3",
             "id": 509342582,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2450,6 +2478,7 @@
           {
             "name": "Southeast Cross Door - Chest 2",
             "id": 509342583,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2468,6 +2497,7 @@
           {
             "name": "Southeast Cross Door - Chest 1",
             "id": 509342584,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2486,6 +2516,7 @@
           {
             "name": "Maze Cave - Maze Room Holy Cross",
             "id": 509342585,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2504,6 +2535,7 @@
           {
             "name": "Caustic Light Cave - Holy Cross Chest",
             "id": 509342586,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2522,6 +2554,7 @@
           {
             "name": "Old House - Holy Cross Chest",
             "id": 509342587,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2570,6 +2603,7 @@
           {
             "name": "Patrol Cave - Holy Cross Chest",
             "id": 509342588,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2588,6 +2622,7 @@
           {
             "name": "Ruined Passage - Holy Cross Chest",
             "id": 509342589,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2606,6 +2641,7 @@
           {
             "name": "Hourglass Cave - Holy Cross Chest",
             "id": 509342590,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2624,6 +2660,7 @@
           {
             "name": "Sealed Temple - Holy Cross Chest",
             "id": 509342591,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2696,6 +2733,7 @@
           {
             "name": "Fountain Cross Door - Page Pickup",
             "id": 509342592,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2714,6 +2752,7 @@
           {
             "name": "Secret Gathering Place - Holy Cross Chest",
             "id": 509342593,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2732,6 +2771,7 @@
           {
             "name": "Top of the Mountain - Page At The Peak",
             "id": 509342594,
+            "region": "Overworld Holy Cross",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2773,6 +2813,7 @@
           {
             "name": "Guardhouse 2 - Upper Floor",
             "id": 509342431,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2791,6 +2832,7 @@
           {
             "name": "Guardhouse 2 - Bottom Floor Secret",
             "id": 509342432,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2809,6 +2851,7 @@
           {
             "name": "Guardhouse 1 - Upper Floor Obscured",
             "id": 509342433,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2827,6 +2870,7 @@
           {
             "name": "Guardhouse 1 - Upper Floor",
             "id": 509342434,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2845,6 +2889,7 @@
           {
             "name": "East Forest - Dancing Fox Spirit Holy Cross",
             "id": 509342435,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2865,6 +2910,7 @@
           {
             "name": "East Forest - Golden Obelisk Holy Cross",
             "id": 509342436,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2885,6 +2931,7 @@
           {
             "name": "East Forest - Ice Rod Grapple Chest",
             "id": 509342437,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2894,20 +2941,11 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Magic Dagger"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Magic Orb"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Magic Wand"
-                        }
+                        "Magic Dagger",
+                        "Magic Orb",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -2933,6 +2971,7 @@
           {
             "name": "East Forest - Above Save Point",
             "id": 509342438,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2951,6 +2990,7 @@
           {
             "name": "East Forest - Above Save Point Obscured",
             "id": 509342439,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2969,6 +3009,7 @@
           {
             "name": "East Forest - From Guardhouse 1 Chest",
             "id": 509342440,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2987,6 +3028,7 @@
           {
             "name": "East Forest - Near Save Point",
             "id": 509342441,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3005,6 +3047,7 @@
           {
             "name": "East Forest - Beneath Spider Chest",
             "id": 509342442,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3023,6 +3066,7 @@
           {
             "name": "East Forest - Near Telescope",
             "id": 509342443,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3041,6 +3085,7 @@
           {
             "name": "East Forest - Spider Chest",
             "id": 509342444,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3059,22 +3104,17 @@
           {
             "name": "East Forest - Lower Dash Chest",
             "id": 509342445,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Hero's Laurels"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Magic Orb"
-                    }
+                    "Hero's Laurels",
+                    "Magic Orb"
                   ]
                 }
               ]
@@ -3092,6 +3132,7 @@
           {
             "name": "East Forest - Lower Grapple Chest",
             "id": 509342446,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3113,6 +3154,7 @@
           {
             "name": "East Forest - Bombable Wall",
             "id": 509342447,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3151,6 +3193,7 @@
           {
             "name": "East Forest - Page On Teleporter",
             "id": 509342448,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3169,6 +3212,7 @@
           {
             "name": "Forest Belltower - Near Save Point",
             "id": 509342449,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3187,6 +3231,7 @@
           {
             "name": "Forest Belltower - After Guard Captain",
             "id": 509342450,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3205,6 +3250,7 @@
           {
             "name": "Forest Belltower - Obscured Near Bell Top Floor",
             "id": 509342451,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3223,6 +3269,7 @@
           {
             "name": "Forest Belltower - Obscured Beneath Bell Bottom Floor",
             "id": 509342452,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3241,6 +3288,7 @@
           {
             "name": "Forest Belltower - Page Pickup",
             "id": 509342453,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3259,6 +3307,7 @@
           {
             "name": "Forest Grave Path - Holy Cross Code by Grave",
             "id": 509342454,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3279,6 +3328,7 @@
           {
             "name": "Forest Grave Path - Above Gate",
             "id": 509342455,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3297,6 +3347,7 @@
           {
             "name": "Forest Grave Path - Obscured Chest",
             "id": 509342456,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3315,6 +3366,7 @@
           {
             "name": "Forest Grave Path - Upper Walkway",
             "id": 509342457,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3333,6 +3385,7 @@
           {
             "name": "Forest Grave Path - Sword Pickup",
             "id": 509342458,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3351,6 +3404,7 @@
           {
             "name": "Hero's Grave - Tooth Relic",
             "id": 509342459,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3383,6 +3437,7 @@
           {
             "name": "Fortress Courtyard - From East Belltower",
             "id": 509342460,
+            "region": "East Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3437,6 +3492,7 @@
           {
             "name": "Dark Tomb - Spike Maze Near Exit",
             "id": 509342424,
+            "region": "Dark Tomb",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3455,6 +3511,7 @@
           {
             "name": "Dark Tomb - 2nd Laser Room",
             "id": 509342425,
+            "region": "Dark Tomb",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3473,6 +3530,7 @@
           {
             "name": "Dark Tomb - 1st Laser Room",
             "id": 509342426,
+            "region": "Dark Tomb",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3491,6 +3549,7 @@
           {
             "name": "Dark Tomb - Spike Maze Upper Walkway",
             "id": 509342427,
+            "region": "Dark Tomb",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3509,6 +3568,7 @@
           {
             "name": "Dark Tomb - Skulls Chest",
             "id": 509342428,
+            "region": "Dark Tomb",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3527,6 +3587,7 @@
           {
             "name": "Dark Tomb - Spike Maze Near Stairs",
             "id": 509342429,
+            "region": "Dark Tomb",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3545,6 +3606,7 @@
           {
             "name": "Dark Tomb - 1st Laser Room Obscured",
             "id": 509342430,
+            "region": "Dark Tomb",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3586,6 +3648,7 @@
           {
             "name": "Beneath the Well - [Powered Secret Room] Chest",
             "id": 509342400,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3606,6 +3669,7 @@
           {
             "name": "Beneath the Well - [Entryway] Chest",
             "id": 509342401,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3624,6 +3688,7 @@
           {
             "name": "Beneath the Well - [Third Room] Beneath Platform Chest",
             "id": 509342402,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3642,6 +3707,7 @@
           {
             "name": "Beneath the Well - [Third Room] Tentacle Chest",
             "id": 509342403,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3660,6 +3726,7 @@
           {
             "name": "Beneath the Well - [Entryway] Obscured Behind Waterfall",
             "id": 509342404,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3678,6 +3745,7 @@
           {
             "name": "Beneath the Well - [Save Room] Upper Floor Chest 1",
             "id": 509342405,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3696,6 +3764,7 @@
           {
             "name": "Beneath the Well - [Save Room] Upper Floor Chest 2",
             "id": 509342406,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3714,6 +3783,7 @@
           {
             "name": "Beneath the Well - [Second Room] Underwater Chest",
             "id": 509342407,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3732,6 +3802,7 @@
           {
             "name": "Beneath the Well - [Back Corridor] Right Secret",
             "id": 509342408,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3750,6 +3821,7 @@
           {
             "name": "Beneath the Well - [Back Corridor] Left Secret",
             "id": 509342409,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3768,6 +3840,7 @@
           {
             "name": "Beneath the Well - [Second Room] Obscured Behind Waterfall",
             "id": 509342410,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3786,6 +3859,7 @@
           {
             "name": "Beneath the Well - [Side Room] Chest By Pots",
             "id": 509342411,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3804,6 +3878,7 @@
           {
             "name": "Beneath the Well - [Side Room] Chest By Phrends",
             "id": 509342412,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3822,6 +3897,7 @@
           {
             "name": "Beneath the Well - [Second Room] Page",
             "id": 509342413,
+            "region": "Beneath the Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3873,6 +3949,7 @@
           {
             "name": "West Furnace - Chest",
             "id": 509342678,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3891,6 +3968,7 @@
           {
             "name": "Overworld - [West] Near West Garden Entrance",
             "id": 509342679,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3909,6 +3987,7 @@
           {
             "name": "West Garden - [Central Highlands] Holy Cross (Blue Lines)",
             "id": 509342680,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3929,6 +4008,7 @@
           {
             "name": "West Garden - [West Lowlands] Tree Holy Cross Chest",
             "id": 509342681,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3961,6 +4041,7 @@
           {
             "name": "West Garden - [Southeast Lowlands] Outside Cave",
             "id": 509342682,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3979,6 +4060,7 @@
           {
             "name": "West Garden - [Central Lowlands] Chest Beneath Faeries",
             "id": 509342683,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3997,6 +4079,7 @@
           {
             "name": "West Garden - [North] Behind Holy Cross Door",
             "id": 509342684,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4017,6 +4100,7 @@
           {
             "name": "West Garden - [Central Highlands] Top of Ladder Before Boss",
             "id": 509342685,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4035,6 +4119,7 @@
           {
             "name": "West Garden - [Central Lowlands] Passage Beneath Bridge",
             "id": 509342686,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4053,6 +4138,7 @@
           {
             "name": "West Garden - [North] Across From Page Pickup",
             "id": 509342687,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4074,6 +4160,7 @@
           {
             "name": "West Garden - [Central Lowlands] Below Left Walkway",
             "id": 509342688,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4095,6 +4182,7 @@
           {
             "name": "West Garden - [West] In Flooded Walkway",
             "id": 509342689,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4116,6 +4204,7 @@
           {
             "name": "West Garden - [West] Past Flooded Walkway",
             "id": 509342690,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4134,6 +4223,7 @@
           {
             "name": "West Garden - [North] Obscured Beneath Hero's Memorial",
             "id": 509342691,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4152,6 +4242,7 @@
           {
             "name": "West Garden - [Central Lowlands] Chest Near Shortcut Bridge",
             "id": 509342692,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4170,6 +4261,7 @@
           {
             "name": "West Garden - [West Highlands] Upper Left Walkway",
             "id": 509342693,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4188,6 +4280,7 @@
           {
             "name": "West Garden - [Central Lowlands] Chest Beneath Save Point",
             "id": 509342694,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4206,6 +4299,7 @@
           {
             "name": "West Garden - [Central Highlands] Behind Guard Captain",
             "id": 509342695,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4224,6 +4318,7 @@
           {
             "name": "West Garden - [South Highlands] Secret Chest Beneath Fuse",
             "id": 509342697,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4242,6 +4337,7 @@
           {
             "name": "West Garden - [East Lowlands] Page Behind Ice Dagger House",
             "id": 509342698,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4285,6 +4381,7 @@
           {
             "name": "West Garden - [North] Page Pickup",
             "id": 509342699,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4303,6 +4400,7 @@
           {
             "name": "West Garden House - [Southeast Lowlands] Ice Dagger Pickup",
             "id": 509342700,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4321,6 +4419,7 @@
           {
             "name": "Hero's Grave - Effigy Relic",
             "id": 509342701,
+            "region": "West Garden",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4395,16 +4494,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Hero's Laurels"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Magic Orb"
-                        }
+                        "Hero's Laurels",
+                        "Magic Orb"
                       ]
                     }
                   ]
@@ -4429,16 +4522,10 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Magic Wand"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Gun"
-                            }
+                            "Gun",
+                            "Magic Wand"
                           ]
                         }
                       ]
@@ -4457,6 +4544,7 @@
           {
             "name": "Ruined Atoll - [West] Near Kevin Block",
             "id": 509342636,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4478,6 +4566,7 @@
           {
             "name": "Ruined Atoll - [South] Upper Floor On Power Line",
             "id": 509342637,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4496,6 +4585,7 @@
           {
             "name": "Ruined Atoll - [South] Chest Near Big Crabs",
             "id": 509342638,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4514,6 +4604,7 @@
           {
             "name": "Ruined Atoll - [North] Guarded By Bird",
             "id": 509342639,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4532,6 +4623,7 @@
           {
             "name": "Ruined Atoll - [Northeast] Chest Beneath Brick Walkway",
             "id": 509342640,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4550,6 +4642,7 @@
           {
             "name": "Ruined Atoll - [Northwest] Bombable Wall",
             "id": 509342641,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4588,6 +4681,7 @@
           {
             "name": "Ruined Atoll - [North] Obscured Beneath Bridge",
             "id": 509342642,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4606,6 +4700,7 @@
           {
             "name": "Ruined Atoll - [South] Upper Floor On Bricks",
             "id": 509342643,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4624,6 +4719,7 @@
           {
             "name": "Ruined Atoll - [South] Near Birds",
             "id": 509342644,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4642,6 +4738,7 @@
           {
             "name": "Ruined Atoll - [Northwest] Behind Envoy",
             "id": 509342645,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4660,6 +4757,7 @@
           {
             "name": "Ruined Atoll - [Southwest] Obscured Behind Fuse",
             "id": 509342646,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4678,6 +4776,7 @@
           {
             "name": "Ruined Atoll - [East] Locked Room Upper Chest",
             "id": 509342647,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4721,6 +4820,7 @@
           {
             "name": "Ruined Atoll - [North] From Lower Overworld Entrance",
             "id": 509342648,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4739,6 +4839,7 @@
           {
             "name": "Ruined Atoll - [East] Locked Room Lower Chest",
             "id": 509342649,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4782,6 +4883,7 @@
           {
             "name": "Ruined Atoll - [Northeast] Chest On Brick Walkway",
             "id": 509342650,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4800,6 +4902,7 @@
           {
             "name": "Ruined Atoll - [Southeast] Chest Near Fuse",
             "id": 509342651,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4818,6 +4921,7 @@
           {
             "name": "Ruined Atoll - [Northeast] Key Pickup",
             "id": 509342652,
+            "region": "Ruined Atoll",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4859,6 +4963,7 @@
           {
             "name": "Frog's Domain - Near Vault",
             "id": 509342479,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4877,6 +4982,7 @@
           {
             "name": "Frog's Domain - Slorm Room",
             "id": 509342480,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4895,22 +5001,17 @@
           {
             "name": "Frog's Domain - Escape Chest",
             "id": 509342481,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Hero's Laurels"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Magic Orb"
-                    }
+                    "Hero's Laurels",
+                    "Magic Orb"
                   ]
                 }
               ]
@@ -4928,22 +5029,17 @@
           {
             "name": "Frog's Domain - Grapple Above Hot Tub",
             "id": 509342482,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Hero's Laurels"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Magic Orb"
-                    }
+                    "Hero's Laurels",
+                    "Magic Orb"
                   ]
                 }
               ]
@@ -4961,6 +5057,7 @@
           {
             "name": "Frog's Domain - Above Vault",
             "id": 509342483,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4979,6 +5076,7 @@
           {
             "name": "Frog's Domain - Main Room Top Floor",
             "id": 509342484,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4997,6 +5095,7 @@
           {
             "name": "Frog's Domain - Main Room Bottom Floor",
             "id": 509342485,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5015,6 +5114,7 @@
           {
             "name": "Frog's Domain - Side Room Secret Passage",
             "id": 509342486,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5033,6 +5133,7 @@
           {
             "name": "Frog's Domain - Side Room Chest",
             "id": 509342487,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5051,22 +5152,17 @@
           {
             "name": "Frog's Domain - Side Room Grapple Secret",
             "id": 509342488,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Hero's Laurels"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Magic Orb"
-                    }
+                    "Hero's Laurels",
+                    "Magic Orb"
                   ]
                 }
               ]
@@ -5084,6 +5180,7 @@
           {
             "name": "Frog's Domain - Magic Orb Pickup",
             "id": 509342489,
+            "region": "Frog's Domain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5125,6 +5222,7 @@
           {
             "name": "Librarian - Hexagon Green",
             "id": 509342490,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5145,6 +5243,7 @@
           {
             "name": "Library Hall - Holy Cross Chest",
             "id": 509342491,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5165,6 +5264,7 @@
           {
             "name": "Library Lab - Chest By Shrine 2",
             "id": 509342492,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5183,6 +5283,7 @@
           {
             "name": "Library Lab - Chest By Shrine 1",
             "id": 509342493,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5201,6 +5302,7 @@
           {
             "name": "Library Lab - Chest By Shrine 3",
             "id": 509342494,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5219,6 +5321,7 @@
           {
             "name": "Library Lab - Behind Chalkboard by Fuse",
             "id": 509342495,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5237,6 +5340,7 @@
           {
             "name": "Library Lab - Page 3",
             "id": 509342496,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5252,16 +5356,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Magic Wand"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Gun"
-                        }
+                        "Gun",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -5281,6 +5379,7 @@
           {
             "name": "Library Lab - Page 1",
             "id": 509342497,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5296,16 +5395,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Magic Wand"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Gun"
-                        }
+                        "Gun",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -5325,6 +5418,7 @@
           {
             "name": "Library Lab - Page 2",
             "id": 509342498,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5340,16 +5434,10 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Magic Wand"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Gun"
-                        }
+                        "Gun",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -5369,6 +5457,7 @@
           {
             "name": "Hero's Grave - Mushroom Relic",
             "id": 509342499,
+            "region": "Library",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5447,6 +5536,7 @@
           {
             "name": "Fortress Leaf Piles - Secret Chest",
             "id": 509342461,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5491,6 +5581,7 @@
           {
             "name": "Fortress Arena - Hexagon Red",
             "id": 509342462,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5534,6 +5625,7 @@
           {
             "name": "Fortress Arena - Siege Engine/Vault Key Pickup",
             "id": 509342463,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5576,6 +5668,7 @@
           {
             "name": "Fortress East Shortcut - Chest Near Slimes",
             "id": 509342464,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5594,6 +5687,7 @@
           {
             "name": "Eastern Vault Fortress - [West Wing] Candles Holy Cross",
             "id": 509342465,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5614,6 +5708,7 @@
           {
             "name": "Eastern Vault Fortress - [West Wing] Dark Room Chest 1",
             "id": 509342466,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5632,6 +5727,7 @@
           {
             "name": "Eastern Vault Fortress - [West Wing] Dark Room Chest 2",
             "id": 509342467,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5650,6 +5746,7 @@
           {
             "name": "Eastern Vault Fortress - [East Wing] Bombable Wall",
             "id": 509342468,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5688,6 +5785,7 @@
           {
             "name": "Eastern Vault Fortress - [West Wing] Page Pickup",
             "id": 509342469,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5706,6 +5804,7 @@
           {
             "name": "Fortress Grave Path - Upper Walkway",
             "id": 509342470,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5724,6 +5823,7 @@
           {
             "name": "Fortress Grave Path - Chest Right of Grave",
             "id": 509342471,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5742,6 +5842,7 @@
           {
             "name": "Fortress Grave Path - Obscured Chest Left of Grave",
             "id": 509342472,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5760,6 +5861,7 @@
           {
             "name": "Hero's Grave - Flowers Relic",
             "id": 509342473,
+            "region": "Eastern Vault Fortress",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5838,6 +5940,7 @@
           {
             "name": "Beneath the Fortress - Bridge",
             "id": 509342474,
+            "region": "Beneath the Vault",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5862,24 +5965,12 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Hero's Laurels"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Magic Wand"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Magic Dagger"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Gun"
-                            }
+                            "Gun",
+                            "Hero's Laurels",
+                            "Magic Dagger",
+                            "Magic Wand"
                           ]
                         }
                       ]
@@ -5901,6 +5992,7 @@
           {
             "name": "Beneath the Fortress - Cell Chest 1",
             "id": 509342475,
+            "region": "Beneath the Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5919,6 +6011,7 @@
           {
             "name": "Beneath the Fortress - Obscured Behind Waterfall",
             "id": 509342476,
+            "region": "Beneath the Vault",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5950,6 +6043,7 @@
           {
             "name": "Beneath the Fortress - Back Room Chest",
             "id": 509342477,
+            "region": "Beneath the Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5968,6 +6062,7 @@
           {
             "name": "Beneath the Fortress - Cell Chest 2",
             "id": 509342478,
+            "region": "Beneath the Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6051,6 +6146,7 @@
           {
             "name": "Quarry - [Back Entrance] Bushes Holy Cross",
             "id": 509342596,
+            "region": "Quarry Back",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6071,6 +6167,7 @@
           {
             "name": "Quarry - [Back Entrance] Chest",
             "id": 509342597,
+            "region": "Quarry Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6089,6 +6186,7 @@
           {
             "name": "Quarry - [Central] Near Shortcut Ladder",
             "id": 509342598,
+            "region": "Quarry Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6107,6 +6205,7 @@
           {
             "name": "Quarry - [Central] Below Entry Walkway",
             "id": 509342601,
+            "region": "Quarry Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6125,6 +6224,7 @@
           {
             "name": "Quarry - [Back Entrance] Obscured Behind Wall",
             "id": 509342605,
+            "region": "Quarry Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6143,6 +6243,7 @@
           {
             "name": "Quarry - [Central] Obscured Below Entry Walkway",
             "id": 509342606,
+            "region": "Quarry Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6161,6 +6262,7 @@
           {
             "name": "Quarry - [West] Upper Area Bombable Wall",
             "id": 509342612,
+            "region": "Quarry Back",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6284,6 +6386,7 @@
           {
             "name": "Quarry - [East] Near Telescope",
             "id": 509342599,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6302,6 +6405,7 @@
           {
             "name": "Quarry - [East] Upper Floor",
             "id": 509342600,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6320,6 +6424,7 @@
           {
             "name": "Quarry - [East] Obscured Near Winding Staircase",
             "id": 509342602,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6338,6 +6443,7 @@
           {
             "name": "Quarry - [East] Obscured Beneath Scaffolding",
             "id": 509342603,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6356,6 +6462,7 @@
           {
             "name": "Quarry - [East] Obscured Near Telescope",
             "id": 509342604,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6374,6 +6481,7 @@
           {
             "name": "Quarry - [Central] Top Floor Overhang",
             "id": 509342607,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6392,6 +6500,7 @@
           {
             "name": "Quarry - [East] Near Bridge",
             "id": 509342608,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6410,6 +6519,7 @@
           {
             "name": "Quarry - [Central] Obscured Behind Staircase",
             "id": 509342610,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6428,6 +6538,7 @@
           {
             "name": "Quarry - [East] Bombable Wall",
             "id": 509342613,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6525,6 +6636,7 @@
           {
             "name": "Quarry - [Central] Above Ladder",
             "id": 509342609,
+            "region": "Monastery",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6543,6 +6655,7 @@
           {
             "name": "Quarry - [Central] Above Ladder Dash Chest",
             "id": 509342611,
+            "region": "Monastery",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6587,6 +6700,7 @@
           {
             "name": "Monastery - Monastery Chest",
             "id": 509342595,
+            "region": "Monastery Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6605,6 +6719,7 @@
           {
             "name": "Hero's Grave - Ash Relic",
             "id": 509342614,
+            "region": "Monastery Back",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6687,6 +6802,7 @@
           {
             "name": "Quarry - [West] Shooting Range Secret Path",
             "id": 509342615,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6705,6 +6821,7 @@
           {
             "name": "Quarry - [West] Near Shooting Range",
             "id": 509342616,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6723,6 +6840,7 @@
           {
             "name": "Quarry - [West] Below Shooting Range",
             "id": 509342617,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6741,6 +6859,7 @@
           {
             "name": "Quarry - [Lowlands] Below Broken Ladder",
             "id": 509342618,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6759,6 +6878,7 @@
           {
             "name": "Quarry - [West] Upper Area Near Waterfall",
             "id": 509342619,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6777,6 +6897,7 @@
           {
             "name": "Quarry - [Lowlands] Upper Walkway",
             "id": 509342620,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6795,6 +6916,7 @@
           {
             "name": "Quarry - [West] Lower Area Below Bridge",
             "id": 509342621,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6813,6 +6935,7 @@
           {
             "name": "Quarry - [West] Lower Area Isolated Chest",
             "id": 509342622,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6831,6 +6954,7 @@
           {
             "name": "Quarry - [Lowlands] Near Elevator",
             "id": 509342623,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6849,6 +6973,7 @@
           {
             "name": "Quarry - [West] Lower Area After Bridge",
             "id": 509342624,
+            "region": "Lower Quarry",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6900,6 +7025,7 @@
           {
             "name": "Rooted Ziggurat Upper - Near Bridge Switch",
             "id": 509342625,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6915,16 +7041,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Hero's Laurels"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Magic Wand"
-                        }
+                        "Hero's Laurels",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -6944,6 +7064,7 @@
           {
             "name": "Rooted Ziggurat Upper - Beneath Bridge To Administrator",
             "id": 509342626,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6962,6 +7083,7 @@
           {
             "name": "Rooted Ziggurat Tower - Inside Tower",
             "id": 509342627,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6980,6 +7102,7 @@
           {
             "name": "Rooted Ziggurat Lower - Near Corpses",
             "id": 509342628,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6998,6 +7121,7 @@
           {
             "name": "Rooted Ziggurat Lower - Spider Ambush",
             "id": 509342629,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7016,6 +7140,7 @@
           {
             "name": "Rooted Ziggurat Lower - Left Of Checkpoint Before Fuse",
             "id": 509342630,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7034,6 +7159,7 @@
           {
             "name": "Rooted Ziggurat Lower - After Guarded Fuse",
             "id": 509342631,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7052,6 +7178,7 @@
           {
             "name": "Rooted Ziggurat Lower - Guarded By Double Turrets",
             "id": 509342632,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7070,6 +7197,7 @@
           {
             "name": "Rooted Ziggurat Lower - After 2nd Double Turret Chest",
             "id": 509342633,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7088,6 +7216,7 @@
           {
             "name": "Rooted Ziggurat Lower - Guarded By Double Turrets 2",
             "id": 509342634,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7106,6 +7235,7 @@
           {
             "name": "Rooted Ziggurat Lower - Hexagon Blue",
             "id": 509342635,
+            "region": "Rooted Ziggurat",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7193,6 +7323,7 @@
           {
             "name": "Cathedral Gauntlet - Gauntlet Reward",
             "id": 509342653,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7248,6 +7379,7 @@
           {
             "name": "Cathedral - Secret Legend Trophy Chest",
             "id": 509342654,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7268,6 +7400,7 @@
           {
             "name": "Swamp - [Upper Graveyard] Obscured Behind Hill",
             "id": 509342655,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7286,6 +7419,7 @@
           {
             "name": "Swamp - [South Graveyard] 4 Orange Skulls",
             "id": 509342656,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7306,6 +7440,7 @@
           {
             "name": "Swamp - [Central] Near Ramps Up",
             "id": 509342657,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7324,6 +7459,7 @@
           {
             "name": "Swamp - [Upper Graveyard] Near Shield Fleemers",
             "id": 509342658,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7342,6 +7478,7 @@
           {
             "name": "Swamp - [South Graveyard] Obscured Behind Ridge",
             "id": 509342659,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7360,6 +7497,7 @@
           {
             "name": "Swamp - [South Graveyard] Obscured Beneath Telescope",
             "id": 509342660,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7378,6 +7516,7 @@
           {
             "name": "Swamp - [Entrance] Above Entryway",
             "id": 509342661,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7399,6 +7538,7 @@
           {
             "name": "Swamp - [Central] South Secret Passage",
             "id": 509342662,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7417,6 +7557,7 @@
           {
             "name": "Swamp - [South Graveyard] Upper Walkway On Pedestal",
             "id": 509342663,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7435,6 +7576,7 @@
           {
             "name": "Swamp - [South Graveyard] Guarded By Tentacles",
             "id": 509342664,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7453,6 +7595,7 @@
           {
             "name": "Swamp - [Upper Graveyard] Near Telescope",
             "id": 509342665,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7471,6 +7614,7 @@
           {
             "name": "Swamp - [Outside Cathedral] Near Moonlight Bridge Door",
             "id": 509342666,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7489,6 +7633,7 @@
           {
             "name": "Swamp - [Entrance] Obscured Inside Watchtower",
             "id": 509342667,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7507,6 +7652,7 @@
           {
             "name": "Swamp - [Entrance] South Near Fence",
             "id": 509342668,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7525,6 +7671,7 @@
           {
             "name": "Swamp - [South Graveyard] Guarded By Big Skeleton",
             "id": 509342669,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7543,6 +7690,7 @@
           {
             "name": "Swamp - [South Graveyard] Chest Near Graves",
             "id": 509342670,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7561,6 +7709,7 @@
           {
             "name": "Swamp - [Entrance] North Small Island",
             "id": 509342671,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7579,6 +7728,7 @@
           {
             "name": "Swamp - [Outside Cathedral] Obscured Behind Memorial",
             "id": 509342672,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7600,6 +7750,7 @@
           {
             "name": "Swamp - [Central] Obscured Behind Northern Mountain",
             "id": 509342673,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7618,6 +7769,7 @@
           {
             "name": "Swamp - [South Graveyard] Upper Walkway Dash Chest",
             "id": 509342674,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7639,6 +7791,7 @@
           {
             "name": "Swamp - [South Graveyard] Above Big Skeleton",
             "id": 509342675,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7657,6 +7810,7 @@
           {
             "name": "Swamp - [Central] Beneath Memorial",
             "id": 509342676,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7675,6 +7829,7 @@
           {
             "name": "Hero's Grave - Feathers Relic",
             "id": 509342677,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7730,6 +7885,7 @@
           {
             "name": "Cathedral - [1F] Guarded By Lasers",
             "id": 509342415,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7748,6 +7904,7 @@
           {
             "name": "Cathedral - [1F] Near Spikes",
             "id": 509342416,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7766,6 +7923,7 @@
           {
             "name": "Cathedral - [2F] Bird Room",
             "id": 509342417,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7784,6 +7942,7 @@
           {
             "name": "Cathedral - [2F] Entryway Upper Walkway",
             "id": 509342418,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7802,6 +7961,7 @@
           {
             "name": "Cathedral - [1F] Library",
             "id": 509342419,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7820,6 +7980,7 @@
           {
             "name": "Cathedral - [2F] Library",
             "id": 509342420,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7838,6 +7999,7 @@
           {
             "name": "Cathedral - [2F] Guarded By Lasers",
             "id": 509342421,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7856,6 +8018,7 @@
           {
             "name": "Cathedral - [2F] Bird Room Secret",
             "id": 509342422,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7874,6 +8037,7 @@
           {
             "name": "Cathedral - [1F] Library Secret",
             "id": 509342423,
+            "region": "Cathedral",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7915,6 +8079,7 @@
           {
             "name": "The Heir",
             "id": null,
+            "region": "Spirit Arena",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10333,43 +10498,406 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Abilities",
-      "Bombs",
-      "Cards",
-      "Consumables",
-      "Dagger",
-      "Everything",
-      "Fire Rod",
-      "Flask",
-      "Golden Treasures",
-      "Hero Relics",
-      "Hexagons",
-      "Holy Cross",
-      "Ice Rod",
-      "Icebolt",
-      "Keys",
-      "Ladder in Quarry",
-      "Ladder to Atoll",
-      "Ladders",
-      "Ladders in Atoll",
-      "Ladders in Ruined Atoll",
-      "Ladders in Town",
-      "Ladders to Bell",
-      "Ladders to Well",
-      "Laurels",
-      "Magic Rod",
-      "Melee Weapons",
-      "Money",
-      "Offerings",
-      "Orb",
-      "Pages",
-      "Prayer",
-      "Progressive Sword",
-      "Questagons",
-      "Wand",
-      "Weapons"
-    ]
+    "1": {
+      "Bombs": [
+        "Ice Bomb x3",
+        "Firecracker x2",
+        "Firecracker x4",
+        "Firecracker x5",
+        "Fire Bomb x3",
+        "Ice Bomb x2",
+        "Firecracker x3",
+        "Firecracker x6",
+        "Ice Bomb x5",
+        "Fire Bomb x2"
+      ],
+      "Cards": [
+        "Muffling Bell",
+        "Cyan Peril Ring",
+        "Lucky Cup",
+        "Magic Echo",
+        "Scavenger Mask",
+        "Glass Cannon",
+        "Bracer",
+        "Louder Echo",
+        "Dagger Strap",
+        "Bone Card",
+        "Anklet",
+        "Aura's Gem",
+        "Orange Peril Ring",
+        "Inverted Ash",
+        "Tincture",
+        "Perfume"
+      ],
+      "Consumables": [
+        "Lure",
+        "HP Berry",
+        "HP Berry x3",
+        "Pepper x2",
+        "Lure x2",
+        "HP Berry x2",
+        "MP Berry x3",
+        "MP Berry x2",
+        "MP Berry",
+        "Ivy x3"
+      ],
+      "Flask": [
+        "Potion Flask"
+      ],
+      "Golden Treasures": [
+        "Spring Falls",
+        "Phonomath",
+        "Regal Weasel",
+        "Dusty",
+        "Vintage",
+        "Back To Work",
+        "Power Up",
+        "Mr Mayor",
+        "Secret Legend",
+        "Sacred Geometry",
+        "Just Some Pals",
+        "Forever Friend"
+      ],
+      "Hero Relics": [
+        "Hero Relic - SP",
+        "Hero Relic - ATT",
+        "Hero Relic - DEF",
+        "Hero Relic - POTION",
+        "Hero Relic - MP",
+        "Hero Relic - HP"
+      ],
+      "Hexagons": [
+        "Green Questagon",
+        "Gold Questagon",
+        "Blue Questagon",
+        "Red Questagon"
+      ],
+      "Keys": [
+        "Key",
+        "Old House Key",
+        "Fortress Vault Key"
+      ],
+      "Ladders": [
+        "Ladder to Quarry",
+        "Ladders in Well",
+        "Ladders in Hourglass Cave",
+        "Ladders near Overworld Checkpoint",
+        "Ladder to Beneath the Vault",
+        "Ladders to Lower Forest",
+        "Ladders near Patrol Cave",
+        "Ladders in Overworld Town",
+        "Ladders in Library",
+        "Ladders in South Atoll",
+        "Ladders in Lower Quarry",
+        "Ladder to Ruined Atoll",
+        "Ladders in Swamp",
+        "Ladder to East Forest",
+        "Ladders to West Bell",
+        "Ladders near Dark Tomb",
+        "Ladder to Swamp",
+        "Ladder near Temple Rafters",
+        "Ladders to Frog's Domain",
+        "Ladders near Weathervane",
+        "Ladder in Dark Tomb"
+      ],
+      "Money": [
+        "Money x4",
+        "Money x32",
+        "Money x50",
+        "Money x64",
+        "Money x10",
+        "Money x16",
+        "Effigy",
+        "Money x25",
+        "Money x200",
+        "Money x48",
+        "Money x30",
+        "Money x40",
+        "Money x255",
+        "Money x5",
+        "Money x3",
+        "Money x128",
+        "Money x15",
+        "Money x1",
+        "Money x100",
+        "Money x20",
+        "Money x2"
+      ],
+      "Offerings": [
+        "Potion Offering",
+        "DEF Offering",
+        "MP Offering",
+        "SP Offering",
+        "HP Offering",
+        "ATT Offering"
+      ],
+      "Pages": [
+        "Pages 18-19",
+        "Pages 30-31",
+        "Pages 8-9",
+        "Pages 50-51",
+        "Pages 14-15",
+        "Pages 34-35",
+        "Pages 40-41",
+        "Pages 20-21",
+        "Pages 44-45",
+        "Pages 36-37",
+        "Pages 28-29",
+        "Pages 54-55",
+        "Pages 52-53 (Icebolt)",
+        "Pages 2-3",
+        "Pages 0-1",
+        "Pages 32-33",
+        "Pages 12-13",
+        "Pages 16-17",
+        "Pages 10-11",
+        "Pages 46-47",
+        "Pages 38-39",
+        "Pages 42-43 (Holy Cross)",
+        "Pages 26-27",
+        "Pages 24-25 (Prayer)",
+        "Pages 6-7",
+        "Pages 22-23",
+        "Pages 48-49",
+        "Pages 4-5"
+      ],
+      "Weapons": [
+        "Sword",
+        "Gun",
+        "Sword Upgrade",
+        "Stick",
+        "Magic Wand"
+      ],
+      "Laurels": [
+        "Hero's Laurels"
+      ],
+      "Orb": [
+        "Magic Orb"
+      ],
+      "Dagger": [
+        "Magic Dagger"
+      ],
+      "Wand": [
+        "Magic Wand"
+      ],
+      "Magic Rod": [
+        "Magic Wand"
+      ],
+      "Fire Rod": [
+        "Magic Wand"
+      ],
+      "Holy Cross": [
+        "Pages 42-43 (Holy Cross)"
+      ],
+      "Prayer": [
+        "Pages 24-25 (Prayer)"
+      ],
+      "Icebolt": [
+        "Pages 52-53 (Icebolt)"
+      ],
+      "Ice Rod": [
+        "Pages 52-53 (Icebolt)"
+      ],
+      "Melee Weapons": [
+        "Sword Upgrade",
+        "Stick",
+        "Sword"
+      ],
+      "Progressive Sword": [
+        "Sword Upgrade"
+      ],
+      "Abilities": [
+        "Pages 24-25 (Prayer)",
+        "Pages 42-43 (Holy Cross)",
+        "Pages 52-53 (Icebolt)"
+      ],
+      "Questagons": [
+        "Green Questagon",
+        "Gold Questagon",
+        "Blue Questagon",
+        "Red Questagon"
+      ],
+      "Ladder to Atoll": [
+        "Ladder to Ruined Atoll"
+      ],
+      "Ladders to Bell": [
+        "Ladders to West Bell"
+      ],
+      "Ladders to Well": [
+        "Ladders in Well"
+      ],
+      "Ladders in Atoll": [
+        "Ladders in South Atoll"
+      ],
+      "Ladders in Ruined Atoll": [
+        "Ladders in South Atoll"
+      ],
+      "Ladders in Town": [
+        "Ladders in Overworld Town"
+      ],
+      "Ladder in Quarry": [
+        "Ladders in Lower Quarry"
+      ],
+      "Everything": [
+        "Card Slot",
+        "Firecracker x4",
+        "Gold Questagon",
+        "Money x50",
+        "Money x10",
+        "Pages 14-15",
+        "Magic Echo",
+        "Pages 52-53 (Icebolt)",
+        "Ladder to Ruined Atoll",
+        "Dagger Strap",
+        "Pages 12-13",
+        "Money x5",
+        "Aura's Gem",
+        "Money x3",
+        "Power Up",
+        "Mr Mayor",
+        "Lantern",
+        "Dath Stone",
+        "Stick",
+        "Pages 30-31",
+        "Ladders near Overworld Checkpoint",
+        "Fortress Vault Key",
+        "Ice Bomb x2",
+        "Ladders near Patrol Cave",
+        "Ladders in Lower Quarry",
+        "Potion Offering",
+        "Lure",
+        "Ladder to East Forest",
+        "Pages 42-43 (Holy Cross)",
+        "Vintage",
+        "Firecracker x3",
+        "Pages 48-49",
+        "Pages 4-5",
+        "Money x4",
+        "Regal Weasel",
+        "Pages 8-9",
+        "HP Berry x3",
+        "Pages 40-41",
+        "Ladders to Lower Forest",
+        "Old House Key",
+        "Money x25",
+        "Grass",
+        "HP Berry x2",
+        "Fire Bomb x2",
+        "Money x200",
+        "Ladders in Overworld Town",
+        "Hero Relic - HP",
+        "Pages 32-33",
+        "Pages 16-17",
+        "Pages 38-39",
+        "DEF Offering",
+        "Fairy",
+        "Pages 22-23",
+        "Money x15",
+        "Money x100",
+        "Muffling Bell",
+        "Money x64",
+        "Shield",
+        "Ladder to Beneath the Vault",
+        "Firecracker x5",
+        "Pages 50-51",
+        "Pepper x2",
+        "MP Berry x3",
+        "Secret Legend",
+        "Scavenger Mask",
+        "Ice Bomb x5",
+        "HP Offering",
+        "Sword Upgrade",
+        "Money x48",
+        "Pages 36-37",
+        "Ladders in South Atoll",
+        "Ladders in Swamp",
+        "Key",
+        "Money x255",
+        "Pages 10-11",
+        "Pages 6-7",
+        "Hero's Laurels",
+        "Gun",
+        "Green Questagon",
+        "Ladder in Dark Tomb",
+        "Spring Falls",
+        "Pages 18-19",
+        "Money x32",
+        "Lucky Cup",
+        "Dusty",
+        "Pages 34-35",
+        "Firecracker x6",
+        "Pages 28-29",
+        "Ivy x3",
+        "Just Some Pals",
+        "Pages 54-55",
+        "Magic Wand",
+        "Glass Cannon",
+        "Pages 2-3",
+        "Pages 46-47",
+        "Back To Work",
+        "MP Berry x2",
+        "MP Berry",
+        "Ladders near Weathervane",
+        "Ladder to Quarry",
+        "Blue Questagon",
+        "Torch",
+        "SP Offering",
+        "Sacred Geometry",
+        "Forever Friend",
+        "Bracer",
+        "Phonomath",
+        "Sword",
+        "Ladders near Dark Tomb",
+        "Ladder near Temple Rafters",
+        "Fire Bomb x3",
+        "Lure x2",
+        "Hourglass",
+        "Inverted Ash",
+        "Ladders in Well",
+        "Ladders in Hourglass Cave",
+        "Firecracker x2",
+        "Hero Relic - ATT",
+        "Golden Coin",
+        "Cyan Peril Ring",
+        "ATT Offering",
+        "Ice Bomb x3",
+        "Ladders in Library",
+        "HP Berry",
+        "Bone Card",
+        "Magic Dagger",
+        "Ladder to Swamp",
+        "Magic Orb",
+        "Pages 26-27",
+        "Red Questagon",
+        "Hero Relic - DEF",
+        "Money x20",
+        "Perfume",
+        "Money x2",
+        "Flask Shard",
+        "Hero Relic - POTION",
+        "Money x16",
+        "Effigy",
+        "MP Offering",
+        "Pages 20-21",
+        "Pages 44-45",
+        "Fool Trap",
+        "Money x30",
+        "Potion Flask",
+        "Louder Echo",
+        "Pages 0-1",
+        "Ladders to West Bell",
+        "Money x40",
+        "Anklet",
+        "Ladders to Frog's Domain",
+        "Money x128",
+        "Hero Relic - SP",
+        "Pages 24-25 (Prayer)",
+        "Orange Peril Ring",
+        "Money x1",
+        "Tincture",
+        "Hero Relic - MP"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

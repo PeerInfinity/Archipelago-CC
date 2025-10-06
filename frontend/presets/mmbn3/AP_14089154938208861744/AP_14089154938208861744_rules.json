@@ -150,6 +150,7 @@
           {
             "name": "ACDC SonicWav W Trade",
             "id": 11735185,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -171,6 +172,7 @@
           {
             "name": "ACDC Bubbler C Trade",
             "id": 11735186,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -192,6 +194,7 @@
           {
             "name": "ACDC Recov120 S Trade",
             "id": 11735187,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -213,6 +216,7 @@
           {
             "name": "ACDC School Desk",
             "id": 11735197,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -231,6 +235,7 @@
           {
             "name": "ACDC Class 5B Bookshelf",
             "id": 11735198,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -249,6 +254,7 @@
           {
             "name": "School 1 Entrance BMD",
             "id": 11735083,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -267,6 +273,7 @@
           {
             "name": "School 1 North Central BMD",
             "id": 11735084,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -285,6 +292,7 @@
           {
             "name": "School 1 Far West BMD 2",
             "id": 11735085,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -303,6 +311,7 @@
           {
             "name": "School 1 KeyDataA BMD",
             "id": 11735161,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -321,6 +330,7 @@
           {
             "name": "School 1 KeyDataB BMD",
             "id": 11735162,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -339,6 +349,7 @@
           {
             "name": "School 1 KeyDataC BMD",
             "id": 11735163,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -357,6 +368,7 @@
           {
             "name": "School 2 South BMD",
             "id": 11735087,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -375,6 +387,7 @@
           {
             "name": "School 2 Entrance BMD",
             "id": 11735086,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -393,6 +406,7 @@
           {
             "name": "School 2 Mainframe BMD",
             "id": 11735088,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -411,6 +425,7 @@
           {
             "name": "School 2 CodeA BMD",
             "id": 11735165,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -429,6 +444,7 @@
           {
             "name": "School 2 CodeB BMD",
             "id": 11735166,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -447,6 +463,7 @@
           {
             "name": "School 2 CodeC BMD",
             "id": 11735164,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -465,6 +482,7 @@
           {
             "name": "ACDC Dog House BMD",
             "id": 11735127,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -483,6 +501,7 @@
           {
             "name": "ACDC Lan's Security Panel BMD",
             "id": 11735128,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -501,6 +520,7 @@
           {
             "name": "ACDC Yai's Phone BMD",
             "id": 11735129,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -519,6 +539,7 @@
           {
             "name": "ACDC NumberMan Display BMD",
             "id": 11735130,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -537,6 +558,7 @@
           {
             "name": "ACDC Tank BMD 1",
             "id": 11735131,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -555,6 +577,7 @@
           {
             "name": "ACDC Tank BMD 2",
             "id": 11735132,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -573,6 +596,7 @@
           {
             "name": "ACDC School Server BMD 1",
             "id": 11735133,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -591,6 +615,7 @@
           {
             "name": "ACDC School Server BMD 2",
             "id": 11735134,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -609,6 +634,7 @@
           {
             "name": "ACDC School Blackboard BMD",
             "id": 11735135,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -627,6 +653,7 @@
           {
             "name": "Numberman Code 01",
             "id": 11735245,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -645,6 +672,7 @@
           {
             "name": "Numberman Code 02",
             "id": 11735246,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -663,6 +691,7 @@
           {
             "name": "Numberman Code 03",
             "id": 11735247,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -681,6 +710,7 @@
           {
             "name": "Numberman Code 04",
             "id": 11735248,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -699,6 +729,7 @@
           {
             "name": "Numberman Code 05",
             "id": 11735249,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -717,6 +748,7 @@
           {
             "name": "Numberman Code 06",
             "id": 11735250,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -735,6 +767,7 @@
           {
             "name": "Numberman Code 07",
             "id": 11735251,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -753,6 +786,7 @@
           {
             "name": "Numberman Code 08",
             "id": 11735252,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -771,6 +805,7 @@
           {
             "name": "Numberman Code 09",
             "id": 11735253,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -805,6 +840,7 @@
           {
             "name": "Numberman Code 10",
             "id": 11735254,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -839,6 +875,7 @@
           {
             "name": "Numberman Code 11",
             "id": 11735255,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -873,6 +910,7 @@
           {
             "name": "Numberman Code 12",
             "id": 11735256,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -907,6 +945,7 @@
           {
             "name": "Numberman Code 13",
             "id": 11735257,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -941,6 +980,7 @@
           {
             "name": "Numberman Code 14",
             "id": 11735258,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -975,6 +1015,7 @@
           {
             "name": "Numberman Code 15",
             "id": 11735259,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1009,6 +1050,7 @@
           {
             "name": "Numberman Code 16",
             "id": 11735260,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1043,6 +1085,7 @@
           {
             "name": "Numberman Code 17",
             "id": 11735261,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1077,6 +1120,7 @@
           {
             "name": "Numberman Code 18",
             "id": 11735262,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1111,6 +1155,7 @@
           {
             "name": "Numberman Code 19",
             "id": 11735263,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1145,6 +1190,7 @@
           {
             "name": "Numberman Code 20",
             "id": 11735264,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1179,6 +1225,7 @@
           {
             "name": "Numberman Code 21",
             "id": 11735265,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1213,6 +1260,7 @@
           {
             "name": "Numberman Code 22",
             "id": 11735266,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1247,6 +1295,7 @@
           {
             "name": "Numberman Code 23",
             "id": 11735267,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1281,6 +1330,7 @@
           {
             "name": "Numberman Code 24",
             "id": 11735268,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1315,6 +1365,7 @@
           {
             "name": "Numberman Code 25",
             "id": 11735269,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1349,6 +1400,7 @@
           {
             "name": "Numberman Code 26",
             "id": 11735270,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1383,6 +1435,7 @@
           {
             "name": "Numberman Code 27",
             "id": 11735271,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1417,6 +1470,7 @@
           {
             "name": "Numberman Code 28",
             "id": 11735272,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1451,6 +1505,7 @@
           {
             "name": "Numberman Code 29",
             "id": 11735273,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1485,6 +1540,7 @@
           {
             "name": "Numberman Code 30",
             "id": 11735274,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1519,6 +1575,7 @@
           {
             "name": "Numberman Code 31",
             "id": 11735275,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "compare",
@@ -1553,6 +1610,7 @@
           {
             "name": "Mayl's HP BMD",
             "id": 11735154,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1571,6 +1629,7 @@
           {
             "name": "Yai's HP BMD 1",
             "id": 11735155,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1589,6 +1648,7 @@
           {
             "name": "Yai's HP BMD 2",
             "id": 11735156,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1607,6 +1667,7 @@
           {
             "name": "Dex's HP BMD 1",
             "id": 11735157,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1625,6 +1686,7 @@
           {
             "name": "Dex's HP BMD 2",
             "id": 11735158,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1643,6 +1705,7 @@
           {
             "name": "Mayl's HP PMD",
             "id": 11735176,
+            "region": "ACDC Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1859,6 +1922,7 @@
           {
             "name": "ACDC 1 Southwest BMD",
             "id": 11735040,
+            "region": "ACDC Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1877,6 +1941,7 @@
           {
             "name": "ACDC 1 Northeast BMD",
             "id": 11735041,
+            "region": "ACDC Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1895,6 +1960,7 @@
           {
             "name": "ACDC 1 PMD",
             "id": 11735172,
+            "region": "ACDC Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1967,6 +2033,7 @@
           {
             "name": "ACDC 2 Center BMD",
             "id": 11735042,
+            "region": "ACDC Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1985,6 +2052,7 @@
           {
             "name": "ACDC 2 North BMD",
             "id": 11735043,
+            "region": "ACDC Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2003,6 +2071,7 @@
           {
             "name": "ACDC 3 Southwest BMD",
             "id": 11735044,
+            "region": "ACDC Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2021,6 +2090,7 @@
           {
             "name": "ACDC 3 Northeast BMD",
             "id": 11735045,
+            "region": "ACDC Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2155,6 +2225,7 @@
           {
             "name": "SciLab Shake1 S Trade",
             "id": 11735188,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2176,6 +2247,7 @@
           {
             "name": "SciLab Garbage Can",
             "id": 11735199,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2194,6 +2266,7 @@
           {
             "name": "SciLab Vending Machine BMD",
             "id": 11735136,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2212,6 +2285,7 @@
           {
             "name": "SciLab Virus Lab Door BMD 1",
             "id": 11735137,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2230,6 +2304,7 @@
           {
             "name": "SciLab Virus Lab Door BMD 2",
             "id": 11735277,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2248,6 +2323,7 @@
           {
             "name": "SciLab Dad's Computer BMD",
             "id": 11735138,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2266,6 +2342,7 @@
           {
             "name": "SciLab Dad's Computer PMD",
             "id": 11735177,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2326,6 +2403,7 @@
           {
             "name": "Job: Please deliver this",
             "id": 11735215,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2365,6 +2443,7 @@
           {
             "name": "Job: My Navi is sick",
             "id": 11735216,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2386,6 +2465,7 @@
           {
             "name": "Job: Help me with my son!",
             "id": 11735217,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2425,6 +2505,7 @@
           {
             "name": "Job: Transmission error",
             "id": 11735218,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2449,6 +2530,7 @@
           {
             "name": "Job: Chip Prices",
             "id": 11735219,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2488,6 +2570,7 @@
           {
             "name": "Job: I'm broke?!",
             "id": 11735220,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2527,6 +2610,7 @@
           {
             "name": "Job: Rare chips for cheap!",
             "id": 11735221,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2551,6 +2635,7 @@
           {
             "name": "Job: Be my boyfriend",
             "id": 11735222,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2575,6 +2660,7 @@
           {
             "name": "Job: Will you deliver?",
             "id": 11735223,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2624,6 +2710,7 @@
           {
             "name": "Job: Somebody, please help!",
             "id": 11735228,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2648,6 +2735,7 @@
           {
             "name": "Job: Looking for condor",
             "id": 11735229,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2697,6 +2785,7 @@
           {
             "name": "Job: Help with rehab",
             "id": 11735230,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2721,6 +2810,7 @@
           {
             "name": "Job: Help with rehab bonus",
             "id": 11735310,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2745,6 +2835,7 @@
           {
             "name": "Job: Old Master",
             "id": 11735231,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2784,6 +2875,7 @@
           {
             "name": "Job: Catching gang members",
             "id": 11735232,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2820,6 +2912,7 @@
           {
             "name": "Job: Please adopt a virus!",
             "id": 11735233,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2844,6 +2937,7 @@
           {
             "name": "Job: Legendary Tomes",
             "id": 11735234,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2883,24 +2977,10 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ItemName"
-                          },
-                          "attr": "Press"
-                        },
-                        {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "ItemName"
-                          },
-                          "attr": "Magnum1_A"
-                        }
+                        "Magnum1 A",
+                        "Press"
                       ]
                     }
                   ]
@@ -2920,6 +3000,7 @@
           {
             "name": "Job: Legendary Tomes - Treasure",
             "id": 11735235,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2959,6 +3040,7 @@
           {
             "name": "Job: Hide and seek! First Child",
             "id": 11735236,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2983,6 +3065,7 @@
           {
             "name": "Job: Hide and seek! Second Child",
             "id": 11735237,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3007,6 +3090,7 @@
           {
             "name": "Job: Hide and seek! Third Child",
             "id": 11735238,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3031,6 +3115,7 @@
           {
             "name": "Job: Hide and seek! Fourth Child",
             "id": 11735239,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3055,6 +3140,7 @@
           {
             "name": "Job: Hide and seek! Completion",
             "id": 11735240,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3079,6 +3165,7 @@
           {
             "name": "Job: Finding the blue Navi",
             "id": 11735241,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3103,6 +3190,7 @@
           {
             "name": "Job: Give your support",
             "id": 11735242,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3127,6 +3215,7 @@
           {
             "name": "Job: Stamp collecting",
             "id": 11735243,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3196,6 +3285,7 @@
           {
             "name": "Job: Help with a will",
             "id": 11735244,
+            "region": "SciLab Overworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3425,6 +3515,7 @@
           {
             "name": "SciLab 1 East BMD",
             "id": 11735047,
+            "region": "SciLab Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3443,6 +3534,7 @@
           {
             "name": "SciLab 1 WWW BMD",
             "id": 11735046,
+            "region": "SciLab Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3464,6 +3556,7 @@
           {
             "name": "SciLab 2 South BMD",
             "id": 11735049,
+            "region": "SciLab Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3482,6 +3575,7 @@
           {
             "name": "SciLab 2 West BMD",
             "id": 11735048,
+            "region": "SciLab Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3668,6 +3762,7 @@
           {
             "name": "Yoka Mr Quiz",
             "id": 11735276,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3686,6 +3781,7 @@
           {
             "name": "Yoka Quiz Master",
             "id": 11735182,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3704,6 +3800,7 @@
           {
             "name": "Yoka FireSwrd P Trade",
             "id": 11735189,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3725,6 +3822,7 @@
           {
             "name": "Yoka Inn Jars",
             "id": 11735200,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3743,6 +3841,7 @@
           {
             "name": "Yoka Zoo Garbage",
             "id": 11735201,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3761,6 +3860,7 @@
           {
             "name": "Zoo Panda PMD",
             "id": 11735178,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3821,6 +3921,7 @@
           {
             "name": "Zoo 1 East BMD",
             "id": 11735089,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3839,6 +3940,7 @@
           {
             "name": "Zoo 1 North BMD",
             "id": 11735091,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3857,6 +3959,7 @@
           {
             "name": "Zoo 1 Central BMD",
             "id": 11735090,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3875,6 +3978,7 @@
           {
             "name": "Zoo 2 East BMD",
             "id": 11735092,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3893,6 +3997,7 @@
           {
             "name": "Zoo 2 Central BMD",
             "id": 11735093,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3911,6 +4016,7 @@
           {
             "name": "Zoo 2 West BMD",
             "id": 11735094,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3929,6 +4035,7 @@
           {
             "name": "Zoo 3 North BMD",
             "id": 11735095,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3947,6 +4054,7 @@
           {
             "name": "Zoo 3 Central BMD",
             "id": 11735096,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3965,6 +4073,7 @@
           {
             "name": "Zoo 3 Path BMD",
             "id": 11735097,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3983,6 +4092,7 @@
           {
             "name": "Zoo 3 Northwest BMD",
             "id": 11735098,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4001,6 +4111,7 @@
           {
             "name": "Zoo 4 West BMD",
             "id": 11735099,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4019,6 +4130,7 @@
           {
             "name": "Zoo 4 Northwest BMD",
             "id": 11735100,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4037,6 +4149,7 @@
           {
             "name": "Zoo 4 Southeast BMD",
             "id": 11735101,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4055,6 +4168,7 @@
           {
             "name": "Yoka TV BMD",
             "id": 11735140,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4073,6 +4187,7 @@
           {
             "name": "Yoka Armor BMD",
             "id": 11735139,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4091,6 +4206,7 @@
           {
             "name": "Yoka Hot Spring BMD",
             "id": 11735141,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4109,6 +4225,7 @@
           {
             "name": "Yoka Ticket Machine BMD",
             "id": 11735142,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4127,6 +4244,7 @@
           {
             "name": "Yoka Giraffe BMD",
             "id": 11735143,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4145,6 +4263,7 @@
           {
             "name": "Yoka Panda BMD",
             "id": 11735144,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4163,6 +4282,7 @@
           {
             "name": "Tamako's HP BMD",
             "id": 11735159,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4181,6 +4301,7 @@
           {
             "name": "Tamako's HP PMD",
             "id": 11735181,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4241,6 +4362,7 @@
           {
             "name": "Comedian",
             "id": 11735195,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4262,6 +4384,7 @@
           {
             "name": "Chocolate Shop 01",
             "id": 11735278,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4280,6 +4403,7 @@
           {
             "name": "Chocolate Shop 02",
             "id": 11735279,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4298,6 +4422,7 @@
           {
             "name": "Chocolate Shop 03",
             "id": 11735280,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4316,6 +4441,7 @@
           {
             "name": "Chocolate Shop 04",
             "id": 11735281,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4334,6 +4460,7 @@
           {
             "name": "Chocolate Shop 05",
             "id": 11735282,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4352,6 +4479,7 @@
           {
             "name": "Chocolate Shop 06",
             "id": 11735283,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4370,6 +4498,7 @@
           {
             "name": "Chocolate Shop 07",
             "id": 11735284,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4388,6 +4517,7 @@
           {
             "name": "Chocolate Shop 08",
             "id": 11735285,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4406,6 +4536,7 @@
           {
             "name": "Chocolate Shop 09",
             "id": 11735286,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4424,6 +4555,7 @@
           {
             "name": "Chocolate Shop 10",
             "id": 11735287,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4442,6 +4574,7 @@
           {
             "name": "Chocolate Shop 11",
             "id": 11735288,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4460,6 +4593,7 @@
           {
             "name": "Chocolate Shop 12",
             "id": 11735289,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4478,6 +4612,7 @@
           {
             "name": "Chocolate Shop 13",
             "id": 11735290,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4496,6 +4631,7 @@
           {
             "name": "Chocolate Shop 14",
             "id": 11735291,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4514,6 +4650,7 @@
           {
             "name": "Chocolate Shop 15",
             "id": 11735292,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4532,6 +4669,7 @@
           {
             "name": "Chocolate Shop 16",
             "id": 11735293,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4550,6 +4688,7 @@
           {
             "name": "Chocolate Shop 17",
             "id": 11735294,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4568,6 +4707,7 @@
           {
             "name": "Chocolate Shop 18",
             "id": 11735295,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4586,6 +4726,7 @@
           {
             "name": "Chocolate Shop 19",
             "id": 11735296,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4604,6 +4745,7 @@
           {
             "name": "Chocolate Shop 20",
             "id": 11735297,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4622,6 +4764,7 @@
           {
             "name": "Chocolate Shop 21",
             "id": 11735298,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4640,6 +4783,7 @@
           {
             "name": "Chocolate Shop 22",
             "id": 11735299,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4658,6 +4802,7 @@
           {
             "name": "Chocolate Shop 23",
             "id": 11735300,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4676,6 +4821,7 @@
           {
             "name": "Chocolate Shop 24",
             "id": 11735301,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4694,6 +4840,7 @@
           {
             "name": "Chocolate Shop 25",
             "id": 11735302,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4712,6 +4859,7 @@
           {
             "name": "Chocolate Shop 26",
             "id": 11735303,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4730,6 +4878,7 @@
           {
             "name": "Chocolate Shop 27",
             "id": 11735304,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4748,6 +4897,7 @@
           {
             "name": "Chocolate Shop 28",
             "id": 11735305,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4766,6 +4916,7 @@
           {
             "name": "Chocolate Shop 29",
             "id": 11735306,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4784,6 +4935,7 @@
           {
             "name": "Chocolate Shop 30",
             "id": 11735307,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4802,6 +4954,7 @@
           {
             "name": "Chocolate Shop 31",
             "id": 11735308,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4820,6 +4973,7 @@
           {
             "name": "Chocolate Shop 32",
             "id": 11735309,
+            "region": "Yoka Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4964,6 +5118,7 @@
           {
             "name": "Yoka 1 North BMD",
             "id": 11735050,
+            "region": "Yoka Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4982,6 +5137,7 @@
           {
             "name": "Yoka 1 WWW BMD",
             "id": 11735051,
+            "region": "Yoka Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5003,6 +5159,7 @@
           {
             "name": "Yoka 1 PMD",
             "id": 11735173,
+            "region": "Yoka Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5075,6 +5232,7 @@
           {
             "name": "Yoka 2 Lower BMD",
             "id": 11735053,
+            "region": "Yoka Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5093,6 +5251,7 @@
           {
             "name": "Yoka 2 Upper BMD",
             "id": 11735052,
+            "region": "Yoka Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5219,6 +5378,7 @@
           {
             "name": "Hospital Quiz Queen",
             "id": 11735183,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5237,6 +5397,7 @@
           {
             "name": "Hades Quiz King",
             "id": 11735184,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5255,6 +5416,7 @@
           {
             "name": "Hospital DynaWav V Trade",
             "id": 11735190,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5276,6 +5438,7 @@
           {
             "name": "Beach DNN WideSwrd C Trade",
             "id": 11735191,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5297,6 +5460,7 @@
           {
             "name": "Beach DNN HoleMetr H Trade",
             "id": 11735192,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5318,6 +5482,7 @@
           {
             "name": "Beach DNN Shadow J Trade",
             "id": 11735193,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5339,6 +5504,7 @@
           {
             "name": "Hades GrabBack K Trade",
             "id": 11735194,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5360,6 +5526,7 @@
           {
             "name": "Beach Department Store",
             "id": 11735202,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5378,6 +5545,7 @@
           {
             "name": "Beach Hospital Plaque",
             "id": 11735203,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5396,6 +5564,7 @@
           {
             "name": "Beach Hospital Pink Door",
             "id": 11735204,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5414,6 +5583,7 @@
           {
             "name": "Beach Hospital Tree",
             "id": 11735205,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5432,6 +5602,7 @@
           {
             "name": "Beach Hospital Hidden Conversation",
             "id": 11735206,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5450,6 +5621,7 @@
           {
             "name": "Beach Hospital Girl",
             "id": 11735207,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5468,6 +5640,7 @@
           {
             "name": "Beach DNN Kiosk",
             "id": 11735208,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5486,6 +5659,7 @@
           {
             "name": "Beach DNN Boxes",
             "id": 11735209,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5504,6 +5678,7 @@
           {
             "name": "Beach DNN Poster",
             "id": 11735210,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5522,6 +5697,7 @@
           {
             "name": "Hades Boat Dock",
             "id": 11735211,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5540,6 +5716,7 @@
           {
             "name": "Hades South BMD",
             "id": 11735102,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5561,6 +5738,7 @@
           {
             "name": "Hades Gargoyle BMD",
             "id": 11735152,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5579,6 +5757,7 @@
           {
             "name": "Hospital 1 North BMD",
             "id": 11735103,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5597,6 +5776,7 @@
           {
             "name": "Hospital 1 West BMD",
             "id": 11735105,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5615,6 +5795,7 @@
           {
             "name": "Hospital 1 Center BMD",
             "id": 11735104,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5633,6 +5814,7 @@
           {
             "name": "Hospital 2 Island BMD",
             "id": 11735108,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5651,6 +5833,7 @@
           {
             "name": "Hospital 2 Central BMD",
             "id": 11735107,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5669,6 +5852,7 @@
           {
             "name": "Hospital 2 Southwest BMD",
             "id": 11735106,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5687,6 +5871,7 @@
           {
             "name": "Hospital 3 West BMD",
             "id": 11735110,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5705,6 +5890,7 @@
           {
             "name": "Hospital 3 Central BMD",
             "id": 11735109,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5723,6 +5909,7 @@
           {
             "name": "Hospital 3 Northwest BMD",
             "id": 11735111,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5741,6 +5928,7 @@
           {
             "name": "Hospital 4 North BMD",
             "id": 11735114,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5759,6 +5947,7 @@
           {
             "name": "Hospital 4 Central BMD",
             "id": 11735112,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5777,6 +5966,7 @@
           {
             "name": "Hospital 4 Southeast BMD",
             "id": 11735113,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5795,6 +5985,7 @@
           {
             "name": "Hospital 5 Island BMD",
             "id": 11735117,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5813,6 +6004,7 @@
           {
             "name": "Hospital 5 Northeast BMD",
             "id": 11735116,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5831,6 +6023,7 @@
           {
             "name": "Hospital 5 Southwest BMD",
             "id": 11735115,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5849,6 +6042,7 @@
           {
             "name": "Beach Hospital Bed BMD",
             "id": 11735145,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5867,6 +6061,7 @@
           {
             "name": "Beach TV BMD",
             "id": 11735146,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5885,6 +6080,7 @@
           {
             "name": "Beach Vending Machine BMD",
             "id": 11735147,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5903,6 +6099,7 @@
           {
             "name": "Beach News Van BMD",
             "id": 11735148,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5921,6 +6118,7 @@
           {
             "name": "Beach Battle Console BMD",
             "id": 11735149,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5939,6 +6137,7 @@
           {
             "name": "Beach Security System BMD",
             "id": 11735150,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5957,6 +6156,7 @@
           {
             "name": "Beach Broadcast Computer BMD",
             "id": 11735151,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5975,6 +6175,7 @@
           {
             "name": "Beach DNN Security Panel PMD",
             "id": 11735179,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6035,6 +6236,7 @@
           {
             "name": "Beach DNN Main Console PMD",
             "id": 11735180,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6095,6 +6297,7 @@
           {
             "name": "Undernet 6 TV BMD",
             "id": 11735070,
+            "region": "Beach Overworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6281,6 +6484,7 @@
           {
             "name": "Beach 1 BMD",
             "id": 11735054,
+            "region": "Beach Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6299,6 +6503,7 @@
           {
             "name": "Beach 1 PMD",
             "id": 11735174,
+            "region": "Beach Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6359,6 +6564,7 @@
           {
             "name": "Beach 2 East BMD",
             "id": 11735056,
+            "region": "Beach Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6380,6 +6586,7 @@
           {
             "name": "Beach 2 West BMD",
             "id": 11735055,
+            "region": "Beach Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6398,6 +6605,7 @@
           {
             "name": "Villain",
             "id": 11735196,
+            "region": "Beach Cyberworld",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6442,6 +6650,7 @@
           {
             "name": "Undernet 1 South BMD",
             "id": 11735057,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6460,6 +6669,7 @@
           {
             "name": "Undernet 1 WWW BMD",
             "id": 11735058,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6481,6 +6691,7 @@
           {
             "name": "Undernet 2 Lower BMD",
             "id": 11735060,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6499,6 +6710,7 @@
           {
             "name": "Undernet 2 Upper BMD",
             "id": 11735059,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6517,6 +6729,7 @@
           {
             "name": "Undernet 3 South BMD",
             "id": 11735061,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6535,6 +6748,7 @@
           {
             "name": "Undernet 3 Central BMD",
             "id": 11735062,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6553,6 +6767,7 @@
           {
             "name": "Undernet 4 Pillar Prog",
             "id": 11735214,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6571,6 +6786,7 @@
           {
             "name": "Undernet 4 Top North BMD",
             "id": 11735065,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6589,6 +6805,7 @@
           {
             "name": "Undernet 4 Bottom West BMD",
             "id": 11735063,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6607,6 +6824,7 @@
           {
             "name": "Undernet 4 Top Pillar BMD",
             "id": 11735064,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6625,6 +6843,7 @@
           {
             "name": "Undernet 5 Upper BMD",
             "id": 11735066,
+            "region": "Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6666,6 +6885,7 @@
           {
             "name": "Undernet 5 Lower BMD",
             "id": 11735067,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6684,6 +6904,7 @@
           {
             "name": "Undernet 6 East BMD",
             "id": 11735068,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6702,6 +6923,7 @@
           {
             "name": "Undernet 6 Central BMD",
             "id": 11735069,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6720,6 +6942,7 @@
           {
             "name": "Undernet 7 PMD",
             "id": 11735175,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6780,6 +7003,7 @@
           {
             "name": "Undernet 7 West BMD",
             "id": 11735071,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6798,6 +7022,7 @@
           {
             "name": "Undernet 7 Northeast BMD",
             "id": 11735073,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6816,6 +7041,7 @@
           {
             "name": "Undernet 7 Northwest BMD",
             "id": 11735072,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6834,6 +7060,7 @@
           {
             "name": "Undernet 7 Upper BMD",
             "id": 11735160,
+            "region": "Deep Undernet",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6875,6 +7102,7 @@
           {
             "name": "WWW Control Room 1 Screen",
             "id": 11735212,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6893,6 +7121,7 @@
           {
             "name": "WWW Wily's Desk",
             "id": 11735213,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6911,6 +7140,7 @@
           {
             "name": "WWW Wall BMD",
             "id": 11735153,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6929,6 +7159,7 @@
           {
             "name": "WWW 1 East BMD",
             "id": 11735120,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6947,6 +7178,7 @@
           {
             "name": "WWW 1 West BMD",
             "id": 11735119,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6965,6 +7197,7 @@
           {
             "name": "WWW 1 Central BMD",
             "id": 11735118,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6983,6 +7216,7 @@
           {
             "name": "WWW 2 East BMD",
             "id": 11735121,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7001,6 +7235,7 @@
           {
             "name": "WWW 2 Northwest BMD",
             "id": 11735122,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7019,6 +7254,7 @@
           {
             "name": "WWW 3 East BMD",
             "id": 11735123,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7037,6 +7273,7 @@
           {
             "name": "WWW 3 North BMD",
             "id": 11735124,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7055,6 +7292,7 @@
           {
             "name": "WWW 4 Central BMD",
             "id": 11735126,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7073,6 +7311,7 @@
           {
             "name": "WWW 4 Northwest BMD",
             "id": 11735125,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7091,6 +7330,7 @@
           {
             "name": "Alpha Defeated",
             "id": null,
+            "region": "WWW Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7132,6 +7372,7 @@
           {
             "name": "Secret 1 South BMD",
             "id": 11735074,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7150,6 +7391,7 @@
           {
             "name": "Secret 1 Northeast BMD",
             "id": 11735075,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7168,6 +7410,7 @@
           {
             "name": "Secret 1 Northwest BMD",
             "id": 11735076,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7186,6 +7429,7 @@
           {
             "name": "Secret 2 Island BMD",
             "id": 11735079,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7204,6 +7448,7 @@
           {
             "name": "Secret 2 Lower BMD",
             "id": 11735078,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7222,6 +7467,7 @@
           {
             "name": "Secret 2 Upper BMD",
             "id": 11735077,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7240,6 +7486,7 @@
           {
             "name": "Secret 3 Island BMD",
             "id": 11735081,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7261,6 +7508,7 @@
           {
             "name": "Secret 3 South BMD",
             "id": 11735080,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7279,6 +7527,7 @@
           {
             "name": "Secret 3 BugFrag BMD",
             "id": 11735082,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7300,6 +7549,7 @@
           {
             "name": "Serenade",
             "id": 11735311,
+            "region": "Secret Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10749,16 +10999,512 @@
     }
   },
   "item_groups": {
-    "1": [
-      "BattleChips",
-      "BugFrags",
-      "Everything",
-      "Key Items",
-      "Navi Chips",
-      "Programs",
-      "Subchips",
-      "Zenny"
-    ]
+    "1": {
+      "Key Items": [
+        "Progressive Undernet Rank",
+        "SpinGrn",
+        "SpinDark",
+        "SpinRed",
+        "CYokaPas",
+        "SubPET",
+        "SpinWht",
+        "SpinYllw",
+        "OrderSys",
+        "SpinBlue",
+        "CBeacPas",
+        "CACDCPas",
+        "RegUP2",
+        "Mr Famous' Wristband",
+        "SpinPurple",
+        "CSciPass",
+        "SpinOrange",
+        "WWW ID",
+        "ExpMem",
+        "Needle",
+        "RegUP1",
+        "RegUP3",
+        "SubMem",
+        "HPMemory",
+        "Hammer",
+        "PETCase",
+        "SpinPink",
+        "ModTools"
+      ],
+      "Subchips": [
+        "SneakRun",
+        "Unlocker",
+        "Untrap",
+        "MiniEnrg",
+        "FullEnrg",
+        "LockEnmy"
+      ],
+      "Programs": [
+        "HP+200 (Yellow)",
+        "Press",
+        "Charge+1 (Pink)",
+        "Collect",
+        "OilBody",
+        "QuickGge",
+        "HubBatc",
+        "HP+500 (Yellow)",
+        "SneakRun",
+        "Humor",
+        "UnderSht",
+        "BrkChrg",
+        "Jungle",
+        "Airshoes",
+        "Attack+1 (Pink)",
+        "GigFldr1",
+        "BlckMnd",
+        "HP+100 (Yellow)",
+        "WpnLV+1 (Pink)",
+        "WpnLV+1 (White)",
+        "WpnLV+1 (Yellow)",
+        "HP+100 (Pink)",
+        "Speed+1 (Yellow)",
+        "SetSand",
+        "Charge+1 (White)",
+        "Attack+1 (White)"
+      ],
+      "BattleChips": [
+        "KingMan V3 K",
+        "StepCross Q",
+        "BeastMan V2 B",
+        "IceStage *",
+        "FlashMan F",
+        "SandStage C",
+        "FstGauge *",
+        "Recov10 *",
+        "BlkBomb2 S",
+        "FireRat H",
+        "Bubbler C",
+        "Guardian O",
+        "BowlMan B",
+        "Geddon3 U",
+        "HeatSide T",
+        "GutsMan V2 G",
+        "LongSwrd E",
+        "Spreader P",
+        "Prism Q",
+        "KingMan K",
+        "Barrier L",
+        "Recov120 S",
+        "Muramasa M",
+        "HoleMetr H",
+        "Recov50 G",
+        "Sword E",
+        "Rook F",
+        "MetalMan V3 M",
+        "PanlOut3 *",
+        "StepCross R",
+        "BlkBomb1 P",
+        "Magnum1 A",
+        "SloGauge *",
+        "GutPunch E",
+        "AntiNavi M",
+        "Team1 *",
+        "Cannon C",
+        "BeastMan V3 B",
+        "Tornado L",
+        "ElecSwrd P",
+        "GrabBack K",
+        "Barr100 E",
+        "GutsMan V3 G",
+        "BubblMan V2 B",
+        "Slasher B",
+        "Barrier E",
+        "Recov150 P",
+        "StpCross S",
+        "BambooSword N",
+        "Shadow J",
+        "PlantMan P",
+        "Roll V3 R",
+        "GutPunch B",
+        "DesertMan V2 D",
+        "Panic C",
+        "Geddon1 *",
+        "PlantMan V2 P",
+        "Geddon1 D",
+        "Punk P",
+        "Roll R",
+        "Fire+30 *",
+        "Invis *",
+        "Shake1 S",
+        "DarkAura A",
+        "DeltaRay Z",
+        "GutsMan G",
+        "FlashMan V3 F",
+        "FlamMan V3 F",
+        "AirShoes *",
+        "Geyser B",
+        "Salamndr *",
+        "Spreader N",
+        "VarSword F",
+        "Recov120 O",
+        "Yo-Yo1 D",
+        "ProtoMan V2 B",
+        "VarSword B",
+        "Roll V2 R",
+        "WideSwrd C",
+        "WideSwrd E",
+        "Lance S",
+        "FlashMan V2 F",
+        "BubblMan V3 B",
+        "Repair *",
+        "AntiSword Y",
+        "StepSwrd O",
+        "DrillMan V3 D",
+        "Aura F",
+        "GrabRvng Y",
+        "MetalMan V2 M",
+        "Bass+ X",
+        "StepSwrd N",
+        "CopyDmg *",
+        "Recov120 *",
+        "CustSwrd Z",
+        "Recov30 *",
+        "DrillMan V2 D",
+        "Hammer T",
+        "Jealousy J",
+        "MetalMan M",
+        "BeastMan B",
+        "GutImpct J",
+        "WideSwrd L",
+        "ZeusHammer Z",
+        "FlamMan V2 F",
+        "Team2 *",
+        "GtStrght S",
+        "Recov300 R",
+        "BowlMan V3 B",
+        "Thndrblt *",
+        "Navi+40 *",
+        "GutImpact H",
+        "Poltergeist G",
+        "Aqua+30 *",
+        "Barr200 E",
+        "DesertMan V3 D",
+        "AntiRecv B",
+        "BowlMan V2 B",
+        "StepSwrd M",
+        "SideGun S",
+        "Snctuary C",
+        "DynaWave V",
+        "DesertMan D",
+        "Spreader *",
+        "FlamMan F",
+        "PlantMan V3 P",
+        "GutStrgt Q",
+        "ProtoMan V3 B",
+        "HiCannon *",
+        "Hole *",
+        "GaiaBlde *",
+        "Rockcube *",
+        "AlphaArm\u03a9 V",
+        "SonicWav W",
+        "BubblMan B",
+        "ProtoMan B",
+        "FireSwrd P",
+        "Snake D",
+        "Fountain *",
+        "DrillMan D",
+        "KingMan V2 K",
+        "HeroSwrd P",
+        "AirShot3 *",
+        "Repair A",
+        "GrabRvng A",
+        "Recov200 N"
+      ],
+      "Zenny": [
+        "800z",
+        "1000z",
+        "1600z",
+        "3000z",
+        "900z",
+        "30000z",
+        "50000z",
+        "2000z",
+        "10000z",
+        "9000z",
+        "1400z",
+        "500z",
+        "1200z",
+        "600z",
+        "1800z",
+        "200z"
+      ],
+      "BugFrags": [
+        "10 BugFrags",
+        "30 BugFrags",
+        "1 BugFrag"
+      ],
+      "Navi Chips": [
+        "KingMan V3 K",
+        "BeastMan V3 B",
+        "DesertMan V3 D",
+        "BowlMan V2 B",
+        "BeastMan V2 B",
+        "GutsMan V3 G",
+        "BubblMan V2 B",
+        "FlashMan F",
+        "ProtoMan V2 B",
+        "DesertMan D",
+        "Roll V2 R",
+        "FlashMan V2 F",
+        "BubblMan V3 B",
+        "FlamMan F",
+        "BowlMan B",
+        "PlantMan P",
+        "DrillMan V3 D",
+        "Roll V3 R",
+        "PlantMan V3 P",
+        "DesertMan V2 D",
+        "MetalMan V2 M",
+        "ProtoMan V3 B",
+        "GutsMan V2 G",
+        "PlantMan V2 P",
+        "KingMan K",
+        "Roll R",
+        "DrillMan V2 D",
+        "BubblMan B",
+        "ProtoMan B",
+        "MetalMan M",
+        "BeastMan B",
+        "FlashMan V3 F",
+        "GutsMan G",
+        "FlamMan V2 F",
+        "MetalMan V3 M",
+        "DrillMan D",
+        "FlamMan V3 F",
+        "BowlMan V3 B",
+        "KingMan V2 K"
+      ],
+      "Everything": [
+        "KingMan V3 K",
+        "1000z",
+        "MiniEnrg",
+        "StepCross Q",
+        "CYokaPas",
+        "BeastMan V2 B",
+        "1600z",
+        "LockEnmy",
+        "IceStage *",
+        "OrderSys",
+        "FlashMan F",
+        "2000z",
+        "SandStage C",
+        "FstGauge *",
+        "Recov10 *",
+        "BlkBomb2 S",
+        "FireRat H",
+        "Bubbler C",
+        "Guardian O",
+        "BowlMan B",
+        "ExpMem",
+        "Geddon3 U",
+        "Airshoes",
+        "HeatSide T",
+        "HPMemory",
+        "GutsMan V2 G",
+        "LongSwrd E",
+        "SpinPink",
+        "Prism Q",
+        "Spreader P",
+        "KingMan K",
+        "Speed+1 (Yellow)",
+        "Barrier L",
+        "Recov120 S",
+        "SpinRed",
+        "Muramasa M",
+        "HoleMetr H",
+        "FullEnrg",
+        "SpinYllw",
+        "50000z",
+        "Recov50 G",
+        "Sword E",
+        "Rook F",
+        "MetalMan V3 M",
+        "1200z",
+        "PanlOut3 *",
+        "StepCross R",
+        "BlkBomb1 P",
+        "Magnum1 A",
+        "PETCase",
+        "SloGauge *",
+        "600z",
+        "GutPunch E",
+        "AntiNavi M",
+        "Team1 *",
+        "800z",
+        "Cannon C",
+        "SpinDark",
+        "BeastMan V3 B",
+        "Press",
+        "10 BugFrags",
+        "Tornado L",
+        "ElecSwrd P",
+        "GrabBack K",
+        "Barr100 E",
+        "GutsMan V3 G",
+        "SpinBlue",
+        "BubblMan V2 B",
+        "OilBody",
+        "Slasher B",
+        "HP+500 (Yellow)",
+        "Barrier E",
+        "Recov150 P",
+        "StpCross S",
+        "BambooSword N",
+        "Shadow J",
+        "BrkChrg",
+        "PlantMan P",
+        "Roll V3 R",
+        "GutPunch B",
+        "Jungle",
+        "DesertMan V2 D",
+        "Panic C",
+        "BlckMnd",
+        "Geddon1 *",
+        "HP+100 (Yellow)",
+        "PlantMan V2 P",
+        "Geddon1 D",
+        "Punk P",
+        "Roll R",
+        "Fire+30 *",
+        "Invis *",
+        "Shake1 S",
+        "SubPET",
+        "3000z",
+        "900z",
+        "DarkAura A",
+        "DeltaRay Z",
+        "30000z",
+        "Mr Famous' Wristband",
+        "SpinPurple",
+        "GutsMan G",
+        "FlashMan V3 F",
+        "CSciPass",
+        "SpinOrange",
+        "FlamMan V3 F",
+        "AirShoes *",
+        "GigFldr1",
+        "Geyser B",
+        "Salamndr *",
+        "Spreader N",
+        "QuickGge",
+        "ModTools",
+        "WpnLV+1 (Yellow)",
+        "VarSword F",
+        "1800z",
+        "Progressive Undernet Rank",
+        "HP+200 (Yellow)",
+        "Recov120 O",
+        "Yo-Yo1 D",
+        "RegUP2",
+        "ProtoMan V2 B",
+        "VarSword B",
+        "Roll V2 R",
+        "WideSwrd C",
+        "WideSwrd E",
+        "Lance S",
+        "WWW ID",
+        "FlashMan V2 F",
+        "Repair *",
+        "BubblMan V3 B",
+        "AntiSword Y",
+        "StepSwrd O",
+        "UnderSht",
+        "DrillMan V3 D",
+        "Aura F",
+        "GrabRvng Y",
+        "RegUP3",
+        "MetalMan V2 M",
+        "WpnLV+1 (White)",
+        "Bass+ X",
+        "StepSwrd N",
+        "CopyDmg *",
+        "Attack+1 (White)",
+        "Charge+1 (White)",
+        "SpinGrn",
+        "CustSwrd Z",
+        "Recov120 *",
+        "Recov30 *",
+        "1 BugFrag",
+        "DrillMan V2 D",
+        "Hammer T",
+        "Jealousy J",
+        "MetalMan M",
+        "Unlocker",
+        "BeastMan B",
+        "GutImpct J",
+        "WideSwrd L",
+        "ZeusHammer Z",
+        "FlamMan V2 F",
+        "Team2 *",
+        "GtStrght S",
+        "1400z",
+        "9000z",
+        "30 BugFrags",
+        "Recov300 R",
+        "BowlMan V3 B",
+        "Needle",
+        "RegUP1",
+        "Thndrblt *",
+        "Navi+40 *",
+        "GutImpact H",
+        "Hammer",
+        "Poltergeist G",
+        "HP+100 (Pink)",
+        "Aqua+30 *",
+        "Barr200 E",
+        "DesertMan V3 D",
+        "AntiRecv B",
+        "BowlMan V2 B",
+        "SpinWht",
+        "Untrap",
+        "StepSwrd M",
+        "SideGun S",
+        "CBeacPas",
+        "CACDCPas",
+        "Snctuary C",
+        "10000z",
+        "DynaWave V",
+        "DesertMan D",
+        "Spreader *",
+        "HubBatc",
+        "FlamMan F",
+        "SneakRun",
+        "500z",
+        "Humor",
+        "PlantMan V3 P",
+        "Attack+1 (Pink)",
+        "GutStrgt Q",
+        "ProtoMan V3 B",
+        "HiCannon *",
+        "Charge+1 (Pink)",
+        "SetSand",
+        "200z",
+        "Hole *",
+        "GaiaBlde *",
+        "Rockcube *",
+        "AlphaArm\u03a9 V",
+        "SonicWav W",
+        "BubblMan B",
+        "ProtoMan B",
+        "FireSwrd P",
+        "Collect",
+        "Snake D",
+        "Fountain *",
+        "DrillMan D",
+        "SubMem",
+        "WpnLV+1 (Pink)",
+        "KingMan V2 K",
+        "HeroSwrd P",
+        "AirShot3 *",
+        "Repair A",
+        "GrabRvng A",
+        "Recov200 N"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

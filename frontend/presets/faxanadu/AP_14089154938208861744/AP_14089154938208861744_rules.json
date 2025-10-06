@@ -62,15 +62,15 @@
             "name": "Eolis -> Path to Apolune",
             "connected_region": "Path to Apolune",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": "Key Jack"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Progressive Sword"
+                  "type": "constant",
+                  "value": [
+                    "Key Jack",
+                    "Progressive Sword"
+                  ]
                 }
               ]
             },
@@ -84,6 +84,7 @@
           {
             "name": "Eolis Guru",
             "id": 400100,
+            "region": "Eolis",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -102,6 +103,7 @@
           {
             "name": "Eolis Key Jack",
             "id": 400101,
+            "region": "Eolis",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -133,6 +135,7 @@
           {
             "name": "Eolis Hand Dagger",
             "id": 400102,
+            "region": "Eolis",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -164,6 +167,7 @@
           {
             "name": "Eolis Red Potion",
             "id": 400103,
+            "region": "Eolis",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -195,6 +199,7 @@
           {
             "name": "Eolis Elixir",
             "id": 400104,
+            "region": "Eolis",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -226,6 +231,7 @@
           {
             "name": "Eolis Deluge",
             "id": 400105,
+            "region": "Eolis",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -293,6 +299,7 @@
           {
             "name": "Path to Apolune Magic Shield",
             "id": 400106,
+            "region": "Path to Apolune",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -314,6 +321,7 @@
           {
             "name": "Path to Apolune Death",
             "id": 400107,
+            "region": "Path to Apolune",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -389,6 +397,7 @@
           {
             "name": "Apolune Small Shield",
             "id": 400108,
+            "region": "Apolune",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -407,6 +416,7 @@
           {
             "name": "Apolune Hand Dagger",
             "id": 400109,
+            "region": "Apolune",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -425,6 +435,7 @@
           {
             "name": "Apolune Deluge",
             "id": 400110,
+            "region": "Apolune",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -443,6 +454,7 @@
           {
             "name": "Apolune Red Potion",
             "id": 400111,
+            "region": "Apolune",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -461,6 +473,7 @@
           {
             "name": "Apolune Key Jack",
             "id": 400112,
+            "region": "Apolune",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -505,6 +518,7 @@
           {
             "name": "Tower of Trunk Hidden Mattock",
             "id": 400113,
+            "region": "Tower of Trunk",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -546,6 +560,7 @@
           {
             "name": "Tower of Trunk Hidden Hourglass",
             "id": 400114,
+            "region": "Tower of Trunk",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -564,6 +579,7 @@
           {
             "name": "Tower of Trunk Boss Mattock",
             "id": 400115,
+            "region": "Tower of Trunk",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -618,6 +634,7 @@
           {
             "name": "Path to Forepaw Hidden Red Potion",
             "id": 400116,
+            "region": "Path to Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -636,17 +653,18 @@
           {
             "name": "Path to Forepaw Glove",
             "id": 400117,
+            "region": "Path to Forepaw",
             "crystal": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": "Deluge"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Unlock Wingboots"
+                  "type": "constant",
+                  "value": [
+                    "Deluge",
+                    "Unlock Wingboots"
+                  ]
                 }
               ]
             },
@@ -699,6 +717,7 @@
           {
             "name": "Forepaw Long Sword",
             "id": 400118,
+            "region": "Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -717,6 +736,7 @@
           {
             "name": "Forepaw Studded Mail",
             "id": 400119,
+            "region": "Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -735,6 +755,7 @@
           {
             "name": "Forepaw Small Shield",
             "id": 400120,
+            "region": "Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -753,6 +774,7 @@
           {
             "name": "Forepaw Red Potion",
             "id": 400121,
+            "region": "Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -771,6 +793,7 @@
           {
             "name": "Forepaw Wingboots",
             "id": 400122,
+            "region": "Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -789,6 +812,7 @@
           {
             "name": "Forepaw Key Jack",
             "id": 400123,
+            "region": "Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -807,6 +831,7 @@
           {
             "name": "Forepaw Key Queen",
             "id": 400124,
+            "region": "Forepaw",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -881,27 +906,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Key Queen"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Ring of Ruby"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sky Spring Flow"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Tower of Fortress Spring Flow"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Joker Spring Flow"
+                      "type": "constant",
+                      "value": [
+                        "Joker Spring Flow",
+                        "Key Queen",
+                        "Ring of Ruby",
+                        "Sky Spring Flow",
+                        "Tower of Fortress Spring Flow"
+                      ]
                     }
                   ]
                 },
@@ -928,6 +944,7 @@
           {
             "name": "Trunk Hidden Ointment",
             "id": 400125,
+            "region": "Trunk",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -946,6 +963,7 @@
           {
             "name": "Trunk Hidden Red Potion",
             "id": 400126,
+            "region": "Trunk",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -964,6 +982,7 @@
           {
             "name": "Trunk Red Potion",
             "id": 400127,
+            "region": "Trunk",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -985,6 +1004,7 @@
           {
             "name": "Sky Spring",
             "id": null,
+            "region": "Trunk",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1029,6 +1049,7 @@
           {
             "name": "Joker Spring Ruby Ring",
             "id": 400128,
+            "region": "Joker Spring",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1047,6 +1068,7 @@
           {
             "name": "Joker Spring",
             "id": null,
+            "region": "Joker Spring",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1088,6 +1110,7 @@
           {
             "name": "Tower of Fortress Poison 1",
             "id": 400129,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1106,6 +1129,7 @@
           {
             "name": "Tower of Fortress Poison 2",
             "id": 400130,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1124,6 +1148,7 @@
           {
             "name": "Tower of Fortress Hidden Wingboots",
             "id": 400131,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1142,6 +1167,7 @@
           {
             "name": "Tower of Fortress Ointment",
             "id": 400132,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1160,6 +1186,7 @@
           {
             "name": "Tower of Fortress Boss Wingboots",
             "id": 400133,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1178,6 +1205,7 @@
           {
             "name": "Tower of Fortress Elixir",
             "id": 400134,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1196,6 +1224,7 @@
           {
             "name": "Tower of Fortress Guru",
             "id": 400135,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1217,6 +1246,7 @@
           {
             "name": "Tower of Fortress Spring",
             "id": null,
+            "region": "Tower of Fortress",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1305,6 +1335,7 @@
           {
             "name": "Path to Mascon Hidden Wingboots",
             "id": 400136,
+            "region": "Path to Mascon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1346,6 +1377,7 @@
           {
             "name": "Tower of Red Potion",
             "id": 400137,
+            "region": "Tower of Red Potion",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1400,6 +1432,7 @@
           {
             "name": "Mascon Large Shield",
             "id": 400138,
+            "region": "Mascon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1418,6 +1451,7 @@
           {
             "name": "Mascon Thunder",
             "id": 400139,
+            "region": "Mascon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1436,6 +1470,7 @@
           {
             "name": "Mascon Mattock",
             "id": 400140,
+            "region": "Mascon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1454,6 +1489,7 @@
           {
             "name": "Mascon Red Potion",
             "id": 400141,
+            "region": "Mascon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1472,6 +1508,7 @@
           {
             "name": "Mascon Key Jack",
             "id": 400142,
+            "region": "Mascon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1490,6 +1527,7 @@
           {
             "name": "Mascon Key Queen",
             "id": 400143,
+            "region": "Mascon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1562,6 +1600,7 @@
           {
             "name": "Misty Shop Death",
             "id": 400144,
+            "region": "Path to Victim",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1583,6 +1622,7 @@
           {
             "name": "Misty Shop Hourglass",
             "id": 400145,
+            "region": "Path to Victim",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1601,6 +1641,7 @@
           {
             "name": "Misty Shop Elixir",
             "id": 400146,
+            "region": "Path to Victim",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1619,6 +1660,7 @@
           {
             "name": "Misty Shop Red Potion",
             "id": 400147,
+            "region": "Path to Victim",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1637,6 +1679,7 @@
           {
             "name": "Misty Doctor Office",
             "id": 400148,
+            "region": "Path to Victim",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1699,6 +1742,7 @@
           {
             "name": "Tower of Suffer Hidden Wingboots",
             "id": 400149,
+            "region": "Tower of Suffer",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1736,6 +1780,7 @@
           {
             "name": "Tower of Suffer Hidden Hourglass",
             "id": 400150,
+            "region": "Tower of Suffer",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1754,6 +1799,7 @@
           {
             "name": "Tower of Suffer Pendant",
             "id": 400151,
+            "region": "Tower of Suffer",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1808,6 +1854,7 @@
           {
             "name": "Victim Full Plate",
             "id": 400152,
+            "region": "Victim",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1826,6 +1873,7 @@
           {
             "name": "Victim Mattock",
             "id": 400153,
+            "region": "Victim",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1847,6 +1895,7 @@
           {
             "name": "Victim Red Potion",
             "id": 400154,
+            "region": "Victim",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1865,6 +1914,7 @@
           {
             "name": "Victim Key King",
             "id": 400155,
+            "region": "Victim",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1883,6 +1933,7 @@
           {
             "name": "Victim Key Queen",
             "id": 400156,
+            "region": "Victim",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1924,15 +1975,15 @@
             "name": "Mist -> Useless Tower",
             "connected_region": "Useless Tower",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": "Key King"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Unlock Wingboots"
+                  "type": "constant",
+                  "value": [
+                    "Key King",
+                    "Unlock Wingboots"
+                  ]
                 }
               ]
             },
@@ -1976,6 +2027,7 @@
           {
             "name": "Victim Tavern",
             "id": 400157,
+            "region": "Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1994,6 +2046,7 @@
           {
             "name": "Mist Hidden Poison 1",
             "id": 400158,
+            "region": "Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2012,6 +2065,7 @@
           {
             "name": "Mist Hidden Poison 2",
             "id": 400159,
+            "region": "Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2030,6 +2084,7 @@
           {
             "name": "Mist Hidden Wingboots",
             "id": 400160,
+            "region": "Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2048,6 +2103,7 @@
           {
             "name": "Misty Magic Hall",
             "id": 400161,
+            "region": "Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2066,6 +2122,7 @@
           {
             "name": "Misty House",
             "id": 400162,
+            "region": "Mist",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2110,6 +2167,7 @@
           {
             "name": "Useless Tower",
             "id": 400163,
+            "region": "Useless Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2151,6 +2209,7 @@
           {
             "name": "Tower of Mist Hidden Ointment",
             "id": 400164,
+            "region": "Tower of Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2169,6 +2228,7 @@
           {
             "name": "Tower of Mist Elixir",
             "id": 400165,
+            "region": "Tower of Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2187,6 +2247,7 @@
           {
             "name": "Tower of Mist Black Onyx",
             "id": 400166,
+            "region": "Tower of Mist",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2271,6 +2332,7 @@
           {
             "name": "Path to Conflate Hidden Ointment",
             "id": 400167,
+            "region": "Path to Conflate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2289,6 +2351,7 @@
           {
             "name": "Path to Conflate Poison",
             "id": 400168,
+            "region": "Path to Conflate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2330,6 +2393,7 @@
           {
             "name": "Helm Branch Hidden Glove",
             "id": 400169,
+            "region": "Helm Branch",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2348,6 +2412,7 @@
           {
             "name": "Helm Branch Battle Helmet",
             "id": 400170,
+            "region": "Helm Branch",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2389,6 +2454,7 @@
           {
             "name": "Conflate Giant Blade",
             "id": 400171,
+            "region": "Conflate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2407,6 +2473,7 @@
           {
             "name": "Conflate Magic Shield",
             "id": 400172,
+            "region": "Conflate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2425,6 +2492,7 @@
           {
             "name": "Conflate Wingboots",
             "id": 400173,
+            "region": "Conflate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2443,6 +2511,7 @@
           {
             "name": "Conflate Red Potion",
             "id": 400174,
+            "region": "Conflate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2461,6 +2530,7 @@
           {
             "name": "Conflate Guru",
             "id": 400175,
+            "region": "Conflate",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2522,6 +2592,7 @@
           {
             "name": "Branches Hidden Ointment",
             "id": 400176,
+            "region": "Branches",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2540,6 +2611,7 @@
           {
             "name": "Branches Poison",
             "id": 400177,
+            "region": "Branches",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2558,6 +2630,7 @@
           {
             "name": "Branches Hidden Mattock",
             "id": 400178,
+            "region": "Branches",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2579,6 +2652,7 @@
           {
             "name": "Branches Hidden Hourglass",
             "id": 400179,
+            "region": "Branches",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2633,6 +2707,7 @@
           {
             "name": "Path to Daybreak Hidden Wingboots 1",
             "id": 400180,
+            "region": "Path to Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2651,6 +2726,7 @@
           {
             "name": "Path to Daybreak Magical Rod",
             "id": 400181,
+            "region": "Path to Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2669,6 +2745,7 @@
           {
             "name": "Path to Daybreak Hidden Wingboots 2",
             "id": 400182,
+            "region": "Path to Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2687,6 +2764,7 @@
           {
             "name": "Path to Daybreak Poison",
             "id": 400183,
+            "region": "Path to Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2705,6 +2783,7 @@
           {
             "name": "Path to Daybreak Glove",
             "id": 400184,
+            "region": "Path to Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2726,6 +2805,7 @@
           {
             "name": "Path to Daybreak Battle Suit",
             "id": 400185,
+            "region": "Path to Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2783,6 +2863,7 @@
           {
             "name": "Daybreak Tilte",
             "id": 400186,
+            "region": "Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2801,6 +2882,7 @@
           {
             "name": "Daybreak Giant Blade",
             "id": 400187,
+            "region": "Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2819,6 +2901,7 @@
           {
             "name": "Daybreak Red Potion",
             "id": 400188,
+            "region": "Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2837,6 +2920,7 @@
           {
             "name": "Daybreak Key King",
             "id": 400189,
+            "region": "Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2855,6 +2939,7 @@
           {
             "name": "Daybreak Key Queen",
             "id": 400190,
+            "region": "Daybreak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2936,6 +3021,7 @@
           {
             "name": "Dartmoor Castle Hidden Hourglass",
             "id": 400191,
+            "region": "Dartmoor Castle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2957,6 +3043,7 @@
           {
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
+            "region": "Dartmoor Castle",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3019,6 +3106,7 @@
           {
             "name": "Dartmoor Giant Blade",
             "id": 400193,
+            "region": "Dartmoor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3037,6 +3125,7 @@
           {
             "name": "Dartmoor Red Potion",
             "id": 400194,
+            "region": "Dartmoor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3055,6 +3144,7 @@
           {
             "name": "Dartmoor Key King",
             "id": 400195,
+            "region": "Dartmoor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3096,6 +3186,7 @@
           {
             "name": "Fraternal Castle Hidden Ointment",
             "id": 400196,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3114,6 +3205,7 @@
           {
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3153,6 +3245,7 @@
           {
             "name": "Fraternal Castle Poison 1",
             "id": 400198,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3171,6 +3264,7 @@
           {
             "name": "Fraternal Castle Poison 2",
             "id": 400199,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3189,6 +3283,7 @@
           {
             "name": "Fraternal Castle Poison 3",
             "id": 400200,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3207,6 +3302,7 @@
           {
             "name": "Fraternal Castle Hidden Hourglass",
             "id": 400202,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3225,6 +3321,7 @@
           {
             "name": "Fraternal Castle Dragon Slayer",
             "id": 400203,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3243,6 +3340,7 @@
           {
             "name": "Fraternal Castle Guru",
             "id": 400204,
+            "region": "Fraternal Castle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3291,6 +3389,7 @@
           {
             "name": "Evil Fortress Ointment",
             "id": 400205,
+            "region": "Evil Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3309,6 +3408,7 @@
           {
             "name": "Evil Fortress Poison 1",
             "id": 400206,
+            "region": "Evil Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3327,6 +3427,7 @@
           {
             "name": "Evil Fortress Glove",
             "id": 400207,
+            "region": "Evil Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3345,6 +3446,7 @@
           {
             "name": "Evil Fortress Poison 2",
             "id": 400208,
+            "region": "Evil Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3363,6 +3465,7 @@
           {
             "name": "Evil Fortress Poison 3",
             "id": 400209,
+            "region": "Evil Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3381,6 +3484,7 @@
           {
             "name": "Evil Fortress Hidden Glove",
             "id": 400210,
+            "region": "Evil Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3399,6 +3503,7 @@
           {
             "name": "Evil One",
             "id": null,
+            "region": "Evil Fortress",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3854,9 +3959,40 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Ring of Elf",
+        "Wingboots",
+        "Poison",
+        "Progressive Armor",
+        "Fire",
+        "Black Onyx",
+        "Key King",
+        "Progressive Sword",
+        "Deluge",
+        "Key Ace",
+        "Hourglass",
+        "Thunder",
+        "Magical Rod",
+        "Pendant",
+        "Tilte",
+        "Glove",
+        "Red Potion",
+        "Death",
+        "Key Queen",
+        "Ring of Dworf",
+        "Unlock Wingboots",
+        "Spring Elixir",
+        "Ring of Ruby",
+        "Ointment",
+        "Key Joker",
+        "Key Jack",
+        "Elixir",
+        "Progressive Shield",
+        "Demons Ring",
+        "Mattock"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

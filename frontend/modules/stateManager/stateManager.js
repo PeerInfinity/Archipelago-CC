@@ -265,6 +265,15 @@ export class StateManager {
           this.inventory[itemName] = 0;
         }
       }
+      // Also clear virtual progression items (items that exist in inventory but not in itemData)
+      // These are items created by progression_mapping (e.g., "rep" in Bomb Rush Cyberfunk)
+      if (this.progressionMapping) {
+        for (const virtualItemName in this.progressionMapping) {
+          if (virtualItemName in this.inventory) {
+            this.inventory[virtualItemName] = 0;
+          }
+        }
+      }
     }
     this._logDebug('[StateManager Class] Inventory cleared.');
 
@@ -283,10 +292,27 @@ export class StateManager {
 
   clearState(options = { recomputeAndSendUpdate: true }) {
     // Re-initialize inventory - canonical format: reset all items to 0
-    if (this.inventory && this.itemData) {
-      for (const itemName in this.itemData) {
-        if (Object.hasOwn(this.itemData, itemName)) {
+    if (this.inventory) {
+      // First, clear all items currently in inventory (including unknown/event items)
+      for (const itemName in this.inventory) {
+        if (Object.hasOwn(this.inventory, itemName)) {
           this.inventory[itemName] = 0;
+        }
+      }
+
+      // Also ensure all items in itemData are set to 0 (in case they weren't in inventory yet)
+      if (this.itemData) {
+        for (const itemName in this.itemData) {
+          if (Object.hasOwn(this.itemData, itemName)) {
+            this.inventory[itemName] = 0;
+          }
+        }
+      }
+
+      // Also ensure virtual progression items are cleared
+      if (this.progressionMapping) {
+        for (const virtualItemName in this.progressionMapping) {
+          this.inventory[virtualItemName] = 0;
         }
       }
     } else if (!this.inventory) {
@@ -1501,6 +1527,7 @@ export class StateManager {
         snapshotInterfaceContext.parent_region = this.regions[fromRegion];
         // Set currentExit so get_entrance can detect self-references
         snapshotInterfaceContext.currentExit = exit.name;
+
         const ruleEvaluationResult = exit.access_rule
           ? this.evaluateRuleFromEngine(
             exit.access_rule,
@@ -3088,6 +3115,14 @@ export class StateManager {
    * Helper function to add items to canonical inventory
    */
   _addItemToInventory(itemName, count = 1) {
+    // Skip virtual progression counter items (they're managed automatically by progression_mapping)
+    if (this.progressionMapping && itemName in this.progressionMapping) {
+      this._logDebug(
+        `[StateManager] Skipping virtual progression item "${itemName}" - it's managed by progression_mapping`
+      );
+      return;
+    }
+
     // Canonical format: plain object
     if (!(itemName in this.inventory)) {
       log('warn', `[StateManager] Adding unknown item: ${itemName}`);
@@ -3099,6 +3134,22 @@ export class StateManager {
     const maxCount = itemDef?.max_count ?? Infinity;
 
     this.inventory[itemName] = Math.min(currentCount + count, maxCount);
+
+    // Handle progression mapping (e.g., REP items in Bomb Rush Cyberfunk)
+    if (this.progressionMapping) {
+      for (const [virtualItemName, mapping] of Object.entries(this.progressionMapping)) {
+        if (mapping.type === 'additive' && mapping.items && itemName in mapping.items) {
+          const valueToAdd = mapping.items[itemName] * count;
+          if (!(virtualItemName in this.inventory)) {
+            this.inventory[virtualItemName] = 0;
+          }
+          this.inventory[virtualItemName] += valueToAdd;
+          this._logDebug(
+            `[StateManager] Progression mapping: Added ${valueToAdd} to "${virtualItemName}" from "${itemName}"`
+          );
+        }
+      }
+    }
   }
 
   /**
@@ -3119,6 +3170,21 @@ export class StateManager {
     this._logDebug(
       `[StateManager] _removeItemFromInventory: "${itemName}" count changed from ${currentCount} to ${newCount}`
     );
+
+    // Handle progression mapping removal (e.g., REP items in Bomb Rush Cyberfunk)
+    if (this.progressionMapping) {
+      for (const [virtualItemName, mapping] of Object.entries(this.progressionMapping)) {
+        if (mapping.type === 'additive' && mapping.items && itemName in mapping.items) {
+          const valueToRemove = mapping.items[itemName] * count;
+          if (virtualItemName in this.inventory) {
+            this.inventory[virtualItemName] = Math.max(0, this.inventory[virtualItemName] - valueToRemove);
+            this._logDebug(
+              `[StateManager] Progression mapping: Removed ${valueToRemove} from "${virtualItemName}" due to "${itemName}"`
+            );
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -3157,6 +3223,54 @@ export class StateManager {
    */
   _hasGroup(groupName) {
     return this._countGroup(groupName) > 0;
+  }
+
+  /**
+   * Check if the inventory has any of the specified items
+   * @param {Array<string>} items - Array of item names to check
+   * @returns {boolean} - True if at least one of the items is in inventory
+   */
+  has_any(items) {
+    if (!Array.isArray(items)) {
+      this._logDebug('[has_any] Argument is not an array:', items);
+      return false;
+    }
+    const result = items.some(itemName => {
+      const hasIt = this._hasItem(itemName);
+      this._logDebug(`[has_any] Checking ${itemName}: ${hasIt} (inventory count: ${this.inventory[itemName] || 0})`);
+      return hasIt;
+    });
+    this._logDebug(`[has_any] Final result for ${JSON.stringify(items)}: ${result}`);
+    return result;
+  }
+
+  /**
+   * Check if the inventory has all of the specified items
+   * @param {Array<string>} items - Array of item names to check
+   * @returns {boolean} - True if all of the items are in inventory
+   */
+  has_all(items) {
+    if (!Array.isArray(items)) {
+      return false;
+    }
+    return items.every(itemName => this._hasItem(itemName));
+  }
+
+  /**
+   * Check if the inventory has all of the specified items with counts
+   * @param {Object} itemCounts - Object mapping item names to required counts
+   * @returns {boolean} - True if all items meet or exceed their required counts
+   */
+  has_all_counts(itemCounts) {
+    if (typeof itemCounts !== 'object' || itemCounts === null) {
+      return false;
+    }
+    for (const [itemName, requiredCount] of Object.entries(itemCounts)) {
+      if (this._countItem(itemName) < requiredCount) {
+        return false;
+      }
+    }
+    return true;
   }
 
   applyRuntimeState(payload) {

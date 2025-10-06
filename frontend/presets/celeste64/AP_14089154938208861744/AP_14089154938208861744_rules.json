@@ -263,6 +263,7 @@
           {
             "name": "First Strawberry",
             "id": 13238272,
+            "region": "Intro Islands",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -287,6 +288,7 @@
           {
             "name": "Intro Checkpoint",
             "id": 13239296,
+            "region": "Intro Islands",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -479,6 +481,7 @@
           {
             "name": "Floating Blocks Strawberry",
             "id": 13238273,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -503,6 +506,7 @@
           {
             "name": "South-East Tower Top Strawberry",
             "id": 13238274,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -527,6 +531,7 @@
           {
             "name": "Theo Strawberry",
             "id": 13238275,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -551,6 +556,7 @@
           {
             "name": "Fall Through Spike Floor Strawberry",
             "id": 13238276,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -575,6 +581,7 @@
           {
             "name": "South-West Dash Refills Strawberry",
             "id": 13238280,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -599,6 +606,7 @@
           {
             "name": "South-East Tower Side Strawberry",
             "id": 13238281,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -623,6 +631,7 @@
           {
             "name": "Girders Strawberry",
             "id": 13238282,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -647,6 +656,7 @@
           {
             "name": "Theo Tower Lower Cassette Strawberry",
             "id": 13238292,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -671,6 +681,7 @@
           {
             "name": "Theo Tower Upper Cassette Strawberry",
             "id": 13238293,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -695,6 +706,7 @@
           {
             "name": "You Are Ready Cassette Strawberry",
             "id": 13238295,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -719,6 +731,7 @@
           {
             "name": "Granny Checkpoint",
             "id": 13239297,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -743,6 +756,7 @@
           {
             "name": "South-East Tower Checkpoint",
             "id": 13239298,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -767,6 +781,7 @@
           {
             "name": "Climb Sign Checkpoint",
             "id": 13239299,
+            "region": "Granny Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -918,6 +933,7 @@
           {
             "name": "Troll Strawberry",
             "id": 13238277,
+            "region": "Freeway Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -942,6 +958,7 @@
           {
             "name": "Falling Blocks Strawberry",
             "id": 13238278,
+            "region": "Freeway Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -966,6 +983,7 @@
           {
             "name": "Breakable Blocks Strawberry",
             "id": 13238284,
+            "region": "Freeway Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -990,6 +1008,7 @@
           {
             "name": "South End of Bridge Cassette Strawberry",
             "id": 13238294,
+            "region": "Freeway Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1014,6 +1033,7 @@
           {
             "name": "North End of Bridge Cassette Strawberry",
             "id": 13238297,
+            "region": "Freeway Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1038,6 +1058,7 @@
           {
             "name": "Freeway Checkpoint",
             "id": 13239300,
+            "region": "Freeway Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1062,6 +1083,7 @@
           {
             "name": "Freeway Feather Checkpoint",
             "id": 13239301,
+            "region": "Freeway Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1141,6 +1163,7 @@
           {
             "name": "Traffic Block Strawberry",
             "id": 13238279,
+            "region": "North-West Girders Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1313,6 +1336,7 @@
           {
             "name": "Feather Maze Strawberry",
             "id": 13238285,
+            "region": "North-East Feathers Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1337,6 +1361,7 @@
           {
             "name": "Feather Chain Strawberry",
             "id": 13238286,
+            "region": "North-East Feathers Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1361,6 +1386,7 @@
           {
             "name": "Feather Hidden Strawberry",
             "id": 13238287,
+            "region": "North-East Feathers Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1385,6 +1411,7 @@
           {
             "name": "Distant Feather Cassette Strawberry",
             "id": 13238298,
+            "region": "North-East Feathers Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1409,6 +1436,7 @@
           {
             "name": "Feather Arches Cassette Strawberry",
             "id": 13238299,
+            "region": "North-East Feathers Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1433,6 +1461,7 @@
           {
             "name": "Feather Maze Checkpoint",
             "id": 13239302,
+            "region": "North-East Feathers Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1584,6 +1613,7 @@
           {
             "name": "Double Dash Puzzle Strawberry",
             "id": 13238288,
+            "region": "South-East House Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1608,6 +1638,7 @@
           {
             "name": "Double Dash Spike Climb Strawberry",
             "id": 13238289,
+            "region": "South-East House Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1632,6 +1663,7 @@
           {
             "name": "Double Dash Spring Strawberry",
             "id": 13238290,
+            "region": "South-East House Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1656,6 +1688,7 @@
           {
             "name": "Cassette Hidden in the House Strawberry",
             "id": 13238296,
+            "region": "South-East House Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1680,6 +1713,7 @@
           {
             "name": "Double Dash House Checkpoint",
             "id": 13239303,
+            "region": "South-East House Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1842,6 +1876,7 @@
           {
             "name": "Badeline Tower Bottom Strawberry",
             "id": 13238283,
+            "region": "Badeline Tower Lower",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1866,6 +1901,7 @@
           {
             "name": "Badeline Tower Breakable Bottom Strawberry",
             "id": 13238291,
+            "region": "Badeline Tower Lower",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2049,6 +2085,7 @@
           {
             "name": "Badeline Tower Cassette Strawberry",
             "id": 13238300,
+            "region": "Badeline Tower Upper",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2073,6 +2110,7 @@
           {
             "name": "Badeline Tower Checkpoint",
             "id": 13239304,
+            "region": "Badeline Tower Upper",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2194,6 +2232,7 @@
           {
             "name": "Badeline Island Cassette Strawberry",
             "id": 13238301,
+            "region": "Badeline Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2218,6 +2257,7 @@
           {
             "name": "Badeline Island Checkpoint",
             "id": 13239305,
+            "region": "Badeline Island",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2595,9 +2635,34 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Feather Maze Checkpoint",
+        "Cassettes",
+        "Air Dash",
+        "Climb Sign Checkpoint",
+        "Traffic Blocks",
+        "Granny Checkpoint",
+        "Strawberry",
+        "Breakable Blocks",
+        "Badeline Tower Checkpoint",
+        "Springs",
+        "Dash Refills",
+        "Double Dash House Checkpoint",
+        "South-East Tower Checkpoint",
+        "Skid Jump",
+        "Raspberry",
+        "Freeway Checkpoint",
+        "Badeline Island Checkpoint",
+        "Coins",
+        "Double Dash Refills",
+        "Feathers",
+        "Ground Dash",
+        "Climb",
+        "Intro Checkpoint",
+        "Freeway Feather Checkpoint"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

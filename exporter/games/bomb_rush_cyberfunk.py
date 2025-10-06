@@ -221,6 +221,25 @@ class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
         
         return item_data
     
+    def get_progression_mapping(self, world) -> Dict[str, Any]:
+        """Return progression mapping for REP items.
+
+        In Bomb Rush Cyberfunk, REP items like "8 REP", "16 REP", etc. contribute
+        their numeric value to a virtual "rep" counter in state.prog_items.
+        """
+        return {
+            "rep": {
+                "type": "additive",
+                "items": {
+                    "8 REP": 8,
+                    "16 REP": 16,
+                    "24 REP": 24,
+                    "32 REP": 32,
+                    "48 REP": 48
+                }
+            }
+        }
+
     def get_game_info(self, world) -> Dict[str, Any]:
         """Get information about Bomb Rush Cyberfunk's rule formats and structure."""
         return {

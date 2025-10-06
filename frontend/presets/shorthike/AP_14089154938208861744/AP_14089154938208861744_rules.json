@@ -62,6 +62,7 @@
           {
             "name": "Start Beach Seashell",
             "id": 83001,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -80,6 +81,7 @@
           {
             "name": "Beach Hut Seashell",
             "id": 83002,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -98,6 +100,7 @@
           {
             "name": "Beach Umbrella Seashell",
             "id": 83003,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -116,6 +119,7 @@
           {
             "name": "Sid Beach Mound Seashell",
             "id": 83004,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -134,6 +138,7 @@
           {
             "name": "Sid Beach Seashell",
             "id": 83005,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -152,6 +157,7 @@
           {
             "name": "Shirley's Point Beach Seashell",
             "id": 83006,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -170,6 +176,7 @@
           {
             "name": "Shirley's Point Rock Seashell",
             "id": 83007,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -188,6 +195,7 @@
           {
             "name": "Visitor's Center Beach Seashell",
             "id": 83008,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -206,6 +214,7 @@
           {
             "name": "West River Seashell",
             "id": 83009,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -224,6 +233,7 @@
           {
             "name": "West Riverbank Seashell",
             "id": 83010,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -242,6 +252,7 @@
           {
             "name": "Stone Tower Riverbank Seashell",
             "id": 83011,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -260,6 +271,7 @@
           {
             "name": "North Beach Seashell",
             "id": 83012,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -278,6 +290,7 @@
           {
             "name": "North Coast Seashell",
             "id": 83013,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -296,6 +309,7 @@
           {
             "name": "Boat Cliff Seashell",
             "id": 83014,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -314,6 +328,7 @@
           {
             "name": "Boat Isle Mound Seashell",
             "id": 83015,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -332,6 +347,7 @@
           {
             "name": "East Coast Seashell",
             "id": 83016,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -350,6 +366,7 @@
           {
             "name": "House North Beach Seashell",
             "id": 83017,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -368,6 +385,7 @@
           {
             "name": "Airstream Island North Seashell",
             "id": 83018,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -386,6 +404,7 @@
           {
             "name": "Airstream Island South Seashell",
             "id": 83019,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -404,6 +423,7 @@
           {
             "name": "Secret Island Beach Seashell",
             "id": 83020,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -422,6 +442,7 @@
           {
             "name": "Meteor Lake Seashell",
             "id": 83126,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -440,6 +461,7 @@
           {
             "name": "Good Creek Path Seashell",
             "id": 83127,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -458,6 +480,7 @@
           {
             "name": "Visitor's Center Shop Golden Feather 1",
             "id": 83021,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -476,6 +499,7 @@
           {
             "name": "Visitor's Center Shop Golden Feather 2",
             "id": 83022,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -494,6 +518,7 @@
           {
             "name": "Visitor's Center Shop Hat",
             "id": 83023,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -515,6 +540,7 @@
           {
             "name": "Tough Bird Salesman Golden Feather 1",
             "id": 83024,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -536,6 +562,7 @@
           {
             "name": "Tough Bird Salesman Golden Feather 2",
             "id": 83025,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -557,6 +584,7 @@
           {
             "name": "Tough Bird Salesman Golden Feather 3",
             "id": 83026,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -578,6 +606,7 @@
           {
             "name": "Tough Bird Salesman Golden Feather 4",
             "id": 83027,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -599,6 +628,7 @@
           {
             "name": "Tough Bird Salesman (400 Coins)",
             "id": 83028,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -620,6 +650,7 @@
           {
             "name": "Beachstickball (10 Hits)",
             "id": 83029,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -641,6 +672,7 @@
           {
             "name": "Beachstickball (20 Hits)",
             "id": 83030,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -662,6 +694,7 @@
           {
             "name": "Beachstickball (30 Hits)",
             "id": 83031,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -683,6 +716,7 @@
           {
             "name": "Shovel Kid Trade",
             "id": 83032,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -704,6 +738,7 @@
           {
             "name": "Compass Guy",
             "id": 83033,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -722,6 +757,7 @@
           {
             "name": "Hawk Peak Bucket Rock",
             "id": 83034,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -740,6 +776,7 @@
           {
             "name": "Orange Islands Bucket Rock",
             "id": 83035,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -758,6 +795,7 @@
           {
             "name": "Bill the Walrus Fisherman",
             "id": 83036,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -776,6 +814,7 @@
           {
             "name": "Catch 3 Fish Reward",
             "id": 83037,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -797,6 +836,7 @@
           {
             "name": "Catch All Fish Reward",
             "id": 83038,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -838,6 +878,7 @@
           {
             "name": "Permit Guy Bribe",
             "id": 83039,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -856,6 +897,7 @@
           {
             "name": "Catch Fish with Permit",
             "id": 83129,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -877,6 +919,7 @@
           {
             "name": "Return Camping Permit",
             "id": 83130,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -898,6 +941,7 @@
           {
             "name": "Blocked Mine Pickaxe 1",
             "id": 83040,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -916,6 +960,7 @@
           {
             "name": "Blocked Mine Pickaxe 2",
             "id": 83041,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -934,6 +979,7 @@
           {
             "name": "Blocked Mine Pickaxe 3",
             "id": 83042,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -952,6 +998,7 @@
           {
             "name": "Blackwood Trail Lookout Toy Shovel",
             "id": 83043,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -970,6 +1017,7 @@
           {
             "name": "Shirley's Point Beach Toy Shovel",
             "id": 83044,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -988,6 +1036,7 @@
           {
             "name": "Visitor's Center Beach Toy Shovel",
             "id": 83045,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1006,6 +1055,7 @@
           {
             "name": "Blackwood Trail Rock Toy Shovel",
             "id": 83046,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1024,6 +1074,7 @@
           {
             "name": "Beach Hut Cliff Toy Shovel",
             "id": 83128,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1042,6 +1093,7 @@
           {
             "name": "Secret Island Beach Trail Stick",
             "id": 83047,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1060,6 +1112,7 @@
           {
             "name": "Below Lighthouse Walkway Stick",
             "id": 83048,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1078,6 +1131,7 @@
           {
             "name": "Beach Hut Rocky Pool Sand Stick",
             "id": 83049,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1096,6 +1150,7 @@
           {
             "name": "Cliff Overlooking West River Waterfall Stick",
             "id": 83050,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1114,6 +1169,7 @@
           {
             "name": "Trail to Tough Bird Salesman Stick",
             "id": 83051,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1132,6 +1188,7 @@
           {
             "name": "North Beach Stick",
             "id": 83052,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1150,6 +1207,7 @@
           {
             "name": "Beachstickball Court Stick",
             "id": 83053,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1168,6 +1226,7 @@
           {
             "name": "Stick Under Sid Beach Umbrella",
             "id": 83054,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1186,6 +1245,7 @@
           {
             "name": "Boat Rental",
             "id": 83055,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1207,6 +1267,7 @@
           {
             "name": "Boat Challenge Reward",
             "id": 83056,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1228,6 +1289,7 @@
           {
             "name": "Outlook Point Dog Gift",
             "id": 83057,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1246,6 +1308,7 @@
           {
             "name": "Collect 15 Seashells",
             "id": 83058,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1271,6 +1334,7 @@
           {
             "name": "Return to Shell Kid",
             "id": 83132,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1308,6 +1372,7 @@
           {
             "name": "Taylor the Turtle Headband Gift",
             "id": 83059,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1326,6 +1391,7 @@
           {
             "name": "Sue the Rabbit Shoes Reward",
             "id": 83060,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1347,6 +1413,7 @@
           {
             "name": "Purchase Sunhat",
             "id": 83061,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1368,6 +1435,7 @@
           {
             "name": "Blackwood Forest Golden Feather",
             "id": 83062,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1386,6 +1454,7 @@
           {
             "name": "Ranger May Shell Necklace Golden Feather",
             "id": 83063,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1407,6 +1476,7 @@
           {
             "name": "Sand Castle Golden Feather",
             "id": 83064,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1428,6 +1498,7 @@
           {
             "name": "Artist Golden Feather",
             "id": 83065,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1446,6 +1517,7 @@
           {
             "name": "Visitor Camp Rock Golden Feather",
             "id": 83066,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1464,6 +1536,7 @@
           {
             "name": "Outlook Cliff Golden Feather",
             "id": 83067,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1482,6 +1555,7 @@
           {
             "name": "Meteor Lake Cliff Golden Feather",
             "id": 83068,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1500,6 +1574,7 @@
           {
             "name": "Secret Island Peak",
             "id": 83069,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1525,6 +1600,7 @@
           {
             "name": "Wristwatch Trade",
             "id": 83070,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1546,6 +1622,7 @@
           {
             "name": "Lighthouse Golden Chest",
             "id": 83071,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1599,6 +1676,7 @@
           {
             "name": "Outlook Golden Chest",
             "id": 83072,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1617,6 +1695,7 @@
           {
             "name": "Stone Tower Golden Chest",
             "id": 83073,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1635,6 +1714,7 @@
           {
             "name": "North Cliff Golden Chest",
             "id": 83074,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1660,6 +1740,7 @@
           {
             "name": "Blackwood Cliff Chest",
             "id": 83075,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1678,6 +1759,7 @@
           {
             "name": "White Coast Trail Chest",
             "id": 83076,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1696,6 +1778,7 @@
           {
             "name": "Sid Beach Chest",
             "id": 83077,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1714,6 +1797,7 @@
           {
             "name": "Sid Beach Buried Treasure Chest",
             "id": 83078,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1735,6 +1819,7 @@
           {
             "name": "Sid Beach Cliff Chest",
             "id": 83079,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1753,6 +1838,7 @@
           {
             "name": "Visitor's Center Buried Chest",
             "id": 83080,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1774,6 +1860,7 @@
           {
             "name": "Visitor's Center Hidden Chest",
             "id": 83081,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1792,6 +1879,7 @@
           {
             "name": "Shirley's Point Chest",
             "id": 83082,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1817,6 +1905,7 @@
           {
             "name": "Caravan Cliff Chest",
             "id": 83083,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1835,6 +1924,7 @@
           {
             "name": "Caravan Arch Chest",
             "id": 83084,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1853,6 +1943,7 @@
           {
             "name": "King Buried Treasure Chest",
             "id": 83085,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1874,6 +1965,7 @@
           {
             "name": "Good Creek Path Buried Chest",
             "id": 83086,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1895,6 +1987,7 @@
           {
             "name": "Good Creek Path West Chest",
             "id": 83087,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1913,6 +2006,7 @@
           {
             "name": "Good Creek Path East Chest",
             "id": 83088,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1931,6 +2025,7 @@
           {
             "name": "West Waterfall Chest",
             "id": 83089,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1949,6 +2044,7 @@
           {
             "name": "Stone Tower West Cliff Chest",
             "id": 83090,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1967,6 +2063,7 @@
           {
             "name": "Bucket Path Chest",
             "id": 83091,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1985,6 +2082,7 @@
           {
             "name": "Bucket Cliff Chest",
             "id": 83092,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2010,6 +2108,7 @@
           {
             "name": "In Her Shadow Buried Treasure Chest",
             "id": 83093,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2031,6 +2130,7 @@
           {
             "name": "Meteor Lake Buried Chest",
             "id": 83094,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2052,6 +2152,7 @@
           {
             "name": "Meteor Lake Chest",
             "id": 83095,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2070,6 +2171,7 @@
           {
             "name": "House North Beach Chest",
             "id": 83096,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2088,6 +2190,7 @@
           {
             "name": "East Coast Chest",
             "id": 83097,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2106,6 +2209,7 @@
           {
             "name": "Fisherman's Boat Chest 1",
             "id": 83099,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2124,6 +2228,7 @@
           {
             "name": "Fisherman's Boat Chest 2",
             "id": 83100,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2142,6 +2247,7 @@
           {
             "name": "Airstream Island Chest",
             "id": 83101,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2160,6 +2266,7 @@
           {
             "name": "West River Waterfall Head Chest",
             "id": 83102,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2178,6 +2285,7 @@
           {
             "name": "Old Building Chest",
             "id": 83103,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2196,6 +2304,7 @@
           {
             "name": "Old Building West Chest",
             "id": 83104,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2214,6 +2323,7 @@
           {
             "name": "Old Building East Chest",
             "id": 83105,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2232,6 +2342,7 @@
           {
             "name": "Hawk Peak West Chest",
             "id": 83106,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2257,6 +2368,7 @@
           {
             "name": "Hawk Peak East Buried Chest",
             "id": 83107,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2294,6 +2406,7 @@
           {
             "name": "Hawk Peak Northeast Chest",
             "id": 83108,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2319,6 +2432,7 @@
           {
             "name": "Northern East Coast Chest",
             "id": 83109,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2337,6 +2451,7 @@
           {
             "name": "North Coast Chest",
             "id": 83110,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2355,6 +2470,7 @@
           {
             "name": "North Coast Buried Chest",
             "id": 83111,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2376,6 +2492,7 @@
           {
             "name": "Small South Island Buried Chest",
             "id": 83112,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2397,6 +2514,7 @@
           {
             "name": "Secret Island Bottom Chest",
             "id": 83113,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2415,6 +2533,7 @@
           {
             "name": "Secret Island Treehouse Chest",
             "id": 83114,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2440,6 +2559,7 @@
           {
             "name": "Sunhat Island Buried Chest",
             "id": 83115,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2461,6 +2581,7 @@
           {
             "name": "Orange Islands South Buried Chest",
             "id": 83116,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2482,6 +2603,7 @@
           {
             "name": "Orange Islands West Chest",
             "id": 83117,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2500,6 +2622,7 @@
           {
             "name": "Orange Islands North Buried Chest",
             "id": 83118,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2565,6 +2688,7 @@
           {
             "name": "Orange Islands East Chest",
             "id": 83119,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2583,6 +2707,7 @@
           {
             "name": "Orange Islands South Hidden Chest",
             "id": 83120,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2601,6 +2726,7 @@
           {
             "name": "A Stormy View Buried Treasure Chest",
             "id": 83121,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2622,6 +2748,7 @@
           {
             "name": "Orange Islands Ruins Buried Chest",
             "id": 83122,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2687,6 +2814,7 @@
           {
             "name": "Lighthouse Race Reward",
             "id": 83123,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2740,6 +2868,7 @@
           {
             "name": "Old Building Race Reward",
             "id": 83124,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -2793,6 +2922,7 @@
           {
             "name": "Hawk Peak Race Reward",
             "id": 83125,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2818,6 +2948,7 @@
           {
             "name": "Lose Race Gift",
             "id": 83131,
+            "region": "Hawk Peak",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3311,11 +3442,65 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Coins",
-      "Everything",
-      "Maps"
-    ]
+    "1": {
+      "Coins": [
+        "13 Coins",
+        "18 Coins",
+        "7 Coins",
+        "15 Coins",
+        "27 Coins",
+        "32 Coins",
+        "25 Coins",
+        "50 Coins",
+        "21 Coins",
+        "33 Coins"
+      ],
+      "Maps": [
+        "In Her Shadow Map",
+        "The King Map",
+        "The Treasure of Sid Beach Map",
+        "A Stormy View Map"
+      ],
+      "Everything": [
+        "Running Shoes",
+        "Baseball Cap",
+        "Seashell",
+        "15 Coins",
+        "Bait",
+        "25 Coins",
+        "The King Map",
+        "Fishing Journal",
+        "Camping Permit",
+        "Compass",
+        "Motorboat Key",
+        "Pickaxe",
+        "Headband",
+        "7 Coins",
+        "18 Coins",
+        "13 Coins",
+        "In Her Shadow Map",
+        "Progressive Fishing Rod",
+        "Medal",
+        "Walkie Talkie",
+        "21 Coins",
+        "Shell Necklace",
+        "Toy Shovel",
+        "32 Coins",
+        "27 Coins",
+        "Stick",
+        "Sunhat",
+        "Wristwatch",
+        "Golden Feather",
+        "The Treasure of Sid Beach Map",
+        "Provincial Park Hat",
+        "Shovel",
+        "50 Coins",
+        "Bucket",
+        "A Stormy View Map",
+        "Silver Feather",
+        "33 Coins"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

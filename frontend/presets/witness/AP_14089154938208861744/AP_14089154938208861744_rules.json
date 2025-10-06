@@ -205,6 +205,7 @@
           {
             "name": "Symmetry Island Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -245,6 +246,7 @@
           {
             "name": "Desert Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -285,6 +287,7 @@
           {
             "name": "Quarry Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -325,6 +328,7 @@
           {
             "name": "Shadows Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -365,6 +369,7 @@
           {
             "name": "Keep Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -418,6 +423,7 @@
           {
             "name": "Monastery Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -458,6 +464,7 @@
           {
             "name": "Town Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -500,6 +507,7 @@
           {
             "name": "Jungle Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -540,6 +548,7 @@
           {
             "name": "Bunker Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -582,6 +591,7 @@
           {
             "name": "Swamp Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -624,6 +634,7 @@
           {
             "name": "Treehouse Laser Activated",
             "id": null,
+            "region": "Entry",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -784,6 +795,7 @@
           {
             "name": "Tutorial Front Left",
             "id": 158004,
+            "region": "Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -802,6 +814,7 @@
           {
             "name": "Tutorial Back Left",
             "id": 158005,
+            "region": "Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -820,6 +833,7 @@
           {
             "name": "Tutorial Back Right",
             "id": 158006,
+            "region": "Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -838,6 +852,7 @@
           {
             "name": "Tutorial Gate Open",
             "id": 158007,
+            "region": "Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -856,6 +871,7 @@
           {
             "name": "Tutorial Patio Floor",
             "id": 158010,
+            "region": "Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -985,6 +1001,7 @@
           {
             "name": "Outside Tutorial Shed Row 5",
             "id": 158017,
+            "region": "Outside Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1010,6 +1027,7 @@
           {
             "name": "Outside Tutorial Tree Row 9",
             "id": 158026,
+            "region": "Outside Tutorial",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1114,6 +1132,7 @@
           {
             "name": "Outside Tutorial Outpost Entry Panel",
             "id": 158011,
+            "region": "Outside Tutorial Path To Outpost",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1184,6 +1203,7 @@
           {
             "name": "Outside Tutorial Outpost Exit Panel",
             "id": 158012,
+            "region": "Outside Tutorial Outpost",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1281,6 +1301,7 @@
           {
             "name": "Orchard Apple Tree 5",
             "id": 158075,
+            "region": "Orchard Beyond First Gate",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -1785,6 +1806,7 @@
           {
             "name": "Glass Factory Entry Panel",
             "id": 158027,
+            "region": "Outside Glass Factory",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1853,6 +1875,7 @@
           {
             "name": "Glass Factory Back Wall 5",
             "id": 158032,
+            "region": "Inside Glass Factory",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1878,6 +1901,7 @@
           {
             "name": "Glass Factory Front 3",
             "id": 158035,
+            "region": "Inside Glass Factory",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1903,6 +1927,7 @@
           {
             "name": "Glass Factory Melting 3",
             "id": 158038,
+            "region": "Inside Glass Factory",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2050,6 +2075,7 @@
           {
             "name": "Symmetry Island Lower Panel",
             "id": 158040,
+            "region": "Outside Symmetry Island",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -2135,6 +2161,7 @@
           {
             "name": "Symmetry Island Right 5",
             "id": 158045,
+            "region": "Symmetry Island Lower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2162,6 +2189,7 @@
           {
             "name": "Symmetry Island Back 6",
             "id": 158051,
+            "region": "Symmetry Island Lower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2189,6 +2217,7 @@
           {
             "name": "Symmetry Island Left 7",
             "id": 158058,
+            "region": "Symmetry Island Lower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2216,6 +2245,7 @@
           {
             "name": "Symmetry Island Scenery Outlines 5",
             "id": 158063,
+            "region": "Symmetry Island Lower",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2241,6 +2271,7 @@
           {
             "name": "Symmetry Island Upper Panel",
             "id": 158064,
+            "region": "Symmetry Island Lower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2291,6 +2322,7 @@
           {
             "name": "Symmetry Island Laser Yellow 3",
             "id": 158067,
+            "region": "Symmetry Island Upper",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2316,6 +2348,7 @@
           {
             "name": "Symmetry Island Laser Blue 3",
             "id": 158070,
+            "region": "Symmetry Island Upper",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2341,6 +2374,7 @@
           {
             "name": "Symmetry Island Laser Panel",
             "id": 158700,
+            "region": "Symmetry Island Upper",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2449,6 +2483,7 @@
           {
             "name": "Desert Surface 8",
             "id": 158084,
+            "region": "Desert Outside",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2467,6 +2502,7 @@
           {
             "name": "Desert Laser Panel",
             "id": 158701,
+            "region": "Desert Outside",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -2509,6 +2545,7 @@
           {
             "name": "Desert Laser Activated + Redirected Solved",
             "id": null,
+            "region": "Desert Outside",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2572,6 +2609,7 @@
           {
             "name": "Desert Light Room 3",
             "id": 158090,
+            "region": "Desert Light Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2626,6 +2664,7 @@
           {
             "name": "Desert Pond Room 5",
             "id": 158095,
+            "region": "Desert Pond Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2692,6 +2731,7 @@
           {
             "name": "Desert Flood Room 6",
             "id": 158110,
+            "region": "Desert Flood Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2792,6 +2832,7 @@
           {
             "name": "Desert Elevator Room Hexagonal",
             "id": 158113,
+            "region": "Desert Elevator Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2810,6 +2851,7 @@
           {
             "name": "Desert Elevator Room Bent 3",
             "id": 158117,
+            "region": "Desert Elevator Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2972,6 +3014,7 @@
           {
             "name": "Quarry Entry 1 Panel",
             "id": 158118,
+            "region": "Outside Quarry",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2997,6 +3040,7 @@
           {
             "name": "Quarry Laser Panel",
             "id": 158702,
+            "region": "Outside Quarry",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -3194,6 +3238,7 @@
           {
             "name": "Quarry Entry 2 Panel",
             "id": 158119,
+            "region": "Quarry Between Entry Doors",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3328,6 +3373,7 @@
           {
             "name": "Quarry Stoneworks Entry Left Panel",
             "id": 158121,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3353,6 +3399,7 @@
           {
             "name": "Quarry Stoneworks Entry Right Panel",
             "id": 158122,
+            "region": "Quarry",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3514,6 +3561,7 @@
           {
             "name": "Quarry Stoneworks Lower Row 6",
             "id": 158130,
+            "region": "Quarry Stoneworks Middle Floor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3718,6 +3766,7 @@
           {
             "name": "Quarry Stoneworks Upper Row 8",
             "id": 158141,
+            "region": "Quarry Stoneworks Upper Floor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3745,6 +3794,7 @@
           {
             "name": "Quarry Stoneworks Stairs Panel",
             "id": 158142,
+            "region": "Quarry Stoneworks Upper Floor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3772,6 +3822,7 @@
           {
             "name": "Quarry Stoneworks Control Room Left",
             "id": 158143,
+            "region": "Quarry Stoneworks Upper Floor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3801,6 +3852,7 @@
           {
             "name": "Quarry Stoneworks Control Room Right",
             "id": 158144,
+            "region": "Quarry Stoneworks Upper Floor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3906,6 +3958,7 @@
           {
             "name": "Quarry Boathouse Intro Left",
             "id": 158146,
+            "region": "Quarry Boathouse",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3931,6 +3984,7 @@
           {
             "name": "Quarry Boathouse Intro Right",
             "id": 158147,
+            "region": "Quarry Boathouse",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4070,6 +4124,7 @@
           {
             "name": "Quarry Boathouse Front Row 5",
             "id": 158153,
+            "region": "Quarry Boathouse Upper Front",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4187,6 +4242,7 @@
           {
             "name": "Quarry Boathouse Back First Row 9",
             "id": 158164,
+            "region": "Quarry Boathouse Upper Back",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4215,6 +4271,7 @@
           {
             "name": "Quarry Boathouse Back Second Row 3",
             "id": 158169,
+            "region": "Quarry Boathouse Upper Back",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4347,6 +4404,7 @@
           {
             "name": "Shadows Intro 8",
             "id": 158173,
+            "region": "Shadows",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -4389,6 +4447,7 @@
           {
             "name": "Shadows Far 8",
             "id": 158181,
+            "region": "Shadows",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -4431,6 +4490,7 @@
           {
             "name": "Shadows Near 5",
             "id": 158186,
+            "region": "Shadows",
             "crystal": null,
             "access_rule": {
               "type": "conditional",
@@ -4543,6 +4603,7 @@
           {
             "name": "Shadows Laser Panel",
             "id": 158703,
+            "region": "Shadows Laser Room",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -4809,6 +4870,7 @@
           {
             "name": "Keep Hedge Maze 1",
             "id": 158193,
+            "region": "Keep",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4827,6 +4889,7 @@
           {
             "name": "Keep Pressure Plates 1",
             "id": 158198,
+            "region": "Keep",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4888,6 +4951,7 @@
           {
             "name": "Keep Hedge Maze 2",
             "id": 158194,
+            "region": "Keep 2nd Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4988,6 +5052,7 @@
           {
             "name": "Keep Hedge Maze 3",
             "id": 158195,
+            "region": "Keep 3rd Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5088,6 +5153,7 @@
           {
             "name": "Keep Hedge Maze 4",
             "id": 158196,
+            "region": "Keep 4th Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5152,6 +5218,7 @@
           {
             "name": "Keep Pressure Plates 2",
             "id": 158200,
+            "region": "Keep 2nd Pressure Plate",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -5259,6 +5326,7 @@
           {
             "name": "Keep Pressure Plates 3",
             "id": 158202,
+            "region": "Keep 3rd Pressure Plate",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -5345,6 +5413,7 @@
           {
             "name": "Keep Pressure Plates 4",
             "id": 158204,
+            "region": "Keep 4th Pressure Plate",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -5419,6 +5488,7 @@
           {
             "name": "Keep Laser Panel Hedges",
             "id": 158704,
+            "region": "Keep Tower",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -5459,6 +5529,7 @@
           {
             "name": "Keep Laser Panel Pressure Plates",
             "id": 158705,
+            "region": "Keep Tower",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -5617,6 +5688,7 @@
           {
             "name": "Monastery Outside 3",
             "id": 158212,
+            "region": "Outside Monastery",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -5657,6 +5729,7 @@
           {
             "name": "Monastery Laser Panel",
             "id": 158706,
+            "region": "Outside Monastery",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -5740,6 +5813,7 @@
           {
             "name": "Monastery Inside 4",
             "id": 158217,
+            "region": "Inside Monastery",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -6023,6 +6097,7 @@
           {
             "name": "Town Cargo Box Entry Panel",
             "id": 158219,
+            "region": "Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -6050,6 +6125,7 @@
           {
             "name": "Town Desert Laser Redirect Control Solved",
             "id": null,
+            "region": "Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6068,6 +6144,7 @@
           {
             "name": "Town Wooden Roof Lower Row 5",
             "id": 158239,
+            "region": "Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -6096,6 +6173,7 @@
           {
             "name": "Town RGB House Entry Panel",
             "id": 158225,
+            "region": "Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -6123,6 +6201,7 @@
           {
             "name": "Town Church Entry Panel",
             "id": 158226,
+            "region": "Town",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -6163,6 +6242,7 @@
           {
             "name": "Town Maze Panel",
             "id": 158228,
+            "region": "Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6181,6 +6261,7 @@
           {
             "name": "Town Pet the Dog",
             "id": 159800,
+            "region": "Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6264,6 +6345,7 @@
           {
             "name": "Town Red Rooftop 5",
             "id": 158234,
+            "region": "Town Red Rooftop",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -6292,6 +6374,7 @@
           {
             "name": "Town Tall Hexagonal",
             "id": 158224,
+            "region": "Town Red Rooftop",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -6355,6 +6438,7 @@
           {
             "name": "Town Wooden Rooftop",
             "id": 158240,
+            "region": "Town Wooden Rooftop",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -6431,6 +6515,7 @@
           {
             "name": "Town Church Lattice",
             "id": 158227,
+            "region": "Town Church",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -6514,6 +6599,7 @@
           {
             "name": "Town RGB House Sound Room Right",
             "id": 158243,
+            "region": "Town RGB House",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6562,6 +6648,7 @@
           {
             "name": "Town RGB House Upstairs Left",
             "id": 158245,
+            "region": "Town RGB House Upstairs",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -6590,6 +6677,7 @@
           {
             "name": "Town RGB House Upstairs Right",
             "id": 158246,
+            "region": "Town RGB House Upstairs",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -7058,6 +7146,7 @@
           {
             "name": "Town Laser Panel",
             "id": 158708,
+            "region": "Town Tower Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7131,6 +7220,7 @@
           {
             "name": "Windmill Entry Panel",
             "id": 158241,
+            "region": "Outside Windmill",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7199,6 +7289,7 @@
           {
             "name": "Windmill Theater Entry Panel",
             "id": 158248,
+            "region": "Windmill Interior",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7295,6 +7386,7 @@
           {
             "name": "Theater Exit Left Panel",
             "id": 158249,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -7322,6 +7414,7 @@
           {
             "name": "Theater Exit Right Panel",
             "id": 158250,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -7451,6 +7544,7 @@
           {
             "name": "Jungle First Row 3",
             "id": 158254,
+            "region": "Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7469,6 +7563,7 @@
           {
             "name": "Jungle Second Row 4",
             "id": 158258,
+            "region": "Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7487,6 +7582,7 @@
           {
             "name": "Jungle Popup Wall 6",
             "id": 158265,
+            "region": "Jungle",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -7527,6 +7623,7 @@
           {
             "name": "Jungle Laser Panel",
             "id": 158709,
+            "region": "Jungle",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -7625,6 +7722,7 @@
           {
             "name": "Jungle Monastery Garden Shortcut Panel",
             "id": 158267,
+            "region": "Outside Jungle River",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7708,6 +7806,7 @@
           {
             "name": "Bunker Entry Panel",
             "id": 158268,
+            "region": "Outside Bunker",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7778,6 +7877,7 @@
           {
             "name": "Bunker Intro Left 5",
             "id": 158273,
+            "region": "Bunker",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -7805,6 +7905,7 @@
           {
             "name": "Bunker Intro Back 4",
             "id": 158277,
+            "region": "Bunker",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -7890,6 +7991,7 @@
           {
             "name": "Bunker Glass Room 3",
             "id": 158281,
+            "region": "Bunker Glass Room",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -7975,6 +8077,7 @@
           {
             "name": "Bunker UV Room 2",
             "id": 158285,
+            "region": "Bunker Ultraviolet Room",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -8438,6 +8541,7 @@
           {
             "name": "Bunker Laser Panel",
             "id": 158710,
+            "region": "Bunker Laser Platform",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8521,6 +8625,7 @@
           {
             "name": "Swamp Entry Panel",
             "id": 158287,
+            "region": "Outside Swamp",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8592,6 +8697,7 @@
           {
             "name": "Swamp Intro Front 6",
             "id": 158293,
+            "region": "Swamp Entry Area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8617,6 +8723,7 @@
           {
             "name": "Swamp Intro Back 8",
             "id": 158301,
+            "region": "Swamp Entry Area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8831,6 +8938,7 @@
           {
             "name": "Swamp Platform Row 4",
             "id": 158316,
+            "region": "Swamp Platform",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8856,6 +8964,7 @@
           {
             "name": "Swamp Platform Shortcut Right Panel",
             "id": 158318,
+            "region": "Swamp Platform",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -8939,6 +9048,7 @@
           {
             "name": "Swamp Cyan Underwater 5",
             "id": 158311,
+            "region": "Swamp Cyan Underwater",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -9024,6 +9134,7 @@
           {
             "name": "Swamp Between Bridges Near Row 4",
             "id": 158306,
+            "region": "Swamp Between Bridges Near",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -9154,6 +9265,7 @@
           {
             "name": "Swamp Between Bridges Far Row 4",
             "id": 158322,
+            "region": "Swamp Between Bridges Far",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -9273,6 +9385,7 @@
           {
             "name": "Swamp Red Underwater 4",
             "id": 158326,
+            "region": "Swamp Red Underwater",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -9561,6 +9674,7 @@
           {
             "name": "Swamp Beyond Rotating Bridge 4",
             "id": 158332,
+            "region": "Swamp Near Boat",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -9772,6 +9886,7 @@
           {
             "name": "Swamp Purple Underwater",
             "id": 158333,
+            "region": "Swamp Purple Underwater",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -9820,6 +9935,7 @@
           {
             "name": "Swamp Blue Underwater 5",
             "id": 158338,
+            "region": "Swamp Blue Underwater",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -9938,6 +10054,7 @@
           {
             "name": "Swamp Laser Panel",
             "id": 158711,
+            "region": "Swamp Laser Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9956,6 +10073,7 @@
           {
             "name": "Swamp Laser Shortcut Right Panel",
             "id": 158342,
+            "region": "Swamp Laser Area",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -10116,6 +10234,7 @@
           {
             "name": "Treehouse First Door Panel",
             "id": 158344,
+            "region": "Treehouse Entry Area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10184,6 +10303,7 @@
           {
             "name": "Treehouse Second Door Panel",
             "id": 158345,
+            "region": "Treehouse Between Entry Doors",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10252,6 +10372,7 @@
           {
             "name": "Treehouse Yellow Bridge 9",
             "id": 158354,
+            "region": "Treehouse Yellow Bridge",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10320,6 +10441,7 @@
           {
             "name": "Treehouse Third Door Panel",
             "id": 158355,
+            "region": "Treehouse After Yellow Bridge",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10491,6 +10613,7 @@
           {
             "name": "Treehouse First Purple Bridge 5",
             "id": 158361,
+            "region": "Treehouse First Purple Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -10573,6 +10696,7 @@
           {
             "name": "Treehouse Right Orange Bridge 12",
             "id": 158402,
+            "region": "Treehouse Right Orange Bridge",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10641,6 +10765,7 @@
           {
             "name": "Treehouse Drawbridge Panel",
             "id": 158404,
+            "region": "Treehouse Drawbridge Platform",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10712,6 +10837,7 @@
           {
             "name": "Treehouse Second Purple Bridge 7",
             "id": 158368,
+            "region": "Treehouse Second Purple Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -10830,6 +10956,7 @@
           {
             "name": "Treehouse Left Orange Bridge 15",
             "id": 158390,
+            "region": "Treehouse Left Orange Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -10940,6 +11067,7 @@
           {
             "name": "Treehouse Green Bridge 7",
             "id": 158375,
+            "region": "Treehouse Green Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -11160,6 +11288,7 @@
           {
             "name": "Treehouse Laser Panel",
             "id": 158712,
+            "region": "Treehouse Laser Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11335,6 +11464,7 @@
           {
             "name": "Mountaintop River Shape",
             "id": 158405,
+            "region": "Mountaintop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11353,6 +11483,7 @@
           {
             "name": "Mountaintop Mountain Entry Panel",
             "id": 158407,
+            "region": "Mountaintop",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -11393,6 +11524,7 @@
           {
             "name": "Mountaintop Mountain Entry Panel Solved",
             "id": null,
+            "region": "Mountaintop",
             "crystal": null,
             "access_rule": {
               "type": "all_of",
@@ -11498,6 +11630,7 @@
           {
             "name": "Mountain Floor 1 Light Bridge Controller",
             "id": 158408,
+            "region": "Mountain Floor 1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -11586,6 +11719,7 @@
           {
             "name": "Mountain Floor 1 Right Row 5",
             "id": 158413,
+            "region": "Mountain Floor 1 Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -11614,6 +11748,7 @@
           {
             "name": "Mountain Floor 1 Left Row 7",
             "id": 158420,
+            "region": "Mountain Floor 1 Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -11644,6 +11779,7 @@
           {
             "name": "Mountain Floor 1 Trash Pillar 2",
             "id": 158425,
+            "region": "Mountain Floor 1 Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -11716,6 +11852,7 @@
           {
             "name": "Mountain Floor 1 Back Row 3",
             "id": 158423,
+            "region": "Mountain Floor 1 Back Section",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -11984,6 +12121,7 @@
           {
             "name": "Mountain Floor 2 Near Row 5",
             "id": 158430,
+            "region": "Mountain Floor 2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12115,6 +12253,7 @@
           {
             "name": "Mountain Floor 2 Light Bridge Controller Near",
             "id": 158431,
+            "region": "Mountain Floor 2 Light Bridge Room Near",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12251,6 +12390,7 @@
           {
             "name": "Mountain Floor 2 Far Row 6",
             "id": 158437,
+            "region": "Mountain Floor 2 Beyond Bridge",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12305,6 +12445,7 @@
           {
             "name": "Mountain Floor 2 Light Bridge Controller Far",
             "id": 158438,
+            "region": "Mountain Floor 2 Light Bridge Room Far",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12554,6 +12695,7 @@
           {
             "name": "Mountain Bottom Floor Giant Puzzle",
             "id": 158444,
+            "region": "Mountain Floor 3",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12630,6 +12772,7 @@
           {
             "name": "Mountain Bottom Floor Pillars Room Entry Left",
             "id": 158445,
+            "region": "Mountain Bottom Floor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12657,6 +12800,7 @@
           {
             "name": "Mountain Bottom Floor Pillars Room Entry Right",
             "id": 158446,
+            "region": "Mountain Bottom Floor",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12732,6 +12876,7 @@
           {
             "name": "Mountain Bottom Floor Right Pillar 4",
             "id": 158525,
+            "region": "Mountain Bottom Floor Pillars Room",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12760,6 +12905,7 @@
           {
             "name": "Mountain Bottom Floor Left Pillar 4",
             "id": 158529,
+            "region": "Mountain Bottom Floor Pillars Room",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -12813,22 +12959,17 @@
           {
             "name": "Mountain Bottom Floor Elevator Start Solved",
             "id": null,
+            "region": "Elevator",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_from_list",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "+1 Laser"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "+1 Laser (Unredirected)"
-                    }
+                    "+1 Laser",
+                    "+1 Laser (Unredirected)"
                   ]
                 },
                 {
@@ -17160,14 +17301,548 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Doors",
-      "Everything",
-      "Lasers",
-      "Obelisk Keys",
-      "Panel Keys",
-      "Symbols"
-    ]
+    "1": {
+      "Symbols": [
+        "Black/White Squares",
+        "Rotated Shapers",
+        "Dots",
+        "Arrows",
+        "Full Dots",
+        "Symmetry",
+        "Colored Dots",
+        "Progressive Dots",
+        "Invisible Dots",
+        "Sound Dots",
+        "Stars + Same Colored Symbol",
+        "Eraser",
+        "Triangles",
+        "Negative Shapers",
+        "Colored Squares",
+        "Progressive Symmetry",
+        "Progressive Stars",
+        "Shapers",
+        "Stars"
+      ],
+      "Panel Keys": [
+        "Jungle Monastery Garden Shortcut (Panel)",
+        "Caves Mountain Shortcut (Panel)",
+        "Town Control Panels",
+        "Theater Entry (Panel)",
+        "Swamp Long Bridge (Panel)",
+        "Glass Factory Entry (Panel)",
+        "Windmill Entry (Panel)",
+        "Desert Light Control (Panel)",
+        "Swamp Sliding Bridge (Panel)",
+        "Caves Swamp Shortcut (Panel)",
+        "Town RGB House Entry (Panel)",
+        "Quarry Boathouse Panels",
+        "Swamp Control Panels",
+        "Quarry Outside Panels",
+        "Jungle Panels",
+        "Windmill & Theater Panels",
+        "Swamp Maze Controls (Panel)",
+        "Quarry Entry 2 (Panel)",
+        "Tunnels Panels",
+        "Town Desert Laser Redirect Control (Panel)",
+        "Mountain Floor 2 Elevator Control (Panel)",
+        "Quarry Elevator Control (Panel)",
+        "Town Church & RGB House Panels",
+        "Quarry Boathouse Hook Control (Panel)",
+        "Desert Flood Controls (Panel)",
+        "Desert Control Panels",
+        "Mountain Floor 1 Light Bridge (Panel)",
+        "Treehouse Panels",
+        "Swamp Laser Shortcut (Panel)",
+        "Symmetry Island Panels",
+        "Keep Hedge Maze 1 (Panel)",
+        "Town Maze Panels",
+        "Windmill Turn Control (Panel)",
+        "Swamp Rotating Bridge (Panel)",
+        "Town Church Entry (Panel)",
+        "Desert Flood Room Entry (Panel)",
+        "Theater Video Input (Panel)",
+        "Bunker Drop-Down Door Controls (Panel)",
+        "Symmetry Island Upper (Panel)",
+        "Mountain & Caves Control Panels",
+        "Keep Hedge Maze Panels",
+        "Keep Hedge Maze 3 (Panel)",
+        "Monastery Panels",
+        "Outside Tutorial Outpost Panels",
+        "Mountain Panels",
+        "Treehouse Laser House Door Timer (Panel)",
+        "Monastery Shutters Control (Panel)",
+        "Treehouse Drawbridge (Panel)",
+        "Desert Surface 3 Control (Panel)",
+        "Quarry Stoneworks Ramp Controls (Panel)",
+        "Town Dockside House Panels",
+        "Bunker Elevator Control (Panel)",
+        "Town RGB Control (Panel)",
+        "Outside Tutorial Outpost Exit (Panel)",
+        "Challenge Entry (Panel)",
+        "Desert Panels",
+        "Swamp Platform Shortcut (Panel)",
+        "Jungle Popup Wall (Panel)",
+        "Quarry Stoneworks Stairs (Panel)",
+        "Caves Elevator Controls (Panel)",
+        "Quarry Stoneworks Entry (Panel)",
+        "Keep Hedge Maze 4 (Panel)",
+        "Bunker Panels",
+        "Tunnels Entry (Panel)",
+        "Boat",
+        "Caves Entry (Panel)",
+        "Swamp Entry (Panel)",
+        "Theater Exit (Panel)",
+        "Quarry Stoneworks Lift Controls (Panel)",
+        "Windmill & Theater Control Panels",
+        "Shadows Door Timer (Panel)",
+        "Bunker Control Panels",
+        "Desert Surface 8 Control (Panel)",
+        "Desert Elevator Room Hexagonal Control (Panel)",
+        "Tunnels Town Shortcut (Panel)",
+        "Caves Panels",
+        "Mountain Floor 2 Light Bridge Far (Panel)",
+        "Town Cargo Box Entry (Panel)",
+        "Bunker Entry (Panel)",
+        "Quarry Boathouse Control Panels",
+        "Desert Light Room Entry (Panel)",
+        "Quarry Stoneworks Control Panels",
+        "Monastery Entry Right (Panel)",
+        "Treehouse First & Second Doors (Panel)",
+        "Mountain Floor 2 Light Bridge Near (Panel)",
+        "Bunker Tinted Glass Door (Panel)",
+        "Symmetry Island Lower (Panel)",
+        "Quarry Stoneworks Panels",
+        "Treehouse Third Door (Panel)",
+        "Town Maze Stairs (Panel)",
+        "Town Maze Rooftop Bridge (Panel)",
+        "Swamp Panels",
+        "Monastery Entry Left (Panel)",
+        "Quarry Boathouse Ramp Height Control (Panel)",
+        "Quarry Boathouse Ramp Horizontal Control (Panel)",
+        "Outside Tutorial Outpost Entry (Panel)",
+        "Quarry Entry 1 (Panel)",
+        "Keep Hedge Maze 2 (Panel)"
+      ],
+      "Doors": [
+        "Theater Exit Left (Door)",
+        "Jungle Doors",
+        "Keep Pressure Plates 4 Exit (Door)",
+        "Shadows Laser Entry Left (Door)",
+        "Swamp Blue Water Pump (Door)",
+        "Keep Hedge Maze 1 Exit (Door)",
+        "Town Wooden Roof Stairs (Door)",
+        "Town Tower Third (Door)",
+        "Desert Doors & Elevator",
+        "Outside Tutorial Outpost Doors",
+        "Outside Tutorial Outpost Path (Door)",
+        "Town Maze Stairs (Door)",
+        "Quarry Stoneworks Roof Exit (Door)",
+        "Keep Hedge Maze 4 Shortcut (Door)",
+        "Quarry Stoneworks Stairs (Door)",
+        "Caves Pillar Door",
+        "Treehouse First (Door)",
+        "Swamp Between Bridges Second Door",
+        "Mountain Bottom Floor Pillars Room Entry (Door)",
+        "Monastery Laser Shortcut (Door)",
+        "Bunker Elevator Room Entry (Door)",
+        "Keep Hedge Maze 3 Exit (Door)",
+        "Town Church Entry (Door)",
+        "Swamp Shortcuts",
+        "Glass Factory Back Wall (Door)",
+        "Jungle Popup Wall (Door)",
+        "Caves Shortcuts",
+        "Quarry Stoneworks Side Exit (Door)",
+        "Swamp Red Water Pump (Door)",
+        "Keep Hedge Maze 2 Exit (Door)",
+        "Desert Pond Room Entry (Door)",
+        "Shadows Ledge Barrier (Door)",
+        "Shadows Laser Entry Right (Door)",
+        "Caves Swamp Shortcut (Door)",
+        "Keep Hedge Maze 3 Shortcut (Door)",
+        "Theater Exit Right (Door)",
+        "Mountain Floor 2 Staircase Near (Door)",
+        "Glass Factory Doors",
+        "Keep Hedge Maze Doors",
+        "Monastery Shortcuts",
+        "Orchard Second Gate (Door)",
+        "Desert Flood Room Entry (Door)",
+        "Swamp Platform Shortcut (Door)",
+        "Treehouse Drawbridge (Door)",
+        "Shadows Lower Doors",
+        "Mountain Bottom Floor Rock (Door)",
+        "Treehouse Laser House Entry (Door)",
+        "Keep Tower Shortcut (Door)",
+        "Desert Elevator Room Entry (Door)",
+        "Quarry Boathouse Dock (Door)",
+        "Shadows Laser Room Doors",
+        "Bunker Entry (Door)",
+        "Keep Pressure Plates Doors",
+        "Swamp Purple Water Pump (Door)",
+        "Keep Hedge Maze 4 Exit (Door)",
+        "Quarry Boathouse Second Barrier (Door)",
+        "Monastery Entry Inner (Door)",
+        "Town RGB House Stairs (Door)",
+        "Bunker UV Room Entry (Door)",
+        "Treehouse Upper Doors",
+        "Keep Pressure Plates 1 Exit (Door)",
+        "Quarry Entry 1 (Door)",
+        "Windmill Entry (Door)",
+        "Monastery Entry Doors",
+        "Theater Entry (Door)",
+        "Desert Elevator (Door)",
+        "Monastery Garden Entry (Door)",
+        "Quarry Entry Doors",
+        "Monastery Entry Outer (Door)",
+        "Outside Tutorial Outpost Entry (Door)",
+        "Swamp Water Pumps",
+        "Swamp Red Underwater Exit (Door)",
+        "Caves Entry (Door)",
+        "Treehouse Second (Door)",
+        "Tunnels Entry (Door)",
+        "Jungle Laser Shortcut (Door)",
+        "Desert Light Room Entry (Door)",
+        "Jungle Monastery Garden Shortcut (Door)",
+        "Symmetry Island Upper (Door)",
+        "Treehouse Third (Door)",
+        "Quarry Entry 2 (Door)",
+        "Swamp Entry (Door)",
+        "Keep Shortcuts",
+        "Shadows Quarry Barrier (Door)",
+        "Keep Shadows Shortcut (Door)",
+        "Keep Hedge Maze 2 Shortcut (Door)",
+        "Mountain Bottom Floor Doors",
+        "Symmetry Island Doors",
+        "Challenge Entry (Door)",
+        "Quarry Boathouse Doors",
+        "Outside Tutorial Outpost Exit (Door)",
+        "Windmill & Theater Doors",
+        "Bunker Tinted Glass Door",
+        "Symmetry Island Lower (Door)",
+        "Mountain Floor 1 Exit (Door)",
+        "Bunker Doors",
+        "Orchard First Gate (Door)",
+        "Swamp Cyan Water Pump (Door)",
+        "Keep Pressure Plates 3 Exit (Door)",
+        "Town Cargo Box Entry (Door)",
+        "Tunnels Doors",
+        "Swamp Laser Shortcut (Door)",
+        "Orchard Gates",
+        "Caves Mountain Shortcut (Door)",
+        "Swamp Doors",
+        "Quarry Boathouse First Barrier (Door)",
+        "Mountain Floor 2 Exit (Door)",
+        "Tunnels Theater Shortcut (Door)",
+        "Treehouse Entry Doors",
+        "Mountain Floor 1 & 2 Doors",
+        "Shadows Timed Door",
+        "Swamp Between Bridges First Door",
+        "Town Tower Fourth (Door)",
+        "Mountain Bottom Floor Giant Puzzle Exit (Door)",
+        "Quarry Stoneworks Doors",
+        "Tunnels Desert Shortcut (Door)",
+        "Town Tower Doors",
+        "Keep Pressure Plates 2 Exit (Door)",
+        "Tunnels Town Shortcut (Door)",
+        "Town Tower Second (Door)",
+        "Quarry Stoneworks Entry (Door)",
+        "Caves Doors",
+        "Glass Factory Entry (Door)",
+        "Town RGB House Entry (Door)",
+        "Mountain Floor 2 Staircase Far (Door)",
+        "Town Doors",
+        "Town Tower First (Door)"
+      ],
+      "Obelisk Keys": [
+        "Quarry Obelisk Key",
+        "Monastery Obelisk Key",
+        "Desert Obelisk Key",
+        "Town Obelisk Key",
+        "Mountainside Obelisk Key",
+        "Treehouse Obelisk Key"
+      ],
+      "Lasers": [
+        "Jungle Laser",
+        "Monastery Laser",
+        "Quarry Laser",
+        "Symmetry Laser",
+        "Swamp Laser",
+        "Bunker Laser",
+        "Desert Laser",
+        "Town Laser",
+        "Treehouse Laser",
+        "Keep Laser",
+        "Shadows Laser"
+      ],
+      "Everything": [
+        "Jungle Monastery Garden Shortcut (Panel)",
+        "Jungle Doors",
+        "Caves Mountain Shortcut (Panel)",
+        "Keep Pressure Plates 4 Exit (Door)",
+        "Town Control Panels",
+        "Desert Obelisk Key",
+        "Theater Entry (Panel)",
+        "Town Tower Third (Door)",
+        "Caves Swamp Shortcut (Panel)",
+        "Town Maze Stairs (Door)",
+        "Quarry Stoneworks Roof Exit (Door)",
+        "Quarry Stoneworks Stairs (Door)",
+        "Swamp Control Panels",
+        "Quarry Outside Panels",
+        "Swamp Maze Controls (Panel)",
+        "Town Laser",
+        "Desert Control Panels",
+        "Mountain Floor 1 Light Bridge (Panel)",
+        "Swamp Rotating Bridge (Panel)",
+        "Symmetry Island Upper (Panel)",
+        "Mountain & Caves Control Panels",
+        "Keep Hedge Maze Panels",
+        "Keep Hedge Maze 3 (Panel)",
+        "Treehouse Laser",
+        "Mountain Panels",
+        "Bunker Entry (Door)",
+        "Keep Pressure Plates Doors",
+        "Quarry Boathouse Second Barrier (Door)",
+        "Quarry Stoneworks Ramp Controls (Panel)",
+        "Monastery Entry Inner (Door)",
+        "Challenge Entry (Panel)",
+        "Windmill Entry (Door)",
+        "Jungle Popup Wall (Panel)",
+        "Swamp Platform Shortcut (Panel)",
+        "Monastery Entry Outer (Door)",
+        "Swamp Water Pumps",
+        "Monastery Laser",
+        "Boat",
+        "Bunker Laser",
+        "Jungle Laser Shortcut (Door)",
+        "Invisible Dots",
+        "Treehouse Third (Door)",
+        "Keep Shortcuts",
+        "Shadows Quarry Barrier (Door)",
+        "Symmetry Island Doors",
+        "Windmill & Theater Doors",
+        "Bunker Doors",
+        "Bunker Entry (Panel)",
+        "Keep Pressure Plates 3 Exit (Door)",
+        "Desert Light Room Entry (Panel)",
+        "Tunnels Doors",
+        "Treehouse First & Second Doors (Panel)",
+        "Mountain Floor 2 Light Bridge Near (Panel)",
+        "Bunker Tinted Glass Door (Panel)",
+        "Caves Mountain Shortcut (Door)",
+        "Treehouse Third Door (Panel)",
+        "Progressive Dots",
+        "Negative Shapers",
+        "Treehouse Obelisk Key",
+        "Shapers",
+        "Quarry Stoneworks Entry (Door)",
+        "Shadows Laser",
+        "Town Wooden Roof Stairs (Door)",
+        "Symmetry Laser",
+        "Swamp Long Bridge (Panel)",
+        "Windmill Entry (Panel)",
+        "Desert Light Control (Panel)",
+        "Arrows",
+        "Swamp Sliding Bridge (Panel)",
+        "Keep Hedge Maze 4 Shortcut (Door)",
+        "Windmill & Theater Panels",
+        "Bunker Elevator Room Entry (Door)",
+        "Tunnels Panels",
+        "Mountainside Obelisk Key",
+        "Town Desert Laser Redirect Control (Panel)",
+        "Quarry Boathouse Hook Control (Panel)",
+        "Desert Flood Controls (Panel)",
+        "Keep Hedge Maze 2 Exit (Door)",
+        "Caves Swamp Shortcut (Door)",
+        "Puzzle Skip",
+        "Town Church Entry (Panel)",
+        "Mountain Floor 2 Staircase Near (Door)",
+        "Glass Factory Doors",
+        "Desert Flood Room Entry (Panel)",
+        "Orchard Second Gate (Door)",
+        "Treehouse Drawbridge (Door)",
+        "Monastery Panels",
+        "Quarry Boathouse Dock (Door)",
+        "Treehouse Drawbridge (Panel)",
+        "Swamp Laser",
+        "Town RGB House Stairs (Door)",
+        "Bunker UV Room Entry (Door)",
+        "Town Dockside House Panels",
+        "Town RGB Control (Panel)",
+        "Outside Tutorial Outpost Exit (Panel)",
+        "Treehouse Upper Doors",
+        "Monastery Entry Doors",
+        "Monastery Garden Entry (Door)",
+        "Quarry Stoneworks Stairs (Panel)",
+        "Black/White Squares",
+        "Outside Tutorial Outpost Entry (Door)",
+        "Quarry Stoneworks Entry (Panel)",
+        "Bunker Panels",
+        "Tunnels Entry (Door)",
+        "Theater Exit (Panel)",
+        "Quarry Stoneworks Lift Controls (Panel)",
+        "Quarry Entry 2 (Door)",
+        "Shadows Door Timer (Panel)",
+        "Keep Hedge Maze 2 Shortcut (Door)",
+        "Challenge Entry (Door)",
+        "Quarry Boathouse Doors",
+        "Bunker Control Panels",
+        "Quarry Laser",
+        "Desert Elevator Room Hexagonal Control (Panel)",
+        "Quarry Obelisk Key",
+        "Swamp Cyan Water Pump (Door)",
+        "Quarry Boathouse Control Panels",
+        "Quarry Stoneworks Control Panels",
+        "Symmetry Island Lower (Panel)",
+        "Quarry Stoneworks Panels",
+        "Quarry Boathouse First Barrier (Door)",
+        "Symmetry",
+        "Shadows Timed Door",
+        "Swamp Between Bridges First Door",
+        "Town Obelisk Key",
+        "Mountain Bottom Floor Giant Puzzle Exit (Door)",
+        "Quarry Stoneworks Doors",
+        "Tunnels Desert Shortcut (Door)",
+        "Eraser",
+        "Town Maze Stairs (Panel)",
+        "Monastery Entry Left (Panel)",
+        "Town Tower Second (Door)",
+        "Jungle Laser",
+        "Theater Exit Left (Door)",
+        "Swamp Blue Water Pump (Door)",
+        "Shadows Laser Entry Left (Door)",
+        "Rotated Shapers",
+        "Keep Hedge Maze 1 Exit (Door)",
+        "Outside Tutorial Outpost Doors",
+        "Caves Pillar Door",
+        "Sound Dots",
+        "Swamp Between Bridges Second Door",
+        "Mountain Bottom Floor Pillars Room Entry (Door)",
+        "Quarry Entry 2 (Panel)",
+        "Keep Hedge Maze 3 Exit (Door)",
+        "Mountain Floor 2 Elevator Control (Panel)",
+        "Quarry Elevator Control (Panel)",
+        "Jungle Popup Wall (Door)",
+        "Town Church & RGB House Panels",
+        "Desert Pond Room Entry (Door)",
+        "Shadows Ledge Barrier (Door)",
+        "Treehouse Panels",
+        "Shadows Laser Entry Right (Door)",
+        "Town Maze Panels",
+        "Keep Hedge Maze 3 Shortcut (Door)",
+        "Theater Exit Right (Door)",
+        "Theater Video Input (Panel)",
+        "Bunker Drop-Down Door Controls (Panel)",
+        "Keep Hedge Maze Doors",
+        "Monastery Shortcuts",
+        "Desert Flood Room Entry (Door)",
+        "Swamp Platform Shortcut (Door)",
+        "Monastery Obelisk Key",
+        "Colored Dots",
+        "Shadows Lower Doors",
+        "Treehouse Laser House Entry (Door)",
+        "Keep Tower Shortcut (Door)",
+        "Outside Tutorial Outpost Panels",
+        "Shadows Laser Room Doors",
+        "Treehouse Laser House Door Timer (Panel)",
+        "Swamp Purple Water Pump (Door)",
+        "Desert Surface 3 Control (Panel)",
+        "Progressive Symmetry",
+        "Slowness",
+        "Keep Pressure Plates 1 Exit (Door)",
+        "Quarry Entry 1 (Door)",
+        "Desert Panels",
+        "Desert Elevator (Door)",
+        "Quarry Entry Doors",
+        "Keep Hedge Maze 4 (Panel)",
+        "Swamp Entry (Panel)",
+        "Desert Light Room Entry (Door)",
+        "Jungle Monastery Garden Shortcut (Door)",
+        "Symmetry Island Upper (Door)",
+        "Windmill & Theater Control Panels",
+        "Bonk",
+        "Swamp Entry (Door)",
+        "Keep Shadows Shortcut (Door)",
+        "Desert Surface 8 Control (Panel)",
+        "Outside Tutorial Outpost Exit (Door)",
+        "Colored Squares",
+        "Symmetry Island Lower (Door)",
+        "Progressive Stars",
+        "Stars",
+        "Tunnels Town Shortcut (Panel)",
+        "Caves Panels",
+        "Mountain Floor 2 Light Bridge Far (Panel)",
+        "Treehouse Entry Doors",
+        "Power Surge",
+        "Town Maze Rooftop Bridge (Panel)",
+        "Swamp Panels",
+        "Caves Doors",
+        "Quarry Boathouse Ramp Height Control (Panel)",
+        "Quarry Boathouse Ramp Horizontal Control (Panel)",
+        "Glass Factory Entry (Door)",
+        "Mountain Floor 2 Staircase Far (Door)",
+        "Town Doors",
+        "Town Tower First (Door)",
+        "Quarry Entry 1 (Panel)",
+        "Keep Hedge Maze 2 (Panel)",
+        "Glass Factory Entry (Panel)",
+        "Full Dots",
+        "Desert Doors & Elevator",
+        "Outside Tutorial Outpost Path (Door)",
+        "Town RGB House Entry (Panel)",
+        "Treehouse First (Door)",
+        "Quarry Boathouse Panels",
+        "Keep Laser",
+        "Jungle Panels",
+        "Monastery Laser Shortcut (Door)",
+        "Town Church Entry (Door)",
+        "Swamp Shortcuts",
+        "Glass Factory Back Wall (Door)",
+        "Caves Shortcuts",
+        "Quarry Stoneworks Side Exit (Door)",
+        "Swamp Red Water Pump (Door)",
+        "Swamp Laser Shortcut (Panel)",
+        "Symmetry Island Panels",
+        "Keep Hedge Maze 1 (Panel)",
+        "Windmill Turn Control (Panel)",
+        "Mountain Bottom Floor Rock (Door)",
+        "Desert Elevator Room Entry (Door)",
+        "Monastery Shutters Control (Panel)",
+        "Keep Hedge Maze 4 Exit (Door)",
+        "Triangles",
+        "Bunker Elevator Control (Panel)",
+        "Theater Entry (Door)",
+        "Caves Elevator Controls (Panel)",
+        "Swamp Red Underwater Exit (Door)",
+        "Caves Entry (Door)",
+        "Tunnels Entry (Panel)",
+        "Treehouse Second (Door)",
+        "Desert Laser",
+        "Caves Entry (Panel)",
+        "Mountain Bottom Floor Doors",
+        "Speed Boost",
+        "Bunker Tinted Glass Door",
+        "Mountain Floor 1 Exit (Door)",
+        "Orchard First Gate (Door)",
+        "Town Cargo Box Entry (Panel)",
+        "Town Cargo Box Entry (Door)",
+        "Monastery Entry Right (Panel)",
+        "Functioning Brain",
+        "Swamp Laser Shortcut (Door)",
+        "Orchard Gates",
+        "Swamp Doors",
+        "Dots",
+        "Mountain Floor 2 Exit (Door)",
+        "Tunnels Theater Shortcut (Door)",
+        "Mountain Floor 1 & 2 Doors",
+        "Town Tower Fourth (Door)",
+        "Stars + Same Colored Symbol",
+        "Town Tower Doors",
+        "Keep Pressure Plates 2 Exit (Door)",
+        "Tunnels Town Shortcut (Door)",
+        "Town RGB House Entry (Door)",
+        "Outside Tutorial Outpost Entry (Panel)"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

@@ -186,6 +186,7 @@
           {
             "name": "Learn HTML",
             "id": 400000001,
+            "region": "VisualPath",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -204,6 +205,7 @@
           {
             "name": "Learn CSS",
             "id": 400000002,
+            "region": "VisualPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -225,6 +227,7 @@
           {
             "name": "Learn Design Systems",
             "id": 400000003,
+            "region": "VisualPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -269,6 +272,7 @@
           {
             "name": "Learn JavaScript",
             "id": 400000004,
+            "region": "LogicPath",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -287,6 +291,7 @@
           {
             "name": "Learn DOM Manipulation",
             "id": 400000005,
+            "region": "LogicPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -308,6 +313,7 @@
           {
             "name": "Learn Algorithms",
             "id": 400000006,
+            "region": "LogicPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -352,6 +358,7 @@
           {
             "name": "Choose Server Language",
             "id": 400000007,
+            "region": "ServerPath",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -370,6 +377,7 @@
           {
             "name": "Learn File I/O",
             "id": 400000008,
+            "region": "ServerPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -391,6 +399,7 @@
           {
             "name": "Learn HTTP Basics",
             "id": 400000009,
+            "region": "ServerPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -435,6 +444,7 @@
           {
             "name": "Learn Git",
             "id": 400000010,
+            "region": "ToolsPath",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -453,6 +463,7 @@
           {
             "name": "Learn Command Line",
             "id": 400000011,
+            "region": "ToolsPath",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -471,6 +482,7 @@
           {
             "name": "Learn Package Managers",
             "id": 400000012,
+            "region": "ToolsPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -615,6 +627,7 @@
           {
             "name": "Static Website Milestone",
             "id": 400000013,
+            "region": "StaticWebsiteHub",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -721,6 +734,7 @@
           {
             "name": "Learn React",
             "id": 400000014,
+            "region": "ReactRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -739,6 +753,7 @@
           {
             "name": "React Components",
             "id": 400000015,
+            "region": "ReactRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -760,6 +775,7 @@
           {
             "name": "Redux",
             "id": 400000016,
+            "region": "ReactRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -804,6 +820,7 @@
           {
             "name": "Learn Vue",
             "id": 400000017,
+            "region": "VueRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -822,6 +839,7 @@
           {
             "name": "Vue Components",
             "id": 400000018,
+            "region": "VueRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -843,6 +861,7 @@
           {
             "name": "Vuex",
             "id": 400000019,
+            "region": "VueRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -887,6 +906,7 @@
           {
             "name": "Advanced Vanilla JS",
             "id": 400000020,
+            "region": "VanillaRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -905,6 +925,7 @@
           {
             "name": "Custom State System",
             "id": 400000021,
+            "region": "VanillaRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1017,6 +1038,7 @@
           {
             "name": "Learn Express",
             "id": 400000022,
+            "region": "ExpressRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1035,6 +1057,7 @@
           {
             "name": "Build REST APIs",
             "id": 400000023,
+            "region": "ExpressRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1056,6 +1079,7 @@
           {
             "name": "MongoDB Integration",
             "id": 400000024,
+            "region": "ExpressRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1100,6 +1124,7 @@
           {
             "name": "Learn Django",
             "id": 400000025,
+            "region": "DjangoRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1118,6 +1143,7 @@
           {
             "name": "Django REST Framework",
             "id": 400000026,
+            "region": "DjangoRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1139,6 +1165,7 @@
           {
             "name": "Django ORM",
             "id": 400000027,
+            "region": "DjangoRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1183,6 +1210,7 @@
           {
             "name": "Learn Flask",
             "id": 400000028,
+            "region": "FlaskRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1201,6 +1229,7 @@
           {
             "name": "Flask-RESTful",
             "id": 400000029,
+            "region": "FlaskRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1222,6 +1251,7 @@
           {
             "name": "SQLAlchemy",
             "id": 400000030,
+            "region": "FlaskRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1266,6 +1296,7 @@
           {
             "name": "UI/UX Principles",
             "id": 400000031,
+            "region": "DesignTrack",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1287,6 +1318,7 @@
           {
             "name": "Responsive Design",
             "id": 400000032,
+            "region": "DesignTrack",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1308,6 +1340,7 @@
           {
             "name": "Accessibility",
             "id": 400000033,
+            "region": "DesignTrack",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1399,6 +1432,7 @@
           {
             "name": "Learn SQL",
             "id": 400000034,
+            "region": "SQLRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1417,6 +1451,7 @@
           {
             "name": "PostgreSQL",
             "id": 400000035,
+            "region": "SQLRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1438,6 +1473,7 @@
           {
             "name": "Query Optimization",
             "id": 400000036,
+            "region": "SQLRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1482,6 +1518,7 @@
           {
             "name": "Learn NoSQL",
             "id": 400000037,
+            "region": "NoSQLRoute",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1500,6 +1537,7 @@
           {
             "name": "MongoDB",
             "id": 400000038,
+            "region": "NoSQLRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1521,6 +1559,7 @@
           {
             "name": "Indexing Strategies",
             "id": 400000039,
+            "region": "NoSQLRoute",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1696,6 +1735,7 @@
           {
             "name": "Interactive App Milestone",
             "id": 400000040,
+            "region": "InteractiveAppHub",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1737,6 +1777,7 @@
           {
             "name": "Sessions",
             "id": 400000041,
+            "region": "AuthPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1758,6 +1799,7 @@
           {
             "name": "JWT",
             "id": 400000042,
+            "region": "AuthPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1779,6 +1821,7 @@
           {
             "name": "OAuth",
             "id": 400000043,
+            "region": "AuthPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1823,6 +1866,7 @@
           {
             "name": "Caching",
             "id": 400000044,
+            "region": "PerfPath",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1856,6 +1900,7 @@
           {
             "name": "CDN",
             "id": 400000045,
+            "region": "PerfPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1877,6 +1922,7 @@
           {
             "name": "Load Balancing",
             "id": 400000046,
+            "region": "PerfPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1921,6 +1967,7 @@
           {
             "name": "Unit Tests",
             "id": 400000047,
+            "region": "TestPath",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1939,6 +1986,7 @@
           {
             "name": "Integration Tests",
             "id": 400000048,
+            "region": "TestPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1960,6 +2008,7 @@
           {
             "name": "E2E Tests",
             "id": 400000049,
+            "region": "TestPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2004,6 +2053,7 @@
           {
             "name": "Docker",
             "id": 400000050,
+            "region": "DevOpsPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2025,6 +2075,7 @@
           {
             "name": "CI/CD",
             "id": 400000051,
+            "region": "DevOpsPath",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2058,6 +2109,7 @@
           {
             "name": "Monitoring",
             "id": 400000052,
+            "region": "DevOpsPath",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2173,6 +2225,7 @@
           {
             "name": "Full-Stack Integration Milestone",
             "id": 400000053,
+            "region": "FullStackHub",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2214,6 +2267,7 @@
           {
             "name": "HTTPS",
             "id": 400000054,
+            "region": "SecurityBranch",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2232,6 +2286,7 @@
           {
             "name": "CORS",
             "id": 400000055,
+            "region": "SecurityBranch",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2253,6 +2308,7 @@
           {
             "name": "Input Validation",
             "id": 400000056,
+            "region": "SecurityBranch",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2297,6 +2353,7 @@
           {
             "name": "Horizontal Scaling",
             "id": 400000057,
+            "region": "ScalingBranch",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2318,6 +2375,7 @@
           {
             "name": "Microservices",
             "id": 400000058,
+            "region": "ScalingBranch",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2362,6 +2420,7 @@
           {
             "name": "Cloud Provider",
             "id": 400000059,
+            "region": "DeploymentBranch",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2383,6 +2442,7 @@
           {
             "name": "Domain Setup",
             "id": 400000060,
+            "region": "DeploymentBranch",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2404,6 +2464,7 @@
           {
             "name": "SSL Certificate",
             "id": 400000061,
+            "region": "DeploymentBranch",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2460,6 +2521,7 @@
           {
             "name": "Production Deployment",
             "id": null,
+            "region": "ProductionHub",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3223,9 +3285,61 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Express",
+        "Vue",
+        "Integration Tests",
+        "Server Basics",
+        "HTML",
+        "CORS",
+        "Docker",
+        "Algorithms",
+        "State Management",
+        "Deployment Complete",
+        "Security Complete",
+        "File I/O",
+        "Design Systems",
+        "Static Website Complete",
+        "React",
+        "CI/CD",
+        "NoSQL",
+        "Interactive App Complete",
+        "Git",
+        "JavaScript Basics",
+        "Horizontal Scaling",
+        "Package Managers",
+        "Django",
+        "Domain",
+        "Scaling Complete",
+        "REST APIs",
+        "Database Basics",
+        "Authentication",
+        "HTTP Basics",
+        "Sessions",
+        "DOM Manipulation",
+        "Accessibility",
+        "Database Integration",
+        "Full-Stack Complete",
+        "SQL",
+        "CDN",
+        "Responsive Design",
+        "CSS",
+        "Caching",
+        "UI/UX",
+        "Query Optimization",
+        "DevOps",
+        "Performance",
+        "Command Line",
+        "HTTPS",
+        "Flask",
+        "Cloud Provider",
+        "Unit Tests",
+        "Testing",
+        "Frontend Framework",
+        "JWT"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

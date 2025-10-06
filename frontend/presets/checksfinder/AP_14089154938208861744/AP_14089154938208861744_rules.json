@@ -62,6 +62,7 @@
           {
             "name": "Tile 1",
             "id": 81000,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -80,6 +81,7 @@
           {
             "name": "Tile 2",
             "id": 81001,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -98,6 +100,7 @@
           {
             "name": "Tile 3",
             "id": 81002,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -116,6 +119,7 @@
           {
             "name": "Tile 4",
             "id": 81003,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -134,6 +138,7 @@
           {
             "name": "Tile 5",
             "id": 81004,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -152,6 +157,7 @@
           {
             "name": "Tile 6",
             "id": 81005,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -184,6 +190,7 @@
           {
             "name": "Tile 7",
             "id": 81006,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -216,6 +223,7 @@
           {
             "name": "Tile 8",
             "id": 81007,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -248,6 +256,7 @@
           {
             "name": "Tile 9",
             "id": 81008,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -280,6 +289,7 @@
           {
             "name": "Tile 10",
             "id": 81009,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -312,6 +322,7 @@
           {
             "name": "Tile 11",
             "id": 81010,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -344,6 +355,7 @@
           {
             "name": "Tile 12",
             "id": 81011,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -376,6 +388,7 @@
           {
             "name": "Tile 13",
             "id": 81012,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -408,6 +421,7 @@
           {
             "name": "Tile 14",
             "id": 81013,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -440,6 +454,7 @@
           {
             "name": "Tile 15",
             "id": 81014,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -472,6 +487,7 @@
           {
             "name": "Tile 16",
             "id": 81015,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -504,6 +520,7 @@
           {
             "name": "Tile 17",
             "id": 81016,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -536,6 +553,7 @@
           {
             "name": "Tile 18",
             "id": 81017,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -568,6 +586,7 @@
           {
             "name": "Tile 19",
             "id": 81018,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -600,6 +619,7 @@
           {
             "name": "Tile 20",
             "id": 81019,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -632,6 +652,7 @@
           {
             "name": "Tile 21",
             "id": 81020,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -664,6 +685,7 @@
           {
             "name": "Tile 22",
             "id": 81021,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -696,6 +718,7 @@
           {
             "name": "Tile 23",
             "id": 81022,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -728,6 +751,7 @@
           {
             "name": "Tile 24",
             "id": 81023,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -760,6 +784,7 @@
           {
             "name": "Tile 25",
             "id": 81024,
+            "region": "Board",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -851,9 +876,13 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Map Bombs",
+        "Map Width",
+        "Map Height"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

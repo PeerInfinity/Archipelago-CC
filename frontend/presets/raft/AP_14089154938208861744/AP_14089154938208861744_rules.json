@@ -169,6 +169,7 @@
           {
             "name": "Honey",
             "id": 48001,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -205,6 +206,7 @@
           {
             "name": "Flippers",
             "id": 48002,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -241,6 +243,7 @@
           {
             "name": "Birds nest",
             "id": 48003,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -277,6 +280,7 @@
           {
             "name": "Battery",
             "id": 48004,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -313,6 +317,7 @@
           {
             "name": "Circuit board",
             "id": 48005,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -349,6 +354,7 @@
           {
             "name": "Bolt",
             "id": 48006,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -385,6 +391,7 @@
           {
             "name": "Hinge",
             "id": 48007,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -421,6 +428,7 @@
           {
             "name": "Shear",
             "id": 48008,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -457,6 +465,7 @@
           {
             "name": "Net launcher",
             "id": 48009,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -493,6 +502,7 @@
           {
             "name": "Drinking glass",
             "id": 48010,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -529,6 +539,7 @@
           {
             "name": "Clay bowl",
             "id": 48011,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -565,6 +576,7 @@
           {
             "name": "Net canister",
             "id": 48012,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -601,6 +613,7 @@
           {
             "name": "Binoculars",
             "id": 48013,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -637,6 +650,7 @@
           {
             "name": "Metal fishing rod",
             "id": 48014,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -673,6 +687,7 @@
           {
             "name": "Oxygen bottle",
             "id": 48015,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -709,6 +724,7 @@
           {
             "name": "Sprinkler",
             "id": 48016,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -745,6 +761,7 @@
           {
             "name": "Empty bottle",
             "id": 48017,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -781,6 +798,7 @@
           {
             "name": "Cookingpot",
             "id": 48018,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -817,6 +835,7 @@
           {
             "name": "Juicer",
             "id": 48019,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -853,6 +872,7 @@
           {
             "name": "Stationary anchor",
             "id": 48020,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -889,6 +909,7 @@
           {
             "name": "Advanced grill",
             "id": 48021,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -925,6 +946,7 @@
           {
             "name": "Metal Spear",
             "id": 48022,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -961,6 +983,7 @@
           {
             "name": "Storage",
             "id": 48023,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -997,6 +1020,7 @@
           {
             "name": "Smelter",
             "id": 48024,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1033,6 +1057,7 @@
           {
             "name": "Paint mill",
             "id": 48025,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1069,6 +1094,7 @@
           {
             "name": "Hammock",
             "id": 48026,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1105,6 +1131,7 @@
           {
             "name": "Metal axe",
             "id": 48027,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1141,6 +1168,7 @@
           {
             "name": "Scrap hook",
             "id": 48028,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1177,6 +1205,7 @@
           {
             "name": "Large crop plot",
             "id": 48029,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1213,6 +1242,7 @@
           {
             "name": "Sweep net",
             "id": 48030,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1249,6 +1279,7 @@
           {
             "name": "Basic bow",
             "id": 48031,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1285,6 +1316,7 @@
           {
             "name": "Scarecrow",
             "id": 48032,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1321,6 +1353,7 @@
           {
             "name": "Metal arrow",
             "id": 48033,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1357,6 +1390,7 @@
           {
             "name": "Shovel",
             "id": 48034,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1393,6 +1427,7 @@
           {
             "name": "Advanced collection net",
             "id": 48035,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1429,6 +1464,7 @@
           {
             "name": "Bucket",
             "id": 48036,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1465,6 +1501,7 @@
           {
             "name": "Collection net",
             "id": 48037,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1501,6 +1538,7 @@
           {
             "name": "Paint brush",
             "id": 48038,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1537,6 +1575,7 @@
           {
             "name": "Advanced purifier",
             "id": 48039,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1573,6 +1612,7 @@
           {
             "name": "Grass plot",
             "id": 48040,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1609,6 +1649,7 @@
           {
             "name": "Stone arrow",
             "id": 48041,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1645,6 +1686,7 @@
           {
             "name": "Medium crop plot",
             "id": 48042,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1681,6 +1723,7 @@
           {
             "name": "Lantern",
             "id": 48043,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1717,6 +1760,7 @@
           {
             "name": "Small trophy board",
             "id": 48044,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1753,6 +1797,7 @@
           {
             "name": "Medium trophy board",
             "id": 48045,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1789,6 +1834,7 @@
           {
             "name": "Large trophy board",
             "id": 48046,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1825,6 +1871,7 @@
           {
             "name": "Backpack",
             "id": 48047,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1861,6 +1908,7 @@
           {
             "name": "Leather helmet",
             "id": 48048,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1897,6 +1945,7 @@
           {
             "name": "Leather body armor",
             "id": 48049,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1933,6 +1982,7 @@
           {
             "name": "Leather greaves",
             "id": 48050,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1969,6 +2019,7 @@
           {
             "name": "Beehive",
             "id": 48051,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2005,6 +2056,7 @@
           {
             "name": "Good healing salve",
             "id": 48052,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2041,6 +2093,7 @@
           {
             "name": "Healing salve",
             "id": 48053,
+            "region": "ResearchTable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2100,6 +2153,7 @@
           {
             "name": "Tala (Radio Tower)",
             "id": 48054,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2119,6 +2173,7 @@
           {
             "name": "Head light blueprint",
             "id": 48055,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2138,6 +2193,7 @@
           {
             "name": "Recycler blueprint",
             "id": 48056,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2157,6 +2213,7 @@
           {
             "name": "Radio Tower Briefcase",
             "id": 48057,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2176,6 +2233,7 @@
           {
             "name": "Radio Tower Frequency to Vasagatan",
             "id": 48058,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2195,6 +2253,7 @@
           {
             "name": "Radio Tower Notepad 1",
             "id": 48059,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2214,6 +2273,7 @@
           {
             "name": "Radio Tower Notepad 2",
             "id": 48060,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2233,6 +2293,7 @@
           {
             "name": "Radio Tower Signalboard Trace",
             "id": 48061,
+            "region": "RadioTower",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2275,6 +2336,7 @@
           {
             "name": "Hannes Letter 1",
             "id": 48062,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2294,6 +2356,7 @@
           {
             "name": "Hannes Letter 2",
             "id": 48063,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2313,6 +2376,7 @@
           {
             "name": "Hannes Letter 3",
             "id": 48064,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2332,6 +2396,7 @@
           {
             "name": "Olof Log 1",
             "id": 48065,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2351,6 +2416,7 @@
           {
             "name": "Olof Log 2",
             "id": 48066,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2370,6 +2436,7 @@
           {
             "name": "Olof Log 3",
             "id": 48067,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2389,6 +2456,7 @@
           {
             "name": "Vasagatan Recording 1",
             "id": 48068,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2408,6 +2476,7 @@
           {
             "name": "Vasagatan Recording 2",
             "id": 48069,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2427,6 +2496,7 @@
           {
             "name": "Vasagatan Recording 3",
             "id": 48070,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2446,6 +2516,7 @@
           {
             "name": "Vasagatan Magazine Clipping",
             "id": 48071,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2465,6 +2536,7 @@
           {
             "name": "Vasagatan Frequency to Balboa",
             "id": 48072,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2484,6 +2556,7 @@
           {
             "name": "Engine blueprint",
             "id": 48073,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2503,6 +2576,7 @@
           {
             "name": "Steering Wheel blueprint",
             "id": 48074,
+            "region": "Vasagatan",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2545,6 +2619,7 @@
           {
             "name": "Machete blueprint",
             "id": 48075,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2564,6 +2639,7 @@
           {
             "name": "Balboa Island Correa twins picture",
             "id": 48076,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2583,6 +2659,7 @@
           {
             "name": "Balboa Island Schedule of engineers",
             "id": 48077,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2602,6 +2679,7 @@
           {
             "name": "Biofuel refiner blueprint",
             "id": 48078,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2621,6 +2699,7 @@
           {
             "name": "Balboa Island Note from Henry",
             "id": 48079,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2657,6 +2736,7 @@
           {
             "name": "Balboa Island Correas diary 3",
             "id": 48080,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2693,6 +2773,7 @@
           {
             "name": "Fuel tank blueprint",
             "id": 48081,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2729,6 +2810,7 @@
           {
             "name": "Balboa Island Correas diary 1",
             "id": 48082,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2748,6 +2830,7 @@
           {
             "name": "Balboa Island Correas diary 2",
             "id": 48083,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2767,6 +2850,7 @@
           {
             "name": "Fuel pipe blueprint",
             "id": 48084,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2786,6 +2870,7 @@
           {
             "name": "Balboa Island Bear map",
             "id": 48085,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2805,6 +2890,7 @@
           {
             "name": "Johnny (Balboa Island)",
             "id": 48086,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2841,6 +2927,7 @@
           {
             "name": "Balboa Island Doll murderer 4",
             "id": 48087,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2860,6 +2947,7 @@
           {
             "name": "Balboa Island Doll murderer 1",
             "id": 48088,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2879,6 +2967,7 @@
           {
             "name": "Balboa Island Doll murderer 3",
             "id": 48089,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2898,6 +2987,7 @@
           {
             "name": "Balboa Island Doll murderer 5",
             "id": 48090,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2917,6 +3007,7 @@
           {
             "name": "Balboa Island Doll murderer 2",
             "id": 48091,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2936,6 +3027,7 @@
           {
             "name": "Relay Station quest",
             "id": 48155,
+            "region": "BalboaIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2978,6 +3070,7 @@
           {
             "name": "Caravan Island Detto journal 1",
             "id": 48092,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2997,6 +3090,7 @@
           {
             "name": "Caravan Island Detto journal 2",
             "id": 48093,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3016,6 +3110,7 @@
           {
             "name": "Caravan Island Detto journal 3",
             "id": 48094,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3035,6 +3130,7 @@
           {
             "name": "Caravan Island Detto journal 4",
             "id": 48095,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3054,6 +3150,7 @@
           {
             "name": "Caravan Island Detto journal 5",
             "id": 48096,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3073,6 +3170,7 @@
           {
             "name": "Caravan Island Detto journal 6",
             "id": 48097,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3092,6 +3190,7 @@
           {
             "name": "Caravan Island Olaf speech",
             "id": 48098,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3111,6 +3210,7 @@
           {
             "name": "Caravan Island Raft town article",
             "id": 48099,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3130,6 +3230,7 @@
           {
             "name": "Caravan Island Doctor's note",
             "id": 48100,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3149,6 +3250,7 @@
           {
             "name": "Firework blueprint",
             "id": 48101,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3168,6 +3270,7 @@
           {
             "name": "Battery Charger quest",
             "id": 48102,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3187,6 +3290,7 @@
           {
             "name": "Zipline quest",
             "id": 48103,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3223,6 +3327,7 @@
           {
             "name": "Caravan Island Frequency to Tangaroa",
             "id": 48104,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3259,6 +3364,7 @@
           {
             "name": "Engine controls blueprint",
             "id": 48105,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3278,6 +3384,7 @@
           {
             "name": "Metal detector blueprint",
             "id": 48106,
+            "region": "CaravanIsland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3320,6 +3427,7 @@
           {
             "name": "Tangaroa Ruben 1",
             "id": 48107,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3339,6 +3447,7 @@
           {
             "name": "Tangaroa Ruben 2",
             "id": 48108,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3358,6 +3467,7 @@
           {
             "name": "Tangaroa Ruben 3",
             "id": 48109,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3377,6 +3487,7 @@
           {
             "name": "Tangaroa Ruben 4",
             "id": 48110,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3396,6 +3507,7 @@
           {
             "name": "Tangaroa Ruben 5",
             "id": 48111,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3415,6 +3527,7 @@
           {
             "name": "Tangaroa Gardener Diary",
             "id": 48112,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3434,6 +3547,7 @@
           {
             "name": "Tangaroa Riot Log",
             "id": 48113,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3453,6 +3567,7 @@
           {
             "name": "Tangaroa Tulley Note",
             "id": 48114,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3472,6 +3587,7 @@
           {
             "name": "Tangaroa Cipher",
             "id": 48115,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3491,6 +3607,7 @@
           {
             "name": "Tangaroa Frequency to Varuna Point",
             "id": 48116,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3510,6 +3627,7 @@
           {
             "name": "Water pipe blueprint",
             "id": 48117,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3529,6 +3647,7 @@
           {
             "name": "Electric purifier blueprint",
             "id": 48118,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3548,6 +3667,7 @@
           {
             "name": "Water tank blueprint",
             "id": 48119,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3567,6 +3687,7 @@
           {
             "name": "Large Storage blueprint",
             "id": 48120,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3586,6 +3707,7 @@
           {
             "name": "Elaine (Tangaroa)",
             "id": 48121,
+            "region": "Tangaroa",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3628,6 +3750,7 @@
           {
             "name": "Varuna Point Grabber diary 1",
             "id": 48122,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3647,6 +3770,7 @@
           {
             "name": "Varuna Point Grabber diary 2",
             "id": 48123,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3666,6 +3790,7 @@
           {
             "name": "Varuna Point Grabber diary 3",
             "id": 48124,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3685,6 +3810,7 @@
           {
             "name": "Varuna Point Grabber diary 4",
             "id": 48125,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3704,6 +3830,7 @@
           {
             "name": "Varuna Point Grabber diary 5",
             "id": 48126,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3723,6 +3850,7 @@
           {
             "name": "Varuna Point Grabber diary 6",
             "id": 48127,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3742,6 +3870,7 @@
           {
             "name": "Varuna Point Frequency to Temperance",
             "id": 48128,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3761,6 +3890,7 @@
           {
             "name": "Wind Turbine blueprint",
             "id": 48129,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3780,6 +3910,7 @@
           {
             "name": "Advanced Battery blueprint",
             "id": 48130,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3799,6 +3930,7 @@
           {
             "name": "Advanced Headlight blueprint",
             "id": 48131,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3818,6 +3950,7 @@
           {
             "name": "Electric Grill blueprint",
             "id": 48132,
+            "region": "Varuna Point",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3860,6 +3993,7 @@
           {
             "name": "Temperance Bruno diary 1",
             "id": 48133,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3879,6 +4013,7 @@
           {
             "name": "Temperance Bruno diary 2",
             "id": 48134,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3898,6 +4033,7 @@
           {
             "name": "Temperance Bruno diary 3",
             "id": 48135,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3917,6 +4053,7 @@
           {
             "name": "Temperance Bruno diary 4",
             "id": 48136,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3936,6 +4073,7 @@
           {
             "name": "Temperance Bruno diary 5",
             "id": 48137,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3955,6 +4093,7 @@
           {
             "name": "Temperance Sparrow note 1",
             "id": 48138,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3974,6 +4113,7 @@
           {
             "name": "Temperance Sparrow note 2",
             "id": 48139,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3993,6 +4133,7 @@
           {
             "name": "Temperance Frequency to Utopia",
             "id": 48140,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4012,6 +4153,7 @@
           {
             "name": "Temperance Star sign 1",
             "id": 48141,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4031,6 +4173,7 @@
           {
             "name": "Temperance Star sign 2",
             "id": 48142,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4050,6 +4193,7 @@
           {
             "name": "Temperance Star sign 3",
             "id": 48143,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4069,6 +4213,7 @@
           {
             "name": "Temperance Star sign 4",
             "id": 48144,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4088,6 +4233,7 @@
           {
             "name": "Electric Smelter blueprint",
             "id": 48145,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4107,6 +4253,7 @@
           {
             "name": "Advanced Biofuel Extractor blueprint",
             "id": 48146,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4126,6 +4273,7 @@
           {
             "name": "Advanced Stationary Anchor blueprint",
             "id": 48147,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4145,6 +4293,7 @@
           {
             "name": "Shogo (Temperance)",
             "id": 48148,
+            "region": "Temperance",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4187,6 +4336,7 @@
           {
             "name": "Electric Zipline blueprint",
             "id": 48149,
+            "region": "Utopia",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4216,6 +4366,7 @@
           {
             "name": "Advanced Backpack blueprint",
             "id": 48150,
+            "region": "Utopia",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4245,6 +4396,7 @@
           {
             "name": "Titanium Tools blueprint",
             "id": 48151,
+            "region": "Utopia",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4274,6 +4426,7 @@
           {
             "name": "Utopia Captives note",
             "id": 48152,
+            "region": "Utopia",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4303,6 +4456,7 @@
           {
             "name": "Utopia Detto map",
             "id": 48153,
+            "region": "Utopia",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4332,6 +4486,7 @@
           {
             "name": "Utopia Complete",
             "id": null,
+            "region": "Utopia",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8966,9 +9121,335 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Resource Pack: 3 Plastic",
+        "Resource Pack: 10 MetalOre",
+        "Resource Pack: 10 Thatch",
+        "Electric zipline tool",
+        "Resource Pack: 2 SeaVine",
+        "Steering Wheel",
+        "Resource Pack: 4 Sand",
+        "Resource Pack: 8 Clay",
+        "Utopia Frequency",
+        "Big backpack",
+        "Resource Pack: 12 Scrap",
+        "Resource Pack: 3 Raw_Beet",
+        "Tangaroa Frequency",
+        "Medium crop plot",
+        "Resource Pack: 14 Plank",
+        "Resource Pack: 11 Plank",
+        "Resource Pack: 3 Scrap",
+        "Backpack",
+        "Advanced small crop plot",
+        "Large Storage",
+        "Caravan Island Frequency",
+        "Resource Pack: 9 Plank",
+        "Resource Pack: 10 Clay",
+        "Resource Pack: 9 SeaVine",
+        "Resource Pack: 13 ExplosiveGoo",
+        "Fuel tank",
+        "progressive-axe",
+        "Resource Pack: 8 Thatch",
+        "Resource Pack: 1 SeaVine",
+        "Resource Pack: 14 CopperOre",
+        "Trashcan",
+        "Resource Pack: 13 Clay",
+        "Leather helmet",
+        "Resource Pack: 2 Raw_Potato",
+        "Net canister",
+        "progressive-biofuel",
+        "Resource Pack: 15 Raw_Potato",
+        "Resource Pack: 15 Raw_Beet",
+        "Resource Pack: 11 Raw_Potato",
+        "Resource Pack: 6 CopperOre",
+        "Metal detector",
+        "progressive-anchor",
+        "Resource Pack: 7 ExplosiveGoo",
+        "Advanced large crop plot",
+        "Hinge",
+        "Resource Pack: 8 Scrap",
+        "Resource Pack: 13 SeaVine",
+        "Resource Pack: 11 CopperOre",
+        "Resource Pack: 2 ExplosiveGoo",
+        "Resource Pack: 4 Plastic",
+        "Resource Pack: 1 Thatch",
+        "Resource Pack: 9 Sand",
+        "Resource Pack: 2 Scrap",
+        "Resource Pack: 9 CopperOre",
+        "Resource Pack: 6 Stone",
+        "Resource Pack: 13 Stone",
+        "Metal arrow",
+        "Resource Pack: 8 Plank",
+        "Scarecrow",
+        "Battery",
+        "Resource Pack: 3 Clay",
+        "Resource Pack: 1 MetalOre",
+        "Vasagatan Frequency",
+        "Resource Pack: 5 Plank",
+        "Resource Pack: 10 Scrap",
+        "Circuit board",
+        "Water tank",
+        "progressive-scarecrow",
+        "Resource Pack: 3 SeaVine",
+        "Basic bow",
+        "Resource Pack: 8 Sand",
+        "Resource Pack: 5 Raw_Beet",
+        "Resource Pack: 5 SeaVine",
+        "Resource Pack: 15 Scrap",
+        "Resource Pack: 4 Scrap",
+        "Resource Pack: 14 MetalOre",
+        "Varuna Point Frequency",
+        "Resource Pack: 2 Plastic",
+        "Resource Pack: 4 TitaniumOre",
+        "Resource Pack: 14 Raw_Potato",
+        "Resource Pack: 4 ExplosiveGoo",
+        "Resource Pack: 1 CopperOre",
+        "Resource Pack: 6 MetalOre",
+        "Resource Pack: 6 Plank",
+        "Resource Pack: 8 TitaniumOre",
+        "progressive-headlight",
+        "progressive-hook",
+        "Resource Pack: 5 Thatch",
+        "Bucket",
+        "Resource Pack: 4 Clay",
+        "Titanium axe",
+        "Titanium hook",
+        "Resource Pack: 6 Scrap",
+        "Resource Pack: 11 Raw_Beet",
+        "Resource Pack: 14 Scrap",
+        "Resource Pack: 1 ExplosiveGoo",
+        "Resource Pack: 10 CopperOre",
+        "Drinking glass",
+        "Resource Pack: 10 Sand",
+        "Resource Pack: 14 Plastic",
+        "Resource Pack: 11 Stone",
+        "Resource Pack: 11 Scrap",
+        "Advanced biofuel refiner",
+        "Resource Pack: 13 TitaniumOre",
+        "Beehive",
+        "Water pipe",
+        "Resource Pack: 12 Plastic",
+        "Resource Pack: 15 Clay",
+        "Resource Pack: 15 Sand",
+        "Resource Pack: 3 MetalOre",
+        "Empty canteen",
+        "Resource Pack: 14 Thatch",
+        "Resource Pack: 2 Sand",
+        "Resource Pack: 10 Plank",
+        "progressive-engine",
+        "Advanced head light",
+        "Electric grill",
+        "Resource Pack: 2 Plank",
+        "Resource Pack: 6 Raw_Beet",
+        "Resource Pack: 13 Raw_Potato",
+        "progressive-containers",
+        "Resource Pack: 1 Plank",
+        "Resource Pack: 3 Thatch",
+        "Resource Pack: 3 CopperOre",
+        "Resource Pack: 3 ExplosiveGoo",
+        "Resource Pack: 13 Sand",
+        "progressive-crop-plot",
+        "Resource Pack: 12 SeaVine",
+        "Shovel",
+        "Resource Pack: 14 Stone",
+        "Resource Pack: 12 Raw_Beet",
+        "Resource Pack: 15 TitaniumOre",
+        "Resource Pack: 9 MetalOre",
+        "Resource Pack: 6 Thatch",
+        "Storage",
+        "Resource Pack: 14 Clay",
+        "Resource Pack: 5 Scrap",
+        "Resource Pack: 6 Plastic",
+        "Resource Pack: 8 CopperOre",
+        "Resource Pack: 12 Plank",
+        "progressive-backpack",
+        "Resource Pack: 7 CopperOre",
+        "Stationary anchor",
+        "Resource Pack: 8 Plastic",
+        "Resource Pack: 6 Clay",
+        "Resource Pack: 11 Plastic",
+        "Resource Pack: 1 Plastic",
+        "Resource Pack: 10 Stone",
+        "Resource Pack: 7 Thatch",
+        "Resource Pack: 8 ExplosiveGoo",
+        "Clay bowl",
+        "Resource Pack: 2 MetalOre",
+        "Resource Pack: 5 CopperOre",
+        "Resource Pack: 12 Sand",
+        "Resource Pack: 3 TitaniumOre",
+        "Resource Pack: 15 Plank",
+        "Resource Pack: 3 Sand",
+        "Wind turbine",
+        "Resource Pack: 1 Clay",
+        "progressive-grill",
+        "Resource Pack: 5 MetalOre",
+        "Empty bottle",
+        "Antenna",
+        "Advanced medium crop plot",
+        "Resource Pack: 5 ExplosiveGoo",
+        "Resource Pack: 13 Plank",
+        "Resource Pack: 11 ExplosiveGoo",
+        "Resource Pack: 15 Thatch",
+        "Scrap hook",
+        "Resource Pack: 12 Clay",
+        "Resource Pack: 8 Raw_Potato",
+        "Zipline tool",
+        "Resource Pack: 8 Stone",
+        "Resource Pack: 7 Raw_Potato",
+        "progressive-storage",
+        "Resource Pack: 6 TitaniumOre",
+        "Resource Pack: 11 Sand",
+        "progressive-metals",
+        "Resource Pack: 12 CopperOre",
+        "Resource Pack: 9 Raw_Potato",
+        "Resource Pack: 14 Sand",
+        "Resource Pack: 8 Raw_Beet",
+        "Advanced purifier",
+        "Resource Pack: 7 SeaVine",
+        "Bolt",
+        "Resource Pack: 4 MetalOre",
+        "Large crop plot",
+        "Resource Pack: 5 Clay",
+        "Resource Pack: 5 Sand",
+        "Resource Pack: 4 Raw_Beet",
+        "Machete",
+        "Resource Pack: 4 Plank",
+        "Resource Pack: 2 CopperOre",
+        "Resource Pack: 2 Thatch",
+        "Recycler",
+        "Resource Pack: 10 ExplosiveGoo",
+        "Simple collection net",
+        "Flippers",
+        "Resource Pack: 11 MetalOre",
+        "Resource Pack: 10 SeaVine",
+        "Resource Pack: 14 ExplosiveGoo",
+        "Resource Pack: 12 TitaniumOre",
+        "Resource Pack: 12 Stone",
+        "Metal spear",
+        "Resource Pack: 13 CopperOre",
+        "Fuel pipe",
+        "Metal axe",
+        "Resource Pack: 12 MetalOre",
+        "Resource Pack: 2 Raw_Beet",
+        "progressive-battery",
+        "Resource Pack: 15 MetalOre",
+        "Advanced Scarecrow",
+        "Resource Pack: 7 Plank",
+        "Resource Pack: 11 Clay",
+        "Resource Pack: 9 Stone",
+        "Resource Pack: 9 Scrap",
+        "Resource Pack: 2 Stone",
+        "Firework",
+        "Resource Pack: 5 TitaniumOre",
+        "Resource Pack: 10 Raw_Beet",
+        "Resource Pack: 14 TitaniumOre",
+        "Resource Pack: 5 Plastic",
+        "progressive-bow",
+        "Resource Pack: 7 Clay",
+        "Resource Pack: 7 Scrap",
+        "Leather greaves",
+        "Healing salve",
+        "Birds nest",
+        "Resource Pack: 4 Raw_Potato",
+        "Resource Pack: 4 CopperOre",
+        "progressive-zipline",
+        "Resource Pack: 10 Plastic",
+        "Resource Pack: 9 Plastic",
+        "Resource Pack: 1 Stone",
+        "Resource Pack: 12 Raw_Potato",
+        "Resource Pack: 15 ExplosiveGoo",
+        "Engine",
+        "progressive-salve",
+        "Receiver",
+        "Resource Pack: 7 Plastic",
+        "Resource Pack: 13 Raw_Beet",
+        "Net launcher",
+        "Resource Pack: 3 Stone",
+        "Resource Pack: 6 ExplosiveGoo",
+        "Good healing salve",
+        "Resource Pack: 15 Stone",
+        "Resource Pack: 2 Clay",
+        "Resource Pack: 13 Scrap",
+        "Resource Pack: 2 TitaniumOre",
+        "Resource Pack: 14 Raw_Beet",
+        "Resource Pack: 1 Raw_Beet",
+        "Biofuel refiner",
+        "Shear",
+        "Advanced collection net",
+        "Temperance Frequency",
+        "Resource Pack: 15 SeaVine",
+        "Resource Pack: 9 Thatch",
+        "Resource Pack: 15 CopperOre",
+        "Resource Pack: 11 Thatch",
+        "progressive-spear",
+        "Resource Pack: 6 SeaVine",
+        "Resource Pack: 10 Raw_Potato",
+        "Advanced stationary anchor",
+        "Resource Pack: 13 Thatch",
+        "Resource Pack: 14 SeaVine",
+        "Resource Pack: 7 MetalOre",
+        "Resource Pack: 7 TitaniumOre",
+        "Grass plot",
+        "Resource Pack: 9 Raw_Beet",
+        "Resource Pack: 10 TitaniumOre",
+        "Advanced grill",
+        "Advanced Battery",
+        "Balboa Island Frequency",
+        "Resource Pack: 4 Thatch",
+        "Engine controls",
+        "Binoculars",
+        "Resource Pack: 12 Thatch",
+        "Electric Smelter",
+        "Oxygen bottle",
+        "Juicer",
+        "Resource Pack: 6 Raw_Potato",
+        "Resource Pack: 5 Stone",
+        "Honey",
+        "Resource Pack: 8 SeaVine",
+        "progressive-frequency",
+        "Zipline",
+        "Resource Pack: 13 MetalOre",
+        "Resource Pack: 3 Plank",
+        "progressive-purifier",
+        "Stone arrow",
+        "Resource Pack: 7 Sand",
+        "Resource Pack: 1 Scrap",
+        "Sweep net",
+        "Resource Pack: 8 MetalOre",
+        "Resource Pack: 9 Clay",
+        "Resource Pack: 1 Sand",
+        "Metal fishing rod",
+        "Resource Pack: 1 TitaniumOre",
+        "Resource Pack: 4 Stone",
+        "Sprinkler",
+        "Resource Pack: 13 Plastic",
+        "progressive-net",
+        "Resource Pack: 3 Raw_Potato",
+        "Titanium sword",
+        "Electric purifier",
+        "Resource Pack: 1 Raw_Potato",
+        "Leather body armor",
+        "Resource Pack: 15 Plastic",
+        "Hammock",
+        "Resource Pack: 9 TitaniumOre",
+        "Resource Pack: 4 SeaVine",
+        "Resource Pack: 6 Sand",
+        "Resource Pack: 7 Raw_Beet",
+        "Titanium arrow",
+        "Battery charger",
+        "Resource Pack: 11 SeaVine",
+        "Resource Pack: 9 ExplosiveGoo",
+        "Resource Pack: 11 TitaniumOre",
+        "Resource Pack: 12 ExplosiveGoo",
+        "progressive-bottle",
+        "Resource Pack: 7 Stone",
+        "Resource Pack: 5 Raw_Potato",
+        "Cookingpot",
+        "Smelter",
+        "Head light"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

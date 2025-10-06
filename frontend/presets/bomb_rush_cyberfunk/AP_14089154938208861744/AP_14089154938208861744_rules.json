@@ -75,6 +75,7 @@
           {
             "name": "Tagged 5 Graffiti Spots",
             "id": 2308169,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -111,6 +112,7 @@
           {
             "name": "Tagged 10 Graffiti Spots",
             "id": 2308170,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -147,6 +149,7 @@
           {
             "name": "Tagged 15 Graffiti Spots",
             "id": 2308171,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -183,6 +186,7 @@
           {
             "name": "Tagged 20 Graffiti Spots",
             "id": 2308172,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -219,6 +223,7 @@
           {
             "name": "Tagged 25 Graffiti Spots",
             "id": 2308173,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -255,6 +260,7 @@
           {
             "name": "Tagged 30 Graffiti Spots",
             "id": 2308174,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -291,6 +297,7 @@
           {
             "name": "Tagged 35 Graffiti Spots",
             "id": 2308175,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -327,6 +334,7 @@
           {
             "name": "Tagged 40 Graffiti Spots",
             "id": 2308176,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -363,6 +371,7 @@
           {
             "name": "Tagged 45 Graffiti Spots",
             "id": 2308177,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -399,6 +408,7 @@
           {
             "name": "Tagged 50 Graffiti Spots",
             "id": 2308178,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -435,6 +445,7 @@
           {
             "name": "Tagged 55 Graffiti Spots",
             "id": 2308179,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -471,6 +482,7 @@
           {
             "name": "Tagged 60 Graffiti Spots",
             "id": 2308180,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -507,6 +519,7 @@
           {
             "name": "Tagged 65 Graffiti Spots",
             "id": 2308181,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -543,6 +556,7 @@
           {
             "name": "Tagged 70 Graffiti Spots",
             "id": 2308182,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -579,6 +593,7 @@
           {
             "name": "Tagged 75 Graffiti Spots",
             "id": 2308183,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -615,6 +630,7 @@
           {
             "name": "Tagged 80 Graffiti Spots",
             "id": 2308184,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -651,6 +667,7 @@
           {
             "name": "Tagged 85 Graffiti Spots",
             "id": 2308185,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -687,6 +704,7 @@
           {
             "name": "Tagged 90 Graffiti Spots",
             "id": 2308186,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -723,6 +741,7 @@
           {
             "name": "Tagged 95 Graffiti Spots",
             "id": 2308187,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -759,6 +778,7 @@
           {
             "name": "Tagged 100 Graffiti Spots",
             "id": 2308188,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -795,6 +815,7 @@
           {
             "name": "Tagged 105 Graffiti Spots",
             "id": 2308189,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -831,6 +852,7 @@
           {
             "name": "Tagged 110 Graffiti Spots",
             "id": 2308190,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -867,6 +889,7 @@
           {
             "name": "Tagged 115 Graffiti Spots",
             "id": 2308191,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -903,6 +926,7 @@
           {
             "name": "Tagged 120 Graffiti Spots",
             "id": 2308192,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -939,6 +963,7 @@
           {
             "name": "Tagged 125 Graffiti Spots",
             "id": 2308193,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -975,6 +1000,7 @@
           {
             "name": "Tagged 130 Graffiti Spots",
             "id": 2308194,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1011,6 +1037,7 @@
           {
             "name": "Tagged 135 Graffiti Spots",
             "id": 2308195,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1047,6 +1074,7 @@
           {
             "name": "Tagged 140 Graffiti Spots",
             "id": 2308196,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1083,6 +1111,7 @@
           {
             "name": "Tagged 145 Graffiti Spots",
             "id": 2308197,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1119,6 +1148,7 @@
           {
             "name": "Tagged 150 Graffiti Spots",
             "id": 2308198,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1155,6 +1185,7 @@
           {
             "name": "Tagged 155 Graffiti Spots",
             "id": 2308199,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1191,6 +1222,7 @@
           {
             "name": "Tagged 160 Graffiti Spots",
             "id": 2308200,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1227,6 +1259,7 @@
           {
             "name": "Tagged 165 Graffiti Spots",
             "id": 2308201,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1263,6 +1296,7 @@
           {
             "name": "Tagged 170 Graffiti Spots",
             "id": 2308202,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1299,6 +1333,7 @@
           {
             "name": "Tagged 175 Graffiti Spots",
             "id": 2308203,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1335,6 +1370,7 @@
           {
             "name": "Tagged 180 Graffiti Spots",
             "id": 2308204,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1371,6 +1407,7 @@
           {
             "name": "Tagged 185 Graffiti Spots",
             "id": 2308205,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1407,6 +1444,7 @@
           {
             "name": "Tagged 190 Graffiti Spots",
             "id": 2308206,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1443,6 +1481,7 @@
           {
             "name": "Tagged 195 Graffiti Spots",
             "id": 2308207,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1479,6 +1518,7 @@
           {
             "name": "Tagged 200 Graffiti Spots",
             "id": 2308208,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1515,6 +1555,7 @@
           {
             "name": "Tagged 205 Graffiti Spots",
             "id": 2308209,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1551,6 +1592,7 @@
           {
             "name": "Tagged 210 Graffiti Spots",
             "id": 2308210,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1587,6 +1629,7 @@
           {
             "name": "Tagged 215 Graffiti Spots",
             "id": 2308211,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1623,6 +1666,7 @@
           {
             "name": "Tagged 220 Graffiti Spots",
             "id": 2308212,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1659,6 +1703,7 @@
           {
             "name": "Tagged 225 Graffiti Spots",
             "id": 2308213,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1695,6 +1740,7 @@
           {
             "name": "Tagged 230 Graffiti Spots",
             "id": 2308214,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1731,6 +1777,7 @@
           {
             "name": "Tagged 235 Graffiti Spots",
             "id": 2308215,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1767,6 +1814,7 @@
           {
             "name": "Tagged 240 Graffiti Spots",
             "id": 2308216,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1803,6 +1851,7 @@
           {
             "name": "Tagged 245 Graffiti Spots",
             "id": 2308217,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1839,6 +1888,7 @@
           {
             "name": "Tagged 250 Graffiti Spots",
             "id": 2308218,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1875,6 +1925,7 @@
           {
             "name": "Tagged 255 Graffiti Spots",
             "id": 2308219,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1911,6 +1962,7 @@
           {
             "name": "Tagged 260 Graffiti Spots",
             "id": 2308220,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1947,6 +1999,7 @@
           {
             "name": "Tagged 265 Graffiti Spots",
             "id": 2308221,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1983,6 +2036,7 @@
           {
             "name": "Tagged 270 Graffiti Spots",
             "id": 2308222,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2019,6 +2073,7 @@
           {
             "name": "Tagged 275 Graffiti Spots",
             "id": 2308223,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2055,6 +2110,7 @@
           {
             "name": "Tagged 280 Graffiti Spots",
             "id": 2308224,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2091,6 +2147,7 @@
           {
             "name": "Tagged 285 Graffiti Spots",
             "id": 2308225,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2127,6 +2184,7 @@
           {
             "name": "Tagged 290 Graffiti Spots",
             "id": 2308226,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2163,6 +2221,7 @@
           {
             "name": "Tagged 295 Graffiti Spots",
             "id": 2308227,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2199,6 +2258,7 @@
           {
             "name": "Tagged 300 Graffiti Spots",
             "id": 2308228,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2235,6 +2295,7 @@
           {
             "name": "Tagged 305 Graffiti Spots",
             "id": 2308229,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2271,6 +2332,7 @@
           {
             "name": "Tagged 310 Graffiti Spots",
             "id": 2308230,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2307,6 +2369,7 @@
           {
             "name": "Tagged 315 Graffiti Spots",
             "id": 2308231,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2343,6 +2406,7 @@
           {
             "name": "Tagged 320 Graffiti Spots",
             "id": 2308232,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2379,6 +2443,7 @@
           {
             "name": "Tagged 325 Graffiti Spots",
             "id": 2308233,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2415,6 +2480,7 @@
           {
             "name": "Tagged 330 Graffiti Spots",
             "id": 2308234,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2451,6 +2517,7 @@
           {
             "name": "Tagged 335 Graffiti Spots",
             "id": 2308235,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2487,6 +2554,7 @@
           {
             "name": "Tagged 340 Graffiti Spots",
             "id": 2308236,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2523,6 +2591,7 @@
           {
             "name": "Tagged 345 Graffiti Spots",
             "id": 2308237,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2559,6 +2628,7 @@
           {
             "name": "Tagged 350 Graffiti Spots",
             "id": 2308238,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2595,6 +2665,7 @@
           {
             "name": "Tagged 355 Graffiti Spots",
             "id": 2308239,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2631,6 +2702,7 @@
           {
             "name": "Tagged 360 Graffiti Spots",
             "id": 2308240,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2667,6 +2739,7 @@
           {
             "name": "Tagged 365 Graffiti Spots",
             "id": 2308241,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2703,6 +2776,7 @@
           {
             "name": "Tagged 370 Graffiti Spots",
             "id": 2308242,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2739,6 +2813,7 @@
           {
             "name": "Tagged 375 Graffiti Spots",
             "id": 2308243,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2775,6 +2850,7 @@
           {
             "name": "Tagged 380 Graffiti Spots",
             "id": 2308244,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2811,6 +2887,7 @@
           {
             "name": "Tagged 385 Graffiti Spots",
             "id": 2308245,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2847,6 +2924,7 @@
           {
             "name": "Tagged 389 Graffiti Spots",
             "id": 2308246,
+            "region": "Misc",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2998,6 +3076,7 @@
           {
             "name": "Hideout: Half pipe CD",
             "id": 2308000,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3016,6 +3095,7 @@
           {
             "name": "Hideout: Garage tower CD",
             "id": 2308001,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3034,6 +3114,7 @@
           {
             "name": "Hideout: Rooftop CD",
             "id": 2308002,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3052,6 +3133,7 @@
           {
             "name": "Hideout: Under staircase graffiti",
             "id": 2308003,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3070,6 +3152,7 @@
           {
             "name": "Hideout: Secret area graffiti",
             "id": 2308004,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3088,6 +3171,7 @@
           {
             "name": "Hideout: Rear studio graffiti",
             "id": 2308005,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3106,6 +3190,7 @@
           {
             "name": "Hideout: Corner ledge graffiti",
             "id": 2308006,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3124,6 +3209,7 @@
           {
             "name": "Hideout: Upper platform skateboard",
             "id": 2308007,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3142,6 +3228,7 @@
           {
             "name": "Hideout: BMX garage skateboard",
             "id": 2308008,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3166,6 +3253,7 @@
           {
             "name": "Hideout: Unlock phone app",
             "id": 2308009,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3190,6 +3278,7 @@
           {
             "name": "Hideout: Vinyl joins the crew",
             "id": 2308010,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3214,6 +3303,7 @@
           {
             "name": "Hideout: Solace joins the crew",
             "id": 2308011,
+            "region": "Hideout",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3312,6 +3402,7 @@
           {
             "name": "Versum Hill: Main street Robo Post graffiti",
             "id": 2308012,
+            "region": "Versum Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3330,6 +3421,7 @@
           {
             "name": "Versum Hill: Behind glass graffiti",
             "id": 2308013,
+            "region": "Versum Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3348,6 +3440,7 @@
           {
             "name": "Versum Hill: Office room graffiti",
             "id": 2308014,
+            "region": "Versum Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3366,6 +3459,7 @@
           {
             "name": "Versum Hill: BMX gate outfit",
             "id": 2308031,
+            "region": "Versum Hill",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3390,6 +3484,7 @@
           {
             "name": "Versum Hill: Big Polo",
             "id": 2308037,
+            "region": "Versum Hill",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3409,6 +3504,7 @@
           {
             "name": "Versum Hill: Trash Polo",
             "id": 2308038,
+            "region": "Versum Hill",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3569,6 +3665,7 @@
           {
             "name": "Versum Hill: Under bridge graffiti",
             "id": 2308015,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3587,6 +3684,7 @@
           {
             "name": "Versum Hill: Train rail ledge skateboard",
             "id": 2308016,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3605,6 +3703,7 @@
           {
             "name": "Versum Hill: Train station CD",
             "id": 2308017,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3623,6 +3722,7 @@
           {
             "name": "Versum Hill: Billboard platform outfit",
             "id": 2308018,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3641,6 +3741,7 @@
           {
             "name": "Versum Hill: Hilltop Robo Post CD",
             "id": 2308019,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3659,6 +3760,7 @@
           {
             "name": "Versum Hill: Hill secret skateboard",
             "id": 2308020,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3677,6 +3779,7 @@
           {
             "name": "Versum Hill: Rooftop CD",
             "id": 2308021,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3695,6 +3798,7 @@
           {
             "name": "Versum Hill: Wallrunning challenge reward",
             "id": 2308022,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3714,6 +3818,7 @@
           {
             "name": "Versum Hill: Manual challenge reward",
             "id": 2308023,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3733,6 +3838,7 @@
           {
             "name": "Versum Hill: Corner challenge reward",
             "id": 2308024,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3752,6 +3858,7 @@
           {
             "name": "Versum Hill: Glass floor skates",
             "id": 2308032,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3776,6 +3883,7 @@
           {
             "name": "Versum Hill: Frank joins the crew",
             "id": 2308035,
+            "region": "Versum Hill - After Roadblock",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3842,6 +3950,7 @@
           {
             "name": "Versum Hill: Underground mall billboard graffiti",
             "id": 2308029,
+            "region": "Versum Hill - Underground Mall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3860,6 +3969,7 @@
           {
             "name": "Versum Hill: Underground mall vending machine skateboard",
             "id": 2308030,
+            "region": "Versum Hill - Underground Mall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3878,6 +3988,7 @@
           {
             "name": "Versum Hill: Rave joins the crew",
             "id": 2308034,
+            "region": "Versum Hill - Underground Mall",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3906,6 +4017,7 @@
           {
             "name": "Versum Hill: Fruit stand Polo",
             "id": 2308039,
+            "region": "Versum Hill - Underground Mall",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3967,6 +4079,7 @@
           {
             "name": "Versum Hill: Side street alley outfit",
             "id": 2308025,
+            "region": "Versum Hill - Side Street",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3985,6 +4098,7 @@
           {
             "name": "Versum Hill: Side street secret skateboard",
             "id": 2308026,
+            "region": "Versum Hill - Side Street",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4058,6 +4172,7 @@
           {
             "name": "Versum Hill: Basketball court alley skateboard",
             "id": 2308027,
+            "region": "Versum Hill - Basketball Court",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4076,6 +4191,7 @@
           {
             "name": "Versum Hill: Basketball court Robo Post CD",
             "id": 2308028,
+            "region": "Versum Hill - Basketball Court",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4094,6 +4210,7 @@
           {
             "name": "Versum Hill: Basketball court shortcut CD",
             "id": 2308033,
+            "region": "Versum Hill - Basketball Court",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4118,6 +4235,7 @@
           {
             "name": "Versum Hill: Rietveld joins the crew",
             "id": 2308036,
+            "region": "Versum Hill - Basketball Court",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4146,6 +4264,7 @@
           {
             "name": "Versum Hill: Complete Chapter 1",
             "id": null,
+            "region": "Versum Hill - Basketball Court",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4318,6 +4437,7 @@
           {
             "name": "Millennium Square: Center ramp graffiti",
             "id": 2308040,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4336,6 +4456,7 @@
           {
             "name": "Millennium Square: Rooftop staircase graffiti",
             "id": 2308041,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4354,6 +4475,7 @@
           {
             "name": "Millennium Square: Toilet graffiti",
             "id": 2308042,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4372,6 +4494,7 @@
           {
             "name": "Millennium Square: Trash graffiti",
             "id": 2308043,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4390,6 +4513,7 @@
           {
             "name": "Millennium Square: Center tower graffiti",
             "id": 2308044,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4408,6 +4532,7 @@
           {
             "name": "Millennium Square: Rooftop billboard graffiti",
             "id": 2308045,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4426,6 +4551,7 @@
           {
             "name": "Millennium Square: Center Robo Post CD",
             "id": 2308046,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4444,6 +4570,7 @@
           {
             "name": "Millennium Square: Parking garage Robo Post CD",
             "id": 2308047,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4462,6 +4589,7 @@
           {
             "name": "Millennium Square: Mall ledge outfit",
             "id": 2308048,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4480,6 +4608,7 @@
           {
             "name": "Millennium Square: Alley rooftop outfit",
             "id": 2308049,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4498,6 +4627,7 @@
           {
             "name": "Millennium Square: Alley staircase skateboard",
             "id": 2308050,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4516,6 +4646,7 @@
           {
             "name": "Millennium Square: Secret painting skates",
             "id": 2308051,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4534,6 +4665,7 @@
           {
             "name": "Millennium Square: Vending machine skates",
             "id": 2308052,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4552,6 +4684,7 @@
           {
             "name": "Millennium Square: Walkway roof skates",
             "id": 2308053,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4570,6 +4703,7 @@
           {
             "name": "Millennium Square: Alley ledge skates",
             "id": 2308054,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4588,6 +4722,7 @@
           {
             "name": "Millennium Square: DJ Cyber joins the crew",
             "id": 2308055,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4606,6 +4741,7 @@
           {
             "name": "Millennium Square: Half pipe Polo",
             "id": 2308056,
+            "region": "Millennium Square",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4741,6 +4877,7 @@
           {
             "name": "Brink Terminal: Upside grind challenge reward",
             "id": 2308057,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4760,6 +4897,7 @@
           {
             "name": "Brink Terminal: Manual challenge reward",
             "id": 2308058,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4779,6 +4917,7 @@
           {
             "name": "Brink Terminal: Score challenge reward",
             "id": 2308059,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4798,6 +4937,7 @@
           {
             "name": "Brink Terminal: Under square ledge graffiti",
             "id": 2308060,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4816,6 +4956,7 @@
           {
             "name": "Brink Terminal: Bus graffiti",
             "id": 2308061,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4834,6 +4975,7 @@
           {
             "name": "Brink Terminal: Under square Robo Post graffiti",
             "id": 2308062,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4852,6 +4994,7 @@
           {
             "name": "Brink Terminal: BMX gate graffiti",
             "id": 2308063,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4876,6 +5019,7 @@
           {
             "name": "Brink Terminal: Square tower CD",
             "id": 2308064,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4894,6 +5038,7 @@
           {
             "name": "Brink Terminal: Trash CD",
             "id": 2308065,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4912,6 +5057,7 @@
           {
             "name": "Brink Terminal: Shop roof outfit",
             "id": 2308066,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4930,6 +5076,7 @@
           {
             "name": "Brink Terminal: Glass roof skates",
             "id": 2308068,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4948,6 +5095,7 @@
           {
             "name": "Brink Terminal: Eclipse joins the crew",
             "id": 2308081,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4972,6 +5120,7 @@
           {
             "name": "Brink Terminal: Behind glass Polo",
             "id": 2308082,
+            "region": "Brink Terminal",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5028,6 +5177,7 @@
           {
             "name": "Brink Terminal: Underground glass skates",
             "id": 2308067,
+            "region": "Brink Terminal - Underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5046,6 +5196,7 @@
           {
             "name": "Brink Terminal: Underground ramp skates",
             "id": 2308070,
+            "region": "Brink Terminal - Underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5101,6 +5252,7 @@
           {
             "name": "Brink Terminal: Mesh's skateboard",
             "id": 2308069,
+            "region": "Brink Terminal - Dock",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5129,6 +5281,7 @@
           {
             "name": "Brink Terminal: Ocean platform CD",
             "id": 2308076,
+            "region": "Brink Terminal - Dock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5147,6 +5300,7 @@
           {
             "name": "Brink Terminal: End of dock CD",
             "id": 2308077,
+            "region": "Brink Terminal - Dock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5165,6 +5319,7 @@
           {
             "name": "Brink Terminal: Dock Robo Post outfit",
             "id": 2308078,
+            "region": "Brink Terminal - Dock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5183,6 +5338,7 @@
           {
             "name": "Brink Terminal: Control room skates",
             "id": 2308079,
+            "region": "Brink Terminal - Dock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5201,6 +5357,7 @@
           {
             "name": "Brink Terminal: Mesh joins the crew",
             "id": 2308080,
+            "region": "Brink Terminal - Dock",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5289,6 +5446,7 @@
           {
             "name": "Brink Terminal: Wire grind CD",
             "id": 2308072,
+            "region": "Brink Terminal - Planet Plaza",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5357,6 +5515,7 @@
           {
             "name": "Brink Terminal: Rooftop halfpipe graffiti",
             "id": 2308071,
+            "region": "Brink Terminal - Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5375,6 +5534,7 @@
           {
             "name": "Brink Terminal: Rooftop glass CD",
             "id": 2308073,
+            "region": "Brink Terminal - Tower",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5399,6 +5559,7 @@
           {
             "name": "Brink Terminal: Tower core outfit",
             "id": 2308074,
+            "region": "Brink Terminal - Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5417,6 +5578,7 @@
           {
             "name": "Brink Terminal: High rooftop outfit",
             "id": 2308075,
+            "region": "Brink Terminal - Tower",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5435,6 +5597,7 @@
           {
             "name": "Brink Terminal: Complete Chapter 2",
             "id": null,
+            "region": "Brink Terminal - Tower",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5570,6 +5733,7 @@
           {
             "name": "Millennium Mall: Warehouse pallet graffiti",
             "id": 2308083,
+            "region": "Millennium Mall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5588,6 +5752,7 @@
           {
             "name": "Millennium Mall: Wall alcove graffiti",
             "id": 2308084,
+            "region": "Millennium Mall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5606,6 +5771,7 @@
           {
             "name": "Millennium Mall: Maintenance shaft CD",
             "id": 2308085,
+            "region": "Millennium Mall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5624,6 +5790,7 @@
           {
             "name": "Millennium Mall: Glass cylinder CD",
             "id": 2308086,
+            "region": "Millennium Mall",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5648,6 +5815,7 @@
           {
             "name": "Millennium Mall: Lower Robo Post outfit",
             "id": 2308087,
+            "region": "Millennium Mall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5703,6 +5871,7 @@
           {
             "name": "Millennium Mall: Hanging lights CD",
             "id": 2308104,
+            "region": "Millennium Mall - Hanging Lights",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5809,6 +5978,7 @@
           {
             "name": "Millennium Mall: Atrium vending machine graffiti",
             "id": 2308088,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5827,6 +5997,7 @@
           {
             "name": "Millennium Mall: Trick challenge reward",
             "id": 2308089,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5846,6 +6017,7 @@
           {
             "name": "Millennium Mall: Slide challenge reward",
             "id": 2308090,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5865,6 +6037,7 @@
           {
             "name": "Millennium Mall: Fish challenge reward",
             "id": 2308091,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5884,6 +6057,7 @@
           {
             "name": "Millennium Mall: Score challenge reward",
             "id": 2308092,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5903,6 +6077,7 @@
           {
             "name": "Millennium Mall: Atrium top floor Robo Post CD",
             "id": 2308093,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5921,6 +6096,7 @@
           {
             "name": "Millennium Mall: Atrium top floor floating CD",
             "id": 2308094,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5939,6 +6115,7 @@
           {
             "name": "Millennium Mall: Atrium top floor BMX",
             "id": 2308095,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5957,6 +6134,7 @@
           {
             "name": "Millennium Mall: Theater entrance BMX",
             "id": 2308096,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5975,6 +6153,7 @@
           {
             "name": "Millennium Mall: Atrium BMX gate BMX",
             "id": 2308097,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5999,6 +6178,7 @@
           {
             "name": "Millennium Mall: Upside down rail outfit",
             "id": 2308098,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6017,6 +6197,7 @@
           {
             "name": "Millennium Mall: DOT.EXE joins the crew",
             "id": 2308106,
+            "region": "Millennium Mall - Atrium",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6087,6 +6268,7 @@
           {
             "name": "Millennium Mall: Race track Robo Post CD",
             "id": 2308103,
+            "region": "Millennium Mall - Race Track",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6164,6 +6346,7 @@
           {
             "name": "Millennium Mall: Theater stage corner graffiti",
             "id": 2308099,
+            "region": "Millennium Mall - Theater",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6182,6 +6365,7 @@
           {
             "name": "Millennium Mall: Theater hanging billboards graffiti",
             "id": 2308100,
+            "region": "Millennium Mall - Theater",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6200,6 +6384,7 @@
           {
             "name": "Millennium Mall: Theater garage graffiti",
             "id": 2308101,
+            "region": "Millennium Mall - Theater",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6218,6 +6403,7 @@
           {
             "name": "Millennium Mall: Theater maintenance CD",
             "id": 2308102,
+            "region": "Millennium Mall - Theater",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6236,6 +6422,7 @@
           {
             "name": "Millennium Mall: Shine joins the crew",
             "id": 2308105,
+            "region": "Millennium Mall - Theater",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6260,6 +6447,7 @@
           {
             "name": "Millennium Mall: Complete Chapter 3",
             "id": null,
+            "region": "Millennium Mall - Theater",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6368,6 +6556,7 @@
           {
             "name": "Pyramid Island: Lower rooftop graffiti",
             "id": 2308107,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6386,6 +6575,7 @@
           {
             "name": "Pyramid Island: Polo graffiti",
             "id": 2308108,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6404,6 +6594,7 @@
           {
             "name": "Pyramid Island: Above entrance graffiti",
             "id": 2308109,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6422,6 +6613,7 @@
           {
             "name": "Pyramid Island: BMX gate BMX",
             "id": 2308110,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6446,6 +6638,7 @@
           {
             "name": "Pyramid Island: Polo pile 1",
             "id": 2308131,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6465,6 +6658,7 @@
           {
             "name": "Pyramid Island: Polo pile 2",
             "id": 2308132,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6484,6 +6678,7 @@
           {
             "name": "Pyramid Island: Polo pile 3",
             "id": 2308133,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6503,6 +6698,7 @@
           {
             "name": "Pyramid Island: Polo pile 4",
             "id": 2308134,
+            "region": "Pyramid Island - Base",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6624,6 +6820,7 @@
           {
             "name": "Pyramid Island: Quarter pipe rooftop graffiti",
             "id": 2308111,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6642,6 +6839,7 @@
           {
             "name": "Pyramid Island: Supply port Robo Post CD",
             "id": 2308112,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6660,6 +6858,7 @@
           {
             "name": "Pyramid Island: Above gate ledge CD",
             "id": 2308113,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6678,6 +6877,7 @@
           {
             "name": "Pyramid Island: Smoke hole BMX",
             "id": 2308114,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6696,6 +6896,7 @@
           {
             "name": "Pyramid Island: Above gate rail outfit",
             "id": 2308115,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6714,6 +6915,7 @@
           {
             "name": "Pyramid Island: Rail loop outfit",
             "id": 2308116,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6732,6 +6934,7 @@
           {
             "name": "Pyramid Island: Score challenge reward",
             "id": 2308117,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6751,6 +6954,7 @@
           {
             "name": "Pyramid Island: Score challenge 2 reward",
             "id": 2308118,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6770,6 +6974,7 @@
           {
             "name": "Pyramid Island: Quarter pipe challenge reward",
             "id": 2308119,
+            "region": "Pyramid Island - After Gate",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6826,6 +7031,7 @@
           {
             "name": "Pyramid Island: Maze outfit",
             "id": 2308128,
+            "region": "Pyramid Island - Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6850,6 +7056,7 @@
           {
             "name": "Pyramid Island: Maze glass Polo",
             "id": 2308135,
+            "region": "Pyramid Island - Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6869,6 +7076,7 @@
           {
             "name": "Pyramid Island: Maze classroom Polo",
             "id": 2308136,
+            "region": "Pyramid Island - Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6888,6 +7096,7 @@
           {
             "name": "Pyramid Island: Maze vent Polo",
             "id": 2308137,
+            "region": "Pyramid Island - Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6907,6 +7116,7 @@
           {
             "name": "Pyramid Island: Big maze Polo",
             "id": 2308138,
+            "region": "Pyramid Island - Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6926,6 +7136,7 @@
           {
             "name": "Pyramid Island: Maze desk Polo",
             "id": 2308139,
+            "region": "Pyramid Island - Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6945,6 +7156,7 @@
           {
             "name": "Pyramid Island: Maze forklift Polo",
             "id": 2308140,
+            "region": "Pyramid Island - Maze",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7037,6 +7249,7 @@
           {
             "name": "Pyramid Island: Wind turbines CD",
             "id": 2308120,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7055,6 +7268,7 @@
           {
             "name": "Pyramid Island: Shortcut glass CD",
             "id": 2308121,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7079,6 +7293,7 @@
           {
             "name": "Pyramid Island: Turret jump CD",
             "id": 2308122,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7097,6 +7312,7 @@
           {
             "name": "Pyramid Island: Helipad BMX",
             "id": 2308123,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7115,6 +7331,7 @@
           {
             "name": "Pyramid Island: Pipe outfit",
             "id": 2308124,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7133,6 +7350,7 @@
           {
             "name": "Pyramid Island: Trash outfit",
             "id": 2308125,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7151,6 +7369,7 @@
           {
             "name": "Pyramid Island: Devil Theory joins the crew",
             "id": 2308130,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7175,6 +7394,7 @@
           {
             "name": "Pyramid Island: Complete Chapter 4",
             "id": null,
+            "region": "Pyramid Island - Upper Areas",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7275,6 +7495,7 @@
           {
             "name": "Pyramid Island: Pyramid top CD",
             "id": 2308126,
+            "region": "Pyramid Island - Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7293,6 +7514,7 @@
           {
             "name": "Pyramid Island: Pyramid top Robo Post CD",
             "id": 2308127,
+            "region": "Pyramid Island - Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7311,6 +7533,7 @@
           {
             "name": "Pyramid Island: Rise joins the crew",
             "id": 2308129,
+            "region": "Pyramid Island - Top",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7422,6 +7645,7 @@
           {
             "name": "Mataan: Robo Post graffiti",
             "id": 2308141,
+            "region": "Mataan - Streets",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7440,6 +7664,7 @@
           {
             "name": "Mataan: Secret ledge BMX",
             "id": 2308142,
+            "region": "Mataan - Streets",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7458,6 +7683,7 @@
           {
             "name": "Mataan: Highway rooftop BMX",
             "id": 2308143,
+            "region": "Mataan - Streets",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7545,6 +7771,7 @@
           {
             "name": "Mataan: Trash CD",
             "id": 2308144,
+            "region": "Mataan - After Smoke Wall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7563,6 +7790,7 @@
           {
             "name": "Mataan: Half pipe CD",
             "id": 2308145,
+            "region": "Mataan - After Smoke Wall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7581,6 +7809,7 @@
           {
             "name": "Mataan: Across bull horns graffiti",
             "id": 2308146,
+            "region": "Mataan - After Smoke Wall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7599,6 +7828,7 @@
           {
             "name": "Mataan: Small rooftop graffiti",
             "id": 2308147,
+            "region": "Mataan - After Smoke Wall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7617,6 +7847,7 @@
           {
             "name": "Mataan: Trash graffiti",
             "id": 2308148,
+            "region": "Mataan - After Smoke Wall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7635,6 +7866,7 @@
           {
             "name": "Mataan: Trash Polo",
             "id": 2308167,
+            "region": "Mataan - After Smoke Wall",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7746,6 +7978,7 @@
           {
             "name": "Mataan: Deep city Robo Post CD",
             "id": 2308149,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7764,6 +7997,7 @@
           {
             "name": "Mataan: Deep city tower CD",
             "id": 2308150,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7782,6 +8016,7 @@
           {
             "name": "Mataan: Race challenge reward",
             "id": 2308151,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7810,6 +8045,7 @@
           {
             "name": "Mataan: Wallrunning challenge reward",
             "id": 2308152,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7838,6 +8074,7 @@
           {
             "name": "Mataan: Score challenge reward",
             "id": 2308153,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7857,6 +8094,7 @@
           {
             "name": "Mataan: Deep city vent jump BMX",
             "id": 2308154,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7875,6 +8113,7 @@
           {
             "name": "Mataan: Deep city side wires outfit",
             "id": 2308155,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7893,6 +8132,7 @@
           {
             "name": "Mataan: Deep city center island outfit",
             "id": 2308156,
+            "region": "Mataan - Deep City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7957,6 +8197,7 @@
           {
             "name": "Mataan: Red light rail graffiti",
             "id": 2308157,
+            "region": "Mataan - Red Light District",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7975,6 +8216,7 @@
           {
             "name": "Mataan: Red light side alley outfit",
             "id": 2308158,
+            "region": "Mataan - Red Light District",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8061,6 +8303,7 @@
           {
             "name": "Mataan: Statue hand outfit",
             "id": 2308159,
+            "region": "Mataan - Lion Statue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8116,6 +8359,7 @@
           {
             "name": "Mataan: Crane CD",
             "id": 2308160,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8134,6 +8378,7 @@
           {
             "name": "Mataan: Elephant tower glass outfit",
             "id": 2308161,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8152,6 +8397,7 @@
           {
             "name": "Mataan: Helipad outfit",
             "id": 2308162,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8170,6 +8416,7 @@
           {
             "name": "Mataan: Vending machine CD",
             "id": 2308163,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8188,6 +8435,7 @@
           {
             "name": "Mataan: Coil joins the crew",
             "id": 2308164,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8216,6 +8464,7 @@
           {
             "name": "Mataan: Flesh Prince joins the crew",
             "id": 2308165,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8234,6 +8483,7 @@
           {
             "name": "Mataan: Futurism joins the crew",
             "id": 2308166,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8252,6 +8502,7 @@
           {
             "name": "Mataan: Shopping Polo",
             "id": 2308168,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8271,6 +8522,7 @@
           {
             "name": "Defeat Faux",
             "id": null,
+            "region": "Mataan - Skyscrapers",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10604,21 +10856,342 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything",
-      "bicycle",
-      "bike",
-      "bmx",
-      "characters",
-      "girl",
-      "graffitil",
-      "graffitim",
-      "graffitixl",
-      "inline",
-      "inline skates",
-      "skateboard",
-      "skates"
-    ]
+    "1": {
+      "graffitim": [
+        "Graffiti (M - Pora)",
+        "Graffiti (M - Thick Candy)",
+        "Graffiti (M - Teddy 4)",
+        "Graffiti (M - Devil 68)",
+        "Graffiti (M - BOMB BEATS)",
+        "Graffiti (M - colorBOMB)",
+        "Graffiti (M - BLOCKY)",
+        "Graffiti (M - Stacked Symbols)",
+        "Graffiti (M - pico pow)",
+        "Graffiti (M - 0m33)",
+        "Graffiti (M - OVERWHELMME)",
+        "Graffiti (M - Vom'B)",
+        "Graffiti (M - QUICK BING)",
+        "Graffiti (M - Zona Leste)",
+        "Graffiti (M - TeleBinge)",
+        "Graffiti (M - Street classic)",
+        "Graffiti (M - SHOGUN)",
+        "Graffiti (M - B-boy Love)",
+        "Graffiti (M - SPRAYTANICPANIC!)"
+      ],
+      "graffitil": [
+        "Graffiti (L - Tius)",
+        "Graffiti (L - Graffo Le Fou)",
+        "Graffiti (L - wild rush)",
+        "Graffiti (L - RECORD.HEAD)",
+        "Graffiti (L - VoodooBoy)",
+        "Graffiti (L - Jd Vila Formosa)",
+        "Graffiti (L - Lauder)",
+        "Graffiti (L - WHOLE SIXER)",
+        "Graffiti (L - Campaign Trail)",
+        "Graffiti (L - skate or di3)",
+        "Graffiti (L - Fang It Up!)",
+        "Graffiti (L - Messenger Mural)",
+        "Graffiti (L - buttercup)",
+        "Graffiti (L - NOISY NINJA)",
+        "Graffiti (L - INFINITY)",
+        "Graffiti (L - Moai Marathon)",
+        "Graffiti (L - SpawningSeason)",
+        "Graffiti (L - FREAKS)",
+        "Graffiti (L - Boom)"
+      ],
+      "graffitixl": [
+        "Graffiti (XL - MOTORCYCLE GANG)",
+        "Graffiti (XL - SECOND SIGHT)",
+        "Graffiti (XL - Deep Dive)",
+        "Graffiti (XL - BiGSHiNYBoMB)",
+        "Graffiti (XL - VIBRATIONS)",
+        "Graffiti (XL - Bomb Burner)",
+        "Graffiti (XL - end 2 end)",
+        "Graffiti (XL - Bombing by FireMan)",
+        "Graffiti (XL - Gamex UPA ABL)",
+        "Graffiti (XL - Raver Funk)",
+        "Graffiti (XL - Pirate's Life 4 Me)",
+        "Graffiti (XL - Bomb Croc)",
+        "Graffiti (XL - WILD STRUXXA)",
+        "Graffiti (XL - Web Spitter)",
+        "Graffiti (XL - Gold Rush)",
+        "Graffiti (XL - FATE)",
+        "Graffiti (XL - headphones on Helmet on)",
+        "Graffiti (XL - MegaHood)"
+      ],
+      "skateboard": [
+        "Skateboard (Taiga)",
+        "Skateboard (Devon)",
+        "Skateboard (Mantra)",
+        "Skateboard (Death Boogie)",
+        "Skateboard (Terrence)",
+        "Skateboard (Sylk)",
+        "Skateboard (Lazer Accuracy)",
+        "Skateboard (Just Swell)",
+        "Skateboard (Maceo)"
+      ],
+      "inline skates": [
+        "Inline Skates (Sharpshooters)",
+        "Inline Skates (Strawberry Missiles)",
+        "Inline Skates (Glaciers)",
+        "Inline Skates (Mech Adversary)",
+        "Inline Skates (Sweet Royale)",
+        "Inline Skates (Red Industry)",
+        "Inline Skates (Ice Cold Killers)",
+        "Inline Skates (Orange Blasters)",
+        "Inline Skates (ck)"
+      ],
+      "skates": [
+        "Inline Skates (Sharpshooters)",
+        "Inline Skates (Strawberry Missiles)",
+        "Inline Skates (Glaciers)",
+        "Inline Skates (Mech Adversary)",
+        "Inline Skates (Sweet Royale)",
+        "Inline Skates (Red Industry)",
+        "Inline Skates (Ice Cold Killers)",
+        "Inline Skates (Orange Blasters)",
+        "Inline Skates (ck)"
+      ],
+      "inline": [
+        "Inline Skates (Sharpshooters)",
+        "Inline Skates (Strawberry Missiles)",
+        "Inline Skates (Glaciers)",
+        "Inline Skates (Mech Adversary)",
+        "Inline Skates (Sweet Royale)",
+        "Inline Skates (Red Industry)",
+        "Inline Skates (Ice Cold Killers)",
+        "Inline Skates (Orange Blasters)",
+        "Inline Skates (ck)"
+      ],
+      "bmx": [
+        "BMX (Mr. Taupe)",
+        "BMX (Gum)",
+        "BMX (oyo)",
+        "BMX (Steel Wheeler)",
+        "BMX (Rigid No.6)",
+        "BMX (Terrazza)",
+        "BMX (XXX)",
+        "BMX (Dedication)",
+        "BMX (Ceremony)"
+      ],
+      "bike": [
+        "BMX (Mr. Taupe)",
+        "BMX (Gum)",
+        "BMX (oyo)",
+        "BMX (Steel Wheeler)",
+        "BMX (Rigid No.6)",
+        "BMX (Terrazza)",
+        "BMX (XXX)",
+        "BMX (Dedication)",
+        "BMX (Ceremony)"
+      ],
+      "bicycle": [
+        "BMX (Mr. Taupe)",
+        "BMX (Gum)",
+        "BMX (oyo)",
+        "BMX (Steel Wheeler)",
+        "BMX (Rigid No.6)",
+        "BMX (Terrazza)",
+        "BMX (XXX)",
+        "BMX (Dedication)",
+        "BMX (Ceremony)"
+      ],
+      "characters": [
+        "Mesh",
+        "Flesh Prince",
+        "Coil",
+        "DOT.EXE",
+        "Devil Theory",
+        "Frank",
+        "Tryce",
+        "Eclipse",
+        "Shine",
+        "Rise",
+        "Futurism",
+        "Oldhead",
+        "Rave",
+        "Bel",
+        "Rietveld",
+        "Solace",
+        "DJ Cyber",
+        "Vinyl"
+      ],
+      "girl": [
+        "Rave",
+        "Shine",
+        "Bel",
+        "Rise",
+        "Futurism",
+        "Vinyl"
+      ],
+      "Everything": [
+        "Music (DA PEOPLE)",
+        "Music (Beastmode Hip Hop Mixtape)",
+        "Skateboard (Devon)",
+        "Music (State of Mind)",
+        "Graffiti (M - Stacked Symbols)",
+        "Music (JACK DA FUNK)",
+        "Inline Skates (Red Industry)",
+        "Graffiti (L - Lauder)",
+        "Graffiti (XL - VIBRATIONS)",
+        "Music (Spectres)",
+        "Graffiti (XL - Gamex UPA ABL)",
+        "Music (Iridium)",
+        "32 REP",
+        "Graffiti (L - SpawningSeason)",
+        "Graffiti (XL - WILD STRUXXA)",
+        "BMX (oyo)",
+        "Outfit (Tryce - Autumn)",
+        "Outfit (Vinyl - Autumn)",
+        "Graffiti (XL - FATE)",
+        "Skateboard (Just Swell)",
+        "Outfit (Felix - Autumn)",
+        "Music (Scraped On The Way Out)",
+        "Skateboard (Taiga)",
+        "Graffiti (XL - SECOND SIGHT)",
+        "Graffiti (M - colorBOMB)",
+        "Graffiti (L - VoodooBoy)",
+        "Graffiti (M - Vom'B)",
+        "Graffiti (L - Messenger Mural)",
+        "Music (Sunshine Popping Mixtape)",
+        "Skateboard (Mantra)",
+        "Music (Chromebies)",
+        "Outfit (Shine - Autumn)",
+        "Inline Skates (Ice Cold Killers)",
+        "Graffiti (M - SPRAYTANICPANIC!)",
+        "Outfit (Coil - Winter)",
+        "Music (In The Pocket)",
+        "Graffiti (M - BOMB BEATS)",
+        "Graffiti (L - wild rush)",
+        "Graffiti (L - RECORD.HEAD)",
+        "BMX (Steel Wheeler)",
+        "Graffiti (XL - BiGSHiNYBoMB)",
+        "Outfit (Felix - Winter)",
+        "Eclipse",
+        "Graffiti (XL - end 2 end)",
+        "Music (Condensed milk)",
+        "Music (Hair Dun Nails Dun)",
+        "Graffiti (M - QUICK BING)",
+        "BMX (Gum)",
+        "Rave",
+        "Music (Refuse)",
+        "Music (Anime Break)",
+        "16 REP",
+        "Graffiti (M - SHOGUN)",
+        "Graffiti (XL - Web Spitter)",
+        "Graffiti (L - Boom)",
+        "BMX (Mr. Taupe)",
+        "Outfit (Mesh - Autumn)",
+        "Graffiti (XL - MOTORCYCLE GANG)",
+        "Graffiti (M - Thick Candy)",
+        "Coil",
+        "Outfit (Rise - Autumn)",
+        "Graffiti (M - pico pow)",
+        "Outfit (Vinyl - Winter)",
+        "Graffiti (XL - Bomb Burner)",
+        "Shine",
+        "Music (Bounce Upon A Time)",
+        "Outfit (Shine - Winter)",
+        "Graffiti (L - NOISY NINJA)",
+        "Graffiti (M - Zona Leste)",
+        "Graffiti (L - Moai Marathon)",
+        "Outfit (Mesh - Winter)",
+        "Bel",
+        "Solace",
+        "Music (Big City Life)",
+        "Music (Chuckin Up)",
+        "Music (Breaking Machine Mixtape)",
+        "DJ Cyber",
+        "Music (Plume)",
+        "Music (hwbouths)",
+        "Flesh Prince",
+        "Camera App",
+        "Graffiti (M - BLOCKY)",
+        "BMX (Terrazza)",
+        "Graffiti (L - Jd Vila Formosa)",
+        "Skateboard (Sylk)",
+        "Music (Operator)",
+        "Graffiti (L - Campaign Trail)",
+        "Music (You Can Say Hi)",
+        "Outfit (Rave - Autumn)",
+        "Inline Skates (Sharpshooters)",
+        "Music (Trinitron)",
+        "Inline Skates (Sweet Royale)",
+        "Outfit (Solace - Winter)",
+        "Skateboard (Terrence)",
+        "Graffiti (M - Street classic)",
+        "Music (Next To Me)",
+        "BMX (Dedication)",
+        "Graffiti (XL - MegaHood)",
+        "Graffiti (L - FREAKS)",
+        "Music (Funk Express)",
+        "Music (Last Hoorah)",
+        "DOT.EXE",
+        "Inline Skates (Mech Adversary)",
+        "Outfit (Tryce - Winter)",
+        "Graffiti (XL - Deep Dive)",
+        "Outfit (Red - Autumn)",
+        "Music (AGUA)",
+        "Frank",
+        "Graffiti (L - buttercup)",
+        "Music (House Cats Mixtape)",
+        "Skateboard (Maceo)",
+        "Graffiti (XL - Bomb Croc)",
+        "Outfit (Solace - Autumn)",
+        "Music (I Wanna Kno)",
+        "Skateboard (Lazer Accuracy)",
+        "Graffiti (M - B-boy Love)",
+        "24 REP",
+        "Graffiti (XL - headphones on Helmet on)",
+        "Outfit (Coil - Autumn)",
+        "Graffiti (M - Teddy 4)",
+        "Graffiti (L - Tius)",
+        "Devil Theory",
+        "48 REP",
+        "Music (Light Switch)",
+        "Music (GET ENUF)",
+        "Skateboard (Death Boogie)",
+        "Tryce",
+        "Outfit (Bel - Winter)",
+        "Graffiti (M - 0m33)",
+        "Graffiti (L - WHOLE SIXER)",
+        "Graffiti (M - OVERWHELMME)",
+        "Graffiti (L - Fang It Up!)",
+        "Graffiti (XL - Bombing by FireMan)",
+        "Rise",
+        "Futurism",
+        "Outfit (Rise - Winter)",
+        "Outfit (Red - Winter)",
+        "Inline Skates (Strawberry Missiles)",
+        "Graffiti (L - INFINITY)",
+        "Outfit (Bel - Autumn)",
+        "Music (watchyaback!)",
+        "Rietveld",
+        "Graffiti (M - TeleBinge)",
+        "Graffiti (XL - Raver Funk)",
+        "Inline Skates (Orange Blasters)",
+        "Vinyl",
+        "Inline Skates (ck)",
+        "Music (Feel The Funk (Computer Love))",
+        "Graffiti (M - Pora)",
+        "Mesh",
+        "Music (Two Days Off)",
+        "Inline Skates (Glaciers)",
+        "Graffiti (M - Devil 68)",
+        "Graffiti (L - Graffo Le Fou)",
+        "Outfit (Rave - Winter)",
+        "BMX (Rigid No.6)",
+        "BMX (XXX)",
+        "Graffiti (L - skate or di3)",
+        "Oldhead",
+        "Graffiti (XL - Pirate's Life 4 Me)",
+        "8 REP",
+        "Music (Precious Thing)",
+        "Music (Morning Glow)",
+        "Graffiti (XL - Gold Rush)",
+        "BMX (Ceremony)"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {
@@ -10792,7 +11365,18 @@
     }
   },
   "progression_mapping": {
-    "1": {}
+    "1": {
+      "rep": {
+        "type": "additive",
+        "items": {
+          "8 REP": 8,
+          "16 REP": 16,
+          "24 REP": 24,
+          "32 REP": 32,
+          "48 REP": 48
+        }
+      }
+    }
   },
   "starting_items": {
     "1": []

@@ -62,6 +62,7 @@
           {
             "name": "City Escape - 1",
             "id": 16711680,
+            "region": "City Escape",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -80,6 +81,7 @@
           {
             "name": "City Escape - 2",
             "id": 16711712,
+            "region": "City Escape",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -108,6 +110,7 @@
           {
             "name": "City Escape - Chao Key 1",
             "id": 16712704,
+            "region": "City Escape",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -126,6 +129,7 @@
           {
             "name": "City Escape - Chao Key 2",
             "id": 16712736,
+            "region": "City Escape",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -144,6 +148,7 @@
           {
             "name": "City Escape - Chao Key 3",
             "id": 16712768,
+            "region": "City Escape",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -162,6 +167,7 @@
           {
             "name": "City Escape - Gold Beetle",
             "id": 16713216,
+            "region": "City Escape",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -180,6 +186,7 @@
           {
             "name": "City Escape - Upgrade",
             "id": 16711840,
+            "region": "City Escape",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -236,6 +243,7 @@
           {
             "name": "Metal Harbor - 1",
             "id": 16711683,
+            "region": "Metal Harbor",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -257,6 +265,7 @@
           {
             "name": "Metal Harbor - 2",
             "id": 16711715,
+            "region": "Metal Harbor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -297,6 +306,7 @@
           {
             "name": "Metal Harbor - Chao Key 1",
             "id": 16712707,
+            "region": "Metal Harbor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -315,6 +325,7 @@
           {
             "name": "Metal Harbor - Chao Key 2",
             "id": 16712739,
+            "region": "Metal Harbor",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -336,6 +347,7 @@
           {
             "name": "Metal Harbor - Chao Key 3",
             "id": 16712771,
+            "region": "Metal Harbor",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -357,6 +369,7 @@
           {
             "name": "Metal Harbor - Gold Beetle",
             "id": 16713219,
+            "region": "Metal Harbor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -375,6 +388,7 @@
           {
             "name": "Metal Harbor - Upgrade",
             "id": 16711843,
+            "region": "Metal Harbor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -416,6 +430,7 @@
           {
             "name": "Green Forest - 1",
             "id": 16711684,
+            "region": "Green Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -434,6 +449,7 @@
           {
             "name": "Green Forest - 2",
             "id": 16711716,
+            "region": "Green Forest",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -462,6 +478,7 @@
           {
             "name": "Green Forest - Chao Key 1",
             "id": 16712708,
+            "region": "Green Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -480,6 +497,7 @@
           {
             "name": "Green Forest - Chao Key 2",
             "id": 16712740,
+            "region": "Green Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -498,6 +516,7 @@
           {
             "name": "Green Forest - Chao Key 3",
             "id": 16712772,
+            "region": "Green Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -516,6 +535,7 @@
           {
             "name": "Green Forest - Gold Beetle",
             "id": 16713220,
+            "region": "Green Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -534,6 +554,7 @@
           {
             "name": "Green Forest - Upgrade",
             "id": 16711844,
+            "region": "Green Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -575,6 +596,7 @@
           {
             "name": "Pyramid Cave - 1",
             "id": 16711690,
+            "region": "Pyramid Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -596,6 +618,7 @@
           {
             "name": "Pyramid Cave - 2",
             "id": 16711722,
+            "region": "Pyramid Cave",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -624,6 +647,7 @@
           {
             "name": "Pyramid Cave - Chao Key 1",
             "id": 16712714,
+            "region": "Pyramid Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -642,6 +666,7 @@
           {
             "name": "Pyramid Cave - Chao Key 2",
             "id": 16712746,
+            "region": "Pyramid Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -663,6 +688,7 @@
           {
             "name": "Pyramid Cave - Chao Key 3",
             "id": 16712778,
+            "region": "Pyramid Cave",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -703,6 +729,7 @@
           {
             "name": "Pyramid Cave - Gold Beetle",
             "id": 16713226,
+            "region": "Pyramid Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -724,6 +751,7 @@
           {
             "name": "Pyramid Cave - Upgrade",
             "id": 16711850,
+            "region": "Pyramid Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -765,6 +793,7 @@
           {
             "name": "Crazy Gadget - 1",
             "id": 16711694,
+            "region": "Crazy Gadget",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -805,6 +834,7 @@
           {
             "name": "Crazy Gadget - 2",
             "id": 16711726,
+            "region": "Crazy Gadget",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -845,6 +875,7 @@
           {
             "name": "Crazy Gadget - Chao Key 1",
             "id": 16712718,
+            "region": "Crazy Gadget",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -866,6 +897,7 @@
           {
             "name": "Crazy Gadget - Chao Key 2",
             "id": 16712750,
+            "region": "Crazy Gadget",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -887,6 +919,7 @@
           {
             "name": "Crazy Gadget - Chao Key 3",
             "id": 16712782,
+            "region": "Crazy Gadget",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -927,6 +960,7 @@
           {
             "name": "Crazy Gadget - Gold Beetle",
             "id": 16713230,
+            "region": "Crazy Gadget",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -967,6 +1001,7 @@
           {
             "name": "Crazy Gadget - Upgrade",
             "id": 16711854,
+            "region": "Crazy Gadget",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1011,6 +1046,7 @@
           {
             "name": "Final Rush - 1",
             "id": 16711695,
+            "region": "Final Rush",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1032,6 +1068,7 @@
           {
             "name": "Final Rush - 2",
             "id": 16711727,
+            "region": "Final Rush",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1060,6 +1097,7 @@
           {
             "name": "Final Rush - Chao Key 1",
             "id": 16712719,
+            "region": "Final Rush",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1078,6 +1116,7 @@
           {
             "name": "Final Rush - Chao Key 2",
             "id": 16712751,
+            "region": "Final Rush",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1096,6 +1135,7 @@
           {
             "name": "Final Rush - Chao Key 3",
             "id": 16712783,
+            "region": "Final Rush",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1117,6 +1157,7 @@
           {
             "name": "Final Rush - Gold Beetle",
             "id": 16713231,
+            "region": "Final Rush",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1135,6 +1176,7 @@
           {
             "name": "Final Rush - Upgrade",
             "id": 16711855,
+            "region": "Final Rush",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1179,6 +1221,7 @@
           {
             "name": "Prison Lane - 1",
             "id": 16711682,
+            "region": "Prison Lane",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1197,6 +1240,7 @@
           {
             "name": "Prison Lane - 2",
             "id": 16711714,
+            "region": "Prison Lane",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1225,6 +1269,7 @@
           {
             "name": "Prison Lane - Chao Key 1",
             "id": 16712706,
+            "region": "Prison Lane",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1246,6 +1291,7 @@
           {
             "name": "Prison Lane - Chao Key 2",
             "id": 16712738,
+            "region": "Prison Lane",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1267,6 +1313,7 @@
           {
             "name": "Prison Lane - Chao Key 3",
             "id": 16712770,
+            "region": "Prison Lane",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1285,6 +1332,7 @@
           {
             "name": "Prison Lane - Gold Beetle",
             "id": 16713218,
+            "region": "Prison Lane",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1303,6 +1351,7 @@
           {
             "name": "Prison Lane - Upgrade",
             "id": 16711842,
+            "region": "Prison Lane",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1347,6 +1396,7 @@
           {
             "name": "Mission Street - 1",
             "id": 16711686,
+            "region": "Mission Street",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1368,6 +1418,7 @@
           {
             "name": "Mission Street - 2",
             "id": 16711718,
+            "region": "Mission Street",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1408,6 +1459,7 @@
           {
             "name": "Mission Street - Chao Key 1",
             "id": 16712710,
+            "region": "Mission Street",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1429,6 +1481,7 @@
           {
             "name": "Mission Street - Chao Key 2",
             "id": 16712742,
+            "region": "Mission Street",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1450,6 +1503,7 @@
           {
             "name": "Mission Street - Chao Key 3",
             "id": 16712774,
+            "region": "Mission Street",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1471,6 +1525,7 @@
           {
             "name": "Mission Street - Gold Beetle",
             "id": 16713222,
+            "region": "Mission Street",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1492,6 +1547,7 @@
           {
             "name": "Mission Street - Upgrade",
             "id": 16711846,
+            "region": "Mission Street",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1533,6 +1589,7 @@
           {
             "name": "Route 101 - 1",
             "id": 16711688,
+            "region": "Route 101",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1551,6 +1608,7 @@
           {
             "name": "Route 101 - 2",
             "id": 16711720,
+            "region": "Route 101",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1602,6 +1660,7 @@
           {
             "name": "Hidden Base - 1",
             "id": 16711689,
+            "region": "Hidden Base",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1623,6 +1682,7 @@
           {
             "name": "Hidden Base - 2",
             "id": 16711721,
+            "region": "Hidden Base",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1663,6 +1723,7 @@
           {
             "name": "Hidden Base - Chao Key 1",
             "id": 16712713,
+            "region": "Hidden Base",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1684,6 +1745,7 @@
           {
             "name": "Hidden Base - Chao Key 2",
             "id": 16712745,
+            "region": "Hidden Base",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1705,6 +1767,7 @@
           {
             "name": "Hidden Base - Gold Beetle",
             "id": 16713225,
+            "region": "Hidden Base",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1726,6 +1789,7 @@
           {
             "name": "Hidden Base - Upgrade",
             "id": 16711849,
+            "region": "Hidden Base",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1782,6 +1846,7 @@
           {
             "name": "Eternal Engine - 1",
             "id": 16711692,
+            "region": "Eternal Engine",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1815,6 +1880,7 @@
           {
             "name": "Eternal Engine - 2",
             "id": 16711724,
+            "region": "Eternal Engine",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1855,6 +1921,7 @@
           {
             "name": "Eternal Engine - Chao Key 1",
             "id": 16712716,
+            "region": "Eternal Engine",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1876,6 +1943,7 @@
           {
             "name": "Eternal Engine - Chao Key 2",
             "id": 16712748,
+            "region": "Eternal Engine",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1909,6 +1977,7 @@
           {
             "name": "Eternal Engine - Chao Key 3",
             "id": 16712780,
+            "region": "Eternal Engine",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1930,6 +1999,7 @@
           {
             "name": "Eternal Engine - Gold Beetle",
             "id": 16713228,
+            "region": "Eternal Engine",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1963,6 +2033,7 @@
           {
             "name": "Eternal Engine - Upgrade",
             "id": 16711852,
+            "region": "Eternal Engine",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2007,6 +2078,7 @@
           {
             "name": "Wild Canyon - 1",
             "id": 16711681,
+            "region": "Wild Canyon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2025,6 +2097,7 @@
           {
             "name": "Wild Canyon - 2",
             "id": 16711713,
+            "region": "Wild Canyon",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2053,6 +2126,7 @@
           {
             "name": "Wild Canyon - Chao Key 1",
             "id": 16712705,
+            "region": "Wild Canyon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2071,6 +2145,7 @@
           {
             "name": "Wild Canyon - Chao Key 2",
             "id": 16712737,
+            "region": "Wild Canyon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2089,6 +2164,7 @@
           {
             "name": "Wild Canyon - Chao Key 3",
             "id": 16712769,
+            "region": "Wild Canyon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2107,6 +2183,7 @@
           {
             "name": "Wild Canyon - Gold Beetle",
             "id": 16713217,
+            "region": "Wild Canyon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2125,6 +2202,7 @@
           {
             "name": "Wild Canyon - Upgrade",
             "id": 16711841,
+            "region": "Wild Canyon",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2169,6 +2247,7 @@
           {
             "name": "Pumpkin Hill - 1",
             "id": 16711685,
+            "region": "Pumpkin Hill",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2190,6 +2269,7 @@
           {
             "name": "Pumpkin Hill - 2",
             "id": 16711717,
+            "region": "Pumpkin Hill",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2218,6 +2298,7 @@
           {
             "name": "Pumpkin Hill - Chao Key 1",
             "id": 16712709,
+            "region": "Pumpkin Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2236,6 +2317,7 @@
           {
             "name": "Pumpkin Hill - Chao Key 2",
             "id": 16712741,
+            "region": "Pumpkin Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2254,6 +2336,7 @@
           {
             "name": "Pumpkin Hill - Chao Key 3",
             "id": 16712773,
+            "region": "Pumpkin Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2272,6 +2355,7 @@
           {
             "name": "Pumpkin Hill - Upgrade",
             "id": 16711845,
+            "region": "Pumpkin Hill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2313,6 +2397,7 @@
           {
             "name": "Aquatic Mine - 1",
             "id": 16711687,
+            "region": "Aquatic Mine",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2334,6 +2419,7 @@
           {
             "name": "Aquatic Mine - 2",
             "id": 16711719,
+            "region": "Aquatic Mine",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2362,6 +2448,7 @@
           {
             "name": "Aquatic Mine - Chao Key 1",
             "id": 16712711,
+            "region": "Aquatic Mine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2380,6 +2467,7 @@
           {
             "name": "Aquatic Mine - Chao Key 2",
             "id": 16712743,
+            "region": "Aquatic Mine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2398,6 +2486,7 @@
           {
             "name": "Aquatic Mine - Chao Key 3",
             "id": 16712775,
+            "region": "Aquatic Mine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2416,6 +2505,7 @@
           {
             "name": "Aquatic Mine - Gold Beetle",
             "id": 16713223,
+            "region": "Aquatic Mine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2434,6 +2524,7 @@
           {
             "name": "Aquatic Mine - Upgrade",
             "id": 16711847,
+            "region": "Aquatic Mine",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2475,6 +2566,7 @@
           {
             "name": "Death Chamber - 1",
             "id": 16711691,
+            "region": "Death Chamber",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2508,6 +2600,7 @@
           {
             "name": "Death Chamber - 2",
             "id": 16711723,
+            "region": "Death Chamber",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2560,6 +2653,7 @@
           {
             "name": "Death Chamber - Chao Key 1",
             "id": 16712715,
+            "region": "Death Chamber",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2581,6 +2675,7 @@
           {
             "name": "Death Chamber - Chao Key 2",
             "id": 16712747,
+            "region": "Death Chamber",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2602,6 +2697,7 @@
           {
             "name": "Death Chamber - Chao Key 3",
             "id": 16712779,
+            "region": "Death Chamber",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2635,6 +2731,7 @@
           {
             "name": "Death Chamber - Gold Beetle",
             "id": 16713227,
+            "region": "Death Chamber",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2668,6 +2765,7 @@
           {
             "name": "Death Chamber - Upgrade",
             "id": 16711851,
+            "region": "Death Chamber",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2709,6 +2807,7 @@
           {
             "name": "Meteor Herd - 1",
             "id": 16711693,
+            "region": "Meteor Herd",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2742,6 +2841,7 @@
           {
             "name": "Meteor Herd - 2",
             "id": 16711725,
+            "region": "Meteor Herd",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2770,6 +2870,7 @@
           {
             "name": "Meteor Herd - Chao Key 1",
             "id": 16712717,
+            "region": "Meteor Herd",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2788,6 +2889,7 @@
           {
             "name": "Meteor Herd - Chao Key 2",
             "id": 16712749,
+            "region": "Meteor Herd",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2806,6 +2908,7 @@
           {
             "name": "Meteor Herd - Chao Key 3",
             "id": 16712781,
+            "region": "Meteor Herd",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2824,6 +2927,7 @@
           {
             "name": "Meteor Herd - Gold Beetle",
             "id": 16713229,
+            "region": "Meteor Herd",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2842,6 +2946,7 @@
           {
             "name": "Meteor Herd - Upgrade",
             "id": 16711853,
+            "region": "Meteor Herd",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2886,6 +2991,7 @@
           {
             "name": "Radical Highway - 1",
             "id": 16711699,
+            "region": "Radical Highway",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2904,6 +3010,7 @@
           {
             "name": "Radical Highway - 2",
             "id": 16711731,
+            "region": "Radical Highway",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -2932,6 +3039,7 @@
           {
             "name": "Radical Highway - Chao Key 1",
             "id": 16712723,
+            "region": "Radical Highway",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2950,6 +3058,7 @@
           {
             "name": "Radical Highway - Chao Key 2",
             "id": 16712755,
+            "region": "Radical Highway",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2968,6 +3077,7 @@
           {
             "name": "Radical Highway - Chao Key 3",
             "id": 16712787,
+            "region": "Radical Highway",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2986,6 +3096,7 @@
           {
             "name": "Radical Highway - Gold Beetle",
             "id": 16713235,
+            "region": "Radical Highway",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3004,6 +3115,7 @@
           {
             "name": "Radical Highway - Upgrade",
             "id": 16711859,
+            "region": "Radical Highway",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3048,6 +3160,7 @@
           {
             "name": "White Jungle - 1",
             "id": 16711704,
+            "region": "White Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3069,6 +3182,7 @@
           {
             "name": "White Jungle - 2",
             "id": 16711736,
+            "region": "White Jungle",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3097,6 +3211,7 @@
           {
             "name": "White Jungle - Chao Key 1",
             "id": 16712728,
+            "region": "White Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3115,6 +3230,7 @@
           {
             "name": "White Jungle - Chao Key 2",
             "id": 16712760,
+            "region": "White Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3136,6 +3252,7 @@
           {
             "name": "White Jungle - Chao Key 3",
             "id": 16712792,
+            "region": "White Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3157,6 +3274,7 @@
           {
             "name": "White Jungle - Gold Beetle",
             "id": 16713240,
+            "region": "White Jungle",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3178,6 +3296,7 @@
           {
             "name": "White Jungle - Upgrade",
             "id": 16711864,
+            "region": "White Jungle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3219,6 +3338,7 @@
           {
             "name": "Sky Rail - 1",
             "id": 16711706,
+            "region": "Sky Rail",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3237,6 +3357,7 @@
           {
             "name": "Sky Rail - 2",
             "id": 16711738,
+            "region": "Sky Rail",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3265,6 +3386,7 @@
           {
             "name": "Sky Rail - Chao Key 1",
             "id": 16712730,
+            "region": "Sky Rail",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3283,6 +3405,7 @@
           {
             "name": "Sky Rail - Chao Key 2",
             "id": 16712762,
+            "region": "Sky Rail",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3301,6 +3424,7 @@
           {
             "name": "Sky Rail - Chao Key 3",
             "id": 16712794,
+            "region": "Sky Rail",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3319,6 +3443,7 @@
           {
             "name": "Sky Rail - Gold Beetle",
             "id": 16713242,
+            "region": "Sky Rail",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3337,6 +3462,7 @@
           {
             "name": "Sky Rail - Upgrade",
             "id": 16711866,
+            "region": "Sky Rail",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3378,6 +3504,7 @@
           {
             "name": "Final Chase - 1",
             "id": 16711709,
+            "region": "Final Chase",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3396,6 +3523,7 @@
           {
             "name": "Final Chase - 2",
             "id": 16711741,
+            "region": "Final Chase",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3424,6 +3552,7 @@
           {
             "name": "Final Chase - Chao Key 1",
             "id": 16712733,
+            "region": "Final Chase",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3442,6 +3571,7 @@
           {
             "name": "Final Chase - Chao Key 2",
             "id": 16712765,
+            "region": "Final Chase",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3460,6 +3590,7 @@
           {
             "name": "Final Chase - Chao Key 3",
             "id": 16712797,
+            "region": "Final Chase",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3478,6 +3609,7 @@
           {
             "name": "Final Chase - Gold Beetle",
             "id": 16713245,
+            "region": "Final Chase",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3496,6 +3628,7 @@
           {
             "name": "Final Chase - Upgrade",
             "id": 16711869,
+            "region": "Final Chase",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3537,6 +3670,7 @@
           {
             "name": "Iron Gate - 1",
             "id": 16711696,
+            "region": "Iron Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3555,6 +3689,7 @@
           {
             "name": "Iron Gate - 2",
             "id": 16711728,
+            "region": "Iron Gate",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3583,6 +3718,7 @@
           {
             "name": "Iron Gate - Chao Key 1",
             "id": 16712720,
+            "region": "Iron Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3601,6 +3737,7 @@
           {
             "name": "Iron Gate - Chao Key 2",
             "id": 16712752,
+            "region": "Iron Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3619,6 +3756,7 @@
           {
             "name": "Iron Gate - Chao Key 3",
             "id": 16712784,
+            "region": "Iron Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3637,6 +3775,7 @@
           {
             "name": "Iron Gate - Gold Beetle",
             "id": 16713232,
+            "region": "Iron Gate",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3655,6 +3794,7 @@
           {
             "name": "Iron Gate - Upgrade",
             "id": 16711856,
+            "region": "Iron Gate",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3699,6 +3839,7 @@
           {
             "name": "Sand Ocean - 1",
             "id": 16711698,
+            "region": "Sand Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3717,6 +3858,7 @@
           {
             "name": "Sand Ocean - 2",
             "id": 16711730,
+            "region": "Sand Ocean",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3745,6 +3887,7 @@
           {
             "name": "Sand Ocean - Chao Key 1",
             "id": 16712722,
+            "region": "Sand Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3763,6 +3906,7 @@
           {
             "name": "Sand Ocean - Chao Key 2",
             "id": 16712754,
+            "region": "Sand Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3781,6 +3925,7 @@
           {
             "name": "Sand Ocean - Chao Key 3",
             "id": 16712786,
+            "region": "Sand Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3799,6 +3944,7 @@
           {
             "name": "Sand Ocean - Gold Beetle",
             "id": 16713234,
+            "region": "Sand Ocean",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3817,6 +3963,7 @@
           {
             "name": "Sand Ocean - Upgrade",
             "id": 16711858,
+            "region": "Sand Ocean",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3861,6 +4008,7 @@
           {
             "name": "Lost Colony - 1",
             "id": 16711701,
+            "region": "Lost Colony",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3882,6 +4030,7 @@
           {
             "name": "Lost Colony - 2",
             "id": 16711733,
+            "region": "Lost Colony",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3922,6 +4071,7 @@
           {
             "name": "Lost Colony - Chao Key 1",
             "id": 16712725,
+            "region": "Lost Colony",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3940,6 +4090,7 @@
           {
             "name": "Lost Colony - Chao Key 2",
             "id": 16712757,
+            "region": "Lost Colony",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3958,6 +4109,7 @@
           {
             "name": "Lost Colony - Chao Key 3",
             "id": 16712789,
+            "region": "Lost Colony",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3979,6 +4131,7 @@
           {
             "name": "Lost Colony - Gold Beetle",
             "id": 16713237,
+            "region": "Lost Colony",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4000,6 +4153,7 @@
           {
             "name": "Lost Colony - Upgrade",
             "id": 16711861,
+            "region": "Lost Colony",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4041,6 +4195,7 @@
           {
             "name": "Weapons Bed - 1",
             "id": 16711702,
+            "region": "Weapons Bed",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4074,6 +4229,7 @@
           {
             "name": "Weapons Bed - 2",
             "id": 16711734,
+            "region": "Weapons Bed",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4126,6 +4282,7 @@
           {
             "name": "Weapons Bed - Chao Key 1",
             "id": 16712726,
+            "region": "Weapons Bed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4144,6 +4301,7 @@
           {
             "name": "Weapons Bed - Chao Key 2",
             "id": 16712758,
+            "region": "Weapons Bed",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4177,6 +4335,7 @@
           {
             "name": "Weapons Bed - Chao Key 3",
             "id": 16712790,
+            "region": "Weapons Bed",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4210,6 +4369,7 @@
           {
             "name": "Weapons Bed - Upgrade",
             "id": 16711862,
+            "region": "Weapons Bed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4251,6 +4411,7 @@
           {
             "name": "Cosmic Wall - 1",
             "id": 16711708,
+            "region": "Cosmic Wall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4272,6 +4433,7 @@
           {
             "name": "Cosmic Wall - 2",
             "id": 16711740,
+            "region": "Cosmic Wall",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4312,6 +4474,7 @@
           {
             "name": "Cosmic Wall - Chao Key 1",
             "id": 16712732,
+            "region": "Cosmic Wall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4333,6 +4496,7 @@
           {
             "name": "Cosmic Wall - Chao Key 2",
             "id": 16712764,
+            "region": "Cosmic Wall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4354,6 +4518,7 @@
           {
             "name": "Cosmic Wall - Chao Key 3",
             "id": 16712796,
+            "region": "Cosmic Wall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4375,6 +4540,7 @@
           {
             "name": "Cosmic Wall - Gold Beetle",
             "id": 16713244,
+            "region": "Cosmic Wall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4396,6 +4562,7 @@
           {
             "name": "Cosmic Wall - Upgrade",
             "id": 16711868,
+            "region": "Cosmic Wall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4440,6 +4607,7 @@
           {
             "name": "Dry Lagoon - 1",
             "id": 16711697,
+            "region": "Dry Lagoon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4458,6 +4626,7 @@
           {
             "name": "Dry Lagoon - 2",
             "id": 16711729,
+            "region": "Dry Lagoon",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4486,6 +4655,7 @@
           {
             "name": "Dry Lagoon - Chao Key 1",
             "id": 16712721,
+            "region": "Dry Lagoon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4504,6 +4674,7 @@
           {
             "name": "Dry Lagoon - Chao Key 2",
             "id": 16712753,
+            "region": "Dry Lagoon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4522,6 +4693,7 @@
           {
             "name": "Dry Lagoon - Chao Key 3",
             "id": 16712785,
+            "region": "Dry Lagoon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4540,6 +4712,7 @@
           {
             "name": "Dry Lagoon - Gold Beetle",
             "id": 16713233,
+            "region": "Dry Lagoon",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4580,6 +4753,7 @@
           {
             "name": "Dry Lagoon - Upgrade",
             "id": 16711857,
+            "region": "Dry Lagoon",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4624,6 +4798,7 @@
           {
             "name": "Egg Quarters - 1",
             "id": 16711700,
+            "region": "Egg Quarters",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4645,6 +4820,7 @@
           {
             "name": "Egg Quarters - 2",
             "id": 16711732,
+            "region": "Egg Quarters",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -4673,6 +4849,7 @@
           {
             "name": "Egg Quarters - Chao Key 1",
             "id": 16712724,
+            "region": "Egg Quarters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4691,6 +4868,7 @@
           {
             "name": "Egg Quarters - Chao Key 2",
             "id": 16712756,
+            "region": "Egg Quarters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4709,6 +4887,7 @@
           {
             "name": "Egg Quarters - Chao Key 3",
             "id": 16712788,
+            "region": "Egg Quarters",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4730,6 +4909,7 @@
           {
             "name": "Egg Quarters - Gold Beetle",
             "id": 16713236,
+            "region": "Egg Quarters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4748,6 +4928,7 @@
           {
             "name": "Egg Quarters - Upgrade",
             "id": 16711860,
+            "region": "Egg Quarters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4789,6 +4970,7 @@
           {
             "name": "Security Hall - 1",
             "id": 16711703,
+            "region": "Security Hall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4810,6 +4992,7 @@
           {
             "name": "Security Hall - 2",
             "id": 16711735,
+            "region": "Security Hall",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4850,6 +5033,7 @@
           {
             "name": "Security Hall - Chao Key 1",
             "id": 16712727,
+            "region": "Security Hall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4868,6 +5052,7 @@
           {
             "name": "Security Hall - Chao Key 2",
             "id": 16712759,
+            "region": "Security Hall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4886,6 +5071,7 @@
           {
             "name": "Security Hall - Chao Key 3",
             "id": 16712791,
+            "region": "Security Hall",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4907,6 +5093,7 @@
           {
             "name": "Security Hall - Gold Beetle",
             "id": 16713239,
+            "region": "Security Hall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4925,6 +5112,7 @@
           {
             "name": "Security Hall - Upgrade",
             "id": 16711863,
+            "region": "Security Hall",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4981,6 +5169,7 @@
           {
             "name": "Route 280 - 1",
             "id": 16711705,
+            "region": "Route 280",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4999,6 +5188,7 @@
           {
             "name": "Route 280 - 2",
             "id": 16711737,
+            "region": "Route 280",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -5050,6 +5240,7 @@
           {
             "name": "Mad Space - 1",
             "id": 16711707,
+            "region": "Mad Space",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5083,6 +5274,7 @@
           {
             "name": "Mad Space - 2",
             "id": 16711739,
+            "region": "Mad Space",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5123,6 +5315,7 @@
           {
             "name": "Mad Space - Chao Key 1",
             "id": 16712731,
+            "region": "Mad Space",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5141,6 +5334,7 @@
           {
             "name": "Mad Space - Chao Key 2",
             "id": 16712763,
+            "region": "Mad Space",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5162,6 +5356,7 @@
           {
             "name": "Mad Space - Chao Key 3",
             "id": 16712795,
+            "region": "Mad Space",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5183,6 +5378,7 @@
           {
             "name": "Mad Space - Gold Beetle",
             "id": 16713243,
+            "region": "Mad Space",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5204,6 +5400,7 @@
           {
             "name": "Mad Space - Upgrade",
             "id": 16711867,
+            "region": "Mad Space",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5268,6 +5465,7 @@
           {
             "name": "Cannon's Core - 1",
             "id": 16711710,
+            "region": "Cannon's Core",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5322,6 +5520,7 @@
           {
             "name": "Cannon's Core - 2",
             "id": 16711742,
+            "region": "Cannon's Core",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5374,6 +5573,7 @@
           {
             "name": "Cannon's Core - Chao Key 1",
             "id": 16712734,
+            "region": "Cannon's Core",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5414,6 +5614,7 @@
           {
             "name": "Cannon's Core - Chao Key 2",
             "id": 16712766,
+            "region": "Cannon's Core",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5447,6 +5648,7 @@
           {
             "name": "Cannon's Core - Chao Key 3",
             "id": 16712798,
+            "region": "Cannon's Core",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5501,6 +5703,7 @@
           {
             "name": "Cannon's Core - Gold Beetle",
             "id": 16713246,
+            "region": "Cannon's Core",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6171,6 +6374,7 @@
           {
             "name": "Gate 1 Boss",
             "id": 16711936,
+            "region": "Gate 1 Boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6375,6 +6579,7 @@
           {
             "name": "Gate 2 Boss",
             "id": 16711937,
+            "region": "Gate 2 Boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6560,6 +6765,7 @@
           {
             "name": "Gate 3 Boss",
             "id": 16711938,
+            "region": "Gate 3 Boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6601,6 +6807,7 @@
           {
             "name": "Finalhazard",
             "id": null,
+            "region": "Biolizard",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9318,16 +9525,326 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Chaos Emeralds",
-      "Eggs",
-      "Everything",
-      "Fruits",
-      "Hats",
-      "Minigames",
-      "Seeds",
-      "Traps"
-    ]
+    "1": {
+      "Chaos Emeralds": [
+        "White Chaos Emerald",
+        "Cyan Chaos Emerald",
+        "Yellow Chaos Emerald",
+        "Green Chaos Emerald",
+        "Blue Chaos Emerald",
+        "Red Chaos Emerald",
+        "Purple Chaos Emerald"
+      ],
+      "Eggs": [
+        "Brown Shiny Egg",
+        "Sky Blue Mono-Tone Egg",
+        "White Shiny Egg",
+        "Green Shiny Egg",
+        "Red Mono-Tone Egg",
+        "Blue Mono-Tone Egg",
+        "Pink Mono-Tone Egg",
+        "Grey Mono-Tone Egg",
+        "Orange Mono-Tone Egg",
+        "Grey Shiny Egg",
+        "Black Shiny Egg",
+        "Yellow Mono-Tone Egg",
+        "Normal Shiny Egg",
+        "Green Mono-Tone Egg",
+        "Blue Two-Tone Egg",
+        "Black Two-Tone Egg",
+        "Orange Shiny Egg",
+        "Yellow Shiny Egg",
+        "Lime Green Mono-Tone Egg",
+        "Sky Blue Shiny Egg",
+        "Sky Blue Two-Tone Egg",
+        "Red Two-Tone Egg",
+        "Purple Mono-Tone Egg",
+        "Purple Two-Tone Egg",
+        "Blue Shiny Egg",
+        "Black Mono-Tone Egg",
+        "Purple Shiny Egg",
+        "Red Shiny Egg",
+        "White Mono-Tone Egg",
+        "Brown Mono-Tone Egg",
+        "Lime Green Two-Tone Egg",
+        "White Two-Tone Egg",
+        "Pink Shiny Egg",
+        "Yellow Two-Tone Egg",
+        "Brown Two-Tone Egg",
+        "Orange Two-Tone Egg",
+        "Lime Green Shiny Egg",
+        "Grey Two-Tone Egg",
+        "Pink Two-Tone Egg",
+        "Green Two-Tone Egg",
+        "Normal Egg"
+      ],
+      "Fruits": [
+        "Mint Candy",
+        "Purple Fruit",
+        "Green Fruit",
+        "Triangle Fruit",
+        "Heart Fruit",
+        "Strong Fruit",
+        "Super Mushroom",
+        "Pink Fruit",
+        "Dark Fruit",
+        "Hero Fruit",
+        "Yellow Fruit",
+        "Square Fruit",
+        "Mushroom",
+        "Chao Fruit",
+        "Smart Fruit",
+        "Dark Garden Fruit",
+        "Round Fruit",
+        "Chao Garden Fruit",
+        "Orange Fruit",
+        "Red Fruit",
+        "Blue Fruit",
+        "Grapes",
+        "Tasty Fruit",
+        "Hero Garden Fruit"
+      ],
+      "Seeds": [
+        "Triangle Seed",
+        "Strong Seed",
+        "Dark Seed",
+        "Round Seed",
+        "Tasty Seed",
+        "Square Seed",
+        "Hero Seed"
+      ],
+      "Hats": [
+        "Flower Pot",
+        "Blue Wool Beanie",
+        "Red Wool Beanie",
+        "Apple",
+        "Empty Can",
+        "Cardboard Box",
+        "Bucket",
+        "Paper Bag",
+        "Watermelon",
+        "Pacifier",
+        "Pan",
+        "Pumpkin",
+        "Black Wool Beanie",
+        "Skull",
+        "Stump"
+      ],
+      "Traps": [
+        "Gravity Trap",
+        "Slow Trap",
+        "Reverse Trap",
+        "Confusion Trap",
+        "Exposition Trap",
+        "Literature Trap",
+        "OmoTrap",
+        "Ice Trap",
+        "Bee Trap",
+        "Poison Trap",
+        "Cutscene Trap",
+        "Tiny Trap",
+        "Controller Drift Trap",
+        "Chaos Control Trap"
+      ],
+      "Minigames": [
+        "Number Sequence Trap",
+        "Pinball Trap",
+        "Input Sequence Trap",
+        "Pong Trap",
+        "Light Up Path Trap",
+        "Breakout Trap",
+        "Pokemon Trivia Trap",
+        "Fishing Trap",
+        "Trivia Trap",
+        "Snake Trap",
+        "Math Quiz Trap",
+        "Pokemon Count Trap"
+      ],
+      "Everything": [
+        "Rouge - Iron Boots",
+        "Green Fruit",
+        "Ice Trap",
+        "Knuckles - Mystic Melody",
+        "Tails - Mystic Melody",
+        "Knuckles - Shovel Claws",
+        "Shadow - Ancient Light",
+        "White Chaos Emerald",
+        "Orange Mono-Tone Egg",
+        "Dark Fruit",
+        "Seal",
+        "Peacock",
+        "Watermelon",
+        "Fishing Trap",
+        "Sonic - Ancient Light",
+        "Normal Shiny Egg",
+        "Extra Life",
+        "Black Two-Tone Egg",
+        "Yellow Shiny Egg",
+        "Pinball Trap",
+        "Lime Green Mono-Tone Egg",
+        "Confusion Trap",
+        "Purple Mono-Tone Egg",
+        "Shadow - Flame Ring",
+        "Invincibility",
+        "Purple Shiny Egg",
+        "Chao Fruit",
+        "Eggman - Laser Blaster",
+        "Sonic - Mystic Melody",
+        "Cutscene Trap",
+        "White Mono-Tone Egg",
+        "Warthog",
+        "HalfFish",
+        "Sonic - Bounce Bracelet",
+        "Rouge - Mystic Melody",
+        "Rouge - Treasure Scope",
+        "Yellow Two-Tone Egg",
+        "Brown Two-Tone Egg",
+        "Orange Two-Tone Egg",
+        "Tasty Seed",
+        "Grey Two-Tone Egg",
+        "Yellow Chaos Emerald",
+        "Mint Candy",
+        "Pacifier",
+        "Emblem",
+        "Tails - Laser Blaster",
+        "Red Mono-Tone Egg",
+        "Blue Mono-Tone Egg",
+        "Hero Seed",
+        "Condor",
+        "Literature Trap",
+        "Pink Fruit",
+        "Cardboard Box",
+        "Pokemon Trivia Trap",
+        "Penguin",
+        "Sheep",
+        "Yellow Mono-Tone Egg",
+        "Gorilla",
+        "Yellow Chaos Drive",
+        "Knuckles - Sunglasses",
+        "Tiny Trap",
+        "Orange Shiny Egg",
+        "Number Sequence Trap",
+        "Triangle Seed",
+        "Eggman - Protective Armor",
+        "Knuckles - Hammer Gloves",
+        "Red Two-Tone Egg",
+        "Pong Trap",
+        "Purple Two-Tone Egg",
+        "Sky Blue Shiny Egg",
+        "Dark Seed",
+        "Black Mono-Tone Egg",
+        "Apple",
+        "OmoTrap",
+        "Pumpkin",
+        "Parrot",
+        "Smart Fruit",
+        "Dark Garden Fruit",
+        "Bear",
+        "Controller Drift Trap",
+        "Input Sequence Trap",
+        "Red Fruit",
+        "White Two-Tone Egg",
+        "Blue Wool Beanie",
+        "Cyan Chaos Emerald",
+        "Pink Shiny Egg",
+        "Paper Bag",
+        "Dragon",
+        "Eggman - Jet Engine",
+        "Shield",
+        "Red Chaos Emerald",
+        "Green Two-Tone Egg",
+        "Tiger",
+        "Phoenix",
+        "Flower Pot",
+        "Unicorn",
+        "Rabbit",
+        "Rouge - Pick Nails",
+        "Heart Fruit",
+        "Bee Trap",
+        "Purple Chaos Emerald",
+        "Sonic - Light Shoes",
+        "Pokemon Count Trap",
+        "Strong Fruit",
+        "Purple Chaos Drive",
+        "Breakout Trap",
+        "Bucket",
+        "Otter",
+        "Hero Fruit",
+        "Pan",
+        "Black Shiny Egg",
+        "Poison Trap",
+        "Blue Two-Tone Egg",
+        "Square Fruit",
+        "Ten Rings",
+        "Blue Shiny Egg",
+        "Round Seed",
+        "Eggman - Large Cannon",
+        "Bat",
+        "Red Shiny Egg",
+        "Brown Mono-Tone Egg",
+        "Lime Green Two-Tone Egg",
+        "Blue Fruit",
+        "Chao Coin",
+        "Snake Trap",
+        "Math Quiz Trap",
+        "Knuckles - Air Necklace",
+        "Green Chaos Emerald",
+        "Pink Two-Tone Egg",
+        "Tasty Fruit",
+        "Grapes",
+        "Sonic - Magic Gloves",
+        "Twenty Rings",
+        "Skull",
+        "Normal Egg",
+        "Empty Can",
+        "Gravity Trap",
+        "Brown Shiny Egg",
+        "Raccoon",
+        "Purple Fruit",
+        "Sky Blue Mono-Tone Egg",
+        "Cheetah",
+        "White Shiny Egg",
+        "Magnetic Shield",
+        "Trivia Trap",
+        "Green Shiny Egg",
+        "Triangle Fruit",
+        "Green Chaos Drive",
+        "Eggman - Mystic Melody",
+        "Pink Mono-Tone Egg",
+        "Grey Mono-Tone Egg",
+        "Skunk",
+        "Light Up Path Trap",
+        "Super Mushroom",
+        "Strong Seed",
+        "Grey Shiny Egg",
+        "Yellow Fruit",
+        "Red Chaos Drive",
+        "Sonic - Flame Ring",
+        "Green Mono-Tone Egg",
+        "Slow Trap",
+        "Sky Blue Two-Tone Egg",
+        "Exposition Trap",
+        "Red Wool Beanie",
+        "Shadow - Mystic Melody",
+        "Mushroom",
+        "Shadow - Air Shoes",
+        "Square Seed",
+        "Skeleton Dog",
+        "Chaos Control Trap",
+        "Round Fruit",
+        "Tails - Bazooka",
+        "Chao Garden Fruit",
+        "Orange Fruit",
+        "Stump",
+        "Reverse Trap",
+        "Tails - Booster",
+        "Five Rings",
+        "Lime Green Shiny Egg",
+        "Blue Chaos Emerald",
+        "Black Wool Beanie",
+        "Hero Garden Fruit"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

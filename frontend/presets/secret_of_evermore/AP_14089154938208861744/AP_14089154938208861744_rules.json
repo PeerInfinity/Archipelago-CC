@@ -62,6 +62,7 @@
           {
             "name": "S. Jungle #0",
             "id": 64100,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -77,6 +78,7 @@
           {
             "name": "S. Jungle #1",
             "id": 64101,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -92,6 +94,7 @@
           {
             "name": "S. Jungle #4",
             "id": 64104,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -107,6 +110,7 @@
           {
             "name": "FE Village #9",
             "id": 64109,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -122,6 +126,7 @@
           {
             "name": "FE Village Hut #13",
             "id": 64113,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -137,6 +142,7 @@
           {
             "name": "FE Village Hut #14",
             "id": 64114,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -152,6 +158,7 @@
           {
             "name": "FE Village Hut #15",
             "id": 64115,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -167,6 +174,7 @@
           {
             "name": "FE Village Hut #16",
             "id": 64116,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -182,6 +190,7 @@
           {
             "name": "FE Village Hut #17",
             "id": 64117,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -197,6 +206,7 @@
           {
             "name": "FE Village Hut #18",
             "id": 64118,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -212,6 +222,7 @@
           {
             "name": "FE Village Hut #19",
             "id": 64119,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -227,6 +238,7 @@
           {
             "name": "FE Village Hut #20",
             "id": 64120,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -242,6 +254,7 @@
           {
             "name": "FE Village Hut #21",
             "id": 64121,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -257,6 +270,7 @@
           {
             "name": "FE Village Hut #22",
             "id": 64122,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -272,6 +286,7 @@
           {
             "name": "FE Village Hut #23",
             "id": 64123,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -287,6 +302,7 @@
           {
             "name": "FE Village Hut #24",
             "id": 64124,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -302,6 +318,7 @@
           {
             "name": "FE Village Hut #25",
             "id": 64125,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -317,6 +334,7 @@
           {
             "name": "FE Village Hut #26",
             "id": 64126,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -332,6 +350,7 @@
           {
             "name": "FE Village Hut #27",
             "id": 64127,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -347,6 +366,7 @@
           {
             "name": "FE Village Hut #28",
             "id": 64128,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -362,6 +382,7 @@
           {
             "name": "FE Village Hut #29",
             "id": 64129,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -377,6 +398,7 @@
           {
             "name": "FE Village Hut #30",
             "id": 64130,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -392,6 +414,7 @@
           {
             "name": "FE Village Hut #31",
             "id": 64131,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -407,6 +430,7 @@
           {
             "name": "FE Village Hut #32",
             "id": 64132,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -422,6 +446,7 @@
           {
             "name": "FE Village Hut #33",
             "id": 64133,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -437,6 +462,7 @@
           {
             "name": "FE Village Hut #34",
             "id": 64134,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -452,6 +478,7 @@
           {
             "name": "Defend Area #35",
             "id": 64135,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -467,6 +494,7 @@
           {
             "name": "Defend Area #36",
             "id": 64136,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -482,6 +510,7 @@
           {
             "name": "Defend Area #37",
             "id": 64137,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -497,6 +526,7 @@
           {
             "name": "Quick Sand Field #38",
             "id": 64138,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -512,6 +542,7 @@
           {
             "name": "Quick Sand Field #39",
             "id": 64139,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -527,6 +558,7 @@
           {
             "name": "Quick Sand Field #40",
             "id": 64140,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -542,6 +574,7 @@
           {
             "name": "Quick Sand Field #41",
             "id": 64141,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -557,6 +590,7 @@
           {
             "name": "Quick Sand Field #42",
             "id": 64142,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -572,6 +606,7 @@
           {
             "name": "Quick Sand Field #43",
             "id": 64143,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -587,6 +622,7 @@
           {
             "name": "Quick Sand Field #44",
             "id": 64144,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -602,6 +638,7 @@
           {
             "name": "Bugmuck #45",
             "id": 64145,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -617,6 +654,7 @@
           {
             "name": "Bugmuck #46",
             "id": 64146,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -632,6 +670,7 @@
           {
             "name": "Bugmuck #47",
             "id": 64147,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -647,6 +686,7 @@
           {
             "name": "Bugmuck #48",
             "id": 64148,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -662,6 +702,7 @@
           {
             "name": "Bugmuck #49",
             "id": 64149,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -677,6 +718,7 @@
           {
             "name": "Bugmuck #50",
             "id": 64150,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -692,6 +734,7 @@
           {
             "name": "Bugmuck #51",
             "id": 64151,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -707,6 +750,7 @@
           {
             "name": "Bugmuck #52",
             "id": 64152,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -722,6 +766,7 @@
           {
             "name": "Acid Rain Guy #53",
             "id": 64153,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -737,6 +782,7 @@
           {
             "name": "Acid Rain Guy #54",
             "id": 64154,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -752,6 +798,7 @@
           {
             "name": "Jaguar Ring Cave #184",
             "id": 64284,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -767,6 +814,7 @@
           {
             "name": "Jaguar Ring Cave #185",
             "id": 64285,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -782,6 +830,7 @@
           {
             "name": "Jaguar Ring Cave #186",
             "id": 64286,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -797,6 +846,7 @@
           {
             "name": "HB Cave #187",
             "id": 64287,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -812,6 +862,7 @@
           {
             "name": "HB Cave #188",
             "id": 64288,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -827,6 +878,7 @@
           {
             "name": "HB Cave #189",
             "id": 64289,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -842,6 +894,7 @@
           {
             "name": "Thraxx",
             "id": 64050,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -857,6 +910,7 @@
           {
             "name": "Acid Rain",
             "id": 64000,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -872,6 +926,7 @@
           {
             "name": "Defend",
             "id": 64007,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -887,6 +942,7 @@
           {
             "name": "Flash",
             "id": 64015,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -902,6 +958,7 @@
           {
             "name": "Hard Ball",
             "id": 64017,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -917,6 +974,7 @@
           {
             "name": "S. Jungle w/ weapon #2",
             "id": 64102,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -932,6 +990,7 @@
           {
             "name": "S. Jungle w/ weapon #3",
             "id": 64103,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -947,6 +1006,7 @@
           {
             "name": "S. Jungle w/ weapon #5",
             "id": 64105,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -962,6 +1022,7 @@
           {
             "name": "Strongheart's Hut #6",
             "id": 64106,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -977,6 +1038,7 @@
           {
             "name": "Strongheart's Hut #7",
             "id": 64107,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -992,6 +1054,7 @@
           {
             "name": "Strongheart's Hut #8",
             "id": 64108,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1007,6 +1070,7 @@
           {
             "name": "Blimp's Hut #10",
             "id": 64110,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1022,6 +1086,7 @@
           {
             "name": "Blimp's Hut #11",
             "id": 64111,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1037,6 +1102,7 @@
           {
             "name": "Blimp's Hut #12",
             "id": 64112,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1052,6 +1118,7 @@
           {
             "name": "N. Jungle #55",
             "id": 64155,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1067,6 +1134,7 @@
           {
             "name": "N. Jungle #56",
             "id": 64156,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1082,6 +1150,7 @@
           {
             "name": "Volcano Path #59",
             "id": 64159,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1097,6 +1166,7 @@
           {
             "name": "Volcano Path #60",
             "id": 64160,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1112,6 +1182,7 @@
           {
             "name": "Volcano Path #61",
             "id": 64161,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1127,6 +1198,7 @@
           {
             "name": "West of Swamp #62",
             "id": 64162,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1142,6 +1214,7 @@
           {
             "name": "West of Swamp #63",
             "id": 64163,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1157,6 +1230,7 @@
           {
             "name": "Swamp #64",
             "id": 64164,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1172,6 +1246,7 @@
           {
             "name": "Swamp #65",
             "id": 64165,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1187,6 +1262,7 @@
           {
             "name": "Swamp #66",
             "id": 64166,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1202,6 +1278,7 @@
           {
             "name": "Swamp #67",
             "id": 64167,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1217,6 +1294,7 @@
           {
             "name": "Swamp #68",
             "id": 64168,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1232,6 +1310,7 @@
           {
             "name": "Swamp #69",
             "id": 64169,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1247,6 +1326,7 @@
           {
             "name": "Swamp #70",
             "id": 64170,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1262,6 +1342,7 @@
           {
             "name": "Volcano Shop #71",
             "id": 64171,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1277,6 +1358,7 @@
           {
             "name": "Volcano Shop #72",
             "id": 64172,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1292,6 +1374,7 @@
           {
             "name": "Arena Holding #95",
             "id": 64195,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1307,6 +1390,7 @@
           {
             "name": "Arena Holding #96",
             "id": 64196,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1322,6 +1406,7 @@
           {
             "name": "Arena Holding #97",
             "id": 64197,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1337,6 +1422,7 @@
           {
             "name": "Arena Holding #98",
             "id": 64198,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1352,6 +1438,7 @@
           {
             "name": "Arena Holding #99",
             "id": 64199,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1367,6 +1454,7 @@
           {
             "name": "Arena Holding #100",
             "id": 64200,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1382,6 +1470,7 @@
           {
             "name": "Arena Holding #101",
             "id": 64201,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1397,6 +1486,7 @@
           {
             "name": "Arena Holding #102",
             "id": 64202,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1412,6 +1502,7 @@
           {
             "name": "Blimp's Cave #109",
             "id": 64209,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1427,6 +1518,7 @@
           {
             "name": "Blimp's Cave #110",
             "id": 64210,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1442,6 +1534,7 @@
           {
             "name": "Crustacia Interior #111",
             "id": 64211,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1457,6 +1550,7 @@
           {
             "name": "Crustacia Interior #112",
             "id": 64212,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1472,6 +1566,7 @@
           {
             "name": "Crustacia Interior #113",
             "id": 64213,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1487,6 +1582,7 @@
           {
             "name": "Crustacia Interior #114",
             "id": 64214,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1502,6 +1598,7 @@
           {
             "name": "Crustacia Interior #115",
             "id": 64215,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1517,6 +1614,7 @@
           {
             "name": "Crustacia Interior #116",
             "id": 64216,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1532,6 +1630,7 @@
           {
             "name": "Volcano Path Cave #182",
             "id": 64282,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1547,6 +1646,7 @@
           {
             "name": "Volcano Path Cave #183",
             "id": 64283,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1562,6 +1662,7 @@
           {
             "name": "Ebon Sewers #190",
             "id": 64290,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1577,6 +1678,7 @@
           {
             "name": "Ebon Sewers #191",
             "id": 64291,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1592,6 +1694,7 @@
           {
             "name": "Ebon Sewers #192",
             "id": 64292,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1607,6 +1710,7 @@
           {
             "name": "Ebon Sewers #193",
             "id": 64293,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1622,6 +1726,7 @@
           {
             "name": "Ebon Sewers #194",
             "id": 64294,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1637,6 +1742,7 @@
           {
             "name": "Outside Ivor #199",
             "id": 64299,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1652,6 +1758,7 @@
           {
             "name": "Outside Ivor #200",
             "id": 64300,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1667,6 +1774,7 @@
           {
             "name": "Outside Ivor #201",
             "id": 64301,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1682,6 +1790,7 @@
           {
             "name": "Outside Ivor #202",
             "id": 64302,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1697,6 +1806,7 @@
           {
             "name": "Ivor Houses #203",
             "id": 64303,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1712,6 +1822,7 @@
           {
             "name": "Ivor Houses #204",
             "id": 64304,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1727,6 +1838,7 @@
           {
             "name": "Ivor Houses #205",
             "id": 64305,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1742,6 +1854,7 @@
           {
             "name": "Ivor Houses #206",
             "id": 64306,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1757,6 +1870,7 @@
           {
             "name": "Ebon Houses #207",
             "id": 64307,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1772,6 +1886,7 @@
           {
             "name": "Ivor Houses #208",
             "id": 64308,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1787,6 +1902,7 @@
           {
             "name": "Ebon Houses #209",
             "id": 64309,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1802,6 +1918,7 @@
           {
             "name": "Ivor Houses #210",
             "id": 64310,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1817,6 +1934,7 @@
           {
             "name": "Ebon Houses #211",
             "id": 64311,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1832,6 +1950,7 @@
           {
             "name": "Ivor Houses #212",
             "id": 64312,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1847,6 +1966,7 @@
           {
             "name": "Ebon Houses #213",
             "id": 64313,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1862,6 +1982,7 @@
           {
             "name": "Ivor Houses #214",
             "id": 64314,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1877,6 +1998,7 @@
           {
             "name": "Ebon Houses #215",
             "id": 64315,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1892,6 +2014,7 @@
           {
             "name": "Ivor Houses #216",
             "id": 64316,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1907,6 +2030,7 @@
           {
             "name": "Ebon Houses #217",
             "id": 64317,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1922,6 +2046,7 @@
           {
             "name": "Ivor Houses #218",
             "id": 64318,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1937,6 +2062,7 @@
           {
             "name": "Ebon Houses #219",
             "id": 64319,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1952,6 +2078,7 @@
           {
             "name": "Ivor Houses #220",
             "id": 64320,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1967,6 +2094,7 @@
           {
             "name": "Ebon Houses #221",
             "id": 64321,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1982,6 +2110,7 @@
           {
             "name": "Ivor Houses #222",
             "id": 64322,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -1997,6 +2126,7 @@
           {
             "name": "Ebon Houses #223",
             "id": 64323,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2012,6 +2142,7 @@
           {
             "name": "Ivor Houses #224",
             "id": 64324,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2027,6 +2158,7 @@
           {
             "name": "Ebon Houses #225",
             "id": 64325,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2042,6 +2174,7 @@
           {
             "name": "Ivor Houses #226",
             "id": 64326,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2057,6 +2190,7 @@
           {
             "name": "Ebon Houses #227",
             "id": 64327,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2072,6 +2206,7 @@
           {
             "name": "Ivor Houses #228",
             "id": 64328,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2087,6 +2222,7 @@
           {
             "name": "Ebon Houses #229",
             "id": 64329,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2102,6 +2238,7 @@
           {
             "name": "Ivor Houses #230",
             "id": 64330,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2117,6 +2254,7 @@
           {
             "name": "Ebon Houses #231",
             "id": 64331,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2132,6 +2270,7 @@
           {
             "name": "Ivor Houses #232",
             "id": 64332,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2147,6 +2286,7 @@
           {
             "name": "Ebon Houses #233",
             "id": 64333,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2162,6 +2302,7 @@
           {
             "name": "Ivor Houses #234",
             "id": 64334,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2177,6 +2318,7 @@
           {
             "name": "Ebon Houses #235",
             "id": 64335,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2192,6 +2334,7 @@
           {
             "name": "Ivor Houses #236",
             "id": 64336,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2207,6 +2350,7 @@
           {
             "name": "Ebon Houses #237",
             "id": 64337,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2222,6 +2366,7 @@
           {
             "name": "Ivor Houses #238",
             "id": 64338,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2237,6 +2382,7 @@
           {
             "name": "Ebon Houses #239",
             "id": 64339,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2252,6 +2398,7 @@
           {
             "name": "Ivor Houses #240",
             "id": 64340,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2267,6 +2414,7 @@
           {
             "name": "Ebon Houses #241",
             "id": 64341,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2282,6 +2430,7 @@
           {
             "name": "Ivor Houses #242",
             "id": 64342,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2297,6 +2446,7 @@
           {
             "name": "Ebon Houses #243",
             "id": 64343,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2312,6 +2462,7 @@
           {
             "name": "Ivor Houses #244",
             "id": 64344,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2327,6 +2478,7 @@
           {
             "name": "Ebon Houses #245",
             "id": 64345,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2342,6 +2494,7 @@
           {
             "name": "Ivor Houses #246",
             "id": 64346,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2357,6 +2510,7 @@
           {
             "name": "Ebon Houses #247",
             "id": 64347,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2372,6 +2526,7 @@
           {
             "name": "Ebon Houses #248",
             "id": 64348,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2387,6 +2542,7 @@
           {
             "name": "Naris #249",
             "id": 64349,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2402,6 +2558,7 @@
           {
             "name": "Naris #250",
             "id": 64350,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2417,6 +2574,7 @@
           {
             "name": "Tinker #251",
             "id": 64351,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2432,6 +2590,7 @@
           {
             "name": "Ebon Dining #252",
             "id": 64352,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2447,6 +2606,7 @@
           {
             "name": "Ivor Dining #253",
             "id": 64353,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2462,6 +2622,7 @@
           {
             "name": "Ivor Dining #254",
             "id": 64354,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2477,6 +2638,7 @@
           {
             "name": "Ivor Upper Floor #261",
             "id": 64361,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2492,6 +2654,7 @@
           {
             "name": "Ivor Upper Floor #262",
             "id": 64362,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2507,6 +2670,7 @@
           {
             "name": "Ivor Sewers #263",
             "id": 64363,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2522,6 +2686,7 @@
           {
             "name": "Ivor Sewers #264",
             "id": 64364,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2537,6 +2702,7 @@
           {
             "name": "Ivor Sewers #265",
             "id": 64365,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2552,6 +2718,7 @@
           {
             "name": "Ivor Sewers #266",
             "id": 64366,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2567,6 +2734,7 @@
           {
             "name": "Ivor Sewers #267",
             "id": 64367,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2582,6 +2750,7 @@
           {
             "name": "Ivor Sewers #268",
             "id": 64368,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2597,6 +2766,7 @@
           {
             "name": "Ivor Sewers #269",
             "id": 64369,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2612,6 +2782,7 @@
           {
             "name": "Ivor Sewers #270",
             "id": 64370,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2627,6 +2798,7 @@
           {
             "name": "Ebon Storage #271",
             "id": 64371,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2642,6 +2814,7 @@
           {
             "name": "Ebon Storage #272",
             "id": 64372,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2657,6 +2830,7 @@
           {
             "name": "Ebon Storage #273",
             "id": 64373,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 3,
@@ -2672,6 +2846,7 @@
           {
             "name": "Coleoptera",
             "id": 64051,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2687,6 +2862,7 @@
           {
             "name": "Mammoth Viper",
             "id": 64052,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2702,6 +2878,7 @@
           {
             "name": "Cave Raptors",
             "id": 64053,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2717,6 +2894,7 @@
           {
             "name": "Salabog",
             "id": 64054,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2732,6 +2910,7 @@
           {
             "name": "Vigor",
             "id": 64055,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2747,6 +2926,7 @@
           {
             "name": "Bad Boys",
             "id": 64059,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2762,6 +2942,7 @@
           {
             "name": "Timberdrake",
             "id": 64060,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2777,6 +2958,7 @@
           {
             "name": "Verminator",
             "id": 64061,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2792,6 +2974,7 @@
           {
             "name": "Footknight",
             "id": 64068,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2807,6 +2990,7 @@
           {
             "name": "Atlas",
             "id": 64001,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2822,6 +3006,7 @@
           {
             "name": "Corrosion",
             "id": 64004,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2837,6 +3022,7 @@
           {
             "name": "Crush",
             "id": 64005,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2852,6 +3038,7 @@
           {
             "name": "Cure",
             "id": 64006,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2867,6 +3054,7 @@
           {
             "name": "Explosion",
             "id": 64012,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2882,6 +3070,7 @@
           {
             "name": "Heal",
             "id": 64018,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2897,6 +3086,7 @@
           {
             "name": "Lance",
             "id": 64019,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2912,6 +3102,7 @@
           {
             "name": "Miracle Cure",
             "id": 64022,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2927,6 +3118,7 @@
           {
             "name": "One Up",
             "id": 64024,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2942,6 +3134,7 @@
           {
             "name": "Regrowth",
             "id": 64026,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2957,6 +3150,7 @@
           {
             "name": "Revealer",
             "id": 64027,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2972,6 +3166,7 @@
           {
             "name": "Revive",
             "id": 64028,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2987,6 +3182,7 @@
           {
             "name": "Slow Burn",
             "id": 64029,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3002,6 +3198,7 @@
           {
             "name": "Sting",
             "id": 64031,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3017,6 +3214,7 @@
           {
             "name": "Super Heal",
             "id": 64033,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3032,6 +3230,7 @@
           {
             "name": "Vanilla Gauge #57",
             "id": 64157,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3047,6 +3246,7 @@
           {
             "name": "Volcano Path #58",
             "id": 64158,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3062,6 +3262,7 @@
           {
             "name": "Volcano Room1 #73",
             "id": 64173,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3077,6 +3278,7 @@
           {
             "name": "Volcano Room1 #74",
             "id": 64174,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3092,6 +3294,7 @@
           {
             "name": "Volcano Room1 #75",
             "id": 64175,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3107,6 +3310,7 @@
           {
             "name": "Volcano Room1 #76",
             "id": 64176,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3122,6 +3326,7 @@
           {
             "name": "Volcano Room1 #77",
             "id": 64177,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3137,6 +3342,7 @@
           {
             "name": "Volcano Room1 #78",
             "id": 64178,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3152,6 +3358,7 @@
           {
             "name": "Volcano Room1 #79",
             "id": 64179,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3167,6 +3374,7 @@
           {
             "name": "Volcano Room1 #80",
             "id": 64180,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3182,6 +3390,7 @@
           {
             "name": "Volcano Room2 #81",
             "id": 64181,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3197,6 +3406,7 @@
           {
             "name": "Volcano Room2 #82",
             "id": 64182,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3212,6 +3422,7 @@
           {
             "name": "Volcano Room2 #83",
             "id": 64183,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3227,6 +3438,7 @@
           {
             "name": "Volcano Room2 #84",
             "id": 64184,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3242,6 +3454,7 @@
           {
             "name": "Volcano Room2 #85",
             "id": 64185,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3257,6 +3470,7 @@
           {
             "name": "Volcano Room2 #86",
             "id": 64186,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3272,6 +3486,7 @@
           {
             "name": "Volcano Room2 #87",
             "id": 64187,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3287,6 +3502,7 @@
           {
             "name": "Volcano Room2 #88",
             "id": 64188,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3302,6 +3518,7 @@
           {
             "name": "Pipe Maze #89",
             "id": 64189,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3317,6 +3534,7 @@
           {
             "name": "Pipe Maze #90",
             "id": 64190,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3332,6 +3550,7 @@
           {
             "name": "Pipe Maze #91",
             "id": 64191,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3347,6 +3566,7 @@
           {
             "name": "Pipe Maze #92",
             "id": 64192,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3362,6 +3582,7 @@
           {
             "name": "Pipe Maze #93",
             "id": 64193,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3377,6 +3598,7 @@
           {
             "name": "Pipe Maze #94",
             "id": 64194,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3392,6 +3614,7 @@
           {
             "name": "W. Crustacia #103",
             "id": 64203,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3407,6 +3630,7 @@
           {
             "name": "W. Crustacia #104",
             "id": 64204,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3422,6 +3646,7 @@
           {
             "name": "W. Crustacia #105",
             "id": 64205,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3437,6 +3662,7 @@
           {
             "name": "W. Crustacia #106",
             "id": 64206,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3452,6 +3678,7 @@
           {
             "name": "E. Crustacia #107",
             "id": 64207,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3467,6 +3694,7 @@
           {
             "name": "E. Crustacia #108",
             "id": 64208,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3482,6 +3710,7 @@
           {
             "name": "Pyramid bottom #117",
             "id": 64217,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3497,6 +3726,7 @@
           {
             "name": "Pyramid bottom #118",
             "id": 64218,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3512,6 +3742,7 @@
           {
             "name": "Pyramid bottom #119",
             "id": 64219,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3527,6 +3758,7 @@
           {
             "name": "Pyramid bottom #120",
             "id": 64220,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3542,6 +3774,7 @@
           {
             "name": "Pyramid bottom #121",
             "id": 64221,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3557,6 +3790,7 @@
           {
             "name": "Pyramid bottom #122",
             "id": 64222,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3572,6 +3806,7 @@
           {
             "name": "Pyramid bottom #123",
             "id": 64223,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3587,6 +3822,7 @@
           {
             "name": "Pyramid bottom #124",
             "id": 64224,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3602,6 +3838,7 @@
           {
             "name": "Pyramid bottom #125",
             "id": 64225,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3617,6 +3854,7 @@
           {
             "name": "Pyramid bottom #126",
             "id": 64226,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3632,6 +3870,7 @@
           {
             "name": "Pyramid bottom #127",
             "id": 64227,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3647,6 +3886,7 @@
           {
             "name": "Pyramid bottom #128",
             "id": 64228,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3662,6 +3902,7 @@
           {
             "name": "Pyramid bottom #129",
             "id": 64229,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3677,6 +3918,7 @@
           {
             "name": "Pyramid bottom #130",
             "id": 64230,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3692,6 +3934,7 @@
           {
             "name": "Pyramid bottom #131",
             "id": 64231,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3707,6 +3950,7 @@
           {
             "name": "Pyramid bottom #132",
             "id": 64232,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3722,6 +3966,7 @@
           {
             "name": "Pyramid bottom #133",
             "id": 64233,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3737,6 +3982,7 @@
           {
             "name": "Pyramid bottom #134",
             "id": 64234,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3752,6 +3998,7 @@
           {
             "name": "Pyramid top #135",
             "id": 64235,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3767,6 +4014,7 @@
           {
             "name": "Pyramid top #136",
             "id": 64236,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3782,6 +4030,7 @@
           {
             "name": "Pyramid top #137",
             "id": 64237,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3797,6 +4046,7 @@
           {
             "name": "Pyramid top #138",
             "id": 64238,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3812,6 +4062,7 @@
           {
             "name": "Pyramid top #139",
             "id": 64239,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3827,6 +4078,7 @@
           {
             "name": "Pyramid top #140",
             "id": 64240,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3842,6 +4094,7 @@
           {
             "name": "Pyramid top #141",
             "id": 64241,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3857,6 +4110,7 @@
           {
             "name": "Pyramid top #142",
             "id": 64242,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3872,6 +4126,7 @@
           {
             "name": "Pyramid top #143",
             "id": 64243,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3887,6 +4142,7 @@
           {
             "name": "Pyramid top #144",
             "id": 64244,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3902,6 +4158,7 @@
           {
             "name": "Pyramid top #145",
             "id": 64245,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3917,6 +4174,7 @@
           {
             "name": "Pyramid top #146",
             "id": 64246,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3932,6 +4190,7 @@
           {
             "name": "Pyramid top #147",
             "id": 64247,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3947,6 +4206,7 @@
           {
             "name": "Pyramid top #148",
             "id": 64248,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3962,6 +4222,7 @@
           {
             "name": "Pyramid top #149",
             "id": 64249,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3977,6 +4238,7 @@
           {
             "name": "Pyramid top #150",
             "id": 64250,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3992,6 +4254,7 @@
           {
             "name": "Pyramid top #151",
             "id": 64251,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4007,6 +4270,7 @@
           {
             "name": "Pyramid top #152",
             "id": 64252,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4022,6 +4286,7 @@
           {
             "name": "Pyramid top #153",
             "id": 64253,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4037,6 +4302,7 @@
           {
             "name": "Pyramid top #154",
             "id": 64254,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4052,6 +4318,7 @@
           {
             "name": "Pyramid top #155",
             "id": 64255,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4067,6 +4334,7 @@
           {
             "name": "Pyramid top #156",
             "id": 64256,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4082,6 +4350,7 @@
           {
             "name": "Pyramid top #157",
             "id": 64257,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4097,6 +4366,7 @@
           {
             "name": "Tiny's hideout #158",
             "id": 64258,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4112,6 +4382,7 @@
           {
             "name": "Tiny's hideout #159",
             "id": 64259,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4127,6 +4398,7 @@
           {
             "name": "Tiny's hideout #160",
             "id": 64260,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4142,6 +4414,7 @@
           {
             "name": "Tiny's hideout #161",
             "id": 64261,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4157,6 +4430,7 @@
           {
             "name": "Tiny's hideout #162",
             "id": 64262,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4172,6 +4446,7 @@
           {
             "name": "Tiny's hideout #163",
             "id": 64263,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4187,6 +4462,7 @@
           {
             "name": "Tiny's hideout #164",
             "id": 64264,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4202,6 +4478,7 @@
           {
             "name": "Halls Main Room #165",
             "id": 64265,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4217,6 +4494,7 @@
           {
             "name": "Halls Main Room #166",
             "id": 64266,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4232,6 +4510,7 @@
           {
             "name": "Halls SW #167",
             "id": 64267,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4247,6 +4526,7 @@
           {
             "name": "Halls SW #168",
             "id": 64268,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4262,6 +4542,7 @@
           {
             "name": "Halls SW #169",
             "id": 64269,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4277,6 +4558,7 @@
           {
             "name": "Halls NW #170",
             "id": 64270,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4292,6 +4574,7 @@
           {
             "name": "Halls NW #171",
             "id": 64271,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4307,6 +4590,7 @@
           {
             "name": "Halls NW #172",
             "id": 64272,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4322,6 +4606,7 @@
           {
             "name": "Halls NW #173",
             "id": 64273,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4337,6 +4622,7 @@
           {
             "name": "Halls NE #174",
             "id": 64274,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4352,6 +4638,7 @@
           {
             "name": "Halls NE #175",
             "id": 64275,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4367,6 +4654,7 @@
           {
             "name": "Halls NE #176",
             "id": 64276,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4382,6 +4670,7 @@
           {
             "name": "Halls NE #177",
             "id": 64277,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4397,6 +4686,7 @@
           {
             "name": "Halls Bridge #178",
             "id": 64278,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4412,6 +4702,7 @@
           {
             "name": "Oglin Cave #179",
             "id": 64279,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4427,6 +4718,7 @@
           {
             "name": "Drain Cave #180",
             "id": 64280,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4442,6 +4734,7 @@
           {
             "name": "Drain Cave #181",
             "id": 64281,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4457,6 +4750,7 @@
           {
             "name": "Gomi's Tower #195",
             "id": 64295,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4472,6 +4766,7 @@
           {
             "name": "Gomi's Tower #196",
             "id": 64296,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4487,6 +4782,7 @@
           {
             "name": "Gomi's Tower #197",
             "id": 64297,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4502,6 +4798,7 @@
           {
             "name": "Gomi's Tower #198",
             "id": 64298,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4517,6 +4814,7 @@
           {
             "name": "Ivor East #255",
             "id": 64355,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4532,6 +4830,7 @@
           {
             "name": "Ivor East #256",
             "id": 64356,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4547,6 +4846,7 @@
           {
             "name": "Ivor East #257",
             "id": 64357,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4562,6 +4862,7 @@
           {
             "name": "Ivor East #258",
             "id": 64358,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4577,6 +4878,7 @@
           {
             "name": "Ivor East #259",
             "id": 64359,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4592,6 +4894,7 @@
           {
             "name": "Ivor East #260",
             "id": 64360,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4607,6 +4910,7 @@
           {
             "name": "Prof. Lab #274",
             "id": 64374,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4622,6 +4926,7 @@
           {
             "name": "Greenhouse #275",
             "id": 64375,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4637,6 +4942,7 @@
           {
             "name": "Alarm room #276",
             "id": 64376,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4652,6 +4958,7 @@
           {
             "name": "Reactor room #277",
             "id": 64377,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4667,6 +4974,7 @@
           {
             "name": "Storage room #278",
             "id": 64378,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4682,6 +4990,7 @@
           {
             "name": "Storage room #279",
             "id": 64379,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4697,6 +5006,7 @@
           {
             "name": "Storage room #280",
             "id": 64380,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4712,6 +5022,7 @@
           {
             "name": "Storage room #281",
             "id": 64381,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4727,6 +5038,7 @@
           {
             "name": "Storage room #282",
             "id": 64382,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4742,6 +5054,7 @@
           {
             "name": "Storage room #283",
             "id": 64383,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4757,6 +5070,7 @@
           {
             "name": "Storage room #284",
             "id": 64384,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4772,6 +5086,7 @@
           {
             "name": "Energy Core #285",
             "id": 64385,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4787,6 +5102,7 @@
           {
             "name": "Megataur",
             "id": 64056,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 2,
@@ -4802,6 +5118,7 @@
           {
             "name": "Rimsala",
             "id": 64057,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4817,6 +5134,7 @@
           {
             "name": "Aquagoth",
             "id": 64058,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4832,6 +5150,7 @@
           {
             "name": "Tiny",
             "id": 64062,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4847,6 +5166,7 @@
           {
             "name": "Mungola",
             "id": 64063,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4862,6 +5182,7 @@
           {
             "name": "Sons of Sth.",
             "id": 64064,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4877,6 +5198,7 @@
           {
             "name": "Volcano Viper",
             "id": 64065,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4892,6 +5214,7 @@
           {
             "name": "Magmar",
             "id": 64066,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4907,6 +5230,7 @@
           {
             "name": "Mad Monk",
             "id": 64067,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4922,6 +5246,7 @@
           {
             "name": "Barrier",
             "id": 64002,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4937,6 +5262,7 @@
           {
             "name": "Call Up",
             "id": 64003,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4952,6 +5278,7 @@
           {
             "name": "Double Drain",
             "id": 64008,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4967,6 +5294,7 @@
           {
             "name": "Drain",
             "id": 64009,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4982,6 +5310,7 @@
           {
             "name": "Energize",
             "id": 64010,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4997,6 +5326,7 @@
           {
             "name": "Escape",
             "id": 64011,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5012,6 +5342,7 @@
           {
             "name": "Fireball",
             "id": 64013,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5027,6 +5358,7 @@
           {
             "name": "Fire Power",
             "id": 64014,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5042,6 +5374,7 @@
           {
             "name": "Force Field",
             "id": 64016,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5057,6 +5390,7 @@
           {
             "name": "Levitate",
             "id": 64020,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5072,6 +5406,7 @@
           {
             "name": "Lightning Storm",
             "id": 64021,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5087,6 +5422,7 @@
           {
             "name": "Nitro",
             "id": 64023,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5102,6 +5438,7 @@
           {
             "name": "Reflect",
             "id": 64025,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5117,6 +5454,7 @@
           {
             "name": "Speed",
             "id": 64030,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5132,6 +5470,7 @@
           {
             "name": "Stop",
             "id": 64032,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5147,6 +5486,7 @@
           {
             "name": "Done",
             "id": null,
+            "region": "Ingame",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -7732,42 +8072,446 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Alchemy",
-      "Any Acorn",
-      "Any Ash",
-      "Any Atlas Medallion",
-      "Any Biscuit",
-      "Any Bone",
-      "Any Brimstone",
-      "Any Call bead",
-      "Any Clay",
-      "Any Crystal",
-      "Any Dry Ice",
-      "Any Ethanol",
-      "Any Feather",
-      "Any Grease",
-      "Any Gunpowder",
-      "Any Honey",
-      "Any Iron",
-      "Any Limestone",
-      "Any Meteorite",
-      "Any Moniez",
-      "Any Mud Pepper",
-      "Any Mushroom",
-      "Any Nectar",
-      "Any Oil",
-      "Any Petal",
-      "Any Pixie Dust",
-      "Any Root",
-      "Any Vinegar",
-      "Any Water",
-      "Any Wax",
-      "Everything",
-      "Ingredients",
-      "Traps",
-      "Weapons"
-    ]
+    "1": {
+      "Any Wax": [
+        "2 Wax",
+        "Wax",
+        "5 Wax",
+        "4 Wax",
+        "3 Wax"
+      ],
+      "Any Water": [
+        "4 Water",
+        "6 Water",
+        "2 Water",
+        "3 Water",
+        "Water"
+      ],
+      "Any Vinegar": [
+        "2 Vinegar",
+        "6 Vinegar",
+        "3 Vinegar",
+        "4 Vinegar"
+      ],
+      "Any Root": [
+        "7 Roots",
+        "Roots",
+        "2 Roots"
+      ],
+      "Any Oil": [
+        "Oil",
+        "5 Oil",
+        "3 Oil"
+      ],
+      "Any Mushroom": [
+        "3 Mushroom",
+        "Mushroom"
+      ],
+      "Any Mud Pepper": [
+        "Mud Pepper"
+      ],
+      "Any Meteorite": [
+        "3 Meteorite",
+        "2 Meteorite"
+      ],
+      "Any Limestone": [
+        "Limestone",
+        "2 Limestone",
+        "3 Limestone"
+      ],
+      "Any Iron": [
+        "5 Iron",
+        "4 Iron",
+        "2 Iron"
+      ],
+      "Any Gunpowder": [
+        "2 Gunpowder"
+      ],
+      "Any Grease": [
+        "Grease"
+      ],
+      "Any Feather": [
+        "Feather",
+        "3 Feathers",
+        "4 Feathers"
+      ],
+      "Any Ethanol": [
+        "3 Ethanol",
+        "Ethanol",
+        "2 Ethanol",
+        "4 Ethanol"
+      ],
+      "Any Dry Ice": [
+        "4 Dry Ice",
+        "2 Dry Ice",
+        "3 Dry Ice"
+      ],
+      "Any Crystal": [
+        "Crystal",
+        "10 Crystal",
+        "4 Crystal",
+        "2 Crystal"
+      ],
+      "Any Clay": [
+        "2 Clay",
+        "Clay",
+        "4 Clay",
+        "3 Clay"
+      ],
+      "Any Brimstone": [
+        "3 Brimstone",
+        "2 Brimstone",
+        "Brimstone",
+        "4 Brimstone"
+      ],
+      "Any Bone": [
+        "2 Bone",
+        "3 Bone"
+      ],
+      "Any Atlas Medallion": [
+        "Atlas Medallion"
+      ],
+      "Any Ash": [
+        "8 Ash",
+        "5 Ash",
+        "4 Ash",
+        "Ash",
+        "2 Ash",
+        "3 Ash",
+        "6 Ash"
+      ],
+      "Any Acorn": [
+        "3 Acorns",
+        "Acorns",
+        "2 Acorns"
+      ],
+      "Ingredients": [
+        "2 Bone",
+        "3 Ash",
+        "Water",
+        "2 Brimstone",
+        "3 Vinegar",
+        "3 Acorns",
+        "3 Limestone",
+        "2 Ash",
+        "Ash",
+        "3 Wax",
+        "Mushroom",
+        "3 Ethanol",
+        "6 Ash",
+        "5 Iron",
+        "Crystal",
+        "Atlas Medallion",
+        "3 Feathers",
+        "2 Crystal",
+        "Wax",
+        "2 Dry Ice",
+        "3 Dry Ice",
+        "4 Brimstone",
+        "2 Roots",
+        "4 Ethanol",
+        "4 Ash",
+        "5 Ash",
+        "4 Iron",
+        "4 Water",
+        "2 Iron",
+        "2 Vinegar",
+        "Oil",
+        "2 Gunpowder",
+        "3 Bone",
+        "5 Wax",
+        "4 Crystal",
+        "5 Oil",
+        "Clay",
+        "Grease",
+        "Feather",
+        "Acorns",
+        "6 Water",
+        "2 Wax",
+        "6 Vinegar",
+        "Ethanol",
+        "3 Meteorite",
+        "2 Meteorite",
+        "3 Oil",
+        "Limestone",
+        "10 Crystal",
+        "4 Clay",
+        "3 Water",
+        "3 Clay",
+        "3 Brimstone",
+        "Mud Pepper",
+        "Roots",
+        "2 Water",
+        "2 Ethanol",
+        "2 Acorns",
+        "3 Mushroom",
+        "2 Clay",
+        "2 Limestone",
+        "4 Vinegar",
+        "7 Roots",
+        "4 Feathers",
+        "4 Dry Ice",
+        "Brimstone",
+        "4 Wax",
+        "8 Ash"
+      ],
+      "Any Call bead": [
+        "Call bead",
+        "3 Call beads",
+        "2 Call beads"
+      ],
+      "Any Petal": [
+        "2 Petal",
+        "Petal"
+      ],
+      "Any Biscuit": [
+        "Biscuit"
+      ],
+      "Any Pixie Dust": [
+        "Pixie Dust"
+      ],
+      "Any Nectar": [
+        "Nectar",
+        "4 Nectar",
+        "3 Nectar"
+      ],
+      "Any Honey": [
+        "Honey",
+        "3 Honey",
+        "2 Honey"
+      ],
+      "Any Moniez": [
+        "200 Moniez",
+        "18 Moniez",
+        "30 Moniez",
+        "100 Moniez",
+        "20 Moniez",
+        "15 Moniez",
+        "500 Moniez"
+      ],
+      "Alchemy": [
+        "Crush",
+        "Atlas",
+        "Levitate",
+        "Reflect",
+        "Fire Power",
+        "Revive",
+        "Sting",
+        "Flash",
+        "Escape",
+        "Drain",
+        "Defend",
+        "One Up",
+        "Fireball",
+        "Force Field",
+        "Lance",
+        "Heal",
+        "Cure",
+        "Speed",
+        "Energize",
+        "Stop",
+        "Super Heal",
+        "Corrosion",
+        "Lightning Storm",
+        "Explosion",
+        "Slow Burn",
+        "Nitro",
+        "Miracle Cure",
+        "Barrier",
+        "Regrowth",
+        "Call Up",
+        "Double Drain",
+        "Hard Ball",
+        "Revealer",
+        "Acid Rain"
+      ],
+      "Weapons": [
+        "Horn Spear",
+        "Bronze Axe",
+        "Spider Claw",
+        "Lance (Weapon)",
+        "Atom Smasher",
+        "Crusader Sword",
+        "Bronze Spear",
+        "Gladiator Sword",
+        "Laser Lance",
+        "Knight Basher"
+      ],
+      "Traps": [
+        "Confound Trap",
+        "HUD Trap",
+        "OHKO Trap",
+        "Quake Trap",
+        "Poison Trap"
+      ],
+      "Everything": [
+        "2 Bone",
+        "Meteorite",
+        "Crush",
+        "Levitate",
+        "2 Brimstone",
+        "3 Vinegar",
+        "3 Acorns",
+        "Iron",
+        "Fire Power",
+        "Revive",
+        "3 Limestone",
+        "Pixie Dust",
+        "Knight Basher",
+        "Aura",
+        "Energy Core",
+        "Ash",
+        "Regenerate",
+        "2 Call beads",
+        "Mushroom",
+        "Bazooka",
+        "Progressive helmet",
+        "Herbal Essence",
+        "3 Ethanol",
+        "Energize",
+        "Stop",
+        "6 Ash",
+        "Super Heal",
+        "3 Feathers",
+        "2 Crystal",
+        "Spider Claw",
+        "Lance (Weapon)",
+        "Wax",
+        "Call bead",
+        "Honey",
+        "3 Nectar",
+        "4 Nectar",
+        "4 Iron",
+        "Horn Spear",
+        "3 Call beads",
+        "30 Particle Bombs",
+        "500 Moniez",
+        "2 Vinegar",
+        "3 Bone",
+        "2 Gunpowder",
+        "4 Crystal",
+        "5 Oil",
+        "Revealer",
+        "Grease",
+        "Feather",
+        "10,000 Gold Coins",
+        "6 Water",
+        "Iron Bracer",
+        "2 Wax",
+        "20 Moniez",
+        "Flash",
+        "Defend",
+        "One Up",
+        "2 Meteorite",
+        "3 Meteorite",
+        "Wheel",
+        "2 Honey",
+        "3 Oil",
+        "Fireball",
+        "HUD Trap",
+        "Limestone",
+        "3 Clay",
+        "3 Water",
+        "Cure",
+        "Poison Trap",
+        "Mud Pepper",
+        "Corrosion",
+        "Roots",
+        "100 Moniez",
+        "2 Acorns",
+        "2 Clay",
+        "3 Mushroom",
+        "Slow Burn",
+        "Root",
+        "Call Up",
+        "Brimstone",
+        "4 Wax",
+        "Atom Smasher",
+        "Atlas",
+        "3 Ash",
+        "Water",
+        "Sting",
+        "2 Petal",
+        "2 Ash",
+        "Amulet of Annihilation",
+        "Petal",
+        "200 Moniez",
+        "Dry Ice",
+        "Drain",
+        "3 Wax",
+        "Crusader Sword",
+        "Force Field",
+        "Speed",
+        "3 Honey",
+        "5 Iron",
+        "Crystal",
+        "Atlas Medallion",
+        "2 Dry Ice",
+        "3 Dry Ice",
+        "4 Brimstone",
+        "Confound Trap",
+        "Explosion",
+        "Gunpowder",
+        "2 Roots",
+        "4 Ash",
+        "4 Ethanol",
+        "30 Thunderballs",
+        "Quake Trap",
+        "5 Ash",
+        "Barrier",
+        "Wings",
+        "4 Water",
+        "Diamond Eye",
+        "2 Iron",
+        "15 Moniez",
+        "Oil",
+        "Nothing",
+        "Vinegar",
+        "5 Wax",
+        "Bone",
+        "Acid Rain",
+        "Clay",
+        "30 Moniez",
+        "18 Moniez",
+        "Acorn",
+        "Reflect",
+        "Progressive gloves",
+        "Acorns",
+        "Gladiator Sword",
+        "6 Vinegar",
+        "Ethanol",
+        "Escape",
+        "Nectar",
+        "Biscuit",
+        "10 Crystal",
+        "4 Clay",
+        "Lance",
+        "Heal",
+        "Laser Lance",
+        "3 Brimstone",
+        "Progressive vest",
+        "2 Ethanol",
+        "2 Water",
+        "Lightning Storm",
+        "Bronze Spear",
+        "2 Limestone",
+        "4 Vinegar",
+        "7 Roots",
+        "30 Cryo Blast",
+        "Nitro",
+        "Miracle Cure",
+        "4 Feathers",
+        "Regrowth",
+        "OHKO Trap",
+        "4 Dry Ice",
+        "Bronze Axe",
+        "Gauge",
+        "Energy Core Fragment",
+        "8 Ash",
+        "Double Drain",
+        "Hard Ball"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

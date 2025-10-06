@@ -209,6 +209,7 @@
           {
             "name": "B-1 mid far left",
             "id": 8675400,
+            "region": "B-1 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -224,6 +225,7 @@
           {
             "name": "B-1 bottom left-center",
             "id": 8675409,
+            "region": "B-1 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -239,6 +241,7 @@
           {
             "name": "B-1 top center",
             "id": 8675396,
+            "region": "B-1 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -254,6 +257,7 @@
           {
             "name": "B-1 top right-center",
             "id": 8675397,
+            "region": "B-1 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -269,6 +273,7 @@
           {
             "name": "B-1 mid right",
             "id": 8675405,
+            "region": "B-1 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -342,6 +347,7 @@
           {
             "name": "B-8 top right",
             "id": 8675419,
+            "region": "B-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -357,6 +363,7 @@
           {
             "name": "B-8 mid far right",
             "id": 8675427,
+            "region": "B-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -430,6 +437,7 @@
           {
             "name": "A-3 top left-center",
             "id": 8675311,
+            "region": "A-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -503,6 +511,7 @@
           {
             "name": "A-4 top left",
             "id": 8675331,
+            "region": "A-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -518,6 +527,7 @@
           {
             "name": "A-4 mid center",
             "id": 8675340,
+            "region": "A-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -533,6 +543,7 @@
           {
             "name": "A-4 bottom right",
             "id": 8675349,
+            "region": "A-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -548,6 +559,7 @@
           {
             "name": "A-4 bottom far left",
             "id": 8675344,
+            "region": "A-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -599,6 +611,7 @@
           {
             "name": "A-6 top far left",
             "id": 8675351,
+            "region": "A-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -614,6 +627,7 @@
           {
             "name": "A-6 mid left",
             "id": 8675359,
+            "region": "A-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -629,6 +643,7 @@
           {
             "name": "A-6 mid far right",
             "id": 8675364,
+            "region": "A-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -644,6 +659,7 @@
           {
             "name": "A-6 top right",
             "id": 8675356,
+            "region": "A-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 2,
@@ -659,6 +675,7 @@
           {
             "name": "A-6 mid far left",
             "id": 8675358,
+            "region": "A-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -674,6 +691,7 @@
           {
             "name": "A-6 bottom far right",
             "id": 8675371,
+            "region": "A-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -725,6 +743,7 @@
           {
             "name": "A-8 bottom center",
             "id": 8675389,
+            "region": "A-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -740,6 +759,7 @@
           {
             "name": "A-8 bottom left-center",
             "id": 8675388,
+            "region": "A-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -755,6 +775,7 @@
           {
             "name": "A-8 bottom right",
             "id": 8675391,
+            "region": "A-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -850,6 +871,7 @@
           {
             "name": "C-3 mid far right",
             "id": 8675448,
+            "region": "C-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -923,6 +945,7 @@
           {
             "name": "C-4 top far right",
             "id": 8675462,
+            "region": "C-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -996,6 +1019,7 @@
           {
             "name": "C-5 mid far left",
             "id": 8675484,
+            "region": "C-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1069,6 +1093,7 @@
           {
             "name": "C-6 top right-center",
             "id": 8675502,
+            "region": "C-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1084,6 +1109,7 @@
           {
             "name": "C-6 top right",
             "id": 8675503,
+            "region": "C-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1157,6 +1183,7 @@
           {
             "name": "D-2 mid left",
             "id": 8675527,
+            "region": "D-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1172,6 +1199,7 @@
           {
             "name": "D-2 top left-center",
             "id": 8675521,
+            "region": "D-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1267,6 +1295,7 @@
           {
             "name": "D-3 top far right",
             "id": 8675546,
+            "region": "D-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1340,6 +1369,7 @@
           {
             "name": "D-5 mid center",
             "id": 8675571,
+            "region": "D-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1355,6 +1385,7 @@
           {
             "name": "D-5 bottom far right",
             "id": 8675581,
+            "region": "D-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1428,6 +1459,7 @@
           {
             "name": "D-6 bottom far left",
             "id": 8675596,
+            "region": "D-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1443,6 +1475,7 @@
           {
             "name": "D-6 mid center",
             "id": 8675592,
+            "region": "D-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1595,6 +1628,7 @@
           {
             "name": "E-4 mid center",
             "id": 8675634,
+            "region": "E-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1668,6 +1702,7 @@
           {
             "name": "E-5 mid left",
             "id": 8675653,
+            "region": "E-5 SW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1719,6 +1754,7 @@
           {
             "name": "E-5 top far right",
             "id": 8675651,
+            "region": "E-5 NE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 2,
@@ -1770,6 +1806,7 @@
           {
             "name": "E-6 mid far left",
             "id": 8675673,
+            "region": "E-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1785,6 +1822,7 @@
           {
             "name": "E-6 bottom far left",
             "id": 8675680,
+            "region": "E-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1800,6 +1838,7 @@
           {
             "name": "E-6 bottom center",
             "id": 8675683,
+            "region": "E-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1815,6 +1854,7 @@
           {
             "name": "E-6 bottom right-center",
             "id": 8675684,
+            "region": "E-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1830,6 +1870,7 @@
           {
             "name": "E-6 bottom right",
             "id": 8675685,
+            "region": "E-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1903,6 +1944,7 @@
           {
             "name": "E-8 top right",
             "id": 8675692,
+            "region": "E-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -1918,6 +1960,7 @@
           {
             "name": "E-8 top far right",
             "id": 8675693,
+            "region": "E-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2013,6 +2056,7 @@
           {
             "name": "F-4 mid center",
             "id": 8675739,
+            "region": "F-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2086,6 +2130,7 @@
           {
             "name": "F-5 bottom left-center",
             "id": 8675766,
+            "region": "F-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2181,6 +2226,7 @@
           {
             "name": "F-7 mid far right",
             "id": 8675784,
+            "region": "F-7 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2254,6 +2300,7 @@
           {
             "name": "F-8 bottom center",
             "id": 8675809,
+            "region": "F-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2327,6 +2374,7 @@
           {
             "name": "G-4 mid left-center",
             "id": 8675843,
+            "region": "G-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2342,6 +2390,7 @@
           {
             "name": "G-4 mid center",
             "id": 8675844,
+            "region": "G-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2415,6 +2464,7 @@
           {
             "name": "G-5 top far left",
             "id": 8675855,
+            "region": "G-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2430,6 +2480,7 @@
           {
             "name": "G-5 top far right",
             "id": 8675861,
+            "region": "G-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2503,6 +2554,7 @@
           {
             "name": "G-6 bottom far left",
             "id": 8675890,
+            "region": "G-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2518,6 +2570,7 @@
           {
             "name": "G-6 bottom left",
             "id": 8675891,
+            "region": "G-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2613,6 +2666,7 @@
           {
             "name": "G-7 top far left",
             "id": 8675897,
+            "region": "G-7 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2628,6 +2682,7 @@
           {
             "name": "G-7 mid center",
             "id": 8675907,
+            "region": "G-7 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2780,6 +2835,7 @@
           {
             "name": "H-4 bottom far left",
             "id": 8675953,
+            "region": "H-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2795,6 +2851,7 @@
           {
             "name": "H-4 top left-center",
             "id": 8675941,
+            "region": "H-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2868,6 +2925,7 @@
           {
             "name": "H-5 top left",
             "id": 8675961,
+            "region": "H-5 NE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2919,6 +2977,7 @@
           {
             "name": "H-5 bottom left",
             "id": 8675975,
+            "region": "H-5 SW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -2992,6 +3051,7 @@
           {
             "name": "H-6 bottom far left",
             "id": 8675995,
+            "region": "H-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3007,6 +3067,7 @@
           {
             "name": "H-6 bottom left",
             "id": 8675996,
+            "region": "H-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3080,6 +3141,7 @@
           {
             "name": "H-7 top far left",
             "id": 8676002,
+            "region": "H-7 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3095,6 +3157,7 @@
           {
             "name": "H-7 bottom center",
             "id": 8676019,
+            "region": "H-7 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3168,6 +3231,7 @@
           {
             "name": "H-8 top right-center",
             "id": 8676027,
+            "region": "H-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3241,6 +3305,7 @@
           {
             "name": "I-4 bottom center",
             "id": 8676082,
+            "region": "I-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3336,6 +3401,7 @@
           {
             "name": "I-5 mid far right",
             "id": 8676099,
+            "region": "I-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3409,6 +3475,7 @@
           {
             "name": "I-6 mid right-center",
             "id": 8676118,
+            "region": "I-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3460,6 +3527,7 @@
           {
             "name": "I-8 top right",
             "id": 8676133,
+            "region": "I-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3475,6 +3543,7 @@
           {
             "name": "I-8 top far right",
             "id": 8676134,
+            "region": "I-8 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3649,6 +3718,7 @@
           {
             "name": "E-2 bottom left-center",
             "id": 8675619,
+            "region": "E-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3722,6 +3792,7 @@
           {
             "name": "F-2 top far left",
             "id": 8675708,
+            "region": "F-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3817,6 +3888,7 @@
           {
             "name": "G-2 mid left",
             "id": 8675821,
+            "region": "G-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3868,6 +3940,7 @@
           {
             "name": "I-2 bottom right",
             "id": 8676063,
+            "region": "I-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3883,6 +3956,7 @@
           {
             "name": "I-2 mid far right",
             "id": 8676057,
+            "region": "I-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -3898,6 +3972,7 @@
           {
             "name": "I-2 bottom far right",
             "id": 8676064,
+            "region": "I-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4094,6 +4169,7 @@
           {
             "name": "J-2 bottom right-center",
             "id": 8676167,
+            "region": "J-2 N",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4109,6 +4185,7 @@
           {
             "name": "J-2 mid center",
             "id": 8676159,
+            "region": "J-2 N",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4124,6 +4201,7 @@
           {
             "name": "J-2 mid left",
             "id": 8676157,
+            "region": "J-2 N",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4175,6 +4253,7 @@
           {
             "name": "J-2 bottom center",
             "id": 8676166,
+            "region": "J-2 S",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4270,6 +4349,7 @@
           {
             "name": "J-3 mid far left",
             "id": 8676177,
+            "region": "J-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4285,6 +4365,7 @@
           {
             "name": "J-3 mid center",
             "id": 8676180,
+            "region": "J-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4358,6 +4439,7 @@
           {
             "name": "J-4 bottom left-center",
             "id": 8676207,
+            "region": "J-4 S",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4409,6 +4491,7 @@
           {
             "name": "J-4 top left",
             "id": 8676192,
+            "region": "J-4 N",
             "crystal": null,
             "access_rule": null,
             "progress_type": 2,
@@ -4517,6 +4600,7 @@
           {
             "name": "J-5 top left",
             "id": 8676213,
+            "region": "J-5 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4532,6 +4616,7 @@
           {
             "name": "J-5 mid left-center",
             "id": 8676221,
+            "region": "J-5 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4583,6 +4668,7 @@
           {
             "name": "J-6 bottom far left",
             "id": 8676863,
+            "region": "J-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4634,6 +4720,7 @@
           {
             "name": "K-2 bottom right-center",
             "id": 8676251,
+            "region": "K-2 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4649,6 +4736,7 @@
           {
             "name": "K-2 bottom far right",
             "id": 8676253,
+            "region": "K-2 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4664,6 +4752,7 @@
           {
             "name": "K-2 bottom right",
             "id": 8676252,
+            "region": "K-2 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4737,6 +4826,7 @@
           {
             "name": "K-2 mid far left",
             "id": 8676240,
+            "region": "K-2 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4752,6 +4842,7 @@
           {
             "name": "K-2 mid left",
             "id": 8676241,
+            "region": "K-2 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4847,6 +4938,7 @@
           {
             "name": "K-3 top left-center",
             "id": 8676256,
+            "region": "K-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4862,6 +4954,7 @@
           {
             "name": "K-3 mid right-center",
             "id": 8676265,
+            "region": "K-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4957,6 +5050,7 @@
           {
             "name": "K-4 mid left-center",
             "id": 8676284,
+            "region": "K-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -4972,6 +5066,7 @@
           {
             "name": "K-4 bottom center",
             "id": 8676292,
+            "region": "K-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5067,6 +5162,7 @@
           {
             "name": "K-5 top center",
             "id": 8676299,
+            "region": "K-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5082,6 +5178,7 @@
           {
             "name": "K-5 top right-center",
             "id": 8676300,
+            "region": "K-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5190,6 +5287,7 @@
           {
             "name": "K-6 mid left-center",
             "id": 8676326,
+            "region": "K-6 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5205,6 +5303,7 @@
           {
             "name": "K-6 mid center",
             "id": 8676327,
+            "region": "K-6 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5313,6 +5412,7 @@
           {
             "name": "K-7 bottom left-center",
             "id": 8676354,
+            "region": "K-7 SW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5328,6 +5428,7 @@
           {
             "name": "K-7 bottom left",
             "id": 8676353,
+            "region": "K-7 SW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5379,6 +5480,7 @@
           {
             "name": "L-2 top far left",
             "id": 8676359,
+            "region": "L-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5394,6 +5496,7 @@
           {
             "name": "L-2 mid right",
             "id": 8676371,
+            "region": "L-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5409,6 +5512,7 @@
           {
             "name": "L-2 top left",
             "id": 8676360,
+            "region": "L-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5424,6 +5528,7 @@
           {
             "name": "L-2 top left-center",
             "id": 8676361,
+            "region": "L-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5439,6 +5544,7 @@
           {
             "name": "L-2 mid far right",
             "id": 8676372,
+            "region": "L-2 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5512,6 +5618,7 @@
           {
             "name": "L-3 top left",
             "id": 8676381,
+            "region": "L-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5607,6 +5714,7 @@
           {
             "name": "L-4 bottom right-center",
             "id": 8676419,
+            "region": "L-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5622,6 +5730,7 @@
           {
             "name": "L-4 bottom right",
             "id": 8676420,
+            "region": "L-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5695,6 +5804,7 @@
           {
             "name": "L-5 top left",
             "id": 8676423,
+            "region": "L-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5710,6 +5820,7 @@
           {
             "name": "L-5 bottom left-center",
             "id": 8676438,
+            "region": "L-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5783,6 +5894,7 @@
           {
             "name": "L-6 mid far right",
             "id": 8676456,
+            "region": "L-6 S",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5798,6 +5910,7 @@
           {
             "name": "L-6 mid right-center",
             "id": 8676454,
+            "region": "L-6 S",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -5906,6 +6019,7 @@
           {
             "name": "L-7 mid left",
             "id": 8676472,
+            "region": "L-7 S",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6036,6 +6150,7 @@
           {
             "name": "M-2 mid right-center",
             "id": 8676496,
+            "region": "M-2 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6087,6 +6202,7 @@
           {
             "name": "M-2 bottom far left",
             "id": 8676499,
+            "region": "M-2 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6182,6 +6298,7 @@
           {
             "name": "M-3 bottom right-center",
             "id": 8676524,
+            "region": "M-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6233,6 +6350,7 @@
           {
             "name": "M-4 mid left",
             "id": 8676535,
+            "region": "M-4 S",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6385,6 +6503,7 @@
           {
             "name": "M-5 top left-center",
             "id": 8676550,
+            "region": "M-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6480,6 +6599,7 @@
           {
             "name": "M-6 bottom center",
             "id": 8676586,
+            "region": "M-6 NW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6575,6 +6695,7 @@
           {
             "name": "M-6 bottom right-center",
             "id": 8676587,
+            "region": "M-6 SE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6670,6 +6791,7 @@
           {
             "name": "M-7 mid far left",
             "id": 8676597,
+            "region": "M-7 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6743,6 +6865,7 @@
           {
             "name": "M-7 top far right",
             "id": 8676596,
+            "region": "M-7 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6816,6 +6939,7 @@
           {
             "name": "N-2 top center",
             "id": 8676614,
+            "region": "N-2 NE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6831,6 +6955,7 @@
           {
             "name": "N-2 top far left",
             "id": 8676611,
+            "region": "N-2 NE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6846,6 +6971,7 @@
           {
             "name": "N-2 bottom right",
             "id": 8676630,
+            "region": "N-2 NE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6861,6 +6987,7 @@
           {
             "name": "N-2 top left",
             "id": 8676612,
+            "region": "N-2 NE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6934,6 +7061,7 @@
           {
             "name": "N-2 bottom center",
             "id": 8676628,
+            "region": "N-2 SW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -6949,6 +7077,7 @@
           {
             "name": "N-2 bottom left",
             "id": 8676626,
+            "region": "N-2 SW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7044,6 +7173,7 @@
           {
             "name": "N-3 mid right",
             "id": 8676644,
+            "region": "N-3 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7161,6 +7291,7 @@
           {
             "name": "N-4 bottom far left",
             "id": 8676667,
+            "region": "N-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7176,6 +7307,7 @@
           {
             "name": "N-4 mid left",
             "id": 8676661,
+            "region": "N-4 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7271,6 +7403,7 @@
           {
             "name": "N-5 bottom center",
             "id": 8676691,
+            "region": "N-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7344,6 +7477,7 @@
           {
             "name": "N-6 top far left",
             "id": 8676695,
+            "region": "N-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7359,6 +7493,7 @@
           {
             "name": "N-6 top right-center",
             "id": 8676699,
+            "region": "N-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7410,6 +7545,7 @@
           {
             "name": "N-7 top left-center",
             "id": 8676718,
+            "region": "N-7 N",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7483,6 +7619,7 @@
           {
             "name": "N-7 bottom far left",
             "id": 8676730,
+            "region": "N-7 S",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7556,6 +7693,7 @@
           {
             "name": "O-3 mid right",
             "id": 8676749,
+            "region": "O-3 NW",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7629,6 +7767,7 @@
           {
             "name": "O-3 bottom center",
             "id": 8676754,
+            "region": "O-3 SE",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7680,6 +7819,7 @@
           {
             "name": "O-4 mid center",
             "id": 8676768,
+            "region": "O-4 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7753,6 +7893,7 @@
           {
             "name": "O-4 mid far left",
             "id": 8676765,
+            "region": "O-4 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7826,6 +7967,7 @@
           {
             "name": "O-5 mid far left",
             "id": 8676786,
+            "region": "O-5 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7899,6 +8041,7 @@
           {
             "name": "O-6 mid right",
             "id": 8676812,
+            "region": "O-6 ",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -7950,6 +8093,7 @@
           {
             "name": "O-7 bottom center",
             "id": 8676838,
+            "region": "O-7 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -8023,6 +8167,7 @@
           {
             "name": "O-7 top right",
             "id": 8676826,
+            "region": "O-7 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -8096,6 +8241,7 @@
           {
             "name": "P-3 bottom center",
             "id": 8676859,
+            "region": "P-3 E",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -8147,6 +8293,7 @@
           {
             "name": "P-3 top far left",
             "id": 8676842,
+            "region": "P-3 W",
             "crystal": null,
             "access_rule": null,
             "progress_type": 1,
@@ -8426,9 +8573,22 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "JJ",
+        "Red ID Card",
+        "Champ",
+        "Opa-Opa",
+        "Apple",
+        "Scope",
+        "Floppy Disk",
+        "ID Card",
+        "Zillion",
+        "Empty",
+        "Win",
+        "Bread"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

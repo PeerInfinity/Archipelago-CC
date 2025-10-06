@@ -46,24 +46,10 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "extractor"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "extractor_chain"
-                    }
+                    "Chaining Extractor",
+                    "Extractor"
                   ]
                 }
               ]
@@ -96,208 +82,33 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "belt"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "balancer"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "comp_merger"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "comp_splitter"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "tunnel"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "tunnel_tier_ii"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "extractor"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "extractor_chain"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "cutter"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "cutter_quad"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "rotator"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "rotator_ccw"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "rotator_180"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "stacker"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "painter"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "painter_double"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "painter_quad"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "color_mixer"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "trash"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "belt_reader"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "storage"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "switch"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "item_filter"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "display"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "wires"
-                    }
+                    "Balancer",
+                    "Belt",
+                    "Belt Reader",
+                    "Chaining Extractor",
+                    "Color Mixer",
+                    "Compact Merger",
+                    "Compact Splitter",
+                    "Cutter",
+                    "Display",
+                    "Double Painter",
+                    "Extractor",
+                    "Item Filter",
+                    "Painter",
+                    "Quad Cutter",
+                    "Quad Painter",
+                    "Rotator",
+                    "Rotator (180\u00b0)",
+                    "Rotator (CCW)",
+                    "Stacker",
+                    "Storage",
+                    "Switch",
+                    "Trash",
+                    "Tunnel",
+                    "Tunnel Tier II",
+                    "Wires"
                   ]
                 }
               ]
@@ -312,6 +123,7 @@
           {
             "name": "My eyes no longer hurt",
             "id": 20013205,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -330,6 +142,7 @@
           {
             "name": "Getting into it",
             "id": 20013229,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -348,6 +161,7 @@
           {
             "name": "GPS",
             "id": 20013249,
+            "region": "Menu",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -389,6 +203,7 @@
           {
             "name": "I need trains",
             "id": 20013247,
+            "region": "Shape transportation",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -434,32 +249,11 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "belt"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "comp_merger"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "comp_splitter"
-                    }
+                    "Belt",
+                    "Compact Merger",
+                    "Compact Splitter"
                   ]
                 }
               ]
@@ -573,24 +367,10 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "painter"
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "ITEMS"
-                      },
-                      "attr": "painter_double"
-                    }
+                    "Double Painter",
+                    "Painter"
                   ]
                 }
               ]
@@ -954,6 +734,7 @@
           {
             "name": "Level 1",
             "id": 20010710,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -972,6 +753,7 @@
           {
             "name": "Level 1 Additional",
             "id": 20010707,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -990,6 +772,7 @@
           {
             "name": "Level 2",
             "id": 20010711,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1008,6 +791,7 @@
           {
             "name": "Level 3",
             "id": 20010712,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1026,6 +810,7 @@
           {
             "name": "Belt Upgrade Tier II",
             "id": 20011209,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1044,6 +829,7 @@
           {
             "name": "Miner Upgrade Tier II",
             "id": 20011708,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1062,6 +848,7 @@
           {
             "name": "Processors Upgrade Tier II",
             "id": 20012207,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1080,6 +867,7 @@
           {
             "name": "Painting Upgrade Tier II",
             "id": 20012706,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1098,6 +886,7 @@
           {
             "name": "It's a mess",
             "id": 20013221,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1116,6 +905,7 @@
           {
             "name": "Oops",
             "id": 20013243,
+            "region": "Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1172,6 +962,7 @@
           {
             "name": "Level 4",
             "id": 20010713,
+            "region": "Levels with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1190,6 +981,7 @@
           {
             "name": "Level 5",
             "id": 20010714,
+            "region": "Levels with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1208,6 +1000,7 @@
           {
             "name": "Level 6",
             "id": 20010715,
+            "region": "Levels with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1226,6 +1019,7 @@
           {
             "name": "Level 7",
             "id": 20010716,
+            "region": "Levels with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1282,6 +1076,7 @@
           {
             "name": "Level 8",
             "id": 20010717,
+            "region": "Levels with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1300,6 +1095,7 @@
           {
             "name": "Level 9",
             "id": 20010718,
+            "region": "Levels with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1318,6 +1114,7 @@
           {
             "name": "Level 10",
             "id": 20010719,
+            "region": "Levels with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1336,6 +1133,7 @@
           {
             "name": "Level 11",
             "id": 20010720,
+            "region": "Levels with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1392,6 +1190,7 @@
           {
             "name": "Level 12",
             "id": 20010721,
+            "region": "Levels with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1410,6 +1209,7 @@
           {
             "name": "Level 13",
             "id": 20010722,
+            "region": "Levels with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1428,6 +1228,7 @@
           {
             "name": "Level 14",
             "id": 20010723,
+            "region": "Levels with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1446,6 +1247,7 @@
           {
             "name": "Level 15",
             "id": 20010724,
+            "region": "Levels with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1502,6 +1304,7 @@
           {
             "name": "Level 16",
             "id": 20010725,
+            "region": "Levels with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1520,6 +1323,7 @@
           {
             "name": "Level 17",
             "id": 20010726,
+            "region": "Levels with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1538,6 +1342,7 @@
           {
             "name": "Level 18",
             "id": 20010727,
+            "region": "Levels with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1556,6 +1361,7 @@
           {
             "name": "Level 19",
             "id": 20010728,
+            "region": "Levels with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1597,6 +1403,7 @@
           {
             "name": "Level 20 Additional",
             "id": 20010708,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1615,6 +1422,7 @@
           {
             "name": "Level 20 Additional 2",
             "id": 20010709,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1633,6 +1441,7 @@
           {
             "name": "Level 20",
             "id": 20010729,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1651,6 +1460,7 @@
           {
             "name": "Level 21",
             "id": 20010730,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1669,6 +1479,7 @@
           {
             "name": "Level 22",
             "id": 20010731,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1687,6 +1498,7 @@
           {
             "name": "Level 23",
             "id": 20010732,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1705,6 +1517,7 @@
           {
             "name": "Level 24",
             "id": 20010733,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1723,6 +1536,7 @@
           {
             "name": "Level 25",
             "id": 20010734,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1741,6 +1555,7 @@
           {
             "name": "Wires",
             "id": 20013210,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1759,6 +1574,7 @@
           {
             "name": "Goal",
             "id": null,
+            "region": "Levels with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1815,6 +1631,7 @@
           {
             "name": "Belt Upgrade Tier III",
             "id": 20011210,
+            "region": "Upgrades with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1833,6 +1650,7 @@
           {
             "name": "Miner Upgrade Tier III",
             "id": 20011709,
+            "region": "Upgrades with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1851,6 +1669,7 @@
           {
             "name": "Processors Upgrade Tier III",
             "id": 20012208,
+            "region": "Upgrades with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1869,6 +1688,7 @@
           {
             "name": "Painting Upgrade Tier III",
             "id": 20012707,
+            "region": "Upgrades with 1 building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1925,6 +1745,7 @@
           {
             "name": "Belt Upgrade Tier IV",
             "id": 20011211,
+            "region": "Upgrades with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1943,6 +1764,7 @@
           {
             "name": "Miner Upgrade Tier IV",
             "id": 20011710,
+            "region": "Upgrades with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1961,6 +1783,7 @@
           {
             "name": "Processors Upgrade Tier IV",
             "id": 20012209,
+            "region": "Upgrades with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1979,6 +1802,7 @@
           {
             "name": "Painting Upgrade Tier IV",
             "id": 20012708,
+            "region": "Upgrades with 2 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2035,6 +1859,7 @@
           {
             "name": "Belt Upgrade Tier V",
             "id": 20011212,
+            "region": "Upgrades with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2053,6 +1878,7 @@
           {
             "name": "Miner Upgrade Tier V",
             "id": 20011711,
+            "region": "Upgrades with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2071,6 +1897,7 @@
           {
             "name": "Processors Upgrade Tier V",
             "id": 20012210,
+            "region": "Upgrades with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2089,6 +1916,7 @@
           {
             "name": "Painting Upgrade Tier V",
             "id": 20012709,
+            "region": "Upgrades with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2107,6 +1935,7 @@
           {
             "name": "Faster",
             "id": 20013222,
+            "region": "Upgrades with 3 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2163,6 +1992,7 @@
           {
             "name": "Belt Upgrade Tier VI",
             "id": 20011213,
+            "region": "Upgrades with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2181,6 +2011,7 @@
           {
             "name": "Miner Upgrade Tier VI",
             "id": 20011712,
+            "region": "Upgrades with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2199,6 +2030,7 @@
           {
             "name": "Processors Upgrade Tier VI",
             "id": 20012211,
+            "region": "Upgrades with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2217,6 +2049,7 @@
           {
             "name": "Painting Upgrade Tier VI",
             "id": 20012710,
+            "region": "Upgrades with 4 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2258,6 +2091,7 @@
           {
             "name": "Belt Upgrade Tier VII",
             "id": 20011214,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2276,6 +2110,7 @@
           {
             "name": "Miner Upgrade Tier VII",
             "id": 20011713,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2294,6 +2129,7 @@
           {
             "name": "Processors Upgrade Tier VII",
             "id": 20012212,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2312,6 +2148,7 @@
           {
             "name": "Painting Upgrade Tier VII",
             "id": 20012711,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2330,6 +2167,7 @@
           {
             "name": "Belt Upgrade Tier VIII",
             "id": 20011215,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2348,6 +2186,7 @@
           {
             "name": "Miner Upgrade Tier VIII",
             "id": 20011714,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2366,6 +2205,7 @@
           {
             "name": "Processors Upgrade Tier VIII",
             "id": 20012213,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2384,6 +2224,7 @@
           {
             "name": "Painting Upgrade Tier VIII",
             "id": 20012712,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2402,6 +2243,7 @@
           {
             "name": "Even faster",
             "id": 20013223,
+            "region": "Upgrades with 5 buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2443,6 +2285,7 @@
           {
             "name": "Painter",
             "id": 20013206,
+            "region": "Achievements with (double) painter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2484,6 +2327,7 @@
           {
             "name": "Cutter",
             "id": 20013207,
+            "region": "Achievements with half cutter",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2525,6 +2369,7 @@
           {
             "name": "Rotater",
             "id": 20013208,
+            "region": "Achievements with clockwise rotator",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2566,6 +2411,7 @@
           {
             "name": "Wait, they stack?",
             "id": 20013209,
+            "region": "Achievements with stacker",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2584,6 +2430,7 @@
           {
             "name": "Stack overflow",
             "id": 20013220,
+            "region": "Achievements with stacker",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2625,6 +2472,7 @@
           {
             "name": "Storage",
             "id": 20013211,
+            "region": "Achievements with storage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2666,6 +2514,7 @@
           {
             "name": "Get rid of them",
             "id": 20013224,
+            "region": "Achievements with trash",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2707,6 +2556,7 @@
           {
             "name": "Now it's easy",
             "id": 20013230,
+            "region": "Achievements with blueprints",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2725,6 +2575,7 @@
           {
             "name": "Copy-Pasta",
             "id": 20013244,
+            "region": "Achievements with blueprints",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2766,6 +2617,7 @@
           {
             "name": "Computer Guy",
             "id": 20013231,
+            "region": "Achievements with wires",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2784,6 +2636,7 @@
           {
             "name": "The next dimension",
             "id": 20013242,
+            "region": "Achievements with wires",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2825,6 +2678,7 @@
           {
             "name": "Perfectionist",
             "id": 20013241,
+            "region": "Achievements with any placeable building",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2881,6 +2735,7 @@
           {
             "name": "The logo!",
             "id": 20013213,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2899,6 +2754,7 @@
           {
             "name": "To the moon",
             "id": 20013214,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2917,6 +2773,7 @@
           {
             "name": "It's piling up",
             "id": 20013215,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2935,6 +2792,7 @@
           {
             "name": "I'll use it later",
             "id": 20013216,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2953,6 +2811,7 @@
           {
             "name": "I've seen that before ...",
             "id": 20013245,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2971,6 +2830,7 @@
           {
             "name": "Memories from the past",
             "id": 20013246,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2989,6 +2849,7 @@
           {
             "name": "Preparing to launch",
             "id": 20013218,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3007,6 +2868,7 @@
           {
             "name": "SpaceY",
             "id": 20013219,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3025,6 +2887,7 @@
           {
             "name": "Efficiency 1",
             "id": 20013217,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3043,6 +2906,7 @@
           {
             "name": "Branding specialist 1",
             "id": 20013236,
+            "region": "Achievements with all main buildings",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3084,6 +2948,7 @@
           {
             "name": "Efficiency 2",
             "id": 20013235,
+            "region": "Achievements with x1.6 belt speed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3102,6 +2967,7 @@
           {
             "name": "Branding specialist 2",
             "id": 20013237,
+            "region": "Achievements with x1.6 belt speed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3158,6 +3024,7 @@
           {
             "name": "Shapesanity 1",
             "id": 20013250,
+            "region": "Shapesanity Full Uncolored",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3176,6 +3043,7 @@
           {
             "name": "Shapesanity 2",
             "id": 20013251,
+            "region": "Shapesanity Full Uncolored",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3194,6 +3062,7 @@
           {
             "name": "Shapesanity 3",
             "id": 20013252,
+            "region": "Shapesanity Full Uncolored",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3250,6 +3119,7 @@
           {
             "name": "Shapesanity 22",
             "id": 20013271,
+            "region": "Shapesanity Full Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3291,6 +3161,7 @@
           {
             "name": "Shapesanity 25",
             "id": 20013274,
+            "region": "Shapesanity Full Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3384,6 +3255,7 @@
           {
             "name": "Shapesanity 10",
             "id": 20013259,
+            "region": "Shapesanity Half Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3402,6 +3274,7 @@
           {
             "name": "Shapesanity 17",
             "id": 20013266,
+            "region": "Shapesanity Half Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3443,6 +3316,7 @@
           {
             "name": "Shapesanity 7",
             "id": 20013256,
+            "region": "Shapesanity Half Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3461,6 +3335,7 @@
           {
             "name": "Shapesanity 20",
             "id": 20013269,
+            "region": "Shapesanity Half Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3554,6 +3429,7 @@
           {
             "name": "Shapesanity 13",
             "id": 20013262,
+            "region": "Shapesanity Piece Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3572,6 +3448,7 @@
           {
             "name": "Shapesanity 14",
             "id": 20013263,
+            "region": "Shapesanity Piece Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3590,6 +3467,7 @@
           {
             "name": "Shapesanity 24",
             "id": 20013273,
+            "region": "Shapesanity Piece Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3631,6 +3509,7 @@
           {
             "name": "Shapesanity 8",
             "id": 20013257,
+            "region": "Shapesanity Piece Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3649,6 +3528,7 @@
           {
             "name": "Shapesanity 9",
             "id": 20013258,
+            "region": "Shapesanity Piece Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3667,6 +3547,7 @@
           {
             "name": "Shapesanity 18",
             "id": 20013267,
+            "region": "Shapesanity Piece Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3723,6 +3604,7 @@
           {
             "name": "Shapesanity 36",
             "id": 20013285,
+            "region": "Shapesanity Stitched Uncolored",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3779,6 +3661,7 @@
           {
             "name": "Shapesanity 11",
             "id": 20013260,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3797,6 +3680,7 @@
           {
             "name": "Shapesanity 12",
             "id": 20013261,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3815,6 +3699,7 @@
           {
             "name": "Shapesanity 19",
             "id": 20013268,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3833,6 +3718,7 @@
           {
             "name": "Shapesanity 21",
             "id": 20013270,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3851,6 +3737,7 @@
           {
             "name": "Shapesanity 23",
             "id": 20013272,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3869,6 +3756,7 @@
           {
             "name": "Shapesanity 29",
             "id": 20013278,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3887,6 +3775,7 @@
           {
             "name": "Shapesanity 31",
             "id": 20013280,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3905,6 +3794,7 @@
           {
             "name": "Shapesanity 32",
             "id": 20013281,
+            "region": "Shapesanity Stitched Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3946,6 +3836,7 @@
           {
             "name": "Shapesanity 6",
             "id": 20013255,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3964,6 +3855,7 @@
           {
             "name": "Shapesanity 15",
             "id": 20013264,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3982,6 +3874,7 @@
           {
             "name": "Shapesanity 27",
             "id": 20013276,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4000,6 +3893,7 @@
           {
             "name": "Shapesanity 30",
             "id": 20013279,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4018,6 +3912,7 @@
           {
             "name": "Shapesanity 33",
             "id": 20013282,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4036,6 +3931,7 @@
           {
             "name": "Shapesanity 34",
             "id": 20013283,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4054,6 +3950,7 @@
           {
             "name": "Shapesanity 35",
             "id": 20013284,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4072,6 +3969,7 @@
           {
             "name": "Shapesanity 38",
             "id": 20013287,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4090,6 +3988,7 @@
           {
             "name": "Shapesanity 40",
             "id": 20013289,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4108,6 +4007,7 @@
           {
             "name": "Shapesanity 41",
             "id": 20013290,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4126,6 +4026,7 @@
           {
             "name": "Shapesanity 42",
             "id": 20013291,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4144,6 +4045,7 @@
           {
             "name": "Shapesanity 43",
             "id": 20013292,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4162,6 +4064,7 @@
           {
             "name": "Shapesanity 44",
             "id": 20013293,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4180,6 +4083,7 @@
           {
             "name": "Shapesanity 45",
             "id": 20013294,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4198,6 +4102,7 @@
           {
             "name": "Shapesanity 46",
             "id": 20013295,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4216,6 +4121,7 @@
           {
             "name": "Shapesanity 47",
             "id": 20013296,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4234,6 +4140,7 @@
           {
             "name": "Shapesanity 48",
             "id": 20013297,
+            "region": "Shapesanity Stitched Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4290,6 +4197,7 @@
           {
             "name": "Shapesanity 4",
             "id": 20013253,
+            "region": "Shapesanity East Windmill Uncolored",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4346,6 +4254,7 @@
           {
             "name": "Shapesanity 16",
             "id": 20013265,
+            "region": "Shapesanity East Windmill Painted",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4387,6 +4296,7 @@
           {
             "name": "Shapesanity 5",
             "id": 20013254,
+            "region": "Shapesanity East Windmill Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4502,6 +4412,7 @@
           {
             "name": "Shapesanity 37",
             "id": 20013286,
+            "region": "Shapesanity Half-Half Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4691,6 +4602,7 @@
           {
             "name": "Shapesanity 49",
             "id": 20013298,
+            "region": "Shapesanity Colorful Half-Half Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4709,6 +4621,7 @@
           {
             "name": "Shapesanity 50",
             "id": 20013299,
+            "region": "Shapesanity Colorful Half-Half Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4824,6 +4737,7 @@
           {
             "name": "Shapesanity 26",
             "id": 20013275,
+            "region": "Shapesanity Colorful Full Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4842,6 +4756,7 @@
           {
             "name": "Shapesanity 28",
             "id": 20013277,
+            "region": "Shapesanity Colorful Full Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4860,6 +4775,7 @@
           {
             "name": "Shapesanity 39",
             "id": 20013288,
+            "region": "Shapesanity Colorful Full Mixed",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6038,24 +5954,224 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Belt Upgrades",
-      "Bundles",
-      "Everything",
-      "Gameplay Mechanics",
-      "Goal Buildings",
-      "Main Buildings",
-      "Miner Upgrades",
-      "Most Important Buildings",
-      "Most Useful Buildings",
-      "Painting Upgrades",
-      "Processing Buildings",
-      "Processors Upgrades",
-      "Top Row Buildings",
-      "Traps",
-      "Upgrades",
-      "Wires Layer Buildings"
-    ]
+    "1": {
+      "Main Buildings": [
+        "Painter",
+        "Rotator",
+        "Stacker",
+        "Cutter",
+        "Color Mixer"
+      ],
+      "Processing Buildings": [
+        "Double Painter",
+        "Stacker",
+        "Rotator (CCW)",
+        "Cutter",
+        "Quad Cutter",
+        "Color Mixer",
+        "Painter",
+        "Rotator (180\u00b0)",
+        "Quad Painter",
+        "Rotator"
+      ],
+      "Goal Buildings": [
+        "Double Painter",
+        "Wires",
+        "Stacker",
+        "Rotator (CCW)",
+        "Cutter",
+        "Constant Signal",
+        "Switch",
+        "Color Mixer",
+        "Quad Cutter",
+        "Painter",
+        "Quad Painter",
+        "Rotator"
+      ],
+      "Most Useful Buildings": [
+        "Compact Splitter",
+        "Chaining Extractor",
+        "Compact Merger",
+        "Balancer",
+        "Tunnel Tier II",
+        "Tunnel",
+        "Trash"
+      ],
+      "Most Important Buildings": [
+        "Extractor",
+        "Belt"
+      ],
+      "Top Row Buildings": [
+        "Belt Reader",
+        "Storage",
+        "Item Filter",
+        "Display",
+        "Switch"
+      ],
+      "Wires Layer Buildings": [
+        "Logic Gates",
+        "Wires",
+        "Constant Signal",
+        "Virtual Processing"
+      ],
+      "Gameplay Mechanics": [
+        "Blueprints",
+        "Wires"
+      ],
+      "Upgrades": [
+        "Rising Processors Upgrade",
+        "Belt Upgrade Trap",
+        "Rising Belt Upgrade",
+        "Big Random Upgrade",
+        "Demonic Miner Upgrade Trap",
+        "Gigantic Miner Upgrade",
+        "Demonic Painting Upgrade Trap",
+        "Small Random Upgrade",
+        "Gigantic Belt Upgrade",
+        "Processors Upgrade Trap",
+        "Small Miner Upgrade",
+        "Gigantic Processors Upgrade",
+        "Small Painting Upgrade",
+        "Miner Upgrade Trap",
+        "Demonic Processors Upgrade Trap",
+        "Demonic Belt Upgrade Trap",
+        "Small Belt Upgrade",
+        "Painting Upgrade Trap",
+        "Big Processors Upgrade",
+        "Small Processors Upgrade",
+        "Big Painting Upgrade",
+        "Big Miner Upgrade",
+        "Rising Painting Upgrade",
+        "Rising Miner Upgrade",
+        "Gigantic Painting Upgrade",
+        "Big Belt Upgrade"
+      ],
+      "Painting Upgrades": [
+        "Demonic Painting Upgrade Trap",
+        "Big Painting Upgrade",
+        "Painting Upgrade Trap",
+        "Rising Painting Upgrade",
+        "Gigantic Painting Upgrade",
+        "Small Painting Upgrade"
+      ],
+      "Miner Upgrades": [
+        "Gigantic Miner Upgrade",
+        "Miner Upgrade Trap",
+        "Big Miner Upgrade",
+        "Rising Miner Upgrade",
+        "Demonic Miner Upgrade Trap",
+        "Small Miner Upgrade"
+      ],
+      "Processors Upgrades": [
+        "Rising Processors Upgrade",
+        "Demonic Processors Upgrade Trap",
+        "Small Processors Upgrade",
+        "Processors Upgrade Trap",
+        "Big Processors Upgrade",
+        "Gigantic Processors Upgrade"
+      ],
+      "Belt Upgrades": [
+        "Belt Upgrade Trap",
+        "Rising Belt Upgrade",
+        "Demonic Belt Upgrade Trap",
+        "Small Belt Upgrade",
+        "Gigantic Belt Upgrade",
+        "Big Belt Upgrade"
+      ],
+      "Bundles": [
+        "Upgrade Shapes Bundle",
+        "Blueprint Shapes Bundle",
+        "Level Shapes Bundle"
+      ],
+      "Traps": [
+        "Level Shapes Draining Trap",
+        "Belt Upgrade Trap",
+        "Inventory Draining Trap",
+        "Demonic Miner Upgrade Trap",
+        "Demonic Painting Upgrade Trap",
+        "Malfunctioning Trap",
+        "Throttled Building Trap",
+        "Processors Upgrade Trap",
+        "Blueprint Shapes Draining Trap",
+        "Miner Upgrade Trap",
+        "Demonic Processors Upgrade Trap",
+        "Inflation Trap",
+        "Painting Upgrade Trap",
+        "Demonic Belt Upgrade Trap",
+        "Upgrade Shapes Draining Trap",
+        "Locked Building Trap",
+        "Belts Clearing Trap"
+      ],
+      "Everything": [
+        "Logic Gates",
+        "Level Shapes Draining Trap",
+        "Stacker",
+        "Big Random Upgrade",
+        "Quad Cutter",
+        "Painter",
+        "Gigantic Belt Upgrade",
+        "Tunnel Tier II",
+        "Blueprints",
+        "Tunnel",
+        "Quad Painter",
+        "Small Miner Upgrade",
+        "Miner Upgrade Trap",
+        "Small Processors Upgrade",
+        "Big Painting Upgrade",
+        "Rising Miner Upgrade",
+        "Big Belt Upgrade",
+        "Belts Clearing Trap",
+        "Wires",
+        "Rotator (CCW)",
+        "Display",
+        "Demonic Miner Upgrade Trap",
+        "Switch",
+        "Malfunctioning Trap",
+        "Throttled Building Trap",
+        "Item Filter",
+        "Rotator",
+        "Small Painting Upgrade",
+        "Blueprint Shapes Draining Trap",
+        "Virtual Processing",
+        "Double Painter",
+        "Balancer",
+        "Small Belt Upgrade",
+        "Extractor",
+        "Big Processors Upgrade",
+        "Color Mixer",
+        "Storage",
+        "Belt Upgrade Trap",
+        "Rising Belt Upgrade",
+        "Constant Signal",
+        "Belt Reader",
+        "Small Random Upgrade",
+        "Gigantic Processors Upgrade",
+        "Upgrade Shapes Bundle",
+        "Compact Merger",
+        "Demonic Belt Upgrade Trap",
+        "Inflation Trap",
+        "Upgrade Shapes Draining Trap",
+        "Chaining Extractor",
+        "Big Miner Upgrade",
+        "Rising Painting Upgrade",
+        "Locked Building Trap",
+        "Gigantic Painting Upgrade",
+        "Compact Splitter",
+        "Rising Processors Upgrade",
+        "Cutter",
+        "Inventory Draining Trap",
+        "Gigantic Miner Upgrade",
+        "Demonic Painting Upgrade Trap",
+        "Rotator (180\u00b0)",
+        "Level Shapes Bundle",
+        "Processors Upgrade Trap",
+        "Trash",
+        "Belt",
+        "Demonic Processors Upgrade Trap",
+        "Painting Upgrade Trap",
+        "Blueprint Shapes Bundle"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

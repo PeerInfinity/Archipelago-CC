@@ -1492,6 +1492,7 @@
           {
             "name": "Hangar (E1M1) - Mega Armor",
             "id": 351000,
+            "region": "Hangar (E1M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1510,6 +1511,7 @@
           {
             "name": "Hangar (E1M1) - Armor",
             "id": 351001,
+            "region": "Hangar (E1M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1528,6 +1530,7 @@
           {
             "name": "Hangar (E1M1) - Shotgun",
             "id": 351002,
+            "region": "Hangar (E1M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1546,6 +1549,7 @@
           {
             "name": "Hangar (E1M1) - Exit",
             "id": 351331,
+            "region": "Hangar (E1M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1617,6 +1621,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Shotgun",
             "id": 351004,
+            "region": "Nuclear Plant (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1635,6 +1640,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Armor",
             "id": 351005,
+            "region": "Nuclear Plant (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1653,6 +1659,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Supercharge",
             "id": 351006,
+            "region": "Nuclear Plant (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1671,6 +1678,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Chaingun",
             "id": 351007,
+            "region": "Nuclear Plant (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1689,6 +1697,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Red keycard",
             "id": 351008,
+            "region": "Nuclear Plant (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1707,6 +1716,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Armor 2",
             "id": 351009,
+            "region": "Nuclear Plant (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1725,6 +1735,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Backpack",
             "id": 351012,
+            "region": "Nuclear Plant (E1M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1786,6 +1797,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Chainsaw",
             "id": 351003,
+            "region": "Nuclear Plant (E1M2) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1804,6 +1816,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Mega Armor",
             "id": 351010,
+            "region": "Nuclear Plant (E1M2) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1822,6 +1835,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Armor 3",
             "id": 351011,
+            "region": "Nuclear Plant (E1M2) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1840,6 +1854,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Backpack 2",
             "id": 351013,
+            "region": "Nuclear Plant (E1M2) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1858,6 +1873,7 @@
           {
             "name": "Nuclear Plant (E1M2) - Exit",
             "id": 351337,
+            "region": "Nuclear Plant (E1M2) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1941,6 +1957,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Armor",
             "id": 351014,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1959,6 +1976,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Supercharge",
             "id": 351015,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1977,6 +1995,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Yellow keycard",
             "id": 351016,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1995,6 +2014,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Blue keycard",
             "id": 351017,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2013,6 +2033,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Shotgun 2",
             "id": 351019,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2031,6 +2052,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Armor 2",
             "id": 351020,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2049,6 +2071,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Rocket launcher",
             "id": 351021,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2067,6 +2090,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Chaingun",
             "id": 351022,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2085,6 +2109,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Backpack",
             "id": 351023,
+            "region": "Toxin Refinery (E1M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2175,6 +2200,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Chainsaw",
             "id": 351026,
+            "region": "Toxin Refinery (E1M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2193,6 +2219,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Armor 3",
             "id": 351028,
+            "region": "Toxin Refinery (E1M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2211,6 +2238,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Exit",
             "id": 351345,
+            "region": "Toxin Refinery (E1M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2272,6 +2300,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Supercharge 2",
             "id": 351024,
+            "region": "Toxin Refinery (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2290,6 +2319,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Partial invisibility",
             "id": 351025,
+            "region": "Toxin Refinery (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2308,6 +2338,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Mega Armor",
             "id": 351027,
+            "region": "Toxin Refinery (E1M3) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2395,6 +2426,7 @@
           {
             "name": "Toxin Refinery (E1M3) - Shotgun",
             "id": 351018,
+            "region": "Toxin Refinery (E1M3) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2549,6 +2581,7 @@
           {
             "name": "Command Control (E1M4) - Chaingun",
             "id": 351029,
+            "region": "Command Control (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2567,6 +2600,7 @@
           {
             "name": "Command Control (E1M4) - Blue keycard",
             "id": 351032,
+            "region": "Command Control (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2585,6 +2619,7 @@
           {
             "name": "Command Control (E1M4) - Supercharge",
             "id": 351033,
+            "region": "Command Control (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2603,6 +2638,7 @@
           {
             "name": "Command Control (E1M4) - Rocket launcher",
             "id": 351034,
+            "region": "Command Control (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2621,6 +2657,7 @@
           {
             "name": "Command Control (E1M4) - Mega Armor",
             "id": 351035,
+            "region": "Command Control (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2639,6 +2676,7 @@
           {
             "name": "Command Control (E1M4) - Shotgun",
             "id": 351037,
+            "region": "Command Control (E1M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2738,6 +2776,7 @@
           {
             "name": "Command Control (E1M4) - Armor",
             "id": 351030,
+            "region": "Command Control (E1M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2756,6 +2795,7 @@
           {
             "name": "Command Control (E1M4) - Yellow keycard",
             "id": 351031,
+            "region": "Command Control (E1M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2820,6 +2860,7 @@
           {
             "name": "Command Control (E1M4) - Exit",
             "id": 351323,
+            "region": "Command Control (E1M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2966,6 +3007,7 @@
           {
             "name": "Command Control (E1M4) - Backpack",
             "id": 351036,
+            "region": "Command Control (E1M4) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3047,6 +3089,7 @@
           {
             "name": "Phobos Lab (E1M5) - Yellow keycard",
             "id": 351039,
+            "region": "Phobos Lab (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3065,6 +3108,7 @@
           {
             "name": "Phobos Lab (E1M5) - Mega Armor",
             "id": 351040,
+            "region": "Phobos Lab (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3083,6 +3127,7 @@
           {
             "name": "Phobos Lab (E1M5) - Rocket launcher",
             "id": 351041,
+            "region": "Phobos Lab (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3101,6 +3146,7 @@
           {
             "name": "Phobos Lab (E1M5) - Shotgun",
             "id": 351042,
+            "region": "Phobos Lab (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3119,6 +3165,7 @@
           {
             "name": "Phobos Lab (E1M5) - Shotgun 2",
             "id": 351043,
+            "region": "Phobos Lab (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3137,6 +3184,7 @@
           {
             "name": "Phobos Lab (E1M5) - Shotgun 3",
             "id": 351050,
+            "region": "Phobos Lab (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3155,6 +3203,7 @@
           {
             "name": "Phobos Lab (E1M5) - Armor",
             "id": 351051,
+            "region": "Phobos Lab (E1M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3250,6 +3299,7 @@
           {
             "name": "Phobos Lab (E1M5) - Chainsaw",
             "id": 351044,
+            "region": "Phobos Lab (E1M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3268,6 +3318,7 @@
           {
             "name": "Phobos Lab (E1M5) - Supercharge",
             "id": 351045,
+            "region": "Phobos Lab (E1M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3286,6 +3337,7 @@
           {
             "name": "Phobos Lab (E1M5) - Mega Armor 2",
             "id": 351049,
+            "region": "Phobos Lab (E1M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3304,6 +3356,7 @@
           {
             "name": "Phobos Lab (E1M5) - Partial invisibility",
             "id": 351053,
+            "region": "Phobos Lab (E1M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3387,6 +3440,7 @@
           {
             "name": "Phobos Lab (E1M5) - Exit",
             "id": 351340,
+            "region": "Phobos Lab (E1M5) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3470,6 +3524,7 @@
           {
             "name": "Phobos Lab (E1M5) - Blue keycard",
             "id": 351038,
+            "region": "Phobos Lab (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3488,6 +3543,7 @@
           {
             "name": "Phobos Lab (E1M5) - Chaingun",
             "id": 351046,
+            "region": "Phobos Lab (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3506,6 +3562,7 @@
           {
             "name": "Phobos Lab (E1M5) - Backpack",
             "id": 351047,
+            "region": "Phobos Lab (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3524,6 +3581,7 @@
           {
             "name": "Phobos Lab (E1M5) - Computer area map",
             "id": 351048,
+            "region": "Phobos Lab (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3542,6 +3600,7 @@
           {
             "name": "Phobos Lab (E1M5) - Armor 2",
             "id": 351052,
+            "region": "Phobos Lab (E1M5) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3690,6 +3749,7 @@
           {
             "name": "Central Processing (E1M6) - Red keycard",
             "id": 351056,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3708,6 +3768,7 @@
           {
             "name": "Central Processing (E1M6) - Partial invisibility",
             "id": 351058,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3726,6 +3787,7 @@
           {
             "name": "Central Processing (E1M6) - Chaingun",
             "id": 351059,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3744,6 +3806,7 @@
           {
             "name": "Central Processing (E1M6) - Backpack",
             "id": 351060,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3762,6 +3825,7 @@
           {
             "name": "Central Processing (E1M6) - Rocket launcher",
             "id": 351061,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3780,6 +3844,7 @@
           {
             "name": "Central Processing (E1M6) - Shotgun",
             "id": 351062,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3798,6 +3863,7 @@
           {
             "name": "Central Processing (E1M6) - Armor",
             "id": 351064,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3816,6 +3882,7 @@
           {
             "name": "Central Processing (E1M6) - Armor 4",
             "id": 351070,
+            "region": "Central Processing (E1M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3870,6 +3937,7 @@
           {
             "name": "Central Processing (E1M6) - Supercharge",
             "id": 351054,
+            "region": "Central Processing (E1M6) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3888,6 +3956,7 @@
           {
             "name": "Central Processing (E1M6) - Blue keycard",
             "id": 351055,
+            "region": "Central Processing (E1M6) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3906,6 +3975,7 @@
           {
             "name": "Central Processing (E1M6) - Mega Armor",
             "id": 351063,
+            "region": "Central Processing (E1M6) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3924,6 +3994,7 @@
           {
             "name": "Central Processing (E1M6) - Partial invisibility 2",
             "id": 351067,
+            "region": "Central Processing (E1M6) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3978,6 +4049,7 @@
           {
             "name": "Central Processing (E1M6) - Yellow keycard",
             "id": 351057,
+            "region": "Central Processing (E1M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3996,6 +4068,7 @@
           {
             "name": "Central Processing (E1M6) - Backpack 2",
             "id": 351065,
+            "region": "Central Processing (E1M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4014,6 +4087,7 @@
           {
             "name": "Central Processing (E1M6) - Computer area map",
             "id": 351066,
+            "region": "Central Processing (E1M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4032,6 +4106,7 @@
           {
             "name": "Central Processing (E1M6) - Armor 2",
             "id": 351068,
+            "region": "Central Processing (E1M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4103,6 +4178,7 @@
           {
             "name": "Central Processing (E1M6) - Armor 3",
             "id": 351069,
+            "region": "Central Processing (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4121,6 +4197,7 @@
           {
             "name": "Central Processing (E1M6) - Exit",
             "id": 351321,
+            "region": "Central Processing (E1M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4175,6 +4252,7 @@
           {
             "name": "Central Processing (E1M6) - Supercharge 2",
             "id": 351071,
+            "region": "Central Processing (E1M6) Nukage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4193,6 +4271,7 @@
           {
             "name": "Central Processing (E1M6) - Backpack 3",
             "id": 351072,
+            "region": "Central Processing (E1M6) Nukage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4305,6 +4384,7 @@
           {
             "name": "Computer Station (E1M7) - Yellow keycard",
             "id": 351076,
+            "region": "Computer Station (E1M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4323,6 +4403,7 @@
           {
             "name": "Computer Station (E1M7) - Armor",
             "id": 351083,
+            "region": "Computer Station (E1M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4384,6 +4465,7 @@
           {
             "name": "Computer Station (E1M7) - Shotgun",
             "id": 351080,
+            "region": "Computer Station (E1M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4402,6 +4484,7 @@
           {
             "name": "Computer Station (E1M7) - Exit",
             "id": 351324,
+            "region": "Computer Station (E1M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4463,6 +4546,7 @@
           {
             "name": "Computer Station (E1M7) - Blue keycard",
             "id": 351077,
+            "region": "Computer Station (E1M7) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4591,6 +4675,7 @@
           {
             "name": "Computer Station (E1M7) - Chaingun",
             "id": 351073,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4609,6 +4694,7 @@
           {
             "name": "Computer Station (E1M7) - Computer area map",
             "id": 351074,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4627,6 +4713,7 @@
           {
             "name": "Computer Station (E1M7) - Supercharge",
             "id": 351075,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4645,6 +4732,7 @@
           {
             "name": "Computer Station (E1M7) - Red keycard",
             "id": 351078,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4663,6 +4751,7 @@
           {
             "name": "Computer Station (E1M7) - Chainsaw",
             "id": 351079,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4681,6 +4770,7 @@
           {
             "name": "Computer Station (E1M7) - Rocket launcher",
             "id": 351082,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4699,6 +4789,7 @@
           {
             "name": "Computer Station (E1M7) - Armor 2",
             "id": 351084,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4717,6 +4808,7 @@
           {
             "name": "Computer Station (E1M7) - Mega Armor",
             "id": 351085,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4735,6 +4827,7 @@
           {
             "name": "Computer Station (E1M7) - Backpack",
             "id": 351086,
+            "region": "Computer Station (E1M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4796,6 +4889,7 @@
           {
             "name": "Computer Station (E1M7) - Partial invisibility",
             "id": 351087,
+            "region": "Computer Station (E1M7) Courtyard",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4894,6 +4988,7 @@
           {
             "name": "Computer Station (E1M7) - Shotgun 2",
             "id": 351081,
+            "region": "Computer Station (E1M7) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4935,6 +5030,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Supercharge",
             "id": 351088,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4953,6 +5049,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Shotgun",
             "id": 351089,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4971,6 +5068,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Shotgun 2",
             "id": 351090,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4989,6 +5087,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Armor",
             "id": 351091,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5007,6 +5106,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Chaingun",
             "id": 351092,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5025,6 +5125,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Partial invisibility",
             "id": 351093,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5043,6 +5144,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Computer area map",
             "id": 351094,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5061,6 +5163,7 @@
           {
             "name": "Phobos Anomaly (E1M8) - Exit",
             "id": 351339,
+            "region": "Phobos Anomaly (E1M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5225,6 +5328,7 @@
           {
             "name": "Military Base (E1M9) - Yellow keycard",
             "id": 351095,
+            "region": "Military Base (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5243,6 +5347,7 @@
           {
             "name": "Military Base (E1M9) - Chaingun",
             "id": 351097,
+            "region": "Military Base (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5261,6 +5366,7 @@
           {
             "name": "Military Base (E1M9) - Armor",
             "id": 351098,
+            "region": "Military Base (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5279,6 +5385,7 @@
           {
             "name": "Military Base (E1M9) - Rocket launcher",
             "id": 351099,
+            "region": "Military Base (E1M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5340,6 +5447,7 @@
           {
             "name": "Military Base (E1M9) - Backpack",
             "id": 351101,
+            "region": "Military Base (E1M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5358,6 +5466,7 @@
           {
             "name": "Military Base (E1M9) - Shotgun",
             "id": 351102,
+            "region": "Military Base (E1M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5376,6 +5485,7 @@
           {
             "name": "Military Base (E1M9) - Chainsaw",
             "id": 351103,
+            "region": "Military Base (E1M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5394,6 +5504,7 @@
           {
             "name": "Military Base (E1M9) - Exit",
             "id": 351335,
+            "region": "Military Base (E1M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5448,6 +5559,7 @@
           {
             "name": "Military Base (E1M9) - Blue keycard",
             "id": 351100,
+            "region": "Military Base (E1M9) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5509,6 +5621,7 @@
           {
             "name": "Military Base (E1M9) - Red keycard",
             "id": 351096,
+            "region": "Military Base (E1M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5609,6 +5722,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Plasma gun",
             "id": 351104,
+            "region": "Deimos Anomaly (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5627,6 +5741,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Blue keycard",
             "id": 351105,
+            "region": "Deimos Anomaly (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5645,6 +5760,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Shotgun",
             "id": 351106,
+            "region": "Deimos Anomaly (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5663,6 +5779,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Armor",
             "id": 351107,
+            "region": "Deimos Anomaly (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5681,6 +5798,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Red keycard",
             "id": 351108,
+            "region": "Deimos Anomaly (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5699,6 +5817,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Shotgun 2",
             "id": 351111,
+            "region": "Deimos Anomaly (E2M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5760,6 +5879,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Exit",
             "id": 351326,
+            "region": "Deimos Anomaly (E2M1) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5821,6 +5941,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Computer area map",
             "id": 351109,
+            "region": "Deimos Anomaly (E2M1) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5839,6 +5960,7 @@
           {
             "name": "Deimos Anomaly (E2M1) - Mega Armor",
             "id": 351110,
+            "region": "Deimos Anomaly (E2M1) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5968,6 +6090,7 @@
           {
             "name": "Containment Area (E2M2) - Armor",
             "id": 351113,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5986,6 +6109,7 @@
           {
             "name": "Containment Area (E2M2) - Armor 2",
             "id": 351114,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6004,6 +6128,7 @@
           {
             "name": "Containment Area (E2M2) - Backpack",
             "id": 351115,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6022,6 +6147,7 @@
           {
             "name": "Containment Area (E2M2) - Supercharge",
             "id": 351116,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6040,6 +6166,7 @@
           {
             "name": "Containment Area (E2M2) - Chainsaw",
             "id": 351117,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6058,6 +6185,7 @@
           {
             "name": "Containment Area (E2M2) - Armor 3",
             "id": 351118,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6076,6 +6204,7 @@
           {
             "name": "Containment Area (E2M2) - Computer area map",
             "id": 351119,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6094,6 +6223,7 @@
           {
             "name": "Containment Area (E2M2) - Mega Armor",
             "id": 351120,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6112,6 +6242,7 @@
           {
             "name": "Containment Area (E2M2) - Plasma gun",
             "id": 351121,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6130,6 +6261,7 @@
           {
             "name": "Containment Area (E2M2) - Blue keycard",
             "id": 351123,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6148,6 +6280,7 @@
           {
             "name": "Containment Area (E2M2) - Yellow keycard",
             "id": 351124,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6166,6 +6299,7 @@
           {
             "name": "Containment Area (E2M2) - Shotgun",
             "id": 351126,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6184,6 +6318,7 @@
           {
             "name": "Containment Area (E2M2) - Shotgun 2",
             "id": 351127,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6202,6 +6337,7 @@
           {
             "name": "Containment Area (E2M2) - Armor 4",
             "id": 351128,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6220,6 +6356,7 @@
           {
             "name": "Containment Area (E2M2) - Berserk",
             "id": 351129,
+            "region": "Containment Area (E2M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6281,6 +6418,7 @@
           {
             "name": "Containment Area (E2M2) - Red keycard",
             "id": 351125,
+            "region": "Containment Area (E2M2) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6389,6 +6527,7 @@
           {
             "name": "Containment Area (E2M2) - Chaingun",
             "id": 351112,
+            "region": "Containment Area (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6407,6 +6546,7 @@
           {
             "name": "Containment Area (E2M2) - Rocket launcher",
             "id": 351122,
+            "region": "Containment Area (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6425,6 +6565,7 @@
           {
             "name": "Containment Area (E2M2) - Backpack 2",
             "id": 351130,
+            "region": "Containment Area (E2M2) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6466,6 +6607,7 @@
           {
             "name": "Containment Area (E2M2) - Exit",
             "id": 351325,
+            "region": "Containment Area (E2M2) Red Exit",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6537,6 +6679,7 @@
           {
             "name": "Refinery (E2M3) - Plasma gun",
             "id": 351131,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6555,6 +6698,7 @@
           {
             "name": "Refinery (E2M3) - Backpack",
             "id": 351132,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6573,6 +6717,7 @@
           {
             "name": "Refinery (E2M3) - Mega Armor",
             "id": 351133,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6591,6 +6736,7 @@
           {
             "name": "Refinery (E2M3) - Armor",
             "id": 351134,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6609,6 +6755,7 @@
           {
             "name": "Refinery (E2M3) - Blue keycard",
             "id": 351137,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6627,6 +6774,7 @@
           {
             "name": "Refinery (E2M3) - Partial invisibility 2",
             "id": 351138,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6645,6 +6793,7 @@
           {
             "name": "Refinery (E2M3) - Shotgun",
             "id": 351139,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6663,6 +6812,7 @@
           {
             "name": "Refinery (E2M3) - Berserk",
             "id": 351140,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6681,6 +6831,7 @@
           {
             "name": "Refinery (E2M3) - Chaingun",
             "id": 351141,
+            "region": "Refinery (E2M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6742,6 +6893,7 @@
           {
             "name": "Refinery (E2M3) - Partial invisibility",
             "id": 351135,
+            "region": "Refinery (E2M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6760,6 +6912,7 @@
           {
             "name": "Refinery (E2M3) - Supercharge",
             "id": 351136,
+            "region": "Refinery (E2M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6778,6 +6931,7 @@
           {
             "name": "Refinery (E2M3) - Exit",
             "id": 351341,
+            "region": "Refinery (E2M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6861,6 +7015,7 @@
           {
             "name": "Deimos Lab (E2M4) - Armor",
             "id": 351142,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6879,6 +7034,7 @@
           {
             "name": "Deimos Lab (E2M4) - Partial invisibility",
             "id": 351143,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6897,6 +7053,7 @@
           {
             "name": "Deimos Lab (E2M4) - Computer area map",
             "id": 351144,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6915,6 +7072,7 @@
           {
             "name": "Deimos Lab (E2M4) - Armor 2",
             "id": 351145,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6933,6 +7091,7 @@
           {
             "name": "Deimos Lab (E2M4) - Blue keycard",
             "id": 351146,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6951,6 +7110,7 @@
           {
             "name": "Deimos Lab (E2M4) - Backpack",
             "id": 351152,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6969,6 +7129,7 @@
           {
             "name": "Deimos Lab (E2M4) - Berserk",
             "id": 351153,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6987,6 +7148,7 @@
           {
             "name": "Deimos Lab (E2M4) - Partial invisibility 2",
             "id": 351154,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7005,6 +7167,7 @@
           {
             "name": "Deimos Lab (E2M4) - Armor 3",
             "id": 351155,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7023,6 +7186,7 @@
           {
             "name": "Deimos Lab (E2M4) - Chaingun",
             "id": 351156,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7041,6 +7205,7 @@
           {
             "name": "Deimos Lab (E2M4) - Supercharge 2",
             "id": 351157,
+            "region": "Deimos Lab (E2M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7124,6 +7289,7 @@
           {
             "name": "Deimos Lab (E2M4) - Yellow keycard",
             "id": 351147,
+            "region": "Deimos Lab (E2M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7178,6 +7344,7 @@
           {
             "name": "Deimos Lab (E2M4) - Supercharge",
             "id": 351148,
+            "region": "Deimos Lab (E2M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7196,6 +7363,7 @@
           {
             "name": "Deimos Lab (E2M4) - Mega Armor",
             "id": 351150,
+            "region": "Deimos Lab (E2M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7214,6 +7382,7 @@
           {
             "name": "Deimos Lab (E2M4) - Plasma gun",
             "id": 351151,
+            "region": "Deimos Lab (E2M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7232,6 +7401,7 @@
           {
             "name": "Deimos Lab (E2M4) - Exit",
             "id": 351327,
+            "region": "Deimos Lab (E2M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7330,6 +7500,7 @@
           {
             "name": "Deimos Lab (E2M4) - Shotgun",
             "id": 351149,
+            "region": "Deimos Lab (E2M4) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7371,6 +7542,7 @@
           {
             "name": "Command Center (E2M5) - Backpack",
             "id": 351158,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7389,6 +7561,7 @@
           {
             "name": "Command Center (E2M5) - Mega Armor",
             "id": 351159,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7407,6 +7580,7 @@
           {
             "name": "Command Center (E2M5) - Berserk",
             "id": 351160,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7425,6 +7599,7 @@
           {
             "name": "Command Center (E2M5) - Chaingun",
             "id": 351161,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7443,6 +7618,7 @@
           {
             "name": "Command Center (E2M5) - Chainsaw",
             "id": 351162,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7461,6 +7637,7 @@
           {
             "name": "Command Center (E2M5) - Plasma gun",
             "id": 351163,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7479,6 +7656,7 @@
           {
             "name": "Command Center (E2M5) - Computer area map",
             "id": 351164,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7497,6 +7675,7 @@
           {
             "name": "Command Center (E2M5) - Armor",
             "id": 351165,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7515,6 +7694,7 @@
           {
             "name": "Command Center (E2M5) - Armor 2",
             "id": 351166,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7533,6 +7713,7 @@
           {
             "name": "Command Center (E2M5) - Partial invisibility",
             "id": 351167,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7551,6 +7732,7 @@
           {
             "name": "Command Center (E2M5) - Exit",
             "id": 351322,
+            "region": "Command Center (E2M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7707,6 +7889,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Berserk",
             "id": 351168,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7725,6 +7908,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Blue skull key",
             "id": 351169,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7743,6 +7927,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Backpack",
             "id": 351170,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7761,6 +7946,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Mega Armor",
             "id": 351171,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7779,6 +7965,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Armor",
             "id": 351173,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7797,6 +7984,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Partial invisibility",
             "id": 351174,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7815,6 +8003,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Chaingun",
             "id": 351177,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7833,6 +8022,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Plasma gun",
             "id": 351178,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7851,6 +8041,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Red skull key",
             "id": 351180,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7869,6 +8060,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Shotgun",
             "id": 351181,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7887,6 +8079,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Rocket launcher",
             "id": 351182,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7905,6 +8098,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Chainsaw",
             "id": 351183,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7923,6 +8117,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Partial invisibility 3",
             "id": 351184,
+            "region": "Halls of the Damned (E2M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7977,6 +8172,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Computer area map",
             "id": 351172,
+            "region": "Halls of the Damned (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7995,6 +8191,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Supercharge",
             "id": 351176,
+            "region": "Halls of the Damned (E2M6) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8083,6 +8280,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Exit",
             "id": 351330,
+            "region": "Halls of the Damned (E2M6) Blue Yellow Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8144,6 +8342,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Yellow skull key",
             "id": 351175,
+            "region": "Halls of the Damned (E2M6) One way Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8162,6 +8361,7 @@
           {
             "name": "Halls of the Damned (E2M6) - Partial invisibility 2",
             "id": 351179,
+            "region": "Halls of the Damned (E2M6) One way Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8336,6 +8536,7 @@
           {
             "name": "Spawning Vats (E2M7) - Rocket launcher",
             "id": 351185,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8354,6 +8555,7 @@
           {
             "name": "Spawning Vats (E2M7) - Partial invisibility",
             "id": 351187,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8372,6 +8574,7 @@
           {
             "name": "Spawning Vats (E2M7) - Mega Armor",
             "id": 351188,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8390,6 +8593,7 @@
           {
             "name": "Spawning Vats (E2M7) - Armor",
             "id": 351190,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8408,6 +8612,7 @@
           {
             "name": "Spawning Vats (E2M7) - Blue keycard",
             "id": 351193,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8426,6 +8631,7 @@
           {
             "name": "Spawning Vats (E2M7) - Invulnerability",
             "id": 351194,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8444,6 +8650,7 @@
           {
             "name": "Spawning Vats (E2M7) - Berserk",
             "id": 351195,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8462,6 +8669,7 @@
           {
             "name": "Spawning Vats (E2M7) - Chainsaw",
             "id": 351196,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8480,6 +8688,7 @@
           {
             "name": "Spawning Vats (E2M7) - Invulnerability 2",
             "id": 351198,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8498,6 +8707,7 @@
           {
             "name": "Spawning Vats (E2M7) - Computer area map",
             "id": 351199,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8516,6 +8726,7 @@
           {
             "name": "Spawning Vats (E2M7) - Plasma gun",
             "id": 351200,
+            "region": "Spawning Vats (E2M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8570,6 +8781,7 @@
           {
             "name": "Spawning Vats (E2M7) - Backpack",
             "id": 351186,
+            "region": "Spawning Vats (E2M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8588,6 +8800,7 @@
           {
             "name": "Spawning Vats (E2M7) - Chaingun",
             "id": 351189,
+            "region": "Spawning Vats (E2M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8606,6 +8819,7 @@
           {
             "name": "Spawning Vats (E2M7) - Yellow keycard",
             "id": 351192,
+            "region": "Spawning Vats (E2M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8667,6 +8881,7 @@
           {
             "name": "Spawning Vats (E2M7) - Red keycard",
             "id": 351191,
+            "region": "Spawning Vats (E2M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8740,6 +8955,7 @@
           {
             "name": "Spawning Vats (E2M7) - Exit",
             "id": 351343,
+            "region": "Spawning Vats (E2M7) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8817,6 +9033,7 @@
           {
             "name": "Spawning Vats (E2M7) - Supercharge",
             "id": 351197,
+            "region": "Spawning Vats (E2M7) Entrance Secret",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8893,6 +9110,7 @@
           {
             "name": "Tower of Babel (E2M8) - Rocket launcher",
             "id": 351201,
+            "region": "Tower of Babel (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8911,6 +9129,7 @@
           {
             "name": "Tower of Babel (E2M8) - Supercharge",
             "id": 351202,
+            "region": "Tower of Babel (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8929,6 +9148,7 @@
           {
             "name": "Tower of Babel (E2M8) - Supercharge 2",
             "id": 351203,
+            "region": "Tower of Babel (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8947,6 +9167,7 @@
           {
             "name": "Tower of Babel (E2M8) - Exit",
             "id": 351344,
+            "region": "Tower of Babel (E2M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9077,6 +9298,7 @@
           {
             "name": "Tower of Babel (E2M8) - Mega Armor",
             "id": 351204,
+            "region": "Tower of Babel (E2M8) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9206,6 +9428,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Supercharge",
             "id": 351205,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9224,6 +9447,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Blue skull key",
             "id": 351206,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9242,6 +9466,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Backpack",
             "id": 351209,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9260,6 +9485,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Chaingun",
             "id": 351210,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9278,6 +9504,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Plasma gun",
             "id": 351211,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9296,6 +9523,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Rocket launcher",
             "id": 351212,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9314,6 +9542,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Shotgun",
             "id": 351213,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9332,6 +9561,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Chainsaw",
             "id": 351214,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9350,6 +9580,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Computer area map",
             "id": 351215,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9368,6 +9599,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Mega Armor",
             "id": 351216,
+            "region": "Fortress of Mystery (E2M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9429,6 +9661,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Red skull key",
             "id": 351207,
+            "region": "Fortress of Mystery (E2M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9490,6 +9723,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Yellow skull key",
             "id": 351208,
+            "region": "Fortress of Mystery (E2M9) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9551,6 +9785,7 @@
           {
             "name": "Fortress of Mystery (E2M9) - Exit",
             "id": 351329,
+            "region": "Fortress of Mystery (E2M9) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9638,6 +9873,7 @@
           {
             "name": "Hell Keep (E3M1) - Shotgun",
             "id": 351217,
+            "region": "Hell Keep (E3M1) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9692,6 +9928,7 @@
           {
             "name": "Hell Keep (E3M1) - Rocket launcher",
             "id": 351218,
+            "region": "Hell Keep (E3M1) Narrow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9710,6 +9947,7 @@
           {
             "name": "Hell Keep (E3M1) - Exit",
             "id": 351332,
+            "region": "Hell Keep (E3M1) Narrow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9781,6 +10019,7 @@
           {
             "name": "Slough of Despair (E3M2) - Chaingun",
             "id": 351219,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9799,6 +10038,7 @@
           {
             "name": "Slough of Despair (E3M2) - Berserk",
             "id": 351220,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9817,6 +10057,7 @@
           {
             "name": "Slough of Despair (E3M2) - Mega Armor",
             "id": 351221,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9835,6 +10076,7 @@
           {
             "name": "Slough of Despair (E3M2) - Armor",
             "id": 351222,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9853,6 +10095,7 @@
           {
             "name": "Slough of Despair (E3M2) - Rocket launcher",
             "id": 351223,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9871,6 +10114,7 @@
           {
             "name": "Slough of Despair (E3M2) - Plasma gun",
             "id": 351224,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9889,6 +10133,7 @@
           {
             "name": "Slough of Despair (E3M2) - Computer area map",
             "id": 351225,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9907,6 +10152,7 @@
           {
             "name": "Slough of Despair (E3M2) - Blue skull key",
             "id": 351226,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9925,6 +10171,7 @@
           {
             "name": "Slough of Despair (E3M2) - Supercharge",
             "id": 351227,
+            "region": "Slough of Despair (E3M2) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9986,6 +10233,7 @@
           {
             "name": "Slough of Despair (E3M2) - Exit",
             "id": 351342,
+            "region": "Slough of Despair (E3M2) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10057,6 +10305,7 @@
           {
             "name": "Pandemonium (E3M3) - Berserk",
             "id": 351228,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10075,6 +10324,7 @@
           {
             "name": "Pandemonium (E3M3) - Chaingun",
             "id": 351229,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10093,6 +10343,7 @@
           {
             "name": "Pandemonium (E3M3) - BFG9000",
             "id": 351230,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10111,6 +10362,7 @@
           {
             "name": "Pandemonium (E3M3) - Supercharge",
             "id": 351231,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10129,6 +10381,7 @@
           {
             "name": "Pandemonium (E3M3) - Invulnerability",
             "id": 351232,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10147,6 +10400,7 @@
           {
             "name": "Pandemonium (E3M3) - Blue skull key",
             "id": 351233,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10165,6 +10419,7 @@
           {
             "name": "Pandemonium (E3M3) - Mega Armor",
             "id": 351234,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10183,6 +10438,7 @@
           {
             "name": "Pandemonium (E3M3) - Shotgun",
             "id": 351235,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10201,6 +10457,7 @@
           {
             "name": "Pandemonium (E3M3) - Armor",
             "id": 351236,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10219,6 +10476,7 @@
           {
             "name": "Pandemonium (E3M3) - Backpack",
             "id": 351237,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10237,6 +10495,7 @@
           {
             "name": "Pandemonium (E3M3) - Computer area map",
             "id": 351238,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10255,6 +10514,7 @@
           {
             "name": "Pandemonium (E3M3) - Mega Armor 2",
             "id": 351239,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10273,6 +10533,7 @@
           {
             "name": "Pandemonium (E3M3) - Shotgun 2",
             "id": 351240,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10291,6 +10552,7 @@
           {
             "name": "Pandemonium (E3M3) - Rocket launcher",
             "id": 351241,
+            "region": "Pandemonium (E3M3) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10352,6 +10614,7 @@
           {
             "name": "Pandemonium (E3M3) - Exit",
             "id": 351338,
+            "region": "Pandemonium (E3M3) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10423,6 +10686,7 @@
           {
             "name": "House of Pain (E3M4) - Shotgun",
             "id": 351242,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10441,6 +10705,7 @@
           {
             "name": "House of Pain (E3M4) - Berserk",
             "id": 351243,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10459,6 +10724,7 @@
           {
             "name": "House of Pain (E3M4) - Mega Armor",
             "id": 351244,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10477,6 +10743,7 @@
           {
             "name": "House of Pain (E3M4) - Chaingun",
             "id": 351245,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10495,6 +10762,7 @@
           {
             "name": "House of Pain (E3M4) - Invulnerability",
             "id": 351246,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10513,6 +10781,7 @@
           {
             "name": "House of Pain (E3M4) - Blue skull key",
             "id": 351247,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10531,6 +10800,7 @@
           {
             "name": "House of Pain (E3M4) - Armor",
             "id": 351248,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10549,6 +10819,7 @@
           {
             "name": "House of Pain (E3M4) - Armor 2",
             "id": 351257,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10567,6 +10838,7 @@
           {
             "name": "House of Pain (E3M4) - Rocket launcher",
             "id": 351258,
+            "region": "House of Pain (E3M4) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10686,6 +10958,7 @@
           {
             "name": "House of Pain (E3M4) - Yellow skull key",
             "id": 351249,
+            "region": "House of Pain (E3M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10704,6 +10977,7 @@
           {
             "name": "House of Pain (E3M4) - Invulnerability 2",
             "id": 351250,
+            "region": "House of Pain (E3M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10722,6 +10996,7 @@
           {
             "name": "House of Pain (E3M4) - Partial invisibility",
             "id": 351254,
+            "region": "House of Pain (E3M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10740,6 +11015,7 @@
           {
             "name": "House of Pain (E3M4) - BFG9000",
             "id": 351255,
+            "region": "House of Pain (E3M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10758,6 +11034,7 @@
           {
             "name": "House of Pain (E3M4) - Supercharge",
             "id": 351256,
+            "region": "House of Pain (E3M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10776,6 +11053,7 @@
           {
             "name": "House of Pain (E3M4) - Armor 3",
             "id": 351259,
+            "region": "House of Pain (E3M4) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10837,6 +11115,7 @@
           {
             "name": "House of Pain (E3M4) - Backpack",
             "id": 351252,
+            "region": "House of Pain (E3M4) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10855,6 +11134,7 @@
           {
             "name": "House of Pain (E3M4) - Mega Armor 2",
             "id": 351253,
+            "region": "House of Pain (E3M4) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10873,6 +11153,7 @@
           {
             "name": "House of Pain (E3M4) - Exit",
             "id": 351333,
+            "region": "House of Pain (E3M4) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10934,6 +11215,7 @@
           {
             "name": "House of Pain (E3M4) - Red skull key",
             "id": 351251,
+            "region": "House of Pain (E3M4) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11046,6 +11328,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Blue skull key",
             "id": 351260,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11064,6 +11347,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Chaingun",
             "id": 351261,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11082,6 +11366,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Plasma gun",
             "id": 351262,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11100,6 +11385,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Supercharge",
             "id": 351263,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11118,6 +11404,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Yellow skull key",
             "id": 351264,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11136,6 +11423,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Invulnerability",
             "id": 351265,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11154,6 +11442,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Berserk",
             "id": 351266,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11172,6 +11461,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Partial invisibility",
             "id": 351267,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11190,6 +11480,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Shotgun 2",
             "id": 351271,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11208,6 +11499,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Rocket launcher",
             "id": 351272,
+            "region": "Unholy Cathedral (E3M5) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11269,6 +11561,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - BFG9000",
             "id": 351269,
+            "region": "Unholy Cathedral (E3M5) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11287,6 +11580,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Exit",
             "id": 351346,
+            "region": "Unholy Cathedral (E3M5) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11348,6 +11642,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Chainsaw",
             "id": 351268,
+            "region": "Unholy Cathedral (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11366,6 +11661,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Supercharge 2",
             "id": 351273,
+            "region": "Unholy Cathedral (E3M5) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11496,6 +11792,7 @@
           {
             "name": "Unholy Cathedral (E3M5) - Shotgun",
             "id": 351270,
+            "region": "Unholy Cathedral (E3M5) Start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11567,6 +11864,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Mega Armor",
             "id": 351274,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11585,6 +11883,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Armor",
             "id": 351275,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11603,6 +11902,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Backpack",
             "id": 351276,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11621,6 +11921,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Invulnerability",
             "id": 351277,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11639,6 +11940,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Chaingun",
             "id": 351278,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11657,6 +11959,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Shotgun",
             "id": 351279,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11675,6 +11978,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Rocket launcher",
             "id": 351280,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11693,6 +11997,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Plasma gun",
             "id": 351281,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11711,6 +12016,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Armor 2",
             "id": 351282,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11729,6 +12035,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Berserk",
             "id": 351283,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11747,6 +12054,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Invulnerability 2",
             "id": 351284,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11765,6 +12073,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Supercharge",
             "id": 351285,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11783,6 +12092,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Blue skull key",
             "id": 351286,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11801,6 +12111,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Blue skull key 2",
             "id": 351287,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11819,6 +12130,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Computer area map",
             "id": 351288,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11837,6 +12149,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Chainsaw",
             "id": 351289,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11855,6 +12168,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Supercharge 2",
             "id": 351290,
+            "region": "Mt. Erebus (E3M6) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11916,6 +12230,7 @@
           {
             "name": "Mt. Erebus (E3M6) - Exit",
             "id": 351336,
+            "region": "Mt. Erebus (E3M6) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12045,6 +12360,7 @@
           {
             "name": "Limbo (E3M7) - Blue skull key",
             "id": 351291,
+            "region": "Limbo (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12063,6 +12379,7 @@
           {
             "name": "Limbo (E3M7) - Supercharge",
             "id": 351292,
+            "region": "Limbo (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12081,6 +12398,7 @@
           {
             "name": "Limbo (E3M7) - Rocket launcher",
             "id": 351293,
+            "region": "Limbo (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12099,6 +12417,7 @@
           {
             "name": "Limbo (E3M7) - Backpack",
             "id": 351295,
+            "region": "Limbo (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12117,6 +12436,7 @@
           {
             "name": "Limbo (E3M7) - Armor 2",
             "id": 351299,
+            "region": "Limbo (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12135,6 +12455,7 @@
           {
             "name": "Limbo (E3M7) - Mega Armor",
             "id": 351300,
+            "region": "Limbo (E3M7) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12189,6 +12510,7 @@
           {
             "name": "Limbo (E3M7) - Red skull key",
             "id": 351294,
+            "region": "Limbo (E3M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12207,6 +12529,7 @@
           {
             "name": "Limbo (E3M7) - BFG9000",
             "id": 351301,
+            "region": "Limbo (E3M7) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12312,6 +12635,7 @@
           {
             "name": "Limbo (E3M7) - Yellow skull key",
             "id": 351298,
+            "region": "Limbo (E3M7) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12366,6 +12690,7 @@
           {
             "name": "Limbo (E3M7) - Exit",
             "id": 351334,
+            "region": "Limbo (E3M7) Yellow",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12506,6 +12831,7 @@
           {
             "name": "Limbo (E3M7) - Plasma gun",
             "id": 351296,
+            "region": "Limbo (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12524,6 +12850,7 @@
           {
             "name": "Limbo (E3M7) - Armor",
             "id": 351297,
+            "region": "Limbo (E3M7) Green",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12565,6 +12892,7 @@
           {
             "name": "Dis (E3M8) - Rocket launcher",
             "id": 351302,
+            "region": "Dis (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12583,6 +12911,7 @@
           {
             "name": "Dis (E3M8) - Plasma gun",
             "id": 351303,
+            "region": "Dis (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12601,6 +12930,7 @@
           {
             "name": "Dis (E3M8) - Mega Armor",
             "id": 351304,
+            "region": "Dis (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12619,6 +12949,7 @@
           {
             "name": "Dis (E3M8) - Exit",
             "id": 351328,
+            "region": "Dis (E3M8) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12709,6 +13040,7 @@
           {
             "name": "Warrens (E3M9) - Shotgun",
             "id": 351305,
+            "region": "Warrens (E3M9) Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12750,6 +13082,7 @@
           {
             "name": "Warrens (E3M9) - Exit",
             "id": 351347,
+            "region": "Warrens (E3M9) Red",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12830,6 +13163,7 @@
           {
             "name": "Warrens (E3M9) - Rocket launcher",
             "id": 351306,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12848,6 +13182,7 @@
           {
             "name": "Warrens (E3M9) - Rocket launcher 2",
             "id": 351307,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12866,6 +13201,7 @@
           {
             "name": "Warrens (E3M9) - Supercharge",
             "id": 351308,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12884,6 +13220,7 @@
           {
             "name": "Warrens (E3M9) - Blue skull key",
             "id": 351309,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12902,6 +13239,7 @@
           {
             "name": "Warrens (E3M9) - Berserk",
             "id": 351310,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12920,6 +13258,7 @@
           {
             "name": "Warrens (E3M9) - Invulnerability",
             "id": 351311,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12938,6 +13277,7 @@
           {
             "name": "Warrens (E3M9) - Partial invisibility",
             "id": 351312,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12956,6 +13296,7 @@
           {
             "name": "Warrens (E3M9) - Chaingun",
             "id": 351313,
+            "region": "Warrens (E3M9) Blue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12997,6 +13338,7 @@
           {
             "name": "Warrens (E3M9) - Plasma gun",
             "id": 351314,
+            "region": "Warrens (E3M9) Blue trigger",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13015,6 +13357,7 @@
           {
             "name": "Warrens (E3M9) - Invulnerability 2",
             "id": 351315,
+            "region": "Warrens (E3M9) Blue trigger",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13033,6 +13376,7 @@
           {
             "name": "Warrens (E3M9) - Armor",
             "id": 351316,
+            "region": "Warrens (E3M9) Blue trigger",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13051,6 +13395,7 @@
           {
             "name": "Warrens (E3M9) - Chainsaw",
             "id": 351317,
+            "region": "Warrens (E3M9) Blue trigger",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13069,6 +13414,7 @@
           {
             "name": "Warrens (E3M9) - BFG9000",
             "id": 351318,
+            "region": "Warrens (E3M9) Blue trigger",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13087,6 +13433,7 @@
           {
             "name": "Warrens (E3M9) - Red skull key",
             "id": 351319,
+            "region": "Warrens (E3M9) Blue trigger",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13105,6 +13452,7 @@
           {
             "name": "Warrens (E3M9) - Supercharge 2",
             "id": 351320,
+            "region": "Warrens (E3M9) Blue trigger",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16023,15 +16371,370 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Ammos",
-      "Computer area maps",
-      "Everything",
-      "Keys",
-      "Levels",
-      "Powerups",
-      "Weapons"
-    ]
+    "1": {
+      "Ammos": [
+        "Box of rockets",
+        "Box of shotgun shells",
+        "Energy cell pack",
+        "Box of bullets"
+      ],
+      "Computer area maps": [
+        "Phobos Anomaly (E1M8) - Computer area map",
+        "Halls of the Damned (E2M6) - Computer area map",
+        "Perfect Hatred (E4M2) - Computer area map",
+        "Sever the Wicked (E4M3) - Computer area map",
+        "Warrens (E3M9) - Computer area map",
+        "Toxin Refinery (E1M3) - Computer area map",
+        "Hell Keep (E3M1) - Computer area map",
+        "Unruly Evil (E4M4) - Computer area map",
+        "Command Control (E1M4) - Computer area map",
+        "Limbo (E3M7) - Computer area map",
+        "Tower of Babel (E2M8) - Computer area map",
+        "Phobos Lab (E1M5) - Computer area map",
+        "Mt. Erebus (E3M6) - Computer area map",
+        "Fortress of Mystery (E2M9) - Computer area map",
+        "Spawning Vats (E2M7) - Computer area map",
+        "Nuclear Plant (E1M2) - Computer area map",
+        "Central Processing (E1M6) - Computer area map",
+        "Deimos Lab (E2M4) - Computer area map",
+        "Refinery (E2M3) - Computer area map",
+        "House of Pain (E3M4) - Computer area map",
+        "Unholy Cathedral (E3M5) - Computer area map",
+        "Military Base (E1M9) - Computer area map",
+        "Fear (E4M9) - Computer area map",
+        "Hangar (E1M1) - Computer area map",
+        "Computer Station (E1M7) - Computer area map",
+        "Pandemonium (E3M3) - Computer area map",
+        "Dis (E3M8) - Computer area map",
+        "Against Thee Wickedly (E4M6) - Computer area map",
+        "Slough of Despair (E3M2) - Computer area map",
+        "Containment Area (E2M2) - Computer area map",
+        "And Hell Followed (E4M7) - Computer area map",
+        "Deimos Anomaly (E2M1) - Computer area map",
+        "Command Center (E2M5) - Computer area map",
+        "Hell Beneath (E4M1) - Computer area map",
+        "They Will Repent (E4M5) - Computer area map",
+        "Unto the Cruel (E4M8) - Computer area map"
+      ],
+      "Keys": [
+        "Halls of the Damned (E2M6) - Blue skull key",
+        "Limbo (E3M7) - Red skull key",
+        "Spawning Vats (E2M7) - Red keycard",
+        "Spawning Vats (E2M7) - Blue keycard",
+        "And Hell Followed (E4M7) - Yellow skull key",
+        "Deimos Anomaly (E2M1) - Red keycard",
+        "Perfect Hatred (E4M2) - Blue skull key",
+        "Sever the Wicked (E4M3) - Red skull key",
+        "Halls of the Damned (E2M6) - Red skull key",
+        "And Hell Followed (E4M7) - Red skull key",
+        "Spawning Vats (E2M7) - Yellow keycard",
+        "Unholy Cathedral (E3M5) - Blue skull key",
+        "Unto the Cruel (E4M8) - Yellow skull key",
+        "Toxin Refinery (E1M3) - Yellow keycard",
+        "Containment Area (E2M2) - Blue keycard",
+        "Against Thee Wickedly (E4M6) - Red skull key",
+        "Limbo (E3M7) - Yellow skull key",
+        "Against Thee Wickedly (E4M6) - Yellow skull key",
+        "Central Processing (E1M6) - Yellow keycard",
+        "Fear (E4M9) - Yellow skull key",
+        "Central Processing (E1M6) - Red keycard",
+        "Limbo (E3M7) - Blue skull key",
+        "Phobos Lab (E1M5) - Blue keycard",
+        "Military Base (E1M9) - Yellow keycard",
+        "Command Control (E1M4) - Blue keycard",
+        "Computer Station (E1M7) - Blue keycard",
+        "Sever the Wicked (E4M3) - Blue skull key",
+        "Fortress of Mystery (E2M9) - Blue skull key",
+        "Against Thee Wickedly (E4M6) - Blue skull key",
+        "Unto the Cruel (E4M8) - Red skull key",
+        "Fortress of Mystery (E2M9) - Red skull key",
+        "House of Pain (E3M4) - Yellow skull key",
+        "They Will Repent (E4M5) - Yellow skull key",
+        "Toxin Refinery (E1M3) - Blue keycard",
+        "Warrens (E3M9) - Red skull key",
+        "Hell Beneath (E4M1) - Red skull key",
+        "House of Pain (E3M4) - Blue skull key",
+        "And Hell Followed (E4M7) - Blue skull key",
+        "Fortress of Mystery (E2M9) - Yellow skull key",
+        "Deimos Anomaly (E2M1) - Blue keycard",
+        "Hell Beneath (E4M1) - Blue skull key",
+        "They Will Repent (E4M5) - Blue skull key",
+        "Unruly Evil (E4M4) - Red skull key",
+        "Warrens (E3M9) - Blue skull key",
+        "Military Base (E1M9) - Red keycard",
+        "Pandemonium (E3M3) - Blue skull key",
+        "Computer Station (E1M7) - Red keycard",
+        "Containment Area (E2M2) - Yellow keycard",
+        "Unholy Cathedral (E3M5) - Yellow skull key",
+        "Slough of Despair (E3M2) - Blue skull key",
+        "Phobos Lab (E1M5) - Yellow keycard",
+        "Command Control (E1M4) - Yellow keycard",
+        "Computer Station (E1M7) - Yellow keycard",
+        "House of Pain (E3M4) - Red skull key",
+        "Refinery (E2M3) - Blue keycard",
+        "Mt. Erebus (E3M6) - Blue skull key",
+        "Deimos Lab (E2M4) - Blue keycard",
+        "Perfect Hatred (E4M2) - Yellow skull key",
+        "Containment Area (E2M2) - Red keycard",
+        "They Will Repent (E4M5) - Red skull key",
+        "Central Processing (E1M6) - Blue keycard",
+        "Military Base (E1M9) - Blue keycard",
+        "Deimos Lab (E2M4) - Yellow keycard",
+        "Halls of the Damned (E2M6) - Yellow skull key",
+        "Nuclear Plant (E1M2) - Red keycard"
+      ],
+      "Levels": [
+        "Limbo (E3M7)",
+        "Phobos Lab (E1M5)",
+        "Nuclear Plant (E1M2)",
+        "Computer Station (E1M7)",
+        "Unruly Evil (E4M4)",
+        "Pandemonium (E3M3)",
+        "Warrens (E3M9)",
+        "Military Base (E1M9)",
+        "They Will Repent (E4M5)",
+        "Deimos Anomaly (E2M1)",
+        "Hell Beneath (E4M1)",
+        "Command Center (E2M5)",
+        "Unholy Cathedral (E3M5)",
+        "Against Thee Wickedly (E4M6)",
+        "Fortress of Mystery (E2M9)",
+        "Halls of the Damned (E2M6)",
+        "Central Processing (E1M6)",
+        "Command Control (E1M4)",
+        "And Hell Followed (E4M7)",
+        "House of Pain (E3M4)",
+        "Phobos Anomaly (E1M8)",
+        "Fear (E4M9)",
+        "Containment Area (E2M2)",
+        "Dis (E3M8)",
+        "Slough of Despair (E3M2)",
+        "Hell Keep (E3M1)",
+        "Hangar (E1M1)",
+        "Mt. Erebus (E3M6)",
+        "Refinery (E2M3)",
+        "Deimos Lab (E2M4)",
+        "Perfect Hatred (E4M2)",
+        "Sever the Wicked (E4M3)",
+        "Spawning Vats (E2M7)",
+        "Tower of Babel (E2M8)",
+        "Unto the Cruel (E4M8)",
+        "Toxin Refinery (E1M3)"
+      ],
+      "Powerups": [
+        "Berserk",
+        "Invulnerability",
+        "Armor",
+        "Partial invisibility",
+        "Supercharge",
+        "Mega Armor"
+      ],
+      "Weapons": [
+        "Plasma gun",
+        "BFG9000",
+        "Rocket launcher",
+        "Chainsaw",
+        "Shotgun",
+        "Chaingun"
+      ],
+      "Everything": [
+        "Rocket capacity",
+        "And Hell Followed (E4M7) - Yellow skull key",
+        "Perfect Hatred (E4M2) - Computer area map",
+        "Deimos Anomaly (E2M1) - Red keycard",
+        "Toxin Refinery (E1M3) - Computer area map",
+        "Mega Armor",
+        "Hell Keep (E3M1) - Computer area map",
+        "Phobos Lab (E1M5)",
+        "Perfect Hatred (E4M2) - Blue skull key",
+        "Phobos Lab (E1M5) - Complete",
+        "Sever the Wicked (E4M3) - Red skull key",
+        "Halls of the Damned (E2M6) - Red skull key",
+        "Pandemonium (E3M3)",
+        "Phobos Anomaly (E1M8) - Complete",
+        "Military Base (E1M9)",
+        "Limbo (E3M7) - Complete",
+        "They Will Repent (E4M5)",
+        "Hell Beneath (E4M1)",
+        "And Hell Followed (E4M7) - Red skull key",
+        "Fortress of Mystery (E2M9) - Computer area map",
+        "Against Thee Wickedly (E4M6) - Complete",
+        "Partial invisibility",
+        "Spawning Vats (E2M7) - Computer area map",
+        "Supercharge",
+        "Sever the Wicked (E4M3) - Complete",
+        "Against Thee Wickedly (E4M6)",
+        "Against Thee Wickedly (E4M6) - Red skull key",
+        "Limbo (E3M7) - Yellow skull key",
+        "Against Thee Wickedly (E4M6) - Yellow skull key",
+        "Central Processing (E1M6) - Yellow keycard",
+        "Invulnerability",
+        "House of Pain (E3M4)",
+        "Fear (E4M9) - Yellow skull key",
+        "Central Processing (E1M6) - Red keycard",
+        "Containment Area (E2M2)",
+        "Limbo (E3M7) - Blue skull key",
+        "Military Base (E1M9) - Yellow keycard",
+        "And Hell Followed (E4M7) - Computer area map",
+        "Energy cell capacity",
+        "Command Center (E2M5) - Computer area map",
+        "Unruly Evil (E4M4) - Complete",
+        "Mt. Erebus (E3M6)",
+        "Refinery (E2M3)",
+        "Against Thee Wickedly (E4M6) - Blue skull key",
+        "Fortress of Mystery (E2M9) - Red skull key",
+        "They Will Repent (E4M5) - Complete",
+        "Unto the Cruel (E4M8)",
+        "Computer Station (E1M7)",
+        "Fortress of Mystery (E2M9) - Complete",
+        "They Will Repent (E4M5) - Yellow skull key",
+        "Tower of Babel (E2M8) - Complete",
+        "Warrens (E3M9) - Red skull key",
+        "Hell Beneath (E4M1) - Red skull key",
+        "Berserk",
+        "House of Pain (E3M4) - Blue skull key",
+        "And Hell Followed (E4M7) - Blue skull key",
+        "Medikit",
+        "Unruly Evil (E4M4) - Computer area map",
+        "Command Center (E2M5) - Complete",
+        "They Will Repent (E4M5) - Blue skull key",
+        "Halls of the Damned (E2M6) - Complete",
+        "Toxin Refinery (E1M3) - Complete",
+        "Limbo (E3M7) - Computer area map",
+        "Mt. Erebus (E3M6) - Computer area map",
+        "Shotgun",
+        "Deimos Anomaly (E2M1)",
+        "Pandemonium (E3M3) - Complete",
+        "And Hell Followed (E4M7) - Complete",
+        "Command Center (E2M5)",
+        "Unholy Cathedral (E3M5)",
+        "Energy cell pack",
+        "Nuclear Plant (E1M2) - Computer area map",
+        "Chaingun",
+        "Perfect Hatred (E4M2) - Complete",
+        "Pandemonium (E3M3) - Blue skull key",
+        "Dis (E3M8) - Complete",
+        "Central Processing (E1M6)",
+        "Unholy Cathedral (E3M5) - Yellow skull key",
+        "Rocket launcher",
+        "Command Control (E1M4)",
+        "Containment Area (E2M2) - Complete",
+        "Phobos Lab (E1M5) - Yellow keycard",
+        "And Hell Followed (E4M7)",
+        "Refinery (E2M3) - Blue keycard",
+        "Dis (E3M8)",
+        "Dis (E3M8) - Computer area map",
+        "Hell Keep (E3M1) - Complete",
+        "Mt. Erebus (E3M6) - Blue skull key",
+        "Slough of Despair (E3M2) - Computer area map",
+        "Containment Area (E2M2) - Computer area map",
+        "Refinery (E2M3) - Complete",
+        "Deimos Anomaly (E2M1) - Computer area map",
+        "Shell capacity",
+        "Perfect Hatred (E4M2)",
+        "Bullet capacity",
+        "They Will Repent (E4M5) - Red skull key",
+        "Armor",
+        "Hell Beneath (E4M1) - Computer area map",
+        "Slough of Despair (E3M2) - Complete",
+        "BFG9000",
+        "Toxin Refinery (E1M3)",
+        "Halls of the Damned (E2M6) - Yellow skull key",
+        "Command Control (E1M4) - Complete",
+        "Nuclear Plant (E1M2) - Red keycard",
+        "Mt. Erebus (E3M6) - Complete",
+        "Halls of the Damned (E2M6) - Blue skull key",
+        "Limbo (E3M7)",
+        "Spawning Vats (E2M7) - Red keycard",
+        "Spawning Vats (E2M7) - Blue keycard",
+        "Limbo (E3M7) - Red skull key",
+        "Sever the Wicked (E4M3) - Computer area map",
+        "Warrens (E3M9) - Computer area map",
+        "Tower of Babel (E2M8) - Computer area map",
+        "Phobos Lab (E1M5) - Computer area map",
+        "Warrens (E3M9)",
+        "Backpack",
+        "House of Pain (E3M4) - Complete",
+        "Spawning Vats (E2M7) - Yellow keycard",
+        "Unholy Cathedral (E3M5) - Blue skull key",
+        "Deimos Lab (E2M4) - Complete",
+        "Unto the Cruel (E4M8) - Yellow skull key",
+        "Toxin Refinery (E1M3) - Yellow keycard",
+        "Deimos Anomaly (E2M1) - Complete",
+        "Hell Beneath (E4M1) - Complete",
+        "Containment Area (E2M2) - Blue keycard",
+        "Deimos Lab (E2M4) - Computer area map",
+        "Fortress of Mystery (E2M9)",
+        "Military Base (E1M9) - Computer area map",
+        "Fear (E4M9) - Computer area map",
+        "Computer Station (E1M7) - Computer area map",
+        "Pandemonium (E3M3) - Computer area map",
+        "Chainsaw",
+        "Slough of Despair (E3M2)",
+        "Against Thee Wickedly (E4M6) - Computer area map",
+        "Phobos Lab (E1M5) - Blue keycard",
+        "Nuclear Plant (E1M2) - Complete",
+        "Command Control (E1M4) - Blue keycard",
+        "Computer Station (E1M7) - Blue keycard",
+        "Fortress of Mystery (E2M9) - Blue skull key",
+        "Deimos Lab (E2M4)",
+        "Sever the Wicked (E4M3) - Blue skull key",
+        "Unto the Cruel (E4M8) - Red skull key",
+        "Spawning Vats (E2M7)",
+        "House of Pain (E3M4) - Yellow skull key",
+        "Unto the Cruel (E4M8) - Computer area map",
+        "Toxin Refinery (E1M3) - Blue keycard",
+        "Computer Station (E1M7) - Complete",
+        "Phobos Anomaly (E1M8) - Computer area map",
+        "Plasma gun",
+        "Halls of the Damned (E2M6) - Computer area map",
+        "Fortress of Mystery (E2M9) - Yellow skull key",
+        "Hangar (E1M1) - Complete",
+        "Deimos Anomaly (E2M1) - Blue keycard",
+        "Box of bullets",
+        "Nuclear Plant (E1M2)",
+        "Box of rockets",
+        "Hell Beneath (E4M1) - Blue skull key",
+        "Fear (E4M9) - Complete",
+        "Unruly Evil (E4M4)",
+        "Command Control (E1M4) - Computer area map",
+        "Unruly Evil (E4M4) - Red skull key",
+        "Unholy Cathedral (E3M5) - Complete",
+        "Warrens (E3M9) - Blue skull key",
+        "Military Base (E1M9) - Red keycard",
+        "Central Processing (E1M6) - Computer area map",
+        "Refinery (E2M3) - Computer area map",
+        "Warrens (E3M9) - Complete",
+        "Computer Station (E1M7) - Red keycard",
+        "House of Pain (E3M4) - Computer area map",
+        "Containment Area (E2M2) - Yellow keycard",
+        "Halls of the Damned (E2M6)",
+        "Unholy Cathedral (E3M5) - Computer area map",
+        "Slough of Despair (E3M2) - Blue skull key",
+        "Command Control (E1M4) - Yellow keycard",
+        "Computer Station (E1M7) - Yellow keycard",
+        "Phobos Anomaly (E1M8)",
+        "Fear (E4M9)",
+        "Hangar (E1M1) - Computer area map",
+        "House of Pain (E3M4) - Red skull key",
+        "Military Base (E1M9) - Complete",
+        "Deimos Lab (E2M4) - Blue keycard",
+        "Hell Keep (E3M1)",
+        "Hangar (E1M1)",
+        "Perfect Hatred (E4M2) - Yellow skull key",
+        "Spawning Vats (E2M7) - Complete",
+        "Containment Area (E2M2) - Red keycard",
+        "Sever the Wicked (E4M3)",
+        "Tower of Babel (E2M8)",
+        "Central Processing (E1M6) - Blue keycard",
+        "Central Processing (E1M6) - Complete",
+        "They Will Repent (E4M5) - Computer area map",
+        "Military Base (E1M9) - Blue keycard",
+        "Deimos Lab (E2M4) - Yellow keycard",
+        "Unto the Cruel (E4M8) - Complete",
+        "Box of shotgun shells"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

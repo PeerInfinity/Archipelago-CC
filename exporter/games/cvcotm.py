@@ -17,21 +17,39 @@ class CvCotMGameExportHandler(BaseGameExportHandler):
         """Expand CvCotM-specific helper functions."""
         # For now, preserve helper nodes as-is
         return None
-        
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Recursively expand rule functions."""
+        """Recursively expand and fix rules for CvCotM."""
         if not rule:
             return rule
-            
-        # Standard processing from base class
-        if rule.get('type') == 'helper':
+
+        rule_type = rule.get('type')
+
+        # Convert function_call with self.method_name to helper calls
+        if rule_type == 'function_call':
+            func = rule.get('function', {})
+            if (func.get('type') == 'attribute' and
+                func.get('object', {}).get('type') == 'name' and
+                func.get('object', {}).get('name') == 'self'):
+                # This is a call to self.method_name - convert to helper
+                method_name = func.get('attr')
+                if method_name:
+                    return {
+                        'type': 'helper',
+                        'name': method_name,
+                        'args': rule.get('args', [])
+                    }
+
+        # Standard helper processing from base class
+        if rule_type == 'helper':
             expanded = self.expand_helper(rule['name'])
             return expanded if expanded else rule
-            
-        if rule.get('type') in ['and', 'or']:
+
+        # Recursively process conditions for and/or rules
+        if rule_type in ['and', 'or']:
             if 'conditions' in rule:
                 rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
-            
+
         return rule
     
     def postprocess_regions(self, multiworld, player: int):
@@ -164,10 +182,33 @@ class CvCotMGameExportHandler(BaseGameExportHandler):
         # If data is already in correct format, return as-is
         return regions_data
     
+    def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
+        """Export CvCotM-specific settings."""
+        # Get base settings from parent class
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Add all CvCotM-specific options that affect logic
+        if hasattr(world, 'options'):
+            options_to_export = [
+                'nerf_roc_wing',
+                'ignore_cleansing',
+                'iron_maiden_behavior',
+                'required_last_keys',
+                'completion_goal',
+            ]
+
+            for option_name in options_to_export:
+                if hasattr(world.options, option_name):
+                    option_value = getattr(world.options, option_name)
+                    # Extract the actual value from the option object
+                    settings[option_name] = getattr(option_value, 'value', option_value)
+
+        return settings
+
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process the exported data to fix any issues."""
         # Fix region data if needed
         if 'regions' in data:
             data['regions'] = self.post_process_regions(data['regions'])
-        
+
         return data

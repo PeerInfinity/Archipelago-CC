@@ -85,6 +85,7 @@
           {
             "name": "Verse Cave right area, bulb in the skeleton room",
             "id": 698107,
+            "region": "Verse Cave right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -103,6 +104,7 @@
           {
             "name": "Verse Cave right area, bulb in the path right of the skeleton room",
             "id": 698108,
+            "region": "Verse Cave right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -121,6 +123,7 @@
           {
             "name": "Verse Cave right area, Big Seed",
             "id": 698175,
+            "region": "Verse Cave right area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -197,6 +200,7 @@
           {
             "name": "Verse Cave left area, the Naija hint about the shield ability",
             "id": 698200,
+            "region": "Verse Cave left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -215,6 +219,7 @@
           {
             "name": "Verse Cave left area, bulb in the center part",
             "id": 698021,
+            "region": "Verse Cave left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -233,6 +238,7 @@
           {
             "name": "Verse Cave left area, bulb in the right part",
             "id": 698022,
+            "region": "Verse Cave left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -251,6 +257,7 @@
           {
             "name": "Verse Cave left area, bulb under the rock at the end of the path",
             "id": 698023,
+            "region": "Verse Cave left area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -442,6 +449,7 @@
           {
             "name": "Home Waters, bulb below the grouper fish",
             "id": 698058,
+            "region": "Home Waters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -460,6 +468,7 @@
           {
             "name": "Home Waters, bulb in the little room above the grouper fish",
             "id": 698060,
+            "region": "Home Waters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -478,6 +487,7 @@
           {
             "name": "Home Waters, bulb in the end of the path close to the Verse Cave",
             "id": 698061,
+            "region": "Home Waters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -496,6 +506,7 @@
           {
             "name": "Home Waters, bulb in the top left path",
             "id": 698062,
+            "region": "Home Waters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -514,6 +525,7 @@
           {
             "name": "Home Waters, bulb close to Naija's Home",
             "id": 698064,
+            "region": "Home Waters",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -532,6 +544,7 @@
           {
             "name": "Home Waters, bulb under the rock in the left path from the Verse Cave",
             "id": 698065,
+            "region": "Home Waters",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -604,6 +617,7 @@
           {
             "name": "Home Waters, Nautilus Egg",
             "id": 698194,
+            "region": "Home Waters, Nautilus nest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -622,6 +636,7 @@
           {
             "name": "Beating Nautilus Prime",
             "id": null,
+            "region": "Home Waters, Nautilus nest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -876,6 +891,7 @@
           {
             "name": "Home Waters, Transturtle",
             "id": 698213,
+            "region": "Home Waters, turtle room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -930,6 +946,7 @@
           {
             "name": "Naija's Home, bulb after the energy door",
             "id": 698119,
+            "region": "Naija's Home",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -966,6 +983,7 @@
           {
             "name": "Naija's Home, bulb under the rock at the right of the main path",
             "id": 698120,
+            "region": "Naija's Home",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1020,6 +1038,7 @@
           {
             "name": "Song Cave, Erulian spirit",
             "id": 698206,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1038,6 +1057,7 @@
           {
             "name": "Song Cave, bulb in the top right part",
             "id": 698071,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1056,6 +1076,7 @@
           {
             "name": "Song Cave, bulb in the big anemone room",
             "id": 698072,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1074,6 +1095,7 @@
           {
             "name": "Song Cave, bulb in the path to the singing statues",
             "id": 698073,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1092,6 +1114,7 @@
           {
             "name": "Song Cave, bulb under the rock in the path to the singing statues",
             "id": 698074,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1110,6 +1133,7 @@
           {
             "name": "Song Cave, bulb under the rock close to the song door",
             "id": 698075,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1128,6 +1152,7 @@
           {
             "name": "Song Cave, Verse Egg",
             "id": 698160,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1146,6 +1171,7 @@
           {
             "name": "Song Cave, Jelly Beacon",
             "id": 698178,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1164,6 +1190,7 @@
           {
             "name": "Song Cave, Anemone Seed",
             "id": 698162,
+            "region": "Song Cave",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1286,6 +1313,7 @@
           {
             "name": "Energy Temple first area, beating the Energy Statue",
             "id": 698205,
+            "region": "Energy Temple first area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1304,6 +1332,7 @@
           {
             "name": "Energy Temple first area, bulb in the bottom room blocked by a rock",
             "id": 698027,
+            "region": "Energy Temple first area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1380,6 +1409,7 @@
           {
             "name": "Energy Temple second area, bulb under the rock",
             "id": 698028,
+            "region": "Energy Temple second area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1473,6 +1503,7 @@
           {
             "name": "Energy Temple third area, bulb in the bottom path",
             "id": 698029,
+            "region": "Energy Temple third area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1605,6 +1636,7 @@
           {
             "name": "Energy Temple boss area, Fallen God Tooth",
             "id": 698169,
+            "region": "Energy Temple fallen God room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1623,6 +1655,7 @@
           {
             "name": "Beating Fallen God",
             "id": null,
+            "region": "Energy Temple fallen God room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1664,6 +1697,7 @@
           {
             "name": "Energy Temple blaster room, Blaster Egg",
             "id": 698195,
+            "region": "Energy Temple blaster room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1682,6 +1716,7 @@
           {
             "name": "Beating Blaster Peg Prime",
             "id": null,
+            "region": "Energy Temple blaster room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1763,6 +1798,7 @@
           {
             "name": "Energy Temple bottom entrance, Krotite Armor",
             "id": 698163,
+            "region": "Energy Temple bottom entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1883,6 +1919,7 @@
           {
             "name": "Open Waters top left area, bulb under the rock in the right path",
             "id": 698001,
+            "region": "Open Waters top left area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1901,6 +1938,7 @@
           {
             "name": "Open Waters top left area, bulb under the rock in the left path",
             "id": 698002,
+            "region": "Open Waters top left area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1919,6 +1957,7 @@
           {
             "name": "Open Waters top left area, bulb to the right of the save crystal",
             "id": 698003,
+            "region": "Open Waters top left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2151,6 +2190,7 @@
           {
             "name": "Open Waters top right area, bulb in the small path before Mithalas",
             "id": 698004,
+            "region": "Open Waters top right area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2169,6 +2209,7 @@
           {
             "name": "Open Waters top right area, bulb in the path from the left entrance",
             "id": 698005,
+            "region": "Open Waters top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2187,6 +2228,7 @@
           {
             "name": "Open Waters top right area, bulb in the clearing close to the bottom exit",
             "id": 698006,
+            "region": "Open Waters top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2205,6 +2247,7 @@
           {
             "name": "Open Waters top right area, bulb in the big clearing close to the save crystal",
             "id": 698007,
+            "region": "Open Waters top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2223,6 +2266,7 @@
           {
             "name": "Open Waters top right area, bulb in the big clearing to the top exit",
             "id": 698008,
+            "region": "Open Waters top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2477,6 +2521,7 @@
           {
             "name": "Open Waters top right area, bulb in the turtle room",
             "id": 698009,
+            "region": "Open Waters top right area, turtle room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2495,6 +2540,7 @@
           {
             "name": "Open Waters top right area, Transturtle",
             "id": 698211,
+            "region": "Open Waters top right area, turtle room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2624,6 +2670,7 @@
           {
             "name": "Open Waters bottom left area, bulb behind the chomper fish",
             "id": 698011,
+            "region": "Open Waters bottom left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2642,6 +2689,7 @@
           {
             "name": "Open Waters bottom left area, bulb inside the lowest fish pass",
             "id": 698010,
+            "region": "Open Waters bottom left area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2829,6 +2877,7 @@
           {
             "name": "Open Waters skeleton path, bulb close to the right exit",
             "id": 698012,
+            "region": "Open Waters skeleton path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2847,6 +2896,7 @@
           {
             "name": "Open Waters skeleton path, bulb behind the chomper fish",
             "id": 698013,
+            "region": "Open Waters skeleton path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2901,6 +2951,7 @@
           {
             "name": "Open Waters skeleton path, King Skull",
             "id": 698177,
+            "region": "Open Waters skeleton path spirit crystal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2977,6 +3028,7 @@
           {
             "name": "Arnassi Ruins, bulb in the right part",
             "id": 698014,
+            "region": "Arnassi Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2995,6 +3047,7 @@
           {
             "name": "Arnassi Ruins, bulb in the left part",
             "id": 698015,
+            "region": "Arnassi Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3013,6 +3066,7 @@
           {
             "name": "Arnassi Ruins, bulb in the center part",
             "id": 698016,
+            "region": "Arnassi Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3031,6 +3085,7 @@
           {
             "name": "Arnassi Ruins, Song Plant Spore",
             "id": 698179,
+            "region": "Arnassi Ruins",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3058,6 +3113,7 @@
           {
             "name": "Arnassi Ruins, Arnassi Armor",
             "id": 698191,
+            "region": "Arnassi Ruins",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3214,6 +3270,7 @@
           {
             "name": "Arnassi Ruins, Arnassi Statue",
             "id": 698164,
+            "region": "Arnassi Ruins cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3469,6 +3526,7 @@
           {
             "name": "Arnassi Ruins, Transturtle",
             "id": 698217,
+            "region": "Arnassi Ruins cave, transturtle area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3523,6 +3581,7 @@
           {
             "name": "Arnassi Ruins, Crab Armor",
             "id": 698187,
+            "region": "Arnassi Ruins, Crabbius Maximus lair",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3541,6 +3600,7 @@
           {
             "name": "Beating Crabbius Maximus",
             "id": null,
+            "region": "Arnassi Ruins, Crabbius Maximus lair",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3773,6 +3833,7 @@
           {
             "name": "Simon Says area, beating Simon Says",
             "id": 698156,
+            "region": "Simon Says area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3791,6 +3852,7 @@
           {
             "name": "Simon Says area, Transturtle",
             "id": 698216,
+            "region": "Simon Says area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3962,6 +4024,7 @@
           {
             "name": "Mithalas City, first bulb in the left city part",
             "id": 698030,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3980,6 +4043,7 @@
           {
             "name": "Mithalas City, second bulb in the left city part",
             "id": 698035,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3998,6 +4062,7 @@
           {
             "name": "Mithalas City, bulb in the right part",
             "id": 698031,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4016,6 +4081,7 @@
           {
             "name": "Mithalas City, bulb at the top of the city",
             "id": 698033,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4034,6 +4100,7 @@
           {
             "name": "Mithalas City, first bulb in a broken home",
             "id": 698034,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4052,6 +4119,7 @@
           {
             "name": "Mithalas City, second bulb in a broken home",
             "id": 698041,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4070,6 +4138,7 @@
           {
             "name": "Mithalas City, bulb in the bottom left part",
             "id": 698037,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4088,6 +4157,7 @@
           {
             "name": "Mithalas City, first bulb in one of the homes",
             "id": 698038,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4106,6 +4176,7 @@
           {
             "name": "Mithalas City, second bulb in one of the homes",
             "id": 698039,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4124,6 +4195,7 @@
           {
             "name": "Second Secret",
             "id": null,
+            "region": "Mithalas City",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4228,6 +4300,7 @@
           {
             "name": "Mithalas City, first bulb at the end of the top path",
             "id": 698032,
+            "region": "Mithalas City top path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4246,6 +4319,7 @@
           {
             "name": "Mithalas City, second bulb at the end of the top path",
             "id": 698040,
+            "region": "Mithalas City top path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4264,6 +4338,7 @@
           {
             "name": "Mithalas City, bulb in the top path",
             "id": 698036,
+            "region": "Mithalas City top path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4282,6 +4357,7 @@
           {
             "name": "Mithalas City, Mithalas Pot",
             "id": 698174,
+            "region": "Mithalas City top path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4300,6 +4376,7 @@
           {
             "name": "Mithalas City, urn in the Castle flower tube entrance",
             "id": 698128,
+            "region": "Mithalas City top path",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4384,6 +4461,7 @@
           {
             "name": "Mithalas City, Doll",
             "id": 698173,
+            "region": "Mithalas City fish pass",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4402,6 +4480,7 @@
           {
             "name": "Mithalas City, urn inside a home fish pass",
             "id": 698129,
+            "region": "Mithalas City fish pass",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -4614,6 +4693,7 @@
           {
             "name": "Mithalas City Castle, bulb in the flesh hole",
             "id": 698042,
+            "region": "Mithalas castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4632,6 +4712,7 @@
           {
             "name": "Mithalas City Castle, Blue Banner",
             "id": 698165,
+            "region": "Mithalas castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4711,6 +4792,7 @@
           {
             "name": "Mithalas City Castle, beating the Priests",
             "id": 698208,
+            "region": "Mithalas castle, plant tube entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4729,6 +4811,7 @@
           {
             "name": "Beating Mithalan priests",
             "id": null,
+            "region": "Mithalas castle, plant tube entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4793,6 +4876,7 @@
           {
             "name": "Mithalas City Castle, Trident Head",
             "id": 698183,
+            "region": "Mithalas castle spirit crystal",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4916,6 +5000,7 @@
           {
             "name": "Mithalas Cathedral, bulb in the flesh room with fleas",
             "id": 698139,
+            "region": "Mithalas Cathedral start",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4934,6 +5019,7 @@
           {
             "name": "Mithalas Cathedral, Mithalan Dress",
             "id": 698189,
+            "region": "Mithalas Cathedral start",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -4975,6 +5061,7 @@
           {
             "name": "Mithalas Cathedral, first urn in the top right room",
             "id": 698136,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4993,6 +5080,7 @@
           {
             "name": "Mithalas Cathedral, second urn in the top right room",
             "id": 698137,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5011,6 +5099,7 @@
           {
             "name": "Mithalas Cathedral, third urn in the top right room",
             "id": 698138,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5029,6 +5118,7 @@
           {
             "name": "Mithalas Cathedral, urn behind the flesh vein",
             "id": 698142,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5047,6 +5137,7 @@
           {
             "name": "Mithalas Cathedral, urn in the top left eyes boss room",
             "id": 698143,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5065,6 +5156,7 @@
           {
             "name": "Mithalas Cathedral, first urn in the path behind the flesh vein",
             "id": 698144,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5083,6 +5175,7 @@
           {
             "name": "Mithalas Cathedral, second urn in the path behind the flesh vein",
             "id": 698145,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5101,6 +5194,7 @@
           {
             "name": "Mithalas Cathedral, third urn in the path behind the flesh vein",
             "id": 698146,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5119,6 +5213,7 @@
           {
             "name": "Mithalas Cathedral, fourth urn in the top right room",
             "id": 698147,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5137,6 +5232,7 @@
           {
             "name": "Mithalas Cathedral, urn below the left entrance",
             "id": 698198,
+            "region": "Mithalas Cathedral start urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5249,6 +5345,7 @@
           {
             "name": "Mithalas Cathedral, first urn in the bottom right path",
             "id": 698140,
+            "region": "Mithalas Cathedral end",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5267,6 +5364,7 @@
           {
             "name": "Mithalas Cathedral, second urn in the bottom right path",
             "id": 698141,
+            "region": "Mithalas Cathedral end",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5403,6 +5501,7 @@
           {
             "name": "Cathedral Underground, bulb in the center part",
             "id": 698113,
+            "region": "Mithalas Cathedral underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5421,6 +5520,7 @@
           {
             "name": "Cathedral Underground, first bulb in the top left part",
             "id": 698114,
+            "region": "Mithalas Cathedral underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5439,6 +5539,7 @@
           {
             "name": "Cathedral Underground, second bulb in the top left part",
             "id": 698115,
+            "region": "Mithalas Cathedral underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5457,6 +5558,7 @@
           {
             "name": "Cathedral Underground, third bulb in the top left part",
             "id": 698116,
+            "region": "Mithalas Cathedral underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5475,6 +5577,7 @@
           {
             "name": "Cathedral Underground, bulb close to the save crystal",
             "id": 698117,
+            "region": "Mithalas Cathedral underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5493,6 +5596,7 @@
           {
             "name": "Cathedral Underground, bulb in the bottom right path",
             "id": 698118,
+            "region": "Mithalas Cathedral underground",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5559,6 +5663,7 @@
           {
             "name": "Mithalas boss area, beating Mithalan God",
             "id": 698202,
+            "region": "Mithalas Cathedral, after Mithalan God",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5577,6 +5682,7 @@
           {
             "name": "Beating Mithalan God",
             "id": null,
+            "region": "Mithalas Cathedral, after Mithalan God",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5828,6 +5934,7 @@
           {
             "name": "Kelp Forest top left area, bulb in the bottom left clearing",
             "id": 698044,
+            "region": "Kelp Forest top left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5846,6 +5953,7 @@
           {
             "name": "Kelp Forest top left area, bulb in the path down from the top left clearing",
             "id": 698045,
+            "region": "Kelp Forest top left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5864,6 +5972,7 @@
           {
             "name": "Kelp Forest top left area, bulb in the top left clearing",
             "id": 698046,
+            "region": "Kelp Forest top left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5882,6 +5991,7 @@
           {
             "name": "Kelp Forest top left area, Jelly Egg",
             "id": 698185,
+            "region": "Kelp Forest top left area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -5937,6 +6047,7 @@
           {
             "name": "Kelp Forest top left area, bulb close to the Verse Egg",
             "id": 698047,
+            "region": "Kelp Forest top left area fish pass",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5955,6 +6066,7 @@
           {
             "name": "Kelp Forest top left area, Verse Egg",
             "id": 698158,
+            "region": "Kelp Forest top left area fish pass",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6076,6 +6188,7 @@
           {
             "name": "Kelp Forest top right area, bulb under the rock in the right path",
             "id": 698048,
+            "region": "Kelp Forest top right area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6094,6 +6207,7 @@
           {
             "name": "Kelp Forest top right area, bulb at the left of the center clearing",
             "id": 698049,
+            "region": "Kelp Forest top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6112,6 +6226,7 @@
           {
             "name": "Kelp Forest top right area, bulb in the left path's big room",
             "id": 698051,
+            "region": "Kelp Forest top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6130,6 +6245,7 @@
           {
             "name": "Kelp Forest top right area, bulb in the left path's small room",
             "id": 698052,
+            "region": "Kelp Forest top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6148,6 +6264,7 @@
           {
             "name": "Kelp Forest top right area, bulb at the top of the center clearing",
             "id": 698053,
+            "region": "Kelp Forest top right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6166,6 +6283,7 @@
           {
             "name": "Kelp Forest top right area, Black Pearl",
             "id": 698167,
+            "region": "Kelp Forest top right area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6252,6 +6370,7 @@
           {
             "name": "Kelp Forest top right area, bulb in the top fish pass",
             "id": 698050,
+            "region": "Kelp Forest top right area fish pass",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6623,6 +6742,7 @@
           {
             "name": "Kelp Forest bottom left area, Transturtle",
             "id": 698212,
+            "region": "Kelp Forest bottom left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6677,6 +6797,7 @@
           {
             "name": "Kelp Forest bottom left area, bulb close to the spirit crystals",
             "id": 698054,
+            "region": "Kelp Forest bottom left area, spirit crystals",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6695,6 +6816,7 @@
           {
             "name": "Kelp Forest bottom left area, Walker Baby",
             "id": 698186,
+            "region": "Kelp Forest bottom left area, spirit crystals",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -6815,6 +6937,7 @@
           {
             "name": "Kelp Forest bottom right area, Odd Container",
             "id": 698168,
+            "region": "Kelp Forest bottom right area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6878,6 +7001,7 @@
           {
             "name": "Kelp Forest boss area, beating Drunian God",
             "id": 698204,
+            "region": "Kelp Forest Drunian God room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6896,6 +7020,7 @@
           {
             "name": "Beating Drunian God",
             "id": null,
+            "region": "Kelp Forest Drunian God room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7013,6 +7138,7 @@
           {
             "name": "Kelp Forest boss room, bulb at the bottom of the area",
             "id": 698055,
+            "region": "Kelp Forest Drunian God room entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7090,6 +7216,7 @@
           {
             "name": "Kelp Forest sprite cave, bulb inside the fish pass",
             "id": 698056,
+            "region": "Sprite cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7145,6 +7272,7 @@
           {
             "name": "Kelp Forest sprite cave, bulb in the second room",
             "id": 698057,
+            "region": "Sprite cave after the plant tube",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7163,6 +7291,7 @@
           {
             "name": "Kelp Forest sprite cave, Seed Bag",
             "id": 698176,
+            "region": "Sprite cave after the plant tube",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7266,6 +7395,7 @@
           {
             "name": "Mermog cave, bulb in the left part of the cave",
             "id": 698121,
+            "region": "Mermog cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7347,6 +7477,7 @@
           {
             "name": "Mermog cave, Piranha Egg",
             "id": 698197,
+            "region": "Mermog cave boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7365,6 +7496,7 @@
           {
             "name": "Beating Mergog",
             "id": null,
+            "region": "Mermog cave boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7419,6 +7551,7 @@
           {
             "name": "Kelp Forest bottom left area, Fish Cave puzzle",
             "id": 698207,
+            "region": "Kelp Forest fish cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7740,6 +7873,7 @@
           {
             "name": "The Veil top left area, In Li's cave",
             "id": 698199,
+            "region": "The Veil top left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7758,6 +7892,7 @@
           {
             "name": "The Veil top left area, bulb under the rock in the top right path",
             "id": 698078,
+            "region": "The Veil top left area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7785,6 +7920,7 @@
           {
             "name": "The Veil top left area, bulb hidden behind the blocking rock",
             "id": 698076,
+            "region": "The Veil top left area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -7803,6 +7939,7 @@
           {
             "name": "The Veil top left area, Transturtle",
             "id": 698209,
+            "region": "The Veil top left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7858,6 +7995,7 @@
           {
             "name": "The Veil top left area, bulb inside the fish pass",
             "id": 698077,
+            "region": "The Veil top left area fish pass",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8145,6 +8283,7 @@
           {
             "name": "The Veil top right area, bulb at the top of the waterfall",
             "id": 698080,
+            "region": "The Veil top right area, left of temple",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8164,6 +8303,7 @@
           {
             "name": "The Veil top right area, Transturtle",
             "id": 698210,
+            "region": "The Veil top right area, left of temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8351,6 +8491,7 @@
           {
             "name": "The Veil top right area, bulb in the middle of the wall jump cliff",
             "id": 698079,
+            "region": "The Veil top right area, right of temple",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8378,6 +8519,7 @@
           {
             "name": "The Veil top right area, Golden Starfish",
             "id": 698180,
+            "region": "The Veil top right area, right of temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8508,6 +8650,7 @@
           {
             "name": "The Veil bottom area, bulb in the left path",
             "id": 698082,
+            "region": "The Veil bottom left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8584,6 +8727,7 @@
           {
             "name": "The Veil bottom area, bulb in the spirit path",
             "id": 698081,
+            "region": "The Veil bottom spirit crystal area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8648,6 +8792,7 @@
           {
             "name": "The Veil bottom area, Verse Egg",
             "id": 698157,
+            "region": "The Veil bottom left area, in the sunken ship",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8746,6 +8891,7 @@
           {
             "name": "The Veil bottom area, Stone Head",
             "id": 698181,
+            "region": "The Veil bottom right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8800,6 +8946,7 @@
           {
             "name": "Octopus Cave, Dumbo Egg",
             "id": 698196,
+            "region": "Octopus Cave top entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8818,6 +8965,7 @@
           {
             "name": "Beating Octopus Prime",
             "id": null,
+            "region": "Octopus Cave top entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8872,6 +9020,7 @@
           {
             "name": "Octopus Cave, bulb in the path below the Octopus Cave path",
             "id": 698122,
+            "region": "Octopus Cave bottom entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8948,6 +9097,7 @@
           {
             "name": "Turtle cave, Turtle Egg",
             "id": 698184,
+            "region": "The Veil top left area, turtle cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -9002,6 +9152,7 @@
           {
             "name": "Turtle cave, bulb in Bubble Cliff",
             "id": 698000,
+            "region": "The Veil top left area, turtle cave Bubble Cliff",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9020,6 +9171,7 @@
           {
             "name": "Turtle cave, Urchin Costume",
             "id": 698193,
+            "region": "The Veil top left area, turtle cave Bubble Cliff",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9097,6 +9249,7 @@
           {
             "name": "Sun Temple, bulb in the top left part",
             "id": 698094,
+            "region": "Sun Temple left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9115,6 +9268,7 @@
           {
             "name": "Sun Temple, bulb in the top right part",
             "id": 698095,
+            "region": "Sun Temple left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9133,6 +9287,7 @@
           {
             "name": "Sun Temple, bulb at the top of the high dark room",
             "id": 698096,
+            "region": "Sun Temple left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9151,6 +9306,7 @@
           {
             "name": "Sun Temple, Golden Gear",
             "id": 698171,
+            "region": "Sun Temple left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9169,6 +9325,7 @@
           {
             "name": "Third Secret",
             "id": null,
+            "region": "Sun Temple left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9370,6 +9527,7 @@
           {
             "name": "Sun Temple, first bulb of the temple",
             "id": 698091,
+            "region": "Sun Temple right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9388,6 +9546,7 @@
           {
             "name": "Sun Temple, bulb on the right part",
             "id": 698092,
+            "region": "Sun Temple right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9406,6 +9565,7 @@
           {
             "name": "Sun Temple, bulb in the hidden room of the right part",
             "id": 698093,
+            "region": "Sun Temple right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9424,6 +9584,7 @@
           {
             "name": "Sun Temple, Sun Key",
             "id": 698182,
+            "region": "Sun Temple right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9442,6 +9603,7 @@
           {
             "name": "Sun Crystal",
             "id": null,
+            "region": "Sun Temple right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9555,6 +9717,7 @@
           {
             "name": "Sun Temple boss path, first path bulb",
             "id": 698017,
+            "region": "Sun Temple before boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9573,6 +9736,7 @@
           {
             "name": "Sun Temple boss path, second path bulb",
             "id": 698018,
+            "region": "Sun Temple before boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9591,6 +9755,7 @@
           {
             "name": "Sun Temple boss path, first cliff bulb",
             "id": 698019,
+            "region": "Sun Temple before boss area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9634,6 +9799,7 @@
           {
             "name": "Sun Temple boss path, second cliff bulb",
             "id": 698020,
+            "region": "Sun Temple before boss area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9743,6 +9909,7 @@
           {
             "name": "Sun Temple boss area, beating Lumerean God",
             "id": 698203,
+            "region": "Sun Temple boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9761,6 +9928,7 @@
           {
             "name": "Beating Lumerean God",
             "id": null,
+            "region": "Sun Temple boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9909,6 +10077,7 @@
           {
             "name": "Abyss left area, bulb in hidden path room",
             "id": 698024,
+            "region": "Abyss left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9927,6 +10096,7 @@
           {
             "name": "Abyss left area, bulb in the right part",
             "id": 698025,
+            "region": "Abyss left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9945,6 +10115,7 @@
           {
             "name": "Abyss left area, Glowing Seed",
             "id": 698166,
+            "region": "Abyss left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9963,6 +10134,7 @@
           {
             "name": "Abyss left area, Glowing Plant",
             "id": 698172,
+            "region": "Abyss left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10063,6 +10235,7 @@
           {
             "name": "Abyss left area, bulb in the bottom fish pass",
             "id": 698026,
+            "region": "Abyss left bottom area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -10272,6 +10445,7 @@
           {
             "name": "Abyss right area, bulb in the middle path",
             "id": 698110,
+            "region": "Abyss right area",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10290,6 +10464,7 @@
           {
             "name": "Abyss right area, bulb behind the rock in the middle path",
             "id": 698111,
+            "region": "Abyss right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10308,6 +10483,7 @@
           {
             "name": "Abyss right area, bulb in the left green room",
             "id": 698112,
+            "region": "Abyss right area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10393,6 +10569,7 @@
           {
             "name": "Abyss right area, bulb behind the rock in the whale room",
             "id": 698109,
+            "region": "Abyss right area, outside the whale",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -10656,6 +10833,7 @@
           {
             "name": "Abyss right area, Transturtle",
             "id": 698214,
+            "region": "Abyss right area, transturtle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10732,6 +10910,7 @@
           {
             "name": "Ice Cavern, bulb in the room to the right",
             "id": 698083,
+            "region": "Ice Cavern",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10750,6 +10929,7 @@
           {
             "name": "Ice Cavern, first bulb in the top exit room",
             "id": 698084,
+            "region": "Ice Cavern",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10768,6 +10948,7 @@
           {
             "name": "Ice Cavern, second bulb in the top exit room",
             "id": 698085,
+            "region": "Ice Cavern",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10786,6 +10967,7 @@
           {
             "name": "Ice Cavern, third bulb in the top exit room",
             "id": 698086,
+            "region": "Ice Cavern",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10804,6 +10986,7 @@
           {
             "name": "Ice Cavern, bulb in the left room",
             "id": 698087,
+            "region": "Ice Cavern",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10890,6 +11073,7 @@
           {
             "name": "Bubble Cave, bulb in the left cave wall",
             "id": 698089,
+            "region": "Bubble Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10908,6 +11092,7 @@
           {
             "name": "Bubble Cave, bulb in the right cave wall (behind the ice crystal)",
             "id": 698090,
+            "region": "Bubble Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10962,6 +11147,7 @@
           {
             "name": "Bubble Cave, Verse Egg",
             "id": 698161,
+            "region": "Bubble Cave boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10980,6 +11166,7 @@
           {
             "name": "Beating Mantis Shrimp Prime",
             "id": null,
+            "region": "Bubble Cave boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11034,6 +11221,7 @@
           {
             "name": "King Jellyfish Cave, bulb in the right path from King Jelly",
             "id": 698088,
+            "region": "Abyss left area, King jellyfish cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11052,6 +11240,7 @@
           {
             "name": "King Jellyfish Cave, Jellyfish Costume",
             "id": 698188,
+            "region": "Abyss left area, King jellyfish cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11070,6 +11259,7 @@
           {
             "name": "Beating King Jellyfish God Prime",
             "id": null,
+            "region": "Abyss left area, King jellyfish cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11124,6 +11314,7 @@
           {
             "name": "The Whale, Verse Egg",
             "id": 698159,
+            "region": "Inside the whale",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11444,6 +11635,7 @@
           {
             "name": "Sunken City, bulb on top of the boss area",
             "id": 698043,
+            "region": "Sunken City boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11462,6 +11654,7 @@
           {
             "name": "Beating the Golem",
             "id": null,
+            "region": "Sunken City boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11480,6 +11673,7 @@
           {
             "name": "Sunken City cleared",
             "id": null,
+            "region": "Sunken City boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11534,6 +11728,7 @@
           {
             "name": "Sunken City left area, Girl Costume",
             "id": 698192,
+            "region": "Sunken City left area, bedroom",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11694,6 +11889,7 @@
           {
             "name": "The Body center area, breaking Li's cage",
             "id": 698201,
+            "region": "The Body center area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -11713,6 +11909,7 @@
           {
             "name": "The Body center area, bulb on the main path blocking tube",
             "id": 698097,
+            "region": "The Body center area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11767,6 +11964,7 @@
           {
             "name": "The Body left area, first bulb in the top face room",
             "id": 698066,
+            "region": "The Body left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11785,6 +11983,7 @@
           {
             "name": "The Body left area, second bulb in the top face room",
             "id": 698069,
+            "region": "The Body left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11803,6 +12002,7 @@
           {
             "name": "The Body left area, bulb below the water stream",
             "id": 698067,
+            "region": "The Body left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11821,6 +12021,7 @@
           {
             "name": "The Body left area, bulb in the top path to the top face room",
             "id": 698068,
+            "region": "The Body left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11839,6 +12040,7 @@
           {
             "name": "The Body left area, bulb in the bottom face room",
             "id": 698070,
+            "region": "The Body left area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11893,6 +12095,7 @@
           {
             "name": "The Body right area, bulb in the top face room",
             "id": 698100,
+            "region": "The Body right area, top path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11947,6 +12150,7 @@
           {
             "name": "The Body right area, bulb in the top path to the bottom face room",
             "id": 698098,
+            "region": "The Body right area, bottom path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11965,6 +12169,7 @@
           {
             "name": "The Body right area, bulb in the bottom face room",
             "id": 698099,
+            "region": "The Body right area, bottom path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12059,6 +12264,7 @@
           {
             "name": "The Body bottom area, bulb in the Jelly Zap room",
             "id": 698101,
+            "region": "The Body bottom area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12077,6 +12283,7 @@
           {
             "name": "The Body bottom area, bulb in the nautilus room",
             "id": 698102,
+            "region": "The Body bottom area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12095,6 +12302,7 @@
           {
             "name": "The Body bottom area, Mutant Costume",
             "id": 698190,
+            "region": "The Body bottom area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12455,6 +12663,7 @@
           {
             "name": "Final Boss area, first bulb in the turtle room",
             "id": 698103,
+            "region": "The Body, final boss area turtle room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12473,6 +12682,7 @@
           {
             "name": "Final Boss area, second bulb in the turtle room",
             "id": 698104,
+            "region": "The Body, final boss area turtle room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12491,6 +12701,7 @@
           {
             "name": "Final Boss area, third bulb in the turtle room",
             "id": 698105,
+            "region": "The Body, final boss area turtle room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12509,6 +12720,7 @@
           {
             "name": "Final Boss area, Transturtle",
             "id": 698215,
+            "region": "The Body, final boss area turtle room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12563,6 +12775,7 @@
           {
             "name": "Final Boss area, bulb in the boss third form room",
             "id": 698106,
+            "region": "The Body, final boss",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12604,6 +12817,7 @@
           {
             "name": "Objective complete",
             "id": null,
+            "region": "The Body, final boss area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12693,6 +12907,7 @@
           {
             "name": "First Secret",
             "id": null,
+            "region": "First Secret area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12799,6 +13014,7 @@
           {
             "name": "Energy Temple, Energy Idol",
             "id": 698170,
+            "region": "Energy Temple Idol room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13029,6 +13245,7 @@
           {
             "name": "Sunken City left area, crate in the little pipe room",
             "id": 698151,
+            "region": "Sunken City left area crates",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13047,6 +13264,7 @@
           {
             "name": "Sunken City left area, crate close to the save crystal",
             "id": 698152,
+            "region": "Sunken City left area crates",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13065,6 +13283,7 @@
           {
             "name": "Sunken City left area, crate before the bedroom",
             "id": 698153,
+            "region": "Sunken City left area crates",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13107,6 +13326,7 @@
           {
             "name": "Sunken City right area, crate close to the save crystal",
             "id": 698154,
+            "region": "Sunken City right area crates",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13125,6 +13345,7 @@
           {
             "name": "Sunken City right area, crate in the left bottom room",
             "id": 698155,
+            "region": "Sunken City right area crates",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13291,6 +13512,7 @@
           {
             "name": "Home Waters, bulb in the path below Nautilus Prime",
             "id": 698059,
+            "region": "Home Waters, behind rock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13309,6 +13531,7 @@
           {
             "name": "Home Waters, bulb in the bottom left room",
             "id": 698063,
+            "region": "Home Waters, behind rock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13351,6 +13574,7 @@
           {
             "name": "Open Waters top right area, first urn in the Mithalas exit",
             "id": 698148,
+            "region": "Open Waters top right area, Mithalas entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13369,6 +13593,7 @@
           {
             "name": "Open Waters top right area, second urn in the Mithalas exit",
             "id": 698149,
+            "region": "Open Waters top right area, Mithalas entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13387,6 +13612,7 @@
           {
             "name": "Open Waters top right area, third urn in the Mithalas exit",
             "id": 698150,
+            "region": "Open Waters top right area, Mithalas entrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13429,6 +13655,7 @@
           {
             "name": "Mithalas City, first urn in one of the homes",
             "id": 698123,
+            "region": "Mithalas City urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13447,6 +13674,7 @@
           {
             "name": "Mithalas City, second urn in one of the homes",
             "id": 698124,
+            "region": "Mithalas City urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13465,6 +13693,7 @@
           {
             "name": "Mithalas City, first urn in the city reserve",
             "id": 698125,
+            "region": "Mithalas City urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13483,6 +13712,7 @@
           {
             "name": "Mithalas City, second urn in the city reserve",
             "id": 698126,
+            "region": "Mithalas City urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13501,6 +13731,7 @@
           {
             "name": "Mithalas City, third urn in the city reserve",
             "id": 698127,
+            "region": "Mithalas City urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13543,6 +13774,7 @@
           {
             "name": "Mithalas City Castle, urn in the bedroom",
             "id": 698130,
+            "region": "Mithalas castle urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13561,6 +13793,7 @@
           {
             "name": "Mithalas City Castle, first urn of the single lamp path",
             "id": 698131,
+            "region": "Mithalas castle urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13579,6 +13812,7 @@
           {
             "name": "Mithalas City Castle, second urn of the single lamp path",
             "id": 698132,
+            "region": "Mithalas castle urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13597,6 +13831,7 @@
           {
             "name": "Mithalas City Castle, urn in the bottom room",
             "id": 698133,
+            "region": "Mithalas castle urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13615,6 +13850,7 @@
           {
             "name": "Mithalas City Castle, first urn on the entrance path",
             "id": 698134,
+            "region": "Mithalas castle urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13633,6 +13869,7 @@
           {
             "name": "Mithalas City Castle, second urn on the entrance path",
             "id": 698135,
+            "region": "Mithalas castle urns",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15554,11 +15791,157 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Damage",
-      "Everything",
-      "Light"
-    ]
+    "1": {
+      "Damage": [
+        "Energy Form",
+        "Li and Li Song",
+        "Baby Blaster",
+        "Beast Form",
+        "Baby Piranha",
+        "Baby Nautilus",
+        "Nature Form"
+      ],
+      "Light": [
+        "Baby Dumbo",
+        "Sun Form"
+      ],
+      "Everything": [
+        "Divine Soup",
+        "Leadership Roll",
+        "Sea Cake",
+        "Eel Oil x 2",
+        "Black Pearl",
+        "Red Berry",
+        "Arcane Poultice",
+        "Jelly Egg",
+        "Fish Oil",
+        "Wok",
+        "Rotten Cake",
+        "Spicy Roll",
+        "Veggie Cake",
+        "Turtle Soup",
+        "Volcano Roll",
+        "Mushroom x 2",
+        "Crab Armor",
+        "Bind Song",
+        "Loaf of Life",
+        "Rainbow Mushroom",
+        "Small Egg x 2",
+        "Baby Dumbo",
+        "Perogi",
+        "Fish Oil x 3",
+        "Jelly Beacon",
+        "Berry Ice Cream",
+        "Hand Roll",
+        "Ice Cream",
+        "Baby Blaster",
+        "Royal Soup",
+        "Magic Soup",
+        "Shark Fin Soup",
+        "Arnassi Statue",
+        "Tasty Roll",
+        "Spicy Meat x 2",
+        "Hearty Soup",
+        "Leeching Poultice",
+        "Baby Piranha",
+        "Healing Poultice x 2",
+        "Plump Perogi",
+        "Legendary Cake",
+        "Poison Loaf",
+        "Rainbow Soup",
+        "Transturtle Abyss right",
+        "King's Skull",
+        "Sun Form",
+        "Baby Walker",
+        "Swamp Cake",
+        "Glowing Egg",
+        "Golden Gear",
+        "Transturtle Veil top left",
+        "Hot Soup",
+        "Beast Form",
+        "Energy Statue",
+        "Song Plant Spore",
+        "Spirit Form",
+        "Rotten Meat x 2",
+        "Poison Soup",
+        "Transturtle Veil top right",
+        "Cold Borscht",
+        "Mithalas Doll",
+        "Baby Nautilus",
+        "Special Bulb",
+        "Small Egg",
+        "Rotten Meat x 8",
+        "Rotten Loaf x 8",
+        "Mithalas Banner",
+        "Transturtle Open Waters top right",
+        "Leadership Roll x 2",
+        "Leaf Poultice",
+        "Arnassi Armor",
+        "Sea Loaf",
+        "Tasty Cake",
+        "Li and Li Song",
+        "Buttery Sea Loaf",
+        "Urchin Costume",
+        "Nature Form",
+        "Sun Key",
+        "Glowing Seed",
+        "Long Life Soup",
+        "Small Bone x 3",
+        "Special Cake",
+        "Plant Leaf x 3",
+        "Fish Form",
+        "Tough Cake",
+        "Transturtle Home Waters",
+        "Veggie Ice Cream",
+        "Anemone",
+        "Transturtle Arnassi Ruins",
+        "Fish Meat x 2",
+        "Veggie Soup",
+        "Shield Song",
+        "Spider Roll",
+        "Hot Soup x 2",
+        "Zuuna's Perogi",
+        "Seed Bag",
+        "Stone Head",
+        "Transturtle Kelp Forest bottom left",
+        "Spicy Soup",
+        "Red Bulb x 2",
+        "Krotite Armor",
+        "Mithalas Pot",
+        "Mutant Costume",
+        "Crab Cake",
+        "Trident",
+        "Vedha Sea Crisp",
+        "Mithalan Dress",
+        "Leaf Poultice x 3",
+        "Dual Form",
+        "Girl Costume",
+        "Plant Leaf",
+        "Jelly Plant",
+        "Turtle Egg",
+        "Odd Container",
+        "Glowing Egg x 2",
+        "Cold Soup",
+        "Healing Poultice",
+        "Sea Loaf x 2",
+        "Golden Starfish",
+        "Plant Leaf x 2",
+        "Small Bone x 2",
+        "Health Upgrade",
+        "Big Seed",
+        "Tooth",
+        "Dumbo Ice Cream",
+        "Sight Poultice",
+        "Hot Borscht",
+        "Energy Form",
+        "Rotten Meat",
+        "Small Tentacle x 2",
+        "Vedha's Cure-All",
+        "Transturtle Final Boss",
+        "Jelly Costume",
+        "Transturtle Simon Says"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

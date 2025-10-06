@@ -195,6 +195,7 @@
           {
             "name": "Spaceship - Rumbi Abuse",
             "id": 2000301000,
+            "region": "Spaceship",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -213,6 +214,7 @@
           {
             "name": "Mafia Boss Shop Item",
             "id": 2000301013,
+            "region": "Spaceship",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -277,6 +279,7 @@
           {
             "name": "Act Completion (Time Rift - Gallery)",
             "id": 2000312758,
+            "region": "Time Rift - Gallery",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -324,6 +327,7 @@
           {
             "name": "Act Completion (Time Rift - The Lab)",
             "id": 2000312838,
+            "region": "Time Rift - The Lab",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -591,6 +595,7 @@
           {
             "name": "Welcome to Mafia Town - Umbrella",
             "id": 2000301002,
+            "region": "Welcome to Mafia Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -609,6 +614,7 @@
           {
             "name": "Act Completion (Welcome to Mafia Town)",
             "id": 2000311771,
+            "region": "Welcome to Mafia Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -743,6 +749,7 @@
           {
             "name": "Act Completion (Barrel Battle)",
             "id": 2000311958,
+            "region": "Barrel Battle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -875,6 +882,7 @@
           {
             "name": "Act Completion (She Came from Outer Space)",
             "id": 2000312262,
+            "region": "She Came from Outer Space",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1073,6 +1081,7 @@
           {
             "name": "Mafia HQ - Hallway Brewing Crate",
             "id": 2000305387,
+            "region": "Down with the Mafia!",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1097,6 +1106,7 @@
           {
             "name": "Mafia HQ - Freezer Chest",
             "id": 2000303241,
+            "region": "Down with the Mafia!",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1115,6 +1125,7 @@
           {
             "name": "Mafia HQ - Secret Room",
             "id": 2000304979,
+            "region": "Down with the Mafia!",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1139,6 +1150,7 @@
           {
             "name": "Mafia HQ - Bathroom Stall Chest",
             "id": 2000303243,
+            "region": "Down with the Mafia!",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1157,6 +1169,7 @@
           {
             "name": "Act Completion (Down with the Mafia!)",
             "id": 2000311326,
+            "region": "Down with the Mafia!",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1281,6 +1294,7 @@
           {
             "name": "Act Completion (Heating Up Mafia Town)",
             "id": 2000311481,
+            "region": "Heating Up Mafia Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1299,6 +1313,7 @@
           {
             "name": "HUMT Access",
             "id": null,
+            "region": "Heating Up Mafia Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1409,6 +1424,7 @@
           {
             "name": "Act Completion (Cheating the Race)",
             "id": 2000312318,
+            "region": "Cheating the Race",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1569,6 +1585,7 @@
           {
             "name": "Act Completion (The Golden Vault)",
             "id": 2000312250,
+            "region": "The Golden Vault",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1812,6 +1829,7 @@
           {
             "name": "Act Completion (Dead Bird Studio)",
             "id": 2000311383,
+            "region": "Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1907,6 +1925,7 @@
           {
             "name": "Murder on the Owl Express - Cafeteria",
             "id": 2000305313,
+            "region": "Murder on the Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1925,6 +1944,7 @@
           {
             "name": "Murder on the Owl Express - Luggage Room Top",
             "id": 2000305090,
+            "region": "Murder on the Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1943,6 +1963,7 @@
           {
             "name": "Murder on the Owl Express - Luggage Room Bottom",
             "id": 2000305091,
+            "region": "Murder on the Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1961,6 +1982,7 @@
           {
             "name": "Murder on the Owl Express - Raven Suite Room",
             "id": 2000305701,
+            "region": "Murder on the Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -1985,6 +2007,7 @@
           {
             "name": "Murder on the Owl Express - Raven Suite Top",
             "id": 2000305312,
+            "region": "Murder on the Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2003,6 +2026,7 @@
           {
             "name": "Murder on the Owl Express - Lounge Chest",
             "id": 2000303963,
+            "region": "Murder on the Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2021,6 +2045,7 @@
           {
             "name": "Act Completion (Murder on the Owl Express)",
             "id": 2000311544,
+            "region": "Murder on the Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2150,6 +2175,7 @@
           {
             "name": "Picture Perfect - Behind Badge Seller",
             "id": 2000304307,
+            "region": "Picture Perfect",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2168,6 +2194,7 @@
           {
             "name": "Picture Perfect - Hats Buy Building",
             "id": 2000304530,
+            "region": "Picture Perfect",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2186,6 +2213,7 @@
           {
             "name": "Act Completion (Picture Perfect)",
             "id": 2000311587,
+            "region": "Picture Perfect",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2324,6 +2352,7 @@
           {
             "name": "Act Completion (Train Rush)",
             "id": 2000312481,
+            "region": "Train Rush",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2490,6 +2519,7 @@
           {
             "name": "Act Completion (The Big Parade)",
             "id": 2000311157,
+            "region": "The Big Parade",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2564,6 +2594,7 @@
           {
             "name": "Act Completion (Award Ceremony)",
             "id": 2000311488,
+            "region": "Award Ceremony",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2724,6 +2755,7 @@
           {
             "name": "Dead Bird Studio Basement - Window Platform",
             "id": 2000305432,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2743,6 +2775,7 @@
           {
             "name": "Dead Bird Studio Basement - Cardboard Conductor",
             "id": 2000305059,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2762,6 +2795,7 @@
           {
             "name": "Dead Bird Studio Basement - Above Conductor Sign",
             "id": 2000305057,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2781,6 +2815,7 @@
           {
             "name": "Dead Bird Studio Basement - Logo Wall",
             "id": 2000305207,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2799,6 +2834,7 @@
           {
             "name": "Dead Bird Studio Basement - Disco Room",
             "id": 2000305061,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2818,6 +2854,7 @@
           {
             "name": "Dead Bird Studio Basement - Small Room",
             "id": 2000304813,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2836,6 +2873,7 @@
           {
             "name": "Dead Bird Studio Basement - Vent Pipe",
             "id": 2000305430,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2854,6 +2892,7 @@
           {
             "name": "Dead Bird Studio Basement - Tightrope",
             "id": 2000305058,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2873,6 +2912,7 @@
           {
             "name": "Dead Bird Studio Basement - Cameras",
             "id": 2000305431,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2892,6 +2932,7 @@
           {
             "name": "Dead Bird Studio Basement - Locked Room",
             "id": 2000305819,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2911,6 +2952,7 @@
           {
             "name": "Act Completion (Dead Bird Studio Basement)",
             "id": 2000312253,
+            "region": "Dead Bird Studio Basement",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -2963,6 +3005,7 @@
           {
             "name": "Act Completion (Time Rift - Dead Bird Studio)",
             "id": 2000312577,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2981,6 +3024,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: Behind Cardboard Planet",
             "id": 2000345449,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2999,6 +3043,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: Near Time Rift Gate",
             "id": 2000345447,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3017,6 +3062,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: Top of Metal Bar",
             "id": 2000345448,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3035,6 +3081,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: Lava Lamp",
             "id": 2000345450,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3053,6 +3100,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: Above Horse Picture",
             "id": 2000345451,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3071,6 +3119,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: Green Screen",
             "id": 2000345452,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3089,6 +3138,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: In The Corner",
             "id": 2000345453,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3107,6 +3157,7 @@
           {
             "name": "Dead Bird Studio (Rift) - Page: Above TV Room",
             "id": 2000345445,
+            "region": "Time Rift - Dead Bird Studio",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3148,6 +3199,7 @@
           {
             "name": "Act Completion (Time Rift - The Owl Express)",
             "id": 2000312807,
+            "region": "Time Rift - The Owl Express",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3249,6 +3301,7 @@
           {
             "name": "Act Completion (Time Rift - The Moon)",
             "id": 2000312785,
+            "region": "Time Rift - The Moon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3300,6 +3353,7 @@
           {
             "name": "Dead Bird Studio - Up the Ladder",
             "id": 2000304874,
+            "region": "Dead Bird Studio - Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3318,6 +3372,7 @@
           {
             "name": "Dead Bird Studio - Red Building Top",
             "id": 2000305024,
+            "region": "Dead Bird Studio - Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3336,6 +3391,7 @@
           {
             "name": "Dead Bird Studio - Behind Water Tower",
             "id": 2000305248,
+            "region": "Dead Bird Studio - Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3354,6 +3410,7 @@
           {
             "name": "Dead Bird Studio - Side of House",
             "id": 2000305247,
+            "region": "Dead Bird Studio - Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3395,6 +3452,7 @@
           {
             "name": "Dead Bird Studio - DJ Grooves Sign Chest",
             "id": 2000303901,
+            "region": "Dead Bird Studio - Post Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3431,6 +3489,7 @@
           {
             "name": "Dead Bird Studio - Tightrope Chest",
             "id": 2000303898,
+            "region": "Dead Bird Studio - Post Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3449,6 +3508,7 @@
           {
             "name": "Dead Bird Studio - Tepee Chest",
             "id": 2000303899,
+            "region": "Dead Bird Studio - Post Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3485,6 +3545,7 @@
           {
             "name": "Dead Bird Studio - Conductor Chest",
             "id": 2000303900,
+            "region": "Dead Bird Studio - Post Elevator Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -3742,6 +3803,7 @@
           {
             "name": "Contractual Obligations - Cherry Bomb Bone Cage",
             "id": 2000324761,
+            "region": "Contractual Obligations",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3760,6 +3822,7 @@
           {
             "name": "Act Completion (Contractual Obligations)",
             "id": 2000312317,
+            "region": "Contractual Obligations",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3778,6 +3841,7 @@
           {
             "name": "Snatcher's Contract - The Subcon Well",
             "id": 2000300200,
+            "region": "Contractual Obligations",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3898,6 +3962,7 @@
           {
             "name": "Subcon Well - Hookshot Badge Chest",
             "id": 2000324114,
+            "region": "The Subcon Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3916,6 +3981,7 @@
           {
             "name": "Subcon Well - Above Chest",
             "id": 2000324612,
+            "region": "The Subcon Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3934,6 +4000,7 @@
           {
             "name": "Subcon Well - On Pipe",
             "id": 2000324311,
+            "region": "The Subcon Well",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -3953,6 +4020,7 @@
           {
             "name": "Subcon Well - Mushroom",
             "id": 2000325318,
+            "region": "The Subcon Well",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3971,6 +4039,7 @@
           {
             "name": "Act Completion (The Subcon Well)",
             "id": 2000311160,
+            "region": "The Subcon Well",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -4158,6 +4227,7 @@
           {
             "name": "Act Completion (Toilet of Doom)",
             "id": 2000311984,
+            "region": "Toilet of Doom",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4202,6 +4272,7 @@
           {
             "name": "TOD Access",
             "id": null,
+            "region": "Toilet of Doom",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4400,6 +4471,7 @@
           {
             "name": "Queen Vanessa's Manor - Cellar",
             "id": 2000324841,
+            "region": "Queen Vanessa's Manor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4418,6 +4490,7 @@
           {
             "name": "Queen Vanessa's Manor - Bedroom Chest",
             "id": 2000323808,
+            "region": "Queen Vanessa's Manor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4436,6 +4509,7 @@
           {
             "name": "Queen Vanessa's Manor - Hall Chest",
             "id": 2000323896,
+            "region": "Queen Vanessa's Manor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4454,6 +4528,7 @@
           {
             "name": "Queen Vanessa's Manor - Chandelier",
             "id": 2000325546,
+            "region": "Queen Vanessa's Manor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4472,6 +4547,7 @@
           {
             "name": "Act Completion (Queen Vanessa's Manor)",
             "id": 2000312017,
+            "region": "Queen Vanessa's Manor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4666,6 +4742,7 @@
           {
             "name": "Act Completion (Mail Delivery Service)",
             "id": 2000312032,
+            "region": "Mail Delivery Service",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5010,6 +5087,7 @@
           {
             "name": "AFR Access",
             "id": null,
+            "region": "Alpine Free Roam",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5146,6 +5224,7 @@
           {
             "name": "Alpine Skyline - The Purrloined Village: Horned Stone",
             "id": 2000335561,
+            "region": "Alpine Skyline Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5164,6 +5243,7 @@
           {
             "name": "Alpine Skyline - The Purrloined Village: Chest Reward",
             "id": 2000334831,
+            "region": "Alpine Skyline Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5182,6 +5262,7 @@
           {
             "name": "Alpine Skyline - Mystifying Time Mesa: Zipline",
             "id": 2000337058,
+            "region": "Alpine Skyline Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -5221,6 +5302,7 @@
           {
             "name": "Alpine Skyline - Mystifying Time Mesa: Gate Puzzle",
             "id": 2000336052,
+            "region": "Alpine Skyline Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5239,6 +5321,7 @@
           {
             "name": "Alpine Skyline - The Twilight Path",
             "id": 2000334434,
+            "region": "Alpine Skyline Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5309,6 +5392,7 @@
           {
             "name": "Alpine Skyline - Goat Village: Below Hookpoint",
             "id": 2000334856,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5327,6 +5411,7 @@
           {
             "name": "Alpine Skyline - Goat Village: Hidden Branch",
             "id": 2000334855,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5345,6 +5430,7 @@
           {
             "name": "Alpine Skyline - Goat Refinery",
             "id": 2000333635,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5396,6 +5482,7 @@
           {
             "name": "Alpine Skyline - Bird Pass Fork",
             "id": 2000335911,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5415,6 +5502,7 @@
           {
             "name": "Alpine Skyline - Yellow Band Hills",
             "id": 2000335756,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5449,6 +5537,7 @@
           {
             "name": "Alpine Skyline - Ember Summit",
             "id": 2000336311,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5468,6 +5557,7 @@
           {
             "name": "Alpine Skyline - Goat Outpost Horn",
             "id": 2000334760,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5487,6 +5577,7 @@
           {
             "name": "Alpine Skyline - Windy Passage",
             "id": 2000334776,
+            "region": "Alpine Skyline Area (TIHS)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5529,6 +5620,7 @@
           {
             "name": "Alpine Skyline - The Birdhouse: Triple Crow Chest",
             "id": 2000334758,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5547,6 +5639,7 @@
           {
             "name": "Alpine Skyline - The Birdhouse: Dweller Platforms Relic",
             "id": 2000336497,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -5571,6 +5664,7 @@
           {
             "name": "Alpine Skyline - The Birdhouse: Brewing Crate House",
             "id": 2000336496,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5589,6 +5683,7 @@
           {
             "name": "Alpine Skyline - The Birdhouse: Hay Bale",
             "id": 2000335885,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5607,6 +5702,7 @@
           {
             "name": "Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet",
             "id": 2000335886,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5625,6 +5721,7 @@
           {
             "name": "Alpine Skyline - The Birdhouse: Outer Edge",
             "id": 2000335492,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5643,6 +5740,7 @@
           {
             "name": "Act Completion (The Birdhouse)",
             "id": 2000311428,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5661,6 +5759,7 @@
           {
             "name": "Birdhouse Cleared",
             "id": null,
+            "region": "The Birdhouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5702,6 +5801,7 @@
           {
             "name": "Alpine Skyline - The Lava Cake: Center Fence Cage",
             "id": 2000335448,
+            "region": "The Lava Cake",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5720,6 +5820,7 @@
           {
             "name": "Alpine Skyline - The Lava Cake: Outer Island Chest",
             "id": 2000334291,
+            "region": "The Lava Cake",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5738,6 +5839,7 @@
           {
             "name": "Alpine Skyline - The Lava Cake: Dweller Pillars",
             "id": 2000335417,
+            "region": "The Lava Cake",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5756,6 +5858,7 @@
           {
             "name": "Alpine Skyline - The Lava Cake: Top Cake",
             "id": 2000335418,
+            "region": "The Lava Cake",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5774,6 +5877,7 @@
           {
             "name": "Act Completion (The Lava Cake)",
             "id": 2000312509,
+            "region": "The Lava Cake",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5792,6 +5896,7 @@
           {
             "name": "Lava Cake Cleared",
             "id": null,
+            "region": "The Lava Cake",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5833,6 +5938,7 @@
           {
             "name": "Alpine Skyline - The Windmill: Inside Pon Cluster",
             "id": 2000336395,
+            "region": "The Windmill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5851,6 +5957,7 @@
           {
             "name": "Alpine Skyline - The Windmill: Entrance",
             "id": 2000335783,
+            "region": "The Windmill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5869,6 +5976,7 @@
           {
             "name": "Alpine Skyline - The Windmill: Dropdown",
             "id": 2000335815,
+            "region": "The Windmill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5887,6 +5995,7 @@
           {
             "name": "Alpine Skyline - The Windmill: House Window",
             "id": 2000335389,
+            "region": "The Windmill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5905,6 +6014,7 @@
           {
             "name": "Act Completion (The Windmill)",
             "id": 2000312263,
+            "region": "The Windmill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5923,6 +6033,7 @@
           {
             "name": "Windmill Cleared",
             "id": null,
+            "region": "The Windmill",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5964,6 +6075,7 @@
           {
             "name": "Alpine Skyline - The Twilight Bell: Wide Purple Platform",
             "id": 2000336478,
+            "region": "The Twilight Bell",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5982,6 +6094,7 @@
           {
             "name": "Alpine Skyline - The Twilight Bell: Ice Platform",
             "id": 2000335826,
+            "region": "The Twilight Bell",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6000,6 +6113,7 @@
           {
             "name": "Act Completion (The Twilight Bell)",
             "id": 2000311540,
+            "region": "The Twilight Bell",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6018,6 +6132,7 @@
           {
             "name": "Twilight Bell Cleared",
             "id": null,
+            "region": "The Twilight Bell",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6110,6 +6225,7 @@
           {
             "name": "Act Completion (The Illness has Spread)",
             "id": 2000312022,
+            "region": "The Illness has Spread",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6129,6 +6245,7 @@
           {
             "name": "TIHS Access",
             "id": null,
+            "region": "The Illness has Spread",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6180,6 +6297,7 @@
           {
             "name": "Act Completion (Time Rift - Alpine Skyline)",
             "id": 2000311777,
+            "region": "Time Rift - Alpine Skyline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6198,6 +6316,7 @@
           {
             "name": "Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge",
             "id": 2000345016,
+            "region": "Time Rift - Alpine Skyline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6216,6 +6335,7 @@
           {
             "name": "Alpine Skyline (Rift) - Page: Windmill Island Ledge",
             "id": 2000345012,
+            "region": "Time Rift - Alpine Skyline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6234,6 +6354,7 @@
           {
             "name": "Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar",
             "id": 2000345015,
+            "region": "Time Rift - Alpine Skyline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6252,6 +6373,7 @@
           {
             "name": "Alpine Skyline (Rift) - Page: Lonely Birdhouse Top",
             "id": 2000345014,
+            "region": "Time Rift - Alpine Skyline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6270,6 +6392,7 @@
           {
             "name": "Alpine Skyline (Rift) - Page: Below Aqueduct",
             "id": 2000345013,
+            "region": "Time Rift - Alpine Skyline",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6371,6 +6494,7 @@
           {
             "name": "Act Completion (Time Rift - The Twilight Bell)",
             "id": 2000312399,
+            "region": "Time Rift - The Twilight Bell",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6428,6 +6552,7 @@
           {
             "name": "Act Completion (Time Rift - Curly Tail Trail)",
             "id": 2000313335,
+            "region": "Time Rift - Curly Tail Trail",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6550,6 +6675,7 @@
           {
             "name": "Mafia Town - Old Man (Seaside Spaghetti)",
             "id": 2000303833,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6639,6 +6765,7 @@
           {
             "name": "Mafia Town - Old Man (Steel Beams)",
             "id": 2000303832,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -6728,6 +6855,7 @@
           {
             "name": "Mafia Town - Blue Vault",
             "id": 2000302850,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6746,6 +6874,7 @@
           {
             "name": "Mafia Town - Green Vault",
             "id": 2000302851,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6764,6 +6893,7 @@
           {
             "name": "Mafia Town - Red Vault",
             "id": 2000302848,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6782,6 +6912,7 @@
           {
             "name": "Mafia Town - Blue Vault Brewing Crate",
             "id": 2000305572,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6806,6 +6937,7 @@
           {
             "name": "Mafia Town - Plaza Under Boxes",
             "id": 2000304458,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6824,6 +6956,7 @@
           {
             "name": "Mafia Town - Small Boat",
             "id": 2000304460,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6842,6 +6975,7 @@
           {
             "name": "Mafia Town - Staircase Pon Cluster",
             "id": 2000304611,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6860,6 +6994,7 @@
           {
             "name": "Mafia Town - Palm Tree",
             "id": 2000304609,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6878,6 +7013,7 @@
           {
             "name": "Mafia Town - Port",
             "id": 2000305219,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6896,6 +7032,7 @@
           {
             "name": "Mafia Town - Docks Chest",
             "id": 2000303534,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6914,6 +7051,7 @@
           {
             "name": "Mafia Town - Ice Hat Cage",
             "id": 2000304831,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -6938,6 +7076,7 @@
           {
             "name": "Mafia Town - Hidden Buttons Chest",
             "id": 2000303483,
+            "region": "Mafia Town Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7002,6 +7141,7 @@
           {
             "name": "Mafia Town - Dweller Boxes",
             "id": 2000304462,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7020,6 +7160,7 @@
           {
             "name": "Mafia Town - Ledge Chest",
             "id": 2000303530,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7038,6 +7179,7 @@
           {
             "name": "Mafia Town - Yellow Sphere Building Chest",
             "id": 2000303535,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7056,6 +7198,7 @@
           {
             "name": "Mafia Town - Beneath Scaffolding",
             "id": 2000304456,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7074,6 +7217,7 @@
           {
             "name": "Mafia Town - On Scaffolding",
             "id": 2000304457,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7177,6 +7321,7 @@
           {
             "name": "Mafia Town - Cargo Ship",
             "id": 2000304459,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7195,6 +7340,7 @@
           {
             "name": "Mafia Town - Beach Alcove",
             "id": 2000304463,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7213,6 +7359,7 @@
           {
             "name": "Mafia Town - Wood Cage",
             "id": 2000304606,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7231,6 +7378,7 @@
           {
             "name": "Mafia Town - Beach Patio",
             "id": 2000304610,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7249,6 +7397,7 @@
           {
             "name": "Mafia Town - Steel Beam Nest",
             "id": 2000304608,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7267,6 +7416,7 @@
           {
             "name": "Mafia Town - Top of Ruined Tower",
             "id": 2000304607,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7291,6 +7441,7 @@
           {
             "name": "Mafia Town - Hot Air Balloon",
             "id": 2000304829,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7315,6 +7466,7 @@
           {
             "name": "Mafia Town - Camera Badge 1",
             "id": 2000302003,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7333,6 +7485,7 @@
           {
             "name": "Mafia Town - Camera Badge 2",
             "id": 2000302004,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7351,6 +7504,7 @@
           {
             "name": "Mafia Town - Chest Beneath Aqueduct",
             "id": 2000303489,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7369,6 +7523,7 @@
           {
             "name": "Mafia Town - Secret Cave",
             "id": 2000305220,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7405,6 +7560,7 @@
           {
             "name": "Mafia Town - Crow Chest",
             "id": 2000303532,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7423,6 +7579,7 @@
           {
             "name": "Mafia Town - Above Boats",
             "id": 2000305218,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7454,6 +7611,7 @@
           {
             "name": "Mafia Town - Slip Slide Chest",
             "id": 2000303529,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7472,6 +7630,7 @@
           {
             "name": "Mafia Town - Behind Faucet",
             "id": 2000304214,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7490,6 +7649,7 @@
           {
             "name": "Mafia Town - Clock Tower Chest",
             "id": 2000303481,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7509,6 +7669,7 @@
           {
             "name": "Mafia Town - Top of Lighthouse",
             "id": 2000304213,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -7528,6 +7689,7 @@
           {
             "name": "Mafia Town - Mafia Geek Platform",
             "id": 2000304212,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7631,6 +7793,7 @@
           {
             "name": "Mafia Town - Behind HQ Chest",
             "id": 2000303486,
+            "region": "Mafia Town Area (HUMT)",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7779,6 +7942,7 @@
           {
             "name": "Act Completion (Time Rift - Mafia of Cooks)",
             "id": 2000311855,
+            "region": "Time Rift - Mafia of Cooks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7797,6 +7961,7 @@
           {
             "name": "Mafia of Cooks - Page: Fish Pile",
             "id": 2000345091,
+            "region": "Time Rift - Mafia of Cooks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7815,6 +7980,7 @@
           {
             "name": "Mafia of Cooks - Page: Trash Mound",
             "id": 2000345090,
+            "region": "Time Rift - Mafia of Cooks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7833,6 +7999,7 @@
           {
             "name": "Mafia of Cooks - Page: Beside Red Building",
             "id": 2000345092,
+            "region": "Time Rift - Mafia of Cooks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7851,6 +8018,7 @@
           {
             "name": "Mafia of Cooks - Page: Behind Shipping Containers",
             "id": 2000345095,
+            "region": "Time Rift - Mafia of Cooks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7869,6 +8037,7 @@
           {
             "name": "Mafia of Cooks - Page: Top of Boat",
             "id": 2000345093,
+            "region": "Time Rift - Mafia of Cooks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7887,6 +8056,7 @@
           {
             "name": "Mafia of Cooks - Page: Below Dock",
             "id": 2000345094,
+            "region": "Time Rift - Mafia of Cooks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7928,6 +8098,7 @@
           {
             "name": "Act Completion (Time Rift - Sewers)",
             "id": 2000312484,
+            "region": "Time Rift - Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8009,6 +8180,7 @@
           {
             "name": "Act Completion (Time Rift - Bazaar)",
             "id": 2000312465,
+            "region": "Time Rift - Bazaar",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8126,6 +8298,7 @@
           {
             "name": "Subcon Village - Tree Top Ice Cube",
             "id": 2000325078,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8144,6 +8317,7 @@
           {
             "name": "Subcon Village - Graveyard Ice Cube",
             "id": 2000325077,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8162,6 +8336,7 @@
           {
             "name": "Subcon Village - House Top",
             "id": 2000325471,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8180,6 +8355,7 @@
           {
             "name": "Subcon Village - Ice Cube House",
             "id": 2000325469,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8198,6 +8374,7 @@
           {
             "name": "Subcon Village - Stump Platform Chest",
             "id": 2000323729,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8216,6 +8393,7 @@
           {
             "name": "Subcon Forest - Giant Tree Climb",
             "id": 2000325470,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8234,6 +8412,7 @@
           {
             "name": "Subcon Forest - Ice Cube Shack",
             "id": 2000324465,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8252,6 +8431,7 @@
           {
             "name": "Subcon Forest - Swamp Gravestone",
             "id": 2000326296,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8276,6 +8456,7 @@
           {
             "name": "Subcon Forest - Swamp Near Well",
             "id": 2000324762,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8294,6 +8475,7 @@
           {
             "name": "Subcon Forest - Swamp Tree A",
             "id": 2000324763,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8312,6 +8494,7 @@
           {
             "name": "Subcon Forest - Swamp Tree B",
             "id": 2000324764,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8330,6 +8513,7 @@
           {
             "name": "Subcon Forest - Swamp Ice Wall",
             "id": 2000324706,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8348,6 +8532,7 @@
           {
             "name": "Subcon Forest - Swamp Treehouse",
             "id": 2000325468,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8366,6 +8551,7 @@
           {
             "name": "Subcon Forest - Swamp Tree Chest",
             "id": 2000323728,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8384,6 +8570,7 @@
           {
             "name": "Subcon Forest - Burning House",
             "id": 2000324710,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8402,6 +8589,7 @@
           {
             "name": "Subcon Forest - Burning Tree Climb",
             "id": 2000325079,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8420,6 +8608,7 @@
           {
             "name": "Subcon Forest - Burning Stump Chest",
             "id": 2000323731,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8438,6 +8627,7 @@
           {
             "name": "Subcon Forest - Burning Forest Treehouse",
             "id": 2000325467,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8456,6 +8646,7 @@
           {
             "name": "Subcon Forest - Spider Bone Cage A",
             "id": 2000324462,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8474,6 +8665,7 @@
           {
             "name": "Subcon Forest - Spider Bone Cage B",
             "id": 2000325080,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8492,6 +8684,7 @@
           {
             "name": "Subcon Forest - Triple Spider Bounce",
             "id": 2000324765,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8510,6 +8703,7 @@
           {
             "name": "Subcon Forest - Noose Treehouse",
             "id": 2000324856,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8529,6 +8723,7 @@
           {
             "name": "Subcon Forest - Long Tree Climb Chest",
             "id": 2000323734,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8553,6 +8748,7 @@
           {
             "name": "Subcon Forest - Manor Rooftop",
             "id": 2000325466,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8571,6 +8767,7 @@
           {
             "name": "Subcon Forest - Infinite Yarn Bush",
             "id": 2000325478,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8595,6 +8792,7 @@
           {
             "name": "Subcon Forest - Magnet Badge Bush",
             "id": 2000325479,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8619,6 +8817,7 @@
           {
             "name": "Subcon Forest - Dweller Stump",
             "id": 2000324767,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8643,6 +8842,7 @@
           {
             "name": "Subcon Forest - Dweller Floating Rocks",
             "id": 2000324464,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8667,6 +8867,7 @@
           {
             "name": "Subcon Forest - Dweller Platforming Tree A",
             "id": 2000324709,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8685,6 +8886,7 @@
           {
             "name": "Subcon Forest - Dweller Platforming Tree B",
             "id": 2000324855,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8709,6 +8911,7 @@
           {
             "name": "Subcon Forest - Giant Time Piece",
             "id": 2000325473,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8727,6 +8930,7 @@
           {
             "name": "Subcon Forest - Gallows",
             "id": 2000325472,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8745,6 +8949,7 @@
           {
             "name": "Subcon Forest - Green and Purple Dweller Rocks",
             "id": 2000325082,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8763,6 +8968,7 @@
           {
             "name": "Subcon Forest - Dweller Shack",
             "id": 2000324463,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8787,6 +8993,7 @@
           {
             "name": "Subcon Forest - Tall Tree Hookshot Swing",
             "id": 2000324766,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -8806,6 +9013,7 @@
           {
             "name": "Snatcher's Contract - Toilet of Doom",
             "id": 2000300201,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8824,6 +9032,7 @@
           {
             "name": "Snatcher's Contract - Queen Vanessa's Manor",
             "id": 2000300202,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8842,6 +9051,7 @@
           {
             "name": "Snatcher's Contract - Mail Delivery Service",
             "id": 2000300203,
+            "region": "Subcon Forest Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8909,6 +9119,7 @@
           {
             "name": "Subcon Village - Snatcher Statue Chest",
             "id": 2000323730,
+            "region": "Subcon Forest Behind Boss Firewall",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8960,6 +9171,7 @@
           {
             "name": "Subcon Forest - Boss Arena Chest",
             "id": 2000323735,
+            "region": "Subcon Forest Boss Arena",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9001,6 +9213,7 @@
           {
             "name": "Act Completion (Your Contract has Expired)",
             "id": 2000311390,
+            "region": "Your Contract has Expired - Post Fight",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9082,6 +9295,7 @@
           {
             "name": "Act Completion (Time Rift - Sleepy Subcon)",
             "id": 2000312086,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9100,6 +9314,7 @@
           {
             "name": "Sleepy Subcon - Page: Behind Entrance Area",
             "id": 2000345373,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9118,6 +9333,7 @@
           {
             "name": "Sleepy Subcon - Page: Near Wrecking Ball",
             "id": 2000345327,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9136,6 +9352,7 @@
           {
             "name": "Sleepy Subcon - Page: Behind Crane",
             "id": 2000345371,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9154,6 +9371,7 @@
           {
             "name": "Sleepy Subcon - Page: Wrecked Treehouse",
             "id": 2000345326,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9172,6 +9390,7 @@
           {
             "name": "Sleepy Subcon - Page: Behind 2nd Rift Gate",
             "id": 2000345372,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9190,6 +9409,7 @@
           {
             "name": "Sleepy Subcon - Page: Rotating Platform",
             "id": 2000345328,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9208,6 +9428,7 @@
           {
             "name": "Sleepy Subcon - Page: Behind 3rd Rift Gate",
             "id": 2000345329,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9226,6 +9447,7 @@
           {
             "name": "Sleepy Subcon - Page: Frozen Tree",
             "id": 2000345330,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9244,6 +9466,7 @@
           {
             "name": "Sleepy Subcon - Page: Secret Library",
             "id": 2000345370,
+            "region": "Time Rift - Sleepy Subcon",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9325,6 +9548,7 @@
           {
             "name": "Act Completion (Time Rift - Pipe)",
             "id": 2000313069,
+            "region": "Time Rift - Pipe",
             "crystal": null,
             "access_rule": {
               "type": "helper",
@@ -9367,6 +9591,7 @@
           {
             "name": "Act Completion (Time Rift - Village)",
             "id": 2000313056,
+            "region": "Time Rift - Village",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9496,6 +9721,7 @@
           {
             "name": "Badge Seller - Item 1",
             "id": 2000301003,
+            "region": "Badge Seller",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9514,6 +9740,7 @@
           {
             "name": "Badge Seller - Item 2",
             "id": 2000301004,
+            "region": "Badge Seller",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9532,6 +9759,7 @@
           {
             "name": "Badge Seller - Item 3",
             "id": 2000301005,
+            "region": "Badge Seller",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9550,6 +9778,7 @@
           {
             "name": "Badge Seller - Item 4",
             "id": 2000301006,
+            "region": "Badge Seller",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9626,6 +9855,7 @@
           {
             "name": "The Finale - Frozen Item",
             "id": 2000304108,
+            "region": "The Finale",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9644,6 +9874,7 @@
           {
             "name": "Act Completion (The Finale)",
             "id": 2000311872,
+            "region": "The Finale",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9678,6 +9909,7 @@
           {
             "name": "Time Piece Cluster",
             "id": null,
+            "region": "The Finale",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -10559,15 +10791,98 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Burger",
-      "Cake",
-      "Crayon",
-      "Everything",
-      "Necklace",
-      "Train",
-      "UFO"
-    ]
+    "1": {
+      "Burger": [
+        "Relic (Burger Cushion)",
+        "Relic (Burger Patty)"
+      ],
+      "Train": [
+        "Relic (Train)",
+        "Relic (Mountain Set)"
+      ],
+      "UFO": [
+        "Relic (Tin-foil Hat Cow)",
+        "Relic (Cool Cow)",
+        "Relic (UFO)",
+        "Relic (Cow)"
+      ],
+      "Crayon": [
+        "Relic (Green Crayon)",
+        "Relic (Crayon Box)",
+        "Relic (Red Crayon)",
+        "Relic (Blue Crayon)"
+      ],
+      "Cake": [
+        "Relic (Cake Stand)",
+        "Relic (Chocolate Cake)",
+        "Relic (Chocolate Cake Slice)",
+        "Relic (Shortcake)"
+      ],
+      "Necklace": [
+        "Relic (Necklace Bust)",
+        "Relic (Necklace)"
+      ],
+      "Everything": [
+        "Relic (Chocolate Cake Slice)",
+        "Progressive Painting Unlock",
+        "Metro Ticket - Blue",
+        "Yarn",
+        "Relic (Cow)",
+        "Snatcher's Contract - Queen Vanessa's Manor",
+        "Relic (Cool Cow)",
+        "Badge Pin",
+        "Relic (UFO)",
+        "Dweller Mask",
+        "25 Pons",
+        "Health Pon",
+        "Metro Ticket - Green",
+        "Parade Trap",
+        "Relic (Chocolate Cake)",
+        "Zipline Unlock - The Windmill Path",
+        "Relic (Burger Cushion)",
+        "Ice Hat",
+        "50 Pons",
+        "Relic (Crayon Box)",
+        "Snatcher's Contract - Mail Delivery Service",
+        "Relic (Blue Crayon)",
+        "Snatcher's Contract - The Subcon Well",
+        "Relic (Cake Stand)",
+        "Scooter Badge",
+        "Zipline Unlock - The Lava Cake Path",
+        "Relic (Shortcake)",
+        "Relic (Green Crayon)",
+        "Brewing Hat",
+        "Relic (Train)",
+        "Zipline Unlock - The Twilight Bell Path",
+        "Relic (Necklace)",
+        "Projectile Badge",
+        "100 Pons",
+        "Relic (Tin-foil Hat Cow)",
+        "Laser Trap",
+        "Relic (Necklace Bust)",
+        "Relic (Mountain Set)",
+        "Metro Ticket - Yellow",
+        "Sprint Hat",
+        "Baby Trap",
+        "Hover Badge",
+        "Item Magnet Badge",
+        "Relic (Red Crayon)",
+        "Random Cosmetic",
+        "Snatcher's Contract - Toilet of Doom",
+        "Zipline Unlock - The Birdhouse Path",
+        "Compass Badge",
+        "Fast Hatter Badge",
+        "One-Hit Hero Badge",
+        "Relic (Burger Patty)",
+        "No Bonk Badge",
+        "Umbrella",
+        "Time Stop Hat",
+        "Hookshot Badge",
+        "Time Piece",
+        "Metro Ticket - Pink",
+        "Camera Badge"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

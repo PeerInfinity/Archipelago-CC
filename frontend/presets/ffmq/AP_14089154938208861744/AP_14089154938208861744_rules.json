@@ -289,6 +289,7 @@
           {
             "name": "Foresta West Battlefield",
             "id": 4325728,
+            "region": "Subregion Foresta",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -569,6 +570,7 @@
           {
             "name": "South of Aquaria Battlefield",
             "id": 4325732,
+            "region": "Subregion Aquaria",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -733,6 +735,7 @@
           {
             "name": "North of Libra Temple Battlefield",
             "id": 4325736,
+            "region": "Subregion Frozen Fields",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1013,6 +1016,7 @@
           {
             "name": "Path to Fireburg Central Battlefield",
             "id": 4325739,
+            "region": "Subregion Fireburg",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1031,6 +1035,7 @@
           {
             "name": "Mine Battlefield",
             "id": 4325742,
+            "region": "Subregion Fireburg",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1856,6 +1861,7 @@
           {
             "name": "Doom Castle B2 - Southeast Chest",
             "id": 4325377,
+            "region": "Doom Castle - Sand Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1904,6 +1910,7 @@
           {
             "name": "Doom Castle B2 - Bone Ledge Box",
             "id": 4325406,
+            "region": "Doom Castle - Sand Floor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1922,6 +1929,7 @@
           {
             "name": "Doom Castle B2 - Hook Platform Box",
             "id": 4325407,
+            "region": "Doom Castle - Sand Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1981,6 +1989,7 @@
           {
             "name": "Doom Castle B2 - Sun Door Chest",
             "id": 4325376,
+            "region": "Doom Castle - Aero Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2287,6 +2296,7 @@
           {
             "name": "Focus Tower 1F - Main Lobby Box",
             "id": 4325409,
+            "region": "Focus Tower 1F Main Lobby",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2631,6 +2641,7 @@
           {
             "name": "Focus Tower 2F - Sand Door Chest",
             "id": 4325379,
+            "region": "Focus Tower 2F - Sand Coin Passage",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2742,6 +2753,7 @@
           {
             "name": "Focus Tower 2F - Back Door Chest",
             "id": 4325378,
+            "region": "Focus Tower 2F - Venus Chest Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2760,6 +2772,7 @@
           {
             "name": "Focus Tower 2F - Venus Chest",
             "id": 4325685,
+            "region": "Focus Tower 2F - Venus Chest Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2871,6 +2884,7 @@
           {
             "name": "Focus Tower 3F - River Door Box",
             "id": 4325410,
+            "region": "Focus Tower 3F - Lower Floor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2982,6 +2996,7 @@
           {
             "name": "Level Forest - Northwest Box",
             "id": 4325416,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3030,6 +3045,7 @@
           {
             "name": "Level Forest - Northeast Box",
             "id": 4325417,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3078,6 +3094,7 @@
           {
             "name": "Level Forest - Middle Box",
             "id": 4325418,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3096,6 +3113,7 @@
           {
             "name": "Level Forest - Southwest Box",
             "id": 4325419,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3144,6 +3162,7 @@
           {
             "name": "Level Forest - Southeast Box",
             "id": 4325420,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3192,6 +3211,7 @@
           {
             "name": "Minotaur",
             "id": null,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3215,6 +3235,7 @@
           {
             "name": "Level Forest - Old Man",
             "id": 4325676,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3233,6 +3254,7 @@
           {
             "name": "Level Forest - Kaeli",
             "id": 4325677,
+            "region": "Level Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3384,6 +3406,7 @@
           {
             "name": "Foresta - Outside Box",
             "id": 4325421,
+            "region": "Foresta",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3468,6 +3491,7 @@
           {
             "name": "Foresta - Kaeli's House Box",
             "id": 4325422,
+            "region": "Kaeli's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3486,6 +3510,7 @@
           {
             "name": "Kaeli Companion",
             "id": null,
+            "region": "Kaeli's House",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3509,6 +3534,7 @@
           {
             "name": "Kaeli 2",
             "id": null,
+            "region": "Kaeli's House",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3665,6 +3691,7 @@
           {
             "name": "Foresta - Old Man House Chest",
             "id": 4325381,
+            "region": "Foresta Houses - Old Man's House Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3683,6 +3710,7 @@
           {
             "name": "Old Man Barrel",
             "id": null,
+            "region": "Foresta Houses - Old Man's House Back",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3737,6 +3765,7 @@
           {
             "name": "Foresta - Rest House Box",
             "id": 4325423,
+            "region": "Foresta Houses - Rest House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3796,6 +3825,7 @@
           {
             "name": "Alive Forest - Libra Treehouse Box",
             "id": 4325426,
+            "region": "Libra Treehouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3855,6 +3885,7 @@
           {
             "name": "Alive Forest - Gemini Treehouse Box",
             "id": 4325427,
+            "region": "Gemini Treehouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3914,6 +3945,7 @@
           {
             "name": "Alive Forest - Mobius Treehouse West Box",
             "id": 4325424,
+            "region": "Mobius Treehouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3932,6 +3964,7 @@
           {
             "name": "Alive Forest - Mobius Treehouse East Box",
             "id": 4325425,
+            "region": "Mobius Treehouse",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3986,6 +4019,7 @@
           {
             "name": "Tristam Companion",
             "id": null,
+            "region": "Sand Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4062,6 +4096,7 @@
           {
             "name": "Bone Dungeon 1F - Entrance Room West Box",
             "id": 4325429,
+            "region": "Bone Dungeon 1F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4080,6 +4115,7 @@
           {
             "name": "Bone Dungeon 1F - Entrance Room Middle Box",
             "id": 4325430,
+            "region": "Bone Dungeon 1F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4098,6 +4134,7 @@
           {
             "name": "Bone Dungeon 1F - Entrance Room East Box",
             "id": 4325431,
+            "region": "Bone Dungeon 1F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4204,6 +4241,7 @@
           {
             "name": "Bone Dungeon B1 - Skull Chest",
             "id": 4325382,
+            "region": "Bone Dungeon B1 - Waterway",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4252,6 +4290,7 @@
           {
             "name": "Bone Dungeon B1 - Tristam",
             "id": 4325678,
+            "region": "Bone Dungeon B1 - Waterway",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4275,6 +4314,7 @@
           {
             "name": "Tristam Bone Dungeon Item Given",
             "id": null,
+            "region": "Bone Dungeon B1 - Waterway",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4356,6 +4396,7 @@
           {
             "name": "Bone Dungeon B1 - Checker Room Box",
             "id": 4325432,
+            "region": "Bone Dungeon B1 - Checker Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4440,6 +4481,7 @@
           {
             "name": "Bone Dungeon B1 - Ribcage Waterway Box",
             "id": 4325433,
+            "region": "Bone Dungeon B1 - Hidden Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4521,6 +4563,7 @@
           {
             "name": "Bone Dungeon B2 - Spines Room Alcove Box",
             "id": 4325435,
+            "region": "Bone Dungeon B2 - Exploding Skull Room - First Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4539,6 +4582,7 @@
           {
             "name": "Long Spine",
             "id": null,
+            "region": "Bone Dungeon B2 - Exploding Skull Room - First Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4682,6 +4726,7 @@
           {
             "name": "Bone Dungeon B2 - Spines Room Looped Hallway Box",
             "id": 4325434,
+            "region": "Bone Dungeon B2 - Exploding Skull Room - Second Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4700,6 +4745,7 @@
           {
             "name": "Short Spine",
             "id": null,
+            "region": "Bone Dungeon B2 - Exploding Skull Room - Second Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4846,6 +4892,7 @@
           {
             "name": "Bone Dungeon B2 - Lone Room Box",
             "id": 4325437,
+            "region": "Bone Dungeon B2 - Box Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4900,6 +4947,7 @@
           {
             "name": "Bone Dungeon B2 - Penultimate Room Chest",
             "id": 4325383,
+            "region": "Bone Dungeon B2 - Quake Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4981,6 +5029,7 @@
           {
             "name": "Bone Dungeon B2 - Two Skulls Room Box",
             "id": 4325436,
+            "region": "Bone Dungeon B2 - Two Skulls Room - First Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4999,6 +5048,7 @@
           {
             "name": "Skull 1",
             "id": null,
+            "region": "Bone Dungeon B2 - Two Skulls Room - First Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5137,6 +5187,7 @@
           {
             "name": "Skull 2",
             "id": null,
+            "region": "Bone Dungeon B2 - Two Skulls Room - Second Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5335,6 +5386,7 @@
           {
             "name": "Bone Dungeon B2 - North Box",
             "id": 4325438,
+            "region": "Bone Dungeon B2 - Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5353,6 +5405,7 @@
           {
             "name": "Bone Dungeon B2 - South Box",
             "id": 4325439,
+            "region": "Bone Dungeon B2 - Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5371,6 +5424,7 @@
           {
             "name": "Bone Dungeon B2 - Flamerus Rex Chest",
             "id": 4325384,
+            "region": "Bone Dungeon B2 - Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5389,6 +5443,7 @@
           {
             "name": "Bone Dungeon B2 - Tristam's Treasure Chest",
             "id": 4325380,
+            "region": "Bone Dungeon B2 - Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5407,6 +5462,7 @@
           {
             "name": "Flamerus Rex",
             "id": null,
+            "region": "Bone Dungeon B2 - Boss Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5488,6 +5544,7 @@
           {
             "name": "Libra Temple - Box",
             "id": 4325440,
+            "region": "Libra Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5506,6 +5563,7 @@
           {
             "name": "Phoebe Companion",
             "id": null,
+            "region": "Libra Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5680,6 +5738,7 @@
           {
             "name": "Summer Aquaria",
             "id": null,
+            "region": "Aquaria",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5739,6 +5798,7 @@
           {
             "name": "Aquaria - Phoebe's House Chest",
             "id": 4325441,
+            "region": "Phoebe's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5815,6 +5875,7 @@
           {
             "name": "Aquaria - Vendor",
             "id": 4325680,
+            "region": "Aquaria Vendor House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5833,6 +5894,7 @@
           {
             "name": "Aquaria - Vendor House Box",
             "id": 4325442,
+            "region": "Aquaria Vendor House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6083,6 +6145,7 @@
           {
             "name": "Wintry Cave 1F - North Box",
             "id": 4325443,
+            "region": "Wintry Cave 1F - East Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6101,6 +6164,7 @@
           {
             "name": "Wintry Cave 1F - Entrance Box",
             "id": 4325446,
+            "region": "Wintry Cave 1F - East Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6119,6 +6183,7 @@
           {
             "name": "Wintry Cave 1F - Slippery Cliff Box",
             "id": 4325444,
+            "region": "Wintry Cave 1F - East Ledge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6167,6 +6232,7 @@
           {
             "name": "Wintry Cave 1F - Phoebe",
             "id": 4325681,
+            "region": "Wintry Cave 1F - East Ledge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6308,6 +6374,7 @@
           {
             "name": "Wintry Cave 1F - Scenic Overlook Box",
             "id": 4325445,
+            "region": "Wintry Cave 1F - Central Space",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6531,6 +6598,7 @@
           {
             "name": "Wintry Cave 2F - West Left Box",
             "id": 4325447,
+            "region": "Wintry Cave 2F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6549,6 +6617,7 @@
           {
             "name": "Wintry Cave 2F - West Right Box",
             "id": 4325448,
+            "region": "Wintry Cave 2F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6567,6 +6636,7 @@
           {
             "name": "Wintry Cave 2F - East Left Box",
             "id": 4325449,
+            "region": "Wintry Cave 2F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6585,6 +6655,7 @@
           {
             "name": "Wintry Cave 2F - East Right Box",
             "id": 4325450,
+            "region": "Wintry Cave 2F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6639,6 +6710,7 @@
           {
             "name": "Wintry Cave 3F - West Box",
             "id": 4325451,
+            "region": "Wintry Cave 3F Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6657,6 +6729,7 @@
           {
             "name": "Wintry Cave 3F - East Box",
             "id": 4325452,
+            "region": "Wintry Cave 3F Top",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6711,6 +6784,7 @@
           {
             "name": "Wintry Cave 3F - Squidite Chest",
             "id": 4325385,
+            "region": "Wintry Cave 3F Bottom",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6734,6 +6808,7 @@
           {
             "name": "Phanquid",
             "id": null,
+            "region": "Wintry Cave 3F Bottom",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6752,6 +6827,7 @@
           {
             "name": "Wintry Cave 3F - Before Boss Box",
             "id": 4325453,
+            "region": "Wintry Cave 3F Bottom",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6833,6 +6909,7 @@
           {
             "name": "Life Temple - Box",
             "id": 4325454,
+            "region": "Life Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6851,6 +6928,7 @@
           {
             "name": "Life Temple - Mysterious Man",
             "id": 4325682,
+            "region": "Life Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6905,6 +6983,7 @@
           {
             "name": "Falls Basin - Snow Crab Chest",
             "id": 4325386,
+            "region": "Fall Basin",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6928,6 +7007,7 @@
           {
             "name": "Freezer Crab",
             "id": null,
+            "region": "Fall Basin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6946,6 +7026,7 @@
           {
             "name": "Falls Basin - Box",
             "id": 4325455,
+            "region": "Fall Basin",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7010,6 +7091,7 @@
           {
             "name": "Ice Pyramid B1 - Chest",
             "id": 4325387,
+            "region": "Ice Pyramid B1 Taunt Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7028,6 +7110,7 @@
           {
             "name": "Ice Pyramid B1 - West Box",
             "id": 4325456,
+            "region": "Ice Pyramid B1 Taunt Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7046,6 +7129,7 @@
           {
             "name": "Ice Pyramid B1 - North Box",
             "id": 4325457,
+            "region": "Ice Pyramid B1 Taunt Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7064,6 +7148,7 @@
           {
             "name": "Ice Pyramid B1 - East Box",
             "id": 4325458,
+            "region": "Ice Pyramid B1 Taunt Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7145,6 +7230,7 @@
           {
             "name": "Ice Pyramid 1F Statue",
             "id": null,
+            "region": "Ice Pyramid 1F Maze Lobby",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7344,6 +7430,7 @@
           {
             "name": "Ice Pyramid 1F - East Alcove Chest",
             "id": 4325389,
+            "region": "Ice Pyramid 1F Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7362,6 +7449,7 @@
           {
             "name": "Ice Pyramid 1F - Sandwiched Alcove Box",
             "id": 4325459,
+            "region": "Ice Pyramid 1F Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7380,6 +7468,7 @@
           {
             "name": "Ice Pyramid 1F - Southwest Left Box",
             "id": 4325460,
+            "region": "Ice Pyramid 1F Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7398,6 +7487,7 @@
           {
             "name": "Ice Pyramid 1F - Southwest Right Box",
             "id": 4325461,
+            "region": "Ice Pyramid 1F Maze",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7474,6 +7564,7 @@
           {
             "name": "Ice Pyramid 2F - South Side Glass Door Box",
             "id": 4325463,
+            "region": "Ice Pyramid 2F South Tiled Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7522,6 +7613,7 @@
           {
             "name": "Ice Pyramid 2F - South Side East Box",
             "id": 4325467,
+            "region": "Ice Pyramid 2F South Tiled Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7576,6 +7668,7 @@
           {
             "name": "Ice Pyramid 2F - Northwest Room Box",
             "id": 4325466,
+            "region": "Ice Pyramid 2F West Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7630,6 +7723,7 @@
           {
             "name": "Ice Pyramid 2F - Center Room Box",
             "id": 4325462,
+            "region": "Ice Pyramid 2F Center Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7684,6 +7778,7 @@
           {
             "name": "Ice Pyramid 2F - North Room Glass Door Box",
             "id": 4325464,
+            "region": "Ice Pyramid 2F Small North Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7790,6 +7885,7 @@
           {
             "name": "Ice Pyramid 2F - North Corridor Glass Door Box",
             "id": 4325465,
+            "region": "Ice Pyramid 2F North Corridor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -7874,6 +7970,7 @@
           {
             "name": "Ice Pyramid 3F - Staircase Dead End Left Box",
             "id": 4325470,
+            "region": "Ice Pyramid 3F Two Boxes Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7892,6 +7989,7 @@
           {
             "name": "Ice Pyramid 3F - Staircase Dead End Right Box",
             "id": 4325471,
+            "region": "Ice Pyramid 3F Two Boxes Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7973,6 +8071,7 @@
           {
             "name": "Ice Pyramid 3F - Inner Room North Box",
             "id": 4325468,
+            "region": "Ice Pyramid 3F Main Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7991,6 +8090,7 @@
           {
             "name": "Ice Pyramid 3F - Inner Room South Box",
             "id": 4325469,
+            "region": "Ice Pyramid 3F Main Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8009,6 +8109,7 @@
           {
             "name": "Ice Pyramid 3F - East Alcove Box",
             "id": 4325472,
+            "region": "Ice Pyramid 3F Main Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8027,6 +8128,7 @@
           {
             "name": "Ice Pyramid 3F - Leapfrog Box",
             "id": 4325473,
+            "region": "Ice Pyramid 3F Main Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8045,6 +8147,7 @@
           {
             "name": "Ice Pyramid 3F Statue",
             "id": null,
+            "region": "Ice Pyramid 3F Main Loop",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8300,6 +8403,7 @@
           {
             "name": "Ice Pyramid 4F - Chest",
             "id": 4325388,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8318,6 +8422,7 @@
           {
             "name": "Ice Pyramid 4F - Northwest Box",
             "id": 4325474,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8336,6 +8441,7 @@
           {
             "name": "Ice Pyramid 4F - West Left Box",
             "id": 4325475,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8354,6 +8460,7 @@
           {
             "name": "Ice Pyramid 4F - West Right Box",
             "id": 4325476,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8372,6 +8479,7 @@
           {
             "name": "Ice Pyramid 4F - South Left Box",
             "id": 4325477,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8390,6 +8498,7 @@
           {
             "name": "Ice Pyramid 4F - South Right Box",
             "id": 4325478,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8408,6 +8517,7 @@
           {
             "name": "Ice Pyramid 4F - East Left Box",
             "id": 4325479,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8426,6 +8536,7 @@
           {
             "name": "Ice Pyramid 4F - East Right Box",
             "id": 4325480,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8444,6 +8555,7 @@
           {
             "name": "Ice Pyramid 4F Statue",
             "id": null,
+            "region": "Ice Pyramid 4F Treasure Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8652,6 +8764,7 @@
           {
             "name": "Ice Pyramid 5F - Glass Door Left Box",
             "id": 4325481,
+            "region": "Ice Pyramid 5F Leap of Faith Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8675,6 +8788,7 @@
           {
             "name": "Ice Pyramid 5F - West Ledge Box",
             "id": 4325482,
+            "region": "Ice Pyramid 5F Leap of Faith Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8693,6 +8807,7 @@
           {
             "name": "Ice Pyramid 5F - South Shelf Box",
             "id": 4325483,
+            "region": "Ice Pyramid 5F Leap of Faith Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8711,6 +8826,7 @@
           {
             "name": "Ice Pyramid 5F - South Leapfrog Box",
             "id": 4325484,
+            "region": "Ice Pyramid 5F Leap of Faith Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8729,6 +8845,7 @@
           {
             "name": "Ice Pyramid 5F - Glass Door Right Box",
             "id": 4325485,
+            "region": "Ice Pyramid 5F Leap of Faith Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8752,6 +8869,7 @@
           {
             "name": "Ice Pyramid 5F - North Box",
             "id": 4325486,
+            "region": "Ice Pyramid 5F Leap of Faith Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8840,6 +8958,7 @@
           {
             "name": "Ice Pyramid 5F Statue",
             "id": null,
+            "region": "Ice Pyramid 5F Stairs to Ice Golem",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9110,6 +9229,7 @@
           {
             "name": "Ice Pyramid 6F - Ice Golem Chest",
             "id": 4325390,
+            "region": "Ice Pyramid Ice Golem Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9133,6 +9253,7 @@
           {
             "name": "Ice Golem",
             "id": null,
+            "region": "Ice Pyramid Ice Golem Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9266,6 +9387,7 @@
           {
             "name": "Spencer's Cave - Box",
             "id": 4325487,
+            "region": "Spencer Cave Normal Main",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9314,6 +9436,7 @@
           {
             "name": "Spencer's Cave - Spencer",
             "id": 4325684,
+            "region": "Spencer Cave Normal Main",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9332,6 +9455,7 @@
           {
             "name": "Spencer's Cave - Locked Chest",
             "id": 4325689,
+            "region": "Spencer Cave Normal Main",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9418,6 +9542,7 @@
           {
             "name": "Collapse Spencer's Cave",
             "id": null,
+            "region": "Spencer Cave Normal South Ledge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9663,6 +9788,7 @@
           {
             "name": "Bomb Libra Block",
             "id": null,
+            "region": "Spencer Cave Caved In Waters",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9926,6 +10052,7 @@
           {
             "name": "Spencer's Cave - Mobius Chest",
             "id": 4325391,
+            "region": "Spencer Cave Caved In Mobius Chest",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10020,6 +10147,7 @@
           {
             "name": "Wintry Temple - West Box",
             "id": 4325488,
+            "region": "Wintry Temple Inner Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10038,6 +10166,7 @@
           {
             "name": "Wintry Temple - North Box",
             "id": 4325489,
+            "region": "Wintry Temple Inner Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10302,6 +10431,7 @@
           {
             "name": "Fireburg - Hidden Tunnel Box",
             "id": 4325492,
+            "region": "Fireburg Lower Plaza",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10356,6 +10486,7 @@
           {
             "name": "Fireburg - Reuben's House Arion",
             "id": 4325690,
+            "region": "Reuben's House",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -10379,6 +10510,7 @@
           {
             "name": "Reuben Companion",
             "id": null,
+            "region": "Reuben's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10397,6 +10529,7 @@
           {
             "name": "Fireburg - Reuben's House Box",
             "id": 4325493,
+            "region": "Reuben's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10478,6 +10611,7 @@
           {
             "name": "Fireburg - Locked House Man",
             "id": 4325688,
+            "region": "GrenadeMan's House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10611,6 +10745,7 @@
           {
             "name": "Fireburg - Vendor",
             "id": 4325687,
+            "region": "Fireburg Vendor House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10744,6 +10879,7 @@
           {
             "name": "Fireburg - Tristam",
             "id": 4325686,
+            "region": "Fireburg Hotel Lobby",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11398,6 +11534,7 @@
           {
             "name": "Jinn",
             "id": null,
+            "region": "Mine Exterior South East Platforms",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11452,6 +11589,7 @@
           {
             "name": "Mine - Parallel Room West Box",
             "id": 4325495,
+            "region": "Mine Parallel Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11500,6 +11638,7 @@
           {
             "name": "Mine - Parallel Room East Box",
             "id": 4325496,
+            "region": "Mine Parallel Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11584,6 +11723,7 @@
           {
             "name": "Mine - Crescent Room Chest",
             "id": 4325392,
+            "region": "Mine Crescent Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11638,6 +11778,7 @@
           {
             "name": "Mine - Glitchy Collision Cave Box",
             "id": 4325494,
+            "region": "Mine Climbing Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11722,6 +11863,7 @@
           {
             "name": "Mine - Cliff Southwest Box",
             "id": 4325497,
+            "region": "Mine Cliff",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11740,6 +11882,7 @@
           {
             "name": "Mine - Cliff Northwest Box",
             "id": 4325498,
+            "region": "Mine Cliff",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11758,6 +11901,7 @@
           {
             "name": "Mine - Cliff Northeast Box",
             "id": 4325499,
+            "region": "Mine Cliff",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11776,6 +11920,7 @@
           {
             "name": "Mine - Cliff Southeast Box",
             "id": 4325500,
+            "region": "Mine Cliff",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11794,6 +11939,7 @@
           {
             "name": "Mine - Reuben",
             "id": 4325683,
+            "region": "Mine Cliff",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11817,6 +11963,7 @@
           {
             "name": "Reuben's dad Saved",
             "id": null,
+            "region": "Mine Cliff",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -11903,6 +12050,7 @@
           {
             "name": "Sealed Temple - West Box",
             "id": 4325501,
+            "region": "Sealed Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11921,6 +12069,7 @@
           {
             "name": "Sealed Temple - East Box",
             "id": 4325502,
+            "region": "Sealed Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12019,6 +12168,7 @@
           {
             "name": "Volcano - Base Chest",
             "id": 4325393,
+            "region": "Volcano Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12037,6 +12187,7 @@
           {
             "name": "Volcano - Base West Box",
             "id": 4325503,
+            "region": "Volcano Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12055,6 +12206,7 @@
           {
             "name": "Volcano - Base East Left Box",
             "id": 4325504,
+            "region": "Volcano Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12073,6 +12225,7 @@
           {
             "name": "Volcano - Base East Right Box",
             "id": 4325505,
+            "region": "Volcano Base",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12127,6 +12280,7 @@
           {
             "name": "Volcano - Medusa Chest",
             "id": 4325394,
+            "region": "Volcano Top Left",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -12150,6 +12304,7 @@
           {
             "name": "Medusa",
             "id": null,
+            "region": "Volcano Top Left",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12168,6 +12323,7 @@
           {
             "name": "Volcano - Behind Medusa Box",
             "id": 4325506,
+            "region": "Volcano Top Left",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12222,6 +12378,7 @@
           {
             "name": "Volcano - Top of the Volcano Left Box",
             "id": 4325507,
+            "region": "Volcano Top Right",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12240,6 +12397,7 @@
           {
             "name": "Volcano - Top of the Volcano Right Box",
             "id": 4325508,
+            "region": "Volcano Top Right",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12294,6 +12452,7 @@
           {
             "name": "Volcano - Right Path Box",
             "id": 4325511,
+            "region": "Volcano Right Path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12392,6 +12551,7 @@
           {
             "name": "Volcano - Left Path Box",
             "id": 4325510,
+            "region": "Volcano Left Path",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12525,6 +12685,7 @@
           {
             "name": "Volcano - Crossover Section Box",
             "id": 4325509,
+            "region": "Volcano Cross Right-Left",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12687,6 +12848,7 @@
           {
             "name": "Lava Dome - Exterior Caldera Near Switch Cliff Box",
             "id": 4325512,
+            "region": "Lava Dome Inner Ring Main Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12705,6 +12867,7 @@
           {
             "name": "Lava Dome - Exterior South Cliff Box",
             "id": 4325513,
+            "region": "Lava Dome Inner Ring Main Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12801,6 +12964,7 @@
           {
             "name": "Lava Dome - Exterior Center Dropoff Ledge Box",
             "id": 4325514,
+            "region": "Lava Dome Inner Ring Center Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12855,6 +13019,7 @@
           {
             "name": "Lava Dome Plate",
             "id": null,
+            "region": "Lava Dome Inner Ring Plate Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13209,6 +13374,7 @@
           {
             "name": "Lava Dome - Exterior Dead End Caldera Box",
             "id": 4325515,
+            "region": "Lava Dome Inner Ring Tiny Bottom Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13307,6 +13473,7 @@
           {
             "name": "Lava Dome - Gold Maze Northwest Box",
             "id": 4325516,
+            "region": "Lava Dome Jump Maze II",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13325,6 +13492,7 @@
           {
             "name": "Lava Dome - Gold Maze Southwest Box",
             "id": 4325622,
+            "region": "Lava Dome Jump Maze II",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13343,6 +13511,7 @@
           {
             "name": "Lava Dome - Gold Maze Northeast Box",
             "id": 4325623,
+            "region": "Lava Dome Jump Maze II",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13361,6 +13530,7 @@
           {
             "name": "Lava Dome - Gold Maze North Box",
             "id": 4325624,
+            "region": "Lava Dome Jump Maze II",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13379,6 +13549,7 @@
           {
             "name": "Lava Dome - Gold Maze Center Box",
             "id": 4325625,
+            "region": "Lava Dome Jump Maze II",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13397,6 +13568,7 @@
           {
             "name": "Lava Dome - Gold Maze Southeast Box",
             "id": 4325626,
+            "region": "Lava Dome Jump Maze II",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13530,6 +13702,7 @@
           {
             "name": "Lava Dome - Bare Maze Leapfrog Alcove North Box",
             "id": 4325517,
+            "region": "Lava Dome Jump Maze I",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13548,6 +13721,7 @@
           {
             "name": "Lava Dome - Bare Maze Leapfrog Alcove South Box",
             "id": 4325518,
+            "region": "Lava Dome Jump Maze I",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13566,6 +13740,7 @@
           {
             "name": "Lava Dome - Bare Maze Center Box",
             "id": 4325519,
+            "region": "Lava Dome Jump Maze I",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13584,6 +13759,7 @@
           {
             "name": "Lava Dome - Bare Maze Southwest Box",
             "id": 4325520,
+            "region": "Lava Dome Jump Maze I",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13695,6 +13871,7 @@
           {
             "name": "Lava Dome - U-Bend Room North Box",
             "id": 4325522,
+            "region": "Lava Dome Lower Moon Helm Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13713,6 +13890,7 @@
           {
             "name": "Lava Dome - U-Bend Room South Box",
             "id": 4325523,
+            "region": "Lava Dome Lower Moon Helm Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13767,6 +13945,7 @@
           {
             "name": "Lava Dome - Beyond River Room Chest",
             "id": 4325395,
+            "region": "Lava Dome Moon Helm Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13785,6 +13964,7 @@
           {
             "name": "Lava Dome - Beyond River Room Box",
             "id": 4325521,
+            "region": "Lava Dome Moon Helm Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13839,6 +14019,7 @@
           {
             "name": "Lava Dome - Three Jumps Room Box",
             "id": 4325526,
+            "region": "Lava Dome Three Jumps Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13945,6 +14126,7 @@
           {
             "name": "Lava Dome - Gold Bar Room Boulder Chest",
             "id": 4325404,
+            "region": "Lava Dome Life Chest Room Lower Ledge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -14056,6 +14238,7 @@
           {
             "name": "Lava Dome - Gold Bar Room Leapfrog Alcove Box West",
             "id": 4325524,
+            "region": "Lava Dome Life Chest Room Upper Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14074,6 +14257,7 @@
           {
             "name": "Lava Dome - Gold Bar Room Leapfrog Alcove Box East",
             "id": 4325525,
+            "region": "Lava Dome Life Chest Room Upper Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14177,6 +14361,7 @@
           {
             "name": "Lava Dome - Lava River Room North Box",
             "id": 4325528,
+            "region": "Lava Dome Big Jump Room Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14195,6 +14380,7 @@
           {
             "name": "Lava Dome - Lava River Room East Box",
             "id": 4325529,
+            "region": "Lava Dome Big Jump Room Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14213,6 +14399,7 @@
           {
             "name": "Lava Dome - Lava River Room South Box",
             "id": 4325530,
+            "region": "Lava Dome Big Jump Room Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14376,6 +14563,7 @@
           {
             "name": "Lava Dome - Split Corridor Box",
             "id": 4325527,
+            "region": "Lava Dome Split Corridor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14509,6 +14697,7 @@
           {
             "name": "Lava Dome - Caldera Stairway West Left Box",
             "id": 4325531,
+            "region": "Lava Dome Four Boxes Stairs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14527,6 +14716,7 @@
           {
             "name": "Lava Dome - Caldera Stairway West Right Box",
             "id": 4325532,
+            "region": "Lava Dome Four Boxes Stairs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14545,6 +14735,7 @@
           {
             "name": "Lava Dome - Caldera Stairway East Left Box",
             "id": 4325533,
+            "region": "Lava Dome Four Boxes Stairs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14563,6 +14754,7 @@
           {
             "name": "Lava Dome - Caldera Stairway East Right Box",
             "id": 4325534,
+            "region": "Lava Dome Four Boxes Stairs",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14644,6 +14836,7 @@
           {
             "name": "Lava Dome - Dualhead Hydra Chest",
             "id": 4325396,
+            "region": "Lava Dome Hydra Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -14667,6 +14860,7 @@
           {
             "name": "Dualhead Hydra",
             "id": null,
+            "region": "Lava Dome Hydra Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14685,6 +14879,7 @@
           {
             "name": "Lava Dome - Hydra Room Northwest Box",
             "id": 4325535,
+            "region": "Lava Dome Hydra Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14703,6 +14898,7 @@
           {
             "name": "Lava Dome - Hydra Room Southweast Box",
             "id": 4325536,
+            "region": "Lava Dome Hydra Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14792,6 +14988,7 @@
           {
             "name": "Rope Bridge - West Box",
             "id": 4325539,
+            "region": "Rope Bridge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14810,6 +15007,7 @@
           {
             "name": "Rope Bridge - East Box",
             "id": 4325540,
+            "region": "Rope Bridge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15117,6 +15315,7 @@
           {
             "name": "Alive Forest - Tree Stump Chest",
             "id": 4325397,
+            "region": "Alive Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15165,6 +15364,7 @@
           {
             "name": "Alive Forest - Near Entrance Box",
             "id": 4325541,
+            "region": "Alive Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15213,6 +15413,7 @@
           {
             "name": "Alive Forest - After Bridge Box",
             "id": 4325542,
+            "region": "Alive Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15261,6 +15462,7 @@
           {
             "name": "Alive Forest - Gemini Stump Box",
             "id": 4325543,
+            "region": "Alive Forest",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15392,6 +15594,7 @@
           {
             "name": "Giant Tree 1F - Northwest Box",
             "id": 4325544,
+            "region": "Giant Tree 1F Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15410,6 +15613,7 @@
           {
             "name": "Giant Tree 1F - Southwest Box",
             "id": 4325545,
+            "region": "Giant Tree 1F Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15428,6 +15632,7 @@
           {
             "name": "Giant Tree 1F - Center Box",
             "id": 4325546,
+            "region": "Giant Tree 1F Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15446,6 +15651,7 @@
           {
             "name": "Giant Tree 1F - East Box",
             "id": 4325547,
+            "region": "Giant Tree 1F Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15668,6 +15874,7 @@
           {
             "name": "Giant Tree 2F - North Box",
             "id": 4325548,
+            "region": "Giant Tree 2F Main Lobby",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15779,6 +15986,7 @@
           {
             "name": "Giant Tree 2F - Dropdown Ledge Box",
             "id": 4325550,
+            "region": "Giant Tree 2F West Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15925,6 +16133,7 @@
           {
             "name": "Giant Tree 2F - South Box",
             "id": 4325549,
+            "region": "Giant Tree 2F Lower Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16208,6 +16417,7 @@
           {
             "name": "Giant Tree 2F - Gidrah Chest",
             "id": 4325398,
+            "region": "Giant Tree 2F Meteor Chest Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16349,6 +16559,7 @@
           {
             "name": "Giant Tree 2F - Mushroom Tunnel West Box",
             "id": 4325551,
+            "region": "Giant Tree 2F Mushroom Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16397,6 +16608,7 @@
           {
             "name": "Giant Tree 2F - Mushroom Tunnel East Box",
             "id": 4325552,
+            "region": "Giant Tree 2F Mushroom Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16560,6 +16772,7 @@
           {
             "name": "Giant Tree 3F - Central Island Box",
             "id": 4325555,
+            "region": "Giant Tree 3F Central Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16688,6 +16901,7 @@
           {
             "name": "Giant Tree 3F - Center North Box",
             "id": 4325553,
+            "region": "Giant Tree 3F Central Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16706,6 +16920,7 @@
           {
             "name": "Giant Tree 3F - Center West Box",
             "id": 4325554,
+            "region": "Giant Tree 3F Central Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16864,6 +17079,7 @@
           {
             "name": "Giant Tree 3F - West Side Box",
             "id": 4325556,
+            "region": "Giant Tree 3F West Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17373,6 +17589,7 @@
           {
             "name": "Giant Tree 3F - Worm Room North Box",
             "id": 4325557,
+            "region": "Giant Tree Worm Room Upper Ledge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17421,6 +17638,7 @@
           {
             "name": "Giant Tree 3F - Worm Room South Box",
             "id": 4325558,
+            "region": "Giant Tree Worm Room Upper Ledge",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17770,6 +17988,7 @@
           {
             "name": "Giant Tree 4F - Highest Platform North Box",
             "id": 4325559,
+            "region": "Giant Tree 4F Middle Floor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17788,6 +18007,7 @@
           {
             "name": "Giant Tree 4F - Highest Platform South Box",
             "id": 4325560,
+            "region": "Giant Tree 4F Middle Floor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17964,6 +18184,7 @@
           {
             "name": "Giant Tree 4F - Hook Ledge Northeast Box",
             "id": 4325561,
+            "region": "Giant Tree 4F South Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17982,6 +18203,7 @@
           {
             "name": "Giant Tree 4F - Hook Ledge Southwest Box",
             "id": 4325562,
+            "region": "Giant Tree 4F South Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18036,6 +18258,7 @@
           {
             "name": "Giant Tree 4F - East Slime Room Box",
             "id": 4325564,
+            "region": "Giant Tree 4F Slime Room East Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -18371,6 +18594,7 @@
           {
             "name": "Giant Tree 4F - West Slime Room Box",
             "id": 4325563,
+            "region": "Giant Tree 4F Slime Room Platform",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18489,6 +18713,7 @@
           {
             "name": "Giant Tree 5F - Northwest Left Box",
             "id": 4325565,
+            "region": "Giant Tree 5F Lower Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18507,6 +18732,7 @@
           {
             "name": "Giant Tree 5F - Northwest Right Box",
             "id": 4325566,
+            "region": "Giant Tree 5F Lower Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18525,6 +18751,7 @@
           {
             "name": "Giant Tree 5F - South Left Box",
             "id": 4325567,
+            "region": "Giant Tree 5F Lower Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18543,6 +18770,7 @@
           {
             "name": "Giant Tree 5F - South Right Box",
             "id": 4325568,
+            "region": "Giant Tree 5F Lower Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18627,23 +18855,18 @@
           {
             "name": "Gidrah",
             "id": null,
+            "region": "Giant Tree 5F Gidrah Platform",
             "crystal": null,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "list",
-                  "value": [
-                    {
-                      "type": "constant",
-                      "value": "River Coin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Sand Coin"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "River Coin"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sand Coin"
                 }
               ]
             },
@@ -18840,6 +19063,7 @@
           {
             "name": "Kaidge Temple - Box",
             "id": 4325569,
+            "region": "Kaidge Temple Upper Ledge",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18894,6 +19118,7 @@
           {
             "name": "Windhole Temple - Box",
             "id": 4325570,
+            "region": "Windhole Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18948,6 +19173,7 @@
           {
             "name": "Mount Gale - Dullahan Chest",
             "id": 4325399,
+            "region": "Mount Gale",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -18975,26 +19201,21 @@
           {
             "name": "Dullahan",
             "id": null,
+            "region": "Mount Gale",
             "crystal": null,
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "list",
-                      "value": [
-                        {
-                          "type": "constant",
-                          "value": "River Coin"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Sand Coin"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "River Coin"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Sand Coin"
                     }
                   ]
                 },
@@ -19022,6 +19243,7 @@
           {
             "name": "Mount Gale - East Box",
             "id": 4325571,
+            "region": "Mount Gale",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19045,6 +19267,7 @@
           {
             "name": "Mount Gale - West Box",
             "id": 4325572,
+            "region": "Mount Gale",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19266,6 +19489,7 @@
           {
             "name": "Otto",
             "id": null,
+            "region": "Otto's House",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19325,6 +19549,7 @@
           {
             "name": "Windia - Otto's Attic Box",
             "id": 4325573,
+            "region": "Otto's Attic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19577,6 +19802,7 @@
           {
             "name": "Windia - Mobius Basement West Box",
             "id": 4325576,
+            "region": "Windia Old People House Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19595,6 +19821,7 @@
           {
             "name": "Windia - Mobius Basement East Box",
             "id": 4325577,
+            "region": "Windia Old People House Basement",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19706,6 +19933,7 @@
           {
             "name": "Windia - Inn Bedroom North Box",
             "id": 4325574,
+            "region": "Windia Inn Beds",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19724,6 +19952,7 @@
           {
             "name": "Windia - Inn Bedroom South Box",
             "id": 4325575,
+            "region": "Windia Inn Beds",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19742,6 +19971,7 @@
           {
             "name": "Windia - Kaeli",
             "id": 4325691,
+            "region": "Windia Inn Beds",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19801,6 +20031,7 @@
           {
             "name": "Windia - Vendor",
             "id": 4325692,
+            "region": "Windia Vendor House",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19887,23 +20118,18 @@
           {
             "name": "Pazuzu 1F",
             "id": null,
+            "region": "Pazuzu Tower 1F Main Lobby",
             "crystal": null,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "list",
-                  "value": [
-                    {
-                      "type": "constant",
-                      "value": "River Coin"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Sand Coin"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "River Coin"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sand Coin"
                 }
               ]
             },
@@ -19956,6 +20182,7 @@
           {
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall West Box",
             "id": 4325578,
+            "region": "Pazuzu Tower 1F Boxes Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20004,6 +20231,7 @@
           {
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall Center Box",
             "id": 4325579,
+            "region": "Pazuzu Tower 1F Boxes Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20052,6 +20280,7 @@
           {
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall East Box",
             "id": 4325580,
+            "region": "Pazuzu Tower 1F Boxes Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20100,6 +20329,7 @@
           {
             "name": "Pazuzu's Tower 1F - Descent Box",
             "id": 4325581,
+            "region": "Pazuzu Tower 1F Boxes Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20272,6 +20502,7 @@
           {
             "name": "Pazuzu's Tower 2F - East Room West Box",
             "id": 4325582,
+            "region": "Pazuzu 2F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20290,6 +20521,7 @@
           {
             "name": "Pazuzu's Tower 2F - East Room East Box",
             "id": 4325583,
+            "region": "Pazuzu 2F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20308,6 +20540,7 @@
           {
             "name": "Pazuzu 2F Lock",
             "id": null,
+            "region": "Pazuzu 2F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20356,6 +20589,7 @@
           {
             "name": "Pazuzu 2F",
             "id": null,
+            "region": "Pazuzu 2F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20472,6 +20706,7 @@
           {
             "name": "Pazuzu's Tower 3F - Guest Room West Box",
             "id": 4325584,
+            "region": "Pazuzu 3F Main Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20490,6 +20725,7 @@
           {
             "name": "Pazuzu's Tower 3F - Guest Room East Box",
             "id": 4325585,
+            "region": "Pazuzu 3F Main Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20508,6 +20744,7 @@
           {
             "name": "Pazuzu 3F",
             "id": null,
+            "region": "Pazuzu 3F Main Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20668,6 +20905,7 @@
           {
             "name": "Pazuzu's Tower 3F - South Ledge Box",
             "id": 4325586,
+            "region": "Pazuzu 3F Southern Island",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20788,6 +21026,7 @@
           {
             "name": "Pazuzu's Tower 4F - Elevator West Box",
             "id": 4325587,
+            "region": "Pazuzu 4F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20836,6 +21075,7 @@
           {
             "name": "Pazuzu's Tower 4F - Elevator East Box",
             "id": 4325588,
+            "region": "Pazuzu 4F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20884,6 +21124,7 @@
           {
             "name": "Pazuzu's Tower 4F - East Storage Room Chest",
             "id": 4325400,
+            "region": "Pazuzu 4F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -20902,6 +21143,7 @@
           {
             "name": "Pazuzu 4F Lock",
             "id": null,
+            "region": "Pazuzu 4F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20950,6 +21192,7 @@
           {
             "name": "Pazuzu 4F",
             "id": null,
+            "region": "Pazuzu 4F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21056,6 +21299,7 @@
           {
             "name": "Pazuzu 5F",
             "id": null,
+            "region": "Pazuzu 5F Pazuzu Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -21132,6 +21376,7 @@
           {
             "name": "Pazuzu's Tower 5F - North Box",
             "id": 4325589,
+            "region": "Pazuzu 5F Upper Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -21150,6 +21395,7 @@
           {
             "name": "Pazuzu's Tower 5F - South Box",
             "id": 4325590,
+            "region": "Pazuzu 5F Upper Loop",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -21270,6 +21516,7 @@
           {
             "name": "Pazuzu's Tower 6F - Box",
             "id": 4325591,
+            "region": "Pazuzu 6F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -21288,6 +21535,7 @@
           {
             "name": "Pazuzu's Tower 6F - Chest",
             "id": 4325401,
+            "region": "Pazuzu 6F",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -21306,6 +21554,7 @@
           {
             "name": "Pazuzu 6F Lock",
             "id": null,
+            "region": "Pazuzu 6F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21384,6 +21633,7 @@
           {
             "name": "Pazuzu 6F",
             "id": null,
+            "region": "Pazuzu 6F",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21682,6 +21932,7 @@
           {
             "name": "Pazuzu's Tower 7F - Pazuzu Chest",
             "id": 4325402,
+            "region": "Pazuzu 7F Sky Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -21700,6 +21951,7 @@
           {
             "name": "Pazuzu",
             "id": null,
+            "region": "Pazuzu 7F Sky Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22103,6 +22355,7 @@
           {
             "name": "Light Temple - Box",
             "id": 4325592,
+            "region": "Light Temple",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22184,6 +22437,7 @@
           {
             "name": "Ship Dock Access",
             "id": null,
+            "region": "Ship Dock",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22336,6 +22590,7 @@
           {
             "name": "Mac Ship Steering Wheel",
             "id": null,
+            "region": "Mac Ship Deck",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22354,6 +22609,7 @@
           {
             "name": "Mac's Ship Deck - North Box",
             "id": 4325593,
+            "region": "Mac Ship Deck",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22372,6 +22628,7 @@
           {
             "name": "Mac's Ship Deck - Center Box",
             "id": 4325594,
+            "region": "Mac Ship Deck",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22390,6 +22647,7 @@
           {
             "name": "Mac's Ship Deck - South Box",
             "id": 4325595,
+            "region": "Mac Ship Deck",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22522,6 +22780,7 @@
           {
             "name": "Mac's Ship B1 - Northwest Hook Platform Box",
             "id": 4325604,
+            "region": "Mac Ship B1 Outer Ring",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22545,6 +22804,7 @@
           {
             "name": "Mac's Ship B1 - Center Hook Platform Box",
             "id": 4325605,
+            "region": "Mac Ship B1 Outer Ring",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22695,6 +22955,7 @@
           {
             "name": "Mac's Ship B1 - Central Corridor Box",
             "id": 4325606,
+            "region": "Mac Ship B1 Central Corridor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22883,6 +23144,7 @@
           {
             "name": "Mac's Ship B2 - Barrel Room South Box",
             "id": 4325599,
+            "region": "Mac Ship B2 Outer Ring",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22901,6 +23163,7 @@
           {
             "name": "Mac's Ship B2 - Barrel Room North Box",
             "id": 4325600,
+            "region": "Mac Ship B2 Outer Ring",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22919,6 +23182,7 @@
           {
             "name": "Mac's Ship B2 - Southwest Room Box",
             "id": 4325601,
+            "region": "Mac Ship B2 Outer Ring",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22937,6 +23201,7 @@
           {
             "name": "Mac's Ship B2 - Southeast Room Box",
             "id": 4325602,
+            "region": "Mac Ship B2 Outer Ring",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -22991,6 +23256,7 @@
           {
             "name": "Mac's Ship B1 - Mac Room Chest",
             "id": 4325403,
+            "region": "Mac Ship B1 Mac Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -23009,6 +23275,7 @@
           {
             "name": "Captain Mac",
             "id": null,
+            "region": "Mac Ship B1 Mac Room",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23218,6 +23485,7 @@
           {
             "name": "Doom Castle 4F - Northwest Room Box",
             "id": 4325607,
+            "region": "Doom Castle Ice Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23271,6 +23539,7 @@
           {
             "name": "Doom Castle 4F - Southwest Room Box",
             "id": 4325608,
+            "region": "Doom Castle Ice Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23324,6 +23593,7 @@
           {
             "name": "Doom Castle 4F - Northeast Room Box",
             "id": 4325609,
+            "region": "Doom Castle Ice Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23372,6 +23642,7 @@
           {
             "name": "Doom Castle 4F - Southeast Room Box",
             "id": 4325610,
+            "region": "Doom Castle Ice Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23425,6 +23696,7 @@
           {
             "name": "Stone Golem",
             "id": null,
+            "region": "Doom Castle Ice Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23524,6 +23796,7 @@
           {
             "name": "Doom Castle 5F - North Left Box",
             "id": 4325611,
+            "region": "Doom Castle Lava Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23547,6 +23820,7 @@
           {
             "name": "Doom Castle 5F - North Right Box",
             "id": 4325612,
+            "region": "Doom Castle Lava Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23570,6 +23844,7 @@
           {
             "name": "Doom Castle 5F - South Left Box",
             "id": 4325613,
+            "region": "Doom Castle Lava Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23593,6 +23868,7 @@
           {
             "name": "Doom Castle 5F - South Right Box",
             "id": 4325614,
+            "region": "Doom Castle Lava Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23616,6 +23892,7 @@
           {
             "name": "Twinhead Wyvern",
             "id": null,
+            "region": "Doom Castle Lava Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23687,6 +23964,7 @@
           {
             "name": "Doom Castle 6F - West Box",
             "id": 4325615,
+            "region": "Doom Castle Sky Floor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -23705,6 +23983,7 @@
           {
             "name": "Doom Castle 6F - East Box",
             "id": 4325616,
+            "region": "Doom Castle Sky Floor",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -23723,6 +24002,7 @@
           {
             "name": "Zuh",
             "id": null,
+            "region": "Doom Castle Sky Floor",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23839,6 +24119,7 @@
           {
             "name": "Dark King",
             "id": null,
+            "region": "Doom Castle Dark King Room",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -25763,23 +26044,192 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Accessories",
-      "Armors",
-      "Axes",
-      "Bombs",
-      "Claws",
-      "Coins",
-      "Consumables",
-      "Everything",
-      "Helms",
-      "Key Items",
-      "Refills",
-      "Shields",
-      "Spells",
-      "Swords",
-      "Weapons"
-    ]
+    "1": {
+      "Key Items": [
+        "Sun Coin",
+        "Captain's Cap",
+        "Wakewater",
+        "Sky Coin",
+        "Venus Key",
+        "Elixir",
+        "Libra Crest",
+        "Mobius Crest",
+        "Sand Coin",
+        "Sky Fragment",
+        "Tree Wither",
+        "Thunder Rock",
+        "Magic Mirror",
+        "Mask",
+        "Multi Key",
+        "River Coin",
+        "Gemini Crest"
+      ],
+      "Coins": [
+        "Sand Coin",
+        "River Coin",
+        "Sky Coin",
+        "Sun Coin"
+      ],
+      "Consumables": [
+        "Refresher",
+        "Cure Potion",
+        "Heal Potion",
+        "Seed"
+      ],
+      "Spells": [
+        "Fire Book",
+        "Blizzard Book",
+        "Aero Book",
+        "Flare Seal",
+        "Life Book",
+        "Exit Book",
+        "White Seal",
+        "Meteor Seal",
+        "Cure Book",
+        "Quake Book",
+        "Heal Book",
+        "Thunder Seal"
+      ],
+      "Weapons": [
+        "Progressive Sword",
+        "Axe",
+        "Charm Claw",
+        "Battle Axe",
+        "Progressive Claw",
+        "Giant's Axe",
+        "Cat Claw",
+        "Excalibur",
+        "Progressive Bomb",
+        "Bomb",
+        "Mega Grenade",
+        "Jumbo Bomb",
+        "Steel Sword",
+        "Dragon Claw",
+        "Progressive Axe",
+        "Knight Sword"
+      ],
+      "Swords": [
+        "Excalibur",
+        "Progressive Sword",
+        "Steel Sword",
+        "Knight Sword"
+      ],
+      "Axes": [
+        "Axe",
+        "Battle Axe",
+        "Progressive Claw",
+        "Giant's Axe",
+        "Progressive Axe"
+      ],
+      "Claws": [
+        "Charm Claw",
+        "Dragon Claw",
+        "Cat Claw"
+      ],
+      "Bombs": [
+        "Jumbo Bomb",
+        "Mega Grenade",
+        "Bomb",
+        "Progressive Bomb"
+      ],
+      "Helms": [
+        "Progressive Helm",
+        "Moon Helm",
+        "Apollo Helm",
+        "Steel Helm"
+      ],
+      "Armors": [
+        "Noble Armor",
+        "Gaia's Armor",
+        "Steel Armor",
+        "Progressive Armor"
+      ],
+      "Shields": [
+        "Steel Shield",
+        "Aegis Shield",
+        "Progressive Shield",
+        "Venus Shield"
+      ],
+      "Accessories": [
+        "Magic Ring",
+        "Charm",
+        "Cupid Locket",
+        "Progressive Accessory"
+      ],
+      "Refills": [
+        "Bomb Refill",
+        "Projectile Refill"
+      ],
+      "Everything": [
+        "Battle Axe",
+        "Gaia's Armor",
+        "Mobius Crest",
+        "Flare Seal",
+        "Cat Claw",
+        "Steel Armor",
+        "Progressive Axe",
+        "Charm Claw",
+        "Axe",
+        "Captain's Cap",
+        "Cure Potion",
+        "Giant's Axe",
+        "Progressive Armor",
+        "Mega Grenade",
+        "Meteor Seal",
+        "Knight Sword",
+        "Wakewater",
+        "Sky Coin",
+        "Projectile Refill",
+        "Aero Book",
+        "Life Book",
+        "Exit Book",
+        "Heal Potion",
+        "Heal Book",
+        "Thunder Seal",
+        "Aegis Shield",
+        "Steel Shield",
+        "Venus Key",
+        "Progressive Bomb",
+        "Bomb",
+        "Bomb Refill",
+        "Jumbo Bomb",
+        "Mask",
+        "Gemini Crest",
+        "Progressive Sword",
+        "Blizzard Book",
+        "Excalibur",
+        "Progressive Accessory",
+        "Quake Book",
+        "Dragon Claw",
+        "Fire Book",
+        "Apollo Helm",
+        "Libra Crest",
+        "White Seal",
+        "Tree Wither",
+        "Steel Helm",
+        "Cure Book",
+        "Cupid Locket",
+        "Magic Ring",
+        "Progressive Shield",
+        "Sand Coin",
+        "Progressive Claw",
+        "Sky Fragment",
+        "Sun Coin",
+        "Progressive Helm",
+        "Magic Mirror",
+        "River Coin",
+        "Seed",
+        "Charm",
+        "Refresher",
+        "Elixir",
+        "Moon Helm",
+        "Venus Shield",
+        "Noble Armor",
+        "Thunder Rock",
+        "Steel Sword",
+        "Multi Key"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

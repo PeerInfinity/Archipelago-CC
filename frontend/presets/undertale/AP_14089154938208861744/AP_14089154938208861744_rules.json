@@ -207,6 +207,7 @@
           {
             "name": "Candy 1",
             "id": 79014,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -225,6 +226,7 @@
           {
             "name": "Candy 2",
             "id": 79015,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -243,6 +245,7 @@
           {
             "name": "Candy 3",
             "id": 79016,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -261,6 +264,7 @@
           {
             "name": "Candy 4",
             "id": 79017,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -279,6 +283,7 @@
           {
             "name": "Donut Sale",
             "id": 79018,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -297,6 +302,7 @@
           {
             "name": "Cider Sale",
             "id": 79019,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -315,6 +321,7 @@
           {
             "name": "Ribbon Cracks",
             "id": 79020,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -333,6 +340,7 @@
           {
             "name": "Toy Knife Edge",
             "id": 79021,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -351,6 +359,7 @@
           {
             "name": "B.Scotch Pie Given",
             "id": 79022,
+            "region": "Ruins",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -427,6 +436,7 @@
           {
             "name": "Snowman",
             "id": 79100,
+            "region": "Snowdin Forest",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -455,6 +465,7 @@
           {
             "name": "Nicecream Snowdin",
             "id": 79001,
+            "region": "Snowdin Forest",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -519,6 +530,7 @@
           {
             "name": "Bunny 1",
             "id": 79034,
+            "region": "Snowdin Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -547,6 +559,7 @@
           {
             "name": "Bunny 2",
             "id": 79035,
+            "region": "Snowdin Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -575,6 +588,7 @@
           {
             "name": "Bunny 3",
             "id": 79036,
+            "region": "Snowdin Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -603,6 +617,7 @@
           {
             "name": "Bunny 4",
             "id": 79037,
+            "region": "Snowdin Town",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -654,6 +669,7 @@
           {
             "name": "Papyrus Date",
             "id": null,
+            "region": "Papyrus\" Home",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -708,6 +724,7 @@
           {
             "name": "Nicecream Waterfall",
             "id": 79002,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -736,6 +753,7 @@
           {
             "name": "Nicecream Punch Card",
             "id": 79003,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -780,6 +798,7 @@
           {
             "name": "Quiche Bench",
             "id": 79004,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -808,6 +827,7 @@
           {
             "name": "Tutu Hidden",
             "id": 79005,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -836,6 +856,7 @@
           {
             "name": "Card Reward",
             "id": 79006,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -864,6 +885,7 @@
           {
             "name": "Grass Shoes",
             "id": 79007,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -892,6 +914,7 @@
           {
             "name": "Astro 1",
             "id": 79023,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -920,6 +943,7 @@
           {
             "name": "Astro 2",
             "id": 79024,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -948,6 +972,7 @@
           {
             "name": "Gerson 1",
             "id": 79038,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -976,6 +1001,7 @@
           {
             "name": "Gerson 2",
             "id": 79039,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1004,6 +1030,7 @@
           {
             "name": "Gerson 3",
             "id": 79040,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1032,6 +1059,7 @@
           {
             "name": "Gerson 4",
             "id": 79041,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1060,6 +1088,7 @@
           {
             "name": "TemmieShop 1",
             "id": 79050,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1088,6 +1117,7 @@
           {
             "name": "TemmieShop 2",
             "id": 79051,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1116,6 +1146,7 @@
           {
             "name": "TemmieShop 3",
             "id": 79052,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1144,6 +1175,7 @@
           {
             "name": "TemmieShop 4",
             "id": 79053,
+            "region": "Waterfall",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1211,6 +1243,7 @@
           {
             "name": "Undyne Date",
             "id": null,
+            "region": "Undyne\"s Home",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1277,6 +1310,7 @@
           {
             "name": "Noodles Fridge",
             "id": 79008,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1305,6 +1339,7 @@
           {
             "name": "Pan Hidden",
             "id": 79009,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1333,6 +1368,7 @@
           {
             "name": "Apron Hidden",
             "id": 79010,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1361,6 +1397,7 @@
           {
             "name": "Bratty Catty 1",
             "id": 79042,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1389,6 +1426,7 @@
           {
             "name": "Bratty Catty 2",
             "id": 79043,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1417,6 +1455,7 @@
           {
             "name": "Bratty Catty 3",
             "id": 79044,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1445,6 +1484,7 @@
           {
             "name": "Bratty Catty 4",
             "id": 79045,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1473,6 +1513,7 @@
           {
             "name": "Burgerpants 1",
             "id": 79046,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1501,6 +1542,7 @@
           {
             "name": "Burgerpants 2",
             "id": 79047,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1529,6 +1571,7 @@
           {
             "name": "Burgerpants 3",
             "id": 79048,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1557,6 +1600,7 @@
           {
             "name": "Burgerpants 4",
             "id": 79049,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1585,6 +1629,7 @@
           {
             "name": "Alphys Date",
             "id": null,
+            "region": "Hotland",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1724,6 +1769,7 @@
           {
             "name": "Trash Burger",
             "id": 79011,
+            "region": "Core",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1752,6 +1798,7 @@
           {
             "name": "Mettaton Plot",
             "id": 79062,
+            "region": "Core",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1847,6 +1894,7 @@
           {
             "name": "Present Knife",
             "id": 79012,
+            "region": "New Home",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1875,6 +1923,7 @@
           {
             "name": "Present Locket",
             "id": 79013,
+            "region": "New Home",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1903,6 +1952,7 @@
           {
             "name": "Left New Home Key",
             "id": 79064,
+            "region": "New Home",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -1931,6 +1981,7 @@
           {
             "name": "Right New Home Key",
             "id": 79065,
+            "region": "New Home",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
@@ -3265,9 +3316,95 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Glamburger",
+        "Burnt Pan",
+        "Crab Apple",
+        "1000G",
+        "Starfait",
+        "Hush Puppy",
+        "Progressive Plot",
+        "Undyne's Letter",
+        "Hot Cat",
+        "Worn Dagger",
+        "Undyne Letter EX",
+        "Popato Chisps",
+        "Sea Tea",
+        "Monster Candy",
+        "Tough Glove",
+        "Ballet Shoes",
+        "Junk Food",
+        "ACT",
+        "Stick",
+        "Punch Card",
+        "500G",
+        "Right Home Key",
+        "Puppydough Icecream",
+        "100G",
+        "Mettaton Plush",
+        "Mystery Key",
+        "DT Extractor",
+        "HP Up",
+        "Progressive Weapons",
+        "Torn Notebook",
+        "Bad Memory",
+        "Core Key",
+        "Key Piece",
+        "Ruins Key",
+        "FIGHT",
+        "Stained Apron",
+        "Nice Cream",
+        "Spider Donut",
+        "Old Tutu",
+        "Heart Locket",
+        "Left Home Key",
+        "Pumpkin Rings",
+        "Dream",
+        "temy armor",
+        "The Locket",
+        "Toy Knife",
+        "Real Knife",
+        "MERCY",
+        "Hotland Key",
+        "Butterscotch Pie",
+        "Cloudy Glasses",
+        "Cowboy Hat",
+        "Snowman Piece",
+        "Faded Ribbon",
+        "Waterfall Key",
+        "Ghost Fruit",
+        "Dog Residue",
+        "Annoying Dog",
+        "Empty Gun",
+        "LOVE",
+        "Cinnamon Bun",
+        "Face Steak",
+        "Complete Skeleton",
+        "Manly Bandanna",
+        "Legendary Hero",
+        "Hot Dog...?",
+        "Fish",
+        "DEF Up",
+        "Astronaut Food",
+        "Abandoned Quiche",
+        "Dog Salad",
+        "Snowdin Key",
+        "Temmie Flakes",
+        "Bandage",
+        "Snail Pie",
+        "Stoic Onion",
+        "Unisicle",
+        "ATK Up",
+        "Progressive Armor",
+        "Instant Noodles",
+        "Bisicle",
+        "Spider Cider",
+        "ITEM",
+        "Croquet Roll",
+        "Rock Candy"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

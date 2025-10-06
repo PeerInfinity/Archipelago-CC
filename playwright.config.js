@@ -70,10 +70,10 @@ export default defineConfig({
   // outputDir: 'test-results/',
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start', // Or your python server command
-  //   url: 'http://localhost:8000', // Your app's URL
-  //   reuseExistingServer: !process.env.CI,
-  //   timeout: 120 * 1000, // Timeout for web server to start
-  // },
+  webServer: {
+    command: 'python -m http.server 8000',
+    url: 'http://localhost:8000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000, // Timeout for web server to start
+  },
 });

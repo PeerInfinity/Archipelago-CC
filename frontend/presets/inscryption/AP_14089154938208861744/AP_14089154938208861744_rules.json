@@ -133,6 +133,7 @@
           {
             "name": "Act 1 - Boss Prospector",
             "id": 147000,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -151,6 +152,7 @@
           {
             "name": "Act 1 - Boss Angler",
             "id": 147001,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -169,6 +171,7 @@
           {
             "name": "Act 1 - Boss Trapper",
             "id": 147002,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -187,6 +190,7 @@
           {
             "name": "Act 1 - Boss Leshy",
             "id": 147003,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -205,6 +209,7 @@
           {
             "name": "Act 1 - Safe",
             "id": 147004,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -223,6 +228,7 @@
           {
             "name": "Act 1 - Clock Main Compartment",
             "id": 147005,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -244,6 +250,7 @@
           {
             "name": "Act 1 - Clock Upper Compartment",
             "id": 147006,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -262,6 +269,7 @@
           {
             "name": "Act 1 - Dagger",
             "id": 147007,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -283,6 +291,7 @@
           {
             "name": "Act 1 - Wardrobe Drawer 1",
             "id": 147008,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -304,6 +313,7 @@
           {
             "name": "Act 1 - Wardrobe Drawer 2",
             "id": 147009,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -325,6 +335,7 @@
           {
             "name": "Act 1 - Wardrobe Drawer 3",
             "id": 147010,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -346,6 +357,7 @@
           {
             "name": "Act 1 - Wardrobe Drawer 4",
             "id": 147011,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -367,6 +379,7 @@
           {
             "name": "Act 1 - Magnificus Eye",
             "id": 147012,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -388,6 +401,7 @@
           {
             "name": "Act 1 - Painting 1",
             "id": 147013,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -406,22 +420,17 @@
           {
             "name": "Act 1 - Painting 2",
             "id": 147014,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Oil Painting's Clover Plant"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Squirrel Totem Head"
-                    }
+                    "Oil Painting's Clover Plant",
+                    "Squirrel Totem Head"
                   ]
                 }
               ]
@@ -439,22 +448,17 @@
           {
             "name": "Act 1 - Painting 3",
             "id": 147015,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Oil Painting's Clover Plant"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Squirrel Totem Head"
-                    }
+                    "Oil Painting's Clover Plant",
+                    "Squirrel Totem Head"
                   ]
                 }
               ]
@@ -472,6 +476,7 @@
           {
             "name": "Act 1 - Greater Smoke",
             "id": 147016,
+            "region": "Act 1",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -513,22 +518,17 @@
           {
             "name": "Act 2 - Boss Leshy",
             "id": 147017,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Camera Replica"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Pile Of Meat"
-                    }
+                    "Camera Replica",
+                    "Pile Of Meat"
                   ]
                 }
               ]
@@ -546,6 +546,7 @@
           {
             "name": "Act 2 - Boss Magnificus",
             "id": 147018,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -575,6 +576,7 @@
           {
             "name": "Act 2 - Boss Grimora",
             "id": 147019,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -600,6 +602,7 @@
           {
             "name": "Act 2 - Boss P03",
             "id": 147020,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -629,22 +632,17 @@
           {
             "name": "Act 2 - Battle Prospector",
             "id": 147021,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Camera Replica"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Pile Of Meat"
-                    }
+                    "Camera Replica",
+                    "Pile Of Meat"
                   ]
                 }
               ]
@@ -662,22 +660,17 @@
           {
             "name": "Act 2 - Battle Angler",
             "id": 147022,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Camera Replica"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Pile Of Meat"
-                    }
+                    "Camera Replica",
+                    "Pile Of Meat"
                   ]
                 }
               ]
@@ -695,22 +688,17 @@
           {
             "name": "Act 2 - Battle Trapper",
             "id": 147023,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Camera Replica"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Pile Of Meat"
-                    }
+                    "Camera Replica",
+                    "Pile Of Meat"
                   ]
                 }
               ]
@@ -728,6 +716,7 @@
           {
             "name": "Act 2 - Battle Sawyer",
             "id": 147024,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -746,6 +735,7 @@
           {
             "name": "Act 2 - Battle Royal",
             "id": 147025,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -764,6 +754,7 @@
           {
             "name": "Act 2 - Battle Kaycee",
             "id": 147026,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -782,6 +773,7 @@
           {
             "name": "Act 2 - Battle Goobert",
             "id": 147027,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -811,6 +803,7 @@
           {
             "name": "Act 2 - Battle Pike Mage",
             "id": 147028,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -840,6 +833,7 @@
           {
             "name": "Act 2 - Battle Lonely Wizard",
             "id": 147029,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -869,6 +863,7 @@
           {
             "name": "Act 2 - Battle Inspector",
             "id": 147030,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -898,6 +893,7 @@
           {
             "name": "Act 2 - Battle Melter",
             "id": 147031,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -927,6 +923,7 @@
           {
             "name": "Act 2 - Battle Dredger",
             "id": 147032,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -956,6 +953,7 @@
           {
             "name": "Act 2 - Dock Chest",
             "id": 147033,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -974,6 +972,7 @@
           {
             "name": "Act 2 - Forest Cabin Chest",
             "id": 147034,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -992,22 +991,17 @@
           {
             "name": "Act 2 - Forest Meadow Chest",
             "id": 147035,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Camera Replica"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Pile Of Meat"
-                    }
+                    "Camera Replica",
+                    "Pile Of Meat"
                   ]
                 }
               ]
@@ -1025,6 +1019,7 @@
           {
             "name": "Act 2 - Cabin Wardrobe Drawer",
             "id": 147036,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1043,6 +1038,7 @@
           {
             "name": "Act 2 - Cabin Safe",
             "id": 147037,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1061,6 +1057,7 @@
           {
             "name": "Act 2 - Crypt Casket 1",
             "id": 147038,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1079,6 +1076,7 @@
           {
             "name": "Act 2 - Crypt Casket 2",
             "id": 147039,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1097,6 +1095,7 @@
           {
             "name": "Act 2 - Crypt Well",
             "id": 147040,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1115,6 +1114,7 @@
           {
             "name": "Act 2 - Tower Chest 1",
             "id": 147041,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1144,6 +1144,7 @@
           {
             "name": "Act 2 - Tower Chest 2",
             "id": 147042,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1173,6 +1174,7 @@
           {
             "name": "Act 2 - Tower Chest 3",
             "id": 147043,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1202,6 +1204,7 @@
           {
             "name": "Act 2 - Tentacle",
             "id": 147044,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1231,6 +1234,7 @@
           {
             "name": "Act 2 - Factory Trash Can",
             "id": 147045,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1260,6 +1264,7 @@
           {
             "name": "Act 2 - Factory Drawer 1",
             "id": 147046,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1289,6 +1294,7 @@
           {
             "name": "Act 2 - Factory Drawer 2",
             "id": 147047,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1318,6 +1324,7 @@
           {
             "name": "Act 2 - Factory Chest 1",
             "id": 147048,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1347,6 +1354,7 @@
           {
             "name": "Act 2 - Factory Chest 2",
             "id": 147049,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1376,6 +1384,7 @@
           {
             "name": "Act 2 - Factory Chest 3",
             "id": 147050,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1405,6 +1414,7 @@
           {
             "name": "Act 2 - Factory Chest 4",
             "id": 147051,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1434,6 +1444,7 @@
           {
             "name": "Act 2 - Ancient Obol",
             "id": 147052,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1463,6 +1474,7 @@
           {
             "name": "Act 2 - Bone Lord Femur",
             "id": 147053,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1484,6 +1496,7 @@
           {
             "name": "Act 2 - Bone Lord Horn",
             "id": 147054,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1505,6 +1518,7 @@
           {
             "name": "Act 2 - Bone Lord Holo Key",
             "id": 147055,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1526,6 +1540,7 @@
           {
             "name": "Act 2 - Mycologists Holo Key",
             "id": 147056,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1555,6 +1570,7 @@
           {
             "name": "Act 2 - Camera Replica",
             "id": 147057,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1573,6 +1589,7 @@
           {
             "name": "Act 2 - Clover",
             "id": 147058,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1591,6 +1608,7 @@
           {
             "name": "Act 2 - Monocle",
             "id": 147059,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1620,6 +1638,7 @@
           {
             "name": "Act 2 - Epitaph Piece 1",
             "id": 147060,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1638,6 +1657,7 @@
           {
             "name": "Act 2 - Epitaph Piece 2",
             "id": 147061,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1656,6 +1676,7 @@
           {
             "name": "Act 2 - Epitaph Piece 3",
             "id": 147062,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1674,6 +1695,7 @@
           {
             "name": "Act 2 - Epitaph Piece 4",
             "id": 147063,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1692,6 +1714,7 @@
           {
             "name": "Act 2 - Epitaph Piece 5",
             "id": 147064,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1710,6 +1733,7 @@
           {
             "name": "Act 2 - Epitaph Piece 6",
             "id": 147065,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1728,6 +1752,7 @@
           {
             "name": "Act 2 - Epitaph Piece 7",
             "id": 147066,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1746,6 +1771,7 @@
           {
             "name": "Act 2 - Epitaph Piece 8",
             "id": 147067,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1764,6 +1790,7 @@
           {
             "name": "Act 2 - Epitaph Piece 9",
             "id": 147068,
+            "region": "Act 2",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1805,6 +1832,7 @@
           {
             "name": "Act 3 - Boss Photographer",
             "id": 147069,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1826,6 +1854,7 @@
           {
             "name": "Act 3 - Boss Archivist",
             "id": 147070,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1857,6 +1886,7 @@
           {
             "name": "Act 3 - Boss Unfinished",
             "id": 147071,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1888,6 +1918,7 @@
           {
             "name": "Act 3 - Boss G0lly",
             "id": 147072,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1919,6 +1950,7 @@
           {
             "name": "Act 3 - Boss Mycologists",
             "id": 147073,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1950,6 +1982,7 @@
           {
             "name": "Act 3 - Bone Lord Room",
             "id": 147074,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1981,6 +2014,7 @@
           {
             "name": "Act 3 - Shop Holo Pelt",
             "id": 147075,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2012,6 +2046,7 @@
           {
             "name": "Act 3 - Middle Holo Pelt",
             "id": 147076,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2033,6 +2068,7 @@
           {
             "name": "Act 3 - Forest Holo Pelt",
             "id": 147077,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2054,6 +2090,7 @@
           {
             "name": "Act 3 - Crypt Holo Pelt",
             "id": 147078,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2075,6 +2112,7 @@
           {
             "name": "Act 3 - Tower Holo Pelt",
             "id": 147079,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2106,6 +2144,7 @@
           {
             "name": "Act 3 - Trader 1",
             "id": 147080,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2141,6 +2180,7 @@
           {
             "name": "Act 3 - Trader 2",
             "id": 147081,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2176,6 +2216,7 @@
           {
             "name": "Act 3 - Trader 3",
             "id": 147082,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2211,6 +2252,7 @@
           {
             "name": "Act 3 - Trader 4",
             "id": 147083,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2246,6 +2288,7 @@
           {
             "name": "Act 3 - Trader 5",
             "id": 147084,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2281,6 +2324,7 @@
           {
             "name": "Act 3 - Drawer 1",
             "id": 147085,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2299,6 +2343,7 @@
           {
             "name": "Act 3 - Drawer 2",
             "id": 147086,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2317,6 +2362,7 @@
           {
             "name": "Act 3 - Clock",
             "id": 147087,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2348,6 +2394,7 @@
           {
             "name": "Act 3 - Extra Battery",
             "id": 147088,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2369,6 +2416,7 @@
           {
             "name": "Act 3 - Nano Armor Generator",
             "id": 147089,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2400,6 +2448,7 @@
           {
             "name": "Act 3 - Chest",
             "id": 147090,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2418,6 +2467,7 @@
           {
             "name": "Act 3 - Goobert's Painting",
             "id": 147091,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2449,6 +2499,7 @@
           {
             "name": "Act 3 - Luke's File Entry 1",
             "id": 147092,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2480,6 +2531,7 @@
           {
             "name": "Act 3 - Luke's File Entry 2",
             "id": 147093,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2511,6 +2563,7 @@
           {
             "name": "Act 3 - Luke's File Entry 3",
             "id": 147094,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2542,6 +2595,7 @@
           {
             "name": "Act 3 - Luke's File Entry 4",
             "id": 147095,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2573,6 +2627,7 @@
           {
             "name": "Act 3 - Inspectometer Battery",
             "id": 147096,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -2591,6 +2646,7 @@
           {
             "name": "Act 3 - Gems Drone",
             "id": 147097,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -2612,6 +2668,7 @@
           {
             "name": "Act 3 - The Great Transcendence",
             "id": 147098,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2643,6 +2700,7 @@
           {
             "name": "Act 3 - Well",
             "id": 147099,
+            "region": "Act 3",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -3291,9 +3349,52 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Stunted Wolf Card",
+        "Mrs. Bomb's Remote",
+        "Wardrobe Key",
+        "Caged Wolf Card",
+        "Ant Cards",
+        "Dagger",
+        "Bee Figurine",
+        "Ourobot Card",
+        "Camera Replica",
+        "Squirrel Totem Head",
+        "Inspectometer Battery",
+        "Pile Of Meat",
+        "Film Roll",
+        "Epitaph Pieces",
+        "Skink Card",
+        "Ring",
+        "Extra Candle",
+        "Ancient Obol",
+        "Quill",
+        "Oil Painting's Clover Plant",
+        "Lonely Wizbot Card",
+        "Greater Smoke",
+        "Angler Hook",
+        "Bone Lord Holo Key",
+        "Epitaph Piece",
+        "Drowned Soul Card",
+        "Bone Lord Horn",
+        "Monocle",
+        "Gems Module",
+        "Holo Pelt",
+        "Currency",
+        "Bone Lord Femur",
+        "Salmon Card",
+        "Great Kraken Card",
+        "Dock's Clover Plant",
+        "Nano Armor Generator",
+        "Card Pack",
+        "Magnificus Eye",
+        "Extra Battery",
+        "Mycologists Holo Key",
+        "Fishbot Card",
+        "Stinkbug Card"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

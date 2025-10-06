@@ -289,6 +289,7 @@
           {
             "name": "Stardust Fields Room 1 Block 1",
             "id": 3790429,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -307,6 +308,7 @@
           {
             "name": "Stardust Fields Room 1 Block 2",
             "id": 3790437,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -325,6 +327,7 @@
           {
             "name": "Stardust Fields Room 2 Block",
             "id": 3790456,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -343,6 +346,7 @@
           {
             "name": "Stardust Fields Room 3 Block",
             "id": 3790509,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -361,6 +365,7 @@
           {
             "name": "Stardust Fields Room 4 Block 1",
             "id": 3790538,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -379,6 +384,7 @@
           {
             "name": "Stardust Fields Room 4 Block 2",
             "id": 3790530,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -397,6 +403,7 @@
           {
             "name": "Stardust Fields Room 4 Block 3",
             "id": 3790522,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -415,6 +422,7 @@
           {
             "name": "Stardust Fields Room 5 Block",
             "id": 3790611,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -433,6 +441,7 @@
           {
             "name": "Hoohoo Village Hammer House Block",
             "id": 3790641,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -459,6 +468,7 @@
           {
             "name": "Hoohoo Mountain Below Summit Block 1",
             "id": 3790963,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -477,6 +487,7 @@
           {
             "name": "Hoohoo Mountain Below Summit Block 2",
             "id": 3790971,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -495,6 +506,7 @@
           {
             "name": "Hoohoo Mountain Below Summit Block 3",
             "id": 3790979,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -513,6 +525,7 @@
           {
             "name": "Hoohoo Mountain Past Hoohooros Block 1",
             "id": 3790992,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -531,6 +544,7 @@
           {
             "name": "Hoohoo Mountain Past Hoohooros Block 2",
             "id": 3791008,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -549,6 +563,7 @@
           {
             "name": "Hoohoo Mountain Hoohooros Room Block 1",
             "id": 3791021,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -567,6 +582,7 @@
           {
             "name": "Hoohoo Mountain Hoohooros Room Block 2",
             "id": 3791029,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -585,6 +601,7 @@
           {
             "name": "Hoohoo Mountain Before Hoohooros Block",
             "id": 3791058,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -603,6 +620,7 @@
           {
             "name": "Hoohoo Mountain Fountain Room Block 1",
             "id": 3791090,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -621,6 +639,7 @@
           {
             "name": "Hoohoo Mountain Fountain Room Block 2",
             "id": 3791098,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -639,6 +658,7 @@
           {
             "name": "Hoohoo Mountain Room 1 Block 1",
             "id": 3791132,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -657,6 +677,7 @@
           {
             "name": "Hoohoo Mountain Room 1 Block 2",
             "id": 3791140,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -675,6 +696,7 @@
           {
             "name": "Hoohoo Mountain Room 1 Block 3",
             "id": 3791148,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -693,6 +715,7 @@
           {
             "name": "Hoohoo Mountain Base Room 1 Block",
             "id": 3791161,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -711,6 +734,7 @@
           {
             "name": "Hoohoo Village Eastside Block",
             "id": 3791191,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -729,6 +753,7 @@
           {
             "name": "Hoohoo Village Bridge Room Block 1",
             "id": 3791215,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -747,6 +772,7 @@
           {
             "name": "Hoohoo Village Bridge Room Block 2",
             "id": 3791231,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -765,6 +791,7 @@
           {
             "name": "Hoohoo Village Bridge Room Block 3",
             "id": 3791247,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -783,6 +810,7 @@
           {
             "name": "Hoohoo Mountain Base Bridge Room Block 1",
             "id": 3791260,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -801,6 +829,7 @@
           {
             "name": "Hoohoo Mountain Base Bridge Room Block 2",
             "id": 3791268,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -819,6 +848,7 @@
           {
             "name": "Hoohoo Mountain Base Bridge Room Block 3",
             "id": 3791276,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -837,6 +867,7 @@
           {
             "name": "Hoohoo Mountain Base Bridge Room Block 4",
             "id": 3791284,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -855,6 +886,7 @@
           {
             "name": "Hoohoo Mountain Base Bridge Room Digspot",
             "id": 3791292,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -881,6 +913,7 @@
           {
             "name": "Hoohoo Mountain Base Boostatue Room Block 1",
             "id": 3791305,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -899,6 +932,7 @@
           {
             "name": "Hoohoo Mountain Base Boostatue Room Block 2",
             "id": 3791313,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -942,6 +976,7 @@
           {
             "name": "Hoohoo Mountain Base Boostatue Room Digspot 1",
             "id": 3791321,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -968,6 +1003,7 @@
           {
             "name": "Hoohoo Mountain Base Boostatue Room Digspot 2",
             "id": 3791329,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1028,6 +1064,7 @@
           {
             "name": "Hoohoo Mountain Base Grassy Area Block 1",
             "id": 3791358,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1046,6 +1083,7 @@
           {
             "name": "Hoohoo Mountain Base Grassy Area Block 2",
             "id": 3791350,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1064,6 +1102,7 @@
           {
             "name": "Hoohoo Mountain Base Past Minecart Minigame Block 1",
             "id": 3791413,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1082,6 +1121,7 @@
           {
             "name": "Hoohoo Mountain Base Past Minecart Minigame Block 2",
             "id": 3791405,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1100,6 +1140,7 @@
           {
             "name": "Cave Connecting Stardust Fields and Hoohoo Village Block 1",
             "id": 3791479,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1118,6 +1159,7 @@
           {
             "name": "Cave Connecting Stardust Fields and Hoohoo Village Block 2",
             "id": 3791487,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1136,6 +1178,7 @@
           {
             "name": "Hoohoo Village South Cave Block",
             "id": 3791565,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1154,6 +1197,7 @@
           {
             "name": "Hoohoo Village North Cave Room 1 Block",
             "id": 3791512,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1172,6 +1216,7 @@
           {
             "name": "Hoohoo Village North Cave Room 2 Block",
             "id": 3791533,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1190,6 +1235,7 @@
           {
             "name": "Beanbean Outskirts Surf Beach Block",
             "id": 3792131,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1208,6 +1254,7 @@
           {
             "name": "Woohoo Hooniversity Star Room Block 1",
             "id": 3793213,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1226,6 +1273,7 @@
           {
             "name": "Woohoo Hooniversity Star Room Block 2",
             "id": 3793221,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1244,6 +1292,7 @@
           {
             "name": "Woohoo Hooniversity Star Room Block 3",
             "id": 3793229,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1262,6 +1311,7 @@
           {
             "name": "Woohoo Hooniversity Sun Door Block 1",
             "id": 3793242,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1280,6 +1330,7 @@
           {
             "name": "Woohoo Hooniversity Sun Door Block 2",
             "id": 3793250,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1298,6 +1349,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 4 Block 1",
             "id": 3793392,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1316,6 +1368,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 4 Block 2",
             "id": 3793400,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1334,6 +1387,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 4 Block 3",
             "id": 3793408,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1352,6 +1406,7 @@
           {
             "name": "Hoohoo Mountain Fountain Room 2 Block",
             "id": 3795189,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1370,6 +1425,7 @@
           {
             "name": "Hoohoo Mountain Past Hoohooros Connector Room Block",
             "id": 3795218,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1388,6 +1444,7 @@
           {
             "name": "Outside Woohoo Hooniversity Block",
             "id": 3795381,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1406,6 +1463,7 @@
           {
             "name": "Shop Starting Flag 1",
             "id": 3933680,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1424,6 +1482,7 @@
           {
             "name": "Shop Starting Flag 2",
             "id": 3933682,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1442,6 +1501,7 @@
           {
             "name": "Shop Starting Flag 3",
             "id": 3933684,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1460,6 +1520,7 @@
           {
             "name": "Hoohoo Mountain Summit Digspot",
             "id": 3790942,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1486,6 +1547,7 @@
           {
             "name": "Hoohoo Mountain Below Summit Digspot",
             "id": 3790955,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1512,6 +1574,7 @@
           {
             "name": "Hoohoo Mountain Past Hoohooros Digspot",
             "id": 3791000,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1538,6 +1601,7 @@
           {
             "name": "Hoohoo Mountain Hoohooros Room Digspot 1",
             "id": 3791037,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1564,6 +1628,7 @@
           {
             "name": "Hoohoo Mountain Hoohooros Room Digspot 2",
             "id": 3791045,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1590,6 +1655,7 @@
           {
             "name": "Hoohoo Mountain Before Hoohooros Digspot",
             "id": 3791074,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1616,6 +1682,7 @@
           {
             "name": "Hoohoo Mountain Room 2 Digspot 1",
             "id": 3791111,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1642,6 +1709,7 @@
           {
             "name": "Hoohoo Mountain Room 2 Digspot 2",
             "id": 3791119,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1668,6 +1736,7 @@
           {
             "name": "Hoohoo Mountain Base Room 1 Digspot",
             "id": 3791169,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1694,6 +1763,7 @@
           {
             "name": "Hoohoo Village Eastside Digspot",
             "id": 3791199,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1720,6 +1790,7 @@
           {
             "name": "Hoohoo Village Super Hammer Cave Digspot",
             "id": 3791618,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1780,6 +1851,7 @@
           {
             "name": "Hoohoo Village Super Hammer Cave Block",
             "id": 3791594,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -1823,6 +1895,7 @@
           {
             "name": "Hoohoo Village North Cave Room 2 Digspot",
             "id": 3791541,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1849,6 +1922,7 @@
           {
             "name": "Hoohoo Mountain Base Minecart Cave Digspot",
             "id": 3791631,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -1875,6 +1949,7 @@
           {
             "name": "Beanbean Outskirts Farm Room Digspot 1",
             "id": 3791650,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1918,6 +1993,7 @@
           {
             "name": "Beanbean Outskirts Farm Room Digspot 2",
             "id": 3791658,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1961,6 +2037,7 @@
           {
             "name": "Beanbean Outskirts Farm Room Digspot 3",
             "id": 3791666,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2004,6 +2081,7 @@
           {
             "name": "Beanbean Outskirts NW Block",
             "id": 3791751,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2030,6 +2108,7 @@
           {
             "name": "Beanbean Outskirts NW Digspot",
             "id": 3791767,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2056,6 +2135,7 @@
           {
             "name": "Beanbean Outskirts W Digspot 1",
             "id": 3791788,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2082,6 +2162,7 @@
           {
             "name": "Beanbean Outskirts W Digspot 2",
             "id": 3791796,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2108,6 +2189,7 @@
           {
             "name": "Beanbean Outskirts W Digspot 3",
             "id": 3791804,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2134,6 +2216,7 @@
           {
             "name": "Beanbean Outskirts SW Digspot 1",
             "id": 3791817,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2160,6 +2243,7 @@
           {
             "name": "Beanbean Outskirts SW Digspot 2",
             "id": 3791833,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2186,6 +2270,7 @@
           {
             "name": "Beanbean Outskirts SW Digspot 3",
             "id": 3791841,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2212,6 +2297,7 @@
           {
             "name": "Beanbean Outskirts N Room 1 Digspot",
             "id": 3791854,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2238,6 +2324,7 @@
           {
             "name": "Beanbean Outskirts N Room 2 Digspot",
             "id": 3791867,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2264,6 +2351,7 @@
           {
             "name": "Beanbean Outskirts S Room 1 Digspot 1",
             "id": 3791880,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2290,6 +2378,7 @@
           {
             "name": "Beanbean Outskirts S Room 1 Block",
             "id": 3791904,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2333,6 +2422,7 @@
           {
             "name": "Beanbean Outskirts S Room 1 Digspot 2",
             "id": 3791912,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2393,6 +2483,7 @@
           {
             "name": "Beanbean Outskirts S Room 2 Block 1",
             "id": 3791949,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2419,6 +2510,7 @@
           {
             "name": "Beanbean Outskirts NE Digspot 1",
             "id": 3791994,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2462,6 +2554,7 @@
           {
             "name": "Beanbean Outskirts NE Digspot 2",
             "id": 3792002,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2488,6 +2581,7 @@
           {
             "name": "Beanbean Outskirts E Digspot 1",
             "id": 3792015,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2514,6 +2608,7 @@
           {
             "name": "Beanbean Outskirts E Digspot 2",
             "id": 3792023,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2557,6 +2652,7 @@
           {
             "name": "Beanbean Outskirts E Digspot 3",
             "id": 3792031,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2583,6 +2679,7 @@
           {
             "name": "Beanbean Outskirts SE Digspot 1",
             "id": 3792044,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2609,6 +2706,7 @@
           {
             "name": "Beanbean Outskirts SE Digspot 2",
             "id": 3792060,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2635,6 +2733,7 @@
           {
             "name": "Beanbean Outskirts SE Digspot 3",
             "id": 3792068,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2661,6 +2760,7 @@
           {
             "name": "Beanbean Outskirts North Beach Digspot 1",
             "id": 3792081,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2687,6 +2787,7 @@
           {
             "name": "Beanbean Outskirts North Beach Digspot 2",
             "id": 3792097,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2713,6 +2814,7 @@
           {
             "name": "Beanbean Outskirts North Beach Digspot 3",
             "id": 3792089,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -2773,6 +2875,7 @@
           {
             "name": "Beanbean Outskirts South Beach Digspot",
             "id": 3792110,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2799,6 +2902,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room Digspot 1",
             "id": 3793279,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2825,6 +2929,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room Digspot 2",
             "id": 3793287,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2851,6 +2956,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 2 Digspot",
             "id": 3793366,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2877,6 +2983,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 3 Digspot",
             "id": 3793379,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2903,6 +3010,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 4 Digspot 1",
             "id": 3793416,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2929,6 +3037,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 4 Digspot 2",
             "id": 3793424,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2955,6 +3064,7 @@
           {
             "name": "Woohoo Hooniversity West of Star Room 5 Digspot",
             "id": 3793437,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -2981,6 +3091,7 @@
           {
             "name": "Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1",
             "id": 3793450,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3007,6 +3118,7 @@
           {
             "name": "Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2",
             "id": 3793458,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3033,6 +3145,7 @@
           {
             "name": "Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot",
             "id": 3793471,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3059,6 +3172,7 @@
           {
             "name": "Woohoo Hooniversity Mini Mario Puzzle Block",
             "id": 3793484,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3085,6 +3199,7 @@
           {
             "name": "Woohoo Hooniversity Mini Mario Puzzle Digspot",
             "id": 3793492,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3111,6 +3226,7 @@
           {
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1",
             "id": 3793505,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3137,6 +3253,7 @@
           {
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2",
             "id": 3793513,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3163,6 +3280,7 @@
           {
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3",
             "id": 3793521,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3189,6 +3307,7 @@
           {
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4",
             "id": 3793529,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3215,6 +3334,7 @@
           {
             "name": "Hoohoo Mountain Fountain Room 2 Digspot",
             "id": 3795197,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3241,6 +3361,7 @@
           {
             "name": "Hoohoo Mountain Past Hoohooros Connector Room Digspot 1",
             "id": 3795210,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3267,6 +3388,7 @@
           {
             "name": "Hoohoo Mountain Past Hoohooros Connector Room Digspot 2",
             "id": 3795226,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3293,6 +3415,7 @@
           {
             "name": "Beanbean Outskirts Secret Scroll 1",
             "id": 2003985,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3336,6 +3459,7 @@
           {
             "name": "Beanbean Outskirts Secret Scroll 2",
             "id": 2003986,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3379,6 +3503,7 @@
           {
             "name": "Beanbean Outskirts Bean Fruit 1",
             "id": 2265925,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3405,6 +3530,7 @@
           {
             "name": "Beanbean Outskirts Bean Fruit 2",
             "id": 2266445,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3431,6 +3557,7 @@
           {
             "name": "Beanbean Outskirts Bean Fruit 3",
             "id": 2263575,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3457,6 +3584,7 @@
           {
             "name": "Beanbean Outskirts Bean Fruit 4",
             "id": 2265402,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3500,6 +3628,7 @@
           {
             "name": "Beanbean Outskirts Bean Fruit 5",
             "id": 2263310,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3543,6 +3672,7 @@
           {
             "name": "Beanbean Outskirts Bean Fruit 6",
             "id": 2262901,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3569,6 +3699,7 @@
           {
             "name": "Beanbean Outskirts Bean Fruit 7",
             "id": 2004017,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3612,6 +3743,7 @@
           {
             "name": "Hoohoo Village Mole Behind Turtle",
             "id": 2587314,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3638,6 +3770,7 @@
           {
             "name": "Beanbean Outskirts Thunderhand Mole",
             "id": 2587080,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3664,6 +3797,7 @@
           {
             "name": "Hoohoo Mountain Peasley's Rose",
             "id": 2004016,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3682,6 +3816,7 @@
           {
             "name": "Beanbean Outskirts Super Hammer Upgrade",
             "id": 2003972,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3708,6 +3843,7 @@
           {
             "name": "Beanbean Outskirts Ultra Hammer Upgrade",
             "id": 2003973,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -3775,6 +3911,7 @@
           {
             "name": "Beanbean Outskirts NE Solo Mario Mole 1",
             "id": 2004021,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3801,6 +3938,7 @@
           {
             "name": "Beanbean Outskirts NE Solo Mario Mole 2",
             "id": 2004022,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3827,6 +3965,7 @@
           {
             "name": "Hoohoo Village Hammers",
             "id": 2003971,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -3845,6 +3984,7 @@
           {
             "name": "Beanbean Outskirts Solo Luigi Cave Mole",
             "id": 2369672,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3871,6 +4011,7 @@
           {
             "name": "Beanbean Outskirts Farm Room Mole Reward 1",
             "id": 2373700,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3897,6 +4038,7 @@
           {
             "name": "Beanbean Outskirts Farm Room Mole Reward 2",
             "id": 2373757,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3923,6 +4065,7 @@
           {
             "name": "Beanbean Outskirts South of Hooniversity Guards Digspot 1",
             "id": 3795344,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3949,6 +4092,7 @@
           {
             "name": "Beanbean Outskirts South of Hooniversity Guards Digspot 2",
             "id": 3795352,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -3975,6 +4119,7 @@
           {
             "name": "Beanbean Outskirts South of Hooniversity Guards Digspot 3",
             "id": 3795360,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4001,6 +4146,7 @@
           {
             "name": "Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1",
             "id": 3795802,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4027,6 +4173,7 @@
           {
             "name": "Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2",
             "id": 3795810,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4053,6 +4200,7 @@
           {
             "name": "Beanbean Outskirts Pipe 2 Room Digspot",
             "id": 3796032,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4079,6 +4227,7 @@
           {
             "name": "Beanbean Outskirts Pipe 4 Room Digspot",
             "id": 3796045,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4105,6 +4254,7 @@
           {
             "name": "Beanbean Castle Town Mini Mario Block 1",
             "id": 3790867,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4131,6 +4281,7 @@
           {
             "name": "Beanbean Castle Town Mini Mario Block 2",
             "id": 3790875,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4157,6 +4308,7 @@
           {
             "name": "Beanbean Castle Town Mini Mario Block 3",
             "id": 3790883,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4183,6 +4335,7 @@
           {
             "name": "Beanbean Castle Town Mini Mario Block 4",
             "id": 3790891,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4209,6 +4362,7 @@
           {
             "name": "Beanbean Castle Town Mini Mario Block 5",
             "id": 3790899,
+            "region": "Main Area",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4345,6 +4499,7 @@
           {
             "name": "Chateau Room 1 Digspot",
             "id": 3792160,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4371,6 +4526,7 @@
           {
             "name": "Chateau Popple Fight Room Block 1",
             "id": 3792184,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4389,6 +4545,7 @@
           {
             "name": "Chateau Popple Fight Room Block 2",
             "id": 3792200,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4407,6 +4564,7 @@
           {
             "name": "Chateau Popple Fight Room Digspot",
             "id": 3792208,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4433,6 +4591,7 @@
           {
             "name": "Chateau Barrel Room Digspot",
             "id": 3792221,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4459,6 +4618,7 @@
           {
             "name": "Chateau Goblet Room Digspot",
             "id": 3792237,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4485,6 +4645,7 @@
           {
             "name": "Chucklehuck Woods Cave Room 1 Block 1",
             "id": 3792258,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4503,6 +4664,7 @@
           {
             "name": "Chucklehuck Woods Cave Room 1 Block 2",
             "id": 3792266,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4521,6 +4683,7 @@
           {
             "name": "Chucklehuck Woods Cave Room 2 Block",
             "id": 3792287,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4539,6 +4702,7 @@
           {
             "name": "Chucklehuck Woods Cave Room 3 Block",
             "id": 3792300,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4557,6 +4721,7 @@
           {
             "name": "Chucklehuck Woods Solo Luigi Cave Room 2 Block",
             "id": 3791730,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4600,6 +4765,7 @@
           {
             "name": "Chucklehuck Woods Solo Luigi Cave Room 3 Block 1",
             "id": 3791709,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4643,6 +4809,7 @@
           {
             "name": "Chucklehuck Woods Solo Luigi Cave Room 3 Block 2",
             "id": 3791717,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -4686,6 +4853,7 @@
           {
             "name": "Chucklehuck Woods Room 2 Block",
             "id": 3792321,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -4704,6 +4872,7 @@
           {
             "name": "Chucklehuck Woods Room 2 Digspot",
             "id": 3792329,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4730,6 +4899,7 @@
           {
             "name": "Chucklehuck Woods Pipe Room Block 1",
             "id": 3792342,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4756,6 +4926,7 @@
           {
             "name": "Chucklehuck Woods Pipe Room Block 2",
             "id": 3792350,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4782,6 +4953,7 @@
           {
             "name": "Chucklehuck Woods Pipe Room Digspot 1",
             "id": 3792366,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4808,6 +4980,7 @@
           {
             "name": "Chucklehuck Woods Pipe Room Digspot 2",
             "id": 3792374,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4834,6 +5007,7 @@
           {
             "name": "Chucklehuck Woods Room 4 Block 1",
             "id": 3792390,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4860,6 +5034,7 @@
           {
             "name": "Chucklehuck Woods Room 4 Block 2",
             "id": 3792398,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4886,6 +5061,7 @@
           {
             "name": "Chucklehuck Woods Room 4 Block 3",
             "id": 3792406,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4912,6 +5088,7 @@
           {
             "name": "Chucklehuck Woods Room 7 Block 1",
             "id": 3792425,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4938,6 +5115,7 @@
           {
             "name": "Chucklehuck Woods Room 7 Block 2",
             "id": 3792441,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4964,6 +5142,7 @@
           {
             "name": "Chucklehuck Woods Room 7 Digspot 1",
             "id": 3792449,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -4990,6 +5169,7 @@
           {
             "name": "Chucklehuck Woods Room 7 Digspot 2",
             "id": 3792457,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5016,6 +5196,7 @@
           {
             "name": "Chucklehuck Woods Room 8 Digspot",
             "id": 3792470,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5042,6 +5223,7 @@
           {
             "name": "Chucklehuck Woods East of Chuckleroot Digspot",
             "id": 3792486,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5068,6 +5250,7 @@
           {
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 1",
             "id": 3792499,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5094,6 +5277,7 @@
           {
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 2",
             "id": 3792507,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5120,6 +5304,7 @@
           {
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 3",
             "id": 3792515,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5146,6 +5331,7 @@
           {
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 4",
             "id": 3792523,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5172,6 +5358,7 @@
           {
             "name": "Chucklehuck Woods White Fruit Room Digspot 1",
             "id": 3792536,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5198,6 +5385,7 @@
           {
             "name": "Chucklehuck Woods White Fruit Room Digspot 2",
             "id": 3792544,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5241,6 +5429,7 @@
           {
             "name": "Chucklehuck Woods White Fruit Room Digspot 3",
             "id": 3792552,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5284,6 +5473,7 @@
           {
             "name": "Chucklehuck Woods West of Chuckleroot Block",
             "id": 3792565,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5302,6 +5492,7 @@
           {
             "name": "Chucklehuck Woods Southwest of Chuckleroot Block",
             "id": 3792578,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5320,6 +5511,7 @@
           {
             "name": "Chucklehuck Woods Wiggler room Digspot 1",
             "id": 3792591,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5346,6 +5538,7 @@
           {
             "name": "Chucklehuck Woods Wiggler room Digspot 2",
             "id": 3792599,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5372,6 +5565,7 @@
           {
             "name": "Chucklehuck Woods Past Chuckleroot Block 1",
             "id": 3792612,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5398,6 +5592,7 @@
           {
             "name": "Chucklehuck Woods Past Chuckleroot Block 2",
             "id": 3792620,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5424,6 +5619,7 @@
           {
             "name": "Chucklehuck Woods Past Chuckleroot Block 3",
             "id": 3792628,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5450,6 +5646,7 @@
           {
             "name": "Chucklehuck Woods Past Chuckleroot Block 4",
             "id": 3792636,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5476,6 +5673,7 @@
           {
             "name": "Chucklehuck Woods Past Chuckleroot Block 5",
             "id": 3792644,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5502,6 +5700,7 @@
           {
             "name": "Chucklehuck Woods Past Chuckleroot Block 6",
             "id": 3792652,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5528,6 +5727,7 @@
           {
             "name": "Chucklehuck Woods Koopa Room Block 1",
             "id": 3792715,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5546,6 +5746,7 @@
           {
             "name": "Chucklehuck Woods Koopa Room Block 2",
             "id": 3792731,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5564,6 +5765,7 @@
           {
             "name": "Chucklehuck Woods Koopa Room Digspot",
             "id": 3792739,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5590,6 +5792,7 @@
           {
             "name": "Chucklehuck Woods Room 1 Digspot",
             "id": 3793353,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5616,6 +5819,7 @@
           {
             "name": "Beanbean Outskirts Brooch Guards Room Digspot 1",
             "id": 3795302,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5642,6 +5846,7 @@
           {
             "name": "Beanbean Outskirts Brooch Guards Room Digspot 2",
             "id": 3795310,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5668,6 +5873,7 @@
           {
             "name": "Beanbean Outskirts Chateau Entrance Digspot 1",
             "id": 3795323,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5694,6 +5900,7 @@
           {
             "name": "Beanbean Outskirts Chateau Entrance Digspot 2",
             "id": 3795331,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5720,6 +5927,7 @@
           {
             "name": "Chateau Green Goblet",
             "id": 2418216,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5763,6 +5971,7 @@
           {
             "name": "Chateau Red Goblet",
             "id": 2004030,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5806,6 +6015,7 @@
           {
             "name": "Chucklehuck Woods Red Chuckola Fruit",
             "id": 2426401,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -5832,6 +6042,7 @@
           {
             "name": "Chucklehuck Woods White Chuckola Fruit",
             "id": 2424600,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -5875,6 +6086,7 @@
           {
             "name": "Chucklehuck Woods Purple Chuckola Fruit",
             "id": 2420084,
+            "region": "Chucklehuck Woods",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5916,6 +6128,7 @@
           {
             "name": "Beanbean Castle Town West Side House Block 1",
             "id": 3790756,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5934,6 +6147,7 @@
           {
             "name": "Beanbean Castle Town West Side House Block 2",
             "id": 3790764,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5952,6 +6166,7 @@
           {
             "name": "Beanbean Castle Town West Side House Block 3",
             "id": 3790772,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5970,6 +6185,7 @@
           {
             "name": "Beanbean Castle Town West Side House Block 4",
             "id": 3790780,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -5988,6 +6204,7 @@
           {
             "name": "Beanbean Castle Town East Side House Block 1",
             "id": 3790808,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6006,6 +6223,7 @@
           {
             "name": "Beanbean Castle Town East Side House Block 2",
             "id": 3790816,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6024,6 +6242,7 @@
           {
             "name": "Beanbean Castle Town East Side House Block 3",
             "id": 3790824,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6042,6 +6261,7 @@
           {
             "name": "Beanbean Castle Town East Side House Block 4",
             "id": 3790832,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6060,6 +6280,7 @@
           {
             "name": "Beanbean Castle Peach's Extra Dress",
             "id": 2004019,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6103,6 +6324,7 @@
           {
             "name": "Beanbean Castle Fake Beanstar",
             "id": 2004018,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -6146,6 +6368,7 @@
           {
             "name": "Beanbean Castle Town Beanlet 1",
             "id": 2429767,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6164,6 +6387,7 @@
           {
             "name": "Beanbean Castle Town Beanlet 2",
             "id": 2429947,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6182,6 +6406,7 @@
           {
             "name": "Beanbean Castle Town Beanlet 3",
             "id": 2429857,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6200,6 +6425,7 @@
           {
             "name": "Beanbean Castle Town Beanlet 4",
             "id": 2431368,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6218,6 +6444,7 @@
           {
             "name": "Beanbean Castle Town Beanlet 5",
             "id": 2431278,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6236,6 +6463,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 1",
             "id": 2429309,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6262,6 +6490,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 2",
             "id": 2429398,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6288,6 +6517,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 3",
             "id": 2429487,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6314,6 +6544,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 4",
             "id": 2429576,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6340,6 +6571,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 5",
             "id": 2429665,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6366,6 +6598,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 6",
             "id": 2430731,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6392,6 +6625,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 7",
             "id": 2430823,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6418,6 +6652,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 8",
             "id": 2430915,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6444,6 +6679,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 9",
             "id": 2431007,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6470,6 +6706,7 @@
           {
             "name": "Beanbean Castle Town Beanstone 10",
             "id": 2431099,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6496,6 +6733,7 @@
           {
             "name": "Coffee Shop Brew Reward 1",
             "id": 2438421,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6514,6 +6752,7 @@
           {
             "name": "Coffee Shop Brew Reward 2",
             "id": 2439030,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6532,6 +6771,7 @@
           {
             "name": "Coffee Shop Brew Reward 3",
             "id": 2440304,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6550,6 +6790,7 @@
           {
             "name": "Coffee Shop Brew Reward 4",
             "id": 2442020,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6568,6 +6809,7 @@
           {
             "name": "Coffee Shop Brew Reward 5",
             "id": 2443032,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6586,6 +6828,7 @@
           {
             "name": "Coffee Shop Brew Reward 6",
             "id": 2443828,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6604,6 +6847,7 @@
           {
             "name": "Coffee Shop Brew Reward 7",
             "id": 2444836,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6622,6 +6866,7 @@
           {
             "name": "Coffee Shop Woohoo Blend",
             "id": 2436359,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6640,6 +6885,7 @@
           {
             "name": "Coffee Shop Hoohoo Blend",
             "id": 2436392,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6658,6 +6904,7 @@
           {
             "name": "Coffee Shop Chuckle Blend",
             "id": 2436425,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6676,6 +6923,7 @@
           {
             "name": "Coffee Shop Teehee Blend",
             "id": 2436458,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6694,6 +6942,7 @@
           {
             "name": "Coffee Shop Hoolumbian",
             "id": 2436491,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6712,6 +6961,7 @@
           {
             "name": "Coffee Shop Chuckoccino",
             "id": 2436524,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6730,6 +6980,7 @@
           {
             "name": "Coffee Shop Teeheespresso",
             "id": 2436557,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -6748,6 +6999,7 @@
           {
             "name": "Beanbean Castle Town Beanstone Reward",
             "id": 2429041,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -6774,6 +7026,7 @@
           {
             "name": "Beanbean Castle Town Beanlet Reward",
             "id": 2430443,
+            "region": "Beanbean Castle Town",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7192,6 +7445,7 @@
           {
             "name": "Badge Shop Starting Flag 1",
             "id": 3933720,
+            "region": "Shop Starting Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7293,6 +7547,7 @@
           {
             "name": "Badge Shop Starting Flag 2",
             "id": 3933722,
+            "region": "Shop Starting Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7394,6 +7649,7 @@
           {
             "name": "Pants Shop Starting Flag 1",
             "id": 3933724,
+            "region": "Shop Starting Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7495,6 +7751,7 @@
           {
             "name": "Pants Shop Starting Flag 2",
             "id": 3933726,
+            "region": "Shop Starting Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7596,6 +7853,7 @@
           {
             "name": "Pants Shop Starting Flag 3",
             "id": 3933728,
+            "region": "Shop Starting Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7720,6 +7978,7 @@
           {
             "name": "Shop Chuckolator Flag",
             "id": 3933688,
+            "region": "Shop Chuckolator Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -7738,6 +7997,7 @@
           {
             "name": "Pants Shop Chuckolator Flag 1",
             "id": 3933738,
+            "region": "Shop Chuckolator Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7839,6 +8099,7 @@
           {
             "name": "Pants Shop Chuckolator Flag 2",
             "id": 3933740,
+            "region": "Shop Chuckolator Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -7940,6 +8201,7 @@
           {
             "name": "Pants Shop Chuckolator Flag 3",
             "id": 3933742,
+            "region": "Shop Chuckolator Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8041,6 +8303,7 @@
           {
             "name": "Badge Shop Chuckolator Flag 1",
             "id": 3933732,
+            "region": "Shop Chuckolator Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8142,6 +8405,7 @@
           {
             "name": "Badge Shop Chuckolator Flag 2",
             "id": 3933734,
+            "region": "Shop Chuckolator Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8243,6 +8507,7 @@
           {
             "name": "Badge Shop Chuckolator Flag 3",
             "id": 3933736,
+            "region": "Shop Chuckolator Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -8367,6 +8632,7 @@
           {
             "name": "Shop Mom Piranha Flag 1",
             "id": 3933692,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8385,6 +8651,7 @@
           {
             "name": "Shop Mom Piranha Flag 2",
             "id": 3933694,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8403,6 +8670,7 @@
           {
             "name": "Shop Mom Piranha Flag 3",
             "id": 3933696,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8421,6 +8689,7 @@
           {
             "name": "Shop Mom Piranha Flag 4",
             "id": 3933698,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -8439,6 +8708,7 @@
           {
             "name": "Pants Shop Mom Piranha Flag 1",
             "id": 3933752,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8574,6 +8844,7 @@
           {
             "name": "Pants Shop Mom Piranha Flag 2",
             "id": 3933754,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8709,6 +8980,7 @@
           {
             "name": "Pants Shop Mom Piranha Flag 3",
             "id": 3933756,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8844,6 +9116,7 @@
           {
             "name": "Badge Shop Mom Piranha Flag 1",
             "id": 3933746,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -8979,6 +9252,7 @@
           {
             "name": "Badge Shop Mom Piranha Flag 2",
             "id": 3933748,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9114,6 +9388,7 @@
           {
             "name": "Badge Shop Mom Piranha Flag 3",
             "id": 3933750,
+            "region": "Shop Mom Piranha Flag",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -9272,6 +9547,7 @@
           {
             "name": "Badge Shop Trunkle Flag 1",
             "id": 3933760,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9373,6 +9649,7 @@
           {
             "name": "Badge Shop Trunkle Flag 2",
             "id": 3933762,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9474,6 +9751,7 @@
           {
             "name": "Badge Shop Trunkle Flag 3",
             "id": 3933764,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9575,6 +9853,7 @@
           {
             "name": "Pants Shop Trunkle Flag 1",
             "id": 3933766,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9676,6 +9955,7 @@
           {
             "name": "Pants Shop Trunkle Flag 2",
             "id": 3933768,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9777,6 +10057,7 @@
           {
             "name": "Pants Shop Trunkle Flag 3",
             "id": 3933770,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -9878,6 +10159,7 @@
           {
             "name": "Shop Trunkle Flag 1",
             "id": 3933702,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9896,6 +10178,7 @@
           {
             "name": "Shop Trunkle Flag 2",
             "id": 3933704,
+            "region": "Shop Enter Fungitown Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -9937,6 +10220,7 @@
           {
             "name": "Badge Shop Beanstar Complete Flag 1",
             "id": 3933774,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10038,6 +10322,7 @@
           {
             "name": "Badge Shop Beanstar Complete Flag 2",
             "id": 3933776,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10139,6 +10424,7 @@
           {
             "name": "Badge Shop Beanstar Complete Flag 3",
             "id": 3933778,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10240,6 +10526,7 @@
           {
             "name": "Pants Shop Beanstar Complete Flag 1",
             "id": 3933780,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10341,6 +10628,7 @@
           {
             "name": "Pants Shop Beanstar Complete Flag 2",
             "id": 3933782,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10442,6 +10730,7 @@
           {
             "name": "Pants Shop Beanstar Complete Flag 3",
             "id": 3933784,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10543,6 +10832,7 @@
           {
             "name": "Shop Beanstar Complete Flag 1",
             "id": 3933708,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10561,6 +10851,7 @@
           {
             "name": "Shop Beanstar Complete Flag 2",
             "id": 3933710,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10579,6 +10870,7 @@
           {
             "name": "Shop Beanstar Complete Flag 3",
             "id": 3933712,
+            "region": "Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -10620,6 +10912,7 @@
           {
             "name": "Badge Shop Birdo Flag 1",
             "id": 3933788,
+            "region": "Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10721,6 +11014,7 @@
           {
             "name": "Badge Shop Birdo Flag 2",
             "id": 3933790,
+            "region": "Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10822,6 +11116,7 @@
           {
             "name": "Badge Shop Birdo Flag 3",
             "id": 3933792,
+            "region": "Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -10923,6 +11218,7 @@
           {
             "name": "Pants Shop Birdo Flag 1",
             "id": 3933794,
+            "region": "Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -11024,6 +11320,7 @@
           {
             "name": "Pants Shop Birdo Flag 2",
             "id": 3933796,
+            "region": "Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -11125,6 +11422,7 @@
           {
             "name": "Pants Shop Birdo Flag 3",
             "id": 3933798,
+            "region": "Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -11226,6 +11524,7 @@
           {
             "name": "Shop Birdo Flag",
             "id": 3933716,
+            "region": "Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11312,6 +11611,7 @@
           {
             "name": "Oho Ocean North Whirlpool Block 1",
             "id": 3793061,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11330,6 +11630,7 @@
           {
             "name": "Oho Ocean North Whirlpool Block 2",
             "id": 3793069,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11348,6 +11649,7 @@
           {
             "name": "Oho Ocean North Whirlpool Block 3",
             "id": 3793077,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11366,6 +11668,7 @@
           {
             "name": "Oho Ocean North Whirlpool Block 4",
             "id": 3793085,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11384,6 +11687,7 @@
           {
             "name": "Oho Ocean North Whirlpool Digspot 1",
             "id": 3793093,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11410,6 +11714,7 @@
           {
             "name": "Oho Ocean North Whirlpool Digspot 2",
             "id": 3793101,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11436,6 +11741,7 @@
           {
             "name": "Oho Ocean Fire Puzzle Room Digspot",
             "id": 3792983,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11462,6 +11768,7 @@
           {
             "name": "Oho Ocean South Whirlpool Digspot 1",
             "id": 3793114,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11488,6 +11795,7 @@
           {
             "name": "Oho Ocean South Whirlpool Digspot 2",
             "id": 3793122,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11514,6 +11822,7 @@
           {
             "name": "Oho Ocean South Whirlpool Digspot 3",
             "id": 3793130,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11540,6 +11849,7 @@
           {
             "name": "Oho Ocean South Whirlpool Digspot 4",
             "id": 3793138,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11566,6 +11876,7 @@
           {
             "name": "Oho Ocean South Whirlpool Digspot 5",
             "id": 3793146,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11592,6 +11903,7 @@
           {
             "name": "Oho Ocean South Whirlpool Digspot 6",
             "id": 3793154,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11618,6 +11930,7 @@
           {
             "name": "Oho Ocean South Whirlpool Room 2 Digspot",
             "id": 3793167,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11644,6 +11957,7 @@
           {
             "name": "Joke's End Pipe Digspot",
             "id": 3794626,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11670,6 +11984,7 @@
           {
             "name": "Joke's End Staircase Digspot",
             "id": 3794639,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11696,6 +12011,7 @@
           {
             "name": "Surf Minigame",
             "id": 2577386,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11714,6 +12030,7 @@
           {
             "name": "North Ocean Whirlpool Mole",
             "id": 2586966,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11732,6 +12049,7 @@
           {
             "name": "Beanbean Outskirts Surf Beach Digspot 1",
             "id": 3792123,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11758,6 +12076,7 @@
           {
             "name": "Beanbean Outskirts Surf Beach Digspot 2",
             "id": 3792139,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11784,6 +12103,7 @@
           {
             "name": "Beanbean Outskirts Surf Beach Digspot 3",
             "id": 3792147,
+            "region": "Surfable",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11846,6 +12166,7 @@
           {
             "name": "Woohoo Hooniversity South Of Star Room Block",
             "id": 3793263,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11864,6 +12185,7 @@
           {
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1",
             "id": 3793300,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11890,6 +12212,7 @@
           {
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Block 1",
             "id": 3793308,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11908,6 +12231,7 @@
           {
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Block 2",
             "id": 3793316,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11926,6 +12250,7 @@
           {
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Block 3",
             "id": 3793324,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11944,6 +12269,7 @@
           {
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Block 4",
             "id": 3793332,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -11962,6 +12288,7 @@
           {
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2",
             "id": 3793340,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -11988,6 +12315,7 @@
           {
             "name": "Woohoo Hooniversity Past Sun Door Block 1",
             "id": 3793548,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12006,6 +12334,7 @@
           {
             "name": "Woohoo Hooniversity Past Sun Door Block 2",
             "id": 3793556,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12024,6 +12353,7 @@
           {
             "name": "Woohoo Hooniversity Past Sun Door Block 3",
             "id": 3793564,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12042,6 +12372,7 @@
           {
             "name": "Woohoo Hooniversity Past Cackletta Room 1 Block",
             "id": 3793580,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12060,6 +12391,7 @@
           {
             "name": "Woohoo Hooniversity Past Cackletta Room 2 Block 1",
             "id": 3793599,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12078,6 +12410,7 @@
           {
             "name": "Woohoo Hooniversity Past Cackletta Room 2 Block 2",
             "id": 3793607,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12096,6 +12429,7 @@
           {
             "name": "Woohoo Hooniversity Past Cackletta Room 2 Digspot",
             "id": 3793615,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12122,6 +12456,7 @@
           {
             "name": "Woohoo Hooniversity Basement Room 1 Digspot",
             "id": 3794118,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12148,6 +12483,7 @@
           {
             "name": "Woohoo Hooniversity Basement Room 2 Digspot",
             "id": 3794131,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12174,6 +12510,7 @@
           {
             "name": "Woohoo Hooniversity Basement Room 3 Block",
             "id": 3794144,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12192,6 +12529,7 @@
           {
             "name": "Woohoo Hooniversity Basement Room 4 Block",
             "id": 3794157,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12210,6 +12548,7 @@
           {
             "name": "Woohoo Hooniversity Popple Room Digspot 1",
             "id": 3794170,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12236,6 +12575,7 @@
           {
             "name": "Woohoo Hooniversity Popple Room Digspot 2",
             "id": 3794178,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12262,6 +12602,7 @@
           {
             "name": "Woohoo Hooniversity Solo Mario Barrel Area Block 1",
             "id": 3795973,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12280,6 +12621,7 @@
           {
             "name": "Woohoo Hooniversity Solo Mario Barrel Area Block 2",
             "id": 3795981,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12298,6 +12640,7 @@
           {
             "name": "Woohoo Hooniversity Solo Mario Barrel Area Block 3",
             "id": 3795989,
+            "region": "Hooniversity",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12387,6 +12730,7 @@
           {
             "name": "Gwarhar Lagoon Pipe Room Digspot",
             "id": 3793789,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12413,6 +12757,7 @@
           {
             "name": "Gwarhar Lagoon Massage Parlor Entrance Digspot",
             "id": 3793814,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12439,6 +12784,7 @@
           {
             "name": "Gwarhar Lagoon First Underwater Area Room 1 Block",
             "id": 3793976,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12465,6 +12811,7 @@
           {
             "name": "Gwarhar Lagoon First Underwater Area Room 2 Block 1",
             "id": 3793989,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12491,6 +12838,7 @@
           {
             "name": "Gwarhar Lagoon First Underwater Area Room 2 Block 2",
             "id": 3793997,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12517,6 +12865,7 @@
           {
             "name": "Gwarhar Lagoon Red Pearl Bean",
             "id": 2317340,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -12560,6 +12909,7 @@
           {
             "name": "Gwarhar Lagoon Green Pearl Bean",
             "id": 2316891,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -12603,6 +12953,7 @@
           {
             "name": "Oho Ocean South Room 1 Block",
             "id": 3793002,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12621,6 +12972,7 @@
           {
             "name": "Oho Ocean South Room 2 Digspot",
             "id": 3793015,
+            "region": "GwarharEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12670,6 +13022,7 @@
           {
             "name": "Gwarhar Lagoon Past Hermie Digspot",
             "id": 3793830,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12696,6 +13049,7 @@
           {
             "name": "Gwarhar Lagoon East of Stone Bridge Block",
             "id": 3793923,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12714,6 +13068,7 @@
           {
             "name": "Gwarhar Lagoon North of Spangle Room Digspot",
             "id": 3793931,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12740,6 +13095,7 @@
           {
             "name": "Gwarhar Lagoon West of Spangle Room Digspot",
             "id": 3793947,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12766,6 +13122,7 @@
           {
             "name": "Gwarhar Lagoon Second Underwater Area Room 4 Digspot",
             "id": 3794018,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12792,6 +13149,7 @@
           {
             "name": "Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1",
             "id": 3794031,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12818,6 +13176,7 @@
           {
             "name": "Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2",
             "id": 3794039,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12844,6 +13203,7 @@
           {
             "name": "Gwarhar Lagoon Second Underwater Area Room 3 Block 1",
             "id": 3794052,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12862,6 +13222,7 @@
           {
             "name": "Gwarhar Lagoon Second Underwater Area Room 3 Block 2",
             "id": 3794060,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12880,6 +13241,7 @@
           {
             "name": "Gwarhar Lagoon Second Underwater Area Room 3 Block 3",
             "id": 3794068,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12898,6 +13260,7 @@
           {
             "name": "Gwarhar Lagoon Second Underwater Area Room 1 Block",
             "id": 3794081,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -12916,6 +13279,7 @@
           {
             "name": "Gwarhar Lagoon Entrance to West Underwater Area Digspot",
             "id": 3793852,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12942,6 +13306,7 @@
           {
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1",
             "id": 3793865,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12968,6 +13333,7 @@
           {
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2",
             "id": 3793873,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -12994,6 +13360,7 @@
           {
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot",
             "id": 3793886,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13020,6 +13387,7 @@
           {
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1",
             "id": 3793899,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13046,6 +13414,7 @@
           {
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2",
             "id": 3793907,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13072,6 +13441,7 @@
           {
             "name": "Gwarhar Lagoon Spangle Room Block",
             "id": 3793960,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13098,6 +13468,7 @@
           {
             "name": "Gwarhar Lagoon Spangle Reward",
             "id": 2322035,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13124,6 +13495,7 @@
           {
             "name": "Beanstar Piece Hermie",
             "id": 2004035,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13142,6 +13514,7 @@
           {
             "name": "Gwarhar Lagoon Spangle",
             "id": 2004023,
+            "region": "GwarharMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13315,6 +13688,7 @@
           {
             "name": "Teehee Valley Room 1 Digspot 1",
             "id": 3794206,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13341,6 +13715,7 @@
           {
             "name": "Teehee Valley Room 1 Digspot 2",
             "id": 3794214,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13367,6 +13742,7 @@
           {
             "name": "Teehee Valley Room 1 Digspot 3",
             "id": 3794222,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13393,6 +13769,7 @@
           {
             "name": "Teehee Valley Room 2 Digspot 1",
             "id": 3794235,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13419,6 +13796,7 @@
           {
             "name": "Teehee Valley Room 2 Digspot 2",
             "id": 3794243,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13445,6 +13823,7 @@
           {
             "name": "Teehee Valley Room 2 Digspot 3",
             "id": 3794251,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13471,6 +13850,7 @@
           {
             "name": "Teehee Valley Past Ultra Hammer Rock Block 1",
             "id": 3794304,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13497,6 +13877,7 @@
           {
             "name": "Teehee Valley Past Ultra Hammer Rock Block 2",
             "id": 3794320,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13523,6 +13904,7 @@
           {
             "name": "Teehee Valley Past Ultra Hammer Rock Digspot 1",
             "id": 3794328,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -13566,6 +13948,7 @@
           {
             "name": "Teehee Valley Past Ultra Hammer Rock Digspot 3",
             "id": 3794344,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -13609,6 +13992,7 @@
           {
             "name": "Teehee Valley Before Trunkle Digspot",
             "id": 3794416,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13635,6 +14019,7 @@
           {
             "name": "S.S. Chuckola Storage Room Block 1",
             "id": 3794448,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13653,6 +14038,7 @@
           {
             "name": "S.S. Chuckola Storage Room Block 2",
             "id": 3794472,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13671,6 +14057,7 @@
           {
             "name": "S.S. Chuckola Membership Card",
             "id": 2491959,
+            "region": "TeeheeValley",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13712,6 +14099,7 @@
           {
             "name": "Chucklehuck Woods Winkle Cave Block 1",
             "id": 3792752,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13730,6 +14118,7 @@
           {
             "name": "Chucklehuck Woods Winkle Cave Block 2",
             "id": 3792760,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13748,6 +14137,7 @@
           {
             "name": "Winkle Area Beanstar Room Block",
             "id": 3792673,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13774,6 +14164,7 @@
           {
             "name": "Winkle Area Digspot",
             "id": 3792686,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13800,6 +14191,7 @@
           {
             "name": "Winkle Area Outside Colloseum Block",
             "id": 3792699,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13818,6 +14210,7 @@
           {
             "name": "Winkle Area Colloseum Digspot",
             "id": 3795107,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13844,6 +14237,7 @@
           {
             "name": "Beanstar Piece Winkle Area",
             "id": 2004032,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13870,6 +14264,7 @@
           {
             "name": "Winkle Area Winkle Card",
             "id": 2496088,
+            "region": "Winkle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13911,6 +14306,7 @@
           {
             "name": "Sewers Room 3 Block 1",
             "id": 3792870,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13929,6 +14325,7 @@
           {
             "name": "Sewers Room 3 Block 2",
             "id": 3792878,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13947,6 +14344,7 @@
           {
             "name": "Sewers Room 3 Block 3",
             "id": 3792886,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -13965,6 +14363,7 @@
           {
             "name": "Sewers Room 5 Block 1",
             "id": 3792902,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -13991,6 +14390,7 @@
           {
             "name": "Sewers Room 5 Block 2",
             "id": 3792910,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14017,6 +14417,7 @@
           {
             "name": "Sewers Prison Room Block 1",
             "id": 3792934,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14035,6 +14436,7 @@
           {
             "name": "Sewers Prison Room Block 2",
             "id": 3792942,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14053,6 +14455,7 @@
           {
             "name": "Sewers Prison Room Block 3",
             "id": 3792950,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14071,6 +14474,7 @@
           {
             "name": "Sewers Prison Room Block 4",
             "id": 3792958,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14089,6 +14493,7 @@
           {
             "name": "Beanbean Castle Beanbean Brooch",
             "id": 2455783,
+            "region": "Sewers",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14130,6 +14535,7 @@
           {
             "name": "Airport Entrance Digspot",
             "id": 3793628,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14156,6 +14562,7 @@
           {
             "name": "Airport Lobby Digspot",
             "id": 3793641,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14182,6 +14589,7 @@
           {
             "name": "Airport Westside Digspot 1",
             "id": 3793654,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14208,6 +14616,7 @@
           {
             "name": "Airport Westside Digspot 2",
             "id": 3793662,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14234,6 +14643,7 @@
           {
             "name": "Airport Westside Digspot 3",
             "id": 3793670,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14260,6 +14670,7 @@
           {
             "name": "Airport Westside Digspot 4",
             "id": 3793678,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14286,6 +14697,7 @@
           {
             "name": "Airport Westside Digspot 5",
             "id": 3793686,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14312,6 +14724,7 @@
           {
             "name": "Airport Center Digspot 1",
             "id": 3793699,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14338,6 +14751,7 @@
           {
             "name": "Airport Center Digspot 2",
             "id": 3793707,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14364,6 +14778,7 @@
           {
             "name": "Airport Center Digspot 3",
             "id": 3793715,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14390,6 +14805,7 @@
           {
             "name": "Airport Center Digspot 4",
             "id": 3793723,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14416,6 +14832,7 @@
           {
             "name": "Airport Center Digspot 5",
             "id": 3793731,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14442,6 +14859,7 @@
           {
             "name": "Airport Eastside Digspot 1",
             "id": 3793744,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14468,6 +14886,7 @@
           {
             "name": "Airport Eastside Digspot 2",
             "id": 3793752,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14494,6 +14913,7 @@
           {
             "name": "Airport Eastside Digspot 3",
             "id": 3793760,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14520,6 +14940,7 @@
           {
             "name": "Airport Eastside Digspot 4",
             "id": 3793768,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14546,6 +14967,7 @@
           {
             "name": "Airport Eastside Digspot 5",
             "id": 3793776,
+            "region": "Airport",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14633,6 +15055,7 @@
           {
             "name": "Joke's End West of First Boiler Room Block 1",
             "id": 3794661,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14651,6 +15074,7 @@
           {
             "name": "Joke's End West of First Boiler Room Block 2",
             "id": 3794669,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14669,6 +15093,7 @@
           {
             "name": "Joke's End First Boiler Room Digspot 1",
             "id": 3794682,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14695,6 +15120,7 @@
           {
             "name": "Joke's End First Boiler Room Digspot 2",
             "id": 3794690,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14721,6 +15147,7 @@
           {
             "name": "Joke's End Second Floor West Room Block 1",
             "id": 3794785,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14739,6 +15166,7 @@
           {
             "name": "Joke's End Second Floor West Room Block 2",
             "id": 3794793,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14757,6 +15185,7 @@
           {
             "name": "Joke's End Second Floor West Room Block 3",
             "id": 3794809,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14775,6 +15204,7 @@
           {
             "name": "Joke's End Second Floor West Room Block 4",
             "id": 3794817,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14793,6 +15223,7 @@
           {
             "name": "Joke's End Mole Reward 1",
             "id": 2586766,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14811,6 +15242,7 @@
           {
             "name": "Joke's End Mole Reward 2",
             "id": 2586834,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -14829,6 +15261,7 @@
           {
             "name": "Joke's End Furnace Room 1 Block 1",
             "id": 3794703,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14855,6 +15288,7 @@
           {
             "name": "Joke's End Furnace Room 1 Block 2",
             "id": 3794711,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14881,6 +15315,7 @@
           {
             "name": "Joke's End Furnace Room 1 Block 3",
             "id": 3794719,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14907,6 +15342,7 @@
           {
             "name": "Joke's End Northeast of Boiler Room 1 Block",
             "id": 3794738,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14933,6 +15369,7 @@
           {
             "name": "Joke's End Northeast of Boiler Room 2 Block",
             "id": 3794764,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -14959,6 +15396,7 @@
           {
             "name": "Joke's End Northeast of Boiler Room 2 Digspot",
             "id": 3794772,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15002,6 +15440,7 @@
           {
             "name": "Joke's End Northeast of Boiler Room 3 Digspot",
             "id": 3794751,
+            "region": "JokesEntrance",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15106,6 +15545,7 @@
           {
             "name": "Joke's End Second Floor East Room Digspot",
             "id": 3794836,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15132,6 +15572,7 @@
           {
             "name": "Joke's End Final Split up Room Digspot",
             "id": 3794855,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15158,6 +15599,7 @@
           {
             "name": "Joke's End South of Bridge Room Block",
             "id": 3794868,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15176,6 +15618,7 @@
           {
             "name": "Joke's End Solo Luigi Room 1 Block",
             "id": 3794884,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15194,6 +15637,7 @@
           {
             "name": "Joke's End Solo Luigi Room 1 Digspot",
             "id": 3794892,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15220,6 +15664,7 @@
           {
             "name": "Joke's End Solo Mario Final Room Block 1",
             "id": 3794905,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15238,6 +15683,7 @@
           {
             "name": "Joke's End Solo Mario Final Room Block 2",
             "id": 3794913,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15256,6 +15702,7 @@
           {
             "name": "Joke's End Solo Mario Final Room Block 3",
             "id": 3794921,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15274,6 +15721,7 @@
           {
             "name": "Joke's End Solo Luigi Room 2 Digspot",
             "id": 3794940,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15300,6 +15748,7 @@
           {
             "name": "Joke's End Solo Mario Room 1 Digspot",
             "id": 3794953,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15326,6 +15775,7 @@
           {
             "name": "Joke's End Solo Mario Room 2 Block 1",
             "id": 3794969,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15344,6 +15794,7 @@
           {
             "name": "Joke's End Solo Mario Room 2 Block 2",
             "id": 3794977,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15362,6 +15813,7 @@
           {
             "name": "Joke's End Solo Mario Room 2 Block 3",
             "id": 3794985,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15380,6 +15832,7 @@
           {
             "name": "Joke's End Second Boiler Room Digspot 1",
             "id": 3795023,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15406,6 +15859,7 @@
           {
             "name": "Joke's End Second Boiler Room Digspot 2",
             "id": 3795031,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15432,6 +15886,7 @@
           {
             "name": "Joke's End North of Second Boiler Room Block 1",
             "id": 3795044,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15450,6 +15905,7 @@
           {
             "name": "Joke's End North of Second Boiler Room Block 2",
             "id": 3795052,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15468,6 +15924,7 @@
           {
             "name": "Joke's End Before Jojora Room Block 1",
             "id": 3795239,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15486,6 +15943,7 @@
           {
             "name": "Joke's End Before Jojora Room Block 2",
             "id": 3795247,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -15504,6 +15962,7 @@
           {
             "name": "Joke's End Before Jojora Room Digspot",
             "id": 3795255,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15530,6 +15989,7 @@
           {
             "name": "Joke's End Jojora Room Digspot",
             "id": 3795268,
+            "region": "JokesMain",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -15609,6 +16069,7 @@
           {
             "name": "Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)",
             "id": 3794336,
+            "region": "PostJokes",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15635,6 +16096,7 @@
           {
             "name": "Teehee Valley Before Birdo Digspot 1",
             "id": 3794267,
+            "region": "PostJokes",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15661,6 +16123,7 @@
           {
             "name": "Teehee Valley Before Birdo Digspot 2",
             "id": 3794275,
+            "region": "PostJokes",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15687,6 +16150,7 @@
           {
             "name": "Teehee Valley Before Birdo Digspot 3",
             "id": 3794283,
+            "region": "PostJokes",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15713,6 +16177,7 @@
           {
             "name": "Teehee Valley Before Birdo Digspot 4",
             "id": 3794291,
+            "region": "PostJokes",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15762,6 +16227,7 @@
           {
             "name": "Yoshi Theater Blue Yoshi",
             "id": 2363733,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15788,6 +16254,7 @@
           {
             "name": "Yoshi Theater Red Yoshi",
             "id": 2363070,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15814,6 +16281,7 @@
           {
             "name": "Yoshi Theater Green Yoshi",
             "id": 2366202,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15840,6 +16308,7 @@
           {
             "name": "Yoshi Theater Yellow Yoshi",
             "id": 2366524,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15866,6 +16335,7 @@
           {
             "name": "Yoshi Theater Purple Yoshi",
             "id": 2364055,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15892,6 +16362,7 @@
           {
             "name": "Yoshi Theater Orange Yoshi",
             "id": 2363392,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15918,6 +16389,7 @@
           {
             "name": "Yoshi Theater Azure Yoshi",
             "id": 2366846,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -15944,6 +16416,7 @@
           {
             "name": "Beanstar Piece Yoshi Theater",
             "id": 2004034,
+            "region": "Theater",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16085,6 +16558,7 @@
           {
             "name": "Teehee Valley Trunkle Room Digspot",
             "id": 3794429,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -16111,6 +16585,7 @@
           {
             "name": "Fungitown Embassy Room Block",
             "id": 3794539,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16129,6 +16604,7 @@
           {
             "name": "Fungitown Entrance Room Block",
             "id": 3794558,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16147,6 +16623,7 @@
           {
             "name": "Fungitown Badge Shop Starting Flag 1",
             "id": 3933828,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -16248,6 +16725,7 @@
           {
             "name": "Fungitown Badge Shop Starting Flag 2",
             "id": 3933830,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -16349,6 +16827,7 @@
           {
             "name": "Fungitown Badge Shop Starting Flag 3",
             "id": 3933832,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -16450,6 +16929,7 @@
           {
             "name": "Fungitown Shop Starting Flag 1",
             "id": 3933802,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16468,6 +16948,7 @@
           {
             "name": "Fungitown Shop Starting Flag 2",
             "id": 3933804,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16486,6 +16967,7 @@
           {
             "name": "Fungitown Shop Starting Flag 3",
             "id": 3933806,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16504,6 +16986,7 @@
           {
             "name": "Fungitown Shop Starting Flag 4",
             "id": 3933808,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16522,6 +17005,7 @@
           {
             "name": "Fungitown Shop Starting Flag 5",
             "id": 3933810,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16540,6 +17024,7 @@
           {
             "name": "Fungitown Shop Starting Flag 6",
             "id": 3933812,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16558,6 +17043,7 @@
           {
             "name": "Fungitown Shop Starting Flag 7",
             "id": 3933814,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16576,6 +17062,7 @@
           {
             "name": "Fungitown Shop Starting Flag 8",
             "id": 3933816,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -16594,6 +17081,7 @@
           {
             "name": "Fungitown Pants Shop Starting Flag 1",
             "id": 3933834,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -16695,6 +17183,7 @@
           {
             "name": "Fungitown Pants Shop Starting Flag 2",
             "id": 3933836,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -16796,6 +17285,7 @@
           {
             "name": "Fungitown Pants Shop Starting Flag 3",
             "id": 3933838,
+            "region": "Fungitown",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -16920,6 +17410,7 @@
           {
             "name": "Fungitown Badge Shop Beanstar Complete Flag 1",
             "id": 3933842,
+            "region": "Fungitown Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17021,6 +17512,7 @@
           {
             "name": "Fungitown Badge Shop Beanstar Complete Flag 2",
             "id": 3933844,
+            "region": "Fungitown Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17122,6 +17614,7 @@
           {
             "name": "Fungitown Pants Shop Beanstar Complete Flag 1",
             "id": 3933846,
+            "region": "Fungitown Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17223,6 +17716,7 @@
           {
             "name": "Fungitown Pants Shop Beanstar Complete Flag 2",
             "id": 3933848,
+            "region": "Fungitown Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17324,6 +17818,7 @@
           {
             "name": "Fungitown Shop Beanstar Complete Flag",
             "id": 3933820,
+            "region": "Fungitown Shop Beanstar Complete Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17365,6 +17860,7 @@
           {
             "name": "Fungitown Shop Birdo Flag",
             "id": 3933824,
+            "region": "Fungitown Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17383,6 +17879,7 @@
           {
             "name": "Fungitown Pants Shop Birdo Flag 1",
             "id": 3933856,
+            "region": "Fungitown Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17484,6 +17981,7 @@
           {
             "name": "Fungitown Pants Shop Birdo Flag 2",
             "id": 3933858,
+            "region": "Fungitown Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17585,6 +18083,7 @@
           {
             "name": "Fungitown Badge Shop Birdo Flag 1",
             "id": 3933852,
+            "region": "Fungitown Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17686,6 +18185,7 @@
           {
             "name": "Fungitown Badge Shop Birdo Flag 2",
             "id": 3933854,
+            "region": "Fungitown Shop Birdo Flag",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -17810,6 +18310,7 @@
           {
             "name": "Beanbean Outskirts Before Harhall Digspot 1",
             "id": 3795281,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17836,6 +18337,7 @@
           {
             "name": "Beanbean Outskirts Before Harhall Digspot 2",
             "id": 3795289,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17862,6 +18364,7 @@
           {
             "name": "Beanstar Piece Harhall",
             "id": 2004033,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17880,6 +18383,7 @@
           {
             "name": "Beanbean Outskirts Boostatue Mole",
             "id": 2004020,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17923,6 +18427,7 @@
           {
             "name": "Harhall's Pants",
             "id": 2004036,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -17941,6 +18446,7 @@
           {
             "name": "Beanbean Outskirts S Room 2 Digspot 1",
             "id": 3791973,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17967,6 +18473,7 @@
           {
             "name": "Beanbean Outskirts S Room 2 Digspot 2",
             "id": 3791965,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -17993,6 +18500,7 @@
           {
             "name": "Beanbean Outskirts S Room 2 Block 2",
             "id": 3791941,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18011,6 +18519,7 @@
           {
             "name": "Beanbean Outskirts S Room 2 Digspot 3",
             "id": 3791925,
+            "region": "BooStatue",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18080,6 +18589,7 @@
           {
             "name": "Oho Oasis West Digspot",
             "id": 3792799,
+            "region": "Oasis",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18106,6 +18616,7 @@
           {
             "name": "Oho Oasis Fire Palace Block",
             "id": 3792830,
+            "region": "Oasis",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18124,6 +18635,7 @@
           {
             "name": "Oho Ocean Spike Room Digspot 1",
             "id": 3793034,
+            "region": "Oasis",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18150,6 +18662,7 @@
           {
             "name": "Oho Ocean Spike Room Digspot 2",
             "id": 3793042,
+            "region": "Oasis",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18176,6 +18689,7 @@
           {
             "name": "Oho Oasis Firebrand",
             "id": 2003976,
+            "region": "Oasis",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18202,6 +18716,7 @@
           {
             "name": "Oho Oasis Thunderhand",
             "id": 2003977,
+            "region": "Oasis",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18251,6 +18766,7 @@
           {
             "name": "Hoohoo Mountain Base Past Ultra Hammer Rocks Block 1",
             "id": 3791426,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18269,6 +18785,7 @@
           {
             "name": "Hoohoo Mountain Base Past Ultra Hammer Rocks Block 2",
             "id": 3791434,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18287,6 +18804,7 @@
           {
             "name": "Hoohoo Mountain Base Past Ultra Hammer Rocks Block 3",
             "id": 3791442,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18305,6 +18823,7 @@
           {
             "name": "Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)",
             "id": 3791337,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18331,6 +18850,7 @@
           {
             "name": "Hoohoo Mountain Base Mole Near Teehee Valley",
             "id": 2587205,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18349,6 +18869,7 @@
           {
             "name": "Teehee Valley Entrance To Hoohoo Mountain Digspot",
             "id": 3794357,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18375,6 +18896,7 @@
           {
             "name": "Teehee Valley Upper Maze Room 1 Block",
             "id": 3794400,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18393,6 +18915,7 @@
           {
             "name": "Teehee Valley Upper Maze Room 2 Digspot 1",
             "id": 3794376,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18419,6 +18942,7 @@
           {
             "name": "Teehee Valley Upper Maze Room 2 Digspot 2",
             "id": 3794384,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18445,6 +18969,7 @@
           {
             "name": "Guffawha Ruins Block",
             "id": 3794595,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18471,6 +18996,7 @@
           {
             "name": "Hoohoo Mountain Base Guffawha Ruins Entrance Digspot",
             "id": 3791371,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18497,6 +19023,7 @@
           {
             "name": "Hoohoo Mountain Base Teehee Valley Entrance Digspot",
             "id": 3791392,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18523,6 +19050,7 @@
           {
             "name": "Hoohoo Mountain Base Teehee Valley Entrance Block",
             "id": 3791384,
+            "region": "BaseUltraRocks",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18564,6 +19092,7 @@
           {
             "name": "Cackletta's Soul",
             "id": null,
+            "region": "Cackletta's Soul",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18643,6 +19172,7 @@
           {
             "name": "Bowser's Castle Entrance Block 1",
             "id": 3795410,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18661,6 +19191,7 @@
           {
             "name": "Bowser's Castle Entrance Block 2",
             "id": 3795418,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18679,6 +19210,7 @@
           {
             "name": "Bowser's Castle Entrance Digspot",
             "id": 3795426,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18705,6 +19237,7 @@
           {
             "name": "Bowser's Castle Iggy & Morton Hallway Block 1",
             "id": 3795439,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18723,6 +19256,7 @@
           {
             "name": "Bowser's Castle Iggy & Morton Hallway Block 2",
             "id": 3795447,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18741,6 +19275,7 @@
           {
             "name": "Bowser's Castle Iggy & Morton Hallway Digspot",
             "id": 3795455,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18767,6 +19302,7 @@
           {
             "name": "Bowser's Castle Past Morton Block",
             "id": 3795468,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18785,6 +19321,7 @@
           {
             "name": "Bowser's Castle Morton Room 1 Digspot",
             "id": 3795593,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18811,6 +19348,7 @@
           {
             "name": "Bowser's Castle Lemmy Room 1 Block",
             "id": 3795612,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18829,6 +19367,7 @@
           {
             "name": "Bowser's Castle Lemmy Room 1 Digspot",
             "id": 3795620,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -18855,6 +19394,7 @@
           {
             "name": "Bowser's Castle Ludwig Room 1 Block",
             "id": 3795642,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18873,6 +19413,7 @@
           {
             "name": "Bowser's Castle Lemmy Room Mole",
             "id": 2587423,
+            "region": "Bowser's Castle",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18927,6 +19468,7 @@
           {
             "name": "Bowser's Castle Ludwig & Roy Hallway Block 1",
             "id": 3795484,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18945,6 +19487,7 @@
           {
             "name": "Bowser's Castle Ludwig & Roy Hallway Block 2",
             "id": 3795492,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18963,6 +19506,7 @@
           {
             "name": "Bowser's Castle Roy Corridor Block 1",
             "id": 3795505,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18981,6 +19525,7 @@
           {
             "name": "Bowser's Castle Roy Corridor Block 2",
             "id": 3795513,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -18999,6 +19544,7 @@
           {
             "name": "Bowser's Castle Mini Mario Sidescroller Block 1",
             "id": 3795670,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19017,6 +19563,7 @@
           {
             "name": "Bowser's Castle Mini Mario Sidescroller Block 2",
             "id": 3795678,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19035,6 +19582,7 @@
           {
             "name": "Bowser's Castle Mini Mario Maze Block 1",
             "id": 3795691,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19053,6 +19601,7 @@
           {
             "name": "Bowser's Castle Mini Mario Maze Block 2",
             "id": 3795699,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19071,6 +19620,7 @@
           {
             "name": "Bowser's Castle Before Wendy Fight Block 1",
             "id": 3795730,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19089,6 +19639,7 @@
           {
             "name": "Bowser's Castle Before Wendy Fight Block 2",
             "id": 3795738,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19107,6 +19658,7 @@
           {
             "name": "Bowser's Castle Larry Room Block",
             "id": 3795894,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19125,6 +19677,7 @@
           {
             "name": "Bowser's Castle Wendy & Larry Hallway Digspot",
             "id": 3795526,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "function_call",
@@ -19151,6 +19704,7 @@
           {
             "name": "Bowser's Castle Before Fawful Fight Block 1",
             "id": 3795542,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19169,6 +19723,7 @@
           {
             "name": "Bowser's Castle Before Fawful Fight Block 2",
             "id": 3795550,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19187,6 +19742,7 @@
           {
             "name": "Bowser's Castle Great Door Block 1",
             "id": 3795563,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -19205,6 +19761,7 @@
           {
             "name": "Bowser's Castle Great Door Block 2",
             "id": 3795571,
+            "region": "Bowser's Castle Mini",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -21319,13 +21876,185 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Beanfruit",
-      "Beanstar Piece",
-      "Chuckola Fruit",
-      "Everything",
-      "Neon Egg"
-    ]
+    "1": {
+      "Beanstar Piece": [
+        "Beanstar Piece 1",
+        "Beanstar Piece 2",
+        "Beanstar Piece 3",
+        "Beanstar Piece 4"
+      ],
+      "Beanfruit": [
+        "Bean Fruit 2",
+        "Bean Fruit 4",
+        "Bean Fruit 6",
+        "Bean Fruit 3",
+        "Bean Fruit 1",
+        "Bean Fruit 7",
+        "Bean Fruit 5"
+      ],
+      "Neon Egg": [
+        "Green Neon Egg",
+        "Yellow Neon Egg",
+        "Orange Neon Egg",
+        "Red Neon Egg",
+        "Purple Neon Egg",
+        "Blue Neon Egg",
+        "Azure Neon Egg"
+      ],
+      "Chuckola Fruit": [
+        "Purple Chuckola Fruit",
+        "Red Chuckola Fruit",
+        "White Chuckola Fruit"
+      ],
+      "Everything": [
+        "Red Pearl Bean",
+        "Beanstone 8",
+        "Bean Fruit 1",
+        "Spangle",
+        "Beanlet 1",
+        "Harhall's Pants",
+        "Counter Badge",
+        "Firebrand",
+        "Casual Coral",
+        "Beanstone 7",
+        "Beanstone 2",
+        "Shroom Bells",
+        "Ultra Mushroom",
+        "Bean Fruit 2",
+        "Bean Fruit 6",
+        "Golden Mushroom",
+        "Peach's Extra Dress",
+        "Wonder Badge",
+        "Bean Fruit 3",
+        "Beanlet 4",
+        "Casual Slacks",
+        "Woo Bean",
+        "Beanstar Piece 2",
+        "Purple Chuckola Fruit",
+        "Chuckle Blend",
+        "Salvage Badge",
+        "Queen B. Jeans",
+        "Purple Neon Egg",
+        "Green Pepper",
+        "Game Boy Horror SP",
+        "Beanlet 2",
+        "Wool Trousers",
+        "Syrup",
+        "Beanstar Piece 4",
+        "Nuts",
+        "Tank Badge",
+        "Beanbean Brooch",
+        "Beanstone 1",
+        "Membership Card",
+        "Red Pepper",
+        "Brilliant Badge",
+        "Beanstar Piece 1",
+        "Pea Badge",
+        "Red Neon Egg",
+        "Charity Badge",
+        "Mushroom",
+        "Beanlet 3",
+        "Shroom Slacks",
+        "Street Jeans",
+        "Chuckoccino",
+        "Mush Badge A",
+        "B. Brand Jeans",
+        "Super Mushroom",
+        "Great Force",
+        "Ultra Nuts",
+        "1-UP Mushroom",
+        "Teehee Blend",
+        "Woohoo Blend",
+        "Refreshing Herb",
+        "Bean Pants",
+        "Mush Badge",
+        "Green Pearl Bean",
+        "Hammers",
+        "5 Coins",
+        "Azure Neon Egg",
+        "Super Nuts",
+        "Beanstone 10",
+        "Blue Jeans",
+        "Beanstone 4",
+        "Red Chuckola Fruit",
+        "Greed Wallet",
+        "Bean Fruit 5",
+        "Hoohoo Blend",
+        "Secret Scroll 1",
+        "Sarge Badge",
+        "Blue Neon Egg",
+        "#1 Trousers",
+        "Ohoracle Badge",
+        "Hoolumbian",
+        "Bean Fruit 4",
+        "Ultra Syrup",
+        "Shroom Pants",
+        "Heart Slacks",
+        "Mari-Lui Badge",
+        "Max Mushroom",
+        "Super Syrup",
+        "Parasol Pants",
+        "Heart Jeans",
+        "Spiny Badge AA",
+        "Beanstone 9",
+        "Thunderhand",
+        "Beauty Badge",
+        "Excite Spring",
+        "Bonus Ring",
+        "Teeheespresso",
+        "Peasley Slacks",
+        "Beanstar Piece 3",
+        "Peasley's Rose",
+        "Mush Badge AA",
+        "Castle Badge",
+        "1-UP Super",
+        "Beanstone 3",
+        "Bean Fruit 7",
+        "Green Goblet",
+        "Hee Bean",
+        "White Chuckola Fruit",
+        "Hard Pants",
+        "Beanlet 5",
+        "Cobalt Necktie",
+        "Beanstar Pants",
+        "Beanstone 5",
+        "Chuckle Bean",
+        "Iron Pants",
+        "Soulful Bros.",
+        "Max Nuts",
+        "Beanstar Emblem",
+        "Plaid Trousers",
+        "Miracle Badge",
+        "Red Goblet",
+        "General Badge",
+        "Green Neon Egg",
+        "Hermetic Pants",
+        "Peachy Jeans",
+        "Power Grip",
+        "Tropic Slacks",
+        "Safety Slacks",
+        "Fake Beanstar",
+        "Orange Neon Egg",
+        "Yellow Neon Egg",
+        "Secret Scroll 2",
+        "Scandal Jeans",
+        "Muscle Badge",
+        "High-End Badge",
+        "Bean B. Badge",
+        "Bros. Rock",
+        "Power Badge",
+        "Bean Trousers",
+        "Winkle Card",
+        "Mushwin Pants",
+        "Max Syrup",
+        "Hoo Bean",
+        "Oh-Pah Badge",
+        "Mushluck Pants",
+        "Bros. Badge",
+        "Beanstone 6",
+        "Grab Badge"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

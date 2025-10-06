@@ -62,6 +62,7 @@
           {
             "name": "Cave: After Wallboss",
             "id": 91630179862862,
+            "region": "Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -80,6 +81,7 @@
           {
             "name": "Cave: Balcony",
             "id": 91630179862863,
+            "region": "Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -98,6 +100,7 @@
           {
             "name": "Cave: Spike pit",
             "id": 91630179862864,
+            "region": "Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -116,6 +119,7 @@
           {
             "name": "Cave: Powered Blaster chest",
             "id": 91630179862865,
+            "region": "Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -137,6 +141,7 @@
           {
             "name": "Cave: Wallboss (Boss)",
             "id": 91630179862886,
+            "region": "Cave",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -155,6 +160,7 @@
           {
             "name": "Cave: Guard (Boss)",
             "id": 91630179862887,
+            "region": "Cave",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -199,6 +205,7 @@
           {
             "name": "Volcanic: Hot coals",
             "id": 91630179862866,
+            "region": "Volcanic",
             "crystal": null,
             "access_rule": {
               "type": "or",
@@ -229,20 +236,11 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "list",
+                          "type": "constant",
                           "value": [
-                            {
-                              "type": "constant",
-                              "value": "Flamethrower"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Ice Spreadshot"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Volt Laser"
-                            }
+                            "Flamethrower",
+                            "Ice Spreadshot",
+                            "Volt Laser"
                           ]
                         }
                       ]
@@ -264,6 +262,7 @@
           {
             "name": "Volcanic: Under bridge",
             "id": 91630179862867,
+            "region": "Volcanic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -282,6 +281,7 @@
           {
             "name": "Volcanic: Behind wall",
             "id": 91630179862868,
+            "region": "Volcanic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -300,6 +300,7 @@
           {
             "name": "Volcanic: Flamethrower chest",
             "id": 91630179862869,
+            "region": "Volcanic",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -344,6 +345,7 @@
           {
             "name": "Volcanic: Cliff (Boss)",
             "id": 91630179862888,
+            "region": "Volcanic",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -411,6 +413,7 @@
           {
             "name": "Arctic: Before pipes",
             "id": 91630179862870,
+            "region": "Arctic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -429,6 +432,7 @@
           {
             "name": "Arctic: After Guard",
             "id": 91630179862871,
+            "region": "Arctic",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -447,6 +451,7 @@
           {
             "name": "Arctic: Under snow",
             "id": 91630179862872,
+            "region": "Arctic",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -468,6 +473,7 @@
           {
             "name": "Arctic: Ice Spreadshot chest",
             "id": 91630179862873,
+            "region": "Arctic",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -512,6 +518,7 @@
           {
             "name": "Arctic: Jacket chest",
             "id": 91630179862874,
+            "region": "Arctic",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -533,6 +540,7 @@
           {
             "name": "Arctic: Ace (Boss)",
             "id": 91630179862889,
+            "region": "Arctic",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -674,24 +682,12 @@
                     "method": "has_all",
                     "args": [
                       {
-                        "type": "list",
+                        "type": "constant",
                         "value": [
-                          {
-                            "type": "constant",
-                            "value": "Arctic Key"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Cave Key"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Swamp Key"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Volcanic Key"
-                          }
+                          "Arctic Key",
+                          "Cave Key",
+                          "Swamp Key",
+                          "Volcanic Key"
                         ]
                       }
                     ]
@@ -744,20 +740,11 @@
                         "method": "has_any",
                         "args": [
                           {
-                            "type": "list",
+                            "type": "constant",
                             "value": [
-                              {
-                                "type": "constant",
-                                "value": "Flamethrower"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Ice Spreadshot"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Volt Laser"
-                              }
+                              "Flamethrower",
+                              "Ice Spreadshot",
+                              "Volt Laser"
                             ]
                           }
                         ]
@@ -774,24 +761,12 @@
                     "method": "has_all",
                     "args": [
                       {
-                        "type": "list",
+                        "type": "constant",
                         "value": [
-                          {
-                            "type": "constant",
-                            "value": "Ace neutralized"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Cliff neutralized"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Guard neutralized"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Snake neutralized"
-                          }
+                          "Ace neutralized",
+                          "Cliff neutralized",
+                          "Guard neutralized",
+                          "Snake neutralized"
                         ]
                       }
                     ]
@@ -844,20 +819,11 @@
                         "method": "has_any",
                         "args": [
                           {
-                            "type": "list",
+                            "type": "constant",
                             "value": [
-                              {
-                                "type": "constant",
-                                "value": "Flamethrower"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Ice Spreadshot"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Volt Laser"
-                              }
+                              "Flamethrower",
+                              "Ice Spreadshot",
+                              "Volt Laser"
                             ]
                           }
                         ]
@@ -877,6 +843,7 @@
           {
             "name": "Hub: Hidden near Arctic",
             "id": 91630179862875,
+            "region": "Hub",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -898,6 +865,7 @@
           {
             "name": "Hub: Hidden near Cave",
             "id": 91630179862876,
+            "region": "Hub",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -916,6 +884,7 @@
           {
             "name": "Hub: Hidden near Swamp",
             "id": 91630179862877,
+            "region": "Hub",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -934,6 +903,7 @@
           {
             "name": "Hub: Console login",
             "id": 91630179862890,
+            "region": "Hub",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -952,6 +922,7 @@
           {
             "name": "Hub: Ninja scare (Boss?)",
             "id": 91630179862891,
+            "region": "Hub",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -996,6 +967,7 @@
           {
             "name": "Swamp: Bramble room",
             "id": 91630179862878,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1016,20 +988,11 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "list",
+                      "type": "constant",
                       "value": [
-                        {
-                          "type": "constant",
-                          "value": "Flamethrower"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Ice Spreadshot"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Volt Laser"
-                        }
+                        "Flamethrower",
+                        "Ice Spreadshot",
+                        "Volt Laser"
                       ]
                     }
                   ]
@@ -1049,6 +1012,7 @@
           {
             "name": "Swamp: Down the chimney",
             "id": 91630179862879,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1067,6 +1031,7 @@
           {
             "name": "Swamp: Wall maze",
             "id": 91630179862880,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1085,6 +1050,7 @@
           {
             "name": "Swamp: Special Extension chest",
             "id": 91630179862881,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1129,6 +1095,7 @@
           {
             "name": "Swamp: Snake (Boss)",
             "id": 91630179862892,
+            "region": "Swamp",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -1227,6 +1194,7 @@
           {
             "name": "Elevator: Ninja (Boss)",
             "id": 91630179862893,
+            "region": "Electrical",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1245,6 +1213,7 @@
           {
             "name": "Electrical: Volt Laser chest",
             "id": 91630179862885,
+            "region": "Electrical",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1263,6 +1232,7 @@
           {
             "name": "Electrical: Generator (Boss)",
             "id": 91630179862895,
+            "region": "Electrical",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1281,6 +1251,7 @@
           {
             "name": "Electrical: Tesla orb",
             "id": 91630179862894,
+            "region": "Electrical",
             "crystal": null,
             "access_rule": {
               "type": "item_check",
@@ -1325,6 +1296,7 @@
           {
             "name": "Electrical: Near generator",
             "id": 91630179862882,
+            "region": "Electrical (Power On)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1343,6 +1315,7 @@
           {
             "name": "Electrical: Behind wall",
             "id": 91630179862883,
+            "region": "Electrical (Power On)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1361,6 +1334,7 @@
           {
             "name": "Electrical: Before Malakhov",
             "id": 91630179862884,
+            "region": "Electrical (Power On)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1379,6 +1353,7 @@
           {
             "name": "Electrical: Malakhov (Boss)",
             "id": 91630179862896,
+            "region": "Electrical (Power On)",
             "crystal": null,
             "access_rule": {
               "type": "constant",
@@ -1397,26 +1372,18 @@
           {
             "name": "Electrical: BRAINOS (Boss)",
             "id": 91630179862897,
+            "region": "Electrical (Power On)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Flamethrower"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Ice Spreadshot"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Volt Laser"
-                    }
+                    "Flamethrower",
+                    "Ice Spreadshot",
+                    "Volt Laser"
                   ]
                 }
               ]
@@ -1434,26 +1401,18 @@
           {
             "name": "Mission objective",
             "id": null,
+            "region": "Electrical (Power On)",
             "crystal": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_all",
               "args": [
                 {
-                  "type": "list",
+                  "type": "constant",
                   "value": [
-                    {
-                      "type": "constant",
-                      "value": "Flamethrower"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Ice Spreadshot"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Volt Laser"
-                    }
+                    "Flamethrower",
+                    "Ice Spreadshot",
+                    "Volt Laser"
                   ]
                 }
               ]
@@ -1800,14 +1759,58 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything",
-      "Filler",
-      "Keys",
-      "Traps",
-      "Upgrades",
-      "Weapons"
-    ]
+    "1": {
+      "Weapons": [
+        "Powered Blaster",
+        "Flamethrower",
+        "Ice Spreadshot",
+        "Volt Laser"
+      ],
+      "Upgrades": [
+        "Special Extension",
+        "Faster Reload",
+        "Life Extension",
+        "Clip Extension"
+      ],
+      "Keys": [
+        "Cave Key",
+        "Arctic Key",
+        "Volcanic Key",
+        "Swamp Key"
+      ],
+      "Filler": [
+        "Quick-fire Mode",
+        "Active Camouflage",
+        "Full Heal"
+      ],
+      "Traps": [
+        "Ninja Trap",
+        "Shake Trap",
+        "Ice Trap"
+      ],
+      "Everything": [
+        "Powered Blaster",
+        "Flamethrower",
+        "Full Heal",
+        "Clip Extension",
+        "Shake Trap",
+        "Life Extension",
+        "Special Extension",
+        "Arctic Key",
+        "Volcanic Key",
+        "Jacket",
+        "Ice Trap",
+        "Faster Reload",
+        "Volt Laser",
+        "Cave Key",
+        "Active Camouflage",
+        "System Power",
+        "Quick-fire Mode",
+        "Ice Spreadshot",
+        "Swamp Key",
+        "Ninja Trap"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {

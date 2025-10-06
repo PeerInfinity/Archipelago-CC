@@ -16170,6 +16170,7 @@
           {
             "name": "Energy Tank, Gauntlet",
             "id": 82005,
+            "region": "Energy Tank, Gauntlet",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16370,6 +16371,7 @@
           {
             "name": "Bomb",
             "id": 82007,
+            "region": "Bomb",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16648,6 +16650,7 @@
           {
             "name": "Energy Tank, Terminator",
             "id": 82008,
+            "region": "Energy Tank, Terminator",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -16848,6 +16851,7 @@
           {
             "name": "Reserve Tank, Brinstar",
             "id": 82017,
+            "region": "Reserve Tank, Brinstar",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17048,6 +17052,7 @@
           {
             "name": "Charge Beam",
             "id": 82023,
+            "region": "Charge Beam",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17248,6 +17253,7 @@
           {
             "name": "Morphing Ball",
             "id": 82026,
+            "region": "Morphing Ball",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17448,6 +17454,7 @@
           {
             "name": "Energy Tank, Brinstar Ceiling",
             "id": 82029,
+            "region": "Energy Tank, Brinstar Ceiling",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17648,6 +17655,7 @@
           {
             "name": "Energy Tank, Etecoons",
             "id": 82030,
+            "region": "Energy Tank, Etecoons",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -17848,6 +17856,7 @@
           {
             "name": "Energy Tank, Waterway",
             "id": 82033,
+            "region": "Energy Tank, Waterway",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -18048,6 +18057,7 @@
           {
             "name": "Energy Tank, Brinstar Gate",
             "id": 82035,
+            "region": "Energy Tank, Brinstar Gate",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -18248,6 +18258,7 @@
           {
             "name": "X-Ray Scope",
             "id": 82038,
+            "region": "X-Ray Scope",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -18448,6 +18459,7 @@
           {
             "name": "Spazer",
             "id": 82042,
+            "region": "Spazer",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -18648,6 +18660,7 @@
           {
             "name": "Energy Tank, Kraid",
             "id": 82043,
+            "region": "Energy Tank, Kraid",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -18848,6 +18861,7 @@
           {
             "name": "Kraid",
             "id": null,
+            "region": "Kraid",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19048,6 +19062,7 @@
           {
             "name": "Varia Suit",
             "id": 82048,
+            "region": "Varia Suit",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19248,6 +19263,7 @@
           {
             "name": "Ice Beam",
             "id": 82050,
+            "region": "Ice Beam",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19448,6 +19464,7 @@
           {
             "name": "Energy Tank, Crocomire",
             "id": 82052,
+            "region": "Energy Tank, Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19648,6 +19665,7 @@
           {
             "name": "Hi-Jump Boots",
             "id": 82053,
+            "region": "Hi-Jump Boots",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -19906,6 +19924,7 @@
           {
             "name": "Grapple Beam",
             "id": 82060,
+            "region": "Grapple Beam",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20174,6 +20193,7 @@
           {
             "name": "Reserve Tank, Norfair",
             "id": 82061,
+            "region": "Reserve Tank, Norfair",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20374,6 +20394,7 @@
           {
             "name": "Speed Booster",
             "id": 82066,
+            "region": "Speed Booster",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20574,6 +20595,7 @@
           {
             "name": "Wave Beam",
             "id": 82068,
+            "region": "Wave Beam",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -20832,6 +20854,7 @@
           {
             "name": "Ridley",
             "id": 82170,
+            "region": "Ridley",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21032,6 +21055,7 @@
           {
             "name": "Energy Tank, Ridley",
             "id": 82078,
+            "region": "Energy Tank, Ridley",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21232,6 +21256,7 @@
           {
             "name": "Screw Attack",
             "id": 82079,
+            "region": "Screw Attack",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21490,6 +21515,7 @@
           {
             "name": "Energy Tank, Firefleas",
             "id": 82080,
+            "region": "Energy Tank, Firefleas",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21748,6 +21774,7 @@
           {
             "name": "Reserve Tank, Wrecked Ship",
             "id": 82129,
+            "region": "Reserve Tank, Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -21948,6 +21975,7 @@
           {
             "name": "Energy Tank, Wrecked Ship",
             "id": 82132,
+            "region": "Energy Tank, Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22148,6 +22176,7 @@
           {
             "name": "Phantoon",
             "id": null,
+            "region": "Phantoon",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22348,6 +22377,7 @@
           {
             "name": "Right Super, Wrecked Ship",
             "id": 82134,
+            "region": "Right Super, Wrecked Ship",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22548,6 +22578,7 @@
           {
             "name": "Gravity Suit",
             "id": 82135,
+            "region": "Gravity Suit",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22758,6 +22789,7 @@
           {
             "name": "Energy Tank, Mama turtle",
             "id": 82138,
+            "region": "Energy Tank, Mama turtle",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -22958,6 +22990,7 @@
           {
             "name": "Plasma Beam",
             "id": 82143,
+            "region": "Plasma Beam",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23216,6 +23249,7 @@
           {
             "name": "Reserve Tank, Maridia",
             "id": 82145,
+            "region": "Reserve Tank, Maridia",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23416,6 +23450,7 @@
           {
             "name": "Spring Ball",
             "id": 82150,
+            "region": "Spring Ball",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23674,6 +23709,7 @@
           {
             "name": "Energy Tank, Botwoon",
             "id": 82152,
+            "region": "Energy Tank, Botwoon",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -23874,6 +23910,7 @@
           {
             "name": "Draygon",
             "id": null,
+            "region": "Draygon",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -24074,6 +24111,7 @@
           {
             "name": "Space Jump",
             "id": 82154,
+            "region": "Space Jump",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -24332,6 +24370,7 @@
           {
             "name": "Mother Brain",
             "id": null,
+            "region": "Mother Brain",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -24532,6 +24571,7 @@
           {
             "name": "Spore Spawn",
             "id": null,
+            "region": "Spore Spawn",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -24732,6 +24772,7 @@
           {
             "name": "Botwoon",
             "id": null,
+            "region": "Botwoon",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -24932,6 +24973,7 @@
           {
             "name": "Crocomire",
             "id": null,
+            "region": "Crocomire",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -25132,6 +25174,7 @@
           {
             "name": "Golden Torizo",
             "id": null,
+            "region": "Golden Torizo",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -25332,6 +25375,7 @@
           {
             "name": "Power Bomb (Crateria surface)",
             "id": 82000,
+            "region": "Power Bomb (Crateria surface)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -25532,6 +25576,7 @@
           {
             "name": "Missile (outside Wrecked Ship bottom)",
             "id": 82001,
+            "region": "Missile (outside Wrecked Ship bottom)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -25790,6 +25835,7 @@
           {
             "name": "Missile (outside Wrecked Ship top)",
             "id": 82002,
+            "region": "Missile (outside Wrecked Ship top)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -25990,6 +26036,7 @@
           {
             "name": "Missile (outside Wrecked Ship middle)",
             "id": 82003,
+            "region": "Missile (outside Wrecked Ship middle)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -26190,6 +26237,7 @@
           {
             "name": "Missile (Crateria moat)",
             "id": 82004,
+            "region": "Missile (Crateria moat)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -26390,6 +26438,7 @@
           {
             "name": "Missile (Crateria bottom)",
             "id": 82006,
+            "region": "Missile (Crateria bottom)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -26600,6 +26649,7 @@
           {
             "name": "Missile (Crateria gauntlet right)",
             "id": 82009,
+            "region": "Missile (Crateria gauntlet right)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -26810,6 +26860,7 @@
           {
             "name": "Missile (Crateria gauntlet left)",
             "id": 82010,
+            "region": "Missile (Crateria gauntlet left)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -27010,6 +27061,7 @@
           {
             "name": "Super Missile (Crateria)",
             "id": 82011,
+            "region": "Super Missile (Crateria)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -27210,6 +27262,7 @@
           {
             "name": "Missile (Crateria middle)",
             "id": 82012,
+            "region": "Missile (Crateria middle)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -27410,6 +27463,7 @@
           {
             "name": "Power Bomb (green Brinstar bottom)",
             "id": 82013,
+            "region": "Power Bomb (green Brinstar bottom)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -27610,6 +27664,7 @@
           {
             "name": "Super Missile (pink Brinstar)",
             "id": 82014,
+            "region": "Super Missile (pink Brinstar)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -27868,6 +27923,7 @@
           {
             "name": "Missile (green Brinstar below super missile)",
             "id": 82015,
+            "region": "Missile (green Brinstar below super missile)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -28126,6 +28182,7 @@
           {
             "name": "Super Missile (green Brinstar top)",
             "id": 82016,
+            "region": "Super Missile (green Brinstar top)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -28326,6 +28383,7 @@
           {
             "name": "Missile (green Brinstar behind missile)",
             "id": 82018,
+            "region": "Missile (green Brinstar behind missile)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -28526,6 +28584,7 @@
           {
             "name": "Missile (green Brinstar behind reserve tank)",
             "id": 82019,
+            "region": "Missile (green Brinstar behind reserve tank)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -28726,6 +28785,7 @@
           {
             "name": "Missile (pink Brinstar top)",
             "id": 82021,
+            "region": "Missile (pink Brinstar top)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -28926,6 +28986,7 @@
           {
             "name": "Missile (pink Brinstar bottom)",
             "id": 82022,
+            "region": "Missile (pink Brinstar bottom)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -29126,6 +29187,7 @@
           {
             "name": "Power Bomb (pink Brinstar)",
             "id": 82024,
+            "region": "Power Bomb (pink Brinstar)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -29326,6 +29388,7 @@
           {
             "name": "Missile (green Brinstar pipe)",
             "id": 82025,
+            "region": "Missile (green Brinstar pipe)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -29536,6 +29599,7 @@
           {
             "name": "Power Bomb (blue Brinstar)",
             "id": 82027,
+            "region": "Power Bomb (blue Brinstar)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -29736,6 +29800,7 @@
           {
             "name": "Missile (blue Brinstar middle)",
             "id": 82028,
+            "region": "Missile (blue Brinstar middle)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -29936,6 +30001,7 @@
           {
             "name": "Super Missile (green Brinstar bottom)",
             "id": 82031,
+            "region": "Super Missile (green Brinstar bottom)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -30136,6 +30202,7 @@
           {
             "name": "Missile (blue Brinstar bottom)",
             "id": 82034,
+            "region": "Missile (blue Brinstar bottom)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -30336,6 +30403,7 @@
           {
             "name": "Missile (blue Brinstar top)",
             "id": 82036,
+            "region": "Missile (blue Brinstar top)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -30536,6 +30604,7 @@
           {
             "name": "Missile (blue Brinstar behind missile)",
             "id": 82037,
+            "region": "Missile (blue Brinstar behind missile)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -30736,6 +30805,7 @@
           {
             "name": "Power Bomb (red Brinstar sidehopper room)",
             "id": 82039,
+            "region": "Power Bomb (red Brinstar sidehopper room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -30936,6 +31006,7 @@
           {
             "name": "Power Bomb (red Brinstar spike room)",
             "id": 82040,
+            "region": "Power Bomb (red Brinstar spike room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -31136,6 +31207,7 @@
           {
             "name": "Missile (red Brinstar spike room)",
             "id": 82041,
+            "region": "Missile (red Brinstar spike room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -31336,6 +31408,7 @@
           {
             "name": "Missile (Kraid)",
             "id": 82044,
+            "region": "Missile (Kraid)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -31536,6 +31609,7 @@
           {
             "name": "Missile (lava room)",
             "id": 82049,
+            "region": "Missile (lava room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -31746,6 +31820,7 @@
           {
             "name": "Missile (below Ice Beam)",
             "id": 82051,
+            "region": "Missile (below Ice Beam)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -31946,6 +32021,7 @@
           {
             "name": "Missile (above Crocomire)",
             "id": 82054,
+            "region": "Missile (above Crocomire)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -32146,6 +32222,7 @@
           {
             "name": "Missile (Hi-Jump Boots)",
             "id": 82055,
+            "region": "Missile (Hi-Jump Boots)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -32404,6 +32481,7 @@
           {
             "name": "Energy Tank (Hi-Jump Boots)",
             "id": 82056,
+            "region": "Energy Tank (Hi-Jump Boots)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -32604,6 +32682,7 @@
           {
             "name": "Power Bomb (Crocomire)",
             "id": 82057,
+            "region": "Power Bomb (Crocomire)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -32804,6 +32883,7 @@
           {
             "name": "Missile (below Crocomire)",
             "id": 82058,
+            "region": "Missile (below Crocomire)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -33004,6 +33084,7 @@
           {
             "name": "Missile (Grapple Beam)",
             "id": 82059,
+            "region": "Missile (Grapple Beam)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -33272,6 +33353,7 @@
           {
             "name": "Missile (Norfair Reserve Tank)",
             "id": 82062,
+            "region": "Missile (Norfair Reserve Tank)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -33482,6 +33564,7 @@
           {
             "name": "Missile (bubble Norfair green door)",
             "id": 82063,
+            "region": "Missile (bubble Norfair green door)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -33682,6 +33765,7 @@
           {
             "name": "Missile (bubble Norfair)",
             "id": 82064,
+            "region": "Missile (bubble Norfair)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -33882,6 +33966,7 @@
           {
             "name": "Missile (Speed Booster)",
             "id": 82065,
+            "region": "Missile (Speed Booster)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -34140,6 +34225,7 @@
           {
             "name": "Missile (Wave Beam)",
             "id": 82067,
+            "region": "Missile (Wave Beam)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -34340,6 +34426,7 @@
           {
             "name": "Missile (Gold Torizo)",
             "id": 82070,
+            "region": "Missile (Gold Torizo)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -34598,6 +34685,7 @@
           {
             "name": "Super Missile (Gold Torizo)",
             "id": 82071,
+            "region": "Super Missile (Gold Torizo)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -34856,6 +34944,7 @@
           {
             "name": "Missile (Mickey Mouse room)",
             "id": 82073,
+            "region": "Missile (Mickey Mouse room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -35056,6 +35145,7 @@
           {
             "name": "Missile (lower Norfair above fire flea room)",
             "id": 82074,
+            "region": "Missile (lower Norfair above fire flea room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -35256,6 +35346,7 @@
           {
             "name": "Power Bomb (lower Norfair above fire flea room)",
             "id": 82075,
+            "region": "Power Bomb (lower Norfair above fire flea room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -35456,6 +35547,7 @@
           {
             "name": "Power Bomb (Power Bombs of shame)",
             "id": 82076,
+            "region": "Power Bomb (Power Bombs of shame)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -35656,6 +35748,7 @@
           {
             "name": "Missile (lower Norfair near Wave Beam)",
             "id": 82077,
+            "region": "Missile (lower Norfair near Wave Beam)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -35856,6 +35949,7 @@
           {
             "name": "Missile (Wrecked Ship middle)",
             "id": 82128,
+            "region": "Missile (Wrecked Ship middle)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -36056,6 +36150,7 @@
           {
             "name": "Missile (Gravity Suit)",
             "id": 82130,
+            "region": "Missile (Gravity Suit)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -36256,6 +36351,7 @@
           {
             "name": "Missile (Wrecked Ship top)",
             "id": 82131,
+            "region": "Missile (Wrecked Ship top)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -36456,6 +36552,7 @@
           {
             "name": "Super Missile (Wrecked Ship left)",
             "id": 82133,
+            "region": "Super Missile (Wrecked Ship left)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -36656,6 +36753,7 @@
           {
             "name": "Missile (green Maridia shinespark)",
             "id": 82136,
+            "region": "Missile (green Maridia shinespark)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -36856,6 +36954,7 @@
           {
             "name": "Super Missile (green Maridia)",
             "id": 82137,
+            "region": "Super Missile (green Maridia)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -37066,6 +37165,7 @@
           {
             "name": "Missile (green Maridia tatori)",
             "id": 82139,
+            "region": "Missile (green Maridia tatori)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -37266,6 +37366,7 @@
           {
             "name": "Super Missile (yellow Maridia)",
             "id": 82140,
+            "region": "Super Missile (yellow Maridia)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -37466,6 +37567,7 @@
           {
             "name": "Missile (yellow Maridia super missile)",
             "id": 82141,
+            "region": "Missile (yellow Maridia super missile)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -37666,6 +37768,7 @@
           {
             "name": "Missile (yellow Maridia false wall)",
             "id": 82142,
+            "region": "Missile (yellow Maridia false wall)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -37866,6 +37969,7 @@
           {
             "name": "Missile (left Maridia sand pit room)",
             "id": 82144,
+            "region": "Missile (left Maridia sand pit room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -38066,6 +38170,7 @@
           {
             "name": "Missile (right Maridia sand pit room)",
             "id": 82146,
+            "region": "Missile (right Maridia sand pit room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -38266,6 +38371,7 @@
           {
             "name": "Power Bomb (right Maridia sand pit room)",
             "id": 82147,
+            "region": "Power Bomb (right Maridia sand pit room)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -38466,6 +38572,7 @@
           {
             "name": "Missile (pink Maridia)",
             "id": 82148,
+            "region": "Missile (pink Maridia)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -38666,6 +38773,7 @@
           {
             "name": "Super Missile (pink Maridia)",
             "id": 82149,
+            "region": "Super Missile (pink Maridia)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -38866,6 +38974,7 @@
           {
             "name": "Missile (Draygon)",
             "id": 82151,
+            "region": "Missile (Draygon)",
             "crystal": null,
             "access_rule": {
               "type": "and",
@@ -39546,9 +39655,34 @@
     }
   },
   "item_groups": {
-    "1": [
-      "Everything"
-    ]
+    "1": {
+      "Everything": [
+        "Super Missile",
+        "Charge Beam",
+        "Nothing",
+        "Power Bomb",
+        "Grappling Beam",
+        "Generic",
+        "Hi-Jump Boots",
+        "Plasma Beam",
+        "Space Jump",
+        "Screw Attack",
+        "Wave Beam",
+        "Bomb",
+        "Spring Ball",
+        "Reserve Tank",
+        "Varia Suit",
+        "Speed Booster",
+        "Spazer",
+        "Ice Beam",
+        "Morph Ball",
+        "No Energy",
+        "Missile",
+        "Gravity Suit",
+        "Energy Tank",
+        "X-Ray Scope"
+      ]
+    }
   },
   "itempool_counts": {
     "1": {
